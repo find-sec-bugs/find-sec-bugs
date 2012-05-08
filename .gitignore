@@ -1,0 +1,14 @@
+#Eclipse
+.classpath
+.project
+test-output
+#IntelliJ
+*.iml
+*.ipr
+*.iws
+#Build directories
+bin
+target
+#Temporary
+backup
+lib

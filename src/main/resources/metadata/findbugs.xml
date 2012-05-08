@@ -1,0 +1,11 @@
+<FindbugsPlugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="findbugsplugin.xsd" 
+	pluginid="com.h3xstream.findsecbugs" 
+	provider="Find Security Bugs" 
+	defaultenabled="false" 
+	website="https://github.com/h3xstream/find-sec-bugs">
+
+	<Detector class="com.h3xstream.findsecbugs.PredictableRandomDetector" reports="SECURITY_PREDICTABLE_RANDOM" />
+	<BugPattern type="SECURITY_PREDICTABLE_RANDOM" abbrev="SECPR" category="SECURITY" />
+
+</FindbugsPlugin>

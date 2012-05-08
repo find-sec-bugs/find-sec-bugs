@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MessageCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="messagecollection.xsd">
+
+	<Plugin>
+		<ShortDescription>Find Security Bugs</ShortDescription>
+		<Details>Highlight part of the source code that should be analyze in
+			a security audit.</Details>
+	</Plugin>
+
+	<Detector class="com.h3xstream.findsecbugs.PredictableRandomDetector">
+		<Details>Detect the use of predictable Pseudo Random Generator (PRG).
+		</Details>
+	</Detector>
+
+	<BugPattern type="SECURITY_PREDICTABLE_RANDOM">
+		<ShortDescription>Predictable Pseudo Random Generator (PRG)
+		</ShortDescription>
+		<LongDescription>Use of {3} is predictable.</LongDescription>
+		<Details>
+<![CDATA[
+<p>The use of a predictable random value can lead to vulnerability if it is use for:</p>
+<ul>
+<li>CSRF token</li>
+<li>password reset token (sent by email)</li>
+<li>or any other secret value</li>
+</ul>
+]]>
+		</Details>
+	</BugPattern>
+
+	<BugCode abbrev="SECPR">Predictable Pseudo Random Generator (PRG)</BugCode>
+</MessageCollection>

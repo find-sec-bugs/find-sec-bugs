@@ -1,4 +1,4 @@
-package edu.umd.cs.findbugs;
+package edu.umd.cs.findbugs.test;
 
 import edu.umd.cs.findbugs.AbstractBugReporter;
 import edu.umd.cs.findbugs.AnalysisError;
@@ -32,7 +32,7 @@ public class EasyBugReporter extends AbstractBugReporter {
 	}
 	
 	@Override
-	protected void doReportBug(BugInstance bugInstance) {
+	public void doReportBug(BugInstance bugInstance) {
 		System.out.println(bugInstance.getMessage());
 		bugCollection.add(bugInstance);
 	}

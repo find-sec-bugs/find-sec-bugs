@@ -2,13 +2,9 @@ package com.h3xstream.findsecbugs;
 
 import static org.mockito.Mockito.*;
 
+import edu.umd.cs.findbugs.test.BaseDetectorTest;
+import edu.umd.cs.findbugs.test.EasyBugReporter;
 import org.testng.annotations.Test;
-
-import edu.umd.cs.findbugs.BaseDetectorTest;
-import edu.umd.cs.findbugs.BugReporter;
-import edu.umd.cs.findbugs.EasyBugReporter;
-
-import java.net.URL;
 
 public class PredictableRandomDetectorTest extends BaseDetectorTest {
 
@@ -21,12 +17,29 @@ public class PredictableRandomDetectorTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-		BugReporter reporter = spy(new EasyBugReporter());
-		analyze(files, reporter);
+		EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
 
-        //TODO: Do assertions on the bug report
-		//expect(reporter.reportBug(eq()))
-		
+        //Assertions
+        //1rst variation new Random()
+		verify(reporter).doReportBug(
+                bugDefinition()
+                    .bugType("SECURITY_PREDICTABLE_RANDOM")
+                    .inClass("InsecureRandom")
+                    .inMethod("test1")
+                    .atLine(11)
+                .build()
+        );
+        //2nd variation Math.random()
+        verify(reporter).doReportBug(
+                bugDefinition()
+                    .bugType("SECURITY_PREDICTABLE_RANDOM")
+                    .inClass("InsecureRandom")
+                    .inMethod("test2")
+                    .atLine(18)
+                .build()
+        );
+
 	}
-	
+
 }

@@ -1,4 +1,4 @@
-package edu.umd.cs.findbugs;
+package edu.umd.cs.findbugs.test;
 
 import edu.umd.cs.findbugs.FindBugsProgress;
 

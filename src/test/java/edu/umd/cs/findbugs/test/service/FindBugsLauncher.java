@@ -1,49 +1,29 @@
-package edu.umd.cs.findbugs;
+package edu.umd.cs.findbugs.test.service;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import edu.umd.cs.findbugs.*;
+import edu.umd.cs.findbugs.config.UserPreferences;
+import org.apache.commons.io.IOUtils;
 
-import java.io.*;
-import java.lang.reflect.Field;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLStreamHandler;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
-import org.apache.commons.io.IOUtils;
+import static org.mockito.Mockito.mock;
 
-import edu.umd.cs.findbugs.config.UserPreferences;
-
-public class BaseDetectorTest {
-	private static final boolean DEBUG = true;
+public class FindBugsLauncher {
 
     /**
-     * @param path
-     * @return Full path to the class file base on class name.
-     */
-    public String getClassFilePath(String path) {
-        ClassLoader cl = getClass().getClassLoader();
-        URL url = cl.getResource(path+".class");
-
-        String filename = url.toString();
-
-        final String prefix = "file:/";
-        if(filename.startsWith(prefix)) {
-            filename = filename.substring(prefix.length());
-        }
-        return filename;
-    }
-
-	/**
 	 * Launch an analysis on the given source directory.
-	 * 
+	 *
 	 * @param classFiles
 	 * @param bugReporter
-	 * @throws IOException
+	 * @throws java.io.IOException
 	 * @throws InterruptedException
-	 * @throws PluginException
+	 * @throws edu.umd.cs.findbugs.PluginException
 	 */
 	public void analyze(String[] classFiles, BugReporter bugReporter) throws IOException, InterruptedException,
             PluginException, NoSuchFieldException, IllegalAccessException {
@@ -55,7 +35,7 @@ public class BaseDetectorTest {
 		for(String file : classFiles) {
 			project.addFile(file);
 		}
-		
+
 		//Initialize the plugin base on the findbugs.xml
 		byte[] archive = buildFakePluginJar();
 
@@ -68,16 +48,17 @@ public class BaseDetectorTest {
 
 		//URL pluginUrl = urlMockFromInputStream(new ByteArrayInputStream(archive));
 		Plugin loadedPlugin = Plugin.loadCustomPlugin(f.toURL(),project);
-		
+
 		//FindBugs engine
-		
+
 		FindBugs2 engine = new FindBugs2();
 		engine.setNoClassOk(true);
 		engine.setMergeSimilarWarnings(false);
 		engine.setBugReporter(bugReporter);
 		engine.setProject(project);
 		engine.setProgressCallback(mock(FindBugsProgress.class));
-		
+        
+
 		engine.setDetectorFactoryCollection(DetectorFactoryCollection.instance());
 
 		//User preferences set to miss no bugs report
@@ -86,60 +67,36 @@ public class BaseDetectorTest {
 		prefs.getFilterSettings().setDisplayFalseWarnings(true);
 		prefs.getFilterSettings().setMinPriority("Low");
 		engine.setUserPreferences(prefs);
-		
-        
-    System.out.println("Analyzing...");
+
+
+        System.out.println("Analyzing...");
 		engine.execute();
 
 	}
-	
+
 	/**
-	 * The minimum requirement to have a "valid" archive plugin is to include 
-	 * a findbugs.xml, messages.xml and MANIFEST.MF files. The rest of the 
-	 * resources are load using the parent ClassLoader (Not requires to be in 
+	 * The minimum requirement to have a "valid" archive plugin is to include
+	 * a findbugs.xml, messages.xml and MANIFEST.MF files. The rest of the
+	 * resources are load using the parent ClassLoader (Not requires to be in
 	 * the jar).
 	 * <p>
 	 * Instead of building a file on disk, the result of the stream is kept in
-	 * memory and return as a byte array. 
+	 * memory and return as a byte array.
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private byte[] buildFakePluginJar() throws IOException {
 		ClassLoader cl = getClass().getClassLoader();
-		
+
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		JarOutputStream jar = new JarOutputStream(buffer);
         //
-		for(String resource : Arrays.asList("findbugs.xml","messages.xml","META-INF/MANIFEST.MF")) {
+		for(String resource : Arrays.asList("findbugs.xml", "messages.xml", "META-INF/MANIFEST.MF")) {
 			jar.putNextEntry(new ZipEntry(resource));
-			jar.write(IOUtils.toByteArray( cl.getResourceAsStream("metadata/"+resource)));
+			jar.write(IOUtils.toByteArray(cl.getResourceAsStream("metadata/" + resource)));
 		}
 		jar.finish();
-		
+
 		return buffer.toByteArray();
 	}
-	
-	/**
-	 * URL is a system class that can't be mock using common mocking library.
-	 * Instead a URL instance with a special handler is build.
-	 * 
-	 * @param is
-	 * @return URL instance
-	 * @throws IOException
-	 */
-	private URL urlMockFromInputStream(InputStream is) throws IOException {
-		final URLConnection mockUrlCon = mock(URLConnection.class);
-		when(mockUrlCon.getInputStream()).thenReturn(is);
-		
-		URLStreamHandler stubUrlHandler = new URLStreamHandler() {
-		    @Override
-		     protected URLConnection openConnection(URL u) throws IOException {
-		        return mockUrlCon;
-		     }
-		};
-		
-		URL url = new URL("proto", "host", 99, "/findbugs", stubUrlHandler);
-		return url;
-	}
-
 }

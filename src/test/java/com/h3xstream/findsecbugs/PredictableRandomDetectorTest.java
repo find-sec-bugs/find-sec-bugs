@@ -21,6 +21,11 @@ public class PredictableRandomDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         //Assertions
+        verify(reporter,times(2)).doReportBug(
+                bugDefinition()
+                    .bugType("SECURITY_PREDICTABLE_RANDOM")
+                .build()
+        );
         //1rst variation new Random()
 		verify(reporter).doReportBug(
                 bugDefinition()
@@ -36,7 +41,7 @@ public class PredictableRandomDetectorTest extends BaseDetectorTest {
                     .bugType("SECURITY_PREDICTABLE_RANDOM")
                     .inClass("InsecureRandom")
                     .inMethod("test2")
-                    .atLine(18)
+                    .atLine(16)
                 .build()
         );
 

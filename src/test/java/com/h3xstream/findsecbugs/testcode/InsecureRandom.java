@@ -1,24 +1,34 @@
 package com.h3xstream.findsecbugs.testcode;
+import java.security.SecureRandom;
 import java.util.Random;
 
 
 public class InsecureRandom {
-	
-	String password = "test";
-	String username = "test";
-	
-	public static void test1() {
+
+	public static void newRandomObj() {
 		Random rand = new Random();
 		
 		System.out.println(rand.nextInt());
 	}
-	
-	public void test2() {
-		
+
+	public static void mathRandom() {
+        //Indirectly using Random class
 		System.out.println(Math.random());
 	}
-	
-	private void unused() {
-		System.out.println(1+2);
-	}
+
+    public static void mathOther() {
+        //Other Math functions unrelated..
+        System.out.println(Math.floor(2.5));
+        System.out.println(Math.cos(Math.toRadians(30)));
+        System.out.println(Math.PI);
+
+        Random random = new SecureRandom();
+        random.nextInt(); //This should not raise any warning
+    }
+
+    public static void main(String[] args) {
+        newRandomObj();
+        mathRandom();
+        mathOther();
+    }
 }

@@ -26,10 +26,10 @@ import edu.umd.cs.findbugs.config.UserPreferences;
 public class BaseDetectorTest {
 	private static final boolean DEBUG = true;
 
-    ClassFileLocator classFileLocator;
-    FindBugsLauncher findBugsLauncher;
+    private ClassFileLocator classFileLocator;
+    private FindBugsLauncher findBugsLauncher;
 
-    public BaseDetectorTest(){
+    public BaseDetectorTest() {
         classFileLocator = new ClassFileLocator();
         findBugsLauncher = new FindBugsLauncher();
     }

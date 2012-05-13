@@ -1,6 +1,7 @@
 package edu.umd.cs.findbugs.test.service;
 
 import edu.umd.cs.findbugs.*;
+import edu.umd.cs.findbugs.config.ProjectFilterSettings;
 import edu.umd.cs.findbugs.config.UserPreferences;
 import org.apache.commons.io.IOUtils;
 
@@ -17,7 +18,7 @@ import static org.mockito.Mockito.mock;
 public class FindBugsLauncher {
 
     /**
-	 * Launch an analysis on the given source directory.
+	 * Launch an analysis on the given source files.
 	 *
 	 * @param classFiles
 	 * @param bugReporter
@@ -50,7 +51,6 @@ public class FindBugsLauncher {
 		Plugin loadedPlugin = Plugin.loadCustomPlugin(f.toURL(),project);
 
 		//FindBugs engine
-
 		FindBugs2 engine = new FindBugs2();
 		engine.setNoClassOk(true);
 		engine.setMergeSimilarWarnings(false);
@@ -63,20 +63,21 @@ public class FindBugsLauncher {
 
 		//User preferences set to miss no bugs report
 		UserPreferences prefs = UserPreferences.createDefaultUserPreferences();
-		prefs.getFilterSettings().setMinRank(20);
-		prefs.getFilterSettings().setDisplayFalseWarnings(true);
-		prefs.getFilterSettings().setMinPriority("Low");
+
+        ProjectFilterSettings filter = prefs.getFilterSettings();
+		filter.setMinRank(20);
+		filter.setDisplayFalseWarnings(true);
+		filter.setMinPriority("Low");
+
 		engine.setUserPreferences(prefs);
-
-
+        
         System.out.println("Analyzing...");
 		engine.execute();
-
 	}
 
 	/**
 	 * The minimum requirement to have a "valid" archive plugin is to include
-	 * a findbugs.xml, messages.xml and MANIFEST.MF files. The rest of the
+	 * findbugs.xml, messages.xml and MANIFEST.MF files. The rest of the
 	 * resources are load using the parent ClassLoader (Not requires to be in
 	 * the jar).
 	 * <p>
@@ -90,7 +91,8 @@ public class FindBugsLauncher {
 
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		JarOutputStream jar = new JarOutputStream(buffer);
-        //
+
+        //Add files to the jar stream
 		for(String resource : Arrays.asList("findbugs.xml", "messages.xml", "META-INF/MANIFEST.MF")) {
 			jar.putNextEntry(new ZipEntry(resource));
 			jar.write(IOUtils.toByteArray(cl.getResourceAsStream("metadata/" + resource)));

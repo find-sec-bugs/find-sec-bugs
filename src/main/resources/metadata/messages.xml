@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MessageCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="messagecollection.xsd">
+                   xsi:noNamespaceSchemaLocation="messagecollection.xsd">
 
-	<Plugin>
-		<ShortDescription>Find Security Bugs</ShortDescription>
-		<Details>Highlight part of the source code that should be analyze in
-			a security audit.</Details>
-	</Plugin>
+    <Plugin>
+        <ShortDescription>Find Security Bugs</ShortDescription>
+        <Details>Highlight part of the source code that should be analyze in
+            a security audit.
+        </Details>
+    </Plugin>
 
-	<Detector class="com.h3xstream.findsecbugs.PredictableRandomDetector">
-		<Details>Detect the use of predictable Pseudo Random Generator (PRG).
-		</Details>
-	</Detector>
+    <!-- Predictable Pseudo Random Generator (PRG) -->
+    <Detector class="com.h3xstream.findsecbugs.PredictableRandomDetector">
+        <Details>Detect the use of predictable Pseudo Random Generator (PRG).
+        </Details>
+    </Detector>
 
-	<BugPattern type="SECURITY_PREDICTABLE_RANDOM">
-		<ShortDescription>Predictable Pseudo Random Generator (PRG)
-		</ShortDescription>
-		<LongDescription>Use of {3} is predictable.</LongDescription>
-		<Details>
-<![CDATA[
+    <BugPattern type="PREDICTABLE_RANDOM">
+        <ShortDescription>Predictable Pseudo Random Generator (PRG)</ShortDescription>
+        <LongDescription>Use of {3} is predictable.</LongDescription>
+        <Details>
+            <![CDATA[
 <p>The use of a predictable random value can lead to vulnerability if it is use for:</p>
 <ul>
 <li>CSRF token</li>
@@ -26,8 +27,196 @@
 <li>or any other secret value</li>
 </ul>
 ]]>
-		</Details>
-	</BugPattern>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECPR">Predictable Pseudo Random Generator (PRG)</BugCode>
 
-	<BugCode abbrev="SECPR">Predictable Pseudo Random Generator (PRG)</BugCode>
+    <!-- Servlet parameter -->
+    <Detector class="com.h3xstream.findsecbugs.endpoint.ServletEndpointDetector">
+        <Details>Identify the unfilter value coming from ServletRequest and HttpServletRequest.
+        </Details>
+    </Detector>
+
+    <BugPattern type="SERVLET_PARAMETER">
+        <ShortDescription>Servlet parameter</ShortDescription>
+        <LongDescription>The method {3} return a String value that is control by the client.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>The Servlet can read GET and POST parameters from various method. The value obtain should be consider unsafe.
+In may be needed to sanitize those values when calling sensitive api such as:</p>
+<ul>
+<li>SQL query</li>
+<li>File opening</li>
+<li>Command execution</li>
+<li>HTML construction</li>
+<li>etc...</li>
+</ul>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSP">Request parameter</BugCode>
+
+    <BugPattern type="SERVLET_CONTENT_TYPE">
+        <ShortDescription>Request Content-Type</ShortDescription>
+        <LongDescription>The HTTP header Content-Type can be control by the client.</LongDescription>
+        <Details>
+            <![CDATA[
+The HTTP header Content-Type can be control by the client.
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSCT">Request Content-Type</BugCode>
+
+
+    <BugPattern type="SERVLET_SERVER_NAME">
+        <ShortDescription>Request Hostname (ServerName/Host)</ShortDescription>
+        <LongDescription>The hostname received can often be control by the client.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>The hostname can often be control by the client. Both <i>ServletRequest.getServerName()</i> and
+<i>HttpServletRequest.getHeader("Host")</i> have the same behavior which is to extract the <i>"Host"</i> header.</p>
+<pre>
+GET /test HTTP/1.1
+Host: www.example.com
+[...]
+</pre>
+<p>
+The web container serving your application may redirect request to your application by default. This would allow
+a malicious user to place any value. It is recommended to have no assumption on the value and therefor to proper
+escaping and validation if needed.
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSSN">Request Server Name (Hostname)</BugCode>
+
+
+    <BugPattern type="SERVLET_SESSION_ID">
+        <ShortDescription>Request Session Id</ShortDescription>
+        <LongDescription>To be confirmed...</LongDescription>
+        <Details>
+            <![CDATA[
+To be confirmed...
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSSID">Request Session Id</BugCode>
+
+    <BugPattern type="SERVLET_QUERY_STRING">
+        <ShortDescription>Request Query String</ShortDescription>
+        <LongDescription>The query string can that any value.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>The query string is the concatenation of the GET parameters and values. Parameter others that those intended can
+be passed.</p>
+<p>For the url request <i>/app/servlet.htm?a=1&b=2</i>, the query string extract will be <i>a=1&b=2</i></p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSSQ">Request Query String</BugCode>
+
+
+    <BugPattern type="SERVLET_HEADER">
+        <ShortDescription>Request Header</ShortDescription>
+        <LongDescription>Request header can easily be alter by the client</LongDescription>
+        <Details>
+            <![CDATA[
+<p>Request header can easily be alter by the client. No assumption should be make that the request come from a regular browser</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSSH">Request Header</BugCode>
+
+
+    <BugPattern type="SERVLET_HEADER_REFERER">
+        <ShortDescription>Request Header "Referer"</ShortDescription>
+        <LongDescription>The header "Referer" can be easily spoofed by the client.</LongDescription>
+        <Details>
+            <![CDATA[
+Behavior:
+<ul>
+<li>Any value can be assigned to this header</li>
+<li>The "Referer" will not be present if the request was initiated from another origin that is secure (https).</li>
+</ul>
+<p>
+Recommendations:
+<ul>
+<li>No access control should be base on this header.</li>
+<li>No CSRF protection should be based only on this value (Because it is optional).</li>
+</ul>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSSHR">Request Header "Referer"</BugCode>
+
+    <BugPattern type="SERVLET_HEADER_USER_AGENT">
+        <ShortDescription>Request Header "User-Agent"</ShortDescription>
+        <LongDescription>The header "User-Agent" can be easily spoofed by the client.</LongDescription>
+        <Details>
+            <![CDATA[
+The header "User-Agent" can be easily spoofed by the client. Adopting different behavior base on the User-Agent (for
+crawler UA) is not recommended.
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSSHUA">>Request Header "User-Agent"</BugCode>
+
+    <BugPattern type="SERVLET_HEADER">
+        <ShortDescription>Request Header</ShortDescription>
+        <LongDescription>Request header can easily be alter by the client</LongDescription>
+        <Details>
+            <![CDATA[
+<p>Request header can easily be alter by the client. No assumption should be make that the request come from a regular browser</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSSH">Request Header</BugCode>
+
+
+
+    <!-- Cookie usage -->
+    <Detector class="com.h3xstream.findsecbugs.endpoint.CookieDetector">
+        <Details>Identy direct cookie usage</Details>
+    </Detector>
+
+    <BugPattern type="COOKIE_USAGE">
+        <ShortDescription>Cookie usage</ShortDescription>
+        <LongDescription>Cookie value can be change by the client.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>The information store in the cookie should not be sensitive or related to the session. In most case, session
+variables should be used. see HttpSession (HttpServletRequest.getSession())</p>
+<p>Cookies can be use for information that need live longer than the session.</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECCU">Cookie usage</BugCode>
+
+    <!-- Path traversal -->
+    <Detector class="com.h3xstream.findsecbugs.PathTraversalDetector">
+        <Details>Identify the different access to the filesystem that takes a path as parameter.</Details>
+    </Detector>
+
+    <BugPattern type="PATH_TRAVERSAL_IN">
+        <ShortDescription>Path traversal (read file)</ShortDescription>
+        <LongDescription>An instance of {3} is created to read a file.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>The class {3} is use to open a file handle using a <b>dynamic</b> parameter.</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECPTI">Path traversal to read file</BugCode>
+
+    <BugPattern type="PATH_TRAVERSAL_OUT">
+        <ShortDescription>Path traversal (write file)</ShortDescription>
+        <LongDescription>An instance of {3} is created to write a file.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>The class {3} is use to open a file handle using a <b>dynamic</b> parameter.</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECPTO">Path traversal to write file</BugCode>
+
 </MessageCollection>

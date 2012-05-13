@@ -1,7 +1,7 @@
-package com.h3xstream.findsecbugs.testcode;
+package testcode;
+
 import java.security.SecureRandom;
 import java.util.Random;
-
 
 public class InsecureRandom {
 

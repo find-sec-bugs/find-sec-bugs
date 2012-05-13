@@ -9,42 +9,65 @@ import edu.umd.cs.findbugs.classfile.ClassDescriptor;
 
 public class EasyBugReporter extends AbstractBugReporter {
 
-	BugCollection bugCollection = new SortedBugCollection();
-	
-	
-	public EasyBugReporter() {
-		setPriorityThreshold(20);
-	}
-	
-	@Override
-	public void finish() {
-		
-	}
+    BugCollection bugCollection = new SortedBugCollection();
 
-	@Override
-	public BugCollection getBugCollection() {
-		return bugCollection;
-	}
+    private static int bugInstanceCount;
 
-	@Override
-	public void observeClass(ClassDescriptor classDescriptor) {
-		
-	}
-	
-	@Override
-	public void doReportBug(BugInstance bugInstance) {
-		System.out.println(bugInstance.getMessage());
-		bugCollection.add(bugInstance);
-	}
 
-	@Override
-	public void reportAnalysisError(AnalysisError error) {
-		
-	}
+    public EasyBugReporter() {
+        setPriorityThreshold(20);
+    }
 
-	@Override
-	public void reportMissingClass(String string) {
-		
-	}
+    @Override
+    public void finish() {
+
+    }
+
+    @Override
+    public BugCollection getBugCollection() {
+        return bugCollection;
+    }
+
+    @Override
+    public void observeClass(ClassDescriptor classDescriptor) {
+
+    }
+
+    @Override
+    public void doReportBug(BugInstance bugInstance) {
+        StringBuilder bugDetail = new StringBuilder();
+        bugDetail
+                .append("\n------------------------------------------------------")
+                .append("\nNew Bug Instance: [" + ++bugInstanceCount + "]")
+                .append("\n  message=" + bugInstance.getMessage())
+                .append("\n  bugType=" + bugInstance.getBugPattern().getType())
+                .append("  category=" + bugInstance.getCategoryAbbrev());
+        if (bugInstance.getPrimaryClass() != null && bugInstance.getPrimaryMethod() != null &&
+                bugInstance.getPrimarySourceLineAnnotation() != null) {
+            bugDetail
+                    .append("\n  class=" + bugInstance.getPrimaryClass().getClassName())
+                    .append("  method=" + bugInstance.getPrimaryMethod().getMethodName())
+                    .append("  line=" + bugInstance.getPrimarySourceLineAnnotation().getStartLine());
+        }
+        bugDetail
+                .append("\n------------------------------------------------------");
+        System.out.println(bugDetail.toString());
+        bugCollection.add(bugInstance);
+    }
+
+    @Override
+    public void reportAnalysisError(AnalysisError error) {
+        if (error.getException() != null) {
+            System.err.println(error.getException().getMessage());
+            error.getException().printStackTrace(System.err);
+        } else {
+            System.err.println(error.getMessage());
+        }
+    }
+
+    @Override
+    public void reportMissingClass(String className) {
+        System.err.println("Missing class " + className);
+    }
 
 }

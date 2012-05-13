@@ -8,43 +8,38 @@ import org.testng.annotations.Test;
 
 public class PredictableRandomDetectorTest extends BaseDetectorTest {
 
-	
-	@Test
-	public void detectUsePredictableRandom() throws Exception {
+    @Test
+    public void detectUsePredictableRandom() throws Exception {
         //Locate test code
-		String[] files = {
-                getClassFilePath("com/h3xstream/findsecbugs/testcode/InsecureRandom")
+        String[] files = {
+                getClassFilePath("testcode/InsecureRandom")
         };
 
         //Run the analysis
-		EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
         //Assertions
-        verify(reporter,times(2)).doReportBug(
+        verify(reporter, times(2)).doReportBug(
                 bugDefinition()
-                    .bugType("SECURITY_PREDICTABLE_RANDOM")
-                .build()
+                        .bugType("PREDICTABLE_RANDOM")
+                        .build()
         );
         //1rst variation new Random()
-		verify(reporter).doReportBug(
+        verify(reporter).doReportBug(
                 bugDefinition()
-                    .bugType("SECURITY_PREDICTABLE_RANDOM")
-                    .inClass("InsecureRandom")
-                    .inMethod("test1")
-                    .atLine(11)
-                .build()
+                        .bugType("PREDICTABLE_RANDOM")
+                        .inClass("InsecureRandom").inMethod("newRandomObj").atLine(9)
+                        .build()
         );
         //2nd variation Math.random()
         verify(reporter).doReportBug(
                 bugDefinition()
-                    .bugType("SECURITY_PREDICTABLE_RANDOM")
-                    .inClass("InsecureRandom")
-                    .inMethod("test2")
-                    .atLine(16)
-                .build()
+                        .bugType("PREDICTABLE_RANDOM")
+                        .inClass("InsecureRandom").inMethod("mathRandom").atLine(16)
+                        .build()
         );
 
-	}
+    }
 
 }

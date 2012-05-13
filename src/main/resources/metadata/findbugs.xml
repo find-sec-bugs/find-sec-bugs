@@ -1,11 +1,29 @@
 <FindbugsPlugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="findbugsplugin.xsd" 
-	pluginid="com.h3xstream.findsecbugs" 
-	provider="Find Security Bugs" 
-	defaultenabled="false" 
-	website="https://github.com/h3xstream/find-sec-bugs">
+                xsi:noNamespaceSchemaLocation="findbugsplugin.xsd"
+                pluginid="com.h3xstream.findsecbugs"
+                provider="Find Security Bugs"
+                defaultenabled="false"
+                website="https://github.com/h3xstream/find-sec-bugs">
 
-	<Detector class="com.h3xstream.findsecbugs.PredictableRandomDetector" reports="SECURITY_PREDICTABLE_RANDOM" />
-	<BugPattern type="SECURITY_PREDICTABLE_RANDOM" abbrev="SECPR" category="SECURITY" />
+    <Detector class="com.h3xstream.findsecbugs.PredictableRandomDetector" reports="PREDICTABLE_RANDOM"/>
+    <BugPattern type="PREDICTABLE_RANDOM" abbrev="SECPR" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.endpoint.ServletEndpointDetector"
+              reports="SERVLET_PARAMETER,SERVLET_CONTENT_TYPE,SERVLET_SERVER_NAME,SERVLET_SESSION_ID,SERVLET_QUERY_STRING,SERVLET_HEADER,SERVLET_HEADER_REFERER,SERVLET_HEADER_USER_AGENT"/>
+    <BugPattern type="SERVLET_PARAMETER" abbrev="SECSP" category="SECURITY"/>
+    <BugPattern type="SERVLET_CONTENT_TYPE" abbrev="SECSCT" category="SECURITY"/>
+    <BugPattern type="SERVLET_SERVER_NAME" abbrev="SECSSN" category="SECURITY"/>
+    <BugPattern type="SERVLET_SESSION_ID" abbrev="SECSSID" category="SECURITY"/>
+    <BugPattern type="SERVLET_QUERY_STRING" abbrev="SECSSQ" category="SECURITY"/>
+    <BugPattern type="SERVLET_HEADER" abbrev="SECSH" category="SECURITY"/>
+    <BugPattern type="SERVLET_HEADER_REFERER" abbrev="SECSHR" category="SECURITY"/>
+    <BugPattern type="SERVLET_HEADER_USER_AGENT" abbrev="SECSHUA" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.endpoint.CookieDetector" reports="COOKIE_USAGE"/>
+    <BugPattern type="COOKIE_USAGE" abbrev="SECCU" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.PathTraversalDetector" reports="PATH_TRAVERSAL_IN,PATH_TRAVERSAL_OUT"/>
+    <BugPattern type="PATH_TRAVERSAL_IN" abbrev="SECPTI" category="SECURITY"/>
+    <BugPattern type="PATH_TRAVERSAL_OUT" abbrev="SECPTO" category="SECURITY"/>
 
 </FindbugsPlugin>

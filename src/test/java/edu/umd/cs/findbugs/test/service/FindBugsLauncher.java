@@ -4,7 +4,10 @@ import edu.umd.cs.findbugs.*;
 import edu.umd.cs.findbugs.config.ProjectFilterSettings;
 import edu.umd.cs.findbugs.config.UserPreferences;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.annotation.concurrent.NotThreadSafe;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,7 +18,13 @@ import java.util.zip.ZipEntry;
 
 import static org.mockito.Mockito.mock;
 
+@NotThreadSafe
 public class FindBugsLauncher {
+
+    private static final Logger log = LoggerFactory.getLogger(FindBugsLauncher.class);
+
+
+    static Plugin loadedPlugin;
 
     /**
 	 * Launch an analysis on the given source files.
@@ -37,19 +46,19 @@ public class FindBugsLauncher {
 			project.addFile(file);
 		}
 
-		//Initialize the plugin base on the findbugs.xml
-		byte[] archive = buildFakePluginJar();
+        if(loadedPlugin == null) {
+            //Initialize the plugin base on the findbugs.xml
+            byte[] archive = buildFakePluginJar();
 
-        File f = new File(System.getProperty("java.io.tmpdir"),"plugin.jar");
-        System.out.println("Writing "+f.getCanonicalPath());
-        f.deleteOnExit();
-        FileOutputStream out = new FileOutputStream(f);
-        out.write(archive);
-        out.close();
+            File f = new File(System.getProperty("java.io.tmpdir"),"plugin.jar");
+            log.info("Writing "+f.getCanonicalPath());
+            f.deleteOnExit();
+            FileOutputStream out = new FileOutputStream(f);
+            out.write(archive);
+            out.close();
 
-		//URL pluginUrl = urlMockFromInputStream(new ByteArrayInputStream(archive));
-		Plugin loadedPlugin = Plugin.loadCustomPlugin(f.toURL(),project);
-
+            loadedPlugin = Plugin.loadCustomPlugin(f.toURL(),project);
+        }
 		//FindBugs engine
 		FindBugs2 engine = new FindBugs2();
 		engine.setNoClassOk(true);
@@ -57,7 +66,6 @@ public class FindBugsLauncher {
 		engine.setBugReporter(bugReporter);
 		engine.setProject(project);
 		engine.setProgressCallback(mock(FindBugsProgress.class));
-        
 
 		engine.setDetectorFactoryCollection(DetectorFactoryCollection.instance());
 
@@ -71,7 +79,7 @@ public class FindBugsLauncher {
 
 		engine.setUserPreferences(prefs);
         
-        System.out.println("Analyzing...");
+        log.info("Analyzing... {}",classFiles);
 		engine.execute();
 	}
 

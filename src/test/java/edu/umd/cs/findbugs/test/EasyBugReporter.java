@@ -6,12 +6,16 @@ import edu.umd.cs.findbugs.BugCollection;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.SortedBugCollection;
 import edu.umd.cs.findbugs.classfile.ClassDescriptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EasyBugReporter extends AbstractBugReporter {
 
-    BugCollection bugCollection = new SortedBugCollection();
+    private BugCollection bugCollection = new SortedBugCollection();
 
-    private static int bugInstanceCount;
+    private int bugInstanceCount;
+
+    private static final Logger log = LoggerFactory.getLogger(EasyBugReporter.class);
 
 
     public EasyBugReporter() {
@@ -51,23 +55,22 @@ public class EasyBugReporter extends AbstractBugReporter {
         }
         bugDetail
                 .append("\n------------------------------------------------------");
-        System.out.println(bugDetail.toString());
+        log.info(bugDetail.toString());
         bugCollection.add(bugInstance);
     }
 
     @Override
     public void reportAnalysisError(AnalysisError error) {
         if (error.getException() != null) {
-            System.err.println(error.getException().getMessage());
-            error.getException().printStackTrace(System.err);
+            log.error(error.getException().getMessage(), error.getException());
         } else {
-            System.err.println(error.getMessage());
+            log.error(error.getMessage());
         }
     }
 
     @Override
     public void reportMissingClass(String className) {
-        System.err.println("Missing class " + className);
+        log.warn("Missing class " + className);
     }
 
 }

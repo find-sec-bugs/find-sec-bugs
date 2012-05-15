@@ -6,6 +6,7 @@ test-output
 *.iml
 *.ipr
 *.iws
+.idea/
 #Build directories
 bin
 target

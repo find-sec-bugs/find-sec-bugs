@@ -203,6 +203,11 @@ variables should be used. see HttpSession (HttpServletRequest.getSession())</p>
         <Details>
             <![CDATA[
 <p>The class {3} is use to open a file handle using a <b>dynamic</b> parameter.</p>
+<p>If unfiltered input is pass to this function, content from an arbitrary path could be read.</p>
+<p>
+<b>References</b><br/>
+<a href="https://www.owasp.org/index.php/Path_Traversal">OWASP : Path Traversal</a>
+</p>
 ]]>
         </Details>
     </BugPattern>
@@ -214,9 +219,51 @@ variables should be used. see HttpSession (HttpServletRequest.getSession())</p>
         <Details>
             <![CDATA[
 <p>The class {3} is use to open a file handle using a <b>dynamic</b> parameter.</p>
+<p>If unfiltered input is pass to this function, content could be writen to an arbitrary path.</p>
+<p>
+<b>References</b><br/>
+<a href="https://www.owasp.org/index.php/Command_Injection">OWASP : Command Injection</a>
+</p>
 ]]>
         </Details>
     </BugPattern>
     <BugCode abbrev="SECPTO">Path traversal to write file</BugCode>
 
+
+    <!-- Command injection -->
+    <Detector class="com.h3xstream.findsecbugs.CommandInjectionDetector">
+        <Details>Identify source of command injection</Details>
+    </Detector>
+
+    <BugPattern type="COMMAND_INJECTION">
+        <ShortDescription>Command Injection</ShortDescription>
+        <LongDescription>{3} is used to executed system command.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>{3} is used to executed system command. If unfiltered input is passed to this api, it can lead </p>
+<p>
+<b>References</b><br/>
+<a href="https://www.owasp.org/index.php/Command_Injection">OWASP : Command Injection</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECCI">Command Injection</BugCode>
+
+    <!-- Weak FilenameUtils method -->
+    <Detector class="com.h3xstream.findsecbugs.WeakFilenameUtilsMethodDetector">
+        <Details>Identify the usage of some FilenameUtils methods</Details>
+    </Detector>
+
+    <BugPattern type="WEAK_FILENAMEUTILS">
+        <ShortDescription>FilenameUtils partial filtering</ShortDescription>
+        <LongDescription>FilenameUtils.{3} doesn't filter nullbyte.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>FilenameUtils.{3} doesn't filter nullbyte.</p>
+<p>.</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECWF">FilenameUtils partial filtering</BugCode>
 </MessageCollection>

@@ -26,4 +26,10 @@
     <BugPattern type="PATH_TRAVERSAL_IN" abbrev="SECPTI" category="SECURITY"/>
     <BugPattern type="PATH_TRAVERSAL_OUT" abbrev="SECPTO" category="SECURITY"/>
 
+    <Detector class="com.h3xstream.findsecbugs.CommandInjectionDetector" reports="COMMAND_INJECTION"/>
+    <BugPattern type="COMMAND_INJECTION" abbrev="SECCI" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.WeakFilenameUtilsMethodDetector" reports="WEAK_FILENAMEUTILS"/>
+    <BugPattern type="WEAK_FILENAMEUTILS" abbrev="SECWF" category="SECURITY"/>
+
 </FindbugsPlugin>

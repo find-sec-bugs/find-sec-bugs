@@ -32,4 +32,6 @@
     <Detector class="com.h3xstream.findsecbugs.WeakFilenameUtilsMethodDetector" reports="WEAK_FILENAMEUTILS"/>
     <BugPattern type="WEAK_FILENAMEUTILS" abbrev="SECWF" category="SECURITY"/>
 
+    <Detector class="com.h3xstream.findsecbugs.WeakTrustManagerDetector" reports="WEAK_TRUSTMANAGER"/>
+    <BugPattern type="WEAK_TRUST_MANAGER" abbrev="SECWTM" category="SECURITY"/>
 </FindbugsPlugin>

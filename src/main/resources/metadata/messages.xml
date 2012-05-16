@@ -257,13 +257,30 @@ variables should be used. see HttpSession (HttpServletRequest.getSession())</p>
 
     <BugPattern type="WEAK_FILENAMEUTILS">
         <ShortDescription>FilenameUtils partial filtering</ShortDescription>
-        <LongDescription>FilenameUtils.{3} doesn't filter nullbyte.</LongDescription>
+        <LongDescription>FilenameUtils.{3} doesn't filter NULL byte.</LongDescription>
         <Details>
             <![CDATA[
 <p>FilenameUtils.{3} doesn't filter nullbyte.</p>
-<p>.</p>
+<p>The risk come from the removal of characters following the NULL byte. This
+removal can occurs with many system API (ie. usage of the File object).</p>
 ]]>
         </Details>
     </BugPattern>
     <BugCode abbrev="SECWF">FilenameUtils partial filtering</BugCode>
+
+
+    <!-- Weak FilenameUtils method -->
+    <Detector class="com.h3xstream.findsecbugs.WeakTrustManagerDetector">
+        <Details>Identify weak TrustManager implementation</Details>
+    </Detector>
+
+    <BugPattern type="WEAK_TRUST_MANAGER">
+        <ShortDescription>Weak TrustManager implementation</ShortDescription>
+        <LongDescription>The implementation of TrustManager is vulnerable to MITM attack.</LongDescription>
+        <Details>
+            <![CDATA[
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECWTM">Identify weak TrustManager implementation</BugCode>
 </MessageCollection>

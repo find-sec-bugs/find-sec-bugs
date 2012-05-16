@@ -40,8 +40,8 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
                 if(classAnn == null) return false;
 
                 String fullName = classAnn.getClassName();
-                String simpleName = fullName.substring(fullName.lastIndexOf("."));
-                criteriaMatches &= fullName.equals(className) || simpleName.equals(simpleName);
+                String simpleName = fullName.substring(fullName.lastIndexOf(".")+1);
+                criteriaMatches &= fullName.equals(className) || simpleName.equals(className);
             }
             if (methodName != null) {
                 MethodAnnotation methodAnn = extractBugAnnotation(bugInstance,MethodAnnotation.class);

@@ -283,4 +283,35 @@ removal can occurs with many system API (ie. usage of the File object).</p>
         </Details>
     </BugPattern>
     <BugCode abbrev="SECWTM">Identify weak TrustManager implementation</BugCode>
+
+    <!-- JAXWS -->
+    <Detector class="com.h3xstream.findsecbugs.endpoint.JaxWsEndpointDetector">
+        <Details>Identify web services endpoint that implements JAX-WS API</Details>
+    </Detector>
+
+    <BugPattern type="JAXWS_ENDPOINT">
+        <ShortDescription>JAX-WS (JSR224) endpoint</ShortDescription>
+        <LongDescription></LongDescription>
+        <Details>
+            <![CDATA[
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECJWS">JAX-WS (JSR224) endpoint</BugCode>
+
+    <!-- JAXRS -->
+    <Detector class="com.h3xstream.findsecbugs.endpoint.JaxRsEndpointDetector">
+        <Details>Identify web services endpoint that implements JAX-RS API</Details>
+    </Detector>
+
+    <BugPattern type="JAXRS_ENDPOINT">
+        <ShortDescription>JAX-RS (JSR311) endpoint</ShortDescription>
+        <LongDescription></LongDescription>
+        <Details>
+            <![CDATA[
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECJRS">JAX-RS (JSR311) endpoint</BugCode>
+
 </MessageCollection>

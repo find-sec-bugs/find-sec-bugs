@@ -26,9 +26,7 @@ import org.apache.bcel.generic.MethodGen;
 public class WeakTrustManagerDetector implements Detector {
 
     private static final boolean DEBUG = false;
-
     private static final String WEAK_TRUST_MANAGER_TYPE = "WEAK_TRUST_MANAGER";
-
     private BugReporter bugReporter;
 
     public WeakTrustManagerDetector(BugReporter bugReporter) {
@@ -60,7 +58,7 @@ public class WeakTrustManagerDetector implements Detector {
 
             if(DEBUG) System.out.println(">>> Method: " + m.getName());
 
-            //checkClientTrusted is not inforce for the moment
+            //The presence of checkClientTrusted is not enforce for the moment
             if (!m.getName().equals("checkServerTrusted") &&
                     !m.getName().equals("getAcceptedIssuers")) {
                 continue;

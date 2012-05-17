@@ -34,4 +34,10 @@
 
     <Detector class="com.h3xstream.findsecbugs.WeakTrustManagerDetector" reports="WEAK_TRUSTMANAGER"/>
     <BugPattern type="WEAK_TRUST_MANAGER" abbrev="SECWTM" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.endpoint.JaxWsEndpointDetector" reports="JAXWS_ENDPOINT"/>
+    <BugPattern type="JAXWS_ENDPOINT" abbrev="SECJWS" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.endpoint.JaxRsEndpointDetector" reports="JAXRS_ENDPOINT"/>
+    <BugPattern type="JAXRS_ENDPOINT" abbrev="SECJRS" category="SECURITY"/>
 </FindbugsPlugin>

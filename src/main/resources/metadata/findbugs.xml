@@ -40,4 +40,10 @@
 
     <Detector class="com.h3xstream.findsecbugs.endpoint.JaxRsEndpointDetector" reports="JAXRS_ENDPOINT"/>
     <BugPattern type="JAXRS_ENDPOINT" abbrev="SECJRS" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.endpoint.TapestryEndpointDetector" reports="TAPESTRY_ENDPOINT"/>
+    <BugPattern type="TAPESTRY_ENDPOINT" abbrev="SECTE" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.endpoint.WicketEndpointDetector" reports="WICKET_ENDPOINT"/>
+    <BugPattern type="WICKET_ENDPOINT" abbrev="SECWE" category="SECURITY"/>
 </FindbugsPlugin>

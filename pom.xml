@@ -90,11 +90,11 @@
 
 
         <dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.6.4</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.6.4</version>
             <scope>test</scope>
-		</dependency>
+        </dependency>
 
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -120,19 +120,32 @@
         </dependency>
 
         <dependency>
-        	<groupId>javax.ws.rs</groupId>
-        	<artifactId>jsr311-api</artifactId>
-        	<version>1.1.1</version>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>1.1.1</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
-        	<groupId>javax.xml</groupId>
-        	<artifactId>jaxws-api</artifactId>
-        	<version>2.0</version>
+            <groupId>javax.xml</groupId>
+            <artifactId>jaxws-api</artifactId>
+            <version>2.0</version>
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+   		    <groupId>org.apache.wicket</groupId>
+   		    <artifactId>wicket-core</artifactId>
+   		    <version>1.5.6</version>
+            <scope>test</scope>
+   		</dependency>
+
+        <dependency>
+            <groupId>org.apache.tapestry</groupId>
+            <artifactId>tapestry-core</artifactId>
+            <version>5.3.3</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

@@ -314,4 +314,57 @@ removal can occurs with many system API (ie. usage of the File object).</p>
     </BugPattern>
     <BugCode abbrev="SECJRS">JAX-RS (JSR311) endpoint</BugCode>
 
+    <!-- Tapestry -->
+    <Detector class="com.h3xstream.findsecbugs.endpoint.TapestryEndpointDetector">
+        <Details>Identify Tapestry "Pages" that serve as input</Details>
+    </Detector>
+
+    <BugPattern type="TAPESTRY_ENDPOINT">
+        <ShortDescription>Tapestry Page</ShortDescription>
+        <LongDescription>{0} is a Tapestry Page</LongDescription>
+        <Details>
+            <![CDATA[
+<p>Tapestry endpoint are discover at the application startup and are requires to be in <i>[base.package.name].pages</i>.
+When a request is received, the GET/POST parameters are mapped to field. The mapping is either done with fieldName:</p>
+<pre><code>
+    [...]
+    protected String input;
+    [...]
+</code></pre>
+<p>or
+the definition of an explicit annotation:
+</p>
+<pre><code>
+    [...]
+    @org.apache.tapestry5.annotations.Parameter
+    protected String parameter1;
+
+    @org.apache.tapestry5.annotations.Component(id = "password")
+    private PasswordField passwordField;
+    [...]
+</code></pre>
+<p>The current page is mapped to the view {0}.tml.</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECTE">Tapestry Page</BugCode>
+
+
+    <!-- Wicket -->
+    <Detector class="com.h3xstream.findsecbugs.endpoint.WicketEndpointDetector">
+        <Details>Identify Wicket "WebPages" that serve as input</Details>
+    </Detector>
+
+    <BugPattern type="WICKET_ENDPOINT">
+        <ShortDescription>Wicket WebPage</ShortDescription>
+        <LongDescription>{0} is a Wicket WebPage</LongDescription>
+        <Details>
+            <![CDATA[
+<p>{0} represent a Wicket WebPage.</p>
+<p>The input are read from a PageParameters instance passed to the constructor.</p>
+<p>The current page is mapped to the view {0}.html.</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECWE">Wicket WebPage</BugCode>
 </MessageCollection>

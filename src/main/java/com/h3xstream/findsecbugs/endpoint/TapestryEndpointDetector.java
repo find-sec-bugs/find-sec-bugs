@@ -26,13 +26,29 @@ public class TapestryEndpointDetector implements Detector {
 
     @Override
     public void visitClassContext(ClassContext classContext) {
+
         JavaClass javaClass = classContext.getJavaClass();
+
+        if(!javaClass.getPackageName().contains(".pages")) {
+            return;
+        }
+
+        //The following some false positive
+        if(javaClass.getPackageName().endsWith(".pages")) {
+            bugReporter.reportBug(new BugInstance(this, TAPESTRY_ENDPOINT_TYPE, LOW_PRIORITY) //
+                    .addClass(javaClass));
+        }
+
+        //The package contains ".pages" and has some references to tapestry
+        // then it must be an endpoint.
+        //The constants pool contains all references that are reused in the bytecode
+        // including full class name and interface name.
         ConstantPool constants = javaClass.getConstantPool();
         for(Constant c : constants.getConstantPool()) {
             if(c instanceof ConstantUtf8) {
                 ConstantUtf8 utf8 = (ConstantUtf8) c;
                 String constantValue = new String(utf8.getBytes());
-                if(constantValue.startsWith("Lorg/apache/tapestry5")) {
+                if(constantValue.startsWith("Lorg/apache/tapestry5/annotations")) {
                     bugReporter.reportBug(new BugInstance(this, TAPESTRY_ENDPOINT_TYPE, LOW_PRIORITY) //
                             .addClass(javaClass));
                     return;
@@ -40,10 +56,7 @@ public class TapestryEndpointDetector implements Detector {
             }
         }
 
-        if(javaClass.getPackageName().endsWith("pages")) {
-            bugReporter.reportBug(new BugInstance(this, TAPESTRY_ENDPOINT_TYPE, LOW_PRIORITY) //
-                    .addClass(javaClass));
-        }
+
 
     }
 

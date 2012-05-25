@@ -1,4 +1,4 @@
-package testcode.pages;
+package testcode.pages.sub;
 
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Persist;

@@ -49,6 +49,24 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--  -->
+            <plugin>
+                <groupId>org.codehaus.groovy.maven</groupId>
+                <artifactId>gmaven-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <id>build-detectors-page</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <source>${pom.basedir}/src/main/script/BuildDetectorsPage.groovy</source>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -134,18 +152,33 @@
         </dependency>
 
         <dependency>
-   		    <groupId>org.apache.wicket</groupId>
-   		    <artifactId>wicket-core</artifactId>
-   		    <version>1.5.6</version>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-core</artifactId>
+            <version>1.5.6</version>
             <scope>test</scope>
-   		</dependency>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.tapestry</groupId>
             <artifactId>tapestry-core</artifactId>
             <version>5.3.3</version>
             <scope>test</scope>
+            <exclusions> <!-- Many transversal dependencies are not needed -->
+                <exclusion>
+                    <groupId>org.apache.tapestry</groupId>
+                    <artifactId>tapestry-ioc</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.antlr</groupId>
+                    <artifactId>antlr-runtime</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.tapestry</groupId>
+                    <artifactId>tapestry-json</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
     </dependencies>
 
 </project>

@@ -104,7 +104,7 @@ To be confirmed...
 
     <BugPattern type="SERVLET_QUERY_STRING">
         <ShortDescription>Request Query String</ShortDescription>
-        <LongDescription>The query string can that any value.</LongDescription>
+        <LongDescription>The query string can be any value.</LongDescription>
         <Details>
             <![CDATA[
 <p>The query string is the concatenation of the GET parameters and values. Parameter others that those intended can
@@ -270,7 +270,7 @@ removal can occurs with many system API (ie. usage of the File object).</p>
 
 
     <!-- Weak FilenameUtils method -->
-    <Detector class="com.h3xstream.findsecbugs.WeakTrustManagerDetector">
+    <Detector class="com.h3xstream.findsecbugs.crypto.WeakTrustManagerDetector">
         <Details>Identify weak TrustManager implementation</Details>
     </Detector>
 
@@ -367,4 +367,22 @@ the definition of an explicit annotation:
         </Details>
     </BugPattern>
     <BugCode abbrev="SECWE">Wicket WebPage</BugCode>
+
+    <!-- Weak Message Digest -->
+    <Detector class="com.h3xstream.findsecbugs.crypto.MessageDigestDetector">
+        <Details>Identify the use of weak MessageDigest that could be replace recommended standards.</Details>
+    </Detector>
+
+    <BugPattern type="WEAK_MESSAGE_DIGEST">
+        <ShortDescription>Weak MessageDigest</ShortDescription>
+        <LongDescription>{3} is not a recommended MessageDigest</LongDescription>
+        <Details>
+            <![CDATA[
+<p>{3} is not a recommended MessageDigest.</p>
+<p>The <a href="http://csrc.nist.gov/groups/ST/toolkit/secure_hashing.html">NIST</a> recommended to use either SHA-1, SHA-224*, SHA-256, SHA-384 or SHA-512.</p>
+<p><small>* SHA-224 algorithm is not provided by <a href="http://docs.oracle.com/javase/6/docs/technotes/guides/security/SunProviders.html#SUNProvider"> SUN provider.</a></small></p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECWMD">Weak MessageDigest</BugCode>
 </MessageCollection>

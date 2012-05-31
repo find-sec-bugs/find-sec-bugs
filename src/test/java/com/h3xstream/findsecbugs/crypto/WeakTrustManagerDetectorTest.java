@@ -1,4 +1,4 @@
-package com.h3xstream.findsecbugs;
+package com.h3xstream.findsecbugs.crypto;
 
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.test.BaseDetectorTest;

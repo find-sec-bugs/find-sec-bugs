@@ -32,7 +32,7 @@
     <Detector class="com.h3xstream.findsecbugs.WeakFilenameUtilsMethodDetector" reports="WEAK_FILENAMEUTILS"/>
     <BugPattern type="WEAK_FILENAMEUTILS" abbrev="SECWF" category="SECURITY"/>
 
-    <Detector class="com.h3xstream.findsecbugs.WeakTrustManagerDetector" reports="WEAK_TRUSTMANAGER"/>
+    <Detector class="com.h3xstream.findsecbugs.crypto.WeakTrustManagerDetector" reports="WEAK_TRUSTMANAGER"/>
     <BugPattern type="WEAK_TRUST_MANAGER" abbrev="SECWTM" category="SECURITY"/>
 
     <Detector class="com.h3xstream.findsecbugs.endpoint.JaxWsEndpointDetector" reports="JAXWS_ENDPOINT"/>
@@ -46,4 +46,8 @@
 
     <Detector class="com.h3xstream.findsecbugs.endpoint.WicketEndpointDetector" reports="WICKET_ENDPOINT"/>
     <BugPattern type="WICKET_ENDPOINT" abbrev="SECWE" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.crypto.MessageDigestDetector" reports="WEAK_MESSAGE_DIGEST"/>
+    <BugPattern type="WEAK_MESSAGE_DIGEST" abbrev="SECWMD" category="SECURITY"/>
+
 </FindbugsPlugin>

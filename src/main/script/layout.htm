@@ -1,0 +1,74 @@
+<html>
+<head>
+    <title>Find Security Bugs</title>
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+</head>
+<body>
+
+<a href="https://github.com/h3xstream/find-sec-bugs"><img
+        style="position: fixed; top: 0; left: 0; border: 0;z-index:100;"
+        src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png" alt="Fork me on GitHub"></a>
+
+<div class="container">
+    <div class="left_column">
+
+        <a href="https://github.com/h3xstream/find-sec-bugs" class="big_title">Find<br/>Security<br/>Bugs</a>
+        <br/><br/><br/>
+
+
+        <a href="#about" class="menu">./about</a><br/>
+        <a href="#download" class="menu">./download</a><br/>
+        <a href="#bugs" class="menu">./bugs</a><br/>
+        <a href="#integration" class="menu">./integration</a><br/>
+        <a href="#license" class="menu">./license</a><br/>
+
+        <br/><br/>
+    </div>
+
+    <div class="right_column">
+        <div class="main_content">
+
+            <a name="about"><span class="title">./about</span></a>
+
+            <p>
+                ${about}
+            </p>
+
+            <a name="download"><span class="title">./download</span></a>
+
+            <p>
+                <a href="${download_url}" class="download_button">Get the plugin v 0.1</a>
+                <a href="http://findbugs.sourceforge.net/" class="download_button">Get Find Bugs</a>
+            </p>
+
+            <a name="b"><span class="title">./bugs</span></a>
+            <p>
+            ${bugs}
+            </p>
+            <p>
+            <ul id="double">
+                <% bugPatterns.each {b-> print "<li>"+b.title+"</li>"}%>
+            </ul>
+            </p>
+            <a name="integration"><span class="title">./integration</span></a>
+
+            <p>
+            <ul id="double">
+                <li>Eclipse</li>
+                <li>IntelliJ</li>
+                <li>Jenkins</li>
+            </ul>
+            </p>
+            <a name="license"><span class="title">./license</span></a>
+
+            <p>
+            ${license}
+            </p>
+
+
+        </div>
+    </div>
+    <div stlye="clear:both"></div>
+</div>
+</body>
+</html>

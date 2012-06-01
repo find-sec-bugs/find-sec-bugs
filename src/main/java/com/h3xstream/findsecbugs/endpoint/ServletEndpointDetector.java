@@ -69,15 +69,15 @@ public class ServletEndpointDetector extends OpcodeStackDetector {
                 //Extract the value being push..
                 OpcodeStack.Item top = stack.getStackItem(0);
                 String value = (String) top.getConstant();//Safe see if condition
-                if (value.equals("Host")) {
+                if ("Host".equals(value)) {
 
                     bugReporter.reportBug(new BugInstance(this, SERVER_NAME_TYPE, LOW_PRIORITY) //
                             .addClass(this).addMethod(this).addSourceLine(this));
-                } else if (value.equalsIgnoreCase("Referer")) {
+                } else if ("Referer".equalsIgnoreCase(value)) {
 
                     bugReporter.reportBug(new BugInstance(this, HEADER_REFERER_TYPE, LOW_PRIORITY) //
                             .addClass(this).addMethod(this).addSourceLine(this));
-                } else if (value.equalsIgnoreCase("User-Agent")) {
+                } else if ("User-Agent".equalsIgnoreCase(value)) {
 
                     bugReporter.reportBug(new BugInstance(this, HEADER_USER_AGENT_TYPE, LOW_PRIORITY) //
                             .addClass(this).addMethod(this).addSourceLine(this));

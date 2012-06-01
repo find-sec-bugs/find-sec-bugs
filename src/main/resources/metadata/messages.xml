@@ -291,7 +291,7 @@ removal can occurs with many system API (ie. usage of the File object).</p>
 
     <BugPattern type="JAXWS_ENDPOINT">
         <ShortDescription>JAX-WS (JSR224) endpoint</ShortDescription>
-        <LongDescription></LongDescription>
+        <LongDescription>{0}.{1} is SOAP Web Service endpoint</LongDescription>
         <Details>
             <![CDATA[
 ]]>
@@ -306,7 +306,7 @@ removal can occurs with many system API (ie. usage of the File object).</p>
 
     <BugPattern type="JAXRS_ENDPOINT">
         <ShortDescription>JAX-RS (JSR311) endpoint</ShortDescription>
-        <LongDescription></LongDescription>
+        <LongDescription>{0}.{1} is REST Web Service endpoint</LongDescription>
         <Details>
             <![CDATA[
 ]]>
@@ -369,7 +369,7 @@ the definition of an explicit annotation:
     <BugCode abbrev="SECWE">Wicket WebPage</BugCode>
 
     <!-- Weak Message Digest -->
-    <Detector class="com.h3xstream.findsecbugs.crypto.MessageDigestDetector">
+    <Detector class="com.h3xstream.findsecbugs.crypto.WeakMessageDigestDetector">
         <Details>Identify the use of weak MessageDigest that could be replace recommended standards.</Details>
     </Detector>
 
@@ -385,4 +385,27 @@ the definition of an explicit annotation:
         </Details>
     </BugPattern>
     <BugCode abbrev="SECWMD">Weak MessageDigest</BugCode>
+
+    <!-- FileUpload Filename -->
+    <Detector class="com.h3xstream.findsecbugs.FileUploadFilenameDetector">
+        <Details>The filename given by FileUpload api can be tampered by the client.</Details>
+    </Detector>
+
+    <BugPattern type="FILE_UPLOAD_FILENAME">
+        <ShortDescription>Tainted filename read</ShortDescription>
+        <LongDescription>The filename read can be tampered by the client</LongDescription>
+        <Details>
+            <![CDATA[
+<p>The filename given by FileUpload api can be tampered by the client.</p>
+<p>It can take value such as:</p>
+<ul>
+<li>"../../../config/overide_file"</li>
+<li>shell.jsp\u0000expected.gif</li>
+</ul>
+<p>Therefore it should not be passed directly to filesystem api.</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECFUN">Tainted filename read</BugCode>
+
 </MessageCollection>

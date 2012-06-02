@@ -4,6 +4,11 @@ import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 
+/**
+ * The filename given in FileUpload API is directly taken from the HTTP request.
+ * <p>
+ * The use without proper filtering can lead to Path traversal
+ */
 public class FileUploadFilenameDetector extends OpcodeStackDetector {
     private static String FILE_UPLOAD_FILENAME_TYPE = "FILE_UPLOAD_FILENAME";
 

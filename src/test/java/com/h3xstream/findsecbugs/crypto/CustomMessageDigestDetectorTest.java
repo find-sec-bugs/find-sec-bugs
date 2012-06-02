@@ -8,33 +8,25 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-public class WeakMessageDigestDetectorTest extends BaseDetectorTest {
+public class CustomMessageDigestDetectorTest extends BaseDetectorTest {
 
     @Test
-    public void detectWeakDigest() throws Exception {
+    public void detectCustomDigest() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/crypto/WeakMessageDigest")
+                getClassFilePath("testcode/crypto/CustomMessageDigest")
         };
 
         //Run the analysis
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        //MD2 usage
-        verify(reporter,atLeastOnce()).doReportBug(
-                bugDefinition()
-                        .bugType("WEAK_MESSAGE_DIGEST")
-                        .inClass("WeakMessageDigest").inMethod("main").atLine(16)
-                        .build()
-        );
-
-        //MD5 usage
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("WEAK_MESSAGE_DIGEST")
-                        .inClass("WeakMessageDigest").inMethod("main").atLine(16)
+                        .bugType("CUSTOM_MESSAGE_DIGEST")
+                        .inClass("CustomMessageDigest")
                         .build()
         );
     }
+
 }

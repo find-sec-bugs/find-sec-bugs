@@ -50,6 +50,9 @@
     <Detector class="com.h3xstream.findsecbugs.crypto.WeakMessageDigestDetector" reports="WEAK_MESSAGE_DIGEST"/>
     <BugPattern type="WEAK_MESSAGE_DIGEST" abbrev="SECWMD" category="SECURITY"/>
 
+    <Detector class="com.h3xstream.findsecbugs.crypto.CustomMessageDigestDetector" reports="CUSTOM_MESSAGE_DIGEST"/>
+    <BugPattern type="CUSTOM_MESSAGE_DIGEST" abbrev="SECCMD" category="SECURITY"/>
+
     <Detector class="com.h3xstream.findsecbugs.FileUploadFilenameDetector" reports="FILE_UPLOAD_NAME"/>
     <BugPattern type="FILE_UPLOAD_FILENAME" abbrev="SECFUN" category="SECURITY"/>
 

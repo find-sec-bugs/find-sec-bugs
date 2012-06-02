@@ -5,6 +5,11 @@ import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.OpcodeStack;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 
+/**
+ * Identify the use MD2 and MD5 hashing function and recommend the
+ * use of SHA functions.
+ */
+//TODO: Add org.apache.commons.codec.digest.DigestUtils.md5()
 public class WeakMessageDigestDetector extends OpcodeStackDetector {
 
     private static String WEAK_MESSAGE_DIGEST_TYPE = "WEAK_MESSAGE_DIGEST";

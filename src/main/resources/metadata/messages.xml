@@ -4,8 +4,7 @@
 
     <Plugin>
         <ShortDescription>Find Security Bugs</ShortDescription>
-        <Details>Highlight part of the source code that should be analyze in
-            a security audit.
+        <Details>Highlight part of the source code that should be analyze in a security audit.
         </Details>
     </Plugin>
 
@@ -26,6 +25,7 @@
 <li>password reset token (sent by email)</li>
 <li>or any other secret value</li>
 </ul>
+<p>A quick fix would be to replace the instanciation of <b>java.util.Random</b> by <b>java.security.SecureRandom</b>.
 ]]>
         </Details>
     </BugPattern>
@@ -172,8 +172,6 @@ crawler UA) is not recommended.
     </BugPattern>
     <BugCode abbrev="SECSSH">Request Header</BugCode>
 
-
-
     <!-- Cookie usage -->
     <Detector class="com.h3xstream.findsecbugs.endpoint.CookieDetector">
         <Details>Identy direct cookie usage</Details>
@@ -279,6 +277,9 @@ removal can occurs with many system API (ie. usage of the File object).</p>
         <LongDescription>The implementation of TrustManager is vulnerable to MITM attack.</LongDescription>
         <Details>
             <![CDATA[
+<p>Empty TrustManager are generally implemented to connected to host that are not signed by root authorities.</p>
+<p>A TrustManager allowing the specific certificate should be build. Details information for a proper implementation :
+<a href="http://stackoverflow.com/a/6378872/89769">[1]</a> <a href="http://stackoverflow.com/a/5493452/89769">[2]</a></p>
 ]]>
         </Details>
     </BugPattern>
@@ -294,6 +295,13 @@ removal can occurs with many system API (ie. usage of the File object).</p>
         <LongDescription>{0}.{1} is SOAP Web Service endpoint</LongDescription>
         <Details>
             <![CDATA[
+<p>This method is part of a SOAP Web Service.</p>
+<h3>Analysis needed</h3>
+<ul>
+<li>The input should be track for potential vulnerability.</li>
+<li>The authentification (if inforce) should be tested using a web client.</li>
+<li>The communication should ideally be over SSL.</li>
+</ul>
 ]]>
         </Details>
     </BugPattern>
@@ -309,6 +317,16 @@ removal can occurs with many system API (ie. usage of the File object).</p>
         <LongDescription>{0}.{1} is REST Web Service endpoint</LongDescription>
         <Details>
             <![CDATA[
+<p>This method is part of a REST Web Service.</p>
+<h3>Analysis needed</h3>
+<ul>
+<li>The input should be track for potential vulnerability.</li>
+<li>The authentification (if inforce) should be tested using a web client.</li>
+<li>The communication should ideally be over SSL.</li>
+<li>If the method allow include GET/POST, CSRF vulnerability should investigate.<sup>[1]</sup></li>
+</ul>
+<p>
+1. <a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)">OWASP - Cross-Site Request Forgery</a>
 ]]>
         </Details>
     </BugPattern>
@@ -343,7 +361,7 @@ the definition of an explicit annotation:
     private PasswordField passwordField;
     [...]
 </code></pre>
-<p>The current page is mapped to the view {0}.tml.</p>
+<p>The current page is mapped to the view [/package/PageName].tml.</p>
 ]]>
         </Details>
     </BugPattern>
@@ -360,9 +378,9 @@ the definition of an explicit annotation:
         <LongDescription>{0} is a Wicket WebPage</LongDescription>
         <Details>
             <![CDATA[
-<p>{0} represent a Wicket WebPage.</p>
+<p>This class represent a Wicket WebPage.</p>
 <p>The input are read from a PageParameters instance passed to the constructor.</p>
-<p>The current page is mapped to the view {0}.html.</p>
+<p>The current page is mapped to the view [/package/WebPageName].html.</p>
 ]]>
         </Details>
     </BugPattern>
@@ -378,13 +396,31 @@ the definition of an explicit annotation:
         <LongDescription>{3} is not a recommended MessageDigest</LongDescription>
         <Details>
             <![CDATA[
-<p>{3} is not a recommended MessageDigest.</p>
+<p>The algorithm used is not a recommended MessageDigest.</p>
 <p>The <a href="http://csrc.nist.gov/groups/ST/toolkit/secure_hashing.html">NIST</a> recommended to use either SHA-1, SHA-224*, SHA-256, SHA-384 or SHA-512.</p>
 <p><small>* SHA-224 algorithm is not provided by <a href="http://docs.oracle.com/javase/6/docs/technotes/guides/security/SunProviders.html#SUNProvider"> SUN provider.</a></small></p>
 ]]>
         </Details>
     </BugPattern>
     <BugCode abbrev="SECWMD">Weak MessageDigest</BugCode>
+
+    <!-- Custom Message Digest -->
+    <Detector class="com.h3xstream.findsecbugs.crypto.CustomMessageDigestDetector">
+        <Details>Identify the implementation of custom MessageDigest</Details>
+    </Detector>
+
+    <BugPattern type="CUSTOM_MESSAGE_DIGEST">
+        <ShortDescription>Custom MessageDigest</ShortDescription>
+        <LongDescription>{0} is a custom MessageDigest</LongDescription>
+        <Details>
+            <![CDATA[
+<p>Implementing custom MessageDigest is error-prone.</p>
+<p>The <a href="http://csrc.nist.gov/groups/ST/toolkit/secure_hashing.html">NIST</a> recommended to use either SHA-1, SHA-224*, SHA-256, SHA-384 or SHA-512.</p>
+<p><small>* SHA-224 algorithm is not provided by <a href="http://docs.oracle.com/javase/6/docs/technotes/guides/security/SunProviders.html#SUNProvider"> SUN provider.</a></small></p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECCMD">Custom MessageDigest</BugCode>
 
     <!-- FileUpload Filename -->
     <Detector class="com.h3xstream.findsecbugs.FileUploadFilenameDetector">

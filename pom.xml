@@ -49,7 +49,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--  -->
+            <!-- Build HTML page use for GitHub page -->
             <plugin>
                 <groupId>org.codehaus.groovy.maven</groupId>
                 <artifactId>gmaven-plugin</artifactId>
@@ -66,6 +66,20 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <!-- More verbose failure on stdout (for Travis-CI) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.12</version>
+                <configuration>
+                    <properties>
+                        <property>
+                            <name>listener</name>
+                            <value>com.h3xstream.testng.VerboseTestListener</value>
+                        </property>
+                    </properties>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -88,7 +102,7 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>5.14</version>
+            <version>5.14.9</version>
             <scope>test</scope>
         </dependency>
 
@@ -180,9 +194,9 @@
         </dependency>
 
         <dependency>
-        	<groupId>commons-fileupload</groupId>
-        	<artifactId>commons-fileupload</artifactId>
-        	<version>1.2.2</version>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.2.2</version>
             <scope>test</scope>
         </dependency>
 

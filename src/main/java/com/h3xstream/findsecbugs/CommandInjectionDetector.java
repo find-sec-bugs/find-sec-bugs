@@ -1,5 +1,6 @@
 package com.h3xstream.findsecbugs;
 
+import com.h3xstream.findsecbugs.common.StringTracer;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
@@ -22,19 +23,22 @@ public class CommandInjectionDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
-
+        printOpCode(seen);
         if (seen == INVOKEVIRTUAL && getClassConstantOperand().equals("java/lang/Runtime") &&
                 getNameConstantOperand().equals("exec")) {
 
-            bugReporter.reportBug(new BugInstance(this, COMMAND_INJECTION_TYPE, NORMAL_PRIORITY) //
+            if (StringTracer.isVariableString(stack.getStackItem(0))) {
+                bugReporter.reportBug(new BugInstance(this, COMMAND_INJECTION_TYPE, NORMAL_PRIORITY) //
                     .addClass(this).addMethod(this).addSourceLine(this)
                     .addString("Runtime.exec(...)"));
+            }
         } else if (seen == INVOKEVIRTUAL && getClassConstantOperand().equals("java/lang/ProcessBuilder") &&
                 getNameConstantOperand().equals("command")) {
-
-            bugReporter.reportBug(new BugInstance(this, COMMAND_INJECTION_TYPE, NORMAL_PRIORITY) //
+            if (StringTracer.hasVariableString(stack)) {
+                bugReporter.reportBug(new BugInstance(this, COMMAND_INJECTION_TYPE, NORMAL_PRIORITY) //
                     .addClass(this).addMethod(this).addSourceLine(this)
                     .addString("ProcessBuilder.command(...)"));
+            }
         }
 
     }

@@ -56,4 +56,23 @@
     <Detector class="com.h3xstream.findsecbugs.FileUploadFilenameDetector" reports="FILE_UPLOAD_NAME"/>
     <BugPattern type="FILE_UPLOAD_FILENAME" abbrev="SECFUN" category="SECURITY"/>
 
+    <Detector class="com.h3xstream.findsecbugs.ReDosDetector" reports="REDOS"/>
+    <BugPattern type="REDOS" abbrev="SECRD" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.SaxParserXxeDetector" reports="SAX_PARSER_XXE"/>
+    <BugPattern type="SAX_PARSER_XXE" abbrev="SECXXE1" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionJavaxDetector" reports="XPATH_INJECTION"/>
+    <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionApacheXPathApiDetector" reports="XPATH_INJECTION"/>
+    <BugPattern type="XPATH_INJECTION" abbrev="SECXPI" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.endpoint.Struts1EndpointDetector" reports="STRUTS1_ENDPOINT"/>
+    <BugPattern type="STRUTS1_ENDPOINT" abbrev="SECSTR1" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.endpoint.Struts2EndpointDetector" reports="STRUTS2_ENDPOINT"/>
+    <BugPattern type="STRUTS2_ENDPOINT" abbrev="SECSTR2" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.endpoint.SpringMvcEndpointDetector" reports="SPRING_ENDPOINT"/>
+    <BugPattern type="SPRING_ENDPOINT" abbrev="SECSC" category="SECURITY"/>
+
 </FindbugsPlugin>

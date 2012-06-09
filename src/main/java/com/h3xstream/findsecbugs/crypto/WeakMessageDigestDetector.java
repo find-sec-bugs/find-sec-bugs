@@ -29,7 +29,7 @@ public class WeakMessageDigestDetector extends OpcodeStackDetector {
 
             //Extract the value being push..
             OpcodeStack.Item top = stack.getStackItem(0);
-            String algorithm = (String) top.getConstant();
+            String algorithm = (String) top.getConstant(); //Null if the value passed isn't constant
 
             if ("MD2".equals(algorithm) || "MD5".equals(algorithm)) {
                 bugReporter.reportBug(new BugInstance(this, WEAK_MESSAGE_DIGEST_TYPE, NORMAL_PRIORITY) //

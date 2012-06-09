@@ -12,7 +12,7 @@ import static org.mockito.Mockito.verify;
 public class PathTraversalDetectorTest extends BaseDetectorTest {
 
     @Test
-    public void detectUsePredictableRandom() throws Exception {
+    public void detectPathTraversal() throws Exception {
         //Locate test code
         String[] files = {
                 getClassFilePath("testcode/PathTraversal")

@@ -267,7 +267,7 @@ removal can occurs with many system API (ie. usage of the File object).</p>
     <BugCode abbrev="SECWF">FilenameUtils partial filtering</BugCode>
 
 
-    <!-- Weak FilenameUtils method -->
+    <!-- Weak TrustManager -->
     <Detector class="com.h3xstream.findsecbugs.crypto.WeakTrustManagerDetector">
         <Details>Identify weak TrustManager implementation</Details>
     </Detector>
@@ -443,5 +443,101 @@ the definition of an explicit annotation:
         </Details>
     </BugPattern>
     <BugCode abbrev="SECFUN">Tainted filename read</BugCode>
+
+    <!-- ReDOS -->
+    <Detector class="com.h3xstream.findsecbugs.ReDosDetector">
+        <Details>The regular expression can grow exponentially with some input.</Details>
+    </Detector>
+
+    <BugPattern type="REDOS">
+        <ShortDescription>ReDOS</ShortDescription>
+        <LongDescription>The regular expression "{3}" is vulnerable to ReDOS</LongDescription>
+        <Details>
+            <![CDATA[
+<a href="https://www.owasp.org/index.php/Regular_expression_Denial_of_Service_-_ReDoS">OWASP : Regular expression Denial of Service</a>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECRD">ReDOS</BugCode>
+
+
+    <!-- SAXParser XXE -->
+    <Detector class="com.h3xstream.findsecbugs.SaxParserXxeDetector">
+        <Details>The SAXParser usage is vulnerable to XXE</Details>
+    </Detector>
+
+    <BugPattern type="SAX_PARSER_XXE">
+        <ShortDescription>The SAXParser usage is vulnerable to XXE attacks</ShortDescription>
+        <LongDescription>The SAXParser usage is vulnerable to Xml External Entity attacks</LongDescription>
+        <Details>
+            <![CDATA[
+
+<a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=61702260">CERT: IDS10-J. Prevent XML external entity attacks</a>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECXXE1">The SAXParser usage is vulnerable to XXE attacks</BugCode>
+
+    <!-- XPath Injection for Javax -->
+    <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionJavaxDetector">
+        <Details>Find XPath query that use tainted input (javax.xml api)</Details>
+    </Detector>
+
+    <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionApacheXPathApiDetector">
+        <Details>Find XPath query that use tainted input (org.apache.xpath api)</Details>
+    </Detector>
+
+    <BugPattern type="XPATH_INJECTION">
+        <ShortDescription>XPath Injection</ShortDescription>
+        <LongDescription>The use of {3} is vulnerable to injection</LongDescription>
+        <Details>
+            <![CDATA[
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECXPI">XPath Injection</BugCode>
+
+    <!-- Struts1 -->
+    <Detector class="com.h3xstream.findsecbugs.endpoint.Struts1EndpointDetector">
+        <Details>Identify Struts 1 endpoint (also called Action)</Details>
+    </Detector>
+
+    <BugPattern type="STRUTS1_ENDPOINT">
+        <ShortDescription>Struts Action</ShortDescription>
+        <LongDescription>{0} is a Struts 1 endpoint</LongDescription>
+        <Details>
+            <![CDATA[
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSTR1">Struts Action</BugCode>
+
+    <!-- Struts2 -->
+    <Detector class="com.h3xstream.findsecbugs.endpoint.Struts2EndpointDetector">
+        <Details>Identify Struts 2 endpoint</Details>
+    </Detector>
+    <BugPattern type="STRUTS2_ENDPOINT">
+        <ShortDescription>Struts 2 endpoint</ShortDescription>
+        <LongDescription>{0} is a Struts 2 endpoint</LongDescription>
+        <Details>
+            <![CDATA[
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSTR2">Struts Endpoint</BugCode>
+
+    <!-- Spring Controller -->
+    <Detector class="com.h3xstream.findsecbugs.endpoint.SpringMvcEndpointDetector">
+        <Details>Identify Spring Controller (also called Controller)</Details>
+    </Detector>
+    <BugPattern type="SPRING_ENDPOINT">
+        <ShortDescription>Spring endpoint</ShortDescription>
+        <LongDescription>{0} is a Spring controller</LongDescription>
+        <Details>
+            <![CDATA[
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSC">Spring Controller</BugCode>
 
 </MessageCollection>

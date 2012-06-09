@@ -26,18 +26,10 @@ public class CustomMessageDigestDetector implements Detector {
     public void visitClassContext(ClassContext classContext) {
         JavaClass javaClass = classContext.getJavaClass();
 
-        //The class extends X509TrustManager
-        boolean isTrustManager = false;
-        String[] interfaces = javaClass.getInterfaceNames();
-        for (String name : interfaces) {
-            if (name.equals("java.security.MessageDigest")) {
-                isTrustManager = true;
-                break;
-            }
+        if ("java.security.MessageDigest".equals(javaClass.getSuperclassName())) {
+            bugReporter.reportBug(new BugInstance(this, CUSTOM_MESSAGE_DIGEST_TYPE, NORMAL_PRIORITY) //
+                    .addClass(javaClass));
         }
-
-        bugReporter.reportBug(new BugInstance(this, CUSTOM_MESSAGE_DIGEST_TYPE, NORMAL_PRIORITY) //
-                                .addClass(javaClass));
     }
 
     @Override

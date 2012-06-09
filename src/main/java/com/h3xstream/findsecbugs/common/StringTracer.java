@@ -15,11 +15,10 @@ public class StringTracer {
 
     /**
      * @param stack
-     * @return If all the parameters are constant
+     * @return If at least one parameters has a variable string.
      */
     public static boolean hasVariableString(OpcodeStack stack) {
         boolean hasStringParam = false;
-        boolean notConstant = false;
 
         for(int i=0;i<stack.getStackDepth();i++) {
             OpcodeStack.Item item = stack.getStackItem(i);

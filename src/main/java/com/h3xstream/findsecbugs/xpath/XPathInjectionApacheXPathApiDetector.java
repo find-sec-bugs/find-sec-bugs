@@ -13,6 +13,6 @@ public class XPathInjectionApacheXPathApiDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
-        //printOpCode(seen);
+
     }
 }

@@ -7,7 +7,7 @@ import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 
 public class XPathInjectionJavaxDetector extends OpcodeStackDetector {
 
-    public static final String XPATH_INJECTION_TYPE = "XPATH_INJECTION";
+    private static final String XPATH_INJECTION_TYPE = "XPATH_INJECTION";
 
     private BugReporter bugReporter;
 
@@ -17,7 +17,7 @@ public class XPathInjectionJavaxDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
-        //printOpCode(seen);
+
         if (seen == INVOKEINTERFACE && getClassConstantOperand().equals("javax/xml/xpath/XPath")) {
 
             if (getNameConstantOperand().equals("compile")

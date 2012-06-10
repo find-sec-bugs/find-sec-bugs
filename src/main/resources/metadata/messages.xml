@@ -200,7 +200,7 @@ variables should be used. see HttpSession (HttpServletRequest.getSession())</p>
         <LongDescription>An instance of {3} is created to read a file.</LongDescription>
         <Details>
             <![CDATA[
-<p>The class {3} is use to open a file handle using a <b>dynamic</b> parameter.</p>
+<p>The class selected is use to open a file handle using a <b>dynamic</b> parameter.</p>
 <p>If unfiltered input is pass to this function, content from an arbitrary path could be read.</p>
 <p>
 <b>References</b><br/>
@@ -216,7 +216,7 @@ variables should be used. see HttpSession (HttpServletRequest.getSession())</p>
         <LongDescription>An instance of {3} is created to write a file.</LongDescription>
         <Details>
             <![CDATA[
-<p>The class {3} is use to open a file handle using a <b>dynamic</b> parameter.</p>
+<p>The class selected is use to open a file handle using a <b>dynamic</b> parameter.</p>
 <p>If unfiltered input is pass to this function, content could be writen to an arbitrary path.</p>
 <p>
 <b>References</b><br/>
@@ -258,7 +258,7 @@ variables should be used. see HttpSession (HttpServletRequest.getSession())</p>
         <LongDescription>FilenameUtils.{3} doesn't filter NULL byte.</LongDescription>
         <Details>
             <![CDATA[
-<p>FilenameUtils.{3} doesn't filter nullbyte.</p>
+<p>Some FilenameUtils' methods doesn't filter nullbyte.</p>
 <p>The risk come from the removal of characters following the NULL byte. This
 removal can occurs with many system API (ie. usage of the File object).</p>
 ]]>
@@ -296,7 +296,7 @@ removal can occurs with many system API (ie. usage of the File object).</p>
         <Details>
             <![CDATA[
 <p>This method is part of a SOAP Web Service.</p>
-<h3>Analysis needed</h3>
+<b>Analysis needed</b>
 <ul>
 <li>The input should be track for potential vulnerability.</li>
 <li>The authentification (if inforce) should be tested using a web client.</li>
@@ -318,7 +318,7 @@ removal can occurs with many system API (ie. usage of the File object).</p>
         <Details>
             <![CDATA[
 <p>This method is part of a REST Web Service.</p>
-<h3>Analysis needed</h3>
+<b>Analysis needed</b>
 <ul>
 <li>The input should be track for potential vulnerability.</li>
 <li>The authentification (if inforce) should be tested using a web client.</li>
@@ -435,8 +435,8 @@ the definition of an explicit annotation:
 <p>The filename given by FileUpload api can be tampered by the client.</p>
 <p>It can take value such as:</p>
 <ul>
-<li>"../../../config/overide_file"</li>
-<li>shell.jsp\u0000expected.gif</li>
+<li><code>"../../../config/overide_file"</code></li>
+<li><code>shell.jsp\u0000expected.gif</code></li>
 </ul>
 <p>Therefore it should not be passed directly to filesystem api.</p>
 ]]>
@@ -467,16 +467,21 @@ the definition of an explicit annotation:
     </Detector>
 
     <BugPattern type="XXE">
-        <ShortDescription>The XML parsing is vulnerable to XXE attacks</ShortDescription>
+        <ShortDescription>XML parsing vulnerable to XXE attacks</ShortDescription>
         <LongDescription>The usage of {3} is vulnerable to Xml External Entity attacks</LongDescription>
         <Details>
             <![CDATA[
-
+<p>Xml External Entity attacks can occurs when the XML parsers support XML entities and received
+user input as XML content.</p>
+<b>Risk 1: Expose local file content</b>
+<p>...</p>
+<b>Risk 2: Denial of service</b>
+<p>...</p>
 <a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=61702260">CERT: IDS10-J. Prevent XML external entity attacks</a>
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECXXE">The XML parsing is vulnerable to XXE attacks</BugCode>
+    <BugCode abbrev="SECXXE">XML parsing vulnerable to XXE attacks</BugCode>
 
     <!-- XPath Injection for Javax -->
     <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionJavaxDetector">
@@ -492,6 +497,7 @@ the definition of an explicit annotation:
         <LongDescription>The use of {3} is vulnerable to injection</LongDescription>
         <Details>
             <![CDATA[
+
 ]]>
         </Details>
     </BugPattern>
@@ -503,14 +509,17 @@ the definition of an explicit annotation:
     </Detector>
 
     <BugPattern type="STRUTS1_ENDPOINT">
-        <ShortDescription>Struts Action</ShortDescription>
+        <ShortDescription>Struts 1 Action</ShortDescription>
         <LongDescription>{0} is a Struts 1 endpoint</LongDescription>
         <Details>
             <![CDATA[
+<p>This class is Struts Action.</p>
+<p>Once a request is route to this controller, a Form object will be builded that constains
+the HTTP parameters.</p>
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECSTR1">Struts Action</BugCode>
+    <BugCode abbrev="SECSTR1">Struts 1 Action</BugCode>
 
     <!-- Struts2 -->
     <Detector class="com.h3xstream.findsecbugs.endpoint.Struts2EndpointDetector">
@@ -521,10 +530,15 @@ the definition of an explicit annotation:
         <LongDescription>{0} is a Struts 2 endpoint</LongDescription>
         <Details>
             <![CDATA[
+<p>In struts 2, the endpoint are Plain Old Java Object (POJO) which means no Interface/Class are implements/extends.</p>
+<p>When a request is route to its controller (like the selected class). The different HTTP parameters are mapped to setter of
+the class. Therefor all setter of this class should be consider as input even if the form expected to be used doesn't include
+all of them.</p>
+
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECSTR2">Struts Endpoint</BugCode>
+    <BugCode abbrev="SECSTR2">Struts 2 endpoint</BugCode>
 
     <!-- Spring Controller -->
     <Detector class="com.h3xstream.findsecbugs.endpoint.SpringMvcEndpointDetector">
@@ -535,22 +549,10 @@ the definition of an explicit annotation:
         <LongDescription>{0} is a Spring controller</LongDescription>
         <Details>
             <![CDATA[
+This class is a Spring Controller. All method annotated with <code>RequestMapping</code> are reachable remotely.
 ]]>
         </Details>
     </BugPattern>
     <BugCode abbrev="SECSC">Spring Controller</BugCode>
 
-    <!-- XXE -->
-    <Detector class="com.h3xstream.findsecbugs.xxe.SaxParserXxeDetector">
-        <Details>Identify Spring Controller (also called Controller)</Details>
-    </Detector>
-    <BugPattern type="XXE">
-        <ShortDescription>Spring endpoint</ShortDescription>
-        <LongDescription>{0} is a Spring controller</LongDescription>
-        <Details>
-            <![CDATA[
-]]>
-        </Details>
-    </BugPattern>
-    <BugCode abbrev="SECXXE">Spring Controller</BugCode>
 </MessageCollection>

@@ -1,7 +1,7 @@
 <html>
 <head>
     <title>Find Security Bugs</title>
-    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <link rel="stylesheet" type="text/css" href="styles.css"/>
 </head>
 <body>
 
@@ -16,11 +16,16 @@
         <br/><br/><br/>
 
 
-        <a href="#about" class="menu">./about</a><br/>
-        <a href="#download" class="menu">./download</a><br/>
-        <a href="#bugs" class="menu">./bugs</a><br/>
-        <a href="#integration" class="menu">./integration</a><br/>
-        <a href="#license" class="menu">./license</a><br/>
+        <a href="#about" class="menu">/about</a><br/>
+        <a href="#download" class="menu">/download</a><br/>
+        <a href="#bugs" class="menu">/bugs</a><br/>
+        <a href="#detectors" class="menu">/detectors</a><br/>
+        <a href="#integration" class="menu">/integration</a><br/>
+        <a href="#license" class="menu">/license</a><br/>
+
+        <br/><br/>
+        <a href="http://travis-ci.org/h3xstream/find-sec-bugs"><img
+                src="https://secure.travis-ci.org/h3xstream/find-sec-bugs.png?branch=master" alt="Build Status"/></a>
 
         <br/><br/>
     </div>
@@ -28,41 +33,131 @@
     <div class="right_column">
         <div class="main_content">
 
-            <a name="about"><span class="title">./about</span></a>
+            <a name="about"><span class="title">/about</span></a>
 
             <p>
-                ${about}
+                <b>Find Security Bugs</b> is plugin for FindBugs that aim to help security audit on Java web
+                application.
             </p>
 
-            <a name="download"><span class="title">./download</span></a>
+            <a name="download"><span class="title">/download</span></a>
 
             <p>
-                <a href="${download_url}" class="download_button">Get the plugin v 1.0</a>
+                <a href="https://github.com/h3xstream/find-sec-bugs/downloads" class="download_button">Get the plugin v
+                    1.0</a>
                 <a href="http://findbugs.sourceforge.net/" class="download_button">Get Find Bugs</a>
             </p>
 
-            <a name="b"><span class="title">./bugs</span></a>
-            <p>
-            ${bugs}
-            </p>
-            <p>
-            <ul id="double">
-                <% bugPatterns.each {b-> print "<li>"+b.title+"</li>"}%>
-            </ul>
-            </p>
-            <a name="integration"><span class="title">./integration</span></a>
+            <a name="b"><span class="title">/bugs</span></a>
 
             <p>
-            <ul id="double">
-                <li>Eclipse</li>
-                <li>IntelliJ</li>
-                <li>Jenkins</li>
-            </ul>
+                The bug patterns identify by the plugin are not automatically a vulnerability or a defect.
+                It represent sensible points of the application that should be analyse closely.
             </p>
-            <a name="license"><span class="title">./license</span></a>
 
             <p>
-            ${license}
+                Few categories of vulnerability and sensible api cover:
+            <table>
+                <tr>
+                    <td>
+                        <ul>
+                            <li>Endpoints from various framework</li>
+                            <li>Command Injection</li>
+                            <li>XPath Injection</li>
+                            <li>Xml eXternal Entity (XXE)</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>Weak cryptography</li>
+                            <li>Tainted inputs</li>
+                            <li>Predictable random</li>
+                            <li>Specific library weakness</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>XSS in JSP page</li>
+                            <li>SQL/HQL injection</li>
+                            <li>ReDOS</li>
+                            <li>...</li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+            Frameworks support:
+            <table>
+            <tr>
+                <td>
+                    <ul>
+                        <li>Spring MVC</li>
+                        <li>Apache Tapestry 5</li>
+                        <li>Struts 1</li>
+                        <li>Struts 2</li>
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        <li>JaxRS (any implementation)</li>
+                        <li>JaxWS</li>
+                        <li>J2EE classic Web api</li>
+                        <li>Apache Wicket</li>
+                    </ul>
+                </td>
+            </tr>
+            </table>
+            </p>
+
+            <a name="detectors"><span class="title">/detectors</span></a>
+
+            <p>The complete list of detectors that will highlight code sections that are at risk:</p>
+
+            <p>
+                <%
+                print """<table class="bug_list">""";
+
+                bugPatterns.each {b->
+                    print """
+                    <tr>
+                        <th class="bug_title">"""+b.title+"""</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc">"""+b.description+"""</td>
+                    </tr>
+                    """
+                }
+
+                print "</table>";
+                %>
+
+            </p>
+            <a name="integration"><span class="title">/integration</span></a>
+
+            <p>
+                This plugin can be integrate with various development tool.
+                It can be use within <a href="http://findbugs.cs.umd.edu/eclipse/">Eclipse</a>,
+                <a href="http://code.google.com/p/findbugs/wiki/IntellijFindBugsPlugins">IntelliJ</a> and
+                <a href="http://kenai.com/projects/sqe/pages/Home">Netbeans</a> with their respective FindBugs plugin.
+            </p>
+            <p>
+                It can also be use in continuous integration with <a href="https://wiki.jenkins-ci.org/display/JENKINS/FindBugs+Plugin">Jenkins plugin</a>.
+            </p>
+            <a name="license"><span class="title">/license</span></a>
+
+            <p>
+                This software is release under <a href="http://www.gnu.org/licenses/lgpl.html">LGPL</a>.<br/>
+                <br/><a href="http://www.gnu.org/licenses/lgpl.html"><img src="lgplv3.png" alt="LGPL"/></a></comment>
+                <br/>
+                <br/>
+                Summary of the implications :
+            <ul>
+                <li>You can <b>use the plugin</b> to audit any kind of project (open source and proprietary).</li>
+                <li>If you <b>modify the plugin</b>, you are requires to publish the modification.
+                    If you need custom detectors for your proprietary framework, it is suggest to create a separate
+                    plugin to avoid dependency to this plugin's code.
+                </li>
+            </ul>
+
             </p>
 
 

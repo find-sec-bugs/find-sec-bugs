@@ -16,7 +16,7 @@ public class CookieDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
-        //printOpCode(seen);
+
         if (seen == INVOKEVIRTUAL && getClassConstantOperand().equals("javax/servlet/http/Cookie")
             && (getNameConstantOperand().equals("getName") || getNameConstantOperand().equals("getValue") ||
             getNameConstantOperand().equals("getPath"))) {

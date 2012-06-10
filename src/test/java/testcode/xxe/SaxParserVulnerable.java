@@ -13,8 +13,8 @@ import java.io.InputStream;
 
 public class SaxParserVulnerable {
 
-    private static void receiveXMLStream(InputStream inStream,
-                                         DefaultHandler defHandler)
+    private static void receiveXMLStream(final InputStream inStream,
+                                         final DefaultHandler defHandler)
             throws ParserConfigurationException, SAXException, IOException {
         // ...
         SAXParserFactory spf = SAXParserFactory.newInstance();
@@ -26,7 +26,7 @@ public class SaxParserVulnerable {
             SAXException, IOException {
 
         String xmlString = "<?xml version=\"1.0\"?>" +
-                "<!DOCTYPE foo SYSTEM \"C:/test.log\"><test>&foo;</test>"; // Tainted input
+                "<!DOCTYPE foo SYSTEM \"C:/test\"><test>&foo;</test>"; // Tainted input
 
         InputStream is = new ByteArrayInputStream(xmlString.getBytes());
         receiveXMLStream(is, new DefaultHandler());

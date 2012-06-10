@@ -1,5 +1,6 @@
 package com.h3xstream.findsecbugs.crypto;
 
+import com.h3xstream.findsecbugs.common.InterfaceUtils;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Detector;
@@ -38,14 +39,7 @@ public class WeakTrustManagerDetector implements Detector {
         JavaClass javaClass = classContext.getJavaClass();
 
         //The class extends X509TrustManager
-        boolean isTrustManager = false;
-        String[] interfaces = javaClass.getInterfaceNames();
-        for (String name : interfaces) {
-            if (name.equals("javax.net.ssl.X509TrustManager")) {
-                isTrustManager = true;
-                break;
-            }
-        }
+        boolean isTrustManager = InterfaceUtils.classImplements(javaClass,"javax.net.ssl.X509TrustManager");
 
         //Not the target of this detector
         if (!isTrustManager) return;
@@ -56,7 +50,7 @@ public class WeakTrustManagerDetector implements Detector {
         for (Method m : methodList) {
             MethodGen methodGen = classContext.getMethodGen(m);
 
-            if(DEBUG) System.out.println(">>> Method: " + m.getName());
+            if (DEBUG) System.out.println(">>> Method: " + m.getName());
 
             //The presence of checkClientTrusted is not enforce for the moment
             if (!m.getName().equals("checkServerTrusted") &&

@@ -59,8 +59,8 @@
     <Detector class="com.h3xstream.findsecbugs.ReDosDetector" reports="REDOS"/>
     <BugPattern type="REDOS" abbrev="SECRD" category="SECURITY"/>
 
-    <Detector class="com.h3xstream.findsecbugs.SaxParserXxeDetector" reports="SAX_PARSER_XXE"/>
-    <BugPattern type="SAX_PARSER_XXE" abbrev="SECXXE1" category="SECURITY"/>
+    <Detector class="com.h3xstream.findsecbugs.xxe.SaxParserXxeDetector" reports="XXE"/>
+    <BugPattern type="XXE" abbrev="SECXXE" category="SECURITY"/>
 
     <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionJavaxDetector" reports="XPATH_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionApacheXPathApiDetector" reports="XPATH_INJECTION"/>

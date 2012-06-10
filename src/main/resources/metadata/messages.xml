@@ -462,13 +462,13 @@ the definition of an explicit annotation:
 
 
     <!-- SAXParser XXE -->
-    <Detector class="com.h3xstream.findsecbugs.SaxParserXxeDetector">
-        <Details>The SAXParser usage is vulnerable to XXE</Details>
+    <Detector class="com.h3xstream.findsecbugs.xxe.SaxParserXxeDetector">
+        <Details>Identify SAXParser usage vulnerable to XXE</Details>
     </Detector>
 
-    <BugPattern type="SAX_PARSER_XXE">
-        <ShortDescription>The SAXParser usage is vulnerable to XXE attacks</ShortDescription>
-        <LongDescription>The SAXParser usage is vulnerable to Xml External Entity attacks</LongDescription>
+    <BugPattern type="XXE">
+        <ShortDescription>The XML parsing is vulnerable to XXE attacks</ShortDescription>
+        <LongDescription>The usage of {3} is vulnerable to Xml External Entity attacks</LongDescription>
         <Details>
             <![CDATA[
 
@@ -476,7 +476,7 @@ the definition of an explicit annotation:
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECXXE1">The SAXParser usage is vulnerable to XXE attacks</BugCode>
+    <BugCode abbrev="SECXXE">The XML parsing is vulnerable to XXE attacks</BugCode>
 
     <!-- XPath Injection for Javax -->
     <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionJavaxDetector">
@@ -540,4 +540,17 @@ the definition of an explicit annotation:
     </BugPattern>
     <BugCode abbrev="SECSC">Spring Controller</BugCode>
 
+    <!-- XXE -->
+    <Detector class="com.h3xstream.findsecbugs.xxe.SaxParserXxeDetector">
+        <Details>Identify Spring Controller (also called Controller)</Details>
+    </Detector>
+    <BugPattern type="XXE">
+        <ShortDescription>Spring endpoint</ShortDescription>
+        <LongDescription>{0} is a Spring controller</LongDescription>
+        <Details>
+            <![CDATA[
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECXXE">Spring Controller</BugCode>
 </MessageCollection>

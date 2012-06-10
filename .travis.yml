@@ -1,4 +1,4 @@
 language: java
-install: mvn clean test
+install: mvn clean compile
 jdk:
   - oraclejdk7

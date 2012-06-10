@@ -1,7 +1,7 @@
 <html>
 <head>
     <title>Find Security Bugs</title>
-    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <link rel="stylesheet" type="text/css" href="styles.css"/>
 </head>
 <body>
 
@@ -16,11 +16,16 @@
         <br/><br/><br/>
 
 
-        <a href="#about" class="menu">./about</a><br/>
-        <a href="#download" class="menu">./download</a><br/>
-        <a href="#bugs" class="menu">./bugs</a><br/>
-        <a href="#integration" class="menu">./integration</a><br/>
-        <a href="#license" class="menu">./license</a><br/>
+        <a href="#about" class="menu">/about</a><br/>
+        <a href="#download" class="menu">/download</a><br/>
+        <a href="#bugs" class="menu">/bugs</a><br/>
+        <a href="#detectors" class="menu">/detectors</a><br/>
+        <a href="#integration" class="menu">/integration</a><br/>
+        <a href="#license" class="menu">/license</a><br/>
+
+        <br/><br/>
+        <a href="http://travis-ci.org/h3xstream/find-sec-bugs"><img
+                src="https://secure.travis-ci.org/h3xstream/find-sec-bugs.png?branch=master" alt="Build Status"/></a>
 
         <br/><br/>
     </div>
@@ -28,47 +33,433 @@
     <div class="right_column">
         <div class="main_content">
 
-            <a name="about"><span class="title">./about</span></a>
+            <a name="about"><span class="title">/about</span></a>
 
             <p>
-                
-<b>Find Security Bugs</b> is plugin for FindBugs that aim to help security audit on Java web application.
-
+                <b>Find Security Bugs</b> is plugin for FindBugs that aim to help security audit on Java web
+                application.
             </p>
 
-            <a name="download"><span class="title">./download</span></a>
+            <a name="download"><span class="title">/download</span></a>
 
             <p>
-                <a href="https://github.com/h3xstream/find-sec-bugs/downloads" class="download_button">Get the plugin v 0.1</a>
+                <a href="https://github.com/h3xstream/find-sec-bugs/downloads" class="download_button">Get the plugin v
+                    1.0</a>
                 <a href="http://findbugs.sourceforge.net/" class="download_button">Get Find Bugs</a>
             </p>
 
-            <a name="b"><span class="title">./bugs</span></a>
+            <a name="b"><span class="title">/bugs</span></a>
+
             <p>
-            
-The bug patterns identify by the plugin are not automatically a vulnerability or a defect.
-It represent sensible points of the application that should be analyse closely.
+                The bug patterns identify by the plugin are not automatically a vulnerability or a defect.
+                It represent sensible points of the application that should be analyse closely.
+            </p>
+
+            <p>
+                Few categories of vulnerability and sensible api cover:
+            <table>
+                <tr>
+                    <td>
+                        <ul>
+                            <li>Endpoints from various framework</li>
+                            <li>Command Injection</li>
+                            <li>XPath Injection</li>
+                            <li>Xml eXternal Entity (XXE)</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>Weak cryptography</li>
+                            <li>Tainted inputs</li>
+                            <li>Predictable random</li>
+                            <li>Specific library weakness</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>XSS in JSP page</li>
+                            <li>SQL/HQL injection</li>
+                            <li>ReDOS</li>
+                            <li>...</li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+            Frameworks support:
+            <table>
+            <tr>
+                <td>
+                    <ul>
+                        <li>Spring MVC</li>
+                        <li>Apache Tapestry 5</li>
+                        <li>Struts 1</li>
+                        <li>Struts 2</li>
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        <li>JaxRS (any implementation)</li>
+                        <li>JaxWS</li>
+                        <li>J2EE classic Web api</li>
+                        <li>Apache Wicket</li>
+                    </ul>
+                </td>
+            </tr>
+            </table>
+            </p>
+
+            <a name="detectors"><span class="title">/detectors</span></a>
+
+            <p>The complete list of detectors that will highlight code sections that are at risk:</p>
+
+            <p>
+                <table class="bug_list">
+                    <tr>
+                        <th class="bug_title">Predictable Pseudo Random Generator (PRG)</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>The use of a predictable random value can lead to vulnerability if it is use for:</p>
+<ul>
+<li>CSRF token</li>
+<li>password reset token (sent by email)</li>
+<li>or any other secret value</li>
+</ul>
+<p>A quick fix would be to replace the instanciation of <b>java.util.Random</b> by <b>java.security.SecureRandom</b>.</td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Servlet parameter</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>The Servlet can read GET and POST parameters from various method. The value obtain should be consider unsafe.
+In may be needed to sanitize those values when calling sensitive api such as:</p>
+<ul>
+<li>SQL query</li>
+<li>File opening</li>
+<li>Command execution</li>
+<li>HTML construction</li>
+<li>etc...</li>
+</ul></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Request Content-Type</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc">The HTTP header Content-Type can be control by the client.</td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Request Hostname (ServerName/Host)</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>The hostname can often be control by the client. Both <i>ServletRequest.getServerName()</i> and
+<i>HttpServletRequest.getHeader("Host")</i> have the same behavior which is to extract the <i>"Host"</i> header.</p>
+<pre>
+GET /test HTTP/1.1
+Host: www.example.com
+[...]
+</pre>
+<p>
+The web container serving your application may redirect request to your application by default. This would allow
+a malicious user to place any value. It is recommended to have no assumption on the value and therefor to proper
+escaping and validation if needed.
+</p></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Request Session Id</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc">To be confirmed...</td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Request Query String</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>The query string is the concatenation of the GET parameters and values. Parameter others that those intended can
+be passed.</p>
+<p>For the url request <i>/app/servlet.htm?a=1&b=2</i>, the query string extract will be <i>a=1&b=2</i></p></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Request Header</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>Request header can easily be alter by the client. No assumption should be make that the request come from a regular browser</p></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Request Header "Referer"</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc">Behavior:
+<ul>
+<li>Any value can be assigned to this header</li>
+<li>The "Referer" will not be present if the request was initiated from another origin that is secure (https).</li>
+</ul>
+<p>
+Recommendations:
+<ul>
+<li>No access control should be base on this header.</li>
+<li>No CSRF protection should be based only on this value (Because it is optional).</li>
+</ul></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Request Header "User-Agent"</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc">The header "User-Agent" can be easily spoofed by the client. Adopting different behavior base on the User-Agent (for
+crawler UA) is not recommended.</td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Request Header</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>Request header can easily be alter by the client. No assumption should be make that the request come from a regular browser</p></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Cookie usage</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>The information store in the cookie should not be sensitive or related to the session. In most case, session
+variables should be used. see HttpSession (HttpServletRequest.getSession())</p>
+<p>Cookies can be use for information that need live longer than the session.</p></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Path traversal (read file)</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>The class selected is use to open a file handle using a <b>dynamic</b> parameter.</p>
+<p>If unfiltered input is pass to this function, content from an arbitrary path could be read.</p>
+<p>
+<b>References</b><br/>
+<a href="https://www.owasp.org/index.php/Path_Traversal">OWASP : Path Traversal</a>
+</p></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Path traversal (write file)</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>The class selected is use to open a file handle using a <b>dynamic</b> parameter.</p>
+<p>If unfiltered input is pass to this function, content could be writen to an arbitrary path.</p>
+<p>
+<b>References</b><br/>
+<a href="https://www.owasp.org/index.php/Command_Injection">OWASP : Command Injection</a>
+</p></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Command Injection</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>{3} is used to executed system command. If unfiltered input is passed to this api, it can lead </p>
+<p>
+<b>References</b><br/>
+<a href="https://www.owasp.org/index.php/Command_Injection">OWASP : Command Injection</a>
+</p></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">FilenameUtils partial filtering</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>Some FilenameUtils' methods doesn't filter nullbyte.</p>
+<p>The risk come from the removal of characters following the NULL byte. This
+removal can occurs with many system API (ie. usage of the File object).</p></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Weak TrustManager implementation</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>Empty TrustManager are generally implemented to connected to host that are not signed by root authorities.</p>
+<p>A TrustManager allowing the specific certificate should be build. Details information for a proper implementation :
+<a href="http://stackoverflow.com/a/6378872/89769">[1]</a> <a href="http://stackoverflow.com/a/5493452/89769">[2]</a></p></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">JAX-WS (JSR224) endpoint</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>This method is part of a SOAP Web Service.</p>
+<b>Analysis needed</b>
+<ul>
+<li>The input should be track for potential vulnerability.</li>
+<li>The authentification (if inforce) should be tested using a web client.</li>
+<li>The communication should ideally be over SSL.</li>
+</ul></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">JAX-RS (JSR311) endpoint</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>This method is part of a REST Web Service.</p>
+<b>Analysis needed</b>
+<ul>
+<li>The input should be track for potential vulnerability.</li>
+<li>The authentification (if inforce) should be tested using a web client.</li>
+<li>The communication should ideally be over SSL.</li>
+<li>If the method allow include GET/POST, CSRF vulnerability should investigate.<sup>[1]</sup></li>
+</ul>
+<p>
+1. <a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)">OWASP - Cross-Site Request Forgery</a></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Tapestry Page</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>Tapestry endpoint are discover at the application startup and are requires to be in <i>[base.package.name].pages</i>.
+When a request is received, the GET/POST parameters are mapped to field. The mapping is either done with fieldName:</p>
+<pre><code>
+    [...]
+    protected String input;
+    [...]
+</code></pre>
+<p>or
+the definition of an explicit annotation:
+</p>
+<pre><code>
+    [...]
+    @org.apache.tapestry5.annotations.Parameter
+    protected String parameter1;
+
+    @org.apache.tapestry5.annotations.Component(id = "password")
+    private PasswordField passwordField;
+    [...]
+</code></pre>
+<p>The current page is mapped to the view [/package/PageName].tml.</p></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Wicket WebPage</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>This class represent a Wicket WebPage.</p>
+<p>The input are read from a PageParameters instance passed to the constructor.</p>
+<p>The current page is mapped to the view [/package/WebPageName].html.</p></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Weak MessageDigest</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>The algorithm used is not a recommended MessageDigest.</p>
+<p>The <a href="http://csrc.nist.gov/groups/ST/toolkit/secure_hashing.html">NIST</a> recommended to use either SHA-1, SHA-224*, SHA-256, SHA-384 or SHA-512.</p>
+<p><small>* SHA-224 algorithm is not provided by <a href="http://docs.oracle.com/javase/6/docs/technotes/guides/security/SunProviders.html#SUNProvider"> SUN provider.</a></small></p></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Custom MessageDigest</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>Implementing custom MessageDigest is error-prone.</p>
+<p>The <a href="http://csrc.nist.gov/groups/ST/toolkit/secure_hashing.html">NIST</a> recommended to use either SHA-1, SHA-224*, SHA-256, SHA-384 or SHA-512.</p>
+<p><small>* SHA-224 algorithm is not provided by <a href="http://docs.oracle.com/javase/6/docs/technotes/guides/security/SunProviders.html#SUNProvider"> SUN provider.</a></small></p></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Tainted filename read</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>The filename given by FileUpload api can be tampered by the client.</p>
+<p>It can take value such as:</p>
+<ul>
+<li><code>"../../../config/overide_file"</code></li>
+<li><code>shell.jsp\u0000expected.gif</code></li>
+</ul>
+<p>Therefore it should not be passed directly to filesystem api.</p></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">ReDOS</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><a href="https://www.owasp.org/index.php/Regular_expression_Denial_of_Service_-_ReDoS">OWASP : Regular expression Denial of Service</a></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">XML parsing vulnerable to XXE attacks</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>Xml External Entity attacks can occurs when the XML parsers support XML entities and received
+user input as XML content.</p>
+<b>Risk 1: Expose local file content</b>
+<p>...</p>
+<b>Risk 2: Denial of service</b>
+<p>...</p>
+<a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=61702260">CERT: IDS10-J. Prevent XML external entity attacks</a></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">XPath Injection</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Struts 1 Action</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>This class is Struts Action.</p>
+<p>Once a request is route to this controller, a Form object will be builded that constains
+the HTTP parameters.</p></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Struts 2 endpoint</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>In struts 2, the endpoint are Plain Old Java Object (POJO) which means no Interface/Class are implements/extends.</p>
+<p>When a request is route to its controller (like the selected class). The different HTTP parameters are mapped to setter of
+the class. Therefor all setter of this class should be consider as input even if the form expected to be used doesn't include
+all of them.</p></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Spring endpoint</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc">This class is a Spring Controller. All method annotated with <code>RequestMapping</code> are reachable remotely.</td>
+                    </tr>
+                    </table>
 
             </p>
+            <a name="integration"><span class="title">/integration</span></a>
+
             <p>
-            <ul id="double">
-                <li>Predictable Pseudo Random Generator (PRG)</li><li>Servlet parameter</li><li>Request Content-Type</li><li>Request Hostname (ServerName/Host)</li><li>Request Session Id</li><li>Request Query String</li><li>Request Header</li><li>Request Header "Referer"</li><li>Request Header "User-Agent"</li><li>Request Header</li><li>Cookie usage</li><li>Path traversal (read file)</li><li>Path traversal (write file)</li><li>Command Injection</li><li>FilenameUtils partial filtering</li><li>Weak TrustManager implementation</li><li>JAX-WS (JSR224) endpoint</li><li>JAX-RS (JSR311) endpoint</li><li>Tapestry Page</li><li>Wicket WebPage</li><li>Weak MessageDigest</li>
+                This plugin can be integrate with various development tool.
+                It can be use within <a href="http://findbugs.cs.umd.edu/eclipse/">Eclipse</a>,
+                <a href="http://code.google.com/p/findbugs/wiki/IntellijFindBugsPlugins">IntelliJ</a> and
+                <a href="http://kenai.com/projects/sqe/pages/Home">Netbeans</a> with their respective FindBugs plugin.
+            </p>
+            <p>
+                It can also be use in continuous integration with <a href="https://wiki.jenkins-ci.org/display/JENKINS/FindBugs+Plugin">Jenkins plugin</a>.
+            </p>
+            <a name="license"><span class="title">/license</span></a>
+
+            <p>
+                This software is release under <a href="http://www.gnu.org/licenses/lgpl.html">LGPL</a>.<br/>
+                <br/><a href="http://www.gnu.org/licenses/lgpl.html"><img src="lgplv3.png" alt="LGPL"/></a></comment>
+                <br/>
+                <br/>
+                Summary of the implications :
+            <ul>
+                <li>You can <b>use the plugin</b> to audit any kind of project (open source and proprietary).</li>
+                <li>If you <b>modify the plugin</b>, you are requires to publish the modification.
+                    If you need custom detectors for your proprietary framework, it is suggest to create a separate
+                    plugin to avoid dependency to this plugin's code.
+                </li>
             </ul>
-            </p>
-            <a name="integration"><span class="title">./integration</span></a>
-
-            <p>
-            <ul id="double">
-                <li>Eclipse</li>
-                <li>IntelliJ</li>
-                <li>Jenkins</li>
-            </ul>
-            </p>
-            <a name="license"><span class="title">./license</span></a>
-
-            <p>
-            
-This software is release under <a href="http://www.gnu.org/licenses/lgpl.html">LGPL</a>.
 
             </p>
 

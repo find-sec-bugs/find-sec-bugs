@@ -14,7 +14,7 @@ public class ClassFileLocator {
 
         String filename = url.toString();
 
-        final String prefix = "file:/";
+        final String prefix = "file:";
         if(filename.startsWith(prefix)) {
             filename = filename.substring(prefix.length());
         }

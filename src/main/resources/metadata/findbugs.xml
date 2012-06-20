@@ -75,4 +75,9 @@
     <Detector class="com.h3xstream.findsecbugs.endpoint.SpringMvcEndpointDetector" reports="SPRING_ENDPOINT"/>
     <BugPattern type="SPRING_ENDPOINT" abbrev="SECSC" category="SECURITY"/>
 
+    <Detector class="com.h3xstream.findsecbugs.sql.HibernateInjectionDetector" reports="SQL_INJECTION"/>
+    <Detector class="com.h3xstream.findsecbugs.sql.JpaInjectionDetector" reports="SQL_INJECTION"/>
+    <Detector class="com.h3xstream.findsecbugs.sql.JdoInjectionDetector" reports="SQL_INJECTION"/>
+    <BugPattern type="SQL_INJECTION" abbrev="SECSQLI" category="SECURITY"/>
+
 </FindbugsPlugin>

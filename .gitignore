@@ -2,14 +2,13 @@
 .classpath
 .project
 test-output
+
 #IntelliJ
 *.iml
 *.ipr
 *.iws
 .idea/
+
 #Build directories
 bin
 target
-#Temporary
-backup
-lib

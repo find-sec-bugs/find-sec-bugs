@@ -555,4 +555,27 @@ This class is a Spring Controller. All method annotated with <code>RequestMappin
     </BugPattern>
     <BugCode abbrev="SECSC">Spring Controller</BugCode>
 
+    <!-- Sql Injection -->
+    <Detector class="com.h3xstream.findsecbugs.sql.HibernateInjectionDetector">
+        <Details>Identify SQL injection on hibernate API</Details>
+    </Detector>
+
+    <Detector class="com.h3xstream.findsecbugs.sql.JpaInjectionDetector">
+        <Details>Identify SQL injection on JPA API</Details>
+    </Detector>
+
+    <Detector class="com.h3xstream.findsecbugs.sql.JdoInjectionDetector">
+        <Details>Identify SQL injection on JDO API</Details>
+    </Detector>
+
+    <BugPattern type="SQL_INJECTION">
+        <ShortDescription>SQL Injection</ShortDescription>
+        <LongDescription>The query is vulnerable SQL injection</LongDescription>
+        <Details>
+            <![CDATA[
+
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSQLI">SQL Injection</BugCode>
 </MessageCollection>

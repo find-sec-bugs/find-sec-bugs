@@ -1,0 +1,37 @@
+package testcode.sqli;
+
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
+
+public class HibernateSql {
+
+    public void testQueries(SessionFactory sessionFactory, String input) {
+
+        Session session = sessionFactory.openSession();
+
+        Criteria criteria = session.createCriteria(TestEntity.class);
+
+        //The following would need to be audited
+
+        criteria.add(Restrictions.sqlRestriction("test=1234" + input));
+
+        session.createQuery("select t from TestEntity t " + input);
+
+        session.createSQLQuery("select * from TestEntity " + input);
+
+
+        //OK nothing risky here..
+
+        criteria.add(Restrictions.sqlRestriction("test=1234"));
+
+        final String localSafe = "where id=1337";
+
+        session.createQuery("select t from TestEntity t "+localSafe);
+
+        final String localSql = "select * from TestEntity " + localSafe;
+
+        session.createSQLQuery(localSql);
+    }
+}

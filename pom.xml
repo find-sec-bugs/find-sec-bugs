@@ -268,6 +268,13 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+        	<groupId>javax.jdo</groupId>
+        	<artifactId>jdo2-api</artifactId>
+        	<version>2.3-eb</version>
+        </dependency>
+
+
     </dependencies>
 
 </project>

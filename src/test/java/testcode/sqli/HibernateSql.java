@@ -11,15 +11,15 @@ public class HibernateSql {
 
         Session session = sessionFactory.openSession();
 
-        Criteria criteria = session.createCriteria(TestEntity.class);
+        Criteria criteria = session.createCriteria(UserEntity.class);
 
         //The following would need to be audited
 
         criteria.add(Restrictions.sqlRestriction("test=1234" + input));
 
-        session.createQuery("select t from TestEntity t " + input);
+        session.createQuery("select t from TestEntity t where id = " + input);
 
-        session.createSQLQuery("select * from TestEntity " + input);
+        session.createSQLQuery(String.format("select * from TestEntity where id = %s ", input));
 
 
         //OK nothing risky here..

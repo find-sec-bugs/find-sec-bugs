@@ -69,29 +69,42 @@ public abstract class SqlInjectionDetector implements Detector {
             if (!(ins instanceof InvokeInstruction))
                 continue;
             InvokeInstruction invoke = (InvokeInstruction) ins;
-            if (isAcceptingSqlQuery(invoke, cpg)) {
+
+            int[] injectableArguments = isAcceptingSqlQuery(invoke, cpg);
+            if(injectableArguments.length > 0) {
+
                 ConstantFrame frame = dataflow.getFactAtLocation(location);
                 int numArguments = frame.getNumArguments(invoke, cpg);
-                Constant value = frame.getStackValue(numArguments - 1);
 
-                if (!value.isConstantString()) {
+                for(int arg : injectableArguments) {
+                    Constant value = frame.getStackValue(arg);
+//                    System.out.println(arg + ". " + frame.getStackValue(arg).getConstantString());
+//
+//                    System.out.println(numArguments);
 
-                    Location prev = getPreviousLocation(cfg, location, true);
-                    if (prev == null || !isSafeValue(prev, cpg, cfg)) {
+                    if (!value.isConstantString()) {
 
-                        bugReporter.reportBug(new BugInstance(this, SQL_INJECTION_TYPE, NORMAL_PRIORITY) //
-                                .addClass(javaClass) //
-                                .addMethod(javaClass,method) //
-                                .addSourceLine(classContext, method, location));
-                        //System.out.println("!!!");
+                        Location prev = getPreviousLocation(cfg, location, true);
+                        for(int a=0;a<arg;a++) {
+                            prev = getPreviousLocation(cfg, prev, true);
+                        }
+                        if (prev == null || !isSafeValue(prev, cpg, cfg)) {
+
+                            bugReporter.reportBug(new BugInstance(this, SQL_INJECTION_TYPE, NORMAL_PRIORITY) //
+                                    .addClass(javaClass) //
+                                    .addMethod(javaClass, method) //
+                                    .addSourceLine(classContext, method, location));
+                            //System.out.println("!!!");
+                        }
                     }
                 }
             }
+
         }
 
     }
 
-    protected abstract boolean isAcceptingSqlQuery(InvokeInstruction ins, ConstantPoolGen cpg);
+    protected abstract int[] isAcceptingSqlQuery(InvokeInstruction ins, ConstantPoolGen cpg);
 
     private InstructionHandle getPreviousInstruction(InstructionHandle handle, boolean skipNops) {
         while (handle.getPrev() != null) {
@@ -126,8 +139,9 @@ public abstract class SqlInjectionDetector implements Detector {
             return true;
         if (prevIns instanceof InvokeInstruction) {
             String methodName = ((InvokeInstruction) prevIns).getMethodName(cpg);
-            if (methodName.startsWith("to") && methodName.endsWith("String") && methodName.length() > 8)
+            if (methodName.startsWith("to") && methodName.endsWith("String") && methodName.length() > 8) {
                 return true;
+            }
         }
         if (prevIns instanceof AALOAD) {
 
@@ -136,8 +150,9 @@ public abstract class SqlInjectionDetector implements Detector {
                 Location prev2 = getPreviousLocation(cfg, prev, true);
                 if (prev2 != null && prev2.getHandle().getInstruction() instanceof GETSTATIC) {
                     GETSTATIC getStatic = (GETSTATIC) prev2.getHandle().getInstruction();
-                    if (getStatic.getSignature(cpg).equals("[Ljava/lang/String;"))
+                    if (getStatic.getSignature(cpg).equals("[Ljava/lang/String;")) {
                         return true;
+                    }
                 }
             }
         }

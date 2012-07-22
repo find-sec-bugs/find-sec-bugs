@@ -16,7 +16,8 @@ public class HibernateInjectionDetector extends SqlInjectionDetector {
         super(bugReporter);
     }
 
-    protected boolean isAcceptingSqlQuery(InvokeInstruction ins, ConstantPoolGen cpg) {
+    @Override
+    protected int[] isAcceptingSqlQuery(InvokeInstruction ins, ConstantPoolGen cpg) {
         //ByteCode.printOpCode(ins, cpg);
 
         if (ins instanceof INVOKESTATIC || ins instanceof INVOKEINTERFACE) {
@@ -26,21 +27,21 @@ public class HibernateInjectionDetector extends SqlInjectionDetector {
 
             //Criterion.sqlRestriction
             if (ins instanceof INVOKESTATIC && className.equals("org.hibernate.criterion.Restrictions") && methodName.equals("sqlRestriction") &&
-                    methodSignature.startsWith("(Ljava/lang/String;)Lorg/hibernate/criterion/Criterion;")) {
-                return true;
+                    methodSignature.equals("(Ljava/lang/String;)Lorg/hibernate/criterion/Criterion;")) {
+                return new int[] {0};
             }
             //Session.createQuery
             else if (ins instanceof INVOKEINTERFACE && className.equals("org.hibernate.Session") && methodName.equals("createQuery") &&
-                    methodSignature.startsWith("(Ljava/lang/String;)Lorg/hibernate/Query;")) {
-                return true;
+                    methodSignature.equals("(Ljava/lang/String;)Lorg/hibernate/Query;")) {
+                return new int[] {0};
             }
             //Session.createSQLQuery
             else if (ins instanceof INVOKEINTERFACE && className.equals("org.hibernate.Session") && methodName.equals("createSQLQuery") &&
-                    methodSignature.startsWith("(Ljava/lang/String;)Lorg/hibernate/SQLQuery;")) {
-                return true;
+                    methodSignature.equals("(Ljava/lang/String;)Lorg/hibernate/SQLQuery;")) {
+                return new int[] {0};
             }
         }
 
-        return false;
+        return new int[0];
     }
 }

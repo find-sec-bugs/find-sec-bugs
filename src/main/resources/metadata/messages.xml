@@ -19,13 +19,19 @@
         <LongDescription>Use of {3} is predictable.</LongDescription>
         <Details>
             <![CDATA[
-<p>The use of a predictable random value can lead to vulnerability if it is use for:</p>
+<p>The use of a predictable random value can lead to vulnerability in those contexts:</p>
 <ul>
 <li>CSRF token</li>
 <li>password reset token (sent by email)</li>
 <li>or any other secret value</li>
 </ul>
 <p>A quick fix would be to replace the instanciation of <b>java.util.Random</b> by <b>java.security.SecureRandom</b>.
+
+<p>
+<b>References</b><br/>
+<a href="http://jazzy.id.au/default/2010/09/20/cracking_random_number_generators_part_1.html">Cracking Random Number Generators - Part 1 (http://jazzy.id.au)</a>
+</p>
+
 ]]>
         </Details>
     </BugPattern>
@@ -45,10 +51,10 @@
 <p>The Servlet can read GET and POST parameters from various method. The value obtain should be consider unsafe.
 In may be needed to sanitize those values when calling sensitive api such as:</p>
 <ul>
-<li>SQL query</li>
-<li>File opening</li>
-<li>Command execution</li>
-<li>HTML construction</li>
+<li>SQL query (May lead to SQL injection)</li>
+<li>File opening (May lead to path traversal)</li>
+<li>Command execution (Potential Command injection)</li>
+<li>HTML construction (Potential XSS)</li>
 <li>etc...</li>
 </ul>
 ]]>
@@ -133,11 +139,13 @@ be passed.</p>
         <LongDescription>The header "Referer" can be easily spoofed by the client.</LongDescription>
         <Details>
             <![CDATA[
+<p>
 Behavior:
 <ul>
 <li>Any value can be assigned to this header</li>
 <li>The "Referer" will not be present if the request was initiated from another origin that is secure (https).</li>
 </ul>
+</p>
 <p>
 Recommendations:
 <ul>
@@ -154,8 +162,8 @@ Recommendations:
         <LongDescription>The header "User-Agent" can be easily spoofed by the client.</LongDescription>
         <Details>
             <![CDATA[
-The header "User-Agent" can be easily spoofed by the client. Adopting different behavior base on the User-Agent (for
-crawler UA) is not recommended.
+<p>The header "User-Agent" can be easily spoofed by the client. Adopting different behavior base on the User-Agent (for
+crawler UA) is not recommended.</p>
 ]]>
         </Details>
     </BugPattern>
@@ -204,6 +212,7 @@ variables should be used. see HttpSession (HttpServletRequest.getSession())</p>
 <p>If unfiltered input is pass to this function, content from an arbitrary path could be read.</p>
 <p>
 <b>References</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246952/Path%20Traversal">WASC : Path Traversal</a><br/>
 <a href="https://www.owasp.org/index.php/Path_Traversal">OWASP : Path Traversal</a>
 </p>
 ]]>
@@ -220,7 +229,8 @@ variables should be used. see HttpSession (HttpServletRequest.getSession())</p>
 <p>If unfiltered input is pass to this function, content could be writen to an arbitrary path.</p>
 <p>
 <b>References</b><br/>
-<a href="https://www.owasp.org/index.php/Command_Injection">OWASP : Command Injection</a>
+<a href="http://projects.webappsec.org/w/page/13246952/Path%20Traversal">WASC-33 : Path Traversal</a><br/>
+<a href="https://www.owasp.org/index.php/Path_Traversal">OWASP : Path Traversal</a>
 </p>
 ]]>
         </Details>
@@ -238,7 +248,7 @@ variables should be used. see HttpSession (HttpServletRequest.getSession())</p>
         <LongDescription>{3} is used to executed system command.</LongDescription>
         <Details>
             <![CDATA[
-<p>{3} is used to executed system command. If unfiltered input is passed to this api, it can lead </p>
+<p>The api highlight is used to executed system command. If unfiltered input is passed to this api, it can lead arbitrary command execution.</p>
 <p>
 <b>References</b><br/>
 <a href="https://www.owasp.org/index.php/Command_Injection">OWASP : Command Injection</a>
@@ -261,6 +271,10 @@ variables should be used. see HttpSession (HttpServletRequest.getSession())</p>
 <p>Some FilenameUtils' methods doesn't filter nullbyte.</p>
 <p>The risk come from the removal of characters following the NULL byte. This
 removal can occurs with many system API (ie. usage of the File object).</p>
+<p>
+<b>References</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246949/Null%20Byte%20Injection">WASC-28: Null Byte Injection</a>
+</p>
 ]]>
         </Details>
     </BugPattern>
@@ -399,6 +413,10 @@ the definition of an explicit annotation:
 <p>The algorithm used is not a recommended MessageDigest.</p>
 <p>The <a href="http://csrc.nist.gov/groups/ST/toolkit/secure_hashing.html">NIST</a> recommended to use either SHA-1, SHA-224*, SHA-256, SHA-384 or SHA-512.</p>
 <p><small>* SHA-224 algorithm is not provided by <a href="http://docs.oracle.com/javase/6/docs/technotes/guides/security/SunProviders.html#SUNProvider"> SUN provider.</a></small></p>
+<p>
+<b>References</b><br/>
+<a href="http://csrc.nist.gov/groups/ST/toolkit/secure_hashing.html">NIST Approved Algorithms</a>
+</p>
 ]]>
         </Details>
     </BugPattern>
@@ -454,7 +472,10 @@ the definition of an explicit annotation:
         <LongDescription>The regular expression "{3}" is vulnerable to ReDOS</LongDescription>
         <Details>
             <![CDATA[
+<p>
+<b>References</b><br/>
 <a href="https://www.owasp.org/index.php/Regular_expression_Denial_of_Service_-_ReDoS">OWASP : Regular expression Denial of Service</a>
+</p>
 ]]>
         </Details>
     </BugPattern>
@@ -494,10 +515,13 @@ user input as XML content.</p>
 
     <BugPattern type="XPATH_INJECTION">
         <ShortDescription>XPath Injection</ShortDescription>
-        <LongDescription>The use of {3} is vulnerable to injection</LongDescription>
+        <LongDescription>The use of {3} is vulnerable to XPath injection</LongDescription>
         <Details>
             <![CDATA[
-
+<p>
+<b>References</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-39: XPath Injection</a>
+</p>
 ]]>
         </Details>
     </BugPattern>
@@ -549,7 +573,7 @@ all of them.</p>
         <LongDescription>{0} is a Spring controller</LongDescription>
         <Details>
             <![CDATA[
-This class is a Spring Controller. All method annotated with <code>RequestMapping</code> are reachable remotely.
+<p>This class is a Spring Controller. All method annotated with <code>RequestMapping</code> are reachable remotely.</p>
 ]]>
         </Details>
     </BugPattern>
@@ -573,7 +597,10 @@ This class is a Spring Controller. All method annotated with <code>RequestMappin
         <LongDescription>The query is vulnerable SQL injection</LongDescription>
         <Details>
             <![CDATA[
-
+<p>
+<b>References</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-19: SQL Injection</a>
+</p>
 ]]>
         </Details>
     </BugPattern>

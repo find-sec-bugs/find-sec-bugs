@@ -21,8 +21,10 @@ p {
 
 .big_title, .big_title:link, .big_title:visited {
     color:#8CC84B;
-    font-size:40px;
+    font-size:52px;
     text-decoration: none;
+    font-family: "Squada One","Courier New", Courier, monospace;
+
 }
 
 .title {
@@ -32,6 +34,11 @@ p {
     background-color:#868977;
     display:block;
     padding:5px;
+
+    border-top-left-radius: 5px 5px;
+	border-top-right-radius: 5px 5px;
+    border-bottom-left-radius: 5px 5px;
+	border-bottom-right-radius: 5px 5px;
 }
 
 .download_button:link,.download_button:visited {
@@ -69,13 +76,23 @@ p {
     overflow: hidden;
     height: 100%;
 }
-.main_content {
-    margin:10px;
+
+.right_column {
+	margin-top:15px;
     margin-right:20px;
     margin-left:240px;
+}
+.main_content {
+	margin-top:-10px;
+	margin-bottom:20px;
     padding:20px;
     background-color:#46483E;
     border:2px solid #8CC84B;
+
+    border-top-left-radius: 10px 10px;
+	border-top-right-radius: 10px 10px;
+    border-bottom-left-radius: 10px 10px;
+	border-bottom-right-radius: 10px 10px;
 }
 
 

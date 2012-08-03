@@ -50,7 +50,7 @@
                 </executions>
             </plugin>
             <!-- Build HTML page use for GitHub page -->
-            <!-- 
+            <!--
             <plugin>
                 <groupId>org.codehaus.groovy.maven</groupId>
                 <artifactId>gmaven-plugin</artifactId>
@@ -68,7 +68,7 @@
                     </execution>
                 </executions>
             </plugin>
-             -->
+            -->
             <!-- More verbose failure on stdout (for Travis-CI) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

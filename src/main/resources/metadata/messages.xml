@@ -310,12 +310,14 @@ removal can occurs with many system API (ie. usage of the File object).</p>
         <Details>
             <![CDATA[
 <p>This method is part of a SOAP Web Service.</p>
+<p>
 <b>Analysis needed</b>
 <ul>
 <li>The input should be track for potential vulnerability.</li>
 <li>The authentification (if inforce) should be tested using a web client.</li>
 <li>The communication should ideally be over SSL.</li>
 </ul>
+</p>
 ]]>
         </Details>
     </BugPattern>
@@ -332,6 +334,7 @@ removal can occurs with many system API (ie. usage of the File object).</p>
         <Details>
             <![CDATA[
 <p>This method is part of a REST Web Service.</p>
+<p>
 <b>Analysis needed</b>
 <ul>
 <li>The input should be track for potential vulnerability.</li>
@@ -339,6 +342,7 @@ removal can occurs with many system API (ie. usage of the File object).</p>
 <li>The communication should ideally be over SSL.</li>
 <li>If the method allow include GET/POST, CSRF vulnerability should investigate.<sup>[1]</sup></li>
 </ul>
+</p>
 <p>
 1. <a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)">OWASP - Cross-Site Request Forgery</a>
 ]]>
@@ -414,7 +418,7 @@ the definition of an explicit annotation:
 <p>The <a href="http://csrc.nist.gov/groups/ST/toolkit/secure_hashing.html">NIST</a> recommended to use either SHA-1, SHA-224*, SHA-256, SHA-384 or SHA-512.</p>
 <p><small>* SHA-224 algorithm is not provided by <a href="http://docs.oracle.com/javase/6/docs/technotes/guides/security/SunProviders.html#SUNProvider"> SUN provider.</a></small></p>
 <p>
-<b>References</b><br/>
+<b>Reference</b><br/>
 <a href="http://csrc.nist.gov/groups/ST/toolkit/secure_hashing.html">NIST Approved Algorithms</a>
 </p>
 ]]>
@@ -473,7 +477,7 @@ the definition of an explicit annotation:
         <Details>
             <![CDATA[
 <p>
-<b>References</b><br/>
+<b>Reference</b><br/>
 <a href="https://www.owasp.org/index.php/Regular_expression_Denial_of_Service_-_ReDoS">OWASP : Regular expression Denial of Service</a>
 </p>
 ]]>
@@ -519,7 +523,7 @@ user input as XML content.</p>
         <Details>
             <![CDATA[
 <p>
-<b>References</b><br/>
+<b>Reference</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-39: XPath Injection</a>
 </p>
 ]]>
@@ -537,7 +541,7 @@ user input as XML content.</p>
         <LongDescription>{0} is a Struts 1 endpoint</LongDescription>
         <Details>
             <![CDATA[
-<p>This class is Struts Action.</p>
+<p>This class is a Struts Action.</p>
 <p>Once a request is route to this controller, a Form object will be builded that constains
 the HTTP parameters.</p>
 ]]>

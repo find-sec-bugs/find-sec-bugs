@@ -1,8 +1,8 @@
 import groovy.text.SimpleTemplateEngine
 
 //For testing only (stub project.basedir input)
-//project = {}
-//project.basedir = new File(System.getProperty("user.dir"))
+project = {}
+project.basedir = new File(System.getProperty("user.dir"))
 
 println project.basedir
 def outputDirectory = new File(project.basedir , "/target")

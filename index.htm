@@ -61,7 +61,7 @@
             </p>
 
             <p>
-                Vulnerability categories cover:
+                Vulnerability categories covered:
             <table>
                 <tr>
                     <td>
@@ -82,7 +82,7 @@
                     </td>
                     <td>
                         <ul>
-                            <li>XSS in JSP page</li>
+                            <li>XSS in JSP page[1]</li>
                             <li>SQL/HQL injection</li>
                             <li>ReDOS</li>
                             <li>...</li>
@@ -90,7 +90,10 @@
                     </td>
                 </tr>
             </table>
-            Frameworks support:
+            <i>[1] Partially cover by Findbugs <a href="http://findbugs.sourceforge.net/bugDescriptions.html#XSS_REQUEST_PARAMETER_TO_JSP_WRITER">build-in detector</a>.</i></p>
+
+
+            <p>Frameworks support:
             <table>
             <tr>
                 <td>
@@ -298,9 +301,22 @@ This removal can occurs with many system API (ie. usage of the File object).</p>
                         <th class="bug_title">Weak TrustManager implementation</th>
                     </tr>
                     <tr>
-                        <td class="bug_desc"><p>Empty TrustManager are generally implemented to connected to host that are not signed by root authorities.</p>
-<p>A TrustManager allowing the specific certificate should be build. Details information for a proper implementation :
-<a href="http://stackoverflow.com/a/6378872/89769">[1]</a> <a href="http://stackoverflow.com/a/5493452/89769">[2]</a></p></td>
+                        <td class="bug_desc"><p>Empty TrustManager implementation are often used to connected easily to a host that is not signed by a root
+<a href="http://en.wikipedia.org/wiki/Certificate_authority">certificate authority</a>. As a consequence, a
+<a href="http://en.wikipedia.org/wiki/Man-in-the-middle_attack">Man-in-the-middle attack</a>
+can occurs since the client will be trusting any given certificate.
+</p>
+
+<p>
+A TrustManager allowing specific certificates (based on a truststore for example) should be built.
+Detail information for a proper implementation :
+<a href="http://stackoverflow.com/a/6378872/89769">[1]</a> <a href="http://stackoverflow.com/a/5493452/89769">[2]</a>
+</p>
+
+<p>
+<b>Reference</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246945/Insufficient%20Transport%20Layer%20Protection">WASC-04: Insufficient Transport Layer Protection</a>
+</p></td>
                     </tr>
                     
                     <tr>

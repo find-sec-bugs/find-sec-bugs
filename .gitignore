@@ -9,6 +9,10 @@ test-output
 *.iws
 .idea/
 
+#Gradle
+.gradle
+
 #Build directories
-bin
-target
+bin/
+build/
+target/

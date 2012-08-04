@@ -274,8 +274,16 @@
         	<groupId>javax.jdo</groupId>
         	<artifactId>jdo2-api</artifactId>
         	<version>2.3-eb</version>
+            <scope>test</scope>
         </dependency>
 
+        <!-- Hazelcast -->
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast</artifactId>
+            <version>1.9.4.8</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 

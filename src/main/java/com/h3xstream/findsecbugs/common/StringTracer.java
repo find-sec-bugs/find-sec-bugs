@@ -4,12 +4,16 @@ import edu.umd.cs.findbugs.OpcodeStack;
 
 public class StringTracer {
 
+	public static boolean isConstantString(OpcodeStack.Item item) {
+		return !isVariableString(item);
+	}
+
     /**
-     * @param param
+     * @param item Stack item (parameter passed to the current function)
      * @return If the given string reference is not a constant
      */
-    public static boolean isVariableString(OpcodeStack.Item param) {
-        String value = (String) param.getConstant();
+    public static boolean isVariableString(OpcodeStack.Item item) {
+        String value = (String) item.getConstant();
         return value == null;
     }
 

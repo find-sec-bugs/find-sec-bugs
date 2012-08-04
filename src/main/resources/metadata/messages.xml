@@ -29,7 +29,8 @@
 
 <p>
 <b>References</b><br/>
-<a href="http://jazzy.id.au/default/2010/09/20/cracking_random_number_generators_part_1.html">Cracking Random Number Generators - Part 1 (http://jazzy.id.au)</a>
+<a href="http://jazzy.id.au/default/2010/09/20/cracking_random_number_generators_part_1.html">Cracking Random Number Generators - Part 1 (http://jazzy.id.au)</a><br/>
+<a href="https://www.securecoding.cert.org/confluence/display/java/MSC02-J.+Generate+strong+random+numbers">CERT: MSC02-J. Generate strong random numbers</a>
 </p>
 
 ]]>
@@ -250,7 +251,7 @@ variables should be used. see HttpSession (HttpServletRequest.getSession())</p>
             <![CDATA[
 <p>The api highlight is used to executed system command. If unfiltered input is passed to this api, it can lead arbitrary command execution.</p>
 <p>
-<b>References</b><br/>
+<b>Reference</b><br/>
 <a href="https://www.owasp.org/index.php/Command_Injection">OWASP : Command Injection</a>
 </p>
 ]]>
@@ -269,10 +270,10 @@ variables should be used. see HttpSession (HttpServletRequest.getSession())</p>
         <Details>
             <![CDATA[
 <p>Some FilenameUtils' methods doesn't filter nullbyte.</p>
-<p>The risk come from the removal of characters following the NULL byte. This
-removal can occurs with many system API (ie. usage of the File object).</p>
+<p>The risk come from the removal of characters following the NULL byte.
+This removal can occurs with many system API (ie. usage of the File object).</p>
 <p>
-<b>References</b><br/>
+<b>Reference</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246949/Null%20Byte%20Injection">WASC-28: Null Byte Injection</a>
 </p>
 ]]>
@@ -291,9 +292,22 @@ removal can occurs with many system API (ie. usage of the File object).</p>
         <LongDescription>The implementation of TrustManager is vulnerable to MITM attack.</LongDescription>
         <Details>
             <![CDATA[
-<p>Empty TrustManager are generally implemented to connected to host that are not signed by root authorities.</p>
-<p>A TrustManager allowing the specific certificate should be build. Details information for a proper implementation :
-<a href="http://stackoverflow.com/a/6378872/89769">[1]</a> <a href="http://stackoverflow.com/a/5493452/89769">[2]</a></p>
+<p>Empty TrustManager implementation are often used to connected easily to a host that is not signed by a root
+<a href="http://en.wikipedia.org/wiki/Certificate_authority">certificate authority</a>. As a consequence, a
+<a href="http://en.wikipedia.org/wiki/Man-in-the-middle_attack">Man-in-the-middle attack</a>
+can occurs since the client will be trusting any given certificate.
+</p>
+
+<p>
+A TrustManager allowing specific certificates (based on a truststore for example) should be built.
+Detail information for a proper implementation :
+<a href="http://stackoverflow.com/a/6378872/89769">[1]</a> <a href="http://stackoverflow.com/a/5493452/89769">[2]</a>
+</p>
+
+<p>
+<b>Reference</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246945/Insufficient%20Transport%20Layer%20Protection">WASC-04: Insufficient Transport Layer Protection</a>
+</p>
 ]]>
         </Details>
     </BugPattern>
@@ -458,9 +472,14 @@ the definition of an explicit annotation:
 <p>It can take value such as:</p>
 <ul>
 <li><code>"../../../config/overide_file"</code></li>
-<li><code>shell.jsp\u0000expected.gif</code></li>
+<li><code>"shell.jsp\u0000expected.gif"</code></li>
 </ul>
-<p>Therefore it should not be passed directly to filesystem api.</p>
+<p>Therefore it should not be passed directly to filesystem api. If acceptable, a new filename should be picked.
+Otherwise, the original filename should be properly escaped.</p>
+<p>
+<b>Reference</b><br/>
+<a href="http://blogs.securiteam.com/index.php/archives/1268">Securiteam: File upload security recommendations</a>
+</p>
 ]]>
         </Details>
     </BugPattern>
@@ -602,11 +621,113 @@ all of them.</p>
         <Details>
             <![CDATA[
 <p>
-<b>References</b><br/>
+<b>Reference</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-19: SQL Injection</a>
 </p>
 ]]>
         </Details>
     </BugPattern>
     <BugCode abbrev="SECSQLI">SQL Injection</BugCode>
+
+    <!-- Bad Hexa -->
+    <Detector class="com.h3xstream.findsecbugs.crypto.BadHexadecimalConversionDetector">
+        <Details>Identify Bad hexadecimal concatenation</Details>
+    </Detector>
+    <BugPattern type="BAD_HEXA_CONVERSION">
+        <ShortDescription>Bad hexadecimal concatenation</ShortDescription>
+        <LongDescription>Identify bad hexadecimal concatenation</LongDescription>
+        <Details>
+<![CDATA[
+<p>When converting a byte array to a string, a conversion mistake can be made if the array is read byte by byte.
+The following sample illustrate the use of Integer.toHexString() which will trim the trailling "0".
+<pre>
+MessageDigest md = MessageDigest.getInstance("SHA-1");
+byte[] resultBytes = md.digest(password.getBytes("UTF-8"));
+
+StringBuilder stringBuilder = new StringBuilder();
+for(byte b :resultBytes) {
+    stringBuilder.append( Integer.toHexString( b & 0xFF ) );
+}
+
+return stringBuilder.toString();
+</pre>
+</p>
+
+<p>
+This mistake can weaken the hashing function use since more collisions are introduce.<br/>
+The values "0x0679" "0x6709" would become "679".
+</p>
+
+<p>
+In this situation, the use of toHexString() should be replace by a String.format() as follow.
+<pre>
+stringBuilder.append( String.format( "%02X", b ) );
+</pre>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECBHC">Bad hexadecimal concatenation</BugCode>
+
+
+    <!-- ECB Mode -->
+    <Detector class="com.h3xstream.findsecbugs.crypto.EcbModeDetector">
+        <Details>ECB mode used</Details>
+    </Detector>
+    <BugPattern type="ECB_MODE">
+        <ShortDescription>ECB mode used</ShortDescription>
+        <LongDescription>The cipher chosen use ECB mode</LongDescription>
+        <Details>
+<![CDATA[
+<p>A CBC mode cipher should be used instead of ECB mode.</p>
+<p>
+<b>References</b><br/>
+<a href="http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Electronic_codebook_.28ECB.29">Wikipedia: Block cipher modes of operation</a><br/>
+<a href="http://csrc.nist.gov/publications/nistpubs/800-38a/sp800-38a.pdf">NIST: Recommendation for Block Cipher Modes of Operation</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECECB">Bad hexadecimal concatenation</BugCode>
+
+    <!-- Hazelcast Symmetric encryption -->
+    <Detector class="com.h3xstream.findsecbugs.crypto.HazelcastSymmetricEncryptionDetector">
+        <Details>Hazelcast Symmetric encryption</Details>
+    </Detector>
+    <BugPattern type="HAZELCAST_SYMMETRIC_ENCRYPTION">
+        <ShortDescription>Hazelcast Symmetric encryption</ShortDescription>
+        <LongDescription>The network communication for Hazelcast are configure to symmetric cipher</LongDescription>
+        <Details>
+<![CDATA[
+<p>The network communication for Hazelcast is configure to a symmetric cipher (probably DES or blowfish).</p>
+<p>Those ciphers alone do not provide integrity or secure authentification.</a>.
+The use of assymetric encryption should privilege.</p>
+<p>
+<b>Reference</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246945/Insufficient%20Transport%20Layer%20Protection">WASC-04 : Insufficient Transport Layer Protection</a><br/>
+<a href="http://www.hazelcast.com/documentation.jsp#Encryption">Hazelcast Documentation : Encryption (see second part)</a><br/>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECHAZ">Bad hexadecimal concatenation</BugCode>
+
+    <!-- Hazelcast Symmetric encryption -->
+    <Detector class="com.h3xstream.findsecbugs.crypto.NullCipherDetector">
+        <Details>Identify the use of NullCipher</Details>
+    </Detector>
+    <BugPattern type="NULL_CIPHER">
+        <ShortDescription>The use of NullCipher might be unwanted</ShortDescription>
+        <LongDescription>The use of NullCipher might be unwanted</LongDescription>
+        <Details>
+<![CDATA[
+<p>
+The NullCipher is rarelly use. It implement the Cipher interface by returning a ciphertext identical to the plaintext.
+In few context including testing, NullCipher can be appropriate.
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECNC">Bad hexadecimal concatenation</BugCode>
+
 </MessageCollection>

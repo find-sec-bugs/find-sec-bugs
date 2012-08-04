@@ -80,4 +80,16 @@
     <Detector class="com.h3xstream.findsecbugs.sql.JdoInjectionDetector" reports="SQL_INJECTION"/>
     <BugPattern type="SQL_INJECTION" abbrev="SECSQLI" category="SECURITY"/>
 
+    <Detector class="com.h3xstream.findsecbugs.crypto.BadHexadecimalConversionDetector" reports="BAD_HEXA_CONVERSION"/>
+    <BugPattern type="BAD_HEXA_CONVERSION" abbrev="SECBHC" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.crypto.EcbModeDetector" reports="ECB_MODE"/>
+    <BugPattern type="ECB_MODE" abbrev="SECECB" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.crypto.HazelcastSymmetricEncryptionDetector" reports="HAZELCAST_SYMMETRIC_ENCRYPTION"/>
+    <BugPattern type="HAZELCAST_SYMMETRIC_ENCRYPTION" abbrev="SECHAZ" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.crypto.NullCipherDetector" reports="NULL_CIPHER"/>
+    <BugPattern type="NULL_CIPHER" abbrev="SECNC" category="SECURITY"/>
+
 </FindbugsPlugin>

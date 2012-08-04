@@ -6,10 +6,17 @@ public class ByteCode {
 
     /**
      * Print the the detail of the given instruction (class, method, etc.)
+     *
      * @param ins Instruction
      * @param cpg Constant Pool
      */
-    public static void printOpCode(InvokeInstruction ins, ConstantPoolGen cpg) {
-        System.out.println(ins.getClass().getSimpleName() + " " + ins.getClassName(cpg).replaceAll("\\.","/") + "." + ins.getMethodName(cpg) + " (" + ins.getSignature(cpg) + ")");
+    public static void printOpCode(Instruction ins, ConstantPoolGen cpg) {
+        if (ins instanceof InvokeInstruction) {
+            InvokeInstruction invokeIns = (InvokeInstruction) ins;
+            System.out.println(ins.getClass().getSimpleName() + " " + invokeIns.getClassName(cpg).replaceAll("\\.", "/") + "." + invokeIns.getMethodName(cpg) + " (" + invokeIns.getSignature(cpg) + ")");
+        } else {
+            System.out.println(ins.getClass().getSimpleName() + " " + ins.toString());
+        }
     }
+
 }

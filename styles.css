@@ -38,10 +38,6 @@ p {
     -webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
     border-radius: 5px;
-
-	-moz-box-shadow:    inset 0 0 10px #CCC;
-    -webkit-box-shadow: inset 0 0 10px #CCC;
-    box-shadow:         inset 0 0 10px #CCC;
 }
 
 .download_button:link,.download_button:visited {

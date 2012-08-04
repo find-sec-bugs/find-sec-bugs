@@ -1,3 +1,4 @@
 language: java
+install: mvn clean
 jdk:
   - oraclejdk7

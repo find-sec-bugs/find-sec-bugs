@@ -603,16 +603,8 @@ all of them.</p>
     <BugCode abbrev="SECSC">Spring Controller</BugCode>
 
     <!-- Sql Injection -->
-    <Detector class="com.h3xstream.findsecbugs.sql.HibernateInjectionDetector">
-        <Details>Identify SQL injection on hibernate API</Details>
-    </Detector>
-
-    <Detector class="com.h3xstream.findsecbugs.sql.JpaInjectionDetector">
-        <Details>Identify SQL injection on JPA API</Details>
-    </Detector>
-
-    <Detector class="com.h3xstream.findsecbugs.sql.JdoInjectionDetector">
-        <Details>Identify SQL injection on JDO API</Details>
+    <Detector class="com.h3xstream.findsecbugs.injection.InjectionDetector">
+        <Details>Identify various kind of Injection in API that accepts strings.</Details>
     </Detector>
 
     <BugPattern type="SQL_INJECTION">

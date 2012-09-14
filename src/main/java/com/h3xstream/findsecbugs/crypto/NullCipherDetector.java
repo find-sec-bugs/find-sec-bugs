@@ -6,7 +6,7 @@ import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 
 public class NullCipherDetector extends OpcodeStackDetector {
 
-    private static String NULL_CIPHER_TYPE = "NULL_CIPHER";
+    private static final String NULL_CIPHER_TYPE = "NULL_CIPHER";
 
     private BugReporter bugReporter;
 

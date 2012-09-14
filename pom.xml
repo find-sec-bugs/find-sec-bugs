@@ -285,6 +285,14 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Bouncy Castle Provider -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk16</artifactId>
+            <version>1.46</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 </project>

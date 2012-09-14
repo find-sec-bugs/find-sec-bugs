@@ -90,4 +90,10 @@
     <Detector class="com.h3xstream.findsecbugs.crypto.NullCipherDetector" reports="NULL_CIPHER"/>
     <BugPattern type="NULL_CIPHER" abbrev="SECNC" category="SECURITY"/>
 
+    <Detector class="com.h3xstream.findsecbugs.crypto.UnencryptedSocketDetector" reports="UNENCRYPTED_SOCKET"/>
+    <BugPattern type="UNENCRYPTED_SOCKET" abbrev="SECUS" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.crypto.StaticIvDetector" reports="STATIC_IV"/>
+    <BugPattern type="STATIC_IV" abbrev="SECSIV" category="SECURITY"/>
+
 </FindbugsPlugin>

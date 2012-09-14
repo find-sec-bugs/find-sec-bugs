@@ -702,9 +702,9 @@ The use of assymetric encryption should privilege.</p>
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECHAZ">Bad hexadecimal concatenation</BugCode>
+    <BugCode abbrev="SECHAZ">Hazelcast Symmetric encryption</BugCode>
 
-    <!-- Hazelcast Symmetric encryption -->
+    <!-- NullCipher's use -->
     <Detector class="com.h3xstream.findsecbugs.crypto.NullCipherDetector">
         <Details>Identify the use of NullCipher</Details>
     </Detector>
@@ -712,7 +712,7 @@ The use of assymetric encryption should privilege.</p>
         <ShortDescription>The use of NullCipher might be unwanted</ShortDescription>
         <LongDescription>The use of NullCipher might be unwanted</LongDescription>
         <Details>
-<![CDATA[
+            <![CDATA[
 <p>
 The NullCipher is rarelly use. It implement the Cipher interface by returning a ciphertext identical to the plaintext.
 In few context including testing, NullCipher can be appropriate.
@@ -722,4 +722,51 @@ In few context including testing, NullCipher can be appropriate.
     </BugPattern>
     <BugCode abbrev="SECNC">Bad hexadecimal concatenation</BugCode>
 
+    <!-- Unencrypted Socket encryption -->
+    <Detector class="com.h3xstream.findsecbugs.crypto.UnencryptedSocketDetector">
+        <Details>Unencrypted socket</Details>
+    </Detector>
+    <BugPattern type="UNENCRYPTED_SOCKET">
+        <ShortDescription>Unencrypted socket</ShortDescription>
+        <LongDescription>Unencrypted socket to {0} (instead of SSLSocket)</LongDescription>
+        <Details>
+<![CDATA[
+<p>
+The communication started will not be encrypted. The traffic could be red by an attacker intercepting the communication.
+</p>
+<p>
+<b>Reference</b><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2010-A9">OWASP : Insufficient Transport Layer Protection</a><br/>
+<a href="http://projects.webappsec.org/w/page/13246945/Insufficient%20Transport%20Layer%20Protection">WASC-04 : Insufficient Transport Layer Protection</a><br/>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECUS"></BugCode>
+
+    <!-- Static Initial -->
+    <Detector class="com.h3xstream.findsecbugs.crypto.StaticIvDetector">
+        <Details></Details>
+    </Detector>
+    <BugPattern type="STATIC_IV">
+        <ShortDescription>Static IV</ShortDescription>
+        <LongDescription>Static IV use to encrypt messages</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+The pupose of the <b>Initialization Vector</b> is to avoid generating the same ciphertext for the same message.
+The IV value should be random and different for every message sent.
+</p>
+<p>
+Also, the IV should not be consider as a secret because it can be sent with the message.
+</p>
+<p>
+<b>Reference</b><br/>
+<a href="http://en.wikipedia.org/wiki/Initialization_vector">Wikipedia: Initialization vector</a><br/>
+<a href="https://defuse.ca/cbcmodeiv.htm">Defuse.ca: Encryption - CBC Mode IV: Secret or Not?</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSIV"></BugCode>
 </MessageCollection>

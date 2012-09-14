@@ -8,7 +8,7 @@ import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
  * http://code.google.com/p/hazelcast/wiki/Encryption
  */
 public class HazelcastSymmetricEncryptionDetector extends OpcodeStackDetector {
-	private static String HAZELCAST_SYMMETRIC_ENCRYPTION_TYPE = "HAZELCAST_SYMMETRIC_ENCRYPTION";
+	private static final String HAZELCAST_SYMMETRIC_ENCRYPTION_TYPE = "HAZELCAST_SYMMETRIC_ENCRYPTION";
 
     private BugReporter bugReporter;
 

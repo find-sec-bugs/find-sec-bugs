@@ -115,6 +115,9 @@ list-style-type:square;
 
 .bug_desc {
      border-top:2px solid #FFFFFF;
+
+     padding-top:40px;
+     padding-bottom:80px;
 }
 
 code {

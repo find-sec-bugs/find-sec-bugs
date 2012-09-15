@@ -21,8 +21,9 @@
 
         <a href="#about" class="menu">/about</a><br/>
         <a href="#download" class="menu">/download</a><br/>
-        <a href="#bugs" class="menu">/bugs</a><br/>
-        <a href="#detectors" class="menu">/detectors</a><br/>
+        <a href="#tutorials" class="menu">/tutorials</a><br/>
+        <a href="#types" class="menu">/types of bugs</a><br/>
+        <a href="#descriptions" class="menu">/bugs descriptions</a><br/>
         <a href="#integration" class="menu">/integration</a><br/>
         <a href="#license" class="menu">/license</a><br/>
 
@@ -52,7 +53,14 @@
                 <a href="http://findbugs.sourceforge.net/" class="download_button">Get Find Bugs</a>
             </p>
 
-            <a name="bugs"><span class="title">/bugs</span></a>
+            <a name="tutorials"><span class="title">/tutorials (soon)</span></a>
+
+            <p>
+                <a href="#">Eclipse Tutorial</a><br/>
+                <a href="#">Jenkins Tutorial</a><br/>
+            </p>
+
+            <a name="types"><span class="title">/types of bugs</span></a>
 
             <p>
                 The bug patterns identified by the plugin are not automatically vulnerabilities or defects.
@@ -116,7 +124,7 @@
             </table>
             </p>
 
-            <a name="detectors"><span class="title">/detectors</span></a>
+            <a name="descriptions"><span class="title">/bugs descriptions</span></a>
 
             <p>The complete list of detectors that will highlight code sections that are at risk:</p>
 
@@ -170,7 +178,7 @@ In may be needed to sanitize those values when calling sensitive api such as:</p
                         <td class="bug_desc"><p>The hostname can often be control by the client. Both <i>ServletRequest.getServerName()</i> and
 <i>HttpServletRequest.getHeader("Host")</i> have the same behavior which is to extract the <i>"Host"</i> header.</p>
 <pre>
-GET /test HTTP/1.1
+GET /testpage HTTP/1.1
 Host: www.example.com
 [...]
 </pre>
@@ -179,13 +187,6 @@ The web container serving your application may redirect request to your applicat
 a malicious user to place any value. It is recommended to have no assumption on the value and therefor to proper
 escaping and validation if needed.
 </p></td>
-                    </tr>
-                    
-                    <tr>
-                        <th class="bug_title">Request Session Id</th>
-                    </tr>
-                    <tr>
-                        <td class="bug_desc">To be confirmed...</td>
                     </tr>
                     
                     <tr>
@@ -563,6 +564,65 @@ The NullCipher is rarelly use. It implement the Cipher interface by returning a 
 In few context including testing, NullCipher can be appropriate.
 </p></td>
                     </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Unencrypted socket</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>
+The communication started will not be encrypted. The traffic could be red by an attacker intercepting the communication.
+</p>
+<p>
+Plain socket (Clear text communication):
+<pre>Socket soc = new Socket("www.google.com",80);</pre>
+</p>
+<p>
+SSL Socket (Secure communication):
+<pre>Socket soc = SSLSocketFactory.getDefault().createSocket("www.google.com", 443);</pre>
+</p>
+
+<p>
+<b>Reference</b><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2010-A9">OWASP : Insufficient Transport Layer Protection</a><br/>
+<a href="http://projects.webappsec.org/w/page/13246945/Insufficient%20Transport%20Layer%20Protection">WASC-04 : Insufficient Transport Layer Protection</a><br/>
+</p></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">DES / DESede usage</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>
+DES and DESede (3DES), previously recommended, are not consider strong ciphers for modern applications. DESede should
+only be use for hardware limitation. Currently, the NIST recommend the usage of AES block cipher.
+</p>
+<p>
+<b>Reference</b><br/>
+<a href="http://www.nist.gov/itl/fips/060205_des.cfm">NIST Withdraws Outdated Data Encryption Standard</a>
+</p></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">RSA NoPadding</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>
+The software uses the RSA algorithm but does not incorporate Optimal Asymmetric Encryption Padding (OAEP), which might weaken the encryption.
+</p>
+<p>
+Weak example:<br/>
+<pre>Cipher.getInstance("RSA/NONE/NoPadding")</pre>
+</p>
+<p>
+It should be replace by:<br/>
+<pre>Cipher.getInstance("RSA/ECB/OAEPWithMD5AndMGF1Padding")</pre>
+</p>
+<p>
+<b>Reference</b><br/>
+<a href="http://cwe.mitre.org/data/definitions/780.html">CWE-780: Use of RSA Algorithm without OAEP</a><br/>
+<a href="http://rdist.root.org/2009/10/06/why-rsa-encryption-padding-is-critical/">Root Labs: Why RSA encryption padding is critical</a>
+</p></td>
+                    </tr>
                     </table>
 
             </p>
@@ -601,5 +661,18 @@ In few context including testing, NullCipher can be appropriate.
     </div>
     <div stlye="clear:both"></div>
 </div>
+
+
+<script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-34839255-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+</script>
 </body>
 </html>

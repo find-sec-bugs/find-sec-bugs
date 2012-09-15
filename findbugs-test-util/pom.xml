@@ -9,7 +9,15 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>findbugs-util</artifactId>
+    <groupId>com.h3xstream.findsecbugs</groupId>
+    <artifactId>findbugs-test-util</artifactId>
+    <name>FindBugs Test Utility</name>
+    <description>
+    Utility that could be reuse for FindBugs plugin development.
+    Include:
+     - Loading of the plugin.
+     - Hamcrest Matcher to do make precise assertion
+    </description>
 
     <build>
         <plugins>

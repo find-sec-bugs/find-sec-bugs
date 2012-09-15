@@ -1,0 +1,99 @@
+<FindbugsPlugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:noNamespaceSchemaLocation="findbugsplugin.xsd"
+                pluginid="com.h3xstream.findsecbugs"
+                provider="Find Security Bugs"
+                defaultenabled="false"
+                website="https://github.com/h3xstream/find-sec-bugs">
+
+    <Detector class="com.h3xstream.findsecbugs.PredictableRandomDetector" reports="PREDICTABLE_RANDOM"/>
+    <BugPattern type="PREDICTABLE_RANDOM" abbrev="SECPR" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.endpoint.ServletEndpointDetector"
+              reports="SERVLET_PARAMETER,SERVLET_CONTENT_TYPE,SERVLET_SERVER_NAME,SERVLET_SESSION_ID,SERVLET_QUERY_STRING,SERVLET_HEADER,SERVLET_HEADER_REFERER,SERVLET_HEADER_USER_AGENT"/>
+    <BugPattern type="SERVLET_PARAMETER" abbrev="SECSP" category="SECURITY"/>
+    <BugPattern type="SERVLET_CONTENT_TYPE" abbrev="SECSCT" category="SECURITY"/>
+    <BugPattern type="SERVLET_SERVER_NAME" abbrev="SECSSN" category="SECURITY"/>
+    <BugPattern type="SERVLET_SESSION_ID" abbrev="SECSSID" category="SECURITY"/>
+    <BugPattern type="SERVLET_QUERY_STRING" abbrev="SECSSQ" category="SECURITY"/>
+    <BugPattern type="SERVLET_HEADER" abbrev="SECSH" category="SECURITY"/>
+    <BugPattern type="SERVLET_HEADER_REFERER" abbrev="SECSHR" category="SECURITY"/>
+    <BugPattern type="SERVLET_HEADER_USER_AGENT" abbrev="SECSHUA" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.endpoint.CookieDetector" reports="COOKIE_USAGE"/>
+    <BugPattern type="COOKIE_USAGE" abbrev="SECCU" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.PathTraversalDetector" reports="PATH_TRAVERSAL_IN,PATH_TRAVERSAL_OUT"/>
+    <BugPattern type="PATH_TRAVERSAL_IN" abbrev="SECPTI" category="SECURITY"/>
+    <BugPattern type="PATH_TRAVERSAL_OUT" abbrev="SECPTO" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.CommandInjectionDetector" reports="COMMAND_INJECTION"/>
+    <BugPattern type="COMMAND_INJECTION" abbrev="SECCI" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.WeakFilenameUtilsMethodDetector" reports="WEAK_FILENAMEUTILS"/>
+    <BugPattern type="WEAK_FILENAMEUTILS" abbrev="SECWF" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.crypto.WeakTrustManagerDetector" reports="WEAK_TRUST_MANAGER"/>
+    <BugPattern type="WEAK_TRUST_MANAGER" abbrev="SECWTM" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.endpoint.JaxWsEndpointDetector" reports="JAXWS_ENDPOINT"/>
+    <BugPattern type="JAXWS_ENDPOINT" abbrev="SECJWS" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.endpoint.JaxRsEndpointDetector" reports="JAXRS_ENDPOINT"/>
+    <BugPattern type="JAXRS_ENDPOINT" abbrev="SECJRS" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.endpoint.TapestryEndpointDetector" reports="TAPESTRY_ENDPOINT"/>
+    <BugPattern type="TAPESTRY_ENDPOINT" abbrev="SECTE" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.endpoint.WicketEndpointDetector" reports="WICKET_ENDPOINT"/>
+    <BugPattern type="WICKET_ENDPOINT" abbrev="SECWE" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.crypto.WeakMessageDigestDetector" reports="WEAK_MESSAGE_DIGEST"/>
+    <BugPattern type="WEAK_MESSAGE_DIGEST" abbrev="SECWMD" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.crypto.CustomMessageDigestDetector" reports="CUSTOM_MESSAGE_DIGEST"/>
+    <BugPattern type="CUSTOM_MESSAGE_DIGEST" abbrev="SECCMD" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.FileUploadFilenameDetector" reports="FILE_UPLOAD_FILENAME"/>
+    <BugPattern type="FILE_UPLOAD_FILENAME" abbrev="SECFUN" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.ReDosDetector" reports="REDOS"/>
+    <BugPattern type="REDOS" abbrev="SECRD" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.xxe.SaxParserXxeDetector" reports="XXE"/>
+    <BugPattern type="XXE" abbrev="SECXXE" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionJavaxDetector" reports="XPATH_INJECTION"/>
+    <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionApacheXPathApiDetector" reports="XPATH_INJECTION"/>
+    <BugPattern type="XPATH_INJECTION" abbrev="SECXPI" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.endpoint.Struts1EndpointDetector" reports="STRUTS1_ENDPOINT"/>
+    <BugPattern type="STRUTS1_ENDPOINT" abbrev="SECSTR1" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.endpoint.Struts2EndpointDetector" reports="STRUTS2_ENDPOINT"/>
+    <BugPattern type="STRUTS2_ENDPOINT" abbrev="SECSTR2" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.endpoint.SpringMvcEndpointDetector" reports="SPRING_ENDPOINT"/>
+    <BugPattern type="SPRING_ENDPOINT" abbrev="SECSC" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.injection.InjectionDetector" reports="SQL_INJECTION"/>
+    <BugPattern type="SQL_INJECTION" abbrev="SECSQLI" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.crypto.BadHexadecimalConversionDetector" reports="BAD_HEXA_CONVERSION"/>
+    <BugPattern type="BAD_HEXA_CONVERSION" abbrev="SECBHC" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.crypto.EcbModeDetector" reports="ECB_MODE"/>
+    <BugPattern type="ECB_MODE" abbrev="SECECB" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.crypto.HazelcastSymmetricEncryptionDetector" reports="HAZELCAST_SYMMETRIC_ENCRYPTION"/>
+    <BugPattern type="HAZELCAST_SYMMETRIC_ENCRYPTION" abbrev="SECHAZ" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.crypto.NullCipherDetector" reports="NULL_CIPHER"/>
+    <BugPattern type="NULL_CIPHER" abbrev="SECNC" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.crypto.UnencryptedSocketDetector" reports="UNENCRYPTED_SOCKET"/>
+    <BugPattern type="UNENCRYPTED_SOCKET" abbrev="SECUS" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.crypto.StaticIvDetector" reports="STATIC_IV"/>
+    <BugPattern type="STATIC_IV" abbrev="SECSIV" category="SECURITY"/>
+
+</FindbugsPlugin>

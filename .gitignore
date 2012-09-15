@@ -1,7 +1,7 @@
 #Eclipse
 .classpath
 .project
-test-output
+com.h3xstream.findbugs.test-output
 
 #IntelliJ
 *.iml

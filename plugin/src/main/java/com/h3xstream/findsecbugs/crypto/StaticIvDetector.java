@@ -15,7 +15,7 @@ public class StaticIvDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
-        printOpCode(seen);
+        //printOpCode(seen);
 
         if (seen == Constants.INVOKESPECIAL && getClassConstantOperand().equals("javax/crypto/spec/IvParameterSpec") &&
                 getNameConstantOperand().equals("<init>")) {

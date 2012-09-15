@@ -28,8 +28,12 @@
         <module>website</module>
     </modules>
 
+
+    <!-- All the dependencies are declare here. Modules will refer to those without specifying the version. -->
     <dependencyManagement>
         <dependencies>
+
+            <!-- Artefact definition of the module -->
 
             <dependency>
                 <groupId>com.h3xstream.findsecbugs</groupId>
@@ -38,7 +42,13 @@
                 <version>1.0-SNAPSHOT</version>
             </dependency>
 
-            <!-- Test dependencies -->
+            <dependency>
+                <groupId>com.h3xstream.findsecbugs</groupId>
+                <artifactId>plugin</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+
+            <!-- test.Test dependencies -->
 
             <dependency>
                 <groupId>org.mockito</groupId>
@@ -66,12 +76,6 @@
             </dependency>
 
             <dependency>
-                <groupId>bcel</groupId>
-                <artifactId>bcel</artifactId>
-                <version>5.1</version>
-            </dependency>
-
-            <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>1.3.2</version>
@@ -91,7 +95,12 @@
                 <scope>test</scope>
             </dependency>
 
-
+            <!-- Groovy (use for the website) -->
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-all</artifactId>
+                <version>2.0.1</version>
+            </dependency>
 
             <!-- Dependencies use to build code examples -->
 
@@ -186,7 +195,7 @@
                 <scope>test</scope>
             </dependency>
 
-            <!-- Bouncy Castle Provider -->
+            <!-- Bouncy Castle Crypto Provider -->
             <dependency>
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcprov-jdk16</artifactId>

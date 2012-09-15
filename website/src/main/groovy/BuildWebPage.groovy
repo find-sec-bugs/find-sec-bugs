@@ -1,23 +1,16 @@
 import groovy.text.SimpleTemplateEngine
 
-//For testing only (stub project.basedir input)
-project = {}
-project.basedir = new File(System.getProperty("user.dir"))
+//Contains the bug descriptions
+InputStream messagesStream = getClass().getResourceAsStream("/metadata/messages.xml")
+//Html Template of the documentation page
+Reader templateReader = new InputStreamReader(getClass().getResourceAsStream("/layout.htm"))
+//Generated page will be place there
+String outputDirectory = binding.variables.containsKey("project") ? project.build.outputDirectory : System.getProperty("java.io.tmpdir")
 
-println project.basedir
-def outputDirectory = new File(project.basedir , "/target")
-println outputDirectory
+println "Importing message from messages.xml"
+rootXml = new XmlParser().parse(messagesStream)
 
-def configDir = new File(project.basedir , '/src/main/resources/metadata')
-def templateDir = new File(project.basedir , '/src/main/script')
-
-
-
-f = new File(configDir, "messages.xml")
-
-println "Importing message from " + f.getCanonicalPath()
-rootXml = new XmlParser().parse(f)
-
+println "Mapping the descriptions to the templates"
 def binding = [:]
 binding['bugPatterns'] = []
 
@@ -28,12 +21,11 @@ rootXml.BugPattern.each { pattern ->
     println pattern.ShortDescription.text()
 }
 
-template = new File(templateDir, "layout.htm")
 generatedPage = new File(outputDirectory, "index.htm")
 
-//Building template
+println "Writing the template to ${outputDirectory}/index.htm"
 def engine = new SimpleTemplateEngine()
-result = engine.createTemplate(template).make(binding)
+result = engine.createTemplate(templateReader).make(binding)
 
 generatedPage.withWriter{
     w ->

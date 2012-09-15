@@ -38,9 +38,9 @@
                         </goals>
                         <configuration>
                             <tasks>
-                                <move todir="${project.build.outputDirectory}">
+                                <copy todir="${project.build.outputDirectory}">
                                     <fileset dir="${project.build.outputDirectory}/metadata"/>
-                                </move>
+                                </copy>
                             </tasks>
                         </configuration>
                     </execution>
@@ -66,6 +66,15 @@
 
     <dependencies>
 
+        <!-- FindBugs API (Detector interface and transitive deps like BCEL..) -->
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>findbugs</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+
+        <!-- Toolkit for easy detector testing -->
         <dependency>
             <groupId>com.h3xstream.findsecbugs</groupId>
             <artifactId>findbugs-util</artifactId>
@@ -73,16 +82,8 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>findbugs</artifactId>
-        </dependency>
 
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-io</artifactId>
-            <scope>test</scope>
-        </dependency>
+        <!-- Unit Testing libraries -->
 
         <dependency>
             <groupId>org.mockito</groupId>
@@ -91,15 +92,9 @@
         </dependency>
 
         <dependency>
-            <groupId>bcel</groupId>
-            <artifactId>bcel</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
         </dependency>
-
 
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -107,7 +102,16 @@
             <scope>test</scope>
         </dependency>
 
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-io</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- /////////////////////////////////////// -->
         <!-- Dependencies use to build code examples -->
+        <!-- /////////////////////////////////////// -->
 
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -243,7 +247,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!--  -->
+        <!-- OWASP ESAPI -->
         <dependency>
             <groupId>org.owasp.esapi</groupId>
             <artifactId>esapi</artifactId>

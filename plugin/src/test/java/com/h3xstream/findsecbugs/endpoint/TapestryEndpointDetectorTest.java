@@ -16,7 +16,7 @@ public class TapestryEndpointDetectorTest extends BaseDetectorTest {
      */
     @Test
     public void detectTapestryPageWithFrameworkReference() throws Exception {
-        //Locate com.h3xstream.findbugs.test code
+        //Locate test code
         String[] files = {
                 getClassFilePath("testcode/pages/sub/TapestryPage")
         };

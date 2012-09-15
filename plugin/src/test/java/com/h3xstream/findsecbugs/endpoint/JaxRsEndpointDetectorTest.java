@@ -11,7 +11,7 @@ public class JaxRsEndpointDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectJaxRsEndpoint() throws Exception {
-        //Locate com.h3xstream.findbugs.test code
+        //Locate test code
         String[] files = {
                 getClassFilePath("testcode/JaxRsService")
         };

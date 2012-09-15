@@ -10,7 +10,7 @@ public class StaticIvDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectStaticIv() throws Exception {
-        //Locate com.h3xstream.findbugs.test code
+        //Locate test code
         String[] files = {
                 getClassFilePath("testcode/crypto/StaticIv")
         };

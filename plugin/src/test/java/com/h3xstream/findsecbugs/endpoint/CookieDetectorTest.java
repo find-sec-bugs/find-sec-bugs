@@ -13,7 +13,7 @@ public class CookieDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectCookieUsage() throws Exception {
-        //Locate com.h3xstream.findbugs.test code
+        //Locate test code
         String[] files = {
                 getClassFilePath("testcode/CookieUsage")
         };

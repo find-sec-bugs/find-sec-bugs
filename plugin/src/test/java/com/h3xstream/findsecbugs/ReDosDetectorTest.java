@@ -13,7 +13,7 @@ public class ReDosDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectRedos() throws Exception {
-        //Locate com.h3xstream.findbugs.test code
+        //Locate test code
         String[] files = {
                 getClassFilePath("testcode/VariousRedos")
         };

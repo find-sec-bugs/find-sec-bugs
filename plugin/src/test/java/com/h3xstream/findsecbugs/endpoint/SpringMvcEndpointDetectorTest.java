@@ -14,7 +14,7 @@ public class SpringMvcEndpointDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectSpringController() throws Exception {
-        //Locate com.h3xstream.findbugs.test code
+        //Locate test code
         String[] files = {
                 getClassFilePath("testcode/SpringTestController")
         };

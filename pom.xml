@@ -2,6 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.h3xstream.findsecbugs</groupId>
     <artifactId>find-sec-bugs</artifactId>
+
     <packaging>pom</packaging>
     <name>Find Security Bugs</name>
     <version>1.0-SNAPSHOT</version>
@@ -11,7 +12,7 @@
             <!-- Force the use of Java 6 compiler -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>2.5.1</version>
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
@@ -24,9 +25,14 @@
 
     <modules>
         <module>plugin</module>
-        <module>findbugs-util</module>
+        <module>findbugs-test-util</module>
         <module>website</module>
     </modules>
+
+    <properties>
+        <!-- The groovy dependency need to be kept in sync with GMaven dependency -->
+        <groovy.version>1.7.0</groovy.version>
+    </properties>
 
 
     <!-- All the dependencies are declare here. Modules will refer to those without specifying the version. -->
@@ -37,7 +43,7 @@
 
             <dependency>
                 <groupId>com.h3xstream.findsecbugs</groupId>
-                <artifactId>findbugs-util</artifactId>
+                <artifactId>findbugs-test-util</artifactId>
                 <type>test-jar</type>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
@@ -99,7 +105,7 @@
             <dependency>
                 <groupId>org.codehaus.groovy</groupId>
                 <artifactId>groovy-all</artifactId>
-                <version>2.0.1</version>
+                <version>${groovy.version}</version>
             </dependency>
 
             <!-- Dependencies use to build code examples -->

@@ -11,7 +11,7 @@ public class Struts1EndpointDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectStruts1Endpoint() throws Exception {
-        //Locate com.h3xstream.findbugs.test code
+        //Locate test code
         String[] files = {
                 getClassFilePath("testcode/struts1/StrutsV1Action"),
                 getClassFilePath("testcode/struts1/TestForm")

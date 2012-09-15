@@ -10,7 +10,7 @@ public class PredictableRandomDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectUsePredictableRandom() throws Exception {
-        //Locate com.h3xstream.findbugs.test code
+        //Locate test code
         String[] files = {
                 getClassFilePath("testcode/InsecureRandom")
         };

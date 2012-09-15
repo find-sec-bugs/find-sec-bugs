@@ -744,7 +744,8 @@ The communication started will not be encrypted. The traffic could be red by an 
     </BugPattern>
     <BugCode abbrev="SECUS"></BugCode>
 
-    <!-- Static Initial -->
+    <!-- Static Initialization vector -->
+<!-- Not implemented yet..
     <Detector class="com.h3xstream.findsecbugs.crypto.StaticIvDetector">
         <Details></Details>
     </Detector>
@@ -754,7 +755,7 @@ The communication started will not be encrypted. The traffic could be red by an 
         <Details>
             <![CDATA[
 <p>
-The pupose of the <b>Initialization Vector</b> is to avoid generating the same ciphertext for the same message.
+The purpose of the <b>Initialization Vector</b> is to avoid generating the same cipher-text for the same message.
 The IV value should be random and different for every message sent.
 </p>
 <p>
@@ -769,4 +770,58 @@ Also, the IV should not be consider as a secret because it can be sent with the 
         </Details>
     </BugPattern>
     <BugCode abbrev="SECSIV"></BugCode>
+-->
+
+    <!-- DES usage -->
+    <Detector class="com.h3xstream.findsecbugs.crypto.DesUsageDetector">
+        <Details>DES / DESede should be replace by AES</Details>
+    </Detector>
+    <BugPattern type="DES_USAGE">
+        <ShortDescription>DES / DESede usage</ShortDescription>
+        <LongDescription>DES / DESede should be replace by AES</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+DES and DESede (3DES), previously recommended, are not consider strong ciphers for modern applications. DESede should
+only be use for hardware limitation. Currently, the NIST recommend the usage of AES block cipher.
+</p>
+<p>
+<b>Reference</b><br/>
+<a href="http://www.nist.gov/itl/fips/060205_des.cfm">NIST Withdraws Outdated Data Encryption Standard</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECDU"></BugCode>
+
+    <!-- RSA NoPadding -->
+    <Detector class="com.h3xstream.findsecbugs.crypto.RsaNoPaddingDetector">
+        <Details>RSA cipher without proper padding</Details>
+    </Detector>
+    <BugPattern type="RSA_NO_PADDING">
+        <ShortDescription>RSA NoPadding</ShortDescription>
+        <LongDescription>RSA cipher without proper padding</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+The software uses the RSA algorithm but does not incorporate Optimal Asymmetric Encryption Padding (OAEP), which might weaken the encryption.
+</p>
+<p>
+Weak example:<br/>
+<pre>Cipher.getInstance("RSA/NONE/NoPadding")</pre>
+</p>
+<p>
+It should be replace by:<br/>
+<pre>Cipher.getInstance("RSA/ECB/OAEPWithMD5AndMGF1Padding")</pre>
+</p>
+<p>
+<b>Reference</b><br/>
+<a href="http://cwe.mitre.org/data/definitions/780.html">CWE-780: Use of RSA Algorithm without OAEP</a><br/>
+<a href="http://rdist.root.org/2009/10/06/why-rsa-encryption-padding-is-critical/">Root Labs: Why RSA encryption padding is critical</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECRNP"></BugCode>
+
 </MessageCollection>

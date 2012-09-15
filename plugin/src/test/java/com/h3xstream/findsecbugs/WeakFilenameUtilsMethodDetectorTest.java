@@ -13,7 +13,7 @@ public class WeakFilenameUtilsMethodDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectWeakFilenameUtils() throws Exception {
-        //Locate com.h3xstream.findbugs.test code
+        //Locate test code
         String[] files = {
                 getClassFilePath("testcode/WeakFilenameUtils")
         };

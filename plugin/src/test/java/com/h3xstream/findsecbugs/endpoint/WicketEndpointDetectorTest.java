@@ -11,7 +11,7 @@ public class WicketEndpointDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectWicketEndpoint() throws Exception {
-        //Locate com.h3xstream.findbugs.test code
+        //Locate test code
         String[] files = {
                 getClassFilePath("testcode/WicketWebPage")
         };

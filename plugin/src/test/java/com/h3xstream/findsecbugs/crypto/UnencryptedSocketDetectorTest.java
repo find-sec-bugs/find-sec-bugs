@@ -14,7 +14,7 @@ public class UnencryptedSocketDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectUnencryptedSocket() throws Exception {
-        //Locate com.h3xstream.findbugs.test code
+        //Locate test code
         String[] files = {
                 getClassFilePath("testcode/crypto/UnencryptedSocket")
         };

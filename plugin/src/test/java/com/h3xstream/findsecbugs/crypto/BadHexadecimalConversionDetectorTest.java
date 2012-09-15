@@ -14,7 +14,7 @@ public class BadHexadecimalConversionDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectBadHexa() throws Exception {
-        //Locate com.h3xstream.findbugs.test code
+        //Locate test code
         String[] files = {
                 getClassFilePath("testcode/crypto/BadHexa")
         };

@@ -14,7 +14,7 @@ public class HazelcastSymmetricEncryptionDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectHazelcastSymmetric() throws Exception {
-        //Locate com.h3xstream.findbugs.test code
+        //Locate test code
         String[] files = {
                 getClassFilePath("testcode/crypto/HazelcastSymmetric")
         };

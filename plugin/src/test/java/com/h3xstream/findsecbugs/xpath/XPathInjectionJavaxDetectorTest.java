@@ -12,7 +12,7 @@ public class XPathInjectionJavaxDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectXPathInjectionJavax() throws Exception {
-        //Locate com.h3xstream.findbugs.test code
+        //Locate test code
         String[] files = {
                 getClassFilePath("testcode/xpath/XPathJavax")
         };

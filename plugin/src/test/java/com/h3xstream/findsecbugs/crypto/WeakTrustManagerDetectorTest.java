@@ -14,7 +14,7 @@ public class WeakTrustManagerDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectWeakTrustManager() throws Exception {
-        //Locate com.h3xstream.findbugs.test code
+        //Locate test code
         String[] files = {
                 getClassFilePath("testcode/trustmanager/WeakTrustManager"),
                 getClassFilePath("testcode/trustmanager/WeakTrustManager$TrustManagerInnerClass"),

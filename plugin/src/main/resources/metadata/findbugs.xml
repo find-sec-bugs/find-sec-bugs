@@ -5,6 +5,14 @@
                 defaultenabled="false"
                 website="https://github.com/h3xstream/find-sec-bugs">
 
+
+    <!--
+    Detector : Java class that analyse bytecode
+    Bug Pattern : Vulnerability/Code at risk*. All bug patterns are describe in messages.xml.
+
+    * Not all bug pattern are direct vulnerability. For example, the identification of endpoints
+    -->
+
     <Detector class="com.h3xstream.findsecbugs.PredictableRandomDetector" reports="PREDICTABLE_RANDOM"/>
     <BugPattern type="PREDICTABLE_RANDOM" abbrev="SECPR" category="SECURITY"/>
 
@@ -93,7 +101,15 @@
     <Detector class="com.h3xstream.findsecbugs.crypto.UnencryptedSocketDetector" reports="UNENCRYPTED_SOCKET"/>
     <BugPattern type="UNENCRYPTED_SOCKET" abbrev="SECUS" category="SECURITY"/>
 
+    <!--
     <Detector class="com.h3xstream.findsecbugs.crypto.StaticIvDetector" reports="STATIC_IV"/>
     <BugPattern type="STATIC_IV" abbrev="SECSIV" category="SECURITY"/>
+    -->
+
+    <Detector class="com.h3xstream.findsecbugs.crypto.DesUsageDetector" reports="DES_USAGE"/>
+    <BugPattern type="DES_USAGE" abbrev="SECDU" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.crypto.RsaNoPaddingDetector" reports="RSA_NO_PADDING"/>
+    <BugPattern type="RSA_NO_PADDING" abbrev="SECRNP" category="SECURITY"/>
 
 </FindbugsPlugin>

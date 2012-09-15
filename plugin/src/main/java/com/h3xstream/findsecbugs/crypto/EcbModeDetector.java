@@ -9,11 +9,14 @@ import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 import org.apache.bcel.Constants;
 
+/**
+ * Identify ECB mode for certain cipher. (AES for the moment).
+ * DES ciphers are target by {@link com.h3xstream.findsecbugs.crypto.DesUsageDetector}.
+ */
 public class EcbModeDetector extends OpcodeStackDetector {
 
 	private static final String ECB_MODE_TYPE = "ECB_MODE";
-
-	private static final boolean DEBUG = false;
+    private static final boolean DEBUG = false;
 
     private BugReporter bugReporter;
 
@@ -32,7 +35,7 @@ public class EcbModeDetector extends OpcodeStackDetector {
 				String cipherValue = (String) item.getConstant();
 				if(DEBUG) System.out.println(cipherValue);
 
-				if(cipherValue.contains( "/ECB/" )) {
+				if(cipherValue.contains( "AES/ECB/" )) {
 					bugReporter.reportBug(new BugInstance(this, ECB_MODE_TYPE, Priorities.NORMAL_PRIORITY) //
 						.addClass( this ).addMethod( this ).addSourceLine(this));
 				}

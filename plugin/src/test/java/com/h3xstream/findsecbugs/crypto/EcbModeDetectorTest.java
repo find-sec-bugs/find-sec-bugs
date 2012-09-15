@@ -16,9 +16,9 @@ public class EcbModeDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectEcbMode() throws Exception {
-        //Locate com.h3xstream.findbugs.test code
+        //Locate test code
         String[] files = {
-                getClassFilePath("testcode/crypto/EcbMode")
+                getClassFilePath("testcode/crypto/BlockCipherList")
         };
 
         //Run the analysis
@@ -27,11 +27,11 @@ public class EcbModeDetectorTest extends BaseDetectorTest {
 
         //Assertions
 
-	    for (Integer line : Arrays.asList( 15, 16, 19, 20, 23, 24, 25, 26, 27 )) {
+	    for (Integer line : Arrays.asList( 18, 19 )) {
 		    verify(reporter).doReportBug(
 				    bugDefinition()
 						    .bugType( "ECB_MODE" )
-						    .inClass( "EcbMode" )
+						    .inClass( "BlockCipherList" )
 						    .inMethod( "main" )
 						    .atLine( line )
 					.build()
@@ -39,10 +39,10 @@ public class EcbModeDetectorTest extends BaseDetectorTest {
 	    }
 
 	    //The count make sure no other bug are detect
-	    verify(reporter, times(9)).doReportBug(
+	    verify(reporter, times(2)).doReportBug(
 			    bugDefinition()
 					    .bugType( "ECB_MODE" )
-					    .inClass( "EcbMode" )
+					    .inClass( "BlockCipherList" )
 					    .inMethod( "main" )
 				.build() );
     }

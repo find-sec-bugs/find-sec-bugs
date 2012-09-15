@@ -9,7 +9,7 @@ import static org.mockito.Mockito.spy;
 public class XPathInjectionApacheXPathApiDetectorTest extends BaseDetectorTest {
     @Test
     public void detectXPathInjectionJavax() throws Exception {
-        //Locate com.h3xstream.findbugs.test code
+        //Locate test code
         String[] files = {
                 getClassFilePath("testcode/xpath/XPathApacheXPathApi")
         };

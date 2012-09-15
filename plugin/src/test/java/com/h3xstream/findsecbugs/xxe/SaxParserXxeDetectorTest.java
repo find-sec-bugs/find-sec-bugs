@@ -13,7 +13,7 @@ public class SaxParserXxeDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectXxe() throws Exception {
-        //Locate com.h3xstream.findbugs.test code
+        //Locate test code
         String[] files = {
                 getClassFilePath("testcode/xxe/SaxParserVulnerable")
         };

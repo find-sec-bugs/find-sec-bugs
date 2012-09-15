@@ -12,7 +12,7 @@ public class NullCipherDetectorTest  extends BaseDetectorTest {
 
     @Test
     public void detectNullCipher() throws Exception {
-        //Locate com.h3xstream.findbugs.test code
+        //Locate test code
         String[] files = {
                 getClassFilePath("testcode/crypto/NullCipherUse")
         };

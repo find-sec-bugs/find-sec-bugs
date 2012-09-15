@@ -13,7 +13,7 @@ public class PathTraversalDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectPathTraversal() throws Exception {
-        //Locate com.h3xstream.findbugs.test code
+        //Locate test code
         String[] files = {
                 getClassFilePath("testcode/PathTraversal")
         };

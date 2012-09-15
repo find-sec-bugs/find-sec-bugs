@@ -9,7 +9,13 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>com.h3xstream.findsecbugs</groupId>
     <artifactId>plugin</artifactId>
+    <name>Find Security Bugs Plugin</name>
+    <description>
+    Core module of the project. It include all the FindBugs detectors.
+    The resulting jar is the published plugin.
+    </description>
 
     <build>
         <plugins>
@@ -77,7 +83,7 @@
         <!-- Toolkit for easy detector testing -->
         <dependency>
             <groupId>com.h3xstream.findsecbugs</groupId>
-            <artifactId>findbugs-util</artifactId>
+            <artifactId>findbugs-test-util</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>

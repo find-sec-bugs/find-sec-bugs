@@ -56,7 +56,7 @@
                     <properties>
                         <property>
                             <name>listener</name>
-                            <value>com.h3xstream.com.h3xstream.com.h3xstream.testng.VerboseTestListener</value>
+                            <value>com.h3xstream.testng.VerboseTestListener</value>
                         </property>
                     </properties>
                 </configuration>

@@ -80,16 +80,16 @@ The HTTP header Content-Type can be control by the client.
         <LongDescription>The hostname received can often be control by the client.</LongDescription>
         <Details>
             <![CDATA[
-<p>The hostname can often be control by the client. Both <i>ServletRequest.getServerName()</i> and
-<i>HttpServletRequest.getHeader("Host")</i> have the same behavior which is to extract the <i>"Host"</i> header.</p>
+<p>The hostname can often be control by the client. Both <code>ServletRequest.getServerName()</code> and
+<code>HttpServletRequest.getHeader("Host")</code> have the same behavior which is to extract the <code>Host</code> header.</p>
 <pre>
-GET /com.h3xstream.findbugs.test HTTP/1.1
+GET /testpage HTTP/1.1
 Host: www.example.com
 [...]
 </pre>
 <p>
-The web container serving your application may redirect request to your application by default. This would allow
-a malicious user to place any value. It is recommended to have no assumption on the value and therefor to proper
+The web container serving your application may redirect requests to your application by default. This would allow
+a malicious user to place any value. It is recommended to have no assumption on the value and therefor to do proper
 escaping and validation if needed.
 </p>
 ]]>
@@ -100,10 +100,22 @@ escaping and validation if needed.
 
     <BugPattern type="SERVLET_SESSION_ID">
         <ShortDescription>Request Session Id</ShortDescription>
-        <LongDescription>To be confirmed...</LongDescription>
+        <LongDescription>Request Session Id</LongDescription>
         <Details>
             <![CDATA[
-To be confirmed...
+<p>
+The method <a href="http://docs.oracle.com/javaee/6/api/javax/servlet/http/HttpServletRequest.html#getRequestedSessionId()"><code>HttpServletRequest.getRequestedSessionId()</code></a>
+typically return the value of the cookie <code>JSESSIONID</code>.
+</p>
+<p>
+The value pass to the client is generally an alphanumeric value (ie: <code>JSESSIONID=jp6q31lq2myn</code>). However the value can be altered by the client. The following HTTP request illustrate the potential deviation.
+<pre>
+GET /somePage HTTP/1.1
+Host: yourwebsite.com
+User-Agent: Mozilla/5.0
+Cookie: JSESSIONID=Get ready to received any value!!??'''&quote;&gt;
+</pre>
+</p>
 ]]>
         </Details>
     </BugPattern>
@@ -116,7 +128,7 @@ To be confirmed...
             <![CDATA[
 <p>The query string is the concatenation of the GET parameters and values. Parameter others that those intended can
 be passed.</p>
-<p>For the url request <i>/app/servlet.htm?a=1&b=2</i>, the query string extract will be <i>a=1&b=2</i></p>
+<p>For the url request <code>/app/servlet.htm?a=1&b=2</code>, the query string extract will be <code>a=1&b=2</code></p>
 ]]>
         </Details>
     </BugPattern>
@@ -128,7 +140,7 @@ be passed.</p>
         <LongDescription>Request header can easily be alter by the client</LongDescription>
         <Details>
             <![CDATA[
-<p>Request header can easily be alter by the client. No assumption should be make that the request come from a regular browser</p>
+<p>Request headers can easily be alter by the client. No assumption should be make that the request come from a regular browser.</p>
 ]]>
         </Details>
     </BugPattern>
@@ -143,7 +155,7 @@ be passed.</p>
 <p>
 Behavior:
 <ul>
-<li>Any value can be assigned to this header</li>
+<li>Any value can be assigned to this header (request coming from malicious user)</li>
 <li>The "Referer" will not be present if the request was initiated from another origin that is secure (https).</li>
 </ul>
 </p>
@@ -151,7 +163,7 @@ Behavior:
 Recommendations:
 <ul>
 <li>No access control should be base on this header.</li>
-<li>No CSRF protection should be based only on this value (Because it is optional).</li>
+<li>No CSRF protection should be based only on this value (<a href="http://www.w3.org/Protocols/HTTP/HTRQ_Headers.html#z14">Because it is optional</a>).</li>
 </ul>
 ]]>
         </Details>
@@ -205,16 +217,19 @@ variables should be used. see HttpSession (HttpServletRequest.getSession())</p>
     </Detector>
 
     <BugPattern type="PATH_TRAVERSAL_IN">
-        <ShortDescription>Path traversal (read file)</ShortDescription>
+        <ShortDescription>Potential Path traversal (read file)</ShortDescription>
         <LongDescription>An instance of {3} is created to read a file.</LongDescription>
         <Details>
             <![CDATA[
-<p>The class selected is use to open a file handle using a <b>dynamic</b> parameter.</p>
-<p>If unfiltered input is pass to this function, content from an arbitrary path could be read.</p>
+<p>A file is open to read its content. The path given is a <b>dynamic</b> parameter.</p>
+<p>If unfiltered parameter is pass to this file API, content from an arbitrary path could be read.</p>
+<p>This detector identify <b>potential</b> path transversal. In many case, the construct file path is not control
+by the user. If it is the case, this bug instance can be ignored.</p>
 <p>
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246952/Path%20Traversal">WASC : Path Traversal</a><br/>
-<a href="https://www.owasp.org/index.php/Path_Traversal">OWASP : Path Traversal</a>
+<a href="https://www.owasp.org/index.php/Path_Traversal">OWASP : Path Traversal</a><br/>
+<a href="http://capec.mitre.org/data/definitions/126.html">CAPEC-126: Path Traversal</a>
 </p>
 ]]>
         </Details>
@@ -222,7 +237,7 @@ variables should be used. see HttpSession (HttpServletRequest.getSession())</p>
     <BugCode abbrev="SECPTI">Path traversal to read file</BugCode>
 
     <BugPattern type="PATH_TRAVERSAL_OUT">
-        <ShortDescription>Path traversal (write file)</ShortDescription>
+        <ShortDescription>Potential Path traversal (write file)</ShortDescription>
         <LongDescription>An instance of {3} is created to write a file.</LongDescription>
         <Details>
             <![CDATA[
@@ -231,7 +246,8 @@ variables should be used. see HttpSession (HttpServletRequest.getSession())</p>
 <p>
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246952/Path%20Traversal">WASC-33 : Path Traversal</a><br/>
-<a href="https://www.owasp.org/index.php/Path_Traversal">OWASP : Path Traversal</a>
+<a href="https://www.owasp.org/index.php/Path_Traversal">OWASP : Path Traversal</a><br/>
+<a href="http://capec.mitre.org/data/definitions/126.html">CAPEC-126: Path Traversal</a>
 </p>
 ]]>
         </Details>
@@ -327,7 +343,7 @@ Detail information for a proper implementation :
 <p>
 <b>Analysis needed</b>
 <ul>
-<li>The input should be track for potential vulnerability.</li>
+<li>The inputs should be track for potential vulnerability.</li>
 <li>The authentification (if inforce) should be tested using a web client.</li>
 <li>The communication should ideally be over SSL.</li>
 </ul>
@@ -374,7 +390,7 @@ Detail information for a proper implementation :
         <LongDescription>{0} is a Tapestry Page</LongDescription>
         <Details>
             <![CDATA[
-<p>Tapestry endpoint are discover at the application startup and are requires to be in <i>[base.package.name].pages</i>.
+<p>Tapestry endpoint are discover at the application startup and are requires to be in <code>[base.package.name].pages</code>.
 When a request is received, the GET/POST parameters are mapped to field. The mapping is either done with fieldName:</p>
 <pre><code>
     [...]
@@ -393,7 +409,7 @@ the definition of an explicit annotation:
     private PasswordField passwordField;
     [...]
 </code></pre>
-<p>The current page is mapped to the view [/package/PageName].tml.</p>
+<p>The page is mapped to the view <code>[/package/PageName].tml.</code></p>
 ]]>
         </Details>
     </BugPattern>
@@ -518,10 +534,44 @@ Otherwise, the original filename should be properly escaped.</p>
 <p>Xml External Entity attacks can occurs when the XML parsers support XML entities and received
 user input as XML content.</p>
 <b>Risk 1: Expose local file content</b>
-<p>...</p>
+<p>
+<pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
+&lt;!DOCTYPE foo [
+   &lt;!ELEMENT foo ANY &gt;
+   &lt;!ENTITY xxe SYSTEM &quot;file:///etc/passwd&quot; &gt; ]&gt;
+&lt;foo&gt;&amp;xxe;&lt;/foo&gt;
+</pre>
+</p>
 <b>Risk 2: Denial of service</b>
-<p>...</p>
-<a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=61702260">CERT: IDS10-J. Prevent XML external entity attacks</a>
+<p>
+<pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;!DOCTYPE s [
+&lt;!ENTITY x &quot;OVERLONG_CONTENT_HERE_WITH_MORE_THAN_10^5_CHARACTERS&quot;&gt;
+]&gt;
+&lt;soapenv:Envelope xmlns:ns1=&quot;http://myPackageNamespace&quot;xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+  &lt;soapenv:Header&gt;
+  &lt;/soapenv:Header&gt;
+  &lt;soapenv:Body&gt;
+     &lt;ns1:reverse&gt;
+        &lt;s&gt;
+          &amp;x;
+          &amp;x;
+          [...]
+        &lt;/s&gt;
+     &lt;/ns1:reverse&gt;
+  &lt;/soapenv:Body&gt;
+&lt;/soapenv:Envelope&gt;
+</pre>
+</p>
+<p>
+<b>References</b><br/>
+<a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=61702260">CERT: IDS10-J. Prevent XML external entity attacks</a><br/>
+<a href="https://www.owasp.org/index.php/Testing_for_XML_Injection_(OWASP-DV-008)">OWASP : Testing for XML Injection</a><br/>
+<a href="http://clawslab.nds.rub.de/wiki/index.php/XML_Generic_Entity_Expansion">WS-Attacks.org: XML Generic Entity Expansion</a><br/>
+<a href="http://clawslab.nds.rub.de/wiki/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a>
+</p>
 ]]>
         </Details>
     </BugPattern>
@@ -537,13 +587,23 @@ user input as XML content.</p>
     </Detector>
 
     <BugPattern type="XPATH_INJECTION">
-        <ShortDescription>XPath Injection</ShortDescription>
+        <ShortDescription>Potential XPath Injection</ShortDescription>
         <LongDescription>The use of {3} is vulnerable to XPath injection</LongDescription>
         <Details>
             <![CDATA[
 <p>
-<b>Reference</b><br/>
-<a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-39: XPath Injection</a>
+XPath injection risks are simlar to SQL injection. If the XPath query contain unfilter user input, the complete datasource
+could be expose.
+</p>
+<p>
+
+</p>
+<p>
+<b>References</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-39: XPath Injection</a><br/>
+<a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=61407250">CERT: IDS09-J. Prevent XPath Injection (archive)</a><br/>
+<a href="http://media.blackhat.com/bh-eu-12/Siddharth/bh-eu-12-Siddharth-Xpath-WP.pdf">Black Hat Europe 2012: Hacking XPath 2.0</a><br/>
+<a href="http://www.balisage.net/Proceedings/vol7/html/Vlist02/BalisageVol7-Vlist02.html">Balisage: XQuery Injection</a>
 </p>
 ]]>
         </Details>
@@ -608,13 +668,14 @@ all of them.</p>
     </Detector>
 
     <BugPattern type="SQL_INJECTION">
-        <ShortDescription>SQL Injection</ShortDescription>
+        <ShortDescription>Potential SQL Injection</ShortDescription>
         <LongDescription>The query is vulnerable SQL injection</LongDescription>
         <Details>
             <![CDATA[
 <p>
-<b>Reference</b><br/>
+<b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-19: SQL Injection</a>
+<a href="http://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a>
 </p>
 ]]>
         </Details>
@@ -693,7 +754,7 @@ stringBuilder.append( String.format( "%02X", b ) );
 <![CDATA[
 <p>The network communication for Hazelcast is configure to a symmetric cipher (probably DES or blowfish).</p>
 <p>Those ciphers alone do not provide integrity or secure authentification.</a>.
-The use of assymetric encryption should privilege.</p>
+The use of assymetric encryption should be privilege.</p>
 <p>
 <b>Reference</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246945/Insufficient%20Transport%20Layer%20Protection">WASC-04 : Insufficient Transport Layer Protection</a><br/>
@@ -734,6 +795,15 @@ In few context including testing, NullCipher can be appropriate.
 <p>
 The communication started will not be encrypted. The traffic could be red by an attacker intercepting the communication.
 </p>
+<p>
+Plain socket (Clear text communication):
+<pre>Socket soc = new Socket("www.google.com",80);</pre>
+</p>
+<p>
+SSL Socket (Secure communication):
+<pre>Socket soc = SSLSocketFactory.getDefault().createSocket("www.google.com", 443);</pre>
+</p>
+
 <p>
 <b>Reference</b><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2010-A9">OWASP : Insufficient Transport Layer Protection</a><br/>
@@ -783,7 +853,7 @@ Also, the IV should not be consider as a secret because it can be sent with the 
             <![CDATA[
 <p>
 DES and DESede (3DES), previously recommended, are not consider strong ciphers for modern applications. DESede should
-only be use for hardware limitation. Currently, the NIST recommend the usage of AES block cipher.
+only be use because of hardware limitation. Currently, the NIST recommend the usage of AES block cipher.
 </p>
 <p>
 <b>Reference</b><br/>

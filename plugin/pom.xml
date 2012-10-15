@@ -185,10 +185,10 @@
                     <groupId>org.springframework</groupId>
                     <artifactId>spring-beans</artifactId>
                 </exclusion>
-                <exclusion>
+                <!--<exclusion>
                     <groupId>org.springframework</groupId>
                     <artifactId>spring-core</artifactId>
-                </exclusion>
+                </exclusion>-->
             </exclusions>
         </dependency>
 

@@ -21,8 +21,9 @@
 
         <a href="#about" class="menu">/about</a><br/>
         <a href="#download" class="menu">/download</a><br/>
-        <a href="#bugs" class="menu">/bugs</a><br/>
-        <a href="#detectors" class="menu">/detectors</a><br/>
+        <a href="#tutorials" class="menu">/tutorials</a><br/>
+        <a href="#types" class="menu">/types of bugs</a><br/>
+        <a href="#descriptions" class="menu">/bugs descriptions</a><br/>
         <a href="#integration" class="menu">/integration</a><br/>
         <a href="#license" class="menu">/license</a><br/>
 
@@ -52,7 +53,14 @@
                 <a href="http://findbugs.sourceforge.net/" class="download_button">Get Find Bugs</a>
             </p>
 
-            <a name="bugs"><span class="title">/bugs</span></a>
+            <a name="tutorials"><span class="title">/tutorials</span></a>
+
+            <p>
+                <a href="https://github.com/h3xstream/find-sec-bugs/wiki/Eclipse-tutorial">Eclipse Tutorial</a><br/>
+                <a href="#">Jenkins Tutorial (coming soon)</a><br/>
+            </p>
+
+            <a name="types"><span class="title">/types of bugs</span></a>
 
             <p>
                 The bug patterns identified by the plugin are not automatically vulnerabilities or defects.
@@ -61,7 +69,7 @@
             </p>
 
             <p>
-                Vulnerability categories covered:
+                Some vulnerability categories covered:
             <table>
                 <tr>
                     <td>
@@ -85,7 +93,7 @@
                             <li>XSS in JSP page[1]</li>
                             <li>SQL/HQL injection</li>
                             <li>ReDOS</li>
-                            <li>...</li>
+                            <li>Path traversal</li>
                         </ul>
                     </td>
                 </tr>
@@ -106,8 +114,8 @@
                 </td>
                 <td>
                     <ul>
-                        <li>JaxRS (any implementation)</li>
-                        <li>JaxWS</li>
+                        <li>JaxRS (Jersey)</li>
+                        <li>JaxWS (Axis2, Metro)</li>
                         <li>J2EE classic Web api</li>
                         <li>Apache Wicket</li>
                     </ul>
@@ -116,9 +124,9 @@
             </table>
             </p>
 
-            <a name="detectors"><span class="title">/detectors</span></a>
+            <a name="descriptions"><span class="title">/bugs descriptions</span></a>
 
-            <p>The complete list of detectors that will highlight code sections that are at risk:</p>
+            <p>This section list all the detectors included in the plugin.</p>
 
             <p>
                 <%
@@ -142,7 +150,7 @@
             <a name="integration"><span class="title">/integration</span></a>
 
             <p>
-                This plugin can be integrate with various development tool.
+                This plugin can be integrate with various development tools.
                 It can be use within <a href="http://findbugs.cs.umd.edu/eclipse/">Eclipse</a>,
                 <a href="http://code.google.com/p/findbugs/wiki/IntellijFindBugsPlugins">IntelliJ</a> and
                 <a href="http://kenai.com/projects/sqe/pages/Home">Netbeans</a> with their respective FindBugs plugin.
@@ -174,5 +182,18 @@
     </div>
     <div stlye="clear:both"></div>
 </div>
+
+
+<script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-34839255-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+</script>
 </body>
 </html>

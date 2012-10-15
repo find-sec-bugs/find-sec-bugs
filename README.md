@@ -7,3 +7,23 @@ Build status : http://travis-ci.org/#!/h3xstream/find-sec-bugs [![Build Status](
 ## License
 
 This software is release under [LGPL](http://www.gnu.org/licenses/lgpl.html).
+
+## Milestones (Planned features)
+
+Aside from adding various new detectors, there are few features that are planned.
+
+### Version 1.0 (current)
+
+- Introduce a basic set of detectors
+- Create a tutorial for Eclipse IDE
+
+### Version 2.0
+
+- Analysis of JSP for XSS
+- Initiate a set of detectors for Groovy specific api
+- Create a maven repository host on GitHub (Could allow auto-update for maven integration)
+- Create tutorial for Jenkins
+
+### Version 3.0
+
+- Improve the flow analysis of variables (for string construction)

@@ -8,7 +8,7 @@ public class PathTraversal {
         String input = args.length > 0 ? args[0] : "../../../../etc/password\u0000";
 
         new File(input);
-        new File("com.h3xstream.findbugs.test/"+input,"misc.jpg");
+        new File("test/"+input,"misc.jpg");
 
         new RandomAccessFile(input,"r");
 

@@ -56,8 +56,9 @@ public class BadHexadecimalConversionDetector implements Detector {
 				System.out.println( ">>> Method: " + m.getName() );
 			}
 
-			//Currently the detection is pretty weak.
-			//It will catch Dummy implementation that have empty method implementation
+			//To suspect that an invalid String representation is being build,
+            //we identify the construction of a MessageDigest and
+            //the use of a function that trim leading 0.
 			boolean invokeMessageDigest = false;
 			boolean invokeToHexString = false;
 

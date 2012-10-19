@@ -23,7 +23,7 @@ import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
 
 /**
- * This listener is useful to add more detail about com.h3xstream.findbugs.test failure.
+ * This listener is useful to add more detail about test failure.
  * (Intended for Travis-CI)
  */
 public class VerboseTestListener extends TestListenerAdapter {

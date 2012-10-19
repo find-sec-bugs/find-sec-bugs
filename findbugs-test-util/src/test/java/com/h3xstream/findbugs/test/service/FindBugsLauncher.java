@@ -58,7 +58,7 @@ public class FindBugsLauncher {
 		final ClassLoader cl = getClass().getClassLoader();
 
 		Project project = new Project();
-		project.setProjectName("automate-com.h3xstream.findbugs.test-project");
+		project.setProjectName("automate-test-project");
 		for(String file : classFiles) {
 			project.addFile(file);
 		}

@@ -23,7 +23,7 @@ import com.h3xstream.findbugs.test.service.ClassFileLocator;
 import com.h3xstream.findbugs.test.service.FindBugsLauncher;
 
 /**
- * Aggregate useful utilities for unit com.h3xstream.findbugs.test on detector.
+ * Aggregate useful utilities for unit tests on detector.
  */
 public class BaseDetectorTest {
 	private static final boolean DEBUG = true;

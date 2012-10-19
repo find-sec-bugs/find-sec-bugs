@@ -8,7 +8,7 @@ import java.io.IOException;
 public class WeakFilenameUtils {
 
     public static void main(String[] args) throws IOException {
-        String maliciousPath = "/com.h3xstream.findbugs.test/com.h3xstream.findbugs.test%00/././../../././secret/note.cfg\u0000dummy.jpg";
+        String maliciousPath = "/test%00/././../../././secret/note.cfg\u0000dummy.jpg";
 
         testPath(maliciousPath);
     }

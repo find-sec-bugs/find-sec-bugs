@@ -19,6 +19,35 @@
                 </configuration>
             </plugin>
 
+            <!-- Update automatically the header of the source code to the LGPL header. -->
+            <plugin>
+                <groupId>com.mycila.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <configuration>
+                    <header>https://raw.github.com/h3xstream/find-sec-bugs/master/LGPL-3.0-header.txt</header>
+                    <aggregate>true</aggregate>
+                    <strictCheck>true</strictCheck>
+                    <includes>
+                        <include>**/**.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/**/testcode/**/**.java</exclude>
+                        <exclude>**/**/package-info.java</exclude>
+                    </excludes>
+                    <properties>
+                        <project>Find Security Bugs</project>
+                        <year>2012</year>
+                        <owner>Philippe Arteau</owner>
+                    </properties>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 

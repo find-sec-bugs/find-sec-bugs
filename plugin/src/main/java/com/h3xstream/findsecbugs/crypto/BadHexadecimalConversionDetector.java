@@ -35,62 +35,61 @@ import edu.umd.cs.findbugs.ba.ClassContext;
 
 public class BadHexadecimalConversionDetector implements Detector {
 
-	private static final boolean DEBUG = false;
-	private static final String BAD_HEXA_CONVERSION_TYPE = "BAD_HEXA_CONVERSION";
-	private BugReporter bugReporter;
+    private static final boolean DEBUG = false;
+    private static final String BAD_HEXA_CONVERSION_TYPE = "BAD_HEXA_CONVERSION";
+    private BugReporter bugReporter;
 
-	public BadHexadecimalConversionDetector( BugReporter bugReporter ) {
-		this.bugReporter = bugReporter;
-	}
+    public BadHexadecimalConversionDetector(BugReporter bugReporter) {
+        this.bugReporter = bugReporter;
+    }
 
-	@Override
-	public void visitClassContext( ClassContext classContext ) {
-		JavaClass javaClass = classContext.getJavaClass();
+    @Override
+    public void visitClassContext(ClassContext classContext) {
+        JavaClass javaClass = classContext.getJavaClass();
 
-		Method[] methodList = javaClass.getMethods();
+        Method[] methodList = javaClass.getMethods();
 
-		for ( Method m : methodList ) {
-			MethodGen methodGen = classContext.getMethodGen( m );
+        for (Method m : methodList) {
+            MethodGen methodGen = classContext.getMethodGen(m);
 
-			if ( DEBUG ) {
-				System.out.println( ">>> Method: " + m.getName() );
-			}
+            if (DEBUG) {
+                System.out.println(">>> Method: " + m.getName());
+            }
 
-			//To suspect that an invalid String representation is being build,
+            //To suspect that an invalid String representation is being build,
             //we identify the construction of a MessageDigest and
             //the use of a function that trim leading 0.
-			boolean invokeMessageDigest = false;
-			boolean invokeToHexString = false;
+            boolean invokeMessageDigest = false;
+            boolean invokeToHexString = false;
 
-			ConstantPoolGen cpg = classContext.getConstantPoolGen();
-			for ( Instruction inst : methodGen.getInstructionList().getInstructions() ) {
-				if ( DEBUG ) {
-					ByteCode.printOpCode( inst, cpg );
-				}
+            ConstantPoolGen cpg = classContext.getConstantPoolGen();
+            for (Instruction inst : methodGen.getInstructionList().getInstructions()) {
+                if (DEBUG) {
+                    ByteCode.printOpCode(inst, cpg);
+                }
 
-				if ( inst instanceof INVOKEVIRTUAL ) { //MessageDigest.digest is called
-					INVOKEVIRTUAL invoke = (INVOKEVIRTUAL) inst;
-					if("java.security.MessageDigest".equals( invoke.getClassName( cpg ) ) && "digest".equals( invoke.getMethodName( cpg ) )) {
-						invokeMessageDigest = true;
-					}
-				}
-				else if ( inst instanceof INVOKESTATIC && invokeMessageDigest ) { //The conversion must occurs after the digest was created
-					INVOKESTATIC invoke = (INVOKESTATIC) inst;
-					if("java.lang.Integer".equals( invoke.getClassName( cpg ) ) && "toHexString".equals( invoke.getMethodName( cpg ) )) {
-						invokeToHexString = true;
-					}
-				}
-			}
+                if (inst instanceof INVOKEVIRTUAL) { //MessageDigest.digest is called
+                    INVOKEVIRTUAL invoke = (INVOKEVIRTUAL) inst;
+                    if ("java.security.MessageDigest".equals(invoke.getClassName(cpg)) && "digest".equals(invoke.getMethodName(cpg))) {
+                        invokeMessageDigest = true;
+                    }
+                } else if (inst instanceof INVOKESTATIC && invokeMessageDigest) { //The conversion must occurs after the digest was created
+                    INVOKESTATIC invoke = (INVOKESTATIC) inst;
+                    if ("java.lang.Integer".equals(invoke.getClassName(cpg)) && "toHexString".equals(invoke.getMethodName(cpg))) {
+                        invokeToHexString = true;
+                    }
+                }
+            }
 
-			if ( invokeMessageDigest && invokeToHexString ) {
-				bugReporter.reportBug( new BugInstance( this, BAD_HEXA_CONVERSION_TYPE, Priorities.NORMAL_PRIORITY ) //
-						.addClassAndMethod(javaClass, m) );
-			}
-		}
-	}
+            if (invokeMessageDigest && invokeToHexString) {
+                bugReporter.reportBug(new BugInstance(this, BAD_HEXA_CONVERSION_TYPE, Priorities.NORMAL_PRIORITY) //
+                        .addClassAndMethod(javaClass, m));
+            }
+        }
+    }
 
-	@Override
-	public void report() {
+    @Override
+    public void report() {
 
-	}
+    }
 }

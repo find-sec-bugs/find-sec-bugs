@@ -63,12 +63,17 @@ public class EasyBugReporter extends AbstractBugReporter {
                 .append("\n  message=" + bugInstance.getMessage())
                 .append("\n  bugType=" + bugInstance.getBugPattern().getType())
                 .append("  category=" + bugInstance.getCategoryAbbrev());
-        if (bugInstance.getPrimaryClass() != null && bugInstance.getPrimaryMethod() != null &&
-                bugInstance.getPrimarySourceLineAnnotation() != null) {
-            bugDetail
-                    .append("\n  class=" + bugInstance.getPrimaryClass().getClassName())
-                    .append("  method=" + bugInstance.getPrimaryMethod().getMethodName())
-                    .append("  line=" + bugInstance.getPrimarySourceLineAnnotation().getStartLine());
+        if (bugInstance.getPrimaryClass() != null) {
+            bugDetail.append("\n  class=" + bugInstance.getPrimaryClass().getClassName());
+        }
+        if(bugInstance.getPrimaryMethod() != null) {
+            bugDetail.append("  method=" + bugInstance.getPrimaryMethod().getMethodName());
+        }
+        if(bugInstance.getPrimaryField() != null) {
+            bugDetail.append("  field=" + bugInstance.getPrimaryField().getFieldName());
+        }
+        if(bugInstance.getPrimarySourceLineAnnotation() != null) {
+            bugDetail.append("  line=" + bugInstance.getPrimarySourceLineAnnotation().getStartLine());
         }
         bugDetail
                 .append("\n------------------------------------------------------");

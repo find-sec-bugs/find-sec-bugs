@@ -23,9 +23,10 @@ import org.hamcrest.Description;
 
 public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
 
-    private String bugType;
-    private String className;
-    private String methodName;
+    private String  bugType;
+    private String  className;
+    private String  methodName;
+    private String  fieldName;
     private Integer lineNumber;
 
     /**
@@ -34,12 +35,14 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
      * @param bugType    Expected bug type
      * @param className  Class name
      * @param methodName Method name
+     * @param fieldName  Field name
      * @param lineNumber Line number
      */
-    public BugInstanceMatcher(String bugType, String className, String methodName, Integer lineNumber) {
-        this.bugType = bugType;
-        this.className = className;
+    public BugInstanceMatcher(String bugType, String className, String methodName, String fieldName, Integer lineNumber) {
+        this.bugType    = bugType;
+        this.className  = className;
         this.methodName = methodName;
+        this.fieldName  = fieldName;
         this.lineNumber = lineNumber;
     }
 
@@ -64,6 +67,11 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
                 MethodAnnotation methodAnn = extractBugAnnotation(bugInstance,MethodAnnotation.class);
                 if(methodAnn == null) return false;
                 criteriaMatches &= methodAnn.getMethodName().equals(methodName);
+            }
+            if (fieldName != null) {
+                FieldAnnotation fieldAnn = extractBugAnnotation(bugInstance,FieldAnnotation.class);
+                if(fieldAnn == null) return false;
+                criteriaMatches &= fieldAnn.getFieldName().equals(fieldName);
             }
             if (lineNumber != null) {
                 SourceLineAnnotation srcAnn = extractBugAnnotation(bugInstance,SourceLineAnnotation.class);
@@ -96,6 +104,9 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
         }
         if (methodName != null) {
             description.appendText("methodName=").appendValue(methodName).appendText(",");
+        }
+        if (fieldName != null) {
+            description.appendText("fieldName=").appendValue(fieldName).appendText(",");
         }
         if (lineNumber != null) {
             description.appendText("lineNumber=").appendValue(lineNumber);

@@ -29,6 +29,7 @@ public class BugInstanceMatcherBuilder {
     private String bugType;
     private String className;
     private String methodName;
+    private String fieldName;
     private Integer lineNumber;
 
     public BugInstanceMatcherBuilder bugType(String bugType) {
@@ -46,6 +47,11 @@ public class BugInstanceMatcherBuilder {
         return this;
     }
 
+    public BugInstanceMatcherBuilder atField(String fieldName) {
+        this.fieldName = fieldName;
+        return this;
+    }
+
     public BugInstanceMatcherBuilder atLine(int lineNumber) {
         this.lineNumber = lineNumber;
         return this;
@@ -55,6 +61,10 @@ public class BugInstanceMatcherBuilder {
      * @return Mockito Matcher
      */
     public BugInstance build() {
-        return Matchers.argThat(new BugInstanceMatcher(bugType,className,methodName,lineNumber));
+        if(fieldName != null && lineNumber != null) {
+            throw new RuntimeException("The field position is not kept after compilation. " +
+                    "The lineNumber can be set when a fieldName is defined.");
+        }
+        return Matchers.argThat(new BugInstanceMatcher(bugType,className,methodName,fieldName,lineNumber));
     }
 }

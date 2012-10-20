@@ -31,4 +31,8 @@ public class InterfaceUtils {
         }
         return false;
     }
+
+    public static boolean classExtends(JavaClass javaClass,String superClass) {
+        return superClass.equals(javaClass.getSuperclassName());
+    }
 }

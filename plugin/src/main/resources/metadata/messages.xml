@@ -30,7 +30,8 @@
 <p>
 <b>References</b><br/>
 <a href="http://jazzy.id.au/default/2010/09/20/cracking_random_number_generators_part_1.html">Cracking Random Number Generators - Part 1 (http://jazzy.id.au)</a><br/>
-<a href="https://www.securecoding.cert.org/confluence/display/java/MSC02-J.+Generate+strong+random+numbers">CERT: MSC02-J. Generate strong random numbers</a>
+<a href="https://www.securecoding.cert.org/confluence/display/java/MSC02-J.+Generate+strong+random+numbers">CERT: MSC02-J. Generate strong random numbers</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/330.html">CWE-330: Use of Insufficiently Random Values</a>
 </p>
 
 ]]>
@@ -813,7 +814,7 @@ SSL Socket (Secure communication):
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECUS"></BugCode>
+    <BugCode abbrev="SECUS">Unencrypted socket</BugCode>
 
     <!-- Static Initialization vector -->
 <!-- Not implemented yet..
@@ -863,7 +864,7 @@ only be use because of hardware limitation. Currently, the NIST recommend the us
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECDU"></BugCode>
+    <BugCode abbrev="SECDU">DES / DESede usage</BugCode>
 
     <!-- RSA NoPadding -->
     <Detector class="com.h3xstream.findsecbugs.crypto.RsaNoPaddingDetector">
@@ -893,6 +894,67 @@ It should be replace by:<br/>
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECRNP"></BugCode>
+    <BugCode abbrev="SECRNP">RSA NoPadding</BugCode>
+
+    <!-- Hard code password -->
+    <Detector class="com.h3xstream.findsecbugs.password.GoogleApiKeyDetector">
+        <Details>Identify hardcode Google API key</Details>
+    </Detector>
+    <BugPattern type="HARD_CODE_PASSWORD">
+        <ShortDescription>Hard code password</ShortDescription>
+        <LongDescription>Hard code password</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Password should not be kept in the source code. The source code are widely share in the entreprise environement.
+Passwords and secret keys can be managed more easily when being separated in configuration files or keystores.
+</p>
+<p>
+<b>References</b><br/>
+<a href="http://cwe.mitre.org/data/definitions/321.html">CWE-321: Use of Hard-coded Cryptographic Key</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/259.html">CWE-259: Use of Hard-coded Password</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECHCP"></BugCode>
+
+
+    <!-- Struts Form Validation -->
+    <Detector class="com.h3xstream.findsecbugs.StrutsValidatorFormDetector">
+        <Details>Identify Struts Form with no input validation</Details>
+    </Detector>
+    <BugPattern type="STRUTS_FORM_VALIDATION">
+        <ShortDescription>Struts Form with no input validation</ShortDescription>
+        <LongDescription>Struts Form with no input validation</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Form inputs should have minimal input validation. Preventive validation can possibly mitigate unknown risk.
+</p>
+<p>
+Validation can be introduce by implementing a <code>validate</code> method.
+<pre>
+public class RegistrationForm extends ValidatorForm {
+
+    private String name;
+    private String email;
+
+    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+        //Validate the properties
+    }
+
+    [...]
+}
+</pre>
+</p>
+<p>
+<b>Reference</b><br/>
+<a href="http://cwe.mitre.org/data/definitions/106.html">CWE-106: Struts: Plug-in Framework not in Use</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSFV">Struts Form with no input validation</BugCode>
 
 </MessageCollection>

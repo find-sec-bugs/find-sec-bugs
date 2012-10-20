@@ -114,4 +114,9 @@
     <Detector class="com.h3xstream.findsecbugs.crypto.RsaNoPaddingDetector" reports="RSA_NO_PADDING"/>
     <BugPattern type="RSA_NO_PADDING" abbrev="SECRNP" category="SECURITY"/>
 
+    <Detector class="com.h3xstream.findsecbugs.password.GoogleApiKeyDetector" reports="HARD_CODE_PASSWORD"/>
+    <BugPattern type="HARD_CODE_PASSWORD" abbrev="SECHCP" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.StrutsValidatorFormDetector" reports="STRUTS_FORM_VALIDATION"/>
+    <BugPattern type="STRUTS_FORM_VALIDATION" abbrev="SECSFV" category="SECURITY"/>
 </FindbugsPlugin>

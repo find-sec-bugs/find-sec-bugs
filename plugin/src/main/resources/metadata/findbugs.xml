@@ -64,8 +64,10 @@
     <Detector class="com.h3xstream.findsecbugs.FileUploadFilenameDetector" reports="FILE_UPLOAD_FILENAME"/>
     <BugPattern type="FILE_UPLOAD_FILENAME" abbrev="SECFUN" category="SECURITY"/>
 
+<!--
     <Detector class="com.h3xstream.findsecbugs.ReDosDetector" reports="REDOS"/>
     <BugPattern type="REDOS" abbrev="SECRD" category="SECURITY"/>
+-->
 
     <Detector class="com.h3xstream.findsecbugs.xxe.SaxParserXxeDetector" reports="XXE"/>
     <BugPattern type="XXE" abbrev="SECXXE" category="SECURITY"/>

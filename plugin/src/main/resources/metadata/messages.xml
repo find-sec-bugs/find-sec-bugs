@@ -502,26 +502,27 @@ Otherwise, the original filename should be properly escaped.</p>
     <BugCode abbrev="SECFUN">Tainted filename read</BugCode>
 
     <!-- ReDOS -->
-    <Detector class="com.h3xstream.findsecbugs.ReDosDetector">
-        <Details>The regular expression can grow exponentially with some input.</Details>
-    </Detector>
+<!--
+ <Detector class="com.h3xstream.findsecbugs.ReDosDetector">
+     <Details>The regular expression can grow exponentially with some input.</Details>
+ </Detector>
 
-    <BugPattern type="REDOS">
-        <ShortDescription>ReDOS</ShortDescription>
-        <LongDescription>The regular expression "{3}" is vulnerable to ReDOS</LongDescription>
-        <Details>
-            <![CDATA[
+ <BugPattern type="REDOS">
+     <ShortDescription>ReDOS</ShortDescription>
+     <LongDescription>The regular expression "{3}" is vulnerable to ReDOS</LongDescription>
+     <Details>
+         <![CDATA[
 <p>
 <b>Reference</b><br/>
 <a href="https://www.owasp.org/index.php/Regular_expression_Denial_of_Service_-_ReDoS">OWASP : Regular expression Denial of Service</a>
 </p>
 ]]>
-        </Details>
-    </BugPattern>
-    <BugCode abbrev="SECRD">ReDOS</BugCode>
+     </Details>
+ </BugPattern>
+ <BugCode abbrev="SECRD">ReDOS</BugCode>
+-->
 
-
-    <!-- SAXParser XXE -->
+ <!-- SAXParser XXE -->
     <Detector class="com.h3xstream.findsecbugs.xxe.SaxParserXxeDetector">
         <Details>Identify SAXParser usage vulnerable to XXE</Details>
     </Detector>

@@ -119,4 +119,8 @@
 
     <Detector class="com.h3xstream.findsecbugs.StrutsValidatorFormDetector" reports="STRUTS_FORM_VALIDATION"/>
     <BugPattern type="STRUTS_FORM_VALIDATION" abbrev="SECSFV" category="SECURITY"/>
+
+    <Detector class="com.h3xstream.findsecbugs.xss.XSSRequestWrapperDetector" reports="XSS_REQUEST_WRAPPER"/>
+    <BugPattern type="XSS_REQUEST_WRAPPER" abbrev="SECXRW" category="SECURITY"/>
+
 </FindbugsPlugin>

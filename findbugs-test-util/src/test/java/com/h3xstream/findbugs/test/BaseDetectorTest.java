@@ -17,10 +17,12 @@
  */
 package com.h3xstream.findbugs.test;
 
+import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import com.h3xstream.findbugs.test.matcher.BugInstanceMatcherBuilder;
 import com.h3xstream.findbugs.test.service.ClassFileLocator;
 import com.h3xstream.findbugs.test.service.FindBugsLauncher;
+import org.mockito.Matchers;
 
 /**
  * Aggregate useful utilities for unit tests on detector.
@@ -46,5 +48,10 @@ public class BaseDetectorTest {
 
     public BugInstanceMatcherBuilder bugDefinition() {
         return new BugInstanceMatcherBuilder();
+    }
+
+
+    public static BugInstance anyBugs() {
+        return Matchers.<BugInstance>any();
     }
 }

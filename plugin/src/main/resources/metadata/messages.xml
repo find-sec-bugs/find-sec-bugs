@@ -230,7 +230,8 @@ by the user. If it is the case, this bug instance can be ignored.</p>
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246952/Path%20Traversal">WASC : Path Traversal</a><br/>
 <a href="https://www.owasp.org/index.php/Path_Traversal">OWASP : Path Traversal</a><br/>
-<a href="http://capec.mitre.org/data/definitions/126.html">CAPEC-126: Path Traversal</a>
+<a href="http://capec.mitre.org/data/definitions/126.html">CAPEC-126: Path Traversal</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/99.html">CWE-99: Improper Control of Resource Identifiers ('Resource Injection')</a>
 </p>
 ]]>
         </Details>
@@ -248,7 +249,8 @@ by the user. If it is the case, this bug instance can be ignored.</p>
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246952/Path%20Traversal">WASC-33 : Path Traversal</a><br/>
 <a href="https://www.owasp.org/index.php/Path_Traversal">OWASP : Path Traversal</a><br/>
-<a href="http://capec.mitre.org/data/definitions/126.html">CAPEC-126: Path Traversal</a>
+<a href="http://capec.mitre.org/data/definitions/126.html">CAPEC-126: Path Traversal</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/99.html">CWE-99: Improper Control of Resource Identifiers ('Resource Injection')</a>
 </p>
 ]]>
         </Details>
@@ -552,19 +554,11 @@ user input as XML content.</p>
 &lt;!DOCTYPE s [
 &lt;!ENTITY x &quot;OVERLONG_CONTENT_HERE_WITH_MORE_THAN_10^5_CHARACTERS&quot;&gt;
 ]&gt;
-&lt;soapenv:Envelope xmlns:ns1=&quot;http://myPackageNamespace&quot;xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
-  &lt;soapenv:Header&gt;
-  &lt;/soapenv:Header&gt;
-  &lt;soapenv:Body&gt;
-     &lt;ns1:reverse&gt;
-        &lt;s&gt;
-          &amp;x;
-          &amp;x;
-          [...]
-        &lt;/s&gt;
-     &lt;/ns1:reverse&gt;
-  &lt;/soapenv:Body&gt;
-&lt;/soapenv:Envelope&gt;
+&lt;foo&gt;
+    &amp;x;
+    &amp;x;
+    [...]
+&lt;/foo&gt;
 </pre>
 </p>
 <p>
@@ -675,8 +669,13 @@ all of them.</p>
         <Details>
             <![CDATA[
 <p>
+Values associate to SQL queries should be escape properly. To so do, prepare statement can be use
+(Available for all major API : JDO, JPA and Hibernate). Alternatively, typed API such as Hibernate Criteria and Querydsl
+can be used.
+</p>
+<p>
 <b>References</b><br/>
-<a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-19: SQL Injection</a>
+<a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-19: SQL Injection</a><br/>
 <a href="http://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a>
 </p>
 ]]>
@@ -858,8 +857,9 @@ DES and DESede (3DES), previously recommended, are not consider strong ciphers f
 only be use because of hardware limitation. Currently, the NIST recommend the usage of AES block cipher.
 </p>
 <p>
-<b>Reference</b><br/>
-<a href="http://www.nist.gov/itl/fips/060205_des.cfm">NIST Withdraws Outdated Data Encryption Standard</a>
+<b>References</b><br/>
+<a href="http://www.nist.gov/itl/fips/060205_des.cfm">NIST Withdraws Outdated Data Encryption Standard</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky Cryptographic Algorithm</a>
 </p>
 ]]>
         </Details>
@@ -917,7 +917,7 @@ Passwords and secret keys can be managed more easily when being separated in con
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECHCP"></BugCode>
+    <BugCode abbrev="SECHCP">Hard code password</BugCode>
 
 
     <!-- Struts Form Validation -->
@@ -956,5 +956,44 @@ public class RegistrationForm extends ValidatorForm {
         </Details>
     </BugPattern>
     <BugCode abbrev="SECSFV">Struts Form with no input validation</BugCode>
+
+    <!-- XSS Filter -->
+    <Detector class="com.h3xstream.findsecbugs.xss.XSSRequestWrapperDetector">
+        <Details>Identify XSSRequestWrapper (weak XSS protection)</Details>
+    </Detector>
+    <BugPattern type="XSS_REQUEST_WRAPPER">
+        <ShortDescription>XSSRequestWrapper is a weak XSS protection</ShortDescription>
+        <LongDescription>XSSRequestWrapper is a weak XSS protection</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+A implementation of <code>HttpServletRequestWrapper</code> called <code>XSSRequestWrapper</code> was publish through
+various blog sites. <sup><a href="http://java.dzone.com/articles/stronger-anti-cross-site">[1]</a></sup>
+<sup><a href="http://www.javacodegeeks.com/2012/07/anti-cross-site-scripting-xss-filter.html">[2]</a></sup>
+</p>
+<p>
+The filtering is weak for few reasons:
+<ul>
+<li>It covers only parameters not headers and side-channel inputs</li>
+<li>The replace chain can be bypass easly (see example below)</li>
+<li>It's a black list of very specific patterns</li>
+</ul>
+</p>
+<p>
+<b>Example of bypass</b><br/>
+</p>
+<pre>&lt;scrivbscript:pt&gt;alert(1)&lt;/scrivbscript:pt&gt;</pre>
+<p>
+The previous input will be transform to <b><code>"&lt;script&gt;alert(1)&lt;/script&gt;"</code></b>.
+
+The removal of <code>"vbscript:"</code> is after the replacement of <code>"&lt;script&gt;.*&lt;/script&gt;"</code>.
+</p>
+<p>
+For an indepth protection, choose solution that filter characters automatically in the <b><u>view</u></b> (template, jsp, ...).
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECXRW">Hard code password</BugCode>
 
 </MessageCollection>

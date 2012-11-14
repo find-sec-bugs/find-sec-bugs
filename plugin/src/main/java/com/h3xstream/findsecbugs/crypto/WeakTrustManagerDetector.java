@@ -62,7 +62,6 @@ public class WeakTrustManagerDetector implements Detector {
         //Not the target of this detector
         if (!isTrustManager) return;
 
-        System.out.println(javaClass.getClassName());
         Method[] methodList = javaClass.getMethods();
 
         for (Method m : methodList) {

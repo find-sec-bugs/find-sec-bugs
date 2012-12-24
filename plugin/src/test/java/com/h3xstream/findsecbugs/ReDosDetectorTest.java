@@ -19,18 +19,56 @@ package com.h3xstream.findsecbugs;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
+import com.h3xstream.findbugs.test.matcher.BugInstanceMatcher;
+import edu.umd.cs.findbugs.BugInstance;
+import edu.umd.cs.findbugs.BugReporter;
+import edu.umd.cs.findbugs.Priorities;
+import org.mockito.Matchers;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
 
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
-@Test(enabled = false)
 public class ReDosDetectorTest extends BaseDetectorTest {
 
+    //Reusable matcher for REDOS bug
+
     @Test
-    public void detectRedos() throws Exception {
+    public void analyseSafePattern() {
+        BugReporter reporter = mock(BugReporter.class);
+        ReDosDetector detector = new ReDosDetector(reporter);
+
+        detector.analyseRegexString("");
+        detector.analyseRegexString("[a-zA-Z]+[0-9]*");
+        detector.analyseRegexString("(id-[0-9]+)-([0-9A-F]*)");
+
+        verify(reporter, never()).reportBug(bugDefinition().bugType("REDOS").build());
+    }
+
+    @Test
+    public void analyseSuspectPattern() {
+
+        BugReporter reporter = mock(BugReporter.class);
+        ReDosDetector detector = new ReDosDetector(reporter);
+
+
+        detector.analyseRegexString("((a)+)+");
+        verify(reporter, times(1)).reportBug(bugDefinition().bugType("REDOS").build());
+
+        reset(reporter);
+
+        detector.analyseRegexString("([b-d])(([a]*))+(0-9)");
+        verify(reporter, times(1)).reportBug(bugDefinition().bugType("REDOS").build());
+    }
+
+    /**
+     * Test that utilize compile code.
+     * @throws Exception
+     */
+    @Test
+    public void detectRedosInCode() throws Exception {
         //Locate test code
         String[] files = {
                 getClassFilePath("testcode/VariousRedos")
@@ -41,22 +79,22 @@ public class ReDosDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         //Field with a Pattern initialize on instantiation
-//        verify(reporter).doReportBug(
-//                bugDefinition()
-//                        .bugType("REDOS")
-//                        .inClass("VariousRedos").inMethod("<init>").atLine(8)
-//                        .build()
-//        );
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("REDOS")
+                        .inClass("VariousRedos").atLine(8)
+                        .build()
+        );
 
         //Pattern build in methods
-//        for (Integer line : Arrays.asList(16, 26)) {
-//            verify(reporter).doReportBug(
-//                    bugDefinition()
-//                            .bugType("REDOS")
-//                            .inClass("VariousRedos").inMethod("main").atLine(line)
-//                            .build()
-//            );
-//        }
+        for (Integer line : Arrays.asList(16, 26)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("REDOS")
+                            .inClass("VariousRedos").inMethod("main").atLine(line)
+                            .build()
+            );
+        }
     }
-
 }

@@ -12,12 +12,12 @@ This software is release under [LGPL](http://www.gnu.org/licenses/lgpl.html).
 
 Aside from adding various new detectors, there are few features that are planned.
 
-### Version 1.0 (current)
+### Version 1.0
 
 - Introduce a basic set of detectors
 - Create a tutorial for Eclipse IDE
 
-### Version 2.0
+### Version 2.0 (current)
 
 - Analysis of JSP for XSS
 - Initiate a set of detectors for Groovy specific api

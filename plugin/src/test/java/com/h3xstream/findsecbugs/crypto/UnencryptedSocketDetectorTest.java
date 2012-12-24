@@ -45,11 +45,11 @@ public class UnencryptedSocketDetectorTest extends BaseDetectorTest {
                         .bugType( "UNENCRYPTED_SOCKET" )
                         .inClass( "UnencryptedSocket" )
                         .inMethod( "plainSocket" )
-                        .atLine(26)
+                        .atLine(23)
                         .build()
         );
 
-        for (Integer line : Arrays.asList(31, 34, 37)) {
+        for (Integer line : Arrays.asList(28, 31, 34)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType( "UNENCRYPTED_SOCKET" )

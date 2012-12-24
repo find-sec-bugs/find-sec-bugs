@@ -2,7 +2,7 @@ package testcode.crypto;
 
 import javax.crypto.Cipher;
 
-import sun.security.jgss.SunProvider;
+import java.security.Provider;
 
 /**
  * Use for test the identification of DES ciphers, AES/ECB.
@@ -16,8 +16,8 @@ public class BlockCipherList {
 		Cipher.getInstance( "AES/CBC/NoPadding");
 		Cipher.getInstance( "AES/CBC/PKCS5Padding", "SunJCE" );
 		Cipher.getInstance( "AES/ECB/NoPadding", "IBMJCE" );
-		Cipher.getInstance( "AES/ECB/PKCS5Padding", SunProvider.INSTANCE );
-		Cipher.getInstance( "DES/CBC/NoPadding", SunProvider.INSTANCE  );
+		Cipher.getInstance( "AES/ECB/PKCS5Padding", new DummyProvider() );
+		Cipher.getInstance( "DES/CBC/NoPadding", new DummyProvider() );
 		Cipher.getInstance( "DES/CBC/PKCS5Padding" );
 		Cipher.getInstance( "DES/ECB/NoPadding" );
 		Cipher.getInstance( "DES/ECB/PKCS5Padding" );
@@ -29,4 +29,15 @@ public class BlockCipherList {
 		Cipher.getInstance( "RSA/ECB/OAEPWithSHA-1AndMGF1Padding" );
 		Cipher.getInstance( "RSA/ECB/OAEPWithSHA-256AndMGF1Padding" );
 	}
+
+    /**
+     * Sun provider are at risk to be remove. This dummy provider will
+     * be easier to maintain.
+     */
+    static class DummyProvider extends Provider {
+
+        protected DummyProvider() {
+            super("dummy", 1.0, "");
+        }
+    }
 }

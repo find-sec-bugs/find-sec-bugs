@@ -23,14 +23,26 @@ import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.OpcodeStack;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
+import edu.umd.cs.findbugs.classfile.FieldDescriptor;
+import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 import org.apache.bcel.Constants;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-//TODO: Replace with http://code.google.com/p/saferegex/
+/**
+ * This detector does minimal effort to find potential REDOS.
+ * <p>
+ * It will identify pattern similar to : <code>(( )+)+</code>
+ * <p>
+ * It will not identify pattern of equivalence (such as<code>(aa|a)</code>).
+ * It is far more complex to identify.
+ *
+ * <p>
+ * For more advanced Regex analysis: <a href="http://code.google.com/p/saferegex/">Safe Regex</a>
+ */
 public class ReDosDetector extends OpcodeStackDetector {
 
-    private boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     private static final String REDOS_TYPE = "REDOS";
 
@@ -66,80 +78,68 @@ public class ReDosDetector extends OpcodeStackDetector {
                 analyseRegexString(value);
             }
         }
-
     }
 
-    protected void analyseRegexString(String regexString) {
-
-        AtomicInteger maxDepthReach = new AtomicInteger(0);
-        visitRegex(regexString,0,new AtomicInteger(0),maxDepthReach,new AtomicInteger(-1));
-
-        if(DEBUG) System.out.printf("%s => %d %n",regexString,maxDepthReach.get());
-
-        if(maxDepthReach.get() >= 2) {
-            bugReporter.reportBug(new BugInstance(this, REDOS_TYPE, Priorities.NORMAL_PRIORITY) //
-                    .addClass(this).addMethod(this).addSourceLine(this)
-                    .addString(regexString));
+    public void analyseRegexString(String regex) {
+        if(regex.length()>0) {
+            recurAnalyseRegex(regex,regex.length()-1,0);
         }
     }
 
+    private int recurAnalyseRegex(String regex, int startPosition, int level) {
+//        print(level, "level = " + level);
+        if(level == 2) {
 
-    /**
-     *
-     * @param input Regex to analyse
-     * @param startPos Current position of the current depth
-     * @param currentDepth Number of encapsulation (ie: (((a)+)+)+  == 3)
-     * @param outMaxDepth A group can contains multiple groups. This return the depest one.
-     * @param outEndPosition The current recursion will return where the cursor is at.
-     */
-    private void visitRegex(String input, int startPos, AtomicInteger currentDepth, AtomicInteger outMaxDepth, AtomicInteger outEndPosition) {
+            MethodDescriptor md = this.getMethodDescriptor();
+            FieldDescriptor fd = this.getFieldDescriptor();
 
-        if(DEBUG) System.out.printf("Entering \"%s\" (depth=%d) %n", input.substring(startPos), currentDepth.intValue());
+            BugInstance bug = new BugInstance(this, REDOS_TYPE, Priorities.NORMAL_PRIORITY) //
+                    .addString(regex).addClass(this);
+            if(md != null)
+                bug.addMethod(md);
+            if(fd != null)
+                bug.addField(fd);
+
+            try {
+                bug.addSourceLine(this);
+            }
+            catch (IllegalStateException e) {}
+
+            bugReporter.reportBug(bug);
+            return 0;
+        }
 
 
+//        print(level, "Analysing " + regex.substring(0, startPosition + 1));
 
-        for (int i = startPos; i < input.length(); i++) {
-            if (isChar(input,i,CLOSING_CHAR)) {
-                //Closing branch
-                outEndPosition.set(i);
+        boolean openingMode = false;
 
-//                if(hasRepetitionCharAfterChar(input,i,PLUS_CHAR)) {
-                    currentDepth.incrementAndGet();
-//                    if(DEBUG) System.out.printf("Current depth was %d %n",currentDepth.intValue());
-//                    currentDepth.incrementAndGet();
-//                    if(currentDepth.intValue() > outMaxDepth.intValue()) {
-//                        outMaxDepth.set(currentDepth.intValue());
-//                    }
-//                }
+        for(int i=startPosition;i>=0;i--) {
+//            print(level, "[" + i + "] = '" + regex.charAt(i) + "'");
 
-                if(DEBUG) System.out.printf("Closing _%s_ (max depth=%d) %n", input.substring(startPos,i), outMaxDepth.intValue());
-                return;
+            if(isChar(regex,i,OPENING_CHAR) ) {
+//                print(level, "<<<<");
+                return i;
             }
 
-            if (isChar(input,i,OPENING_CHAR)) {
-                //New branch
-                AtomicInteger depthNewBranch = new AtomicInteger(currentDepth.intValue());
-
-                if(DEBUG) System.out.printf("before = %d %n",depthNewBranch.intValue());
-                visitRegex(input,i+1,depthNewBranch,outMaxDepth,outEndPosition);
-                if(DEBUG) System.out.printf("after = %d %n",depthNewBranch.intValue());
-//
-//
-                if(depthNewBranch.intValue() > outMaxDepth.intValue()) {
-                    outMaxDepth.set(currentDepth.intValue());
+            if(isChar(regex,i,CLOSING_CHAR) ) {
+                int newLevel = level;
+                if(i+1 < regex.length() && isChar(regex,i+1,PLUS_CHAR)) {
+                    newLevel += 1;
                 }
-
-                //Continue from the last branch end
-                i = outEndPosition.get();
+//                print(level, ">>>>");
+                openingMode=true;
+                i = recurAnalyseRegex(regex,i-1,newLevel);
+                if(i==-1) {
+                    return 0;
+                }
+//                print(level, "Restarting at " + i);
             }
-
-
         }
 
+//        print(level, "END!");
 
-        if(currentDepth.intValue() > outMaxDepth.intValue()) {
-            outMaxDepth.set(currentDepth.intValue());
-        }
+        return 0;
     }
 
     /**
@@ -150,9 +150,10 @@ public class ReDosDetector extends OpcodeStackDetector {
      * @return
      */
     private boolean isChar(String value, int position,char[] charToTest) {
+        char actualChar = value.charAt(position);
         boolean oneCharFound=false;
         for(char ch : charToTest) {
-            if(value.charAt(position) == ch) {
+            if(actualChar == ch) {
                 oneCharFound = true;
                 break;
             }
@@ -160,16 +161,18 @@ public class ReDosDetector extends OpcodeStackDetector {
         return oneCharFound && (position == 0 || value.charAt(position-1) != '\\');
     }
 
-    private boolean hasRepetitionCharAfterChar(String value, int position, char[] plusChar) {
-        if(position >= value.length() -1) {
-            return false;
-        }
+    //Debug method
 
-        for(char ch : plusChar) {
-            if(value.charAt(position+1) == ch) {
-                return true;
-            }
-        }
-        return false;
-    }
+//    private void print(int level,Object obj) {
+//        System.out.println(lvl(level) + "> "+ obj);
+//    }
+//
+//    private String lvl(int level) {
+//        StringBuilder str = new StringBuilder();
+//        for(int i=0;i<level;i++) {
+//            str.append("-\t");
+//        }
+//        return str.toString();
+//    }
+
 }

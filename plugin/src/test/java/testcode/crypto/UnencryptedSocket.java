@@ -1,12 +1,9 @@
 package testcode.crypto;
 
-import sun.security.ssl.SSLSocketImpl;
-
 import javax.net.ssl.SSLSocketFactory;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 public class UnencryptedSocket {
 

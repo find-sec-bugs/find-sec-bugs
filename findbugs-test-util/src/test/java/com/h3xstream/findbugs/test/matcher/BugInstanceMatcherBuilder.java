@@ -61,10 +61,10 @@ public class BugInstanceMatcherBuilder {
      * @return Mockito Matcher
      */
     public BugInstance build() {
-        if(fieldName != null && lineNumber != null) {
-            throw new RuntimeException("The field position is not kept after compilation. " +
-                    "The lineNumber can be set when a fieldName is defined.");
-        }
+//        if(fieldName != null && lineNumber != null) {
+//            throw new RuntimeException("The field position is not kept after compilation. " +
+//                    "The lineNumber can be set when a fieldName is defined.");
+//        }
         return Matchers.argThat(new BugInstanceMatcher(bugType,className,methodName,fieldName,lineNumber));
     }
 }

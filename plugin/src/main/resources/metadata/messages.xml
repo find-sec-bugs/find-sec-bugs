@@ -505,25 +505,37 @@ Otherwise, the original filename should be properly escaped.</p>
     <BugCode abbrev="SECFUN">Tainted filename read</BugCode>
 
     <!-- ReDOS -->
-<!--
+
  <Detector class="com.h3xstream.findsecbugs.ReDosDetector">
      <Details>The regular expression can grow exponentially with some input.</Details>
  </Detector>
 
  <BugPattern type="REDOS">
      <ShortDescription>ReDOS</ShortDescription>
-     <LongDescription>The regular expression "{3}" is vulnerable to ReDOS</LongDescription>
+     <LongDescription>The regular expression "{0}" is vulnerable to ReDOS</LongDescription>
      <Details>
          <![CDATA[
+
 <p>
-<b>Reference</b><br/>
-<a href="https://www.owasp.org/index.php/Regular_expression_Denial_of_Service_-_ReDoS">OWASP : Regular expression Denial of Service</a>
+ReDOS stands for Regular expression Denial of Service. The regular expression (RegEx) identify may take a large amount of time
+when analysing certain strings.
+</a>
+<p>
+For example the following RegEx, the input "<code>aaaaaaaaaaaaaaaaX</code>" will cause the RegEx engine to analyse 65536 different paths.<sup>[1] Example taken from OWASP referecen</sup>
+<pre>^(a+)+$</pre>
+Therefore, it is possible that a single request cause a large amount of computation on the server side.
+</p>
+
+<p>
+<b>References</b><br/>
+<a href="http://www.jroller.com/sebastianKuebeck/entry/detecting_and_preventing_redos_vulnerabilities">Sebastian Kubeck's Weblog: Detecting and Preventing ReDoS Vulnerabilities</a><br/>
+<sup>[1]</sup> <a href="https://www.owasp.org/index.php/Regular_expression_Denial_of_Service_-_ReDoS">OWASP : Regular expression Denial of Service</a>
 </p>
 ]]>
      </Details>
  </BugPattern>
  <BugCode abbrev="SECRD">ReDOS</BugCode>
--->
+
 
  <!-- SAXParser XXE -->
     <Detector class="com.h3xstream.findsecbugs.xxe.SaxParserXxeDetector">

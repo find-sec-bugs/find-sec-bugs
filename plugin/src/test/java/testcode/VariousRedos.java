@@ -12,7 +12,7 @@ public class VariousRedos {
 
         String input = args.length > 0  ? args[0] : "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa!";
 
-        //Pattern war
+        //Pattern var
         Pattern emailValidation = Pattern.compile("^([a-zA-Z0-9])(([\\-.]|[_]+)?([a-zA-Z0-9]+))*(@){1}[a-z0-9]+[.]{1}(([a-z]{2,3})|([a-z]{2,3}[.]{1}[a-z]{2,3}))$");
         Matcher m = emailValidation.matcher(input);
         if(m.find()) {

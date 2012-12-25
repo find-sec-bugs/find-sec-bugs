@@ -42,6 +42,10 @@ public class BaseDetectorTest {
         return classFileLocator.getClassFilePath(path);
     }
 
+    public String getJspFilePath(String path) {
+        return classFileLocator.getJspFilePath(path);
+    }
+
     public void analyze(String[] classFiles, BugReporter bugReporter) throws Exception {
         findBugsLauncher.analyze(classFiles,bugReporter);
     }

@@ -67,6 +67,29 @@
                     </properties>
                 </configuration>
             </plugin>
+
+
+            <!-- Compilation of the JSP test pages -->
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>maven-jetty-jspc-plugin</artifactId>
+                <version>6.1.26</version>
+                <executions>
+                    <execution>
+                        <id>jspc</id>
+                        <phase>test-compile</phase> <!-- Needed to make the bytecode available for the tests -->
+                        <goals>
+                            <goal>jspc</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Use the test folders to avoid polluting the resulting jar -->
+                            <generatedClasses>${project.build.directory}/test-classes</generatedClasses>
+                            <webAppSourceDirectory>${basedir}/src/test/webapp</webAppSourceDirectory>
+                            <suppressSmap>false</suppressSmap>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 

@@ -17,13 +17,13 @@ Aside from adding various new detectors, there are few features that are planned
 - Introduce a basic set of detectors
 - Create a tutorial for Eclipse IDE
 
-### Version 2.0 (current)
+### Version 1.1 (current)
 
-- Analysis of JSP for XSS
 - Initiate a set of detectors for Groovy specific api
 - Create a maven repository host on GitHub (Could allow auto-update for maven integration)
 - Create tutorial for Jenkins
 
-### Version 3.0
+### Version 2.0
 
+- Analysis of JSP for XSS
 - Improve the flow analysis of variables (for string construction)

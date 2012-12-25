@@ -1,23 +1,55 @@
 <FindbugsPlugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xsi:noNamespaceSchemaLocation="findbugsplugin.xsd"
+                xsi:noNamespaceSchemaLocation="https://findbugs.googlecode.com/svn-history/r13379/trunk/findbugs/etc/findbugsplugin.xsd"
                 pluginid="com.h3xstream.findsecbugs"
                 provider="Find Security Bugs"
                 defaultenabled="false"
                 website="https://github.com/h3xstream/find-sec-bugs">
 
-
     <!--
-    Detector : Java class that analyse bytecode
+    Detector : Java class that analyse the bytecode
     Bug Pattern : Vulnerability/Code at risk*. All bug patterns are describe in messages.xml.
 
     * Not all bug pattern are direct vulnerability. For example, the identification of endpoints
     -->
 
     <Detector class="com.h3xstream.findsecbugs.PredictableRandomDetector" reports="PREDICTABLE_RANDOM"/>
-    <BugPattern type="PREDICTABLE_RANDOM" abbrev="SECPR" category="SECURITY"/>
+
 
     <Detector class="com.h3xstream.findsecbugs.endpoint.ServletEndpointDetector"
               reports="SERVLET_PARAMETER,SERVLET_CONTENT_TYPE,SERVLET_SERVER_NAME,SERVLET_SESSION_ID,SERVLET_QUERY_STRING,SERVLET_HEADER,SERVLET_HEADER_REFERER,SERVLET_HEADER_USER_AGENT"/>
+
+    <Detector class="com.h3xstream.findsecbugs.endpoint.CookieDetector" reports="COOKIE_USAGE"/>
+    <Detector class="com.h3xstream.findsecbugs.PathTraversalDetector" reports="PATH_TRAVERSAL_IN,PATH_TRAVERSAL_OUT"/>
+    <Detector class="com.h3xstream.findsecbugs.CommandInjectionDetector" reports="COMMAND_INJECTION"/>
+    <Detector class="com.h3xstream.findsecbugs.WeakFilenameUtilsMethodDetector" reports="WEAK_FILENAMEUTILS"/>
+    <Detector class="com.h3xstream.findsecbugs.crypto.WeakTrustManagerDetector" reports="WEAK_TRUST_MANAGER"/>
+    <Detector class="com.h3xstream.findsecbugs.endpoint.JaxWsEndpointDetector" reports="JAXWS_ENDPOINT"/>
+    <Detector class="com.h3xstream.findsecbugs.endpoint.JaxRsEndpointDetector" reports="JAXRS_ENDPOINT"/>
+    <Detector class="com.h3xstream.findsecbugs.endpoint.TapestryEndpointDetector" reports="TAPESTRY_ENDPOINT"/>
+    <Detector class="com.h3xstream.findsecbugs.endpoint.WicketEndpointDetector" reports="WICKET_ENDPOINT"/>
+    <Detector class="com.h3xstream.findsecbugs.crypto.WeakMessageDigestDetector" reports="WEAK_MESSAGE_DIGEST"/>
+    <Detector class="com.h3xstream.findsecbugs.crypto.CustomMessageDigestDetector" reports="CUSTOM_MESSAGE_DIGEST"/>
+    <Detector class="com.h3xstream.findsecbugs.FileUploadFilenameDetector" reports="FILE_UPLOAD_FILENAME"/>
+    <Detector class="com.h3xstream.findsecbugs.ReDosDetector" reports="REDOS"/>
+    <Detector class="com.h3xstream.findsecbugs.xxe.SaxParserXxeDetector" reports="XXE"/>
+    <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionJavaxDetector" reports="XPATH_INJECTION"/>
+    <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionApacheXPathApiDetector" reports="XPATH_INJECTION"/>
+    <Detector class="com.h3xstream.findsecbugs.endpoint.Struts1EndpointDetector" reports="STRUTS1_ENDPOINT"/>
+    <Detector class="com.h3xstream.findsecbugs.endpoint.Struts2EndpointDetector" reports="STRUTS2_ENDPOINT"/>
+    <Detector class="com.h3xstream.findsecbugs.endpoint.SpringMvcEndpointDetector" reports="SPRING_ENDPOINT"/>
+    <Detector class="com.h3xstream.findsecbugs.injection.InjectionDetector" reports="SQL_INJECTION"/>
+    <Detector class="com.h3xstream.findsecbugs.crypto.BadHexadecimalConversionDetector" reports="BAD_HEXA_CONVERSION"/>
+    <Detector class="com.h3xstream.findsecbugs.crypto.EcbModeDetector" reports="ECB_MODE"/>
+    <Detector class="com.h3xstream.findsecbugs.crypto.HazelcastSymmetricEncryptionDetector" reports="HAZELCAST_SYMMETRIC_ENCRYPTION"/>
+    <Detector class="com.h3xstream.findsecbugs.crypto.NullCipherDetector" reports="NULL_CIPHER"/>
+    <Detector class="com.h3xstream.findsecbugs.crypto.UnencryptedSocketDetector" reports="UNENCRYPTED_SOCKET"/>
+    <Detector class="com.h3xstream.findsecbugs.crypto.DesUsageDetector" reports="DES_USAGE"/>
+    <Detector class="com.h3xstream.findsecbugs.crypto.RsaNoPaddingDetector" reports="RSA_NO_PADDING"/>
+    <Detector class="com.h3xstream.findsecbugs.password.GoogleApiKeyDetector" reports="HARD_CODE_PASSWORD"/>
+    <Detector class="com.h3xstream.findsecbugs.StrutsValidatorFormDetector" reports="STRUTS_FORM_VALIDATION"/>
+    <Detector class="com.h3xstream.findsecbugs.xss.XSSRequestWrapperDetector" reports="XSS_REQUEST_WRAPPER"/>
+
+    <BugPattern type="PREDICTABLE_RANDOM" abbrev="SECPR" category="SECURITY"/>
     <BugPattern type="SERVLET_PARAMETER" abbrev="SECSP" category="SECURITY"/>
     <BugPattern type="SERVLET_CONTENT_TYPE" abbrev="SECSCT" category="SECURITY"/>
     <BugPattern type="SERVLET_SERVER_NAME" abbrev="SECSSN" category="SECURITY"/>
@@ -26,98 +58,42 @@
     <BugPattern type="SERVLET_HEADER" abbrev="SECSH" category="SECURITY"/>
     <BugPattern type="SERVLET_HEADER_REFERER" abbrev="SECSHR" category="SECURITY"/>
     <BugPattern type="SERVLET_HEADER_USER_AGENT" abbrev="SECSHUA" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.endpoint.CookieDetector" reports="COOKIE_USAGE"/>
     <BugPattern type="COOKIE_USAGE" abbrev="SECCU" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.PathTraversalDetector" reports="PATH_TRAVERSAL_IN,PATH_TRAVERSAL_OUT"/>
     <BugPattern type="PATH_TRAVERSAL_IN" abbrev="SECPTI" category="SECURITY"/>
     <BugPattern type="PATH_TRAVERSAL_OUT" abbrev="SECPTO" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.CommandInjectionDetector" reports="COMMAND_INJECTION"/>
     <BugPattern type="COMMAND_INJECTION" abbrev="SECCI" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.WeakFilenameUtilsMethodDetector" reports="WEAK_FILENAMEUTILS"/>
     <BugPattern type="WEAK_FILENAMEUTILS" abbrev="SECWF" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.crypto.WeakTrustManagerDetector" reports="WEAK_TRUST_MANAGER"/>
     <BugPattern type="WEAK_TRUST_MANAGER" abbrev="SECWTM" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.endpoint.JaxWsEndpointDetector" reports="JAXWS_ENDPOINT"/>
     <BugPattern type="JAXWS_ENDPOINT" abbrev="SECJWS" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.endpoint.JaxRsEndpointDetector" reports="JAXRS_ENDPOINT"/>
     <BugPattern type="JAXRS_ENDPOINT" abbrev="SECJRS" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.endpoint.TapestryEndpointDetector" reports="TAPESTRY_ENDPOINT"/>
     <BugPattern type="TAPESTRY_ENDPOINT" abbrev="SECTE" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.endpoint.WicketEndpointDetector" reports="WICKET_ENDPOINT"/>
     <BugPattern type="WICKET_ENDPOINT" abbrev="SECWE" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.crypto.WeakMessageDigestDetector" reports="WEAK_MESSAGE_DIGEST"/>
     <BugPattern type="WEAK_MESSAGE_DIGEST" abbrev="SECWMD" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.crypto.CustomMessageDigestDetector" reports="CUSTOM_MESSAGE_DIGEST"/>
     <BugPattern type="CUSTOM_MESSAGE_DIGEST" abbrev="SECCMD" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.FileUploadFilenameDetector" reports="FILE_UPLOAD_FILENAME"/>
     <BugPattern type="FILE_UPLOAD_FILENAME" abbrev="SECFUN" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.ReDosDetector" reports="REDOS"/>
     <BugPattern type="REDOS" abbrev="SECRD" category="SECURITY"/>
-    <Detector class="com.h3xstream.findsecbugs.xxe.SaxParserXxeDetector" reports="XXE"/>
     <BugPattern type="XXE" abbrev="SECXXE" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionJavaxDetector" reports="XPATH_INJECTION"/>
-    <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionApacheXPathApiDetector" reports="XPATH_INJECTION"/>
     <BugPattern type="XPATH_INJECTION" abbrev="SECXPI" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.endpoint.Struts1EndpointDetector" reports="STRUTS1_ENDPOINT"/>
     <BugPattern type="STRUTS1_ENDPOINT" abbrev="SECSTR1" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.endpoint.Struts2EndpointDetector" reports="STRUTS2_ENDPOINT"/>
     <BugPattern type="STRUTS2_ENDPOINT" abbrev="SECSTR2" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.endpoint.SpringMvcEndpointDetector" reports="SPRING_ENDPOINT"/>
     <BugPattern type="SPRING_ENDPOINT" abbrev="SECSC" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.injection.InjectionDetector" reports="SQL_INJECTION"/>
     <BugPattern type="SQL_INJECTION" abbrev="SECSQLI" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.crypto.BadHexadecimalConversionDetector" reports="BAD_HEXA_CONVERSION"/>
     <BugPattern type="BAD_HEXA_CONVERSION" abbrev="SECBHC" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.crypto.EcbModeDetector" reports="ECB_MODE"/>
     <BugPattern type="ECB_MODE" abbrev="SECECB" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.crypto.HazelcastSymmetricEncryptionDetector" reports="HAZELCAST_SYMMETRIC_ENCRYPTION"/>
     <BugPattern type="HAZELCAST_SYMMETRIC_ENCRYPTION" abbrev="SECHAZ" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.crypto.NullCipherDetector" reports="NULL_CIPHER"/>
     <BugPattern type="NULL_CIPHER" abbrev="SECNC" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.crypto.UnencryptedSocketDetector" reports="UNENCRYPTED_SOCKET"/>
     <BugPattern type="UNENCRYPTED_SOCKET" abbrev="SECUS" category="SECURITY"/>
+    <BugPattern type="DES_USAGE" abbrev="SECDU" category="SECURITY"/>
+    <BugPattern type="RSA_NO_PADDING" abbrev="SECRNP" category="SECURITY"/>
+    <BugPattern type="HARD_CODE_PASSWORD" abbrev="SECHCP" category="SECURITY"/>
+    <BugPattern type="STRUTS_FORM_VALIDATION" abbrev="SECSFV" category="SECURITY"/>
+    <BugPattern type="XSS_REQUEST_WRAPPER" abbrev="SECXRW" category="SECURITY"/>
 
     <!--
     <Detector class="com.h3xstream.findsecbugs.crypto.StaticIvDetector" reports="STATIC_IV"/>
     <BugPattern type="STATIC_IV" abbrev="SECSIV" category="SECURITY"/>
     -->
 
-    <Detector class="com.h3xstream.findsecbugs.crypto.DesUsageDetector" reports="DES_USAGE"/>
-    <BugPattern type="DES_USAGE" abbrev="SECDU" category="SECURITY"/>
 
-    <Detector class="com.h3xstream.findsecbugs.crypto.RsaNoPaddingDetector" reports="RSA_NO_PADDING"/>
-    <BugPattern type="RSA_NO_PADDING" abbrev="SECRNP" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.password.GoogleApiKeyDetector" reports="HARD_CODE_PASSWORD"/>
-    <BugPattern type="HARD_CODE_PASSWORD" abbrev="SECHCP" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.StrutsValidatorFormDetector" reports="STRUTS_FORM_VALIDATION"/>
-    <BugPattern type="STRUTS_FORM_VALIDATION" abbrev="SECSFV" category="SECURITY"/>
-
-    <Detector class="com.h3xstream.findsecbugs.xss.XSSRequestWrapperDetector" reports="XSS_REQUEST_WRAPPER"/>
-    <BugPattern type="XSS_REQUEST_WRAPPER" abbrev="SECXRW" category="SECURITY"/>
 
 </FindbugsPlugin>

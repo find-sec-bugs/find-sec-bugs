@@ -2,7 +2,10 @@ package testcode.xss;
 
 import java.util.regex.Pattern;
 
-public class EasyBypassPoc {
+/**
+ * Simple POC kept as reference.
+ */
+public class ByPassExamplePoc {
 
     private static Pattern[] patterns = new Pattern[]{
             // Script fragments

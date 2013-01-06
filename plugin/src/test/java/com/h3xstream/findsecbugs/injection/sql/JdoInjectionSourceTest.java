@@ -30,7 +30,7 @@ import static org.mockito.Mockito.verify;
 public class JdoInjectionSourceTest extends BaseDetectorTest {
 
     @Test
-    public void detectInjection() throws Exception {
+    public void detectJdoInjection() throws Exception {
         //Locate test code
         String[] files = {
                 getClassFilePath("testcode/sqli/JdoSql")

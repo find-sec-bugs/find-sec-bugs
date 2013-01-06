@@ -17,6 +17,6 @@ public class CookieUsage extends HttpServlet {
             cookie.getPath();
         }
 
-        resp.addCookie(new Cookie("com.h3xstream.findbugs.test", "value"));
+        resp.addCookie(new Cookie("test", "value"));
     }
 }

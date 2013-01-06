@@ -56,7 +56,7 @@ public class TapestryEndpointDetectorTest extends BaseDetectorTest {
      */
     @Test
     public void detectTapestryPagePojo() throws Exception {
-        //Locate com.h3xstream.findbugs.test code
+        //Locate test code
         String[] files = {
                 getClassFilePath("testcode/pages/Index")
         };
@@ -79,7 +79,7 @@ public class TapestryEndpointDetectorTest extends BaseDetectorTest {
      */
     @Test
     public void noFalsePositiveOnOtherClass() throws Exception {
-        //Locate com.h3xstream.findbugs.test code
+        //Locate test code
         String[] files = {
                 getClassFilePath("testcode/JaxRsService"),
                 getClassFilePath("testcode/JaxWsService")

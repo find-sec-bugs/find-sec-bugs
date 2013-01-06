@@ -2,7 +2,7 @@ package testcode;
 
 import javax.ws.rs.Path;
 
-@Path("/com.h3xstream.findbugs.test")
+@Path("/test")
 public class JaxRsService {
 
     public String randomMethod() {

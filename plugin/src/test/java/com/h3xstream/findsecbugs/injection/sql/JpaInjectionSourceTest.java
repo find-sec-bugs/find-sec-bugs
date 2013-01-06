@@ -28,7 +28,7 @@ import static org.mockito.Mockito.verify;
 public class JpaInjectionSourceTest extends BaseDetectorTest {
 
     @Test
-    public void detectInjection() throws Exception {
+    public void detectJpaInjection() throws Exception {
         //Locate test code
         String[] files = {
                 getClassFilePath("testcode/sqli/JpaSql")

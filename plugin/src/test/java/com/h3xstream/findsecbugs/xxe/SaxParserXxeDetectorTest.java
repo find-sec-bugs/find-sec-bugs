@@ -49,7 +49,7 @@ public class SaxParserXxeDetectorTest extends BaseDetectorTest {
 
     @Test
     public void safeWithUseOfPrivilegeExceptionAction() throws Exception {
-        //Locate com.h3xstream.findbugs.test code
+        //Locate test code
         String[] files = {
                 getClassFilePath("testcode/xxe/SaxParserSafePrivilegedExceptionAction"),
                 getClassFilePath("testcode/xxe/SaxParserSafePrivilegedExceptionAction$1")
@@ -69,7 +69,7 @@ public class SaxParserXxeDetectorTest extends BaseDetectorTest {
 
     @Test
     public void safeWithUseOfEntityResolver() throws Exception {
-        //Locate com.h3xstream.findbugs.test code
+        //Locate test code
         String[] files = {
                 getClassFilePath("testcode/xxe/SaxParserSafeEntityResolver"),
                 getClassFilePath("testcode/xxe/SaxParserSafeEntityResolver$CustomResolver")

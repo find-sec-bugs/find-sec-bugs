@@ -25,7 +25,7 @@ import static org.mockito.Mockito.spy;
 
 public class XPathInjectionApacheXPathApiDetectorTest extends BaseDetectorTest {
     @Test
-    public void detectXPathInjectionJavax() throws Exception {
+    public void detectXPathInjectionApache() throws Exception {
         //Locate test code
         String[] files = {
                 getClassFilePath("testcode/xpath/XPathApacheXPathApi")

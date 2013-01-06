@@ -45,7 +45,7 @@ public class CustomMessageDigest extends MessageDigest {
     public static void main(String[] args) throws NoSuchAlgorithmException {
 
         MessageDigest dig = new CustomMessageDigest();
-        dig.update("This is a com.h3xstream.findbugs.test!".getBytes());
+        dig.update("This is a test!".getBytes());
         byte[] result = dig.digest();
         printHex(result);
     }

@@ -27,7 +27,7 @@ import static org.mockito.Mockito.verify;
 public class JaxWsEndpointDetectorTest extends BaseDetectorTest {
 
     @Test
-    public void detectJaxRsEndpoint() throws Exception {
+    public void detectJaxWsEndpoint() throws Exception {
         //Locate test code
         String[] files = {
                 getClassFilePath("testcode/JaxWsService")

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.util.logging.Logger;
 
 @Controller
-@RequestMapping("/com.h3xstream.findbugs.test")
+@RequestMapping("/test")
 public class SpringTestController {
 
     private static final Logger logger = Logger.getLogger(SpringTestController.class.getName());

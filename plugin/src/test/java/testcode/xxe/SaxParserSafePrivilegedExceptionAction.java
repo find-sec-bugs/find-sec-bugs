@@ -46,7 +46,7 @@ public class SaxParserSafePrivilegedExceptionAction {
             SAXException, IOException {
 
         String xmlString = "<?xml version=\"1.0\"?>" +
-                "<!DOCTYPE com.h3xstream.findbugs.test SYSTEM \"C:/test111\"><com.h3xstream.findbugs.test></com.h3xstream.findbugs.test>"; // Tainted input
+                "<!DOCTYPE foo SYSTEM \"C:/test111\"><test>&foo;</test>"; // Tainted input
 
         InputStream is = new ByteArrayInputStream(xmlString.getBytes());
         receiveXMLStream(is, new DefaultHandler());

@@ -15,7 +15,7 @@ public class HibernateSql {
 
         //The following would need to be audited
 
-        criteria.add(Restrictions.sqlRestriction("com.h3xstream.findbugs.test=1234" + input));
+        criteria.add(Restrictions.sqlRestriction("test=1234" + input));
 
         session.createQuery("select t from UserEntity t where id = " + input);
 
@@ -24,7 +24,7 @@ public class HibernateSql {
 
         //OK nothing risky here..
 
-        criteria.add(Restrictions.sqlRestriction("com.h3xstream.findbugs.test=1234"));
+        criteria.add(Restrictions.sqlRestriction("test=1234"));
 
         final String localSafe = "where id=1337";
 

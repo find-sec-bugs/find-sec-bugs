@@ -1,11 +1,9 @@
 package testcode.crypto;
 
-import org.apache.commons.codec.binary.Hex;
+import testcode.util.HexUtil;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.Provider;
-import java.security.Security;
 
 public class WeakMessageDigest {
     public static void main(String[] args) throws NoSuchAlgorithmException {
@@ -20,7 +18,7 @@ public class WeakMessageDigest {
 
 
     private static void printHex(byte[] bytes) {
-        System.out.println(Hex.encodeHexString(bytes));
+        System.out.println(HexUtil.toString(bytes));
     }
 
 }

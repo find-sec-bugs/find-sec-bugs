@@ -10,6 +10,12 @@
     <name>Find Security Bugs</name>
     <version>1.1-SNAPSHOT</version>
 
+    <properties>
+        <licence.plugin.version>1.10.b1</licence.plugin.version>
+        <!-- The groovy dependency need to be kept in sync with GMaven dependency -->
+        <groovy.version>1.7.0</groovy.version>
+    </properties>
+
     <build>
         <plugins>
             <!-- Force the use of Java 6 compiler -->
@@ -26,6 +32,7 @@
             <plugin>
                 <groupId>com.mycila.maven-license-plugin</groupId>
                 <artifactId>maven-license-plugin</artifactId>
+                <version>${licence.plugin.version}</version>
                 <configuration>
                     <header>https://raw.github.com/h3xstream/find-sec-bugs/master/LGPL-3.0-header.txt</header>
                     <aggregate>true</aggregate>
@@ -34,8 +41,9 @@
                         <include>**/**.java</include>
                     </includes>
                     <excludes>
-                        <exclude>**/**/testcode/**/**.java</exclude>
-                        <exclude>**/**/package-info.java</exclude>
+                        <exclude>**/testcode/**/**.java</exclude>
+                        <exclude>**/plugin-deps/**/**.java</exclude>
+                        <exclude>**/package-info.java</exclude>
                     </excludes>
                     <properties>
                         <project>Find Security Bugs</project>
@@ -45,6 +53,7 @@
                 </configuration>
                 <executions>
                     <execution>
+                        <id>regen_lgpl</id>
                         <goals>
                             <goal>check</goal>
                         </goals>
@@ -59,12 +68,10 @@
         <module>plugin</module>
         <module>findbugs-test-util</module>
         <module>website</module>
+        <module>plugin-deps</module>
     </modules>
 
-    <properties>
-        <!-- The groovy dependency need to be kept in sync with GMaven dependency -->
-        <groovy.version>1.7.0</groovy.version>
-    </properties>
+
 
 
     <!-- All the dependencies are declare here. Modules will refer to those without specifying the version. -->
@@ -77,16 +84,22 @@
                 <groupId>com.h3xstream.findsecbugs</groupId>
                 <artifactId>findbugs-test-util</artifactId>
                 <type>test-jar</type>
-                <version>1.1-SNAPSHOT</version>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.h3xstream.findsecbugs</groupId>
                 <artifactId>plugin</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <version>${project.version}</version>
             </dependency>
 
-            <!-- test.Test dependencies -->
+            <dependency>
+                <groupId>com.h3xstream.findsecbugs</groupId>
+                <artifactId>plugin-deps</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- Test dependencies -->
 
             <dependency>
                 <groupId>org.mockito</groupId>
@@ -138,114 +151,6 @@
                 <groupId>org.codehaus.groovy</groupId>
                 <artifactId>groovy-all</artifactId>
                 <version>${groovy.version}</version>
-            </dependency>
-
-            <!-- Dependencies use to build code examples -->
-
-            <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>servlet-api</artifactId>
-                <version>2.5</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>2.1</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>javax.ws.rs</groupId>
-                <artifactId>jsr311-api</artifactId>
-                <version>1.1.1</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>javax.xml</groupId>
-                <artifactId>jaxws-api</artifactId>
-                <version>2.0</version>
-                <scope>test</scope>
-            </dependency>
-
-
-            <dependency>
-                <groupId>commons-fileupload</groupId>
-                <artifactId>commons-fileupload</artifactId>
-                <version>1.2.2</version>
-                <scope>test</scope>
-            </dependency>
-
-            <!-- Various web framework -->
-
-            <dependency>
-                <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-core</artifactId>
-                <version>1.5.6</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.tapestry</groupId>
-                <artifactId>tapestry-core</artifactId>
-                <version>5.3.3</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-web</artifactId>
-                <version>3.1.1.RELEASE</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>struts</groupId>
-                <artifactId>struts</artifactId>
-                <version>1.2.9</version>
-                <scope>test</scope>
-            </dependency>
-
-
-            <!-- SQL API -->
-
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-core</artifactId>
-                <version>4.1.3.Final</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>javax.jdo</groupId>
-                <artifactId>jdo2-api</artifactId>
-                <version>2.3-eb</version>
-                <scope>test</scope>
-            </dependency>
-
-            <!-- Hazelcast -->
-            <dependency>
-                <groupId>com.hazelcast</groupId>
-                <artifactId>hazelcast</artifactId>
-                <version>1.9.4.8</version>
-                <scope>test</scope>
-            </dependency>
-
-            <!-- Bouncy Castle Crypto Provider -->
-            <dependency>
-                <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk16</artifactId>
-                <version>1.46</version>
-                <scope>test</scope>
-            </dependency>
-
-            <!-- OWASP ESAPI -->
-            <dependency>
-                <groupId>org.owasp.esapi</groupId>
-                <artifactId>esapi</artifactId>
-                <version>2.0_rc11</version>
             </dependency>
 
         </dependencies>

@@ -1,6 +1,5 @@
 package testcode.googlemaps;
 
-import org.owasp.esapi.codecs.Base64;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

@@ -18,7 +18,6 @@
 package com.h3xstream.findsecbugs.crypto;
 
 import com.h3xstream.findsecbugs.common.ByteCode;
-
 import edu.umd.cs.findbugs.Priorities;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;

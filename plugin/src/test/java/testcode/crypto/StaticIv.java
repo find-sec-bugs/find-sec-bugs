@@ -1,13 +1,14 @@
 package testcode.crypto;
 
-import org.apache.commons.codec.binary.Hex;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import testcode.util.HexUtil;
 
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.*;
+import java.util.Arrays;
 import java.util.Random;
 
 public class StaticIv {
@@ -36,6 +37,6 @@ public class StaticIv {
         cipher.update("Hide me !".getBytes());
 
         byte[] data = cipher.doFinal();
-        System.out.println(Hex.encodeHex(data));
+        System.out.println(HexUtil.toString(data));
     }
 }

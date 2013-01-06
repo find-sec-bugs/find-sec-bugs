@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MessageCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:noNamespaceSchemaLocation="messagecollection.xsd">
+                   xsi:noNamespaceSchemaLocation="https://findbugs.googlecode.com/svn-history/r13419/trunk/findbugs/etc/messagecollection.xsd">
 
     <Plugin>
         <ShortDescription>Find Security Bugs</ShortDescription>
@@ -37,7 +37,6 @@
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECPR">Predictable Pseudo Random Generator (PRG)</BugCode>
 
     <!-- Servlet parameter -->
     <Detector class="com.h3xstream.findsecbugs.endpoint.ServletEndpointDetector">
@@ -192,7 +191,7 @@ crawler UA) is not recommended.</p>
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECSSH">Request Header</BugCode>
+    <BugCode abbrev="SECSH">Request Header</BugCode>
 
     <!-- Cookie usage -->
     <Detector class="com.h3xstream.findsecbugs.endpoint.CookieDetector">
@@ -604,9 +603,6 @@ XPath injection risks are simlar to SQL injection. If the XPath query contain un
 could be expose.
 </p>
 <p>
-
-</p>
-<p>
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-39: XPath Injection</a><br/>
 <a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=61407250">CERT: IDS09-J. Prevent XPath Injection (archive)</a><br/>
@@ -681,7 +677,7 @@ all of them.</p>
         <Details>
             <![CDATA[
 <p>
-Values associate to SQL queries should be escape properly. To so do, prepare statement can be use
+Values associated to the SQL queries should be escape properly. Prepare statement can be use
 (Available for all major API : JDO, JPA and Hibernate). Alternatively, typed API such as Hibernate Criteria and Querydsl
 can be used.
 </p>

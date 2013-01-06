@@ -1,6 +1,6 @@
 package testcode.crypto;
 
-import org.apache.commons.codec.binary.Hex;
+import testcode.util.HexUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -51,6 +51,6 @@ public class CustomMessageDigest extends MessageDigest {
     }
 
     private static void printHex(byte[] bytes) {
-        System.out.println(Hex.encodeHexString(bytes));
+        System.out.println(HexUtil.toString(bytes));
     }
 }

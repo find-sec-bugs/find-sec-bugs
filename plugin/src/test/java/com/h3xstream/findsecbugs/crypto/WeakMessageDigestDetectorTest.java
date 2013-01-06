@@ -42,7 +42,7 @@ public class WeakMessageDigestDetectorTest extends BaseDetectorTest {
         verify(reporter, atLeastOnce()).doReportBug(
                 bugDefinition()
                         .bugType("WEAK_MESSAGE_DIGEST")
-                        .inClass("WeakMessageDigest").inMethod("main").atLine(16)
+                        .inClass("WeakMessageDigest").inMethod("main").atLine(10)
                         .build()
         );
 
@@ -50,7 +50,7 @@ public class WeakMessageDigestDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("WEAK_MESSAGE_DIGEST")
-                        .inClass("WeakMessageDigest").inMethod("main").atLine(16)
+                        .inClass("WeakMessageDigest").inMethod("main").atLine(14)
                         .build()
         );
     }

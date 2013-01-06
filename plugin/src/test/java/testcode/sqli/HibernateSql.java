@@ -17,7 +17,7 @@ public class HibernateSql {
 
         criteria.add(Restrictions.sqlRestriction("com.h3xstream.findbugs.test=1234" + input));
 
-        session.createQuery("select t from TestEntity t where id = " + input);
+        session.createQuery("select t from UserEntity t where id = " + input);
 
         session.createSQLQuery(String.format("select * from TestEntity where id = %s ", input));
 
@@ -28,7 +28,7 @@ public class HibernateSql {
 
         final String localSafe = "where id=1337";
 
-        session.createQuery("select t from TestEntity t "+localSafe);
+        session.createQuery("select t from UserEntity t "+localSafe);
 
         final String localSql = "select * from TestEntity " + localSafe;
 

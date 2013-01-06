@@ -27,7 +27,7 @@ import static org.mockito.Mockito.verify;
 public class FileUploadFilenameDetectorTest extends BaseDetectorTest {
 
     @Test
-    public void detectCommandInjection() throws Exception {
+    public void detectTaintedFilename() throws Exception {
         //Locate test code
         String[] files = {
                 getClassFilePath("testcode/FileUploadCommon"),

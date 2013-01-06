@@ -1,9 +1,6 @@
 package org.apache.commons.fileupload;
 
-public class FileItem {
-    private String name;
+public interface FileItem {
 
-    public String getName() {
-        return name;
-    }
+    public String getName();
 }

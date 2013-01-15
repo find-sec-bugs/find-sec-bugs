@@ -15,7 +15,27 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs;
+package com.h3xstream.findsecbugs.injection.ldap;
 
-public class LdapInjectionDetector {
+import com.h3xstream.findsecbugs.injection.InjectionDetector;
+import com.h3xstream.findsecbugs.injection.InjectionSource;
+import edu.umd.cs.findbugs.BugReporter;
+
+public class LdapDetector extends InjectionDetector {
+
+    private static final String LDAP_INJECTION_TYPE = "LDAP_INJECTION";
+
+    public LdapDetector(BugReporter bugReporter) {
+        super(bugReporter);
+    }
+
+    @Override
+    public InjectionSource[] getInjectionSource() {
+        return new InjectionSource[]{new JndiLdapInjectionSource(),new UnboundIdLdapInjectionSource()};
+    }
+
+    @Override
+    public String getBugType() {
+        return LDAP_INJECTION_TYPE;
+    }
 }

@@ -41,17 +41,12 @@ import java.util.List;
 /**
  * Class inspired by the detector FindSqlInjection
  */
-public class InjectionDetector implements Detector {
-
-    private static final String SQL_INJECTION_TYPE = "SQL_INJECTION";
+public abstract class InjectionDetector implements Detector {
 
     private ClassContext classContext;
-
     private BugReporter bugReporter;
 
-	private InjectionSource[] sources = {new HibernateInjectionSource(),new JdoInjectionSource(),new JpaInjectionSource()};
-
-    public InjectionDetector( BugReporter bugReporter ) {
+    protected InjectionDetector(BugReporter bugReporter) {
         this.bugReporter = bugReporter;
     }
 
@@ -60,33 +55,29 @@ public class InjectionDetector implements Detector {
         JavaClass javaClass = classContext.getJavaClass();
         Method[] methodList = javaClass.getMethods();
 
-	    ConstantPoolGen cpg = classContext.getConstantPoolGen();
+        ConstantPoolGen cpg = classContext.getConstantPoolGen();
 
-	    List<InjectionSource> selectedSources = new ArrayList<InjectionSource>();
+        List<InjectionSource> selectedSources = new ArrayList<InjectionSource>();
 
-	    for(InjectionSource source :sources) {
-		    if(source.isCandidate( cpg )) {
-			    selectedSources.add(source);
-			    //System.out.println("Select = " + source.getClass().getSimpleName());
-		    }
-	    }
+        for (InjectionSource source : getInjectionSource()) {
+            if (source.isCandidate(cpg)) {
+                selectedSources.add(source);
+            }
+        }
 
-	    if(selectedSources.size() > 0) {
-	        for (Method method : methodList) {
-	            MethodGen methodGen = classContext.getMethodGen(method);
-	            if (methodGen == null)
-	                continue;
+        if (selectedSources.size() > 0) {
+            for (Method method : methodList) {
+                MethodGen methodGen = classContext.getMethodGen(method);
+                if (methodGen == null)
+                    continue;
 
-
-	            try {
-	                analyzeMethod(classContext, method,selectedSources);
-	            } catch (DataflowAnalysisException e) {
-
-	            } catch (CFGBuilderException e) {
-
-	            }
-	        }
-	    }
+                try {
+                    analyzeMethod(classContext, method, selectedSources);
+                } catch (DataflowAnalysisException e) {
+                } catch (CFGBuilderException e) {
+                }
+            }
+        }
     }
 
     private void analyzeMethod(ClassContext classContext, Method method, List<InjectionSource> selectedSources) throws DataflowAnalysisException, CFGBuilderException {
@@ -109,22 +100,21 @@ public class InjectionDetector implements Detector {
                 continue;
             InvokeInstruction invoke = (InvokeInstruction) ins;
 
-	        //ByteCode.printOpCode( ins, cpg );
+            //ByteCode.printOpCode( ins, cpg );
 
-	        int[] injectableArguments = new int[0];
-	        for(InjectionSource source: selectedSources) {
-		        injectableArguments = source.getInjectableParameters( invoke, cpg );
-		        //System.out.println("Get param from = " + source.getClass().getSimpleName());
-		        if(injectableArguments.length>0) break;
-	        }
+            int[] injectableArguments = new int[0];
+            for (InjectionSource source : selectedSources) {
+                injectableArguments = source.getInjectableParameters(invoke, cpg);
+                //System.out.println("Get param from = " + source.getClass().getSimpleName());
+                if (injectableArguments.length > 0) break;
+            }
 
-
-            if(injectableArguments.length > 0) {
+            if (injectableArguments.length > 0) {
 
                 ConstantFrame frame = dataflow.getFactAtLocation(location);
                 int numArguments = frame.getNumArguments(invoke, cpg);
 
-                for(int arg : injectableArguments) {
+                arguments : for (int arg : injectableArguments) {
                     Constant value = frame.getStackValue(arg);
 //                    System.out.println(arg + ". " + frame.getStackValue(arg).getConstantString());
 //
@@ -133,15 +123,16 @@ public class InjectionDetector implements Detector {
                     if (!value.isConstantString()) {
 
                         Location prev = getPreviousLocation(cfg, location, true);
-                        for(int a=0;a<arg;a++) {
+                        for (int a = 0; a < arg; a++) {
                             prev = getPreviousLocation(cfg, prev, true);
                         }
                         if (prev == null || !isSafeValue(prev, cpg, cfg)) {
 
-                            bugReporter.reportBug(new BugInstance(this, SQL_INJECTION_TYPE, Priorities.NORMAL_PRIORITY) //
+                            bugReporter.reportBug(new BugInstance(this, getBugType(), Priorities.NORMAL_PRIORITY) //
                                     .addClass(javaClass) //
                                     .addMethod(javaClass, method) //
                                     .addSourceLine(classContext, method, location));
+                            break arguments;
                             //System.out.println("!!!");
                         }
                     }
@@ -208,4 +199,9 @@ public class InjectionDetector implements Detector {
     @Override
     public void report() {
     }
+
+
+    public abstract InjectionSource[] getInjectionSource();
+
+    public abstract String getBugType();
 }

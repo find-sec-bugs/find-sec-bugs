@@ -667,8 +667,8 @@ all of them.</p>
     <BugCode abbrev="SECSC">Spring Controller</BugCode>
 
     <!-- Sql Injection -->
-    <Detector class="com.h3xstream.findsecbugs.injection.InjectionDetector">
-        <Details>Identify various kind of Injection in API that accepts strings.</Details>
+    <Detector class="com.h3xstream.findsecbugs.injection.sql.SqlInjectionDetector">
+        <Details>Identify various kind of SQL Injection in API that accepts strings.</Details>
     </Detector>
 
     <BugPattern type="SQL_INJECTION">
@@ -677,7 +677,7 @@ all of them.</p>
         <Details>
             <![CDATA[
 <p>
-Values associated to the SQL queries should be escape properly. Prepare statement can be use
+The input values associated to the SQL queries should be escape properly. Prepare statement can be use to easily mitigate the risk
 (Available for all major API : JDO, JPA and Hibernate). Alternatively, typed API such as Hibernate Criteria and Querydsl
 can be used.
 </p>
@@ -690,6 +690,30 @@ can be used.
         </Details>
     </BugPattern>
     <BugCode abbrev="SECSQLI">SQL Injection</BugCode>
+
+    <!-- LDAP Injection -->
+    <Detector class="com.h3xstream.findsecbugs.injection.ldap.LdapDetector">
+        <Details>Identify various kind of LDAP Injection in JNDI and UnboundId API.</Details>
+    </Detector>
+
+    <BugPattern type="LDAP_INJECTION">
+        <ShortDescription>Potential LDAP Injection</ShortDescription>
+        <LongDescription>The query could be vulnerable LDAP injection</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Just like SQL query, all inputs place inside LDAP query should be escape properly.
+</p>
+<p>
+<b>References</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246947/LDAP%20Injection">WASC-29: LDAP Injection</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/90.html">CWE-90: Improper Neutralization of Special Elements used in an LDAP Query ('LDAP Injection')</a><br/>
+<a href="http://www.veracode.com/security/ldap-injection">LDAP Injection Guide: Learn How to Detect LDAP Injections and Improve LDAP Security</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECLDAPI">LDAP Injection</BugCode>
 
     <!-- Bad Hexa -->
     <Detector class="com.h3xstream.findsecbugs.crypto.BadHexadecimalConversionDetector">

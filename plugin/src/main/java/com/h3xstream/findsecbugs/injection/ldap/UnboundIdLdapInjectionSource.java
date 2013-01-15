@@ -15,21 +15,20 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.injection.sql;
+package com.h3xstream.findsecbugs.injection.ldap;
 
 import com.h3xstream.findsecbugs.injection.InjectionSource;
-
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.generic.ConstantPoolGen;
-import org.apache.bcel.generic.INVOKEINTERFACE;
-import org.apache.bcel.generic.INVOKESTATIC;
+import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.InvokeInstruction;
 
 /**
- * Focus on hibernate API for SQL/HQL injection.
+ * UnboundId API offers both a Typed and a string based filters.
+ * This detector only look at filter parameters from query..
  */
-public class HibernateInjectionSource implements InjectionSource {
+public class UnboundIdLdapInjectionSource  implements InjectionSource {
 
     @Override
     public boolean isCandidate(ConstantPoolGen cpg) {
@@ -37,9 +36,8 @@ public class HibernateInjectionSource implements InjectionSource {
             Constant cnt = cpg.getConstant(i);
             if (cnt instanceof ConstantUtf8) {
                 String utf8String = ((ConstantUtf8) cnt).getBytes();
-                //System.out.println("cnt= "+utf8String);
-                if (utf8String.equals("org/hibernate/criterion/Restrictions") ||
-                        utf8String.equals("org/hibernate/Session")) {
+//                System.out.println("cnt= "+utf8String);
+                if (utf8String.equals("com/unboundid/ldap/sdk/LDAPConnection")) {
                     return true;
                 }
             }
@@ -49,31 +47,18 @@ public class HibernateInjectionSource implements InjectionSource {
 
     @Override
     public int[] getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg) {
-        //ByteCode.printOpCode(ins, cpg);
 
-        if (ins instanceof INVOKESTATIC || ins instanceof INVOKEINTERFACE) {
+        if (ins instanceof INVOKEVIRTUAL) {
             String methodName = ins.getMethodName(cpg);
             String methodSignature = ins.getSignature(cpg);
             String className = ins.getClassName(cpg);
 
-            //Criterion.sqlRestriction
-            if (ins instanceof INVOKESTATIC && className.equals("org.hibernate.criterion.Restrictions") && methodName.equals("sqlRestriction") &&
-                    methodSignature.equals("(Ljava/lang/String;)Lorg/hibernate/criterion/Criterion;")) {
-                return new int[]{0};
-            }
-            //Session.createQuery
-            else if (ins instanceof INVOKEINTERFACE && className.equals("org.hibernate.Session") && methodName.equals("createQuery") &&
-                    methodSignature.equals("(Ljava/lang/String;)Lorg/hibernate/Query;")) {
-                return new int[]{0};
-            }
-            //Session.createSQLQuery
-            else if (ins instanceof INVOKEINTERFACE && className.equals("org.hibernate.Session") && methodName.equals("createSQLQuery") &&
-                    methodSignature.equals("(Ljava/lang/String;)Lorg/hibernate/SQLQuery;")) {
-                return new int[]{0};
+            if (className.equals("com.unboundid.ldap.sdk.LDAPConnection") && methodName.equals("search") &&
+                    methodSignature.equals("(Ljava/lang/String;Lcom/unboundid/ldap/sdk/SearchScope;Ljava/lang/String;[Ljava/lang/String;)Lcom/unboundid/ldap/sdk/SearchResult;")) {
+                return new int[]{0,2};
             }
         }
 
         return new int[0];
     }
-
 }

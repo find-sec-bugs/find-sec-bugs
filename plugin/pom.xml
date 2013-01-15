@@ -138,8 +138,6 @@
             <scope>test</scope>
         </dependency>
 
-
-
         <dependency>
             <groupId>com.h3xstream.findsecbugs</groupId>
             <artifactId>plugin-deps</artifactId>

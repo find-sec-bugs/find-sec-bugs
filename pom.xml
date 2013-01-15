@@ -42,8 +42,16 @@
                     </includes>
                     <excludes>
                         <exclude>**/testcode/**/**.java</exclude>
-                        <exclude>**/plugin-deps/**/**.java</exclude>
                         <exclude>**/package-info.java</exclude>
+                        <!-- Package that contains stub api -->
+                        <exclude>**/com/hazelcast/**/**.java</exclude>
+                        <exclude>**/javax/**/**.java</exclude>
+                        <exclude>**/org/apache/**/**.java</exclude>
+                        <exclude>**/org/bouncycastle/**/**.java</exclude>
+                        <exclude>**/org/hibernate/**/**.java</exclude>
+                        <exclude>**/org/owasp/**/**.java</exclude>
+                        <exclude>**/org/springframework/**/**.java</exclude>
+                        <exclude>**/com/unboundid/ldap/**/**.java</exclude>
                     </excludes>
                     <properties>
                         <project>Find Security Bugs</project>

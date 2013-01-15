@@ -19,9 +19,9 @@ Aside from adding various new detectors, there are few features that are planned
 
 ### Version 1.1 (current)
 
-- Initiate a set of detectors for Groovy specific api
+- Initiate a set of detectors for Groovy (Grails, Ratpack) and Scala (Play2, Scalatra)
 - Create a maven repository host on GitHub (Could allow auto-update for maven integration)
-- Create tutorial for Jenkins
+- Create a tutorial for Jenkins
 
 ### Version 2.0
 

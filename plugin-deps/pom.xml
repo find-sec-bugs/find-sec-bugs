@@ -13,9 +13,9 @@
     <artifactId>plugin-deps</artifactId>
 
     <description>
-    This module create facade for all the APIs (classes, interfaces and annotations)
-    that are use in the test code. Since the plugin aim various framework, the objective is to avoid
-    the needed to download all the framework supported by the static analyzer.
+    This module create facades for all the APIs (classes, interfaces and annotations)
+    that are use in the test code. The objective is to avoid the needed to download
+    all the framework supported by the static analyzer.
     </description>
 
 </project>

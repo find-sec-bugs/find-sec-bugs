@@ -4,7 +4,6 @@
     <link href='http://fonts.googleapis.com/css?family=Squada+One' rel='stylesheet' type='text/css'>
 
     <link rel="stylesheet" type="text/css" href="styles.css"/>
-
 </head>
 <body>
 
@@ -29,7 +28,13 @@
 
         <br/><br/>
         <a href="http://travis-ci.org/h3xstream/find-sec-bugs"><img
-                src="https://secure.travis-ci.org/h3xstream/find-sec-bugs.png?branch=master" alt="Build Status"/></a>
+                src="https://secure.travis-ci.org/h3xstream/find-sec-bugs.png?branch=master" alt="Build Status"/></a><br/>
+
+        <div class="g-plusone"></div><br/>
+
+        <div id="fb-root"></div><br/>
+
+        <a href="https://twitter.com/share" class="twitter-share-button" data-lang="en">Tweet</a>
 
         <br/><br/>
     </div>
@@ -145,7 +150,8 @@
 <p>
 <b>References</b><br/>
 <a href="http://jazzy.id.au/default/2010/09/20/cracking_random_number_generators_part_1.html">Cracking Random Number Generators - Part 1 (http://jazzy.id.au)</a><br/>
-<a href="https://www.securecoding.cert.org/confluence/display/java/MSC02-J.+Generate+strong+random+numbers">CERT: MSC02-J. Generate strong random numbers</a>
+<a href="https://www.securecoding.cert.org/confluence/display/java/MSC02-J.+Generate+strong+random+numbers">CERT: MSC02-J. Generate strong random numbers</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/330.html">CWE-330: Use of Insufficiently Random Values</a>
 </p></td>
                     </tr>
                     
@@ -279,7 +285,8 @@ by the user. If it is the case, this bug instance can be ignored.</p>
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246952/Path%20Traversal">WASC : Path Traversal</a><br/>
 <a href="https://www.owasp.org/index.php/Path_Traversal">OWASP : Path Traversal</a><br/>
-<a href="http://capec.mitre.org/data/definitions/126.html">CAPEC-126: Path Traversal</a>
+<a href="http://capec.mitre.org/data/definitions/126.html">CAPEC-126: Path Traversal</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/99.html">CWE-99: Improper Control of Resource Identifiers ('Resource Injection')</a>
 </p></td>
                     </tr>
                     
@@ -293,7 +300,8 @@ by the user. If it is the case, this bug instance can be ignored.</p>
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246952/Path%20Traversal">WASC-33 : Path Traversal</a><br/>
 <a href="https://www.owasp.org/index.php/Path_Traversal">OWASP : Path Traversal</a><br/>
-<a href="http://capec.mitre.org/data/definitions/126.html">CAPEC-126: Path Traversal</a>
+<a href="http://capec.mitre.org/data/definitions/126.html">CAPEC-126: Path Traversal</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/99.html">CWE-99: Improper Control of Resource Identifiers ('Resource Injection')</a>
 </p></td>
                     </tr>
                     
@@ -456,8 +464,19 @@ Otherwise, the original filename should be properly escaped.</p>
                     </tr>
                     <tr>
                         <td class="bug_desc"><p>
-<b>Reference</b><br/>
-<a href="https://www.owasp.org/index.php/Regular_expression_Denial_of_Service_-_ReDoS">OWASP : Regular expression Denial of Service</a>
+ReDOS stands for Regular expression Denial of Service. The regular expression (RegEx) identify may take a large amount of time
+when analysing certain strings.
+</a>
+<p>
+For example the following RegEx, the input "<code>aaaaaaaaaaaaaaaaX</code>" will cause the RegEx engine to analyse 65536 different paths.<sup>[1] Example taken from OWASP referecen</sup>
+<pre>^(a+)+$</pre>
+Therefore, it is possible that a single request cause a large amount of computation on the server side.
+</p>
+
+<p>
+<b>References</b><br/>
+<a href="http://www.jroller.com/sebastianKuebeck/entry/detecting_and_preventing_redos_vulnerabilities">Sebastian Kubeck's Weblog: Detecting and Preventing ReDoS Vulnerabilities</a><br/>
+<sup>[1]</sup> <a href="https://www.owasp.org/index.php/Regular_expression_Denial_of_Service_-_ReDoS">OWASP : Regular expression Denial of Service</a>
 </p></td>
                     </tr>
                     
@@ -484,19 +503,11 @@ user input as XML content.</p>
 &lt;!DOCTYPE s [
 &lt;!ENTITY x &quot;OVERLONG_CONTENT_HERE_WITH_MORE_THAN_10^5_CHARACTERS&quot;&gt;
 ]&gt;
-&lt;soapenv:Envelope xmlns:ns1=&quot;http://myPackageNamespace&quot;xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
-  &lt;soapenv:Header&gt;
-  &lt;/soapenv:Header&gt;
-  &lt;soapenv:Body&gt;
-     &lt;ns1:reverse&gt;
-        &lt;s&gt;
-          &amp;x;
-          &amp;x;
-          [...]
-        &lt;/s&gt;
-     &lt;/ns1:reverse&gt;
-  &lt;/soapenv:Body&gt;
-&lt;/soapenv:Envelope&gt;
+&lt;foo&gt;
+    &amp;x;
+    &amp;x;
+    [...]
+&lt;/foo&gt;
 </pre>
 </p>
 <p>
@@ -515,9 +526,6 @@ user input as XML content.</p>
                         <td class="bug_desc"><p>
 XPath injection risks are simlar to SQL injection. If the XPath query contain unfilter user input, the complete datasource
 could be expose.
-</p>
-<p>
-
 </p>
 <p>
 <b>References</b><br/>
@@ -559,9 +567,29 @@ all of them.</p></td>
                     </tr>
                     <tr>
                         <td class="bug_desc"><p>
+The input values associated to the SQL queries should be escape properly. Prepare statement can be use to easily mitigate the risk
+(Available for all major API : JDO, JPA and Hibernate). Alternatively, typed API such as Hibernate Criteria and Querydsl
+can be used.
+</p>
+<p>
 <b>References</b><br/>
-<a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-19: SQL Injection</a>
+<a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-19: SQL Injection</a><br/>
 <a href="http://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a>
+</p></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Potential LDAP Injection</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>
+Just like SQL query, all inputs place inside LDAP query should be escape properly.
+</p>
+<p>
+<b>References</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246947/LDAP%20Injection">WASC-29: LDAP Injection</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/90.html">CWE-90: Improper Neutralization of Special Elements used in an LDAP Query ('LDAP Injection')</a><br/>
+<a href="http://www.veracode.com/security/ldap-injection">LDAP Injection Guide: Learn How to Detect LDAP Injections and Improve LDAP Security</a>
 </p></td>
                     </tr>
                     
@@ -665,8 +693,9 @@ DES and DESede (3DES), previously recommended, are not consider strong ciphers f
 only be use because of hardware limitation. Currently, the NIST recommend the usage of AES block cipher.
 </p>
 <p>
-<b>Reference</b><br/>
-<a href="http://www.nist.gov/itl/fips/060205_des.cfm">NIST Withdraws Outdated Data Encryption Standard</a>
+<b>References</b><br/>
+<a href="http://www.nist.gov/itl/fips/060205_des.cfm">NIST Withdraws Outdated Data Encryption Standard</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky Cryptographic Algorithm</a>
 </p></td>
                     </tr>
                     
@@ -689,6 +718,81 @@ It should be replace by:<br/>
 <b>Reference</b><br/>
 <a href="http://cwe.mitre.org/data/definitions/780.html">CWE-780: Use of RSA Algorithm without OAEP</a><br/>
 <a href="http://rdist.root.org/2009/10/06/why-rsa-encryption-padding-is-critical/">Root Labs: Why RSA encryption padding is critical</a>
+</p></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Hard code password</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>
+Password should not be kept in the source code. The source code are widely share in the entreprise environement.
+Passwords and secret keys can be managed more easily when being separated in configuration files or keystores.
+</p>
+<p>
+<b>References</b><br/>
+<a href="http://cwe.mitre.org/data/definitions/321.html">CWE-321: Use of Hard-coded Cryptographic Key</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/259.html">CWE-259: Use of Hard-coded Password</a>
+</p></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Struts Form with no input validation</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>
+Form inputs should have minimal input validation. Preventive validation can possibly mitigate unknown risk.
+</p>
+<p>
+Validation can be introduce by implementing a <code>validate</code> method.
+<pre>
+public class RegistrationForm extends ValidatorForm {
+
+    private String name;
+    private String email;
+
+    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+        //Validate the properties
+    }
+
+    [...]
+}
+</pre>
+</p>
+<p>
+<b>Reference</b><br/>
+<a href="http://cwe.mitre.org/data/definitions/106.html">CWE-106: Struts: Plug-in Framework not in Use</a>
+</p></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">XSSRequestWrapper is a weak XSS protection</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>
+A implementation of <code>HttpServletRequestWrapper</code> called <code>XSSRequestWrapper</code> was publish through
+various blog sites. <sup><a href="http://java.dzone.com/articles/stronger-anti-cross-site">[1]</a></sup>
+<sup><a href="http://www.javacodegeeks.com/2012/07/anti-cross-site-scripting-xss-filter.html">[2]</a></sup>
+</p>
+<p>
+The filtering is weak for few reasons:
+<ul>
+<li>It covers only parameters not headers and side-channel inputs</li>
+<li>The replace chain can be bypass easly (see example below)</li>
+<li>It's a black list of very specific patterns</li>
+</ul>
+</p>
+<p>
+<b>Example of bypass</b><br/>
+</p>
+<pre>&lt;scrivbscript:pt&gt;alert(1)&lt;/scrivbscript:pt&gt;</pre>
+<p>
+The previous input will be transform to <b><code>"&lt;script&gt;alert(1)&lt;/script&gt;"</code></b>.
+
+The removal of <code>"vbscript:"</code> is after the replacement of <code>"&lt;script&gt;.*&lt;/script&gt;"</code>.
+</p>
+<p>
+For an indepth protection, choose solution that filter characters automatically in the <b><u>view</u></b> (template, jsp, ...).
 </p></td>
                     </tr>
                     </table>
@@ -730,6 +834,20 @@ It should be replace by:<br/>
     <div stlye="clear:both"></div>
 </div>
 
+<!-- Google Plus -->
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+
+<!-- Facebook -->
+<script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<!-- Twitter -->
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
 <script type="text/javascript">
     var _gaq = _gaq || [];

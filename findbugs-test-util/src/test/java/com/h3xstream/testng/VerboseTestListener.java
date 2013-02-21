@@ -19,6 +19,7 @@ package com.h3xstream.testng;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
 
@@ -32,6 +33,16 @@ public class VerboseTestListener extends TestListenerAdapter {
 
     @Override
     public void onTestFailure(ITestResult tr) {
-        log.error(tr.getName()+" failed",tr.getThrowable());
+        log.error( tr.getName()+" failed", tr.getThrowable() );
+    }
+
+    @Override
+    public void onStart(ITestContext ctx) {
+        log.info("<<<<<<<<<<<<<<<<<<<< {} started >>>>>>>>>>>>>>>>>>>>", ctx.getName());
+    }
+
+    @Override
+    public void onFinish(ITestContext ctx) {
+        log.info("<<<<<<<<<<<<<<<<<<<< {} finished >>>>>>>>>>>>>>>>>>>>", ctx.getName());
     }
 }

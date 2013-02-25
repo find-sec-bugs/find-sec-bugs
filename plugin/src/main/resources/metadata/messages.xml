@@ -182,17 +182,6 @@ crawler UA) is not recommended.</p>
     </BugPattern>
     <BugCode abbrev="SECSSHUA">>Request Header "User-Agent"</BugCode>
 
-    <BugPattern type="SERVLET_HEADER">
-        <ShortDescription>Request Header</ShortDescription>
-        <LongDescription>Request header can easily be alter by the client</LongDescription>
-        <Details>
-            <![CDATA[
-<p>Request header can easily be alter by the client. No assumption should be make that the request come from a regular browser</p>
-]]>
-        </Details>
-    </BugPattern>
-    <BugCode abbrev="SECSH">Request Header</BugCode>
-
     <!-- Cookie usage -->
     <Detector class="com.h3xstream.findsecbugs.endpoint.CookieDetector">
         <Details>Identy direct cookie usage</Details>

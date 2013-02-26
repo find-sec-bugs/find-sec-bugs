@@ -38,6 +38,7 @@ public class XPathInjectionJavaxDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
+        //Assertions
         for (Integer line : Arrays.asList(21, 29)) {
             verify(reporter).doReportBug(
                     bugDefinition().bugType("XPATH_INJECTION")

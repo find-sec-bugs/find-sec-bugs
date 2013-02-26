@@ -17,10 +17,16 @@
  */
 package com.h3xstream.findsecbugs.xpath;
 
+import com.h3xstream.findsecbugs.common.StringTracer;
+import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
+import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
+import org.apache.bcel.Constants;
 
 public class XPathInjectionApacheXPathApiDetector extends OpcodeStackDetector {
+
+    private static final String XPATH_INJECTION_TYPE = "XPATH_INJECTION";
 
     private BugReporter bugReporter;
 
@@ -31,5 +37,19 @@ public class XPathInjectionApacheXPathApiDetector extends OpcodeStackDetector {
     @Override
     public void sawOpcode(int seen) {
 
+        if (seen == Constants.INVOKESTATIC && getClassConstantOperand().equals("org/apache/xpath/XPathAPI")) {
+            if (getNameConstantOperand().equals("selectNodeIterator") ||
+                getNameConstantOperand().equals("selectNodeList") ||
+                getNameConstantOperand().equals("selectSingleNode") ) {
+
+                //For all 3 methos the query is in the last parameter
+                if (StringTracer.isVariableString(stack.getStackItem(0))) {
+
+                    bugReporter.reportBug(new BugInstance(this, XPATH_INJECTION_TYPE, Priorities.NORMAL_PRIORITY) //
+                            .addClass(this).addMethod(this).addSourceLine(this) //
+                            .addString("XPathApi."+getNameConstantOperand()+"()"));
+                }
+            }
+        }
     }
 }

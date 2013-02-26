@@ -21,7 +21,11 @@ import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
+
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class XPathInjectionApacheXPathApiDetectorTest extends BaseDetectorTest {
     @Test
@@ -36,5 +40,17 @@ public class XPathInjectionApacheXPathApiDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
 
+        //Assertions
+        for (Integer line : Arrays.asList(19, 23, 27)) {
+            verify(reporter).doReportBug(
+                    bugDefinition().bugType("XPATH_INJECTION")
+                            .inClass("XPathApacheXPathApi").inMethod("main").atLine(line)
+                            .build()
+            );
+        }
+
+        //More than two means a false positive was trigger
+        verify(reporter, times(3)).doReportBug(
+                bugDefinition().bugType("XPATH_INJECTION").build());
     }
 }

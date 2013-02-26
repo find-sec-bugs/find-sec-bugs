@@ -932,6 +932,12 @@ It should be replace by:<br/>
     <Detector class="com.h3xstream.findsecbugs.password.GoogleApiKeyDetector">
         <Details>Identify hardcode Google API key</Details>
     </Detector>
+
+    <!-- Identify JNDI credentials -->
+    <Detector class="com.h3xstream.findsecbugs.password.JndiCredentialsDetector">
+        <Details>Identify hardcoded credentials in context initialization</Details>
+    </Detector>
+
     <BugPattern type="HARD_CODE_PASSWORD">
         <ShortDescription>Hard code password</ShortDescription>
         <LongDescription>Hard code password</LongDescription>

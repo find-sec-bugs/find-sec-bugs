@@ -47,6 +47,7 @@
     <Detector class="com.h3xstream.findsecbugs.crypto.DesUsageDetector" reports="DES_USAGE"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.RsaNoPaddingDetector" reports="RSA_NO_PADDING"/>
     <Detector class="com.h3xstream.findsecbugs.password.GoogleApiKeyDetector" reports="HARD_CODE_PASSWORD"/>
+    <Detector class="com.h3xstream.findsecbugs.password.JndiCredentialsDetector" reports="HARD_CODE_PASSWORD"/>
     <Detector class="com.h3xstream.findsecbugs.StrutsValidatorFormDetector" reports="STRUTS_FORM_VALIDATION"/>
     <Detector class="com.h3xstream.findsecbugs.xss.XSSRequestWrapperDetector" reports="XSS_REQUEST_WRAPPER"/>
 

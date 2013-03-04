@@ -4,15 +4,13 @@
     <link href='http://fonts.googleapis.com/css?family=Squada+One' rel='stylesheet' type='text/css'>
 
     <link rel="stylesheet" type="text/css" href="styles.css"/>
+
 </head>
 <body>
 
 <a href="https://github.com/h3xstream/find-sec-bugs"><img
         style="position: fixed; top: 0; left: 0; border: 0;z-index:100;"
         src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png" alt="Fork me on GitHub"></a>
-
-
-
 
 <div class="container">
     <div class="left_column">
@@ -34,8 +32,6 @@
                 src="https://secure.travis-ci.org/h3xstream/find-sec-bugs.png?branch=master" alt="Build Status"/></a><br/>
         <br/>
 
-
-
         <br/><br/>
     </div>
 
@@ -53,8 +49,9 @@
             <a name="download"><span class="title">/download</span></a>
 
             <p>
+                (Latest package generate on <b>March 3th, 2012</b>)<br/>
                 <a href="https://github.com/h3xstream/find-sec-bugs/downloads" class="download_button">Get the plugin v
-                    1.0</a>
+                    1.0.1</a>
                 <a href="http://findbugs.sourceforge.net/" class="download_button">Get Find Bugs</a>
             </p>
 
@@ -131,7 +128,7 @@
 
             <a name="descriptions"><span class="title">/bugs descriptions</span></a>
 
-            <p>This section list all the detectors included in the plugin.</p>
+            <p>Find Security Bugs has a total of <b>36</b> detectors and <b>42</b> different bug patterns. The complete list of bug patterns are list in this section.</p>
 
             <p>
                 <table class="bug_list">
@@ -255,13 +252,6 @@ Recommendations:
                     <tr>
                         <td class="bug_desc"><p>The header "User-Agent" can be easily spoofed by the client. Adopting different behavior base on the User-Agent (for
 crawler UA) is not recommended.</p></td>
-                    </tr>
-                    
-                    <tr>
-                        <th class="bug_title">Request Header</th>
-                    </tr>
-                    <tr>
-                        <td class="bug_desc"><p>Request header can easily be alter by the client. No assumption should be make that the request come from a regular browser</p></td>
                     </tr>
                     
                     <tr>
@@ -486,7 +476,7 @@ Therefore, it is possible that a single request cause a large amount of computat
                     <tr>
                         <td class="bug_desc"><p>Xml External Entity attacks can occurs when the XML parsers support XML entities and received
 user input as XML content.</p>
-<b>Risk 1: Expose local file content</b>
+<b>Risk 1: Expose local file content (XXE : <u>X</u>ml e<u>X</u>ternal <u>E</u>ntity)</b>
 <p>
 <pre>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
@@ -496,7 +486,7 @@ user input as XML content.</p>
 &lt;foo&gt;&amp;xxe;&lt;/foo&gt;
 </pre>
 </p>
-<b>Risk 2: Denial of service</b>
+<b>Risk 2: Denial of service (XEE : <u>X</u>ml <u>E</u>ntity <u>E</u>xpansion)</b>
 <p>
 <pre>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
@@ -795,6 +785,44 @@ The removal of <code>"vbscript:"</code> is after the replacement of <code>"&lt;s
 For an indepth protection, choose solution that filter characters automatically in the <b><u>view</u></b> (template, jsp, ...).
 </p></td>
                     </tr>
+                    
+                    <tr>
+                        <th class="bug_title">Blowfish usage with weak key size</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>
+The Blowfish cipher supported keysize from 32 bits to 448 bits.
+Small key size make the the ciphertext vulnerable to brute force attack.
+At least 128 bits entropy should be used when generating the key.
+</p>
+<p>
+Unless the code is a legacy implementation that need maintenance, AES block cipher should be
+use instead.
+</p>
+<p>
+<b>Reference</b><br/>
+<a href="http://en.wikipedia.org/wiki/Blowfish_(cipher)">Blowfish_(cipher)</a>
+</p></td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="bug_title">RSA usage with weak key size</th>
+                    </tr>
+                    <tr>
+                        <td class="bug_desc"><p>"RSA Laboratories currently recommends key sizes of 1024 bits for corporate use and 2048 bits for extremely valuable keys like the root key pair used by a certifying authority". <sup>[1]</sup></p>
+
+<p>The KeyPairGenerator creation should be as follow.
+<pre>
+KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+keyGen.initialize(1024);
+</pre>
+</p>
+<p>
+<b>References</b><br/>
+[1] <a href="http://www.rsa.com/rsalabs/node.asp?id=2218">RSA Laboratories : 3.1.5 How large a key should be used in the RSA cryptosystem?</a><br/>
+<a href="http://en.wikipedia.org/wiki/Key_size#Asymmetric%5Falgorithm%5Fkey%5Flengths">Wikipedia : Asymmetric algorithm key lengths</a>
+</p></td>
+                    </tr>
                     </table>
 
             </p>
@@ -869,8 +897,5 @@ For an indepth protection, choose solution that filter characters automatically 
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
     })();
 </script>
-
-
-
 </body>
 </html>

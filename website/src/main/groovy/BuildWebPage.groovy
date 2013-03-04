@@ -14,11 +14,19 @@ println "Mapping the descriptions to the templates"
 def binding = [:]
 binding['bugPatterns'] = []
 
+binding['nbPatterns'] = 0
+binding['nbDetectors'] = 0
+
 rootXml.BugPattern.each { pattern ->
     binding['bugPatterns'].add(
             ['title': pattern.ShortDescription.text(),
                     'description': pattern.Details.text()])
     println pattern.ShortDescription.text()
+    binding['nbPatterns']++
+}
+
+rootXml.Detector.each { detector ->
+    binding['nbDetectors']++
 }
 
 generatedPage = new File(outputDirectory, "index.htm")

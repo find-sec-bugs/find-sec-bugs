@@ -537,7 +537,7 @@ Therefore, it is possible that a single request cause a large amount of computat
             <![CDATA[
 <p>Xml External Entity attacks can occurs when the XML parsers support XML entities and received
 user input as XML content.</p>
-<b>Risk 1: Expose local file content</b>
+<b>Risk 1: Expose local file content (XXE : <u>X</u>ml e<u>X</u>ternal <u>E</u>ntity)</b>
 <p>
 <pre>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
@@ -547,7 +547,7 @@ user input as XML content.</p>
 &lt;foo&gt;&amp;xxe;&lt;/foo&gt;
 </pre>
 </p>
-<b>Risk 2: Denial of service</b>
+<b>Risk 2: Denial of service (XEE : <u>X</u>ml <u>E</u>ntity <u>E</u>xpansion)</b>
 <p>
 <pre>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
@@ -1039,7 +1039,7 @@ Small key size make the the ciphertext vulnerable to brute force attack.
 At least 128 bits entropy should be used when generating the key.
 </p>
 <p>
-Unless the code is a legacy implementation that need maintenance, AES block cipher should
+Unless the code is a legacy implementation that need maintenance, AES block cipher should be
 use instead.
 </p>
 <p>

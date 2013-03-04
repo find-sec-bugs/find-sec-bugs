@@ -36,4 +36,62 @@ public class ByteCode {
         }
     }
 
+    /**
+     * Get the constant value of the given instruction.
+     * (The instruction must refer to the Constant Pool otherwise null is return)
+     * @param h
+     * @param cpg
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public static <T> T  getConstantLDC(InstructionHandle h, ConstantPoolGen cpg, Class<T> clazz) {
+        Instruction prevIns = h.getInstruction();
+        if(prevIns instanceof LDC) {
+            LDC ldcCipher = (LDC) prevIns;
+            Object val = ldcCipher.getValue(cpg);
+            if(val.getClass().equals(clazz)) {
+                return clazz.cast(val);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Extract the number from a push operation (BIPUSH/SIPUSH).
+     * @param h
+     * @return
+     */
+    public static Number getPushNumber(InstructionHandle h) {
+        Instruction prevIns = h.getInstruction();
+        if(prevIns instanceof BIPUSH) {
+            BIPUSH ldcCipher = (BIPUSH) prevIns;
+            return ldcCipher.getValue();
+        }
+        else if(prevIns instanceof SIPUSH) {
+            SIPUSH ldcCipher = (SIPUSH) prevIns;
+            return ldcCipher.getValue();
+        }
+        return null;
+    }
+
+    /**
+     * Get the previous instruction matching the given type of instruction (second parameter)
+     * @param startHandle
+     * @param clazz Type of instruction to look for
+     * @param <T>
+     * @return
+     */
+    public static <T> T getPrevInstruction(InstructionHandle startHandle,Class<T> clazz) {
+        InstructionHandle curHandle = startHandle;
+        while(curHandle != null) {
+            curHandle = curHandle.getPrev();
+
+            if(curHandle != null && clazz.isInstance(curHandle.getInstruction())) {
+                return clazz.cast(curHandle.getInstruction());
+            }
+        }
+        return null;
+    }
 }

@@ -1034,4 +1034,60 @@ For an indepth protection, choose solution that filter characters automatically 
     </BugPattern>
     <BugCode abbrev="SECXRW">Hard code password</BugCode>
 
+
+    <!-- Blowfish key size -->
+    <Detector class="com.h3xstream.findsecbugs.crypto.InsufficientKeySizeBlowfishDetector">
+        <Details>Identify Blowfish usage with weak key size</Details>
+    </Detector>
+    <BugPattern type="BLOWFISH_KEY_SIZE">
+        <ShortDescription>Blowfish usage with weak key size</ShortDescription>
+        <LongDescription>Blowfish usage with weak key size</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+The Blowfish cipher supported keysize from 32 bits to 448 bits.
+Small key size make the the ciphertext vulnerable to brute force attack.
+At least 128 bits entropy should be used when generating the key.
+</p>
+<p>
+Unless the code is a legacy implementation that need maintenance, AES block cipher should
+use instead.
+</p>
+<p>
+<b>Reference</b><br/>
+<a href="http://en.wikipedia.org/wiki/Blowfish_(cipher)">Blowfish_(cipher)</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECBKS">Blowfish usage with weak key size</BugCode>
+
+
+    <!-- RSA key size -->
+    <Detector class="com.h3xstream.findsecbugs.crypto.InsufficientKeySizeRsaDetector">
+        <Details>Identify RSA usage with weak key size</Details>
+    </Detector>
+    <BugPattern type="RSA_KEY_SIZE">
+        <ShortDescription>RSA usage with weak key size</ShortDescription>
+        <LongDescription>RSA usage with weak key size</LongDescription>
+        <Details>
+            <![CDATA[
+<p>"RSA Laboratories currently recommends key sizes of 1024 bits for corporate use and 2048 bits for extremely valuable keys like the root key pair used by a certifying authority". <sup>[1]</sup></p>
+
+<p>The KeyPairGenerator creation should be as follow.
+<pre>
+KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+keyGen.initialize(1024);
+</pre>
+</p>
+<p>
+<b>References</b><br/>
+[1] <a href="http://www.rsa.com/rsalabs/node.asp?id=2218">RSA Laboratories : 3.1.5 How large a key should be used in the RSA cryptosystem?</a><br/>
+<a href="http://en.wikipedia.org/wiki/Key_size#Asymmetric%5Falgorithm%5Fkey%5Flengths">Wikipedia : Asymmetric algorithm key lengths</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECRKS">RSA usage with weak key size</BugCode>
+
 </MessageCollection>

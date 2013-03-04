@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.injection;
 
+import com.h3xstream.findsecbugs.common.ByteCode;
 import com.h3xstream.findsecbugs.injection.sql.HibernateInjectionSource;
 import com.h3xstream.findsecbugs.injection.sql.JdoInjectionSource;
 import com.h3xstream.findsecbugs.injection.sql.JpaInjectionSource;
@@ -42,6 +43,7 @@ import java.util.List;
  * Class inspired by the detector FindSqlInjection
  */
 public abstract class InjectionDetector implements Detector {
+
 
     private ClassContext classContext;
     private BugReporter bugReporter;
@@ -120,13 +122,13 @@ public abstract class InjectionDetector implements Detector {
 //
 //                    System.out.println(numArguments);
 
-                    if (!value.isConstantString()) {
+                    if (value == null || !value.isConstantString()) {
 
                         Location prev = getPreviousLocation(cfg, location, true);
                         for (int a = 0; a < arg; a++) {
                             prev = getPreviousLocation(cfg, prev, true);
                         }
-                        if (prev == null || !isSafeValue(prev, cpg, cfg)) {
+                        if (prev != null && !isSafeValue(prev, cpg, cfg)) {
 
                             bugReporter.reportBug(new BugInstance(this, getBugType(), Priorities.NORMAL_PRIORITY) //
                                     .addClass(javaClass) //

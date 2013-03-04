@@ -51,7 +51,6 @@ public class ServletEndpointDetector extends OpcodeStackDetector {
     public void sawOpcode(int seen) {
 
         //All call to ServletRequest
-        //TODO : getProtocol, getRemoteAddr, getRemoteHost, getLocalName
         if (seen == Constants.INVOKEINTERFACE && (getClassConstantOperand().equals("javax/servlet/ServletRequest") ||
                 getClassConstantOperand().equals("javax/servlet/http/HttpServletRequest"))) {
 

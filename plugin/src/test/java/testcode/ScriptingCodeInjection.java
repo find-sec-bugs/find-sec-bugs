@@ -6,6 +6,8 @@ import javax.script.ScriptException;
 
 public class ScriptingCodeInjection {
 
+    //TODO : Implement detector for those api
+
     public static void scripting(String userInput) throws ScriptException {
 
         ScriptEngineManager scriptEngineManager = new ScriptEngineManager();

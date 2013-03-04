@@ -25,6 +25,9 @@ import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 import org.apache.bcel.Constants;
 
+/**
+ * Ref: http://cwe.mitre.org/data/definitions/780.html
+ */
 public class RsaNoPaddingDetector extends OpcodeStackDetector {
 
     private static final String RSA_NO_PADDING_TYPE = "RSA_NO_PADDING";

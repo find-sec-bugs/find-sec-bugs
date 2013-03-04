@@ -46,7 +46,7 @@ public class RsaNoPaddingDetectorTest extends BaseDetectorTest {
                         .bugType("RSA_NO_PADDING")
                         .inClass("RsaNoPadding")
                         .inMethod("rsaCipherWeak")
-                        .atLine(15)
+                        .atLine(18)
                         .build()
         );
 

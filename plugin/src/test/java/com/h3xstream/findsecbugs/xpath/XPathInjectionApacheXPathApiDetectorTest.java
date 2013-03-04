@@ -49,7 +49,7 @@ public class XPathInjectionApacheXPathApiDetectorTest extends BaseDetectorTest {
             );
         }
 
-        //More than two means a false positive was trigger
+        //More than three means a false positive was trigger
         verify(reporter, times(3)).doReportBug(
                 bugDefinition().bugType("XPATH_INJECTION").build());
     }

@@ -48,8 +48,11 @@
     <Detector class="com.h3xstream.findsecbugs.crypto.RsaNoPaddingDetector" reports="RSA_NO_PADDING"/>
     <Detector class="com.h3xstream.findsecbugs.password.GoogleApiKeyDetector" reports="HARD_CODE_PASSWORD"/>
     <Detector class="com.h3xstream.findsecbugs.password.JndiCredentialsDetector" reports="HARD_CODE_PASSWORD"/>
-    <Detector class="com.h3xstream.findsecbugs.StrutsValidatorFormDetector" reports="STRUTS_FORM_VALIDATION"/>
+    <Detector class="com.h3xstream.findsecbugs.StrutsValidatorFormDetector" reports="STRUTS_FORM_VALIDATION"/> <!-- TODO : Disable by default -->
     <Detector class="com.h3xstream.findsecbugs.xss.XSSRequestWrapperDetector" reports="XSS_REQUEST_WRAPPER"/>
+    <Detector class="com.h3xstream.findsecbugs.crypto.InsufficientKeySizeBlowfishDetector" reports="BLOWFISH_KEY_SIZE"/>
+    <Detector class="com.h3xstream.findsecbugs.crypto.InsufficientKeySizeRsaDetector" reports="RSA_KEY_SIZE"/>
+
 
     <BugPattern type="PREDICTABLE_RANDOM" abbrev="SECPR" category="SECURITY"/>
     <BugPattern type="SERVLET_PARAMETER" abbrev="SECSP" category="SECURITY"/>
@@ -91,6 +94,8 @@
     <BugPattern type="HARD_CODE_PASSWORD" abbrev="SECHCP" category="SECURITY"/>
     <BugPattern type="STRUTS_FORM_VALIDATION" abbrev="SECSFV" category="SECURITY"/>
     <BugPattern type="XSS_REQUEST_WRAPPER" abbrev="SECXRW" category="SECURITY"/>
+    <BugPattern type="RSA_KEY_SIZE" abbrev="SECRKS" category="SECURITY"/>
+    <BugPattern type="BLOWFISH_KEY_SIZE" abbrev="SECBKS" category="SECURITY"/>
 
     <!--
     <Detector class="com.h3xstream.findsecbugs.crypto.StaticIvDetector" reports="STATIC_IV"/>

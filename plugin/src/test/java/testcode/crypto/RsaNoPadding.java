@@ -5,6 +5,9 @@ import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * Code sample taken from : http://cwe.mitre.org/data/definitions/780.html
+ */
 public class RsaNoPadding {
 
     public void rsaCipherOk() throws NoSuchAlgorithmException, NoSuchPaddingException {

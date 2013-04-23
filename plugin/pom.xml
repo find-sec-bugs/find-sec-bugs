@@ -4,13 +4,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>com.h3xstream.findsecbugs</groupId>
-        <artifactId>find-sec-bugs</artifactId>
-        <version>1.1-SNAPSHOT</version>
+        <artifactId>root-pom</artifactId>
+        <version>1.1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.h3xstream.findsecbugs</groupId>
     <artifactId>plugin</artifactId>
+
+    <packaging>jar</packaging>
+
     <name>Find Security Bugs Plugin</name>
     <description>
     Core module of the project. It include all the FindBugs detectors.
@@ -89,6 +92,16 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <!-- Override the default behavior (see root pom) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <skip>false</skip>
+                </configuration>
             </plugin>
         </plugins>
     </build>

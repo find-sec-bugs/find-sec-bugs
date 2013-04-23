@@ -4,11 +4,12 @@
 
 <modelVersion>4.0.0</modelVersion>
     <groupId>com.h3xstream.findsecbugs</groupId>
-    <artifactId>find-sec-bugs</artifactId>
+    <artifactId>root-pom</artifactId>
 
     <packaging>pom</packaging>
-    <name>Find Security Bugs</name>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
+
+    <name>Find Security Bugs root</name>
 
     <properties>
         <licence.plugin.version>1.10.b1</licence.plugin.version>
@@ -68,6 +69,17 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- Only selected projects are deploy (see plugin project) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
@@ -164,4 +176,36 @@
         </dependencies>
 
     </dependencyManagement>
+
+    <!--
+    The following meta data are present to comply with Maven Central.
+    Ref: https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide#SonatypeOSSMavenRepositoryUsageGuide-6.CentralSyncRequirement
+    -->
+
+    <url>http://h3xstream.github.io/find-sec-bugs/</url>
+
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License</name>
+            <url>http://www.gnu.org/copyleft/lesser.html</url>
+            <distribution>repo</distribution>
+            <comments></comments>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:https://github.com/h3xstream/find-sec-bugs.git</connection>
+        <developerConnection>scm:git:git@github.com:h3xstream/find-sec-bugs.git</developerConnection>
+        <tag>HEAD</tag>
+        <url>https://github.com/h3xstream/find-sec-bugs</url>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>h3xstream</id>
+            <name>Philippe Arteau</name>
+            <url>http://www.h3xstream.com/</url>
+        </developer>
+    </developers>
+
 </project>

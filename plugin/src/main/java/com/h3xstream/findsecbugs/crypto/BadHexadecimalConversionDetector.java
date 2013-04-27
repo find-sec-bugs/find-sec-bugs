@@ -62,6 +62,9 @@ public class BadHexadecimalConversionDetector implements Detector {
             boolean invokeToHexString = false;
 
             ConstantPoolGen cpg = classContext.getConstantPoolGen();
+            if(methodGen.getInstructionList() == null || methodGen.getInstructionList().getInstructions() == null) {
+                continue; //No instruction .. nothing to do
+            }
             for (Instruction inst : methodGen.getInstructionList().getInstructions()) {
                 if (DEBUG) {
                     ByteCode.printOpCode(inst, cpg);

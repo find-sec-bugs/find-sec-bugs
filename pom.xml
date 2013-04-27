@@ -35,7 +35,7 @@
                 <artifactId>maven-license-plugin</artifactId>
                 <version>${licence.plugin.version}</version>
                 <configuration>
-                    <header>https://raw.github.com/h3xstream/find-sec-bugs/master/LGPL-3.0-header.txt</header>
+                    <header>file:///${session.executionRootDirectory}/LGPL-3.0-header.txt</header>
                     <aggregate>true</aggregate>
                     <strictCheck>true</strictCheck>
                     <includes>

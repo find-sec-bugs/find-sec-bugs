@@ -97,7 +97,9 @@ public abstract class InjectionDetector implements Detector {
         ConstantDataflow dataflow = classContext.getConstantDataflow(method);
         for (Iterator<Location> i = cfg.locationIterator(); i.hasNext(); ) {
             Location location = i.next();
-            Instruction ins = location.getHandle().getInstruction();
+
+            InstructionHandle insHandle = location.getHandle();
+            Instruction ins = insHandle.getInstruction();
             if (!(ins instanceof InvokeInstruction))
                 continue;
             InvokeInstruction invoke = (InvokeInstruction) ins;
@@ -106,7 +108,7 @@ public abstract class InjectionDetector implements Detector {
 
             int[] injectableArguments = new int[0];
             for (InjectionSource source : selectedSources) {
-                injectableArguments = source.getInjectableParameters(invoke, cpg);
+                injectableArguments = source.getInjectableParameters(invoke, cpg, insHandle);
                 //System.out.println("Get param from = " + source.getClass().getSimpleName());
                 if (injectableArguments.length > 0) break;
             }

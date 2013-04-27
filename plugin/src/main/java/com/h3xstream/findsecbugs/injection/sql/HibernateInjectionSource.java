@@ -25,6 +25,7 @@ import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.INVOKEINTERFACE;
 import org.apache.bcel.generic.INVOKESTATIC;
 import org.apache.bcel.generic.InvokeInstruction;
+import org.apache.bcel.generic.InstructionHandle;
 
 /**
  * Focus on hibernate API for SQL/HQL injection.
@@ -48,7 +49,7 @@ public class HibernateInjectionSource implements InjectionSource {
     }
 
     @Override
-    public int[] getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg) {
+    public int[] getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {
         //ByteCode.printOpCode(ins, cpg);
 
         if (ins instanceof INVOKESTATIC || ins instanceof INVOKEINTERFACE) {

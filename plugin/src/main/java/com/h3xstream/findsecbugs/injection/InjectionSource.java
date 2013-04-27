@@ -18,6 +18,7 @@
 package com.h3xstream.findsecbugs.injection;
 
 import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InvokeInstruction;
 
 public interface InjectionSource {
@@ -34,9 +35,11 @@ public interface InjectionSource {
 	/**
 	 * The implementation should identify method that are susceptible to injection and return
 	 * parameters index that can injected.
-	 * @param ins
-	 * @param cpg
-	 * @return
+	 *
+     * @param ins Instruction visit
+     * @param cpg ConstantPool (needed to find the class name and method name associate to instruction)
+     * @param insHandle instruction handle (needed to look at the instruction around the current instruction)
+     * @return
 	 */
-	int[] getInjectableParameters( InvokeInstruction ins, ConstantPoolGen cpg );
+	int[] getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle);
 }

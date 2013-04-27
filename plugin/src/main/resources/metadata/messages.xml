@@ -113,7 +113,7 @@ The value pass to the client is generally an alphanumeric value (ie: <code>JSESS
 GET /somePage HTTP/1.1
 Host: yourwebsite.com
 User-Agent: Mozilla/5.0
-Cookie: JSESSIONID=Get ready to received any value!!??'''&quote;&gt;
+Cookie: JSESSIONID=Get ready to receive any value!!??'''&quot;&gt;
 </pre>
 </p>
 ]]>
@@ -273,10 +273,10 @@ by the user. If it is the case, this bug instance can be ignored.</p>
 
     <BugPattern type="WEAK_FILENAMEUTILS">
         <ShortDescription>FilenameUtils partial filtering</ShortDescription>
-        <LongDescription>FilenameUtils.{3} doesn't filter NULL byte.</LongDescription>
+        <LongDescription>FilenameUtils.{3} don't filter NULL byte.</LongDescription>
         <Details>
             <![CDATA[
-<p>Some FilenameUtils' methods doesn't filter nullbyte.</p>
+<p>Some FilenameUtils' methods don't filter NULL byte (<code>0x00</code>).</p>
 <p>The risk come from the removal of characters following the NULL byte.
 This removal can occurs with many system API (ie. usage of the File object).</p>
 <p>
@@ -681,7 +681,7 @@ can be used.
     <BugCode abbrev="SECSQLI">SQL Injection</BugCode>
 
     <!-- LDAP Injection -->
-    <Detector class="com.h3xstream.findsecbugs.injection.ldap.LdapDetector">
+    <Detector class="com.h3xstream.findsecbugs.injection.ldap.LdapInjectionDetector">
         <Details>Identify various kind of LDAP Injection in JNDI and UnboundId API.</Details>
     </Detector>
 
@@ -1078,5 +1078,44 @@ keyGen.initialize(1024);
         </Details>
     </BugPattern>
     <BugCode abbrev="SECRKS">RSA usage with weak key size</BugCode>
+
+    <!-- Unvalidated redirect -->
+    <Detector class="com.h3xstream.findsecbugs.injection.redirect.UnvalidatedRedirectDetector">
+        <Details>Identify redirect with user input URL</Details>
+    </Detector>
+    <BugPattern type="UNVALIDATED_REDIRECT">
+        <ShortDescription>Unvalidated Redirect</ShortDescription>
+        <LongDescription>Unvalidated Redirect</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    Unvalidated request is a vulnerability that facilitate fishing attack.
+</p>
+<p>
+    <b>Scenario</b><br/>
+    1. A user is requested to visit the malicious url : http://website.com/login?redirect=http://evil.vvebsite.com/fake/login<br/>
+    2. The user is redirect to a fake login. (http://evil.vvebsite.com/fake/login)<br/>
+    3. The user enter his credentials.<br/>
+    4. He is redirect to the original website.<br/>
+    <br/>
+    This is attack is plausible because most users don't double check the url after the redirection. Also, redirection to
+    authenticate are very common.
+</p>
+<p>
+    <b>Counter measures</b><br/>
+    <ul>
+        <li>White list URLs (if possible)</li>
+        <li>Validate that the beginning of the URL is part of white list</li>
+    </ul>
+</p>
+<p>
+    <b>References</b><br/>
+    <a href="http://projects.webappsec.org/w/page/13246981/URL%20Redirector%20Abuse">WASC-38 : URL Redirector Abuse</a><br/>
+    <a href="https://www.owasp.org/index.php/Top_10_2010-A10-Unvalidated_Redirects_and_Forwards">OWASP Top 10 A10: Unvalidated Redirects and Forwards</a>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECUR">Unvalidated Redirect</BugCode>
 
 </MessageCollection>

@@ -63,7 +63,7 @@ public class StrutsValidatorFormDetector implements Detector {
 
         //ValidatorForm without a validate method is just like a regular ActionForm
         if(!validateMethodFound) {
-            bugReporter.reportBug(new BugInstance(this, STRUTS_FORM_VALIDATION_TYPE, Priorities.NORMAL_PRIORITY) //
+            bugReporter.reportBug(new BugInstance(this, STRUTS_FORM_VALIDATION_TYPE, Priorities.LOW_PRIORITY) //
                     .addClass(javaClass) //
                     .addString("ValidatorForm"));
         }

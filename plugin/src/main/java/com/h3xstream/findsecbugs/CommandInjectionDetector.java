@@ -42,6 +42,7 @@ public class CommandInjectionDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
+        //printOpCode(seen);
         if (seen == Constants.INVOKEVIRTUAL && getClassConstantOperand().equals("java/lang/Runtime") &&
                 getNameConstantOperand().equals("exec")) {
 

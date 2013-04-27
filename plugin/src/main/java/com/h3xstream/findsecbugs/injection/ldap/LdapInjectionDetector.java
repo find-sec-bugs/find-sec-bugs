@@ -21,11 +21,11 @@ import com.h3xstream.findsecbugs.injection.InjectionDetector;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
 import edu.umd.cs.findbugs.BugReporter;
 
-public class LdapDetector extends InjectionDetector {
+public class LdapInjectionDetector extends InjectionDetector {
 
     private static final String LDAP_INJECTION_TYPE = "LDAP_INJECTION";
 
-    public LdapDetector(BugReporter bugReporter) {
+    public LdapInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
     }
 

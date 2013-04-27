@@ -15,17 +15,15 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.injection.ldap;
+package com.h3xstream.findsecbugs.injection.redirect;
 
+import com.h3xstream.findsecbugs.common.ByteCode;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantUtf8;
-import org.apache.bcel.generic.ConstantPoolGen;
-import org.apache.bcel.generic.INVOKEVIRTUAL;
-import org.apache.bcel.generic.InstructionHandle;
-import org.apache.bcel.generic.InvokeInstruction;
+import org.apache.bcel.generic.*;
 
-public class JndiLdapInjectionSource implements InjectionSource {
+public class RedirectionSource implements InjectionSource {
 
     @Override
     public boolean isCandidate(ConstantPoolGen cpg) {
@@ -34,7 +32,7 @@ public class JndiLdapInjectionSource implements InjectionSource {
             if (cnt instanceof ConstantUtf8) {
                 String utf8String = ((ConstantUtf8) cnt).getBytes();
 //                System.out.println("cnt= "+utf8String);
-                if (utf8String.equals("javax/naming/directory/InitialDirContext")) {
+                if (utf8String.equals("javax/servlet/http/HttpServletResponse")) {
                     return true;
                 }
             }
@@ -44,16 +42,28 @@ public class JndiLdapInjectionSource implements InjectionSource {
 
     @Override
     public int[] getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {
+        //ByteCode.printOpCode(ins, cpg);
 
-        //INVOKEVIRTUAL javax/naming/directory/InitialDirContext.search ((Ljava/lang/String;Ljava/lang/String;Ljavax/naming/directory/SearchControls;)Ljavax/naming/NamingEnumeration;)
-        if (ins instanceof INVOKEVIRTUAL) {
+        if (ins instanceof INVOKEINTERFACE) {
             String methodName = ins.getMethodName(cpg);
             String methodSignature = ins.getSignature(cpg);
             String className = ins.getClassName(cpg);
 
-            if (className.equals("javax.naming.directory.InitialDirContext") && methodName.equals("search") &&
-                    methodSignature.equals("(Ljava/lang/String;Ljava/lang/String;Ljavax/naming/directory/SearchControls;)Ljavax/naming/NamingEnumeration;")) {
-                return new int[]{1,2};
+            if (className.equals("javax.servlet.http.HttpServletResponse")) {
+                if(methodName.equals("sendRedirect")) {
+                    return new int[] {0};
+                }
+                else if(methodName.equals("addHeader")) {
+
+                    LDC ldc = ByteCode.getPrevInstruction(insHandle, LDC.class);
+                    if(ldc != null) {
+                        Object value = ldc.getValue(cpg);
+                        if("Location".equals(value)) {
+                            return new int[] {0};
+                        }
+                    }
+
+                }
             }
         }
         return new int[0];

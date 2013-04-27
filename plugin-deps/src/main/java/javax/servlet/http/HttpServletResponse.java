@@ -7,4 +7,6 @@ public interface HttpServletResponse extends ServletResponse {
     void addCookie(Cookie cookie);
 
     void addHeader(String header, String value);
+
+    void sendRedirect(String url);
 }

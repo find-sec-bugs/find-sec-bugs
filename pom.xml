@@ -196,8 +196,7 @@
     <scm>
         <connection>scm:git:https://github.com/h3xstream/find-sec-bugs.git</connection>
         <developerConnection>scm:git:git@github.com:h3xstream/find-sec-bugs.git</developerConnection>
-        <tag>HEAD</tag>
-        <url>https://github.com/h3xstream/find-sec-bugs</url>
+        <url>git@github.com:h3xstream/find-sec-bugs.git</url>
     </scm>
 
     <developers>

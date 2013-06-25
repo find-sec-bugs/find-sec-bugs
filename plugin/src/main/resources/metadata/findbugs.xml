@@ -2,7 +2,7 @@
                 xsi:noNamespaceSchemaLocation="https://findbugs.googlecode.com/svn-history/r13379/trunk/findbugs/etc/findbugsplugin.xsd"
                 pluginid="com.h3xstream.findsecbugs"
                 provider="Find Security Bugs"
-                defaultenabled="false"
+                defaultenabled="true"
                 website="https://github.com/h3xstream/find-sec-bugs">
 
     <!--

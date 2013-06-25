@@ -37,6 +37,7 @@
 ]]>
         </Details>
     </BugPattern>
+    <BugCode abbrev="SECPR">Predictable Pseudo Random Generator (PRG)</BugCode>
 
     <!-- Servlet parameter -->
     <Detector class="com.h3xstream.findsecbugs.endpoint.ServletEndpointDetector">
@@ -144,7 +145,7 @@ be passed.</p>
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECSSH">Request Header</BugCode>
+    <BugCode abbrev="SECSH">Request Header</BugCode>
 
 
     <BugPattern type="SERVLET_HEADER_REFERER">
@@ -168,7 +169,7 @@ Recommendations:
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECSSHR">Request Header "Referer"</BugCode>
+    <BugCode abbrev="SECSHR">Request Header "Referer"</BugCode>
 
     <BugPattern type="SERVLET_HEADER_USER_AGENT">
         <ShortDescription>Request Header "User-Agent"</ShortDescription>
@@ -180,7 +181,7 @@ crawler UA) is not recommended.</p>
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECSSHUA">>Request Header "User-Agent"</BugCode>
+    <BugCode abbrev="SECSHUA">>Request Header "User-Agent"</BugCode>
 
     <!-- Cookie usage -->
     <Detector class="com.h3xstream.findsecbugs.endpoint.CookieDetector">

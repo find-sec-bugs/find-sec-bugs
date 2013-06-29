@@ -28,8 +28,8 @@ public class BlockCipherList {
 		Cipher.getInstance( "RSA/ECB/PKCS1Padding" );
 		Cipher.getInstance( "RSA/ECB/OAEPWithSHA-1AndMGF1Padding" );
 		Cipher.getInstance( "RSA/ECB/OAEPWithSHA-256AndMGF1Padding" );
-    Cipher.getInstance( "RC2/ECB/PKCS5Padding" );
-    Cipher.getInstance( "ARCFOUR/ECB/NOPADDING" );
+		Cipher.getInstance( "RC2/ECB/PKCS5Padding" );
+		Cipher.getInstance( "ARCFOUR/ECB/NOPADDING" );
 	}
 
     /**

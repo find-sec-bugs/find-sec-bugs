@@ -44,7 +44,7 @@ public class EcbModeDetectorTest extends BaseDetectorTest {
 
         //Assertions
 
-	    for (Integer line : Arrays.asList( 18, 19 )) {
+	    for (Integer line : Arrays.asList( 18, 19, 22, 23, 26, 27 )) {
 		    verify(reporter).doReportBug(
 				    bugDefinition()
 						    .bugType( "ECB_MODE" )
@@ -56,7 +56,7 @@ public class EcbModeDetectorTest extends BaseDetectorTest {
 	    }
 
 	    //The count make sure no other bug are detect
-	    verify(reporter, times(11)).doReportBug(
+	    verify(reporter, times(6)).doReportBug(
 			    bugDefinition()
 					    .bugType( "ECB_MODE" )
 					    .inClass( "BlockCipherList" )

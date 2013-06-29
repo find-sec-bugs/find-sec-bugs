@@ -52,7 +52,7 @@ public class EcbModeDetector extends OpcodeStackDetector {
 				String cipherValue = (String) item.getConstant();
 				if(DEBUG) System.out.println(cipherValue);
 
-				if(cipherValue.contains( "/ECB/" )) {
+				if(cipherValue.contains("AES/ECB/") || cipherValue.contains("DES/ECB/") || cipherValue.contains("DESede/ECB/")) {
 					bugReporter.reportBug(new BugInstance(this, ECB_MODE_TYPE, Priorities.NORMAL_PRIORITY) //
 						.addClass( this ).addMethod( this ).addSourceLine(this));
 				}

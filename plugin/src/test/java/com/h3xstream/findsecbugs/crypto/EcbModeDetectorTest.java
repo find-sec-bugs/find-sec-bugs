@@ -56,7 +56,7 @@ public class EcbModeDetectorTest extends BaseDetectorTest {
 	    }
 
 	    //The count make sure no other bug are detect
-	    verify(reporter, times(2)).doReportBug(
+	    verify(reporter, times(11)).doReportBug(
 			    bugDefinition()
 					    .bugType( "ECB_MODE" )
 					    .inClass( "BlockCipherList" )

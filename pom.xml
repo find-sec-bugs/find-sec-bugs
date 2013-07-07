@@ -7,7 +7,7 @@
     <artifactId>root-pom</artifactId>
 
     <packaging>pom</packaging>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.1.0</version>
 
     <name>Find Security Bugs root</name>
 
@@ -15,6 +15,9 @@
         <licence.plugin.version>1.10.b1</licence.plugin.version>
         <!-- The groovy dependency need to be kept in sync with GMaven dependency -->
         <groovy.version>1.7.0</groovy.version>
+        <!-- Encoding configuration -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
     <build>
@@ -206,5 +209,19 @@
             <url>http://www.h3xstream.com/</url>
         </developer>
     </developers>
+
+    <distributionManagement>
+        <repository>
+            <id>sonatype-nexus-staging</id>
+            <name>Sonatype staging repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+
+        <snapshotRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype snapshot repository</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 </project>

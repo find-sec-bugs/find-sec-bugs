@@ -4,6 +4,8 @@ Website : http://h3xstream.github.com/find-sec-bugs/
 
 Build status : http://travis-ci.org/#!/h3xstream/find-sec-bugs [![Build Status](https://secure.travis-ci.org/h3xstream/find-sec-bugs.png?branch=master)](http://travis-ci.org/h3xstream/find-sec-bugs)
 
+Code coverage : [![Coverage Status](https://coveralls.io/repos/h3xstream/find-sec-bugs/badge.png?branch=master)](https://coveralls.io/r/h3xstream/find-sec-bugs?branch=master)
+
 ## License
 
 This software is release under [LGPL](http://www.gnu.org/licenses/lgpl.html).

@@ -103,6 +103,28 @@
                     <skip>false</skip>
                 </configuration>
             </plugin>
+            
+            
+            <!-- Cobertura configuration -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                   <formats>
+                       <format>html</format>
+                       <format>xml</format> <!-- Needed for coveralls plugin -->
+                   </formats>
+                </configuration>
+            </plugin>
+            
+            <!-- Coveralls -->
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>1.2.0</version>
+            </plugin>
+            
         </plugins>
     </build>
 
@@ -158,4 +180,5 @@
         </dependency>
 
     </dependencies>
+
 </project>

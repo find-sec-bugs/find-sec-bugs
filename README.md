@@ -19,13 +19,14 @@ Aside from adding various new detectors, there are few features that are planned
 - Introduce a basic set of detectors
 - Create a tutorial for Eclipse IDE
 
-### Version 1.1 (current)
+### Version 1.1
 
 - Create a tutorial for Jenkins
 - ~~Create a maven repository host on GitHub~~ Publish the plugin on Maven central repository
-- Initiate a set of detectors for Groovy (Grails, Ratpack) and Scala (Play2, Scalatra)
 
-### Version 2.0
+### Version 1.2 (current)
 
 - Analysis of JSP for XSS
+- Performance improvements (mainly injections' detectors)
+- Initiate a set of detectors for Groovy (Grails, Ratpack) and Scala (Play2, Scalatra)
 - Improve the flow analysis of variables (for string construction)

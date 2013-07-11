@@ -25,7 +25,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class NullCipherDetectorTest  extends BaseDetectorTest {
+public class NullCipherDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectNullCipher() throws Exception {
@@ -41,9 +41,9 @@ public class NullCipherDetectorTest  extends BaseDetectorTest {
 
         verify(reporter, times(1)).doReportBug(
                 bugDefinition()
-                        .bugType( "NULL_CIPHER" )
-                        .inClass( "NullCipherUse" )
-                        .inMethod( "main" )
+                        .bugType("NULL_CIPHER")
+                        .inClass("NullCipherUse")
+                        .inMethod("main")
                         .build()
         );
     }

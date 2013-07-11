@@ -53,7 +53,7 @@ public class JndiLdapInjectionSource implements InjectionSource {
 
             if (className.equals("javax.naming.directory.InitialDirContext") && methodName.equals("search") &&
                     methodSignature.equals("(Ljava/lang/String;Ljava/lang/String;Ljavax/naming/directory/SearchControls;)Ljavax/naming/NamingEnumeration;")) {
-                return new int[]{1,2};
+                return new int[]{1, 2};
             }
         }
         return new int[0];

@@ -20,7 +20,7 @@ public class InsufficientKeySizeRsa {
 
     public KeyPair weakKeySize2() throws NoSuchAlgorithmException {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-        keyGen.initialize(128,new SecureRandom()); //Different signature
+        keyGen.initialize(128, new SecureRandom()); //Different signature
 
         KeyPair key = keyGen.generateKeyPair();
         return key;

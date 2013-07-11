@@ -13,7 +13,7 @@
     <artifactId>website</artifactId>
     <name>Website Generator</name>
     <description>
-    The static website reuse the description of the bug patterns to build a overview.
+        The static website reuse the description of the bug patterns to build a overview.
     </description>
 
     <build>

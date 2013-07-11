@@ -43,13 +43,13 @@ public class FormWithValidation extends ValidatorForm {
         //
         boolean validName = false, validEmail = false;
         try {
-            validName = ESAPI.validator().isValidInput("TestForm_name",name, "name",20,false);
-            validEmail = ESAPI.validator().isValidInput("TestForm_email",email, "email",45,false);
-        } catch( IntrusionException e ) {
+            validName = ESAPI.validator().isValidInput("TestForm_name", name, "name", 20, false);
+            validEmail = ESAPI.validator().isValidInput("TestForm_email", email, "email", 45, false);
+        } catch (IntrusionException e) {
             log.severe(e.getMessage());
         }
-        if(!validName) errors.add("name",new ActionMessage("TestForm.name.invalid"));
-        if(!validEmail) errors.add("email",new ActionMessage("TestForm.email.invalid"));
+        if (!validName) errors.add("name", new ActionMessage("TestForm.name.invalid"));
+        if (!validEmail) errors.add("email", new ActionMessage("TestForm.email.invalid"));
 
         return errors;
     }

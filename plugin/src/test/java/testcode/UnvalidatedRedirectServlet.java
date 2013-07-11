@@ -11,17 +11,17 @@ public class UnvalidatedRedirectServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String url = req.getParameter("urlRedirect");
-        unvalidatedRedirect1(resp,url);
+        unvalidatedRedirect1(resp, url);
     }
 
     private void unvalidatedRedirect1(HttpServletResponse resp, String url) {
-        if(url != null) {
+        if (url != null) {
             resp.sendRedirect(url);
         }
     }
 
     public void unvalidatedRedirect2(HttpServletResponse resp, String url) {
-        if(url != null) {
+        if (url != null) {
             resp.addHeader("Location", url);
         }
     }
@@ -30,7 +30,7 @@ public class UnvalidatedRedirectServlet extends HttpServlet {
 
     public void falsePositiveRedirect1(HttpServletResponse resp) {
         String url = "/Home";
-        if(url != null) {
+        if (url != null) {
             resp.sendRedirect(url);
         }
     }

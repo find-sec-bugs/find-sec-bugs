@@ -65,6 +65,7 @@ public class ReDosDetectorTest extends BaseDetectorTest {
 
     /**
      * Test that utilize compile code.
+     *
      * @throws Exception
      */
     @Test

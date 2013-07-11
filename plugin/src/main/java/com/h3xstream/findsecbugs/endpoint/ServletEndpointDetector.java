@@ -100,7 +100,7 @@ public class ServletEndpointDetector extends OpcodeStackDetector {
                     bugReporter.reportBug(new BugInstance(this, HEADER_USER_AGENT_TYPE, Priorities.LOW_PRIORITY) //
                             .addClass(this).addMethod(this).addSourceLine(this));
                 } else {
-                    
+
                     bugReporter.reportBug(new BugInstance(this, HEADER_TYPE, Priorities.LOW_PRIORITY) //
                             .addClass(this).addMethod(this).addSourceLine(this));
                 }

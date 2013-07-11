@@ -39,7 +39,7 @@ public class CookieDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        for(Integer line : Arrays.asList(15,16,17)) {
+        for (Integer line : Arrays.asList(15, 16, 17)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("COOKIE_USAGE")

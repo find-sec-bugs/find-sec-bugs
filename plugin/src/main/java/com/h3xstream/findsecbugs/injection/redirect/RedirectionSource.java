@@ -50,16 +50,15 @@ public class RedirectionSource implements InjectionSource {
             String className = ins.getClassName(cpg);
 
             if (className.equals("javax.servlet.http.HttpServletResponse")) {
-                if(methodName.equals("sendRedirect")) {
-                    return new int[] {0};
-                }
-                else if(methodName.equals("addHeader")) {
+                if (methodName.equals("sendRedirect")) {
+                    return new int[]{0};
+                } else if (methodName.equals("addHeader")) {
 
                     LDC ldc = ByteCode.getPrevInstruction(insHandle, LDC.class);
-                    if(ldc != null) {
+                    if (ldc != null) {
                         Object value = ldc.getValue(cpg);
-                        if("Location".equals(value)) {
-                            return new int[] {0};
+                        if ("Location".equals(value)) {
+                            return new int[]{0};
                         }
                     }
 

@@ -23,23 +23,24 @@ import org.apache.bcel.generic.InvokeInstruction;
 
 public interface InjectionSource {
 
-	/**
-	 * Before starting intensive analysis on variable flow and iterating on every instruction,
-	 * this function will make sure the injection type can occurs in the current class base on
-	 * its constant pool gen. All classes dependencies can be found in this pool.
-	 * @param cpg
-	 * @return
-	 */
-	boolean isCandidate(ConstantPoolGen cpg);
+    /**
+     * Before starting intensive analysis on variable flow and iterating on every instruction,
+     * this function will make sure the injection type can occurs in the current class base on
+     * its constant pool gen. All classes dependencies can be found in this pool.
+     *
+     * @param cpg
+     * @return
+     */
+    boolean isCandidate(ConstantPoolGen cpg);
 
-	/**
-	 * The implementation should identify method that are susceptible to injection and return
-	 * parameters index that can injected.
-	 *
-     * @param ins Instruction visit
-     * @param cpg ConstantPool (needed to find the class name and method name associate to instruction)
+    /**
+     * The implementation should identify method that are susceptible to injection and return
+     * parameters index that can injected.
+     *
+     * @param ins       Instruction visit
+     * @param cpg       ConstantPool (needed to find the class name and method name associate to instruction)
      * @param insHandle instruction handle (needed to look at the instruction around the current instruction)
      * @return
-	 */
-	int[] getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle);
+     */
+    int[] getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle);
 }

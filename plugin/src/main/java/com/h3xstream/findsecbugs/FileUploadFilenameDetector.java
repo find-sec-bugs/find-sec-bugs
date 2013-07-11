@@ -42,10 +42,10 @@ public class FileUploadFilenameDetector extends OpcodeStackDetector {
 
         if (seen == Constants.INVOKEINTERFACE &&
                 (getClassConstantOperand().equals("org/apache/wicket/util/upload/FileItem") ||
-                getClassConstantOperand().equals("org/apache/commons/fileupload/FileItem")) &&
-                        getNameConstantOperand().equals("getName")) {
+                        getClassConstantOperand().equals("org/apache/commons/fileupload/FileItem")) &&
+                getNameConstantOperand().equals("getName")) {
             bugReporter.reportBug(new BugInstance(this, FILE_UPLOAD_FILENAME_TYPE, Priorities.NORMAL_PRIORITY) //
-                                    .addClass(this).addMethod(this).addSourceLine(this));
+                    .addClass(this).addMethod(this).addSourceLine(this));
         }
 
     }

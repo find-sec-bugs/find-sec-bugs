@@ -35,7 +35,7 @@ println "Writing the template to ${outputDirectory}/index.htm"
 def engine = new SimpleTemplateEngine()
 result = engine.createTemplate(templateReader).make(binding)
 
-generatedPage.withWriter{
+generatedPage.withWriter {
     w ->
-    w << result.toString()
+        w << result.toString()
 }

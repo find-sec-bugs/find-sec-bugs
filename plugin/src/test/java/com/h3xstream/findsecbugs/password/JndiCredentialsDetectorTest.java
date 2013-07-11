@@ -41,7 +41,7 @@ public class JndiCredentialsDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         //Assertions
-        for (Integer line : Arrays.asList(10,15)) {
+        for (Integer line : Arrays.asList(10, 15)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("HARD_CODE_PASSWORD")
@@ -51,7 +51,7 @@ public class JndiCredentialsDetectorTest extends BaseDetectorTest {
         }
 
         //More than two occurrence == false positive
-        verify(reporter,times(2)).doReportBug(
+        verify(reporter, times(2)).doReportBug(
                 bugDefinition().bugType("HARD_CODE_PASSWORD").build());
     }
 }

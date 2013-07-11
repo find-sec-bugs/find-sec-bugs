@@ -39,10 +39,10 @@ public class Struts2EndpointDetector implements Detector {
     public void visitClassContext(ClassContext classContext) {
         JavaClass javaClass = classContext.getJavaClass();
 
-        for(Method m : javaClass.getMethods()) {
-            if("execute".equals(m.getName()) && "()Ljava/lang/String;".equals(m.getSignature())) {
+        for (Method m : javaClass.getMethods()) {
+            if ("execute".equals(m.getName()) && "()Ljava/lang/String;".equals(m.getSignature())) {
                 bugReporter.reportBug(new BugInstance(this, STRUTS2_ENDPOINT_TYPE, Priorities.LOW_PRIORITY) //
-                                    .addClass(javaClass));
+                        .addClass(javaClass));
             }
         }
     }

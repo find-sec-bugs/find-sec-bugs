@@ -40,14 +40,14 @@ public class HazelcastSymmetricEncryptionDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-	    //Identify the constructor
-	    verify(reporter, times(1)).doReportBug(
+        //Identify the constructor
+        verify(reporter, times(1)).doReportBug(
                 bugDefinition()
-                        .bugType( "HAZELCAST_SYMMETRIC_ENCRYPTION" )
-                        .inClass( "HazelcastSymmetric" )
-                        .inMethod( "init" )
-                        .atLine( 26 )
-                .build()
+                        .bugType("HAZELCAST_SYMMETRIC_ENCRYPTION")
+                        .inClass("HazelcastSymmetric")
+                        .inMethod("init")
+                        .atLine(26)
+                        .build()
         );
     }
 

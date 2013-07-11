@@ -2,7 +2,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
     <groupId>com.h3xstream.findsecbugs</groupId>
     <artifactId>root-pom</artifactId>
 
@@ -82,7 +82,7 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
-            
+
 
         </plugins>
     </build>
@@ -94,8 +94,6 @@
         <module>website</module>
         <module>plugin-deps</module>
     </modules>
-
-
 
 
     <!-- All the dependencies are declare here. Modules will refer to those without specifying the version. -->

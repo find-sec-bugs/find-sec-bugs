@@ -57,7 +57,7 @@ public class WeakTrustManagerDetector implements Detector {
         JavaClass javaClass = classContext.getJavaClass();
 
         //The class extends X509TrustManager
-        boolean isTrustManager = InterfaceUtils.classImplements(javaClass,"javax.net.ssl.X509TrustManager");
+        boolean isTrustManager = InterfaceUtils.classImplements(javaClass, "javax.net.ssl.X509TrustManager");
 
         //Not the target of this detector
         if (!isTrustManager) return;

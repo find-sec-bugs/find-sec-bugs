@@ -5,9 +5,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
 /**
- * Similar to XSSRequestWrapper (from the same author)
- *
- * <a href="">http://www.javacodegeeks.com/2012/07/anti-cross-site-scripting-xss-filter.html</a>
+ * Similar to the other XSSRequestWrapper (from the same author)
+ * <p>
+ * <a href="http://www.javacodegeeks.com/2012/07/anti-cross-site-scripting-xss-filter.html">XSSRequestWrapper</a>
  */
 public class XSSRequestWrapper2 extends HttpServletRequestWrapper {
 

@@ -5,16 +5,16 @@ import java.util.Random;
 
 public class InsecureRandom {
 
-	public static void newRandomObj() {
-		Random rand = new Random();
-		
-		System.out.println(rand.nextInt());
-	}
+    public static void newRandomObj() {
+        Random rand = new Random();
 
-	public static void mathRandom() {
+        System.out.println(rand.nextInt());
+    }
+
+    public static void mathRandom() {
         //Indirectly using Random class
-		System.out.println(Math.random());
-	}
+        System.out.println(Math.random());
+    }
 
     public static void mathOther() {
         //Other Math functions unrelated..

@@ -12,8 +12,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
-public class KeyStoresTrustManager implements X509TrustManager
-{
+public class KeyStoresTrustManager implements X509TrustManager {
     private LinkedList<X509TrustManager> trustManagers = new LinkedList<X509TrustManager>();
     private X509Certificate[] acceptedIssuers;
 
@@ -32,8 +31,8 @@ public class KeyStoresTrustManager implements X509TrustManager
 
         //Build accepted issuers list
         Set<X509Certificate> issuers = new HashSet<X509Certificate>();
-        for(X509TrustManager tm : trustManagers) {
-            for(X509Certificate issuer : tm.getAcceptedIssuers()) {
+        for (X509TrustManager tm : trustManagers) {
+            for (X509Certificate issuer : tm.getAcceptedIssuers()) {
                 issuers.add(issuer);
             }
         }
@@ -41,14 +40,13 @@ public class KeyStoresTrustManager implements X509TrustManager
     }
 
     @Override
-    public void checkClientTrusted(X509Certificate[] certificates,String authType) throws CertificateException {
+    public void checkClientTrusted(X509Certificate[] certificates, String authType) throws CertificateException {
         CertificateException catchException = null;
-        for(X509TrustManager tm : trustManagers) {
+        for (X509TrustManager tm : trustManagers) {
             try {
                 tm.checkClientTrusted(certificates, authType);
                 return;
-            }
-            catch (CertificateException e) {
+            } catch (CertificateException e) {
                 catchException = e;
             }
         }
@@ -56,14 +54,13 @@ public class KeyStoresTrustManager implements X509TrustManager
     }
 
     @Override
-    public void checkServerTrusted(X509Certificate[] certificates,String authType) throws CertificateException {
+    public void checkServerTrusted(X509Certificate[] certificates, String authType) throws CertificateException {
         CertificateException catchException = null;
-        for(X509TrustManager tm : trustManagers) {
+        for (X509TrustManager tm : trustManagers) {
             try {
                 tm.checkServerTrusted(certificates, authType);
                 return;
-            }
-            catch (CertificateException e) {
+            } catch (CertificateException e) {
                 catchException = e;
             }
         }

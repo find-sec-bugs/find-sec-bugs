@@ -27,7 +27,7 @@ import org.apache.bcel.Constants;
  * http://code.google.com/p/hazelcast/wiki/Encryption
  */
 public class HazelcastSymmetricEncryptionDetector extends OpcodeStackDetector {
-	private static final String HAZELCAST_SYMMETRIC_ENCRYPTION_TYPE = "HAZELCAST_SYMMETRIC_ENCRYPTION";
+    private static final String HAZELCAST_SYMMETRIC_ENCRYPTION_TYPE = "HAZELCAST_SYMMETRIC_ENCRYPTION";
 
     private BugReporter bugReporter;
 
@@ -37,12 +37,12 @@ public class HazelcastSymmetricEncryptionDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
-		//printOpCode( seen );
+        //printOpCode( seen );
         if (seen == Constants.INVOKESPECIAL && getClassConstantOperand().equals("com/hazelcast/config/SymmetricEncryptionConfig") &&
-		        getNameConstantOperand().equals("<init>")) {
+                getNameConstantOperand().equals("<init>")) {
 
             bugReporter.reportBug(new BugInstance(this, HAZELCAST_SYMMETRIC_ENCRYPTION_TYPE, Priorities.NORMAL_PRIORITY) //
-                    .addClass( this ).addMethod(this).addSourceLine(this));
+                    .addClass(this).addMethod(this).addSourceLine(this));
         }
     }
 }

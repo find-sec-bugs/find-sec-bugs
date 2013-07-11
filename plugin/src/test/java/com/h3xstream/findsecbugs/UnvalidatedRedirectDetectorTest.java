@@ -25,7 +25,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class UnvalidatedRedirectDetectorTest  extends BaseDetectorTest {
+public class UnvalidatedRedirectDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectUnvalidatedRedirect() throws Exception {
@@ -55,7 +55,7 @@ public class UnvalidatedRedirectDetectorTest  extends BaseDetectorTest {
                         .build()
         );
 
-        verify(reporter,times(2)).doReportBug(
+        verify(reporter, times(2)).doReportBug(
                 bugDefinition().bugType("UNVALIDATED_REDIRECT").build()
         );
     }

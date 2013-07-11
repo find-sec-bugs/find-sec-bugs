@@ -42,18 +42,18 @@ public class HibernateInjectionSourceTest extends BaseDetectorTest {
 
         for (Integer line : Arrays.asList(18, 20, 22)) {
             verify(reporter).doReportBug(
-                bugDefinition()
-                        .bugType("SQL_INJECTION")
-                        .inClass("HibernateSql").inMethod("testQueries").atLine(line)
-                        .build()
+                    bugDefinition()
+                            .bugType("SQL_INJECTION")
+                            .inClass("HibernateSql").inMethod("testQueries").atLine(line)
+                            .build()
             );
         }
 
         //Only the previous 3 cases should be marked as vulnerable
         verify(reporter, times(3)).doReportBug(
-            bugDefinition()
-                    .bugType("SQL_INJECTION")
-                    .build()
+                bugDefinition()
+                        .bugType("SQL_INJECTION")
+                        .build()
         );
     }
 }

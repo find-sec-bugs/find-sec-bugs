@@ -16,8 +16,7 @@ import java.io.InputStream;
 public class SaxParserSafeEntityResolver {
 
     public static class CustomResolver implements EntityResolver {
-        public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException
-        {
+        public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
             return new InputSource(); // Do not allow unknown entities, by returning blank path
         }
     }

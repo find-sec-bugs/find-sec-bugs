@@ -45,11 +45,10 @@ public class ByteCodeTest {
             when(ins.getSignature(Matchers.<ConstantPoolGen>any())).thenReturn("(Lsignature)Lblah");
 
             //Print invocation
-            ByteCode.printOpCode(ins,cpg);
+            ByteCode.printOpCode(ins, cpg);
 
-            verify(sysOut,atLeastOnce()).println(contains("ClassTest.method"));
-        }
-        finally {
+            verify(sysOut, atLeastOnce()).println(contains("ClassTest.method"));
+        } finally {
             System.setOut(oldPrintStream);
             System.out.println("Sysout is back!");
         }

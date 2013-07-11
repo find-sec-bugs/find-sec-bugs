@@ -44,24 +44,24 @@ public class EcbModeDetectorTest extends BaseDetectorTest {
 
         //Assertions
 
-	    for (Integer line : Arrays.asList( 18, 19, 22, 23, 26, 27 )) {
-		    verify(reporter).doReportBug(
-				    bugDefinition()
-						    .bugType( "ECB_MODE" )
-						    .inClass( "BlockCipherList" )
-						    .inMethod( "main" )
-						    .atLine( line )
-					.build()
-		    );
-	    }
+        for (Integer line : Arrays.asList(18, 19, 22, 23, 26, 27)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("ECB_MODE")
+                            .inClass("BlockCipherList")
+                            .inMethod("main")
+                            .atLine(line)
+                            .build()
+            );
+        }
 
-	    //The count make sure no other bug are detect
-	    verify(reporter, times(6)).doReportBug(
-			    bugDefinition()
-					    .bugType( "ECB_MODE" )
-					    .inClass( "BlockCipherList" )
-					    .inMethod( "main" )
-				.build() );
+        //The count make sure no other bug are detect
+        verify(reporter, times(6)).doReportBug(
+                bugDefinition()
+                        .bugType("ECB_MODE")
+                        .inClass("BlockCipherList")
+                        .inMethod("main")
+                        .build());
     }
 
 }

@@ -65,6 +65,6 @@ public class BugInstanceMatcherBuilder {
 //            throw new RuntimeException("The field position is not kept after compilation. " +
 //                    "The lineNumber can be set when a fieldName is defined.");
 //        }
-        return Matchers.argThat(new BugInstanceMatcher(bugType,className,methodName,fieldName,lineNumber));
+        return Matchers.argThat(new BugInstanceMatcher(bugType, className, methodName, fieldName, lineNumber));
     }
 }

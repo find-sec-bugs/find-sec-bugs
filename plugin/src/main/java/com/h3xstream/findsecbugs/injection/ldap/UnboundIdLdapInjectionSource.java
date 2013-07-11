@@ -29,7 +29,7 @@ import org.apache.bcel.generic.InvokeInstruction;
  * UnboundId API offers both a Typed and a string based filters.
  * This detector only look at filter parameters from query..
  */
-public class UnboundIdLdapInjectionSource  implements InjectionSource {
+public class UnboundIdLdapInjectionSource implements InjectionSource {
 
     @Override
     public boolean isCandidate(ConstantPoolGen cpg) {
@@ -56,7 +56,7 @@ public class UnboundIdLdapInjectionSource  implements InjectionSource {
 
             if (className.equals("com.unboundid.ldap.sdk.LDAPConnection") && methodName.equals("search") &&
                     methodSignature.equals("(Ljava/lang/String;Lcom/unboundid/ldap/sdk/SearchScope;Ljava/lang/String;[Ljava/lang/String;)Lcom/unboundid/ldap/sdk/SearchResult;")) {
-                return new int[]{0,2};
+                return new int[]{0, 2};
             }
         }
 

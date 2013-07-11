@@ -53,7 +53,7 @@ public class InsufficientKeySizeRsaDetector implements Detector {
         for (Method m : methodList) {
 
             try {
-                analyzeMethod(m,classContext);
+                analyzeMethod(m, classContext);
             } catch (CFGBuilderException e) {
             } catch (DataflowAnalysisException e) {
             }
@@ -81,29 +81,28 @@ public class InsufficientKeySizeRsaDetector implements Detector {
                 INVOKESTATIC invoke = (INVOKESTATIC) inst;
                 if ("java.security.KeyPairGenerator".equals(invoke.getClassName(cpg)) && "getInstance".equals(invoke.getMethodName(cpg))) {
                     String value = ByteCode.getConstantLDC(location.getHandle().getPrev(), cpg, String.class);
-                    if(value != null && value.toUpperCase().startsWith("RSA")) {
+                    if (value != null && value.toUpperCase().startsWith("RSA")) {
                         createRsaKeyGen = true;
                     }
                 }
-            }
-            else if (inst instanceof INVOKEVIRTUAL) {
+            } else if (inst instanceof INVOKEVIRTUAL) {
                 INVOKEVIRTUAL invoke = (INVOKEVIRTUAL) inst;
                 if ("java.security.KeyPairGenerator".equals(invoke.getClassName(cpg)) && "initialize".equals(invoke.getMethodName(cpg))) {
                     Number n = null;
                     //init() with one parameter
-                    if("(I)V".equals(invoke.getSignature(cpg))) {
-                        n = ByteCode.getPushNumber( location.getHandle().getPrev() );
+                    if ("(I)V".equals(invoke.getSignature(cpg))) {
+                        n = ByteCode.getPushNumber(location.getHandle().getPrev());
                     }
                     //init() with a second parameter an instance of SecureRandom
                     else if ("(ILjava/security/SecureRandom;)V".equals(invoke.getSignature(cpg))) {
 
                         SIPUSH push = ByteCode.getPrevInstruction(location.getHandle(), SIPUSH.class);
-                        if(push != null) {
+                        if (push != null) {
                             n = push.getValue();
                         }
                     }
 
-                    if(n != null && n.intValue() < 1024) {
+                    if (n != null && n.intValue() < 1024) {
                         initializeWeakKeyLength = true;
                         locationWeakness = location;
                     }
@@ -112,12 +111,12 @@ public class InsufficientKeySizeRsaDetector implements Detector {
         }
 
         //Both condition have been found in the same method
-        if(createRsaKeyGen && initializeWeakKeyLength) {
+        if (createRsaKeyGen && initializeWeakKeyLength) {
             JavaClass clz = classContext.getJavaClass();
             bugReporter.reportBug(new BugInstance(this, RSA_KEY_SIZE_TYPE, Priorities.NORMAL_PRIORITY) //
                     .addClass(clz)
-                    .addMethod(clz,m)
-                    .addSourceLine(classContext,m,locationWeakness));
+                    .addMethod(clz, m)
+                    .addSourceLine(classContext, m, locationWeakness));
         }
     }
 

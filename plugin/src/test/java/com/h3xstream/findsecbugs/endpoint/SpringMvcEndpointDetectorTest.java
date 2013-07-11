@@ -42,7 +42,7 @@ public class SpringMvcEndpointDetectorTest extends BaseDetectorTest {
 
 
         //Assertions
-        for(Integer line : Arrays.asList(18,24)) {
+        for (Integer line : Arrays.asList(18, 24)) {
             verify(reporter, never()).doReportBug(
                     bugDefinition()
                             .bugType("XXE")

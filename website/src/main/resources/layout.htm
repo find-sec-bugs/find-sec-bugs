@@ -29,7 +29,8 @@
 
         <br/><br/>
         <a href="http://travis-ci.org/h3xstream/find-sec-bugs"><img
-                src="https://secure.travis-ci.org/h3xstream/find-sec-bugs.png?branch=master" alt="Build Status"/></a><br/>
+                src="https://secure.travis-ci.org/h3xstream/find-sec-bugs.png?branch=master"
+                alt="Build Status"/></a><br/>
         <br/>
 
         <br/><br/>
@@ -100,53 +101,59 @@
                     </td>
                 </tr>
             </table>
-            <i>[1] Partially cover by Findbugs <a href="http://findbugs.sourceforge.net/bugDescriptions.html#XSS_REQUEST_PARAMETER_TO_JSP_WRITER">build-in detector</a>.</i></p>
+            <i>[1] Partially cover by Findbugs <a
+                    href="http://findbugs.sourceforge.net/bugDescriptions.html#XSS_REQUEST_PARAMETER_TO_JSP_WRITER">build-in
+                detector</a>.</i></p>
 
 
             <p>Frameworks support:
             <table>
-            <tr>
-                <td>
-                    <ul>
-                        <li>Spring MVC</li>
-                        <li>Apache Tapestry 5</li>
-                        <li>Struts 1</li>
-                        <li>Struts 2</li>
-                    </ul>
-                </td>
-                <td>
-                    <ul>
-                        <li>JaxRS (Jersey)</li>
-                        <li>JaxWS (Axis2, Metro)</li>
-                        <li>J2EE classic Web api</li>
-                        <li>Apache Wicket</li>
-                    </ul>
-                </td>
-            </tr>
+                <tr>
+                    <td>
+                        <ul>
+                            <li>Spring MVC</li>
+                            <li>Apache Tapestry 5</li>
+                            <li>Struts 1</li>
+                            <li>Struts 2</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>JaxRS (Jersey)</li>
+                            <li>JaxWS (Axis2, Metro)</li>
+                            <li>J2EE classic Web api</li>
+                            <li>Apache Wicket</li>
+                        </ul>
+                    </td>
+                </tr>
             </table>
             </p>
 
             <a name="descriptions"><span class="title">/bugs descriptions</span></a>
 
-            <p>Find Security Bugs has a total of <b><% print nbDetectors %></b> detectors and <b><% print nbPatterns %></b> different bug patterns. The complete list of bug patterns are list in this section.</p>
+            <p>Find Security Bugs has a total of <b><% print nbDetectors %></b> detectors and <b><% print nbPatterns
+                %></b> different bug patterns. The complete list of bug patterns are list in this section.</p>
 
             <p>
                 <%
-                print """<table class="bug_list">""";
+                print """
+            <table class="bug_list">""";
 
                 bugPatterns.each {b->
-                    print """
-                    <tr>
-                        <th class="bug_title">"""+b.title+"""</th>
-                    </tr>
-                    <tr>
-                        <td class="bug_desc">"""+b.description+"""</td>
-                    </tr>
-                    """
+                print """
+                <tr>
+                    <th class="bug_title">"""+b.title+"""</th>
+                </tr>
+                <tr>
+                    <td class="bug_desc">"""+b.description+"""</td>
+                </tr>
+                """
                 }
 
-                print "</table>";
-                %>
+                print "
+            </table>
+            ";
+            %>
 
             </p>
             <a name="integration"><span class="title">/integration</span></a>
@@ -157,8 +164,10 @@
                 <a href="http://code.google.com/p/findbugs/wiki/IntellijFindBugsPlugins">IntelliJ</a> and
                 <a href="http://kenai.com/projects/sqe/pages/Home">Netbeans</a> with their respective FindBugs plugin.
             </p>
+
             <p>
-                It can also be use in continuous integration such as <a href="https://wiki.jenkins-ci.org/display/JENKINS/FindBugs+Plugin">Jenkins</a>
+                It can also be use in continuous integration such as <a
+                    href="https://wiki.jenkins-ci.org/display/JENKINS/FindBugs+Plugin">Jenkins</a>
                 and <a href="http://www.sonarsource.org/">Sonar</a>.
             </p>
             <a name="license"><span class="title">/license</span></a>
@@ -188,8 +197,13 @@
 <div id="social" style="position: fixed; bottom: 0; left: 0; border: 0;z-index:100;padding:30px;">
 
     <a href="https://twitter.com/share" class="twitter-share-button" data-lang="en">Tweet</a><br/>
-    <div class="g-plusone"></div><br/>
-    <div class="fb-like" data-href="http://h3xstream.github.com/find-sec-bugs/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="lucida grande"></div><br/>
+
+    <div class="g-plusone"></div>
+    <br/>
+
+    <div class="fb-like" data-href="http://h3xstream.github.com/find-sec-bugs/" data-send="false"
+         data-layout="button_count" data-width="450" data-show-faces="false" data-font="lucida grande"></div>
+    <br/>
 </div>
 
 <!-- Google Plus -->
@@ -197,16 +211,25 @@
 
 <!-- Facebook -->
 <div id="fb-root"></div>
-<script>(function(d, s, id) {
+<script>(function (d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
+    js = d.createElement(s);
+    js.id = id;
     js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
 
 <!-- Twitter -->
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script>!function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (!d.getElementById(id)) {
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }
+}(document, "script", "twitter-wjs");</script>
 
 
 <script type="text/javascript">
@@ -214,10 +237,13 @@
     _gaq.push(['_setAccount', 'UA-34839255-2']);
     _gaq.push(['_trackPageview']);
 
-    (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    (function () {
+        var ga = document.createElement('script');
+        ga.type = 'text/javascript';
+        ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(ga, s);
     })();
 </script>
 </body>

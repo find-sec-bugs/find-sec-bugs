@@ -13,8 +13,8 @@ public class FileUploadCommon {
         ServletFileUpload upload = new ServletFileUpload(new DiskFileItemFactory());
         List<FileItem> fileItems = upload.parseRequest(req);
 
-        for(FileItem item : fileItems) {
-            System.out.println("Saving "+item.getName()+"...");
+        for (FileItem item : fileItems) {
+            System.out.println("Saving " + item.getName() + "...");
         }
     }
 }

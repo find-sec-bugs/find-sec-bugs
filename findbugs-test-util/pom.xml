@@ -14,10 +14,10 @@
     <artifactId>findbugs-test-util</artifactId>
     <name>FindBugs Test Utility</name>
     <description>
-    Utility that could be reuse for FindBugs plugin development.
-    Include:
-     - Loading of the plugin.
-     - Hamcrest Matcher to do make precise assertion
+        Utility that could be reuse for FindBugs plugin development.
+        Include:
+        - Loading of the plugin.
+        - Hamcrest Matcher to do make precise assertion
     </description>
 
     <build>

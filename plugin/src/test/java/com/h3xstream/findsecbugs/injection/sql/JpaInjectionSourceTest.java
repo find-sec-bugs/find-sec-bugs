@@ -39,23 +39,23 @@ public class JpaInjectionSourceTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         verify(reporter).doReportBug(
-            bugDefinition()
-                    .bugType("SQL_INJECTION")
-                    .inClass("JpaSql").inMethod("getUserByUsername").atLine(16)
-                    .build()
+                bugDefinition()
+                        .bugType("SQL_INJECTION")
+                        .inClass("JpaSql").inMethod("getUserByUsername").atLine(16)
+                        .build()
         );
         verify(reporter).doReportBug(
-            bugDefinition()
-                    .bugType("SQL_INJECTION")
-                    .inClass("JpaSql").inMethod("getUserByUsernameAlt2").atLine(24)
-                    .build()
+                bugDefinition()
+                        .bugType("SQL_INJECTION")
+                        .inClass("JpaSql").inMethod("getUserByUsernameAlt2").atLine(24)
+                        .build()
         );
 
         //Only the previous 2 cases should be marked as vulnerable
         verify(reporter, times(2)).doReportBug(
-            bugDefinition()
-                    .bugType("SQL_INJECTION")
-                    .build()
+                bugDefinition()
+                        .bugType("SQL_INJECTION")
+                        .build()
         );
     }
 }

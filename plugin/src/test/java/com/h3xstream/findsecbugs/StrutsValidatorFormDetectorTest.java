@@ -79,7 +79,7 @@ public class StrutsValidatorFormDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
 
-        verify(reporter,never()).doReportBug(
+        verify(reporter, never()).doReportBug(
                 bugDefinition()
                         .bugType("STRUTS_FORM_VALIDATION")
                         .build()

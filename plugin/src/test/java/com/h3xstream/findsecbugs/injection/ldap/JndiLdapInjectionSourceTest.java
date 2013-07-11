@@ -41,7 +41,7 @@ public class JndiLdapInjectionSourceTest extends BaseDetectorTest {
                 bugDefinition()
                         .bugType("LDAP_INJECTION")
                         .inClass("JndiLdap")
-                        .atLine(46)
+                        .atLine(45)
                         .build()
         );
     }

@@ -47,7 +47,7 @@ public class InsufficientKeySizeBlowfishDetector implements Detector {
         for (Method m : methodList) {
 
             try {
-                analyzeMethod(m,classContext);
+                analyzeMethod(m, classContext);
             } catch (CFGBuilderException e) {
             } catch (DataflowAnalysisException e) {
             }
@@ -74,30 +74,29 @@ public class InsufficientKeySizeBlowfishDetector implements Detector {
             if (inst instanceof INVOKESTATIC) { //MessageDigest.digest is called
                 INVOKESTATIC invoke = (INVOKESTATIC) inst;
                 if ("javax.crypto.KeyGenerator".equals(invoke.getClassName(cpg)) && "getInstance".equals(invoke.getMethodName(cpg))) {
-                    String value = ByteCode.getConstantLDC( location.getHandle().getPrev(), cpg, String.class );
-                    if("Blowfish".equals(value)) {
+                    String value = ByteCode.getConstantLDC(location.getHandle().getPrev(), cpg, String.class);
+                    if ("Blowfish".equals(value)) {
                         createBlowfishKeyGen = true;
                     }
                 }
-            }
-            else if (inst instanceof INVOKEVIRTUAL) {
+            } else if (inst instanceof INVOKEVIRTUAL) {
                 INVOKEVIRTUAL invoke = (INVOKEVIRTUAL) inst;
                 if ("javax.crypto.KeyGenerator".equals(invoke.getClassName(cpg)) && "init".equals(invoke.getMethodName(cpg))) {
                     Number n = null;
                     //init() with one parameter
-                    if("(I)V".equals(invoke.getSignature(cpg))) {
-                        n = ByteCode.getPushNumber( location.getHandle().getPrev() );
+                    if ("(I)V".equals(invoke.getSignature(cpg))) {
+                        n = ByteCode.getPushNumber(location.getHandle().getPrev());
                     }
                     //init() with a second parameter an instance of SecureRandom
                     else if ("(ILjava/security/SecureRandom;)V".equals(invoke.getSignature(cpg))) {
 
                         BIPUSH push = ByteCode.getPrevInstruction(location.getHandle(), BIPUSH.class);
-                        if(push != null) {
+                        if (push != null) {
                             n = push.getValue();
                         }
                     }
 
-                    if(n != null && n.intValue() < 128) {
+                    if (n != null && n.intValue() < 128) {
                         initializeWeakKeyLength = true;
                         locationWeakness = location;
                     }
@@ -106,12 +105,12 @@ public class InsufficientKeySizeBlowfishDetector implements Detector {
         }
 
         //Both condition have been found in the same method
-        if(createBlowfishKeyGen && initializeWeakKeyLength) {
+        if (createBlowfishKeyGen && initializeWeakKeyLength) {
             JavaClass clz = classContext.getJavaClass();
             bugReporter.reportBug(new BugInstance(this, BLOWFISH_KEY_SIZE_TYPE, Priorities.NORMAL_PRIORITY) //
                     .addClass(clz)
-                    .addMethod(clz,m)
-                    .addSourceLine(classContext,m,locationWeakness));
+                    .addMethod(clz, m)
+                    .addSourceLine(classContext, m, locationWeakness));
         }
     }
 

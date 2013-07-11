@@ -40,7 +40,7 @@ public class NullCipherDetector extends OpcodeStackDetector {
                 getNameConstantOperand().equals("<init>")) {
 
             bugReporter.reportBug(new BugInstance(this, NULL_CIPHER_TYPE, Priorities.NORMAL_PRIORITY) //
-                    .addClass( this ).addMethod(this).addSourceLine(this));
+                    .addClass(this).addMethod(this).addSourceLine(this));
         }
     }
 }

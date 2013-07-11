@@ -1,142 +1,146 @@
 body, td {
-    margin:0px;
-    padding :0px;
+    margin: 0px;
+    padding: 0px;
     font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Verdana, Tahoma, sans-serif;
     font-size: 14px;
-    color:#D2D8BA;
-    vertical-align:top;
+    color: #D2D8BA;
+    vertical-align: top;
 }
 
 a:link, a:visited {
-    color:#8BC84B;
+    color: #8BC84B;
 }
 
 body, .left_column {
-    background-color:#33342D;
+    background-color: #33342D;
 }
 
 p {
-    padding-left:20px;
+    padding-left: 20px;
 }
 
 .big_title, .big_title:link, .big_title:visited {
-    color:#8CC84B;
-    font-size:52px;
+    color: #8CC84B;
+    font-size: 52px;
     text-decoration: none;
-    font-family: "Squada One","Courier New", Courier, monospace;
+    font-family: "Squada One", "Courier New", Courier, monospace;
 
 }
 
 .title {
-    color:#FFF;
-    font-weight:bold;
+    color: #FFF;
+    font-weight: bold;
     font-family: Helvetica, Arial, sans-serif;
-    background-color:#868977;
-    display:block;
-    padding:5px;
+    background-color: #868977;
+    display: block;
+    padding: 5px;
 
     -webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
+    -moz-border-radius: 5px;
     border-radius: 5px;
 }
 
-.download_button:link,.download_button:visited {
-    color:#33342D;
+.download_button:link, .download_button:visited {
+    color: #33342D;
     background-color: #8BC84B;
     font-weight: bold;
     padding: 6px 12px;
 
-    text-decoration:none;
+    text-decoration: none;
 
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
 
-    border:solid 1px #33342D;
+    border: solid 1px #33342D;
 }
+
 .download_button:hover {
     background-color: #AAA;
 }
 
 .menu, .menu:link, .menu:visited {
-    color:#fff;font-weight:bold;text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
     font-family: Helvetica, Arial, sans-serif;
 }
 
 .container {
     margin: 0 auto;
 }
+
 .left_column {
-    text-align:right;
-    position:fixed;
-    top:0px;
-    left:0px;
+    text-align: right;
+    position: fixed;
+    top: 0px;
+    left: 0px;
     width: 200px;
     float: left;
     padding: 20px;
-    margin-right:10px;
+    margin-right: 10px;
     display: block;
     overflow: hidden;
     height: 100%;
 }
 
 .right_column {
-	margin-top:15px;
-    margin-right:20px;
-    margin-left:240px;
+    margin-top: 15px;
+    margin-right: 20px;
+    margin-left: 240px;
 }
+
 .main_content {
-	margin-top:-10px;
-	margin-bottom:20px;
-    padding:20px;
-    background-color:#46483E;
-    border:2px solid #8CC84B;
+    margin-top: -10px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #46483E;
+    border: 2px solid #8CC84B;
 
     -webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
 }
 
-
-ul{
-list-style-type:square;
+ul {
+    list-style-type: square;
 }
-
 
 .bug_title {
-    text-align:left;
-    font-size:13px;
-    color:#FFFFFF;
+    text-align: left;
+    font-size: 13px;
+    color: #FFFFFF;
 }
+
 .bug_desc, .bug_desc li {
-    padding-left:0px;
-    font-size:12px;
+    padding-left: 0px;
+    font-size: 12px;
 }
 
 .bug_desc {
-     border-top:2px solid #FFFFFF;
-     padding-top:5px;
-     padding-bottom:10px;
+    border-top: 2px solid #FFFFFF;
+    padding-top: 5px;
+    padding-bottom: 10px;
 }
 
 code {
-    font-size:11px;
+    font-size: 11px;
     font-family: "Courier New", Courier, monospace;
 }
 
 pre {
-	background-color:#333;
-    border:1px solid #D2D8BA;
-    border-left:8px solid #D2D8BA;
-    padding:2px;
-    color:#D2D8BA;
+    background-color: #333;
+    border: 1px solid #D2D8BA;
+    border-left: 8px solid #D2D8BA;
+    padding: 2px;
+    color: #D2D8BA;
 
-    margin:0px;
-	padding:4px;
-    width:540px;
-    overflow:auto;
+    margin: 0px;
+    padding: 4px;
+    width: 540px;
+    overflow: auto;
 
     -webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
 }

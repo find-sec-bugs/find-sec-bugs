@@ -13,10 +13,10 @@ public class XPathApacheXPathApi {
         Document doc = XmlUtils.loadDoc("/testcode/xpath/data.xml");
 
         String input = args.length != 0 ? args[1] : "guess' or '1'='1";
-        String query = "//groups/group[@id='"+input+"']/writeAccess/text()";
+        String query = "//groups/group[@id='" + input + "']/writeAccess/text()";
 
         //selectNodeIterator
-        NodeIterator iterator = XPathAPI.selectNodeIterator(doc,query);
+        NodeIterator iterator = XPathAPI.selectNodeIterator(doc, query);
         XmlUtils.printNodeIterator(iterator);
 
         //selectNodeList

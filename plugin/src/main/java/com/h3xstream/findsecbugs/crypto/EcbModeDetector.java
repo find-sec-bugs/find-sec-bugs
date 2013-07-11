@@ -32,7 +32,7 @@ import org.apache.bcel.Constants;
  */
 public class EcbModeDetector extends OpcodeStackDetector {
 
-	private static final String ECB_MODE_TYPE = "ECB_MODE";
+    private static final String ECB_MODE_TYPE = "ECB_MODE";
     private static final boolean DEBUG = false;
 
     private BugReporter bugReporter;
@@ -41,22 +41,22 @@ public class EcbModeDetector extends OpcodeStackDetector {
         this.bugReporter = bugReporter;
     }
 
-	@Override
-	public void sawOpcode( int seen ) {
+    @Override
+    public void sawOpcode(int seen) {
 //		printOpCode( seen );
 
-		if (seen == Constants.INVOKESTATIC && getClassConstantOperand().equals("javax/crypto/Cipher") &&
-		                getNameConstantOperand().equals("getInstance")) {
-			OpcodeStack.Item item = stack.getStackItem( stack.getStackDepth()-1 ); //The first argument is last
-			if ( StringTracer.isConstantString(item)) {
-				String cipherValue = (String) item.getConstant();
-				if(DEBUG) System.out.println(cipherValue);
+        if (seen == Constants.INVOKESTATIC && getClassConstantOperand().equals("javax/crypto/Cipher") &&
+                getNameConstantOperand().equals("getInstance")) {
+            OpcodeStack.Item item = stack.getStackItem(stack.getStackDepth() - 1); //The first argument is last
+            if (StringTracer.isConstantString(item)) {
+                String cipherValue = (String) item.getConstant();
+                if (DEBUG) System.out.println(cipherValue);
 
-				if(cipherValue.contains("AES/ECB/") || cipherValue.contains("DES/ECB/") || cipherValue.contains("DESede/ECB/")) {
-					bugReporter.reportBug(new BugInstance(this, ECB_MODE_TYPE, Priorities.NORMAL_PRIORITY) //
-						.addClass( this ).addMethod( this ).addSourceLine(this));
-				}
-			}
-		}
-	}
+                if (cipherValue.contains("AES/ECB/") || cipherValue.contains("DES/ECB/") || cipherValue.contains("DESede/ECB/")) {
+                    bugReporter.reportBug(new BugInstance(this, ECB_MODE_TYPE, Priorities.NORMAL_PRIORITY) //
+                            .addClass(this).addMethod(this).addSourceLine(this));
+                }
+            }
+        }
+    }
 }

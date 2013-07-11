@@ -20,7 +20,7 @@ public class BasicServlet extends HttpServlet {
         resp.getWriter().print("<!--" + req.getQueryString() + "-->");
 
         String referrer = req.getHeader("Referer"); //Should have a higher priority
-        if(referrer != null && referrer.startsWith("http://company.ca")) {
+        if (referrer != null && referrer.startsWith("http://company.ca")) {
             req.getHeader("Host");
             req.getHeader("User-Agent");
             req.getHeader("X-Requested-With");

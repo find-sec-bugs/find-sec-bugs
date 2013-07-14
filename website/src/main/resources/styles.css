@@ -3,35 +3,46 @@ body, td {
     padding: 0px;
     font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Verdana, Tahoma, sans-serif;
     font-size: 14px;
-    color: #D2D8BA;
+    color: #354A57;
     vertical-align: top;
 }
 
+.welcome_msg {
+	width:500px;
+	font-size: 17px;
+	text-align:center;
+}
+
 a:link, a:visited {
-    color: #8BC84B;
+    color: #445D6B;
 }
 
 body, .left_column {
-    background-color: #33342D;
+    background-color: #FCF9EF;
 }
 
 p {
     padding-left: 20px;
 }
 
-.big_title, .big_title:link, .big_title:visited {
-    color: #8CC84B;
+.header_title, .header_title:link, .header_title:visited {
+    color: #354A57;
     font-size: 52px;
     text-decoration: none;
     font-family: "Squada One", "Courier New", Courier, monospace;
 
 }
-
+.big_title {
+    color: #254456;
+    font-size: 40px;
+    text-decoration: none;
+    font-family: "Squada One", "Courier New", Courier, monospace;
+}
 .title {
     color: #FFF;
     font-weight: bold;
     font-family: Helvetica, Arial, sans-serif;
-    background-color: #868977;
+    background-color: #707A7F;
     display: block;
     padding: 5px;
 
@@ -42,7 +53,7 @@ p {
 
 .download_button:link, .download_button:visited {
     color: #33342D;
-    background-color: #8BC84B;
+    background-color: #89969E;
     font-weight: bold;
     padding: 6px 12px;
 
@@ -56,11 +67,11 @@ p {
 }
 
 .download_button:hover {
-    background-color: #AAA;
+    background-color: #BCCED8;
 }
 
 .menu, .menu:link, .menu:visited {
-    color: #fff;
+    color: #27353D;
     font-weight: bold;
     text-decoration: none;
     font-family: Helvetica, Arial, sans-serif;
@@ -75,7 +86,7 @@ p {
     position: fixed;
     top: 0px;
     left: 0px;
-    width: 200px;
+    width: 240px;
     float: left;
     padding: 20px;
     margin-right: 10px;
@@ -87,15 +98,15 @@ p {
 .right_column {
     margin-top: 15px;
     margin-right: 20px;
-    margin-left: 240px;
+    margin-left: 280px;
 }
 
 .main_content {
     margin-top: -10px;
     margin-bottom: 20px;
     padding: 20px;
-    background-color: #46483E;
-    border: 2px solid #8CC84B;
+    background-color: #D3D6D0;
+    border: 2px solid #354A57;
 
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
@@ -109,7 +120,7 @@ ul {
 .bug_title {
     text-align: left;
     font-size: 13px;
-    color: #FFFFFF;
+    color: #27353D;
 }
 
 .bug_desc, .bug_desc li {
@@ -118,7 +129,7 @@ ul {
 }
 
 .bug_desc {
-    border-top: 2px solid #FFFFFF;
+    border-top: 2px solid #27353D;
     padding-top: 5px;
     padding-bottom: 10px;
 }
@@ -129,11 +140,11 @@ code {
 }
 
 pre {
-    background-color: #333;
-    border: 1px solid #D2D8BA;
-    border-left: 8px solid #D2D8BA;
+    background-color: #EAE4D3;
+    border: 1px solid #333;
+    border-left: 8px solid #333;
     padding: 2px;
-    color: #D2D8BA;
+    color: #354A57;
 
     margin: 0px;
     padding: 4px;

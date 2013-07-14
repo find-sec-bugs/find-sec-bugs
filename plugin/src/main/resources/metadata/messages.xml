@@ -510,7 +510,7 @@ ReDOS stands for Regular expression Denial of Service. The regular expression (R
 when analysing certain strings.
 </a>
 <p>
-For example the following RegEx, the input "<code>aaaaaaaaaaaaaaaaX</code>" will cause the RegEx engine to analyse 65536 different paths.<sup>[1] Example taken from OWASP referecen</sup>
+For example the following RegEx, the input "<code>aaaaaaaaaaaaaaaaX</code>" will cause the RegEx engine to analyse 65536 different paths.<sup>[1] Example taken from OWASP reference</sup>
 <pre>^(a+)+$</pre>
 Therefore, it is possible that a single request cause a large amount of computation on the server side.
 </p>

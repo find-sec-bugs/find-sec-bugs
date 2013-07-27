@@ -39,15 +39,15 @@ public class XPathInjectionApacheXPathApiDetector extends OpcodeStackDetector {
 
         if (seen == Constants.INVOKESTATIC && getClassConstantOperand().equals("org/apache/xpath/XPathAPI")) {
             if (getNameConstantOperand().equals("selectNodeIterator") ||
-                getNameConstantOperand().equals("selectNodeList") ||
-                getNameConstantOperand().equals("selectSingleNode") ) {
+                    getNameConstantOperand().equals("selectNodeList") ||
+                    getNameConstantOperand().equals("selectSingleNode")) {
 
                 //For all 3 methos the query is in the last parameter
                 if (StringTracer.isVariableString(stack.getStackItem(0))) {
 
                     bugReporter.reportBug(new BugInstance(this, XPATH_INJECTION_TYPE, Priorities.NORMAL_PRIORITY) //
                             .addClass(this).addMethod(this).addSourceLine(this) //
-                            .addString("XPathApi."+getNameConstantOperand()+"()"));
+                            .addString("XPathApi." + getNameConstantOperand() + "()"));
                 }
             }
         }

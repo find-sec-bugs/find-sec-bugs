@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.h3xstream.findsecbugs</groupId>
         <artifactId>root-pom</artifactId>
-        <version>1.1.0</version>
+        <version>1.2.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,8 +16,8 @@
 
     <name>Find Security Bugs Plugin</name>
     <description>
-    Core module of the project. It include all the FindBugs detectors.
-    The resulting jar is the published plugin.
+        Core module of the project. It include all the FindBugs detectors.
+        The resulting jar is the published plugin.
     </description>
 
     <build>
@@ -80,7 +80,8 @@
                 <executions>
                     <execution>
                         <id>jspc</id>
-                        <phase>test-compile</phase> <!-- Needed to make the bytecode available for the tests -->
+                        <!-- Needed to make the bytecode available for the tests -->
+                        <phase>test-compile</phase>
                         <goals>
                             <goal>jspc</goal>
                         </goals>
@@ -104,6 +105,29 @@
                     <skip>false</skip>
                 </configuration>
             </plugin>
+
+
+            <!-- Cobertura configuration -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <formats>
+                        <format>html</format>
+                        <!-- Needed for coveralls plugin -->
+                        <format>xml</format>
+                    </formats>
+                </configuration>
+            </plugin>
+
+            <!-- Coveralls -->
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>1.2.0</version>
+            </plugin>
+
         </plugins>
     </build>
 
@@ -158,4 +182,5 @@
         </dependency>
 
     </dependencies>
+
 </project>

@@ -43,26 +43,26 @@ public class StrutsValidatorFormDetector implements Detector {
         boolean isActionForm = InterfaceUtils.classExtends(javaClass, "org.apache.struts.action.ActionForm");
         boolean isValidatorForm = InterfaceUtils.classExtends(javaClass, "org.apache.struts.validator.ValidatorForm");
 
-        if(isActionForm && !isValidatorForm) {
+        if (isActionForm && !isValidatorForm) {
             bugReporter.reportBug(new BugInstance(this, STRUTS_FORM_VALIDATION_TYPE, Priorities.NORMAL_PRIORITY) //
                     .addClass(javaClass) //
                     .addString("ActionForm"));
             return;
         }
 
-        if(!isValidatorForm) return; //Not form implementation
+        if (!isValidatorForm) return; //Not form implementation
 
         final String expectedSig = "(Lorg/apache/struts/action/ActionMapping;Ljavax/servlet/http/HttpServletRequest;)Lorg/apache/struts/action/ActionErrors;";
         boolean validateMethodFound = false;
-        for(Method m : javaClass.getMethods()) {
+        for (Method m : javaClass.getMethods()) {
 
-            if("validate".equals(m.getName()) && expectedSig.equals(m.getSignature()) ) {
+            if ("validate".equals(m.getName()) && expectedSig.equals(m.getSignature())) {
                 validateMethodFound = true;
             }
         }
 
         //ValidatorForm without a validate method is just like a regular ActionForm
-        if(!validateMethodFound) {
+        if (!validateMethodFound) {
             bugReporter.reportBug(new BugInstance(this, STRUTS_FORM_VALIDATION_TYPE, Priorities.LOW_PRIORITY) //
                     .addClass(javaClass) //
                     .addString("ValidatorForm"));

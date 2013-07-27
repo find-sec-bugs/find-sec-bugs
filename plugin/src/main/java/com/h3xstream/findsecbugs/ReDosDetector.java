@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * <p>
  * It will not identify pattern of equivalence (such as<code>(aa|a)</code>).
  * It is far more complex to identify.
- *
+ * <p>
  * <p>
  * For more advanced Regex analysis: <a href="http://code.google.com/p/saferegex/">Safe Regex</a>
  */
@@ -46,11 +46,11 @@ public class ReDosDetector extends OpcodeStackDetector {
 
     private static final String REDOS_TYPE = "REDOS";
 
-    private static final char[] OPENING_CHAR = {'(','['};
+    private static final char[] OPENING_CHAR = {'(', '['};
 
-    private static final char[] CLOSING_CHAR = {')',']'};
+    private static final char[] CLOSING_CHAR = {')', ']'};
 
-    private static final char[] PLUS_CHAR = {'+','*','?'};
+    private static final char[] PLUS_CHAR = {'+', '*', '?'};
 
     private BugReporter bugReporter;
 
@@ -81,29 +81,29 @@ public class ReDosDetector extends OpcodeStackDetector {
     }
 
     public void analyseRegexString(String regex) {
-        if(regex.length()>0) {
-            recurAnalyseRegex(regex,regex.length()-1,0);
+        if (regex.length() > 0) {
+            recurAnalyseRegex(regex, regex.length() - 1, 0);
         }
     }
 
     private int recurAnalyseRegex(String regex, int startPosition, int level) {
 //        print(level, "level = " + level);
-        if(level == 2) {
+        if (level == 2) {
 
             MethodDescriptor md = this.getMethodDescriptor();
             FieldDescriptor fd = this.getFieldDescriptor();
 
             BugInstance bug = new BugInstance(this, REDOS_TYPE, Priorities.NORMAL_PRIORITY) //
                     .addString(regex).addClass(this);
-            if(md != null)
+            if (md != null)
                 bug.addMethod(md);
-            if(fd != null)
+            if (fd != null)
                 bug.addField(fd);
 
             try {
                 bug.addSourceLine(this);
+            } catch (IllegalStateException e) {
             }
-            catch (IllegalStateException e) {}
 
             bugReporter.reportBug(bug);
             return 0;
@@ -114,23 +114,23 @@ public class ReDosDetector extends OpcodeStackDetector {
 
         boolean openingMode = false;
 
-        for(int i=startPosition;i>=0;i--) {
+        for (int i = startPosition; i >= 0; i--) {
 //            print(level, "[" + i + "] = '" + regex.charAt(i) + "'");
 
-            if(isChar(regex,i,OPENING_CHAR) ) {
+            if (isChar(regex, i, OPENING_CHAR)) {
 //                print(level, "<<<<");
                 return i;
             }
 
-            if(isChar(regex,i,CLOSING_CHAR) ) {
+            if (isChar(regex, i, CLOSING_CHAR)) {
                 int newLevel = level;
-                if(i+1 < regex.length() && isChar(regex,i+1,PLUS_CHAR)) {
+                if (i + 1 < regex.length() && isChar(regex, i + 1, PLUS_CHAR)) {
                     newLevel += 1;
                 }
 //                print(level, ">>>>");
-                openingMode=true;
-                i = recurAnalyseRegex(regex,i-1,newLevel);
-                if(i==-1) {
+                openingMode = true;
+                i = recurAnalyseRegex(regex, i - 1, newLevel);
+                if (i == -1) {
                     return 0;
                 }
 //                print(level, "Restarting at " + i);
@@ -143,22 +143,21 @@ public class ReDosDetector extends OpcodeStackDetector {
     }
 
     /**
-     *
      * @param value
      * @param position
      * @param charToTest
      * @return
      */
-    private boolean isChar(String value, int position,char[] charToTest) {
+    private boolean isChar(String value, int position, char[] charToTest) {
         char actualChar = value.charAt(position);
-        boolean oneCharFound=false;
-        for(char ch : charToTest) {
-            if(actualChar == ch) {
+        boolean oneCharFound = false;
+        for (char ch : charToTest) {
+            if (actualChar == ch) {
                 oneCharFound = true;
                 break;
             }
         }
-        return oneCharFound && (position == 0 || value.charAt(position-1) != '\\');
+        return oneCharFound && (position == 0 || value.charAt(position - 1) != '\\');
     }
 
     //Debug method

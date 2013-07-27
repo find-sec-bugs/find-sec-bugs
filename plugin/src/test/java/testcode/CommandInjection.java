@@ -10,7 +10,7 @@ public class CommandInjection {
 
         String input = args.length > 0 ? args[0] : ";cat /etc/passwd";
 
-        List<String> cmd = Arrays.asList("ls","-l", input);
+        List<String> cmd = Arrays.asList("ls", "-l", input);
 
         //Runtime exec()
         Runtime r = Runtime.getRuntime();
@@ -22,12 +22,12 @@ public class CommandInjection {
         //ProcessBuilder
 
         new ProcessBuilder()
-            .command("ls","-l",input)
-            .start();
+                .command("ls", "-l", input)
+                .start();
 
         new ProcessBuilder()
-            .command(cmd)
-            .start();
+                .command(cmd)
+                .start();
     }
 
 }

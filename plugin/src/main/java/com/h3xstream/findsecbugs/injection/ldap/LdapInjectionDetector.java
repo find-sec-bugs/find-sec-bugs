@@ -31,7 +31,7 @@ public class LdapInjectionDetector extends InjectionDetector {
 
     @Override
     public InjectionSource[] getInjectionSource() {
-        return new InjectionSource[]{new JndiLdapInjectionSource(),new UnboundIdLdapInjectionSource()};
+        return new InjectionSource[]{new JndiLdapInjectionSource(), new UnboundIdLdapInjectionSource()};
     }
 
     @Override

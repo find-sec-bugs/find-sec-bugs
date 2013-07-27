@@ -52,25 +52,24 @@ public class SaxParserXxeDetector extends OpcodeStackDetector {
 
             JavaClass javaClass = getThisClass();
 
-            if(InterfaceUtils.classImplements(javaClass,"java.security.PrivilegedExceptionAction")) {
+            if (InterfaceUtils.classImplements(javaClass, "java.security.PrivilegedExceptionAction")) {
                 return; //Assuming the proper right are apply to the sandbox
             }
 
 
-
             bugReporter.reportBug(new BugInstance(this, XXE_TYPE, Priorities.NORMAL_PRIORITY) //
-                .addClass(this).addMethod(this).addSourceLine(this)
-                .addString("SAXParser.parse(...)"));
+                    .addClass(this).addMethod(this).addSourceLine(this)
+                    .addString("SAXParser.parse(...)"));
 
         }
 
         if (seen == Constants.INVOKEINTERFACE &&
-                        getClassConstantOperand().equals("org/xml/sax/XMLReader") &&
-                        getNameConstantOperand().equals("parse")) {
+                getClassConstantOperand().equals("org/xml/sax/XMLReader") &&
+                getNameConstantOperand().equals("parse")) {
 
             JavaClass javaClass = getThisClass();
 
-            if(InterfaceUtils.classImplements(javaClass,"java.security.PrivilegedExceptionAction")) {
+            if (InterfaceUtils.classImplements(javaClass, "java.security.PrivilegedExceptionAction")) {
                 return; //Assuming the proper right are apply to the sandbox
             }
 

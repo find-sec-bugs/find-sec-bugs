@@ -27,7 +27,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-public class XSSRequestWrapperDetectorTest  extends BaseDetectorTest {
+public class XSSRequestWrapperDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectXssWrapper1() throws Exception {
@@ -42,7 +42,7 @@ public class XSSRequestWrapperDetectorTest  extends BaseDetectorTest {
     private void detectXssWrapperFromClass(String className) throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/xss/"+className)
+                getClassFilePath("testcode/xss/" + className)
         };
 
         //Run the analysis
@@ -70,7 +70,7 @@ public class XSSRequestWrapperDetectorTest  extends BaseDetectorTest {
         analyze(files, reporter);
 
         //Assertions
-        verify(reporter,never()).doReportBug(
+        verify(reporter, never()).doReportBug(
                 bugDefinition()
                         .bugType("XSS_REQUEST_WRAPPER")
                         .build()

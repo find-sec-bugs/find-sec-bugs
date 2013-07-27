@@ -58,24 +58,24 @@ public class GoogleApiKeyDetector implements Detector {
         ConstantPool ctp = javaClass.getConstantPool();
 
         boolean keyStringField = false;
-        for(Field f : javaClass.getFields()) {
-            if(f.getName().equals("keyString")) { //The expected field name
-               keyStringField = true;
-               break;
+        for (Field f : javaClass.getFields()) {
+            if (f.getName().equals("keyString")) { //The expected field name
+                keyStringField = true;
+                break;
             }
         }
 
-        if(!keyStringField) { //No key field identify
+        if (!keyStringField) { //No key field identify
             return;
         }
 
         //Class name left unchanged
         boolean urlSigner = javaClass.getClassName().contains("UrlSigner");
 
-        if(keyStringField && urlSigner) {
+        if (keyStringField && urlSigner) {
 
             bugReporter.reportBug(new BugInstance(this, HARD_CODE_PASSWORD_TYPE, Priorities.NORMAL_PRIORITY) //
-                    .addClass(javaClass).addField(new FieldVariable(javaClass.getClassName(),"keyString","Ljava/lang/String;")));
+                    .addClass(javaClass).addField(new FieldVariable(javaClass.getClassName(), "keyString", "Ljava/lang/String;")));
             return;
         }
 
@@ -83,9 +83,9 @@ public class GoogleApiKeyDetector implements Detector {
         for (Method m : javaClass.getMethods()) {
             MethodGen methodGen = classContext.getMethodGen(m);
 
-            if(methodGen.getName().equals("signRequest")) {
+            if (methodGen.getName().equals("signRequest")) {
                 bugReporter.reportBug(new BugInstance(this, HARD_CODE_PASSWORD_TYPE, Priorities.NORMAL_PRIORITY) //
-                        .addClass(javaClass).addField(new FieldVariable(javaClass.getClassName(),"keyString","")));
+                        .addClass(javaClass).addField(new FieldVariable(javaClass.getClassName(), "keyString", "")));
             }
         }
     }

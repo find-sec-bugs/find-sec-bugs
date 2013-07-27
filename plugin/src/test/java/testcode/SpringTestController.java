@@ -13,13 +13,13 @@ public class SpringTestController {
 
     private static final Logger logger = Logger.getLogger(SpringTestController.class.getName());
 
-    @RequestMapping(value="/hello1/{text}", method = RequestMethod.GET)
+    @RequestMapping(value = "/hello1/{text}", method = RequestMethod.GET)
     public String hello1(@PathVariable String text) {
         logger.fine("hello #1");
         return "redirect:/somewhere";
     }
 
-    @RequestMapping(value="/hello2", method = RequestMethod.POST)
+    @RequestMapping(value = "/hello2", method = RequestMethod.POST)
     public void hello2() {
         logger.fine("hello #2");
     }

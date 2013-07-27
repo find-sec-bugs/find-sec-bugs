@@ -82,7 +82,7 @@ public class WeakTrustManagerDetectorTest extends BaseDetectorTest {
                 bugDefinition()
                         .bugType("WEAK_TRUST_MANAGER")
                         .inClass("KeyStoresTrustManager")
-                .build()
+                        .build()
         );
 
         //The FakeImpl should not trigger any report (doesn't implements the analysed Interface)
@@ -90,7 +90,7 @@ public class WeakTrustManagerDetectorTest extends BaseDetectorTest {
                 bugDefinition()
                         .bugType("WEAK_TRUST_MANAGER")
                         .inClass("FakeImpl")
-                .build()
+                        .build()
         );
     }
 }

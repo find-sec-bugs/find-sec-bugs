@@ -24,8 +24,7 @@ public class JndiLdap {
 
             new InitialDirContext(props);
             return true;
-        }
-        catch (NamingException e) {
+        } catch (NamingException e) {
             return false;
         }
 
@@ -40,7 +39,7 @@ public class JndiLdap {
         InitialDirContext context = new InitialDirContext(props);
 
         SearchControls ctrls = new SearchControls();
-        ctrls.setReturningAttributes(new String[] { "givenName", "sn" });
+        ctrls.setReturningAttributes(new String[]{"givenName", "sn"});
         ctrls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
         NamingEnumeration<SearchResult> answers = context.search("dc=People,dc=example,dc=com", "(uid=" + username + ")", ctrls);

@@ -43,31 +43,28 @@ public class UnencryptedSocketDetector extends OpcodeStackDetector {
 
             int depth = stack.getStackDepth();
             String host = "remote host"; //Bonus information for the message
-            if(depth != 0) {
+            if (depth != 0) {
                 int hostIndex;
-                if(getSigConstantOperand().equals("(Ljava/lang/String;I)V")) {
+                if (getSigConstantOperand().equals("(Ljava/lang/String;I)V")) {
                     hostIndex = 1;
-                }
-                else if(getSigConstantOperand().equals("(Ljava/lang/String;IZ)V")) {
+                } else if (getSigConstantOperand().equals("(Ljava/lang/String;IZ)V")) {
                     hostIndex = 2;
-                }
-                else if(getSigConstantOperand().equals("(Ljava/lang/String;ILjava/net/InetAddress;I)V")) {
+                } else if (getSigConstantOperand().equals("(Ljava/lang/String;ILjava/net/InetAddress;I)V")) {
                     hostIndex = 3;
-                }
-                else {
+                } else {
                     hostIndex = -1;
                 }
 
-                if(hostIndex != -1) {
+                if (hostIndex != -1) {
                     //Extract the value from the constant string
                     OpcodeStack.Item top = stack.getStackItem(hostIndex);
-                    if(top.getConstant() != null) {
+                    if (top.getConstant() != null) {
                         host = (String) top.getConstant();
                     }
                 }
             }
-            if(DEBUG) {
-                System.out.println("host:"+host);
+            if (DEBUG) {
+                System.out.println("host:" + host);
             }
             bugReporter.reportBug(new BugInstance(this, UNENCRYPTED_SOCKET_TYPE, Priorities.NORMAL_PRIORITY) //
                     .addClass(this).addMethod(this).addSourceLine(this) //

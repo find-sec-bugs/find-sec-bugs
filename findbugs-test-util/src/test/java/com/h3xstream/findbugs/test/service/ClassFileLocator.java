@@ -29,7 +29,7 @@ public class ClassFileLocator {
      */
     public String getClassFilePath(String path) {
         ClassLoader cl = getClass().getClassLoader();
-        URL url = cl.getResource(path+".class");
+        URL url = cl.getResource(path + ".class");
         assertNotNull(url, "No class found for the path = " + path);
         return getFilenameFromUrl(url);
     }
@@ -49,7 +49,7 @@ public class ClassFileLocator {
         String filename = url.toString();
 
         final String prefix = "file:";
-        if(filename.startsWith(prefix)) {
+        if (filename.startsWith(prefix)) {
             filename = filename.substring(prefix.length());
         }
         return filename;

@@ -9,28 +9,28 @@ import java.security.Provider;
  */
 public class BlockCipherList {
 
-	public static void main( String[] args ) throws Exception {
+    public static void main(String[] args) throws Exception {
 
-		//Note : Not a realistic code sample (no encryption occurs)
+        //Note : Not a realistic code sample (no encryption occurs)
 
-		Cipher.getInstance( "AES/CBC/NoPadding");
-		Cipher.getInstance( "AES/CBC/PKCS5Padding", "SunJCE" );
-		Cipher.getInstance( "AES/ECB/NoPadding", "IBMJCE" );
-		Cipher.getInstance( "AES/ECB/PKCS5Padding", new DummyProvider() );
-		Cipher.getInstance( "DES/CBC/NoPadding", new DummyProvider() );
-		Cipher.getInstance( "DES/CBC/PKCS5Padding" );
-		Cipher.getInstance( "DES/ECB/NoPadding" );
-		Cipher.getInstance( "DES/ECB/PKCS5Padding" );
-		Cipher.getInstance( "DESede/CBC/NoPadding" );
-		Cipher.getInstance( "DESede/CBC/PKCS5Padding" );
-		Cipher.getInstance( "DESede/ECB/NoPadding" );
-		Cipher.getInstance( "DESede/ECB/PKCS5Padding" );
-		Cipher.getInstance( "RSA/ECB/PKCS1Padding" );
-		Cipher.getInstance( "RSA/ECB/OAEPWithSHA-1AndMGF1Padding" );
-		Cipher.getInstance( "RSA/ECB/OAEPWithSHA-256AndMGF1Padding" );
-		Cipher.getInstance( "RC2/ECB/PKCS5Padding" );
-		Cipher.getInstance( "ARCFOUR/ECB/NOPADDING" );
-	}
+        Cipher.getInstance("AES/CBC/NoPadding");
+        Cipher.getInstance("AES/CBC/PKCS5Padding", "SunJCE");
+        Cipher.getInstance("AES/ECB/NoPadding", "IBMJCE");
+        Cipher.getInstance("AES/ECB/PKCS5Padding", new DummyProvider());
+        Cipher.getInstance("DES/CBC/NoPadding", new DummyProvider());
+        Cipher.getInstance("DES/CBC/PKCS5Padding");
+        Cipher.getInstance("DES/ECB/NoPadding");
+        Cipher.getInstance("DES/ECB/PKCS5Padding");
+        Cipher.getInstance("DESede/CBC/NoPadding");
+        Cipher.getInstance("DESede/CBC/PKCS5Padding");
+        Cipher.getInstance("DESede/ECB/NoPadding");
+        Cipher.getInstance("DESede/ECB/PKCS5Padding");
+        Cipher.getInstance("RSA/ECB/PKCS1Padding");
+        Cipher.getInstance("RSA/ECB/OAEPWithSHA-1AndMGF1Padding");
+        Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
+        Cipher.getInstance("RC2/ECB/PKCS5Padding");
+        Cipher.getInstance("ARCFOUR/ECB/NOPADDING");
+    }
 
     /**
      * Sun provider are at risk to be remove. This dummy provider will

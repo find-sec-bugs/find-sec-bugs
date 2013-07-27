@@ -39,11 +39,11 @@ public class JndiCredentialsDetector extends OpcodeStackDetector {
     @Override
     public void sawOpcode(int seen) {
 
-        if(seen == Constants.INVOKEVIRTUAL && getClassConstantOperand().equals("java/util/Properties") &&
+        if (seen == Constants.INVOKEVIRTUAL && getClassConstantOperand().equals("java/util/Properties") &&
                 getNameConstantOperand().equals("put") && getSigConstantOperand().equals("(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;")) {
             OpcodeStack.Item item1 = stack.getStackItem(1);
             OpcodeStack.Item item0 = stack.getStackItem(0); //The last argument (on the top of the stack)
-            if ( "java.naming.security.credentials".equals((String) item1.getConstant()) && StringTracer.isConstantString(item0) ) {
+            if ("java.naming.security.credentials".equals((String) item1.getConstant()) && StringTracer.isConstantString(item0)) {
                 bugReporter.reportBug(new BugInstance(this, HARD_CODE_PASSWORD_TYPE, Priorities.NORMAL_PRIORITY) //
                         .addClass(this).addMethod(this).addSourceLine(this)); //
             }

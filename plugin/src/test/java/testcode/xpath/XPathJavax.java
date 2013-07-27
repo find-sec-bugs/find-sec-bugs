@@ -13,7 +13,7 @@ public class XPathJavax {
 
         String input = args.length != 0 ? args[1] : "guess' or '1'='1";
 
-        String query = "//groups/group[@id='"+input+"']/writeAccess/text()";
+        String query = "//groups/group[@id='" + input + "']/writeAccess/text()";
 
         System.out.println(">> XPath.compile()");
         {
@@ -26,8 +26,8 @@ public class XPathJavax {
         System.out.println(">> XPath.evaluate()");
         {
             XPath xpath = XPathFactory.newInstance().newXPath();
-            String result = xpath.evaluate(query,doc);
-            System.out.println("result="+result);
+            String result = xpath.evaluate(query, doc);
+            System.out.println("result=" + result);
         }
 
         //Safe (The next sample should not be mark)

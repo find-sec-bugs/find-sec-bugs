@@ -46,7 +46,7 @@ public class WicketEndpointDetector implements Detector {
         String superClassName = javaClass.getSuperclassName();
         if ("org.apache.wicket.markup.html.WebPage".equals(superClassName)) {
             bugReporter.reportBug(new BugInstance(this, WICKET_ENDPOINT_TYPE, Priorities.LOW_PRIORITY) //
-                .addClass(javaClass));
+                    .addClass(javaClass));
             return;
         }
     }

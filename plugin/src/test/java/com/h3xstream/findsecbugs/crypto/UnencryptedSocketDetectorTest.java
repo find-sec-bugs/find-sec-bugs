@@ -42,9 +42,9 @@ public class UnencryptedSocketDetectorTest extends BaseDetectorTest {
 
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType( "UNENCRYPTED_SOCKET" )
-                        .inClass( "UnencryptedSocket" )
-                        .inMethod( "plainSocket" )
+                        .bugType("UNENCRYPTED_SOCKET")
+                        .inClass("UnencryptedSocket")
+                        .inMethod("plainSocket")
                         .atLine(23)
                         .build()
         );
@@ -52,9 +52,9 @@ public class UnencryptedSocketDetectorTest extends BaseDetectorTest {
         for (Integer line : Arrays.asList(28, 31, 34)) {
             verify(reporter).doReportBug(
                     bugDefinition()
-                            .bugType( "UNENCRYPTED_SOCKET" )
-                            .inClass( "UnencryptedSocket" )
-                            .inMethod( "otherConstructors" )
+                            .bugType("UNENCRYPTED_SOCKET")
+                            .inClass("UnencryptedSocket")
+                            .inMethod("otherConstructors")
                             .atLine(line)
                             .build()
             );

@@ -14,7 +14,7 @@ public class LDAPConnection implements LDAPInterface {
     }
 
     @Override
-    public SearchResult search(String s, SearchScope sub, String filter,String... attributes) {
+    public SearchResult search(String s, SearchScope sub, String filter, String... attributes) {
         return null;
     }
 

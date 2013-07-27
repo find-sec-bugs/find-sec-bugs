@@ -42,20 +42,20 @@ public class BadHexadecimalConversionDetectorTest extends BaseDetectorTest {
 
         //Assertions
 
-	    verify(reporter).doReportBug(
-			    bugDefinition()
-					    .bugType( "BAD_HEXA_CONVERSION" )
-					    .inClass( "BadHexa" )
-					    .inMethod( "badHash" )
-				.build()
-	    );
-
-	    verify(reporter, never()).doReportBug(
+        verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType( "BAD_HEXA_CONVERSION" )
-                        .inClass( "BadHexa" )
-		                .inMethod( "goodHash" )
-                .build()
+                        .bugType("BAD_HEXA_CONVERSION")
+                        .inClass("BadHexa")
+                        .inMethod("badHash")
+                        .build()
+        );
+
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("BAD_HEXA_CONVERSION")
+                        .inClass("BadHexa")
+                        .inMethod("goodHash")
+                        .build()
         );
     }
 }

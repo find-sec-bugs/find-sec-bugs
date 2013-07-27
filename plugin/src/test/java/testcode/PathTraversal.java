@@ -8,9 +8,9 @@ public class PathTraversal {
         String input = args.length > 0 ? args[0] : "../../../../etc/password\u0000";
 
         new File(input);
-        new File("test/"+input,"misc.jpg");
+        new File("test/" + input, "misc.jpg");
 
-        new RandomAccessFile(input,"r");
+        new RandomAccessFile(input, "r");
 
         new FileReader(input);
 
@@ -18,9 +18,9 @@ public class PathTraversal {
 
 
         new FileWriter(input);
-        new FileWriter(input,true);
+        new FileWriter(input, true);
 
         new FileOutputStream(input);
-        new FileOutputStream(input,true);
+        new FileOutputStream(input, true);
     }
 }

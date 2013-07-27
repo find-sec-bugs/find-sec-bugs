@@ -9,11 +9,11 @@ import java.util.List;
 
 public class FileUploadWicket {
     public void handleFile(HttpServletRequest req) throws FileUploadException {
-            ServletFileUpload upload = new ServletFileUpload();
-            List<FileItem> fileItems = upload.parseRequest(req);
+        ServletFileUpload upload = new ServletFileUpload();
+        List<FileItem> fileItems = upload.parseRequest(req);
 
-            for(FileItem item : fileItems) {
-                System.out.println("Saving "+item.getName()+"...");
-            }
+        for (FileItem item : fileItems) {
+            System.out.println("Saving " + item.getName() + "...");
         }
+    }
 }

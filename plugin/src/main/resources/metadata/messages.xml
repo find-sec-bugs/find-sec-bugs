@@ -495,22 +495,22 @@ Otherwise, the original filename should be properly escaped.</p>
 
     <!-- ReDOS -->
 
- <Detector class="com.h3xstream.findsecbugs.ReDosDetector">
-     <Details>The regular expression can grow exponentially with some input.</Details>
- </Detector>
+    <Detector class="com.h3xstream.findsecbugs.ReDosDetector">
+        <Details>The regular expression can grow exponentially with some input.</Details>
+    </Detector>
 
- <BugPattern type="REDOS">
-     <ShortDescription>ReDOS</ShortDescription>
-     <LongDescription>The regular expression "{0}" is vulnerable to ReDOS</LongDescription>
-     <Details>
-         <![CDATA[
+    <BugPattern type="REDOS">
+        <ShortDescription>ReDOS</ShortDescription>
+        <LongDescription>The regular expression "{0}" is vulnerable to ReDOS</LongDescription>
+        <Details>
+            <![CDATA[
 
 <p>
 ReDOS stands for Regular expression Denial of Service. The regular expression (RegEx) identify may take a large amount of time
 when analysing certain strings.
 </a>
 <p>
-For example the following RegEx, the input "<code>aaaaaaaaaaaaaaaaX</code>" will cause the RegEx engine to analyse 65536 different paths.<sup>[1] Example taken from OWASP referecen</sup>
+For example the following RegEx, the input "<code>aaaaaaaaaaaaaaaaX</code>" will cause the RegEx engine to analyse 65536 different paths.<sup>[1] Example taken from OWASP reference</sup>
 <pre>^(a+)+$</pre>
 Therefore, it is possible that a single request cause a large amount of computation on the server side.
 </p>
@@ -521,12 +521,12 @@ Therefore, it is possible that a single request cause a large amount of computat
 <sup>[1]</sup> <a href="https://www.owasp.org/index.php/Regular_expression_Denial_of_Service_-_ReDoS">OWASP : Regular expression Denial of Service</a>
 </p>
 ]]>
-     </Details>
- </BugPattern>
- <BugCode abbrev="SECRD">ReDOS</BugCode>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECRD">ReDOS</BugCode>
 
 
- <!-- SAXParser XXE -->
+    <!-- SAXParser XXE -->
     <Detector class="com.h3xstream.findsecbugs.xxe.SaxParserXxeDetector">
         <Details>Identify SAXParser usage vulnerable to XXE</Details>
     </Detector>
@@ -713,7 +713,7 @@ Just like SQL query, all inputs place inside LDAP query should be escape properl
         <ShortDescription>Bad hexadecimal concatenation</ShortDescription>
         <LongDescription>Identify bad hexadecimal concatenation</LongDescription>
         <Details>
-<![CDATA[
+            <![CDATA[
 <p>When converting a byte array to a string, a conversion mistake can be made if the array is read byte by byte.
 The following sample illustrate the use of Integer.toHexString() which will trim the trailling "0".
 <pre>
@@ -754,7 +754,7 @@ stringBuilder.append( String.format( "%02X", b ) );
         <ShortDescription>ECB mode used</ShortDescription>
         <LongDescription>The cipher chosen use ECB mode</LongDescription>
         <Details>
-<![CDATA[
+            <![CDATA[
 <p>A CBC mode cipher should be used instead of ECB mode.</p>
 <p>
 <b>References</b><br/>
@@ -774,7 +774,7 @@ stringBuilder.append( String.format( "%02X", b ) );
         <ShortDescription>Hazelcast Symmetric encryption</ShortDescription>
         <LongDescription>The network communication for Hazelcast are configure to symmetric cipher</LongDescription>
         <Details>
-<![CDATA[
+            <![CDATA[
 <p>The network communication for Hazelcast is configure to a symmetric cipher (probably DES or blowfish).</p>
 <p>Those ciphers alone do not provide integrity or secure authentification.</a>.
 The use of assymetric encryption should be privilege.</p>
@@ -814,7 +814,7 @@ In few context including testing, NullCipher can be appropriate.
         <ShortDescription>Unencrypted socket</ShortDescription>
         <LongDescription>Unencrypted socket to {0} (instead of SSLSocket)</LongDescription>
         <Details>
-<![CDATA[
+            <![CDATA[
 <p>
 The communication started will not be encrypted. The traffic could be red by an attacker intercepting the communication.
 </p>
@@ -838,32 +838,32 @@ SSL Socket (Secure communication):
     <BugCode abbrev="SECUS">Unencrypted socket</BugCode>
 
     <!-- Static Initialization vector -->
-<!-- Not implemented yet..
-    <Detector class="com.h3xstream.findsecbugs.crypto.StaticIvDetector">
-        <Details></Details>
-    </Detector>
-    <BugPattern type="STATIC_IV">
-        <ShortDescription>Static IV</ShortDescription>
-        <LongDescription>Static IV use to encrypt messages</LongDescription>
-        <Details>
-            <![CDATA[
-<p>
-The purpose of the <b>Initialization Vector</b> is to avoid generating the same cipher-text for the same message.
-The IV value should be random and different for every message sent.
-</p>
-<p>
-Also, the IV should not be consider as a secret because it can be sent with the message.
-</p>
-<p>
-<b>Reference</b><br/>
-<a href="http://en.wikipedia.org/wiki/Initialization_vector">Wikipedia: Initialization vector</a><br/>
-<a href="https://defuse.ca/cbcmodeiv.htm">Defuse.ca: Encryption - CBC Mode IV: Secret or Not?</a>
-</p>
-]]>
-        </Details>
-    </BugPattern>
-    <BugCode abbrev="SECSIV"></BugCode>
--->
+    <!-- Not implemented yet..
+        <Detector class="com.h3xstream.findsecbugs.crypto.StaticIvDetector">
+            <Details></Details>
+        </Detector>
+        <BugPattern type="STATIC_IV">
+            <ShortDescription>Static IV</ShortDescription>
+            <LongDescription>Static IV use to encrypt messages</LongDescription>
+            <Details>
+                <![CDATA[
+    <p>
+    The purpose of the <b>Initialization Vector</b> is to avoid generating the same cipher-text for the same message.
+    The IV value should be random and different for every message sent.
+    </p>
+    <p>
+    Also, the IV should not be consider as a secret because it can be sent with the message.
+    </p>
+    <p>
+    <b>Reference</b><br/>
+    <a href="http://en.wikipedia.org/wiki/Initialization_vector">Wikipedia: Initialization vector</a><br/>
+    <a href="https://defuse.ca/cbcmodeiv.htm">Defuse.ca: Encryption - CBC Mode IV: Secret or Not?</a>
+    </p>
+    ]]>
+            </Details>
+        </BugPattern>
+        <BugCode abbrev="SECSIV"></BugCode>
+    -->
 
     <!-- DES usage -->
     <Detector class="com.h3xstream.findsecbugs.crypto.DesUsageDetector">

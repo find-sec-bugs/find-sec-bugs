@@ -28,7 +28,7 @@ public class HibernateSql {
 
         final String localSafe = "where id=1337";
 
-        session.createQuery("select t from UserEntity t "+localSafe);
+        session.createQuery("select t from UserEntity t " + localSafe);
 
         final String localSql = "select * from TestEntity " + localSafe;
 

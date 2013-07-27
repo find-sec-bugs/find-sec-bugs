@@ -22,7 +22,7 @@ public class JpaSql {
 
     public void getUserByUsernameAlt2(String username) {
         TypedQuery<UserEntity> q = em.createQuery(
-                "select * from Users where name = '"+username+"'",
+                "select * from Users where name = '" + username + "'",
                 UserEntity.class);
 
         UserEntity res = q.getSingleResult();

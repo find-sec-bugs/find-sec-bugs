@@ -40,17 +40,17 @@ public class RsaNoPaddingDetector extends OpcodeStackDetector {
     }
 
     @Override
-    public void sawOpcode( int seen ) {
+    public void sawOpcode(int seen) {
         if (seen == Constants.INVOKESTATIC && getClassConstantOperand().equals("javax/crypto/Cipher") &&
                 getNameConstantOperand().equals("getInstance")) {
-            OpcodeStack.Item item = stack.getStackItem( stack.getStackDepth()-1 ); //The first argument is last
-            if ( StringTracer.isConstantString(item)) {
+            OpcodeStack.Item item = stack.getStackItem(stack.getStackDepth() - 1); //The first argument is last
+            if (StringTracer.isConstantString(item)) {
                 String cipherValue = (String) item.getConstant();
-                if(DEBUG) System.out.println(cipherValue);
+                if (DEBUG) System.out.println(cipherValue);
 
-                if(cipherValue.startsWith( "RSA/" ) && cipherValue.endsWith( "/NoPadding" )) {
+                if (cipherValue.startsWith("RSA/") && cipherValue.endsWith("/NoPadding")) {
                     bugReporter.reportBug(new BugInstance(this, RSA_NO_PADDING_TYPE, Priorities.NORMAL_PRIORITY) //
-                            .addClass( this ).addMethod( this ).addSourceLine(this));
+                            .addClass(this).addMethod(this).addSourceLine(this));
                 }
             }
         }

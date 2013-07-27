@@ -22,7 +22,7 @@ import org.apache.bcel.classfile.JavaClass;
 public class InterfaceUtils {
 
 
-    public static boolean classImplements(JavaClass javaClass,String interfaceName) {
+    public static boolean classImplements(JavaClass javaClass, String interfaceName) {
         String[] interfaces = javaClass.getInterfaceNames();
         for (String name : interfaces) {
             if (name.equals(interfaceName)) {
@@ -32,7 +32,7 @@ public class InterfaceUtils {
         return false;
     }
 
-    public static boolean classExtends(JavaClass javaClass,String superClass) {
+    public static boolean classExtends(JavaClass javaClass, String superClass) {
         return superClass.equals(javaClass.getSuperclassName());
     }
 }

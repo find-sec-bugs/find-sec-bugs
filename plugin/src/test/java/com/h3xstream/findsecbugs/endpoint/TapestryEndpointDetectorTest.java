@@ -29,6 +29,7 @@ public class TapestryEndpointDetectorTest extends BaseDetectorTest {
 
     /**
      * This first code sample has some Annotation and Type imports.
+     *
      * @throws Exception
      */
     @Test
@@ -52,6 +53,7 @@ public class TapestryEndpointDetectorTest extends BaseDetectorTest {
 
     /**
      * This code sample is a plain POJO. The package name will trigger the pointer.
+     *
      * @throws Exception
      */
     @Test

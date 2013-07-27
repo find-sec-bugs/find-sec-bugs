@@ -47,19 +47,19 @@ public class PathTraversalDetector extends OpcodeStackDetector {
                     && getNameConstantOperand().equals("<init>")) {
 
                 //Constructor with one param.
-                if(getSigConstantOperand().equals("(Ljava/lang/String;)V")) {
+                if (getSigConstantOperand().equals("(Ljava/lang/String;)V")) {
                     if (StringTracer.isVariableString(stack.getStackItem(0))) {
                         bugReporter.reportBug(new BugInstance(this, PATH_TRAVERSAL_IN_TYPE, Priorities.NORMAL_PRIORITY) //
-                                                .addClass(this).addMethod(this).addSourceLine(this) //
-                                                .addString("java.io.File"));
+                                .addClass(this).addMethod(this).addSourceLine(this) //
+                                .addString("java.io.File"));
                     }
-                //Constructor with two param.
-                } else if(getSigConstantOperand().equals("(Ljava/lang/String;Ljava/lang/String;)V")) {
+                    //Constructor with two param.
+                } else if (getSigConstantOperand().equals("(Ljava/lang/String;Ljava/lang/String;)V")) {
 
                     if (StringTracer.isVariableString(stack.getStackItem(1)) || !StringTracer.isVariableString(stack.getStackItem(0))) {
                         bugReporter.reportBug(new BugInstance(this, PATH_TRAVERSAL_IN_TYPE, Priorities.NORMAL_PRIORITY) //
-                                                .addClass(this).addMethod(this).addSourceLine(this) //
-                                                .addString("java.io.File"));
+                                .addClass(this).addMethod(this).addSourceLine(this) //
+                                .addString("java.io.File"));
                     }
                 }
 
@@ -88,8 +88,8 @@ public class PathTraversalDetector extends OpcodeStackDetector {
 
                 if (StringTracer.isVariableString(stack.getStackItem(0))) {
                     bugReporter.reportBug(new BugInstance(this, PATH_TRAVERSAL_IN_TYPE, Priorities.NORMAL_PRIORITY) //
-                        .addClass(this).addMethod(this).addSourceLine(this) //
-                        .addString("java.io.FileInputStream"));
+                            .addClass(this).addMethod(this).addSourceLine(this) //
+                            .addString("java.io.FileInputStream"));
                 }
             }
 
@@ -102,8 +102,8 @@ public class PathTraversalDetector extends OpcodeStackDetector {
 
                 if (StringTracer.isVariableString(stack.getStackItem(1))) {
                     bugReporter.reportBug(new BugInstance(this, PATH_TRAVERSAL_OUT_TYPE, Priorities.NORMAL_PRIORITY) //
-                        .addClass(this).addMethod(this).addSourceLine(this) //
-                        .addString("java.io.FileWriter"));
+                            .addClass(this).addMethod(this).addSourceLine(this) //
+                            .addString("java.io.FileWriter"));
                 }
             } else if (getClassConstantOperand().equals("java/io/FileOutputStream")
                     && getNameConstantOperand().equals("<init>")
@@ -111,17 +111,16 @@ public class PathTraversalDetector extends OpcodeStackDetector {
                     getSigConstantOperand().equals("(Ljava/lang/String;Z)V"))) {
 
                 OpcodeStack.Item param;
-                if(getSigConstantOperand().equals("(Ljava/lang/String;Z)V")) { //Constructor : (String,Boolean)
+                if (getSigConstantOperand().equals("(Ljava/lang/String;Z)V")) { //Constructor : (String,Boolean)
                     param = stack.getStackItem(1); //Stack order is reverse (2 parameters)
-                }
-                else {
+                } else {
                     param = stack.getStackItem(0);
                 }
 
                 if (StringTracer.isVariableString(param)) {
                     bugReporter.reportBug(new BugInstance(this, PATH_TRAVERSAL_OUT_TYPE, Priorities.NORMAL_PRIORITY) //
-                        .addClass(this).addMethod(this).addSourceLine(this) //
-                        .addString("java.io.FileOutputStream"));
+                            .addClass(this).addMethod(this).addSourceLine(this) //
+                            .addString("java.io.FileOutputStream"));
                 }
             }
         }

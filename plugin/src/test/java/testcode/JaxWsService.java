@@ -13,7 +13,7 @@ public class JaxWsService {
 
     @WebMethod
     public String hello(String user) {
-        return "Hello "+user;
+        return "Hello " + user;
     }
 
     public int notAWebMethod() {

@@ -1,4 +1,4 @@
-<%@page import="static org.apache.commons.lang.StringEscapeUtils.*" pageEncoding="UTF-8"%>
+<%@page import="static org.apache.commons.lang.StringEscapeUtils.*" pageEncoding="UTF-8" %>
 
 <%
     String evilInput = (String) request.getAttribute("input");

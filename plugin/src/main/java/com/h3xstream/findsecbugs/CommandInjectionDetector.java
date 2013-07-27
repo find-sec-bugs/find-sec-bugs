@@ -48,15 +48,15 @@ public class CommandInjectionDetector extends OpcodeStackDetector {
 
             if (StringTracer.isVariableString(stack.getStackItem(0))) {
                 bugReporter.reportBug(new BugInstance(this, COMMAND_INJECTION_TYPE, Priorities.NORMAL_PRIORITY) //
-                    .addClass(this).addMethod(this).addSourceLine(this)
-                    .addString("Runtime.exec(...)"));
+                        .addClass(this).addMethod(this).addSourceLine(this)
+                        .addString("Runtime.exec(...)"));
             }
         } else if (seen == Constants.INVOKEVIRTUAL && getClassConstantOperand().equals("java/lang/ProcessBuilder") &&
                 getNameConstantOperand().equals("command")) {
             if (StringTracer.hasVariableString(stack)) {
                 bugReporter.reportBug(new BugInstance(this, COMMAND_INJECTION_TYPE, Priorities.NORMAL_PRIORITY) //
-                    .addClass(this).addMethod(this).addSourceLine(this)
-                    .addString("ProcessBuilder.command(...)"));
+                        .addClass(this).addMethod(this).addSourceLine(this)
+                        .addString("ProcessBuilder.command(...)"));
             }
         }
 

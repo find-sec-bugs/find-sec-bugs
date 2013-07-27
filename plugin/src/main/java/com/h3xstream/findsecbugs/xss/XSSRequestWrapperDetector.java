@@ -62,7 +62,7 @@ public class XSSRequestWrapperDetector implements Detector {
         Method[] methodList = javaClass.getMethods();
 
         for (Method m : methodList) {
-            if(m.getName().equals("stripXSS")) {
+            if (m.getName().equals("stripXSS")) {
                 bugReporter.reportBug(new BugInstance(this, XSS_REQUEST_WRAPPER_TYPE, Priorities.NORMAL_PRIORITY) //
                         .addClassAndMethod(javaClass, m));
                 return;

@@ -23,10 +23,10 @@ import org.hamcrest.Description;
 
 public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
 
-    private String  bugType;
-    private String  className;
-    private String  methodName;
-    private String  fieldName;
+    private String bugType;
+    private String className;
+    private String methodName;
+    private String fieldName;
     private Integer lineNumber;
 
     /**
@@ -39,10 +39,10 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
      * @param lineNumber Line number
      */
     public BugInstanceMatcher(String bugType, String className, String methodName, String fieldName, Integer lineNumber) {
-        this.bugType    = bugType;
-        this.className  = className;
+        this.bugType = bugType;
+        this.className = className;
         this.methodName = methodName;
-        this.fieldName  = fieldName;
+        this.fieldName = fieldName;
         this.lineNumber = lineNumber;
     }
 
@@ -56,26 +56,26 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
                 criteriaMatches &= bugInstance.getType().equals(bugType);
             }
             if (className != null) {
-                ClassAnnotation classAnn = extractBugAnnotation(bugInstance,ClassAnnotation.class);
-                if(classAnn == null) return false;
+                ClassAnnotation classAnn = extractBugAnnotation(bugInstance, ClassAnnotation.class);
+                if (classAnn == null) return false;
 
                 String fullName = classAnn.getClassName();
-                String simpleName = fullName.substring(fullName.lastIndexOf(".")+1);
+                String simpleName = fullName.substring(fullName.lastIndexOf(".") + 1);
                 criteriaMatches &= fullName.equals(className) || simpleName.equals(className);
             }
             if (methodName != null) {
-                MethodAnnotation methodAnn = extractBugAnnotation(bugInstance,MethodAnnotation.class);
-                if(methodAnn == null) return false;
+                MethodAnnotation methodAnn = extractBugAnnotation(bugInstance, MethodAnnotation.class);
+                if (methodAnn == null) return false;
                 criteriaMatches &= methodAnn.getMethodName().equals(methodName);
             }
             if (fieldName != null) {
-                FieldAnnotation fieldAnn = extractBugAnnotation(bugInstance,FieldAnnotation.class);
-                if(fieldAnn == null) return false;
+                FieldAnnotation fieldAnn = extractBugAnnotation(bugInstance, FieldAnnotation.class);
+                if (fieldAnn == null) return false;
                 criteriaMatches &= fieldAnn.getFieldName().equals(fieldName);
             }
             if (lineNumber != null) {
-                SourceLineAnnotation srcAnn = extractBugAnnotation(bugInstance,SourceLineAnnotation.class);
-                if(srcAnn == null) return false;
+                SourceLineAnnotation srcAnn = extractBugAnnotation(bugInstance, SourceLineAnnotation.class);
+                if (srcAnn == null) return false;
                 criteriaMatches &= srcAnn.getStartLine() <= lineNumber && lineNumber <= srcAnn.getEndLine();
             }
             return criteriaMatches;
@@ -84,9 +84,9 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
         }
     }
 
-    private <T> T extractBugAnnotation(BugInstance bugInstance,Class<T> annotationType) {
-        for(BugAnnotation annotation : bugInstance.getAnnotations()) {
-            if(annotation.getClass().equals(annotationType)) {
+    private <T> T extractBugAnnotation(BugInstance bugInstance, Class<T> annotationType) {
+        for (BugAnnotation annotation : bugInstance.getAnnotations()) {
+            if (annotation.getClass().equals(annotationType)) {
                 return (T) annotation;
             }
         }

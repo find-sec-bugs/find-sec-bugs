@@ -11,6 +11,6 @@ public class JaxRsService {
 
     @Path("/hello")
     public String hello(String user) {
-        return "Hello "+user;
+        return "Hello " + user;
     }
 }

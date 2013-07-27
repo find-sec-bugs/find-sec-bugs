@@ -2,40 +2,90 @@ import groovy.text.SimpleTemplateEngine
 
 //Contains the bug descriptions
 InputStream messagesStream = getClass().getResourceAsStream("/metadata/messages.xml")
+
 //Html Template of the documentation page
-Reader templateReader = new InputStreamReader(getClass().getResourceAsStream("/layout.htm"))
+def getTemplateReader(String path) {
+    return new InputStreamReader(getClass().getResourceAsStream(path))
+}
+
 //Generated page will be place there
-String outputDirectory = binding.variables.containsKey("project") ? project.build.outputDirectory : System.getProperty("java.io.tmpdir")
+String outDir = binding.variables.containsKey("project") ? project.build.outputDirectory : System.getProperty("java.io.tmpdir")
+
+def outputFile(outDir,file) {
+    return new File(outDir, file)
+}
+
+//Loading detectors
 
 println "Importing message from messages.xml"
 rootXml = new XmlParser().parse(messagesStream)
 
 println "Mapping the descriptions to the templates"
-def binding = [:]
-binding['bugPatterns'] = []
+def bugsBinding = [:]
+bugsBinding['bugPatterns'] = []
 
-binding['nbPatterns'] = 0
-binding['nbDetectors'] = 0
+bugsBinding['nbPatterns'] = 0
+bugsBinding['nbDetectors'] = 0
 
 rootXml.BugPattern.each { pattern ->
-    binding['bugPatterns'].add(
+    bugsBinding['bugPatterns'].add(
             ['title': pattern.ShortDescription.text(),
-                    'description': pattern.Details.text()])
+             'description': pattern.Details.text(),
+             'type':pattern.attribute("type")])
     println pattern.ShortDescription.text()
-    binding['nbPatterns']++
+    bugsBinding['nbPatterns']++
 }
 
 rootXml.Detector.each { detector ->
-    binding['nbDetectors']++
+    bugsBinding['nbDetectors']++
 }
 
-generatedPage = new File(outputDirectory, "index.htm")
+downloadUrl = "http://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/plugin/1.1.0/plugin-1.1.0.jar"
+latestVersion = "v 1.1.0"
 
-println "Writing the template to ${outputDirectory}/index.htm"
+//Generate
+
 def engine = new SimpleTemplateEngine()
-result = engine.createTemplate(templateReader).make(binding)
 
-generatedPage.withWriter{
+println "Writing the template to ${outDir}/index.htm"
+
+
+
+outputFile(outDir,"index.htm").withWriter {
     w ->
-    w << result.toString()
+        w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Home'])
+        w << engine.createTemplate(getTemplateReader("/home.htm")).make(['latestVersion':latestVersion])
+        w << engine.createTemplate(getTemplateReader("/social.htm")).make()
+        w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make()
+}
+
+outputFile(outDir,"download.htm").withWriter {
+    w ->
+        w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(
+                ['title':'Download'])
+        w << engine.createTemplate(getTemplateReader("/download.htm")).make(
+                ['downloadUrl':downloadUrl,'latestVersion':latestVersion])
+        w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make()
+}
+
+outputFile(outDir,"tutorials.htm").withWriter {
+    w ->
+        w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Tutorials'])
+        w << engine.createTemplate(getTemplateReader("/tutorials.htm")).make()
+        w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make()
+}
+
+outputFile(outDir,"bugs.htm").withWriter {
+    w ->
+        w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Bugs Description'])
+        w << engine.createTemplate(getTemplateReader("/bugs.htm")).make(bugsBinding)
+        w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make()
+}
+
+
+outputFile(outDir,"license.htm").withWriter {
+    w ->
+        w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'License'])
+        w << engine.createTemplate(getTemplateReader("/license.htm")).make(bugsBinding)
+        w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make()
 }

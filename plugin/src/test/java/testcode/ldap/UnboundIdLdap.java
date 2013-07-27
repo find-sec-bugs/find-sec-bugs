@@ -22,8 +22,7 @@ public class UnboundIdLdap {
         try {
             ldap = new LDAPConnection("ldap.example.com", 389, dn, password);
             return true;
-        }
-        catch (LDAPException e) {
+        } catch (LDAPException e) {
             if (e.getResultCode() == ResultCode.INVALID_CREDENTIALS)
                 return false;
 

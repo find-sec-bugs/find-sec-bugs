@@ -33,7 +33,7 @@ public class VerboseTestListener extends TestListenerAdapter {
 
     @Override
     public void onTestFailure(ITestResult tr) {
-        log.error( tr.getName()+" failed", tr.getThrowable() );
+        log.error(tr.getName() + " failed", tr.getThrowable());
     }
 
     @Override

@@ -28,7 +28,7 @@ import org.mockito.Matchers;
  * Aggregate useful utilities for unit tests on detector.
  */
 public class BaseDetectorTest {
-	private static final boolean DEBUG = true;
+    private static final boolean DEBUG = true;
 
     private ClassFileLocator classFileLocator;
     private FindBugsLauncher findBugsLauncher;
@@ -47,7 +47,7 @@ public class BaseDetectorTest {
     }
 
     public void analyze(String[] classFiles, BugReporter bugReporter) throws Exception {
-        findBugsLauncher.analyze(classFiles,bugReporter);
+        findBugsLauncher.analyze(classFiles, bugReporter);
     }
 
     public BugInstanceMatcherBuilder bugDefinition() {

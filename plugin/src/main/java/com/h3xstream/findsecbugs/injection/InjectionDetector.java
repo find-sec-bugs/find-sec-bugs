@@ -118,7 +118,8 @@ public abstract class InjectionDetector implements Detector {
                 ConstantFrame frame = dataflow.getFactAtLocation(location);
                 int numArguments = frame.getNumArguments(invoke, cpg);
 
-                arguments : for (int arg : injectableArguments) {
+                arguments:
+                for (int arg : injectableArguments) {
                     Constant value = frame.getStackValue(arg);
 //                    System.out.println(arg + ". " + frame.getStackValue(arg).getConstantString());
 //

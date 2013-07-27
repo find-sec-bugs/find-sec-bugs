@@ -33,20 +33,20 @@ import org.apache.bcel.generic.InvokeInstruction;
  */
 public class JpaInjectionSource implements InjectionSource {
 
-	@Override
-	public boolean isCandidate( ConstantPoolGen cpg ) {
-		for(int i=0;i<cpg.getSize();i++) {
-			Constant cnt =cpg.getConstant( i );
-			if(cnt instanceof ConstantUtf8 ) {
-				String utf8String = ((ConstantUtf8) cnt).getBytes();
-				//System.out.println("cnt= "+utf8String);
-				if(utf8String.equals( "javax/persistence/EntityManager" )) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+    @Override
+    public boolean isCandidate(ConstantPoolGen cpg) {
+        for (int i = 0; i < cpg.getSize(); i++) {
+            Constant cnt = cpg.getConstant(i);
+            if (cnt instanceof ConstantUtf8) {
+                String utf8String = ((ConstantUtf8) cnt).getBytes();
+                //System.out.println("cnt= "+utf8String);
+                if (utf8String.equals("javax/persistence/EntityManager")) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     @Override
     public int[] getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {

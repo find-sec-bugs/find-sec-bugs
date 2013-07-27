@@ -22,6 +22,7 @@ public class StrutsV2Endpoint {
     public String getItemId() {
         return itemId;
     }
+
     public void setItemId(String itemId) {
         this.itemId = itemId;
     }
@@ -29,6 +30,7 @@ public class StrutsV2Endpoint {
     public String getPrice() {
         return price;
     }
+
     public void setPrice(String price) {
         this.price = price;
     }

@@ -28,6 +28,7 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
     private String methodName;
     private String fieldName;
     private Integer lineNumber;
+    private Integer lineNumberApprox;
 
     /**
      * All the parameters are optional. Only the non-null parameters are used.
@@ -38,12 +39,13 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
      * @param fieldName  Field name
      * @param lineNumber Line number
      */
-    public BugInstanceMatcher(String bugType, String className, String methodName, String fieldName, Integer lineNumber) {
+    public BugInstanceMatcher(String bugType, String className, String methodName, String fieldName, Integer lineNumber, Integer lineNumberApprox) {
         this.bugType = bugType;
         this.className = className;
         this.methodName = methodName;
         this.fieldName = fieldName;
         this.lineNumber = lineNumber;
+        this.lineNumberApprox = lineNumberApprox;
     }
 
     @Override
@@ -77,6 +79,11 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
                 SourceLineAnnotation srcAnn = extractBugAnnotation(bugInstance, SourceLineAnnotation.class);
                 if (srcAnn == null) return false;
                 criteriaMatches &= srcAnn.getStartLine() <= lineNumber && lineNumber <= srcAnn.getEndLine();
+            }
+            if (lineNumberApprox != null) {
+                SourceLineAnnotation srcAnn = extractBugAnnotation(bugInstance, SourceLineAnnotation.class);
+                if (srcAnn == null) return false;
+                criteriaMatches &= srcAnn.getStartLine()-1 <= lineNumberApprox && lineNumberApprox <= srcAnn.getEndLine()+1;
             }
             return criteriaMatches;
         } else {

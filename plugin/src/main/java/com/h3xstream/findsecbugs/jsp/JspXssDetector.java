@@ -36,7 +36,7 @@ public class JspXssDetector implements Detector {
 
     private static final String XSS_JSP_PRINT = "XSS_JSP_PRINT";
     private static final String XSS_SERVLET = "XSS_SERVLET";
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     private BugReporter bugReporter;
 

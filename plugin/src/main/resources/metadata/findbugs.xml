@@ -53,8 +53,7 @@
     <Detector class="com.h3xstream.findsecbugs.crypto.InsufficientKeySizeBlowfishDetector" reports="BLOWFISH_KEY_SIZE"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.InsufficientKeySizeRsaDetector" reports="RSA_KEY_SIZE"/>
     <Detector class="com.h3xstream.findsecbugs.injection.redirect.UnvalidatedRedirectDetector" reports="UNVALIDATED_REDIRECT" />
-    <Detector class="com.h3xstream.findsecbugs.jsp.JspXssDetector" reports="XSS_JSP_PRINT" />
-
+    <Detector class="com.h3xstream.findsecbugs.jsp.JspXssDetector" reports="XSS_JSP_PRINT,XSS_SERVLET" />
 
     <BugPattern type="PREDICTABLE_RANDOM" abbrev="SECPR" category="SECURITY"/>
     <BugPattern type="SERVLET_PARAMETER" abbrev="SECSP" category="SECURITY"/>
@@ -100,6 +99,7 @@
     <BugPattern type="BLOWFISH_KEY_SIZE" abbrev="SECBKS" category="SECURITY"/>
     <BugPattern type="UNVALIDATED_REDIRECT" abbrev="SECUR" category="SECURITY"/>
     <BugPattern type="XSS_JSP_PRINT" abbrev="SECXSS1" category="SECURITY"/>
+    <BugPattern type="XSS_SERVLET" abbrev="SECXSS2" category="SECURITY"/>
 
     <!--
     <Detector class="com.h3xstream.findsecbugs.crypto.StaticIvDetector" reports="STATIC_IV"/>

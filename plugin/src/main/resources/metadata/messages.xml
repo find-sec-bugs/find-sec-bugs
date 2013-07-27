@@ -1067,7 +1067,7 @@ use instead.
 <p>The KeyPairGenerator creation should be as follow.
 <pre>
 KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-keyGen.initialize(1024);
+keyGen.initialize(2048);
 </pre>
 </p>
 <p>
@@ -1120,8 +1120,7 @@ keyGen.initialize(1024);
     <BugCode abbrev="SECUR">Unvalidated Redirect</BugCode>
 
 
-
-    <!-- XSS -->
+    <!-- XSS in JSP -->
     <Detector class="com.h3xstream.findsecbugs.jsp.JspXssDetector">
         <Details>Identify tainted inputs print in JSP views.</Details>
     </Detector>
@@ -1163,5 +1162,41 @@ String taintedInput = (String) request.getAttribute("input");
         </Details>
     </BugPattern>
     <BugCode abbrev="SECXSS1">Potential XSS in JSP</BugCode>
+
+    <!-- XSS in servlet -->
+    <BugPattern type="XSS_SERVLET">
+        <ShortDescription>Potential XSS in servlet</ShortDescription>
+        <LongDescription>Potential XSS in servlet</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    A potential XSS was found. It could be use to execute unwanted Javascript on client browser. (See references)
+</p>
+<p>
+    <b>Vulnerable code:</b>
+<pre>protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    String input1 = req.getParameter("input1");
+    [...]
+    resp.getWriter().write(input1);
+}</pre>
+</p>
+<p>
+    <b>Proper code:</b>
+<pre>protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    String input1 = req.getParameter("input1");
+    [...]
+    resp.getWriter().write(ESAPI.encoder().encodeForHTML(input1));
+}</pre>
+</p>
+<p>
+    <b>References</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8 : Cross Site Scripting</a><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2010-A2-Cross-Site_Scripting_(XSS)">OWASP Top 10 A2 :Cross-Site Scripting (XSS)</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECXSS2">Potential XSS in servlet</BugCode>
 
 </MessageCollection>

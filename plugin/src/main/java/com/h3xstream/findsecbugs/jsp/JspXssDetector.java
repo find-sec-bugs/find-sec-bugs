@@ -34,7 +34,8 @@ import java.util.*;
  */
 public class JspXssDetector implements Detector {
 
-    private static final String XSS_IN_JSP = "XSS_JSP_PRINT";
+    private static final String XSS_JSP_PRINT = "XSS_JSP_PRINT";
+    private static final String XSS_SERVLET = "XSS_SERVLET";
     private static final boolean DEBUG = true;
 
     private BugReporter bugReporter;
@@ -111,11 +112,20 @@ public class JspXssDetector implements Detector {
                     //Potential print
                     if(locationAfterLoadIns instanceof InvokeInstruction) {
                         InvokeInstruction invoke = (InvokeInstruction) locationAfterLoadIns;
+
                         if ("javax.servlet.jsp.JspWriter".equals(invoke.getClassName(cpg)) &&
                                 "print".equals(invoke.getMethodName(cpg))) {
 
                             JavaClass clz = classContext.getJavaClass();
-                            bugReporter.reportBug(new BugInstance(this, XSS_IN_JSP, Priorities.HIGH_PRIORITY) //
+                            bugReporter.reportBug(new BugInstance(this, XSS_JSP_PRINT, Priorities.HIGH_PRIORITY) //
+                                    .addClass(clz)
+                                    .addMethod(clz,m)
+                                    .addSourceLine(classContext,m,locationAfterLoad));
+                        }
+                        else if("java.io.PrintWriter".equals(invoke.getClassName(cpg)) &&
+                                "write".equals(invoke.getMethodName(cpg))) {
+                            JavaClass clz = classContext.getJavaClass();
+                            bugReporter.reportBug(new BugInstance(this, XSS_SERVLET, Priorities.HIGH_PRIORITY) //
                                     .addClass(clz)
                                     .addMethod(clz,m)
                                     .addSourceLine(classContext,m,locationAfterLoad));

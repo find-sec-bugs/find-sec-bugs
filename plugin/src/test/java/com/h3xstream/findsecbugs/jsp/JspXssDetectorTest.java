@@ -21,22 +21,136 @@ import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.spy;
+import java.util.Arrays;
 
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
+/**
+ * Before running theses tests cases, jsp files need to be compiled.
+ *
+ * <pre>mvn clean test-compile</pre>
+ */
 public class JspXssDetectorTest extends BaseDetectorTest {
 
     @Test
-    public void detectXss() throws Exception {
+    public void detectXssDirectUse() throws Exception {
         //Locate test code
         String[] files = {
-                getJspFilePath("test.jsp")
+                getJspFilePath("xss_1_direct_use.jsp")
         };
 
         //Run the analysis
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
+        //Assertions
+        for (Integer line : Arrays.asList(53, 59)) { //Generated classes lines doesn't match original JSP
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("XSS_JSP_PRINT")
+                            .inMethod("_jspService").atLine(line)
+                            .build()
+            );
+        }
 
+        verify(reporter, times(2)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
+    }
+
+    @Test
+    public void detectXssTransferLocal() throws Exception {
+        //Locate test code
+        String[] files = {
+                getJspFilePath("xss_2_transfer_local.jsp")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+        //Assertions
+        //Generated classes lines doesn't match original JSP
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("XSS_JSP_PRINT")
+                        .inMethod("_jspService").atLine(53)
+                        .build()
+        );
+
+        verify(reporter, times(1)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
+    }
+
+    @Test
+    public void detectXssFalsePositiveSafeInput() throws Exception {
+        //Locate test code
+        String[] files = {
+                getJspFilePath("xss_3_false_positive_static_function.jsp")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+        //No alert should be trigger
+        verify(reporter, times(0)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
+    }
+
+    @Test
+    public void detectXssFalsePositiveOverwriteLocal() throws Exception {
+        //Locate test code
+        String[] files = {
+                getJspFilePath("xss_4_false_positive_overwrite_local.jsp")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+        //No alert should be trigger
+        verify(reporter, times(0)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
+    }
+
+    @Test
+    public void detectXssMultipleTransfertLocal() throws Exception {
+        //Locate test code
+        String[] files = {
+                getJspFilePath("xss_5_multiple_transfer_local.jsp")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("XSS_JSP_PRINT")
+                        .inMethod("_jspService").atLine(56)
+                        .build()
+        );
+
+        verify(reporter, times(1)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
+    }
+
+    @Test
+    public void detectXssGetParameter() throws Exception {
+        //Locate test code
+        String[] files = {
+                getJspFilePath("xss_6_get_parameter.jsp")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("XSS_JSP_PRINT")
+                        .inMethod("_jspService").atLine(50)
+                        .build()
+        );
+
+        verify(reporter, times(1)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
     }
 }
 

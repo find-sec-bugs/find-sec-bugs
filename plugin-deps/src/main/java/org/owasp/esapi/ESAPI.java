@@ -5,4 +5,8 @@ public class ESAPI {
     public static Validator validator() {
         return null;
     }
+
+    public static Encoder encoder() {
+        return null;
+    }
 }

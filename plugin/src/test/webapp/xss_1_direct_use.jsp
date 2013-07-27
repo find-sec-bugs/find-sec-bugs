@@ -6,6 +6,12 @@
 
 
 <%
+//XSS
 out.print(evilInput);
+//OK
 out.print(escapeHtml(evilInput));
 %>
+
+<%= evilInput  %>
+
+<%= escapeHtml(evilInput) %>

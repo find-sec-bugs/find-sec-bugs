@@ -663,7 +663,7 @@ all of them.</p>
 
     <BugPattern type="SQL_INJECTION">
         <ShortDescription>Potential SQL Injection</ShortDescription>
-        <LongDescription>The query is vulnerable SQL injection</LongDescription>
+        <LongDescription>The query is potentially vulnerable SQL injection</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -1118,5 +1118,50 @@ keyGen.initialize(1024);
         </Details>
     </BugPattern>
     <BugCode abbrev="SECUR">Unvalidated Redirect</BugCode>
+
+
+
+    <!-- XSS -->
+    <Detector class="com.h3xstream.findsecbugs.jsp.JspXssDetector">
+        <Details>Identify tainted inputs print in JSP views.</Details>
+    </Detector>
+    <BugPattern type="XSS_JSP_PRINT">
+        <ShortDescription>Potential XSS in JSP</ShortDescription>
+        <LongDescription>Potential XSS in JSP</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    A potential XSS was found. It could be use to execute unwanted Javascript on client browser. (See references)
+</p>
+<p>
+    <b>Vulnerable code:</b>
+    <pre>
+<%
+String taintedInput = (String) request.getAttribute("input");
+%>
+[...]
+<%= taintedInput %>
+    </pre>
+</p>
+<p>
+    <b>Proper code:</b>
+    <pre>
+<%
+String taintedInput = (String) request.getAttribute("input");
+%>
+[...]
+<%= ESAPI.encoder().encodeForHTML(taintedInput) %>
+    </pre>
+</p>
+<p>
+    <b>References</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8 : Cross Site Scripting</a><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2010-A2-Cross-Site_Scripting_(XSS)">OWASP Top 10 A2 :Cross-Site Scripting (XSS)</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECXSS1">Potential XSS in JSP</BugCode>
 
 </MessageCollection>

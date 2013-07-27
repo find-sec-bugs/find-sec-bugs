@@ -75,8 +75,8 @@
             <!-- Compilation of the JSP test pages -->
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
-                <artifactId>maven-jetty-jspc-plugin</artifactId>
-                <version>6.1.26</version>
+                <artifactId>jetty-jspc-maven-plugin</artifactId>
+                <version>8.1.11.v20130520</version>
                 <executions>
                     <execution>
                         <id>jspc</id>
@@ -89,6 +89,7 @@
                             <generatedClasses>${project.build.directory}/test-classes</generatedClasses>
                             <webAppSourceDirectory>${basedir}/src/test/webapp</webAppSourceDirectory>
                             <suppressSmap>false</suppressSmap>
+                            <useProvidedScope>true</useProvidedScope>
                         </configuration>
                     </execution>
                 </executions>
@@ -144,7 +145,6 @@
             <scope>test</scope>
         </dependency>
 
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-io</artifactId>
@@ -154,7 +154,7 @@
         <dependency>
             <groupId>com.h3xstream.findsecbugs</groupId>
             <artifactId>plugin-deps</artifactId>
-            <scope>test</scope>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>

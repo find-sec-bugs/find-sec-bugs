@@ -75,7 +75,7 @@
         </td>
         <td>
             <ul>
-                <li>XSS in JSP page[1]</li>
+                <li>XSS in JSP page</li>
                 <li>SQL/HQL injection</li>
                 <li>ReDOS</li>
                 <li>Path traversal</li>
@@ -83,13 +83,6 @@
         </td>
     </tr>
 </table>
-
-<p>
-<i>[1] Partially cover by Findbugs <a
-        href="http://findbugs.sourceforge.net/bugDescriptions.html#XSS_REQUEST_PARAMETER_TO_JSP_WRITER">build-in
-    detector</a>.</i>
-</p>
-
 
 <p>Frameworks support:</p>
 <table>
@@ -116,7 +109,7 @@
 
 <a name="descriptions"><span class="title">Bugs descriptions</span></a>
 
-<p>Find Security Bugs has a total of <b>37</b> detectors and <b>43</b> different bug patterns. The complete list of bug patterns are list in this section.
+<p>Find Security Bugs has a total of <b>38</b> detectors and <b>45</b> different bug patterns. The complete list of bug patterns are list in this section.
 </p>
 
     
@@ -803,7 +796,7 @@ use instead.
 <p>The KeyPairGenerator creation should be as follow.
 <pre>
 KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-keyGen.initialize(1024);
+keyGen.initialize(2048);
 </pre>
 </p>
 <p>
@@ -841,6 +834,72 @@ keyGen.initialize(1024);
     <b>References</b><br/>
     <a href="http://projects.webappsec.org/w/page/13246981/URL%20Redirector%20Abuse">WASC-38 : URL Redirector Abuse</a><br/>
     <a href="https://www.owasp.org/index.php/Top_10_2010-A10-Unvalidated_Redirects_and_Forwards">OWASP Top 10 A10: Unvalidated Redirects and Forwards</a>
+</p></td>
+    </tr>
+    
+    <tr>
+        <th class="bug_title"><a name="XSS_JSP_PRINT"></a>Potential XSS in JSP <a href="#XSS_JSP_PRINT" title="Permanent link"><img alt="link icon" src="link.png"/></a></th>
+    </tr>
+    <tr>
+        <td class="bug_desc"><p>
+    A potential XSS was found. It could be use to execute unwanted Javascript on client browser. (See references)
+</p>
+<p>
+    <b>Vulnerable code:</b>
+    <pre>
+<%
+String taintedInput = (String) request.getAttribute("input");
+%>
+[...]
+<%= taintedInput %>
+    </pre>
+</p>
+<p>
+    <b>Proper code:</b>
+    <pre>
+<%
+String taintedInput = (String) request.getAttribute("input");
+%>
+[...]
+<%= ESAPI.encoder().encodeForHTML(taintedInput) %>
+    </pre>
+</p>
+<p>
+    <b>References</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8 : Cross Site Scripting</a><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2010-A2-Cross-Site_Scripting_(XSS)">OWASP Top 10 A2 :Cross-Site Scripting (XSS)</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a>
+</p></td>
+    </tr>
+    
+    <tr>
+        <th class="bug_title"><a name="XSS_SERVLET"></a>Potential XSS in servlet <a href="#XSS_SERVLET" title="Permanent link"><img alt="link icon" src="link.png"/></a></th>
+    </tr>
+    <tr>
+        <td class="bug_desc"><p>
+    A potential XSS was found. It could be use to execute unwanted Javascript on client browser. (See references)
+</p>
+<p>
+    <b>Vulnerable code:</b>
+<pre>protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    String input1 = req.getParameter("input1");
+    [...]
+    resp.getWriter().write(input1);
+}</pre>
+</p>
+<p>
+    <b>Proper code:</b>
+<pre>protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    String input1 = req.getParameter("input1");
+    [...]
+    resp.getWriter().write(ESAPI.encoder().encodeForHTML(input1));
+}</pre>
+</p>
+<p>
+    <b>References</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8 : Cross Site Scripting</a><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2010-A2-Cross-Site_Scripting_(XSS)">OWASP Top 10 A2 :Cross-Site Scripting (XSS)</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a>
 </p></td>
     </tr>
     

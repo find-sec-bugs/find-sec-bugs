@@ -5,12 +5,12 @@
 
     <parent>
         <groupId>com.h3xstream.findsecbugs</groupId>
-        <artifactId>root-pom</artifactId>
+        <artifactId>findsecbugs-root-pom</artifactId>
         <version>1.2.0-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>website</artifactId>
+    <artifactId>findsecbugs-website</artifactId>
     <name>Website Generator</name>
     <description>
         The static website reuse the description of the bug patterns to build a overview.
@@ -66,7 +66,7 @@
 
         <dependency>
             <groupId>com.h3xstream.findsecbugs</groupId>
-            <artifactId>plugin</artifactId>
+            <artifactId>findsecbugs-plugin</artifactId>
         </dependency>
 
         <dependency>

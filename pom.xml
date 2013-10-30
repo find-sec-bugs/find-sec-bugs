@@ -58,6 +58,7 @@
                         <exclude>**/org/owasp/**/**.java</exclude>
                         <exclude>**/org/springframework/**/**.java</exclude>
                         <exclude>**/com/unboundid/ldap/**/**.java</exclude>
+                        <exclude>**/**/ReadMe.java</exclude>
                     </excludes>
                     <properties>
                         <project>Find Security Bugs</project>

@@ -7,9 +7,11 @@
     <artifactId>findsecbugs-root-pom</artifactId>
 
     <packaging>pom</packaging>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>1.2.0</version>
 
     <name>Find Security Bugs root</name>
+
+	<description>Root project file that aggregate the different modules of Find Security Bugs.</description>
 
     <properties>
         <licence.plugin.version>1.10.b1</licence.plugin.version>

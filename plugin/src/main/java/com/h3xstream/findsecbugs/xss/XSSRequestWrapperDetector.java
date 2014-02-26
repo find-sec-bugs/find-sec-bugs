@@ -30,11 +30,8 @@ import org.apache.bcel.generic.MethodGen;
 /**
  * Various flavor of XSSRequestWrapper exist to do some debatable prevention. It can be considered as a Web Application
  * Firewall.
- * <p>
- * This detector will at least trigger a warning that the Filter is partial protection. Not all input are cover.
- * It will rise stronger alert if key characters are not filter (<code>"</code>, <code>'</code> and <code>\</code>).
- * <p>
- * Some implementation to detect:
+ * <br/>
+ * Some implementations to detect:
  * http://java.dzone.com/articles/stronger-anti-cross-site
  * http://www.javacodegeeks.com/2012/07/anti-cross-site-scripting-xss-filter.html
  * http://ricardozuasti.com/2012/stronger-anti-cross-site-scripting-xss-filter-for-java-web-apps/

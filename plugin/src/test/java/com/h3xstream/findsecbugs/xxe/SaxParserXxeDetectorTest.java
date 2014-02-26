@@ -87,4 +87,25 @@ public class SaxParserXxeDetectorTest extends BaseDetectorTest {
         );
     }
 
+
+
+    @Test
+    public void detectXxeFromDocumentBuilder() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/xxe/DocumentBuilderVulnerable")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("XXE")
+                        .inClass("DocumentBuilderVulnerable").inMethod("receiveXMLStream").atLine(18)
+                        .build()
+        );
+    }
+
 }

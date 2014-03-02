@@ -68,7 +68,8 @@ public class WeakMessageDigestDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         //Message Digest
-        for(int line : Arrays.asList(29,30,31,32, 34,35,36, 38,39,40)) {
+        int l = 37;
+        for(int line : Arrays.asList(l++,l++,l++,l++, l+=2,l++,l++, l+=2,l++,l++)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("WEAK_MESSAGE_DIGEST")

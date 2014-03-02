@@ -41,7 +41,7 @@ public class WeakMessageDigestDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
-        printOpCode(seen);
+        //printOpCode(seen);
         if (seen == Constants.INVOKESTATIC && getClassConstantOperand().equals("java/security/MessageDigest") &&
                 getNameConstantOperand().equals("getInstance") &&
                 getSigConstantOperand().equals("(Ljava/lang/String;)Ljava/security/MessageDigest;")) {

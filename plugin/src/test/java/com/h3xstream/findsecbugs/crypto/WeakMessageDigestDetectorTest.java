@@ -21,9 +21,9 @@ import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
+import java.util.Arrays;
+
+import static org.mockito.Mockito.*;
 
 public class WeakMessageDigestDetectorTest extends BaseDetectorTest {
 
@@ -38,19 +38,49 @@ public class WeakMessageDigestDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        //MD2 usage
-        verify(reporter, atLeastOnce()).doReportBug(
+        //Message Digest
+        for(int line : Arrays.asList(12,16,20)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("WEAK_MESSAGE_DIGEST")
+                            .inClass("WeakMessageDigest").inMethod("main").atLine(line)
+                            .build()
+            );
+        }
+
+        verify(reporter,times(3)).doReportBug(
                 bugDefinition()
                         .bugType("WEAK_MESSAGE_DIGEST")
-                        .inClass("WeakMessageDigest").inMethod("main").atLine(10)
+                        .inClass("WeakMessageDigest").inMethod("main")
                         .build()
         );
+    }
 
-        //MD5 usage
-        verify(reporter).doReportBug(
+    @Test
+    public void detectWeakDigestApache() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/crypto/WeakMessageDigest")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+        //Message Digest
+        for(int line : Arrays.asList(29,30,31,32, 34,35,36, 38,39,40)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("WEAK_MESSAGE_DIGEST")
+                            .inClass("WeakMessageDigest").inMethod("apacheApiVariations").atLine(line)
+                            .build()
+            );
+        }
+
+        verify(reporter,times(10)).doReportBug(
                 bugDefinition()
                         .bugType("WEAK_MESSAGE_DIGEST")
-                        .inClass("WeakMessageDigest").inMethod("main").atLine(14)
+                        .inClass("WeakMessageDigest").inMethod("apacheApiVariations")
                         .build()
         );
     }

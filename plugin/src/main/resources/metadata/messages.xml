@@ -1248,5 +1248,25 @@ The solution is to avoid using XML decoder to parse content from untrusted sourc
     </BugPattern>
     <BugCode abbrev="XMLDEC">XMLDecoder usage</BugCode>
 
+    <!-- XML decoder -->
+    <Detector class="com.h3xstream.findsecbugs.crypto.StaticIvDetector">
+        <Details>Identity initialization vector (IV) that are not properly generated.</Details>
+    </Detector>
+    <BugPattern type="STATIC_IV">
+        <ShortDescription>Static IV</ShortDescription>
+        <LongDescription>The initialization vector (IV) is not properly generated</LongDescription>
+        <Details>
+            <p>
+                Initialization vector must be regenerated for each message encrypted.
+            </p>
+            <p>
+                <b>References</b><br/>
+                <a href="http://en.wikipedia.org/wiki/Initialization_vector">Wikipedia: Initialization vector</a><br/>
+                <a href="http://cwe.mitre.org/data/definitions/329.html">CWE-329: Not Using a Random IV with CBC Mode</a><br/>
+                <a href="https://defuse.ca/cbcmodeiv.htm">Encryption - CBC Mode IV: Secret or Not?</a><br/>
+            </p>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="STAIV">Static IV</BugCode>
 
 </MessageCollection>

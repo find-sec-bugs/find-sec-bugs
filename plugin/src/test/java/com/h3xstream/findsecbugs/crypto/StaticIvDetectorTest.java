@@ -21,7 +21,9 @@ import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.spy;
+import java.util.Arrays;
+
+import static org.mockito.Mockito.*;
 
 public class StaticIvDetectorTest extends BaseDetectorTest {
 
@@ -29,12 +31,68 @@ public class StaticIvDetectorTest extends BaseDetectorTest {
     public void detectStaticIv() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/crypto/StaticIv")
+                getClassFilePath("testcode/crypto/iv/StaticVariableIv")
         };
 
         //Run the analysis
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
+
+        //Assertions
+
+        verify(reporter).doReportBug( //
+                bugDefinition().bugType("STATIC_IV").inClass("StaticVariableIv").inMethod("encrypt").atLine(26).build()
+        );
+
+        //Only one report of this bug pattern
+        verify(reporter,times(1)).doReportBug( //
+                bugDefinition().bugType("STATIC_IV").inClass("StaticVariableIv").build()
+        );
     }
+
+    @Test
+    public void detectConstantIv() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/crypto/iv/ConstantIv")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+        //Assertions
+
+        for(int line : Arrays.asList(17,36)) {
+            verify(reporter).doReportBug( //
+                    bugDefinition().bugType("STATIC_IV").inClass("ConstantIv").atLine(line).build()
+            );
+        }
+
+        //Only one report of this bug pattern
+        verify(reporter,times(2)).doReportBug( //
+                bugDefinition().bugType("STATIC_IV").inClass("ConstantIv").build()
+        );
+    }
+
+    //FIXME:Variable flow analysis require
+    /*@Test
+    public void avoidFalsePositive() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/crypto/iv/SafeIvGeneration")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+        //Assertions
+
+        //Not bug should be report
+        verify(reporter,never()).doReportBug( //
+                bugDefinition().bugType("STATIC_IV").inClass("SafeIvGeneration").build()
+        );
+    }*/
 
 }

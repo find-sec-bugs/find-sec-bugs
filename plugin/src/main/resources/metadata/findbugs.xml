@@ -54,6 +54,7 @@
     <Detector class="com.h3xstream.findsecbugs.injection.redirect.UnvalidatedRedirectDetector" reports="UNVALIDATED_REDIRECT" />
     <Detector class="com.h3xstream.findsecbugs.jsp.JspXssDetector" reports="XSS_JSP_PRINT,XSS_SERVLET" />
     <Detector class="com.h3xstream.findsecbugs.XmlDecoderDetector" reports="XML_DECODER"/>
+    <Detector class="com.h3xstream.findsecbugs.crypto.StaticIvDetector" reports="STATIC_IV"/>
 
     <BugPattern type="PREDICTABLE_RANDOM" abbrev="SECPR" category="SECURITY"/>
     <BugPattern type="SERVLET_PARAMETER" abbrev="SECSP" category="SECURITY"/>
@@ -101,6 +102,7 @@
     <BugPattern type="XSS_JSP_PRINT" abbrev="SECXSS1" category="SECURITY"/>
     <BugPattern type="XSS_SERVLET" abbrev="SECXSS2" category="SECURITY"/>
     <BugPattern type="XML_DECODER" abbrev="XMLDEC" category="SECURITY"/>
+    <BugPattern type="STATIC_IV" abbrev="STAIV" category="SECURITY"/>
 
     <!--
     <Detector class="com.h3xstream.findsecbugs.crypto.StaticIvDetector" reports="STATIC_IV"/>

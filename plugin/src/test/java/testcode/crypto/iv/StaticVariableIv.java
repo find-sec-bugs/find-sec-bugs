@@ -1,19 +1,16 @@
-package testcode.crypto;
+package testcode.crypto.iv;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import testcode.util.HexUtil;
 
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
 import java.security.*;
-import java.util.Arrays;
 import java.util.Random;
 
-public class StaticIv {
+public class StaticVariableIv {
 
-    static Random r = new Random();
+    static Random r = new SecureRandom();
 
     //Static IV ? potential reuse over time ?
     static byte[] iv = new byte[16];

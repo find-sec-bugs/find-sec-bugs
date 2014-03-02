@@ -1199,4 +1199,54 @@ String taintedInput = (String) request.getAttribute("input");
     </BugPattern>
     <BugCode abbrev="SECXSS2">Potential XSS in servlet</BugCode>
 
+    <!-- XML decoder -->
+    <Detector class="com.h3xstream.findsecbugs.XmlDecoderDetector">
+        <Details>Identify usage for XMLDecoder (a dangerous XML serializer).</Details>
+    </Detector>
+    <BugPattern type="XML_DECODER">
+        <ShortDescription>XMLDecoder usage</ShortDescription>
+        <LongDescription>XMLDecoder usage</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    XMLDecoder should not be use to parse user data. Deserializing user input can lead to arbitrary code execution.
+    It is possible because XMLDecoder support method invocation. It is intended to call to call setter method.
+    In practice, any method can be called.
+</p>
+<p>
+    <b>Malicious XML example:</b>
+</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;java version="1.4.0" class="java.beans.XMLDecoder"&gt;
+  &lt;object class="java.io.PrintWriter"&gt;
+    &lt;string>/tmp/Hacked.txt&lt;/string&gt;
+    &lt;void method="println"&gt;
+      &lt;string>Hello World!&lt;/string&gt;
+    &lt;/void&gt;
+    &lt;void method="close"/&gt;
+  &lt;/object&gt;
+&lt;/java&gt;
+</pre>
+<p>
+The previous XML code will cause the creation of a file with the content "Hello World!".
+</p>
+
+
+<p>
+<b>Solution:</b></br/>
+The solution is to avoid using XML decoder to parse content from untrusted source.
+</p>
+
+<p>
+<b>References</b><br/>
+<a href="http://blog.diniscruz.com/2013/08/using-xmldecoder-to-execute-server-side.html">Dinis Cruz Blog: Using XMLDecoder to execute server-side Java Code on an Restlet application</a><br/>
+<a href="https://securityblog.redhat.com/2014/01/23/java-deserialization-flaws-part-2-xml-deserialization/">RedHat blog : Java deserialization flaws: Part 2, XML deserialization</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="XMLDEC">XMLDecoder usage</BugCode>
+
+
 </MessageCollection>

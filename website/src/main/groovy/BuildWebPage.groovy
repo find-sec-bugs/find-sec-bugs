@@ -40,8 +40,8 @@ rootXml.Detector.each { detector ->
     bugsBinding['nbDetectors']++
 }
 
-downloadUrl = "http://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/plugin/1.1.0/plugin-1.1.0.jar"
-latestVersion = "v 1.1.0"
+downloadUrl = "http://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/1.2.0/findsecbugs-plugin-1.2.0.jar"
+latestVersion = "v 1.2.0"
 
 //Generate
 

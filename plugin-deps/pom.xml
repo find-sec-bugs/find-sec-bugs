@@ -18,4 +18,12 @@
         all the framework supported by the static analyzer.
     </description>
 
+    <dependencies>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.9</version>
+        </dependency>
+    </dependencies>
+
 </project>

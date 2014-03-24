@@ -41,7 +41,7 @@ public class WeakMessageDigestDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
-
+        //printOpCode(seen);
         if (seen == Constants.INVOKESTATIC && getClassConstantOperand().equals("java/security/MessageDigest") &&
                 getNameConstantOperand().equals("getInstance") &&
                 getSigConstantOperand().equals("(Ljava/lang/String;)Ljava/security/MessageDigest;")) {
@@ -50,12 +50,52 @@ public class WeakMessageDigestDetector extends OpcodeStackDetector {
             OpcodeStack.Item top = stack.getStackItem(0);
             String algorithm = (String) top.getConstant(); //Null if the value passed isn't constant
 
-            if ("MD2".equals(algorithm) || "MD5".equals(algorithm)) {
-                bugReporter.reportBug(new BugInstance(this, WEAK_MESSAGE_DIGEST_TYPE, Priorities.NORMAL_PRIORITY) //
-                        .addClass(this).addMethod(this).addSourceLine(this) //
-                        .addString(algorithm));
+            analyzeHashingFunction(algorithm);
+        }
+
+        if (seen == Constants.INVOKESTATIC && //
+                getClassConstantOperand().equals("org/apache/commons/codec/digest/DigestUtils")) {
+            if(getNameConstantOperand().equals("getMd2Digest") || //
+                    getNameConstantOperand().equals("md2Hex")) {
+                analyzeHashingFunction("md2");
             }
 
+            if(getNameConstantOperand().equals("getMd5Digest") || //
+                    getNameConstantOperand().equals("md5Hex")) {
+                analyzeHashingFunction("md5");
+            }
+
+            if(getNameConstantOperand().equals("getSha1Digest") || //
+                    getNameConstantOperand().equals("getShaDigest") ||
+                    getNameConstantOperand().equals("sha1Hex")) {
+                analyzeHashingFunction("sha1");
+            }
+
+            if(getNameConstantOperand().equals("getDigest")) {
+                //Extract the value being push..
+                OpcodeStack.Item top = stack.getStackItem(0);
+                String algorithm = (String) top.getConstant(); //Null if the value passed isn't constant
+
+                analyzeHashingFunction(algorithm);
+            }
+        }
+    }
+
+    private void analyzeHashingFunction(String algorithm) {
+        if(algorithm == null) return;
+
+        algorithm = algorithm.toUpperCase();
+
+        if ("MD2".equals(algorithm) || "MD5".equals(algorithm)) {
+            bugReporter.reportBug(new BugInstance(this, WEAK_MESSAGE_DIGEST_TYPE, Priorities.NORMAL_PRIORITY) //
+                    .addClass(this).addMethod(this).addSourceLine(this) //
+                    .addString(algorithm));
+        }
+
+        if ("SHA1".equals(algorithm)) { //Lower priority for SHA-1
+            bugReporter.reportBug(new BugInstance(this, WEAK_MESSAGE_DIGEST_TYPE, Priorities.LOW_PRIORITY) //
+                    .addClass(this).addMethod(this).addSourceLine(this) //
+                    .addString(algorithm));
         }
     }
 }

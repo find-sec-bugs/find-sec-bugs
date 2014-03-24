@@ -17,24 +17,29 @@
  */
 package com.h3xstream.findsecbugs.xxe;
 
+import com.h3xstream.findsecbugs.common.ByteCode;
 import com.h3xstream.findsecbugs.common.InterfaceUtils;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
-import edu.umd.cs.findbugs.Detector;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.ba.ClassContext;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 import org.apache.bcel.Constants;
 import org.apache.bcel.classfile.JavaClass;
-import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.*;
 
 /**
+ * 3 equivalent APIs are covered by this detector.
+ *
+ * <li>SAXParser.parse()</li>
+ * <li>XMLReader.parse()</li>
+ * <li>DocumentBuilder.parse()</li>
+ * <br/>
  * References:
  * https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=61702260
  */
 public class SaxParserXxeDetector extends OpcodeStackDetector {
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private static final String XXE_TYPE = "XXE";
 
     private BugReporter bugReporter;
@@ -45,43 +50,53 @@ public class SaxParserXxeDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
+        if(seen != Constants.INVOKEVIRTUAL && seen != INVOKEINTERFACE) return;
 
-        if (seen == Constants.INVOKEVIRTUAL &&
-                getClassConstantOperand().equals("javax/xml/parsers/SAXParser") &&
-                getNameConstantOperand().equals("parse")) {
+        String fullClassName = getClassConstantOperand();
+        String method = getNameConstantOperand();
+
+        //The method call is doing XML parsing (see class javadoc)
+        if ((seen == Constants.INVOKEVIRTUAL &&
+                fullClassName.equals("javax/xml/parsers/SAXParser") &&
+                method.equals("parse")) ||
+                (seen == Constants.INVOKEINTERFACE &&
+                        fullClassName.equals("org/xml/sax/XMLReader") &&
+                        method.equals("parse")) ||
+                (seen == Constants.INVOKEVIRTUAL &&
+                        getClassConstantOperand().equals("javax/xml/parsers/DocumentBuilder") &&
+                        method.equals("parse"))) {
 
             JavaClass javaClass = getThisClass();
 
+            //(1rst solution for secure parsing) Sandbox in an action with limited privileges
             if (InterfaceUtils.classImplements(javaClass, "java.security.PrivilegedExceptionAction")) {
                 return; //Assuming the proper right are apply to the sandbox
             }
 
+            ClassContext classCtx = getClassContext();
+            ConstantPoolGen cpg = classCtx.getConstantPoolGen();
+            MethodGen methodGen = classCtx.getMethodGen(getMethod());
 
+            //(2nd solution for secure parsing) Look for entity custom resolver
+            for (Instruction inst : methodGen.getInstructionList().getInstructions()) {
+                if (DEBUG) {
+                    ByteCode.printOpCode(inst, cpg);
+                }
+
+                if (inst instanceof INVOKEINTERFACE) { //XMLReader.setEntityResolver is called
+                    INVOKEINTERFACE invoke = (INVOKEINTERFACE) inst;
+                    if ("setEntityResolver".equals(invoke.getMethodName(cpg))) {
+                        return;
+                    }
+                }
+            }
+
+            String simpleClassName = fullClassName.substring(fullClassName.lastIndexOf('/'));
+            //Raise a bug
             bugReporter.reportBug(new BugInstance(this, XXE_TYPE, Priorities.NORMAL_PRIORITY) //
                     .addClass(this).addMethod(this).addSourceLine(this)
-                    .addString("SAXParser.parse(...)"));
+                    .addString(simpleClassName+"."+method+"(...)"));
 
-        }
-
-        if (seen == Constants.INVOKEINTERFACE &&
-                getClassConstantOperand().equals("org/xml/sax/XMLReader") &&
-                getNameConstantOperand().equals("parse")) {
-
-            JavaClass javaClass = getThisClass();
-
-            if (InterfaceUtils.classImplements(javaClass, "java.security.PrivilegedExceptionAction")) {
-                return; //Assuming the proper right are apply to the sandbox
-            }
-
-            Method m = getMethod();
-            MethodGen methodGen = getClassContext().getMethodGen(m);
-            ConstantPoolGen cpg = getClassContext().getConstantPoolGen();
-
-            //TODO: Detect when EntityResolver are set for the current instance
-
-//            bugReporter.reportBug(new BugInstance(this, XXE_TYPE, NORMAL_PRIORITY) //
-//                            .addClass(this).addMethod(this).addSourceLine(this)
-//                            .addString("XMLReader.parse(...)"));
         }
     }
 }

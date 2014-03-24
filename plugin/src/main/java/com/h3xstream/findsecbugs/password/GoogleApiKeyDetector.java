@@ -70,9 +70,7 @@ public class GoogleApiKeyDetector implements Detector {
         }
 
         //Class name left unchanged
-        boolean urlSigner = javaClass.getClassName().contains("UrlSigner");
-
-        if (keyStringField && urlSigner) {
+        if (javaClass.getClassName().contains("UrlSigner")) {
 
             bugReporter.reportBug(new BugInstance(this, HARD_CODE_PASSWORD_TYPE, Priorities.NORMAL_PRIORITY) //
                     .addClass(javaClass).addField(new FieldVariable(javaClass.getClassName(), "keyString", "Ljava/lang/String;")));

@@ -116,13 +116,13 @@ public abstract class InjectionDetector implements Detector {
             if (injectableArguments.length > 0) {
 
                 ConstantFrame frame = dataflow.getFactAtLocation(location);
-                int numArguments = frame.getNumArguments(invoke, cpg);
+
 
                 arguments:
                 for (int arg : injectableArguments) {
                     Constant value = frame.getStackValue(arg);
 //                    System.out.println(arg + ". " + frame.getStackValue(arg).getConstantString());
-//
+//                    int numArguments = frame.getNumArguments(invoke, cpg);
 //                    System.out.println(numArguments);
 
                     if (value == null || !value.isConstantString()) {
@@ -152,7 +152,7 @@ public abstract class InjectionDetector implements Detector {
         while (handle.getPrev() != null) {
             handle = handle.getPrev();
             Instruction prevIns = handle.getInstruction();
-            if (!(prevIns instanceof NOP && skipNops)) {
+            if (!(skipNops && prevIns instanceof NOP)) {
                 return handle;
             }
         }

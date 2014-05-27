@@ -595,9 +595,10 @@ could be expose.
 <p>
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-39: XPath Injection</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/643.html">CWE-643: Improper Neutralization of Data within XPath Expressions ('XPath Injection')</a><br/>
 <a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=61407250">CERT: IDS09-J. Prevent XPath Injection (archive)</a><br/>
 <a href="http://media.blackhat.com/bh-eu-12/Siddharth/bh-eu-12-Siddharth-Xpath-WP.pdf">Black Hat Europe 2012: Hacking XPath 2.0</a><br/>
-<a href="http://www.balisage.net/Proceedings/vol7/html/Vlist02/BalisageVol7-Vlist02.html">Balisage: XQuery Injection</a>
+<a href="http://www.balisage.net/Proceedings/vol7/html/Vlist02/BalisageVol7-Vlist02.html">Balisage: XQuery Injection</a><br/>
 </p>
 ]]>
         </Details>
@@ -746,25 +747,7 @@ stringBuilder.append( String.format( "%02X", b ) );
     <BugCode abbrev="SECBHC">Bad hexadecimal concatenation</BugCode>
 
 
-    <!-- ECB Mode -->
-    <Detector class="com.h3xstream.findsecbugs.crypto.EcbModeDetector">
-        <Details>ECB mode used</Details>
-    </Detector>
-    <BugPattern type="ECB_MODE">
-        <ShortDescription>ECB mode used</ShortDescription>
-        <LongDescription>The cipher chosen use ECB mode</LongDescription>
-        <Details>
-            <![CDATA[
-<p>A CBC mode cipher should be used instead of ECB mode.</p>
-<p>
-<b>References</b><br/>
-<a href="http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Electronic_codebook_.28ECB.29">Wikipedia: Block cipher modes of operation</a><br/>
-<a href="http://csrc.nist.gov/publications/nistpubs/800-38a/sp800-38a.pdf">NIST: Recommendation for Block Cipher Modes of Operation</a>
-</p>
-]]>
-        </Details>
-    </BugPattern>
-    <BugCode abbrev="SECECB">Bad hexadecimal concatenation</BugCode>
+
 
     <!-- Hazelcast Symmetric encryption -->
     <Detector class="com.h3xstream.findsecbugs.crypto.HazelcastSymmetricEncryptionDetector">
@@ -1222,7 +1205,7 @@ The solution is to avoid using XML decoder to parse content from untrusted sourc
     </BugPattern>
     <BugCode abbrev="XMLDEC">XMLDecoder usage</BugCode>
 
-    <!-- XML decoder -->
+    <!-- Static IV -->
     <Detector class="com.h3xstream.findsecbugs.crypto.StaticIvDetector">
         <Details>Identity initialization vector (IV) that are not properly generated.</Details>
     </Detector>
@@ -1242,5 +1225,66 @@ The solution is to avoid using XML decoder to parse content from untrusted sourc
         </Details>
     </BugPattern>
     <BugCode abbrev="STAIV">Static IV</BugCode>
+
+    <!-- Ciphers with no integrity -->
+    <Detector class="com.h3xstream.findsecbugs.crypto.CipherWithNoIntegrityDetector">
+        <Details>Identity ciphers that does not provide integrity.</Details>
+    </Detector>
+
+    <!-- ECB Mode -->
+
+    <BugPattern type="ECB_MODE">
+        <ShortDescription>ECB mode used</ShortDescription>
+        <LongDescription>The cipher chosen use ECB mode</LongDescription>
+        <Details>
+            <![CDATA[
+<p>An authenticated cipher mode should be used instead of ECB mode.</p>
+<p>
+<b>References</b><br/>
+<a href="http://en.wikipedia.org/wiki/Authenticated_encryption">Wikipedia: Authenticated encryption</a><br/>
+<a href="http://csrc.nist.gov/groups/ST/toolkit/BCM/modes_development.html#01">NIST: Authenticated Encryption Modes</a><br/>
+<a href="http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Electronic_codebook_.28ECB.29">Wikipedia: Block cipher modes of operation</a><br/>
+<a href="http://csrc.nist.gov/publications/nistpubs/800-38a/sp800-38a.pdf">NIST: Recommendation for Block Cipher Modes of Operation</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECECB">Bad hexadecimal concatenation</BugCode>
+
+    <!-- Padding oracle -->
+    <BugPattern type="PADDING_ORACLE">
+        <ShortDescription>Cipher is susceptible to padding oracle</ShortDescription>
+        <LongDescription>The cipher is susceptible to padding oracle</LongDescription>
+        <Details>
+            <p>
+                TODO
+            </p>
+            <p>
+                <b>References</b><br/>
+                <a href="http://www.infobytesec.com/down/paddingoracle_openjam.pdf">Padding Oracles for the masses (by Matias Soler)</a>
+                <a href="http://en.wikipedia.org/wiki/Authenticated_encryption">Wikipedia: Authenticated encryption</a><br/>
+                <a href="http://csrc.nist.gov/groups/ST/toolkit/BCM/modes_development.html#01">NIST: Authenticated Encryption Modes</a><br/>
+            </p>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="PADORA">Cipher is susceptible to padding oracle</BugCode>
+
+    <!-- Integrity missing -->
+    <BugPattern type="CIPHER_INTEGRITY">
+        <ShortDescription>Cipher with no integrity</ShortDescription>
+        <LongDescription>The cipher used does not provide integrity</LongDescription>
+        <Details>
+            <p>
+                TODO
+            </p>
+            <p>
+                <b>References</b><br/>
+                <a href="http://en.wikipedia.org/wiki/Authenticated_encryption">Wikipedia: Authenticated encryption</a><br/>
+                <a href="http://csrc.nist.gov/groups/ST/toolkit/BCM/modes_development.html#01">NIST: Authenticated Encryption Modes</a><br/>
+            </p>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="CIPINT">Cipher with no integrity</BugCode>
+
 
 </MessageCollection>

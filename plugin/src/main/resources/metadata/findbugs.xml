@@ -37,7 +37,6 @@
     <Detector class="com.h3xstream.findsecbugs.injection.sql.SqlInjectionDetector" reports="SQL_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.injection.ldap.LdapInjectionDetector" reports="LDAP_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.BadHexadecimalConversionDetector" reports="BAD_HEXA_CONVERSION"/>
-    <Detector class="com.h3xstream.findsecbugs.crypto.EcbModeDetector" reports="ECB_MODE"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.HazelcastSymmetricEncryptionDetector"
               reports="HAZELCAST_SYMMETRIC_ENCRYPTION"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.NullCipherDetector" reports="NULL_CIPHER"/>
@@ -55,6 +54,7 @@
     <Detector class="com.h3xstream.findsecbugs.jsp.JspXssDetector" reports="XSS_JSP_PRINT,XSS_SERVLET" />
     <Detector class="com.h3xstream.findsecbugs.XmlDecoderDetector" reports="XML_DECODER"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.StaticIvDetector" reports="STATIC_IV"/>
+    <Detector class="com.h3xstream.findsecbugs.crypto.CipherWithNoIntegrityDetector" reports="ECB_MODE,ORACLE_PADDING,CIPHER_INTEGRITY"/>
 
     <BugPattern type="PREDICTABLE_RANDOM" abbrev="SECPR" category="SECURITY"/>
     <BugPattern type="SERVLET_PARAMETER" abbrev="SECSP" category="SECURITY"/>
@@ -87,7 +87,6 @@
     <BugPattern type="SQL_INJECTION" abbrev="SECSQLI" category="SECURITY"/>
     <BugPattern type="LDAP_INJECTION" abbrev="SECLDAPI" category="SECURITY"/>
     <BugPattern type="BAD_HEXA_CONVERSION" abbrev="SECBHC" category="SECURITY"/>
-    <BugPattern type="ECB_MODE" abbrev="SECECB" category="SECURITY"/>
     <BugPattern type="HAZELCAST_SYMMETRIC_ENCRYPTION" abbrev="SECHAZ" category="SECURITY"/>
     <BugPattern type="NULL_CIPHER" abbrev="SECNC" category="SECURITY"/>
     <BugPattern type="UNENCRYPTED_SOCKET" abbrev="SECUS" category="SECURITY"/>
@@ -103,6 +102,9 @@
     <BugPattern type="XSS_SERVLET" abbrev="SECXSS2" category="SECURITY"/>
     <BugPattern type="XML_DECODER" abbrev="XMLDEC" category="SECURITY"/>
     <BugPattern type="STATIC_IV" abbrev="STAIV" category="SECURITY"/>
+    <BugPattern type="ECB_MODE" abbrev="SECECB" category="SECURITY"/>
+    <BugPattern type="PADDING_ORACLE" abbrev="PADORA" category="SECURITY"/>
+    <BugPattern type="CIPHER_INTEGRITY" abbrev="CIPINT" category="SECURITY"/>
 
     <!--
     <Detector class="com.h3xstream.findsecbugs.crypto.StaticIvDetector" reports="STATIC_IV"/>

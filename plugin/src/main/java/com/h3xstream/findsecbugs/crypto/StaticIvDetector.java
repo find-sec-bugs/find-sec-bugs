@@ -35,7 +35,7 @@ import java.util.Set;
 
 public class StaticIvDetector implements Detector {
 
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private static final String STATIC_IV = "STATIC_IV";
     private BugReporter bugReporter;
 

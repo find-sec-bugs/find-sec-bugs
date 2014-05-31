@@ -55,6 +55,7 @@
     <Detector class="com.h3xstream.findsecbugs.XmlDecoderDetector" reports="XML_DECODER"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.StaticIvDetector" reports="STATIC_IV"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.CipherWithNoIntegrityDetector" reports="ECB_MODE,ORACLE_PADDING,CIPHER_INTEGRITY"/>
+    <Detector class="com.h3xstream.findsecbugs.crypto.EsapiEncryptorDetector" reports="ESAPI_ENCRYPTOR"/>
 
     <BugPattern type="PREDICTABLE_RANDOM" abbrev="SECPR" category="SECURITY"/>
     <BugPattern type="SERVLET_PARAMETER" abbrev="SECSP" category="SECURITY"/>
@@ -105,6 +106,7 @@
     <BugPattern type="ECB_MODE" abbrev="SECECB" category="SECURITY"/>
     <BugPattern type="PADDING_ORACLE" abbrev="PADORA" category="SECURITY"/>
     <BugPattern type="CIPHER_INTEGRITY" abbrev="CIPINT" category="SECURITY"/>
+    <BugPattern type="ESAPI_ENCRYPTOR" abbrev="ESAPIENC" category="SECURITY"/>
 
     <!--
     <Detector class="com.h3xstream.findsecbugs.crypto.StaticIvDetector" reports="STATIC_IV"/>

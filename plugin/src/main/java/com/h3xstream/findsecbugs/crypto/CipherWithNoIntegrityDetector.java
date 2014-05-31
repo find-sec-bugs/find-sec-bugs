@@ -79,13 +79,13 @@ public class CipherWithNoIntegrityDetector extends OpcodeStackDetector {
                 if (DEBUG) System.out.println(cipherValue);
 
                 //Ref for the list of potential ciphers : http://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#impl
-
+                //Note: Not all ECB mode are vulnerable. see RSA/ECB/*
                 if (cipherValue.contains("AES/ECB/") || cipherValue.contains("DES/ECB/") || cipherValue.contains("DESede/ECB/")) {
                     bugReporter.reportBug(new BugInstance(this, ECB_MODE_TYPE, Priorities.HIGH_PRIORITY) //
                             .addClass(this).addMethod(this).addSourceLine(this));
                 }
 
-                if (cipherValue.contains("/CBC/PKCS5Padding") || cipherValue.contains("/ECB/") || cipherValue.contains("DESede/ECB/")) {
+                if (cipherValue.contains("/CBC/PKCS5Padding")) {
                     bugReporter.reportBug(new BugInstance(this, PADDING_ORACLE_TYPE, Priorities.HIGH_PRIORITY) //
                             .addClass(this).addMethod(this).addSourceLine(this));
                 }

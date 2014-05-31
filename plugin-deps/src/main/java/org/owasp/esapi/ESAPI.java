@@ -9,4 +9,8 @@ public class ESAPI {
     public static Encoder encoder() {
         return null;
     }
+
+    public static Encryptor encryptor() {
+        return null;
+    }
 }

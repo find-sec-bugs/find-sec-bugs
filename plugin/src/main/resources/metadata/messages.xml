@@ -1256,7 +1256,7 @@ The solution is to avoid using XML decoder to parse content from untrusted sourc
         <ShortDescription>Cipher is susceptible to padding oracle</ShortDescription>
         <LongDescription>The cipher is susceptible to padding oracle</LongDescription>
         <Details>
-            <p>
+<![CDATA[<p>
                 TODO
             </p>
             <p>
@@ -1264,7 +1264,7 @@ The solution is to avoid using XML decoder to parse content from untrusted sourc
                 <a href="http://www.infobytesec.com/down/paddingoracle_openjam.pdf">Padding Oracles for the masses (by Matias Soler)</a>
                 <a href="http://en.wikipedia.org/wiki/Authenticated_encryption">Wikipedia: Authenticated encryption</a><br/>
                 <a href="http://csrc.nist.gov/groups/ST/toolkit/BCM/modes_development.html#01">NIST: Authenticated Encryption Modes</a><br/>
-            </p>
+            </p>]]>
         </Details>
     </BugPattern>
     <BugCode abbrev="PADORA">Cipher is susceptible to padding oracle</BugCode>
@@ -1274,17 +1274,40 @@ The solution is to avoid using XML decoder to parse content from untrusted sourc
         <ShortDescription>Cipher with no integrity</ShortDescription>
         <LongDescription>The cipher used does not provide integrity</LongDescription>
         <Details>
-            <p>
-                TODO
-            </p>
-            <p>
-                <b>References</b><br/>
-                <a href="http://en.wikipedia.org/wiki/Authenticated_encryption">Wikipedia: Authenticated encryption</a><br/>
-                <a href="http://csrc.nist.gov/groups/ST/toolkit/BCM/modes_development.html#01">NIST: Authenticated Encryption Modes</a><br/>
-            </p>
+<![CDATA[
+<p>
+    TODO
+</p>
+<p>
+    <b>References</b><br/>
+    <a href="http://en.wikipedia.org/wiki/Authenticated_encryption">Wikipedia: Authenticated encryption</a><br/>
+    <a href="http://csrc.nist.gov/groups/ST/toolkit/BCM/modes_development.html#01">NIST: Authenticated Encryption Modes</a><br/>
+</p>
+]]>
         </Details>
     </BugPattern>
     <BugCode abbrev="CIPINT">Cipher with no integrity</BugCode>
+
+    <!-- ESAPI Encryptor -->
+    <Detector class="com.h3xstream.findsecbugs.crypto.EsapiEncryptorDetector">
+        <Details>Identity usage of ESAPI Encryptor.</Details>
+    </Detector>
+    <BugPattern type="ESAPI_ENCRYPTOR">
+        <ShortDescription>Usage of ESAPI Encryptor</ShortDescription>
+        <LongDescription>The ESAPI encryptor API is use encrypt data</LongDescription>
+        <Details>
+<![CDATA[
+<p>
+    TODO
+</p>
+<p>
+    <b>References</b><br/>
+    <a href="http://owasp-esapi-java.googlecode.com/svn/trunk/documentation/ESAPI-security-bulletin1.pdf">ESAPI Security bulletin 1 (CVE-2013-5679)</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="ESAPIENC">ESAPI Encryptor</BugCode>
 
 
 </MessageCollection>

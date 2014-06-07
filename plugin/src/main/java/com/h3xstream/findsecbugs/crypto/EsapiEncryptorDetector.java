@@ -40,7 +40,7 @@ public class EsapiEncryptorDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
-        printOpCode(seen);
+        //printOpCode(seen);
         if (seen == Constants.INVOKEINTERFACE && getClassConstantOperand().equals("org/owasp/esapi/Encryptor") &&
                 (getNameConstantOperand().equals("encrypt") || getNameConstantOperand().equals("decrypt"))) {
 

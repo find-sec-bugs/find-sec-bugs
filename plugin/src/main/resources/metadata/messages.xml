@@ -335,8 +335,8 @@ Detail information for a proper implementation :
 <p>
 <b>Analysis needed</b>
 <ul>
-<li>The inputs should be track for potential vulnerability.</li>
-<li>The authentification (if inforce) should be tested using a web client.</li>
+<li>The inputs should be track for potential vulnerabilities.</li>
+<li>An authentication mechanism should be present.</li>
 <li>The communication should ideally be over SSL.</li>
 </ul>
 </p>
@@ -359,8 +359,8 @@ Detail information for a proper implementation :
 <p>
 <b>Analysis needed</b>
 <ul>
-<li>The input should be track for potential vulnerability.</li>
-<li>The authentification (if inforce) should be tested using a web client.</li>
+<li>The inputs should be track for potential vulnerabilities.</li>
+<li>An authentication mechanism should be present.</li>
 <li>The communication should ideally be over SSL.</li>
 <li>If the method allow include GET/POST, CSRF vulnerability should investigate.<sup>[1]</sup></li>
 </ul>
@@ -461,6 +461,23 @@ the definition of an explicit annotation:
 <p>Implementing custom MessageDigest is error-prone.</p>
 <p>The <a href="http://csrc.nist.gov/groups/ST/toolkit/secure_hashing.html">NIST</a> recommended to use either SHA-1, SHA-224*, SHA-256, SHA-384 or SHA-512.</p>
 <p><small>* SHA-224 algorithm is not provided by <a href="http://docs.oracle.com/javase/6/docs/technotes/guides/security/SunProviders.html#SUNProvider"> SUN provider.</a></small></p>
+
+<p>
+    <b>Vulnerable code:</b><br/>
+<pre>MyProprietaryMessageDigest extends MessageDigest {
+    @Override
+    protected byte[] engineDigest() {
+        [...]
+        //Creativity is a bad idea
+        return [...];
+    }
+}</pre>
+</p>
+<p>
+    <b>Solution:</b><br/>
+<pre>MessageDigest sha256Digest = MessageDigest.getInstance("SHA256");
+sha256Digest.update(password.getBytes());</pre>
+</p>
 ]]>
         </Details>
     </BugPattern>
@@ -506,13 +523,14 @@ Otherwise, the original filename should be properly escaped.</p>
             <![CDATA[
 
 <p>
-ReDOS stands for Regular expression Denial of Service. The regular expression (RegEx) identify may take a large amount of time
-when analysing certain strings.
-</a>
+    ReDOS stands for Regular expression Denial of Service. The regular expression (RegEx) identify may take a large amount of time
+    when analysing certain strings.
 <p>
-For example the following RegEx, the input "<code>aaaaaaaaaaaaaaaaX</code>" will cause the RegEx engine to analyse 65536 different paths.<sup>[1] Example taken from OWASP reference</sup>
-<pre>^(a+)+$</pre>
-Therefore, it is possible that a single request cause a large amount of computation on the server side.
+    For example the following RegEx, the input "<code>aaaaaaaaaaaaaaaaX</code>" will cause the RegEx engine to analyse 65536 different paths.<sup>[1] Example taken from OWASP reference</sup>
+    <pre>^(a+)+$</pre>
+</p>
+<p>
+    Therefore, it is possible that a single request cause a large amount of computation on the server side.
 </p>
 
 <p>
@@ -746,9 +764,6 @@ stringBuilder.append( String.format( "%02X", b ) );
     </BugPattern>
     <BugCode abbrev="SECBHC">Bad hexadecimal concatenation</BugCode>
 
-
-
-
     <!-- Hazelcast Symmetric encryption -->
     <Detector class="com.h3xstream.findsecbugs.crypto.HazelcastSymmetricEncryptionDetector">
         <Details>Hazelcast Symmetric encryption</Details>
@@ -759,8 +774,8 @@ stringBuilder.append( String.format( "%02X", b ) );
         <Details>
             <![CDATA[
 <p>The network communication for Hazelcast is configure to a symmetric cipher (probably DES or blowfish).</p>
-<p>Those ciphers alone do not provide integrity or secure authentification.</a>.
-The use of assymetric encryption should be privilege.</p>
+<p>Those ciphers alone do not provide integrity or secure authentication.</a>.
+The use of asymmetric encryption should be preferred.</p>
 <p>
 <b>Reference</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246945/Insufficient%20Transport%20Layer%20Protection">WASC-04 : Insufficient Transport Layer Protection</a><br/>
@@ -784,6 +799,19 @@ The use of assymetric encryption should be privilege.</p>
 The NullCipher is rarelly use. It implement the Cipher interface by returning a ciphertext identical to the plaintext.
 In few context including testing, NullCipher can be appropriate.
 </p>
+
+<p>
+    <b>Vulnerable code:</b><br/>
+<pre>Cipher doNothingCihper = new NullCipher();
+[...]
+//The ciphertext produces will be identical to the plaintext.
+byte[] cipherText = c.doFinal(plainText);</pre>
+
+</p>
+<p>
+    <b>Solution</b><br/>
+    Avoid using the NullCipher. Its accidental use can cause important confidentiality risk.
+</p>
 ]]>
         </Details>
     </BugPattern>
@@ -802,10 +830,12 @@ In few context including testing, NullCipher can be appropriate.
 The communication started will not be encrypted. The traffic could be red by an attacker intercepting the communication.
 </p>
 <p>
+<b>Vulnerable code:</b><br/>
 Plain socket (Clear text communication):
 <pre>Socket soc = new Socket("www.google.com",80);</pre>
 </p>
 <p>
+<b>Solution:</b><br/>
 SSL Socket (Secure communication):
 <pre>Socket soc = SSLSocketFactory.getDefault().createSocket("www.google.com", 443);</pre>
 </p>
@@ -836,6 +866,19 @@ DES and DESede (3DES), previously recommended, are not consider strong ciphers f
 only be use because of hardware limitation. Currently, the NIST recommend the usage of AES block cipher.
 </p>
 <p>
+    <b>Weak code:</b>
+<pre>Cipher c = Cipher.getInstance("DESede/ECB/PKCS5Padding");
+c.init(Cipher.ENCRYPT_MODE, k, iv);
+byte[] cipherText = c.doFinal(plainText);</pre>
+
+</p>
+<p>
+    <b>Solution:</b>
+    <pre>Cipher c = Cipher.getInstance("AES/GCM/NoPadding");
+c.init(Cipher.ENCRYPT_MODE, k, iv);
+byte[] cipherText = c.doFinal(plainText);</pre>
+</p>
+<p>
 <b>References</b><br/>
 <a href="http://www.nist.gov/itl/fips/060205_des.cfm">NIST Withdraws Outdated Data Encryption Standard</a><br/>
 <a href="http://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky Cryptographic Algorithm</a>
@@ -858,11 +901,12 @@ only be use because of hardware limitation. Currently, the NIST recommend the us
 The software uses the RSA algorithm but does not incorporate Optimal Asymmetric Encryption Padding (OAEP), which might weaken the encryption.
 </p>
 <p>
-Weak example:<br/>
+<b>Vulnerable code:</b><br/>
 <pre>Cipher.getInstance("RSA/NONE/NoPadding")</pre>
 </p>
 <p>
-It should be replace by:<br/>
+<b>Solution:</b><br/>
+The code should be replace by:<br/>
 <pre>Cipher.getInstance("RSA/ECB/OAEPWithMD5AndMGF1Padding")</pre>
 </p>
 <p>
@@ -894,6 +938,14 @@ It should be replace by:<br/>
 Password should not be kept in the source code. The source code are widely share in the entreprise environement.
 Passwords and secret keys can be managed more easily when being separated in configuration files or keystores.
 </p>
+<p><b>Vulnerable code examples:</b><br/>
+<br/>
+<pre>private String SECRET_PASSWORD = "letMeIn!";</pre>
+<br/>
+<pre>Properties props = new Properties();
+props.put(Context.SECURITY_CREDENTIALS, "p@ssw0rd");</pre>
+</p>
+
 <p>
 <b>References</b><br/>
 <a href="http://cwe.mitre.org/data/definitions/321.html">CWE-321: Use of Hard-coded Cryptographic Key</a><br/>
@@ -925,11 +977,11 @@ public class RegistrationForm extends ValidatorForm {
     private String name;
     private String email;
 
-    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
-        //Validate the properties
-    }
-
     [...]
+
+    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+        //Validation code goes here.
+    }
 }
 </pre>
 </p>
@@ -997,9 +1049,19 @@ Small key size make the the ciphertext vulnerable to brute force attack.
 At least 128 bits entropy should be used when generating the key.
 </p>
 <p>
-Unless the code is a legacy implementation that need maintenance, AES block cipher should be
-use instead.
+Unless the code is a legacy implementation that need maintenance, AES block cipher should be use instead.
 </p>
+
+<p><b>Vulnerable code:</b><br/>
+<pre>KeyGenerator keyGen = KeyGenerator.getInstance("Blowfish");
+keyGen.init(64);</pre>
+</p>
+
+<p><b>Solution:</b><br/>
+<pre>KeyGenerator keyGen = KeyGenerator.getInstance("Blowfish");
+keyGen.init(128);</pre>
+</p>
+
 <p>
 <b>Reference</b><br/>
 <a href="http://en.wikipedia.org/wiki/Blowfish_(cipher)">Blowfish_(cipher)</a>
@@ -1021,7 +1083,15 @@ use instead.
             <![CDATA[
 <p>"RSA Laboratories currently recommends key sizes of 1024 bits for corporate use and 2048 bits for extremely valuable keys like the root key pair used by a certifying authority". <sup>[1]</sup></p>
 
-<p>The KeyPairGenerator creation should be as follow.
+<p><b>Vulnerable code:</b><br/>
+<pre>
+KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+keyGen.initialize(512);
+</pre>
+</p>
+
+<p><b>Solution:</b><br/>
+The KeyPairGenerator creation should be as follow with at least 2048 bit key size.<br/>
 <pre>
 KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
 keyGen.initialize(2048);
@@ -1060,8 +1130,17 @@ keyGen.initialize(2048);
     authenticate are very common.
 </p>
 <p>
-    <b>Counter measures</b><br/>
+    <b>Vulnerable code:</b></br/>
+    <pre>protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    [...]
+    resp.sendRedirect(req.getParameter("redirectUrl"));
+    [...]
+}</pre>
+</p>
+<p>
+    <b>Solution/Counter measures</b><br/>
     <ul>
+        <li>Accept only relative path</li>
         <li>White list URLs (if possible)</li>
         <li>Validate that the beginning of the URL is part of white list</li>
     </ul>
@@ -1188,8 +1267,14 @@ String taintedInput = (String) request.getAttribute("input");
 <p>
 The previous XML code will cause the creation of a file with the content "Hello World!".
 </p>
-
-
+<p>
+    <b>Vulnerable code:</b></br/>
+    <pre>XMLDecoder d = new XMLDecoder(in);
+try {
+    Object result = d.readObject();
+}
+[...]</pre>
+</p>
 <p>
 <b>Solution:</b></br/>
 The solution is to avoid using XML decoder to parse content from untrusted source.
@@ -1240,6 +1325,19 @@ The solution is to avoid using XML decoder to parse content from untrusted sourc
             <![CDATA[
 <p>An authenticated cipher mode should be used instead of ECB mode.</p>
 <p>
+<b>Code at risk:</b>
+    <pre>Cipher c = Cipher.getInstance("AES/ECB/NoPadding");
+c.init(Cipher.ENCRYPT_MODE, k, iv);
+byte[] cipherText = c.doFinal(plainText);</pre>
+</p>
+<p>
+    <b>Solution:</b>
+    <pre>Cipher c = Cipher.getInstance("AES/GCM/NoPadding");
+c.init(Cipher.ENCRYPT_MODE, k, iv);
+byte[] cipherText = c.doFinal(plainText);</pre>
+</p>
+
+<p>
 <b>References</b><br/>
 <a href="http://en.wikipedia.org/wiki/Authenticated_encryption">Wikipedia: Authenticated encryption</a><br/>
 <a href="http://csrc.nist.gov/groups/ST/toolkit/BCM/modes_development.html#01">NIST: Authenticated Encryption Modes</a><br/>
@@ -1256,15 +1354,30 @@ The solution is to avoid using XML decoder to parse content from untrusted sourc
         <ShortDescription>Cipher is susceptible to padding oracle</ShortDescription>
         <LongDescription>The cipher is susceptible to padding oracle</LongDescription>
         <Details>
-<![CDATA[<p>
-                TODO
-            </p>
-            <p>
-                <b>References</b><br/>
-                <a href="http://www.infobytesec.com/down/paddingoracle_openjam.pdf">Padding Oracles for the masses (by Matias Soler)</a>
-                <a href="http://en.wikipedia.org/wiki/Authenticated_encryption">Wikipedia: Authenticated encryption</a><br/>
-                <a href="http://csrc.nist.gov/groups/ST/toolkit/BCM/modes_development.html#01">NIST: Authenticated Encryption Modes</a><br/>
-            </p>]]>
+<![CDATA[
+<p>
+    This specific mode of CBC with PKCS5Padding is susceptible to padding oracle. An adversary could potentially decrypt the
+    message if the system exposed the difference between an plaintext with invalid padding or valid padding.
+</p>
+<p>
+    <b>Code at risk:</b>
+    <pre>Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
+c.init(Cipher.ENCRYPT_MODE, k, iv);
+byte[] cipherText = c.doFinal(plainText);</pre>
+</p>
+<p>
+    <b>Solution:</b>
+    <pre>Cipher c = Cipher.getInstance("AES/GCM/NoPadding");
+c.init(Cipher.ENCRYPT_MODE, k, iv);
+byte[] cipherText = c.doFinal(plainText);</pre>
+</p>
+<p>
+    <b>References</b><br/>
+    <a href="http://www.infobytesec.com/down/paddingoracle_openjam.pdf">Padding Oracles for the masses (by Matias Soler)</a>
+    <a href="http://en.wikipedia.org/wiki/Authenticated_encryption">Wikipedia: Authenticated encryption</a><br/>
+    <a href="http://csrc.nist.gov/groups/ST/toolkit/BCM/modes_development.html#01">NIST: Authenticated Encryption Modes</a><br/>
+</p>
+]]>
         </Details>
     </BugPattern>
     <BugCode abbrev="PADORA">Cipher is susceptible to padding oracle</BugCode>
@@ -1276,12 +1389,38 @@ The solution is to avoid using XML decoder to parse content from untrusted sourc
         <Details>
 <![CDATA[
 <p>
-    TODO
+    The ciphertext produced are susceptible to be alter by an adversary. This mean that the cipher provided no guarantee to be tamper proof.
+    If the ciphertext can be controlled by a user, it could be alter for arbitrary message in many cases.
+</p>
+<p>
+    The solution is to used a cipher that include a HMAC. Combining a HMAC function to the existing cipher is prone to error <sup><a href="http://www.thoughtcrime.org/blog/the-cryptographic-doom-principle/">[1]</a></sup>.
+</p>
+<p>
+    <b>Code at risk:</b><br/>
+    <i>AES in CBC mode</i><br/>
+
+    <pre>Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
+c.init(Cipher.ENCRYPT_MODE, k, iv);
+byte[] cipherText = c.doFinal(plainText);</pre>
+    <br/>
+    <i>Triple DES with ECB mode</i><br/>
+
+<pre>Cipher c = Cipher.getInstance("DESede/ECB/PKCS5Padding");
+c.init(Cipher.ENCRYPT_MODE, k, iv);
+byte[] cipherText = c.doFinal(plainText);</pre>
+
+</p>
+<p>
+    <b>Solution:</b>
+    <pre>Cipher c = Cipher.getInstance("AES/GCM/NoPadding");
+c.init(Cipher.ENCRYPT_MODE, k, iv);
+byte[] cipherText = c.doFinal(plainText);</pre>
 </p>
 <p>
     <b>References</b><br/>
     <a href="http://en.wikipedia.org/wiki/Authenticated_encryption">Wikipedia: Authenticated encryption</a><br/>
     <a href="http://csrc.nist.gov/groups/ST/toolkit/BCM/modes_development.html#01">NIST: Authenticated Encryption Modes</a><br/>
+    <a href="http://www.thoughtcrime.org/blog/the-cryptographic-doom-principle/">Moxie Marlinspike's blog: The Cryptographic Doom Principle</a>
 </p>
 ]]>
         </Details>
@@ -1298,11 +1437,71 @@ The solution is to avoid using XML decoder to parse content from untrusted sourc
         <Details>
 <![CDATA[
 <p>
-    TODO
+    The ESAPI has a small history of vulnerabilities with the cryptography component. Here is a quick validation list to
+    make sure the Authenticated Encryption is working as expected.
+</p>
+<p><b>1. Library Version</b></p>
+<p>
+    The latest version ESAPI is 1.2.0. Version <= 2.0.1 are vulnerable to a MAC bypass (CVE-2013-5679).<br/>
+</p>
+<p>
+    For Maven users, the plugin <a href="http://mojo.codehaus.org/versions-maven-plugin/">versions</a> can called using the following command. The effective version of ESAPI will be available in the ouput.<br/>
+    <pre>$ mvn versions:display-dependency-updates</pre>
+    <br/>Output:<br/>
+    <pre>
+[...]
+[INFO] The following dependencies in Dependencies have newer versions:
+[INFO]   org.slf4j:slf4j-api ................................... 1.6.4 -> 1.7.7
+[INFO]   org.owasp.esapi:esapi ................................. 2.0.1 -> 2.1.0
+[...]
+    </pre>
+</p>
+<p>
+    or by looking at the configuration directly.<br/>
+    <pre>
+&lt;dependency&gt;
+    &lt;groupId&gt;org.owasp.esapi&lt;/groupId&gt;
+    &lt;artifactId&gt;esapi&lt;/artifactId&gt;
+    &lt;version&gt;2.1.0&lt;/version&gt;
+&lt;/dependency&gt;
+    </pre>
+</p>
+<p>
+    For Ant user, the jar used should be <a href="http://repo1.maven.org/maven2/org/owasp/esapi/esapi/2.1.0/esapi-2.1.0.jar">esapi-2.1.0.jar</a>.
+</p>
+<p><b>2. Configuration</b></p>
+    <p>
+    The library version 2.1.0 is still vulnerable to key size being change in the ciphertext definition (CVE-2013-5960). Some precautions need to be taken.<br/>
+    <br/>
+    <div><b>Vulnerable configuration (if any element are present)</b><br/>
+    <pre>
+Encryptor.CipherText.useMAC=false
+
+Encryptor.EncryptionAlgorithm=AES
+Encryptor.CipherTransformation=AES/CBC/PKCS5Padding
+
+Encryptor.cipher_modes.additional_allowed=CBC</pre>
+    </div>
+</p>
+<p>
+    <div>
+    <b>Secure configuration</b><br/>
+    <pre>
+#Needed
+Encryptor.CipherText.useMAC=true
+
+#Needed to have a solid auth. encryption
+Encryptor.EncryptionAlgorithm=AES
+Encryptor.CipherTransformation=AES/GCM/NoPadding
+
+#CBC mode should be removed to avoid key size downgrade
+Encryptor.cipher_modes.additional_allowed=</pre>
+    </div>
 </p>
 <p>
     <b>References</b><br/>
-    <a href="http://owasp-esapi-java.googlecode.com/svn/trunk/documentation/ESAPI-security-bulletin1.pdf">ESAPI Security bulletin 1 (CVE-2013-5679)</a>
+    <a href="http://owasp-esapi-java.googlecode.com/svn/trunk/documentation/ESAPI-security-bulletin1.pdf">ESAPI Security bulletin 1 (CVE-2013-5679)</a><br/>
+    <a href="http://www.synacktiv.com/ressources/synacktiv_owasp_esapi_hmac_bypass.pdf">Synactiv: Bypassing HMAC validation in OWASP ESAPI symmetric encryption</a>
 </p>
 ]]>
         </Details>

@@ -21,9 +21,9 @@ import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import java.util.Arrays;
+
+import static org.mockito.Mockito.*;
 
 public class JpaInjectionSourceTest extends BaseDetectorTest {
 
@@ -52,9 +52,49 @@ public class JpaInjectionSourceTest extends BaseDetectorTest {
         );
 
         //Only the previous 2 cases should be marked as vulnerable
-        verify(reporter, times(2)).doReportBug(
+        //2 createQuery + 3 createNativeQuery detect
+        verify(reporter, times(2+3)).doReportBug(
                 bugDefinition()
                         .bugType("SQL_INJECTION")
+                        .build()
+        );
+    }
+
+    @Test
+    public void detectJpaInjectionInNativeQuery() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/sqli/JpaSql")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+        //All 3 method signatures are detected
+
+        for(Integer l : Arrays.asList(51,52,53)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("SQL_INJECTION")
+                            .inClass("JpaSql").inMethod("getUserWithNativeQueryUnsafe").atLine(l)
+                            .build()
+            );
+        }
+
+        //Check for false positive
+
+        verify(reporter, times(3)).doReportBug(
+                bugDefinition()
+                        .bugType("SQL_INJECTION")
+                        .inClass("JpaSql").inMethod("getUserWithNativeQueryUnsafe")
+                        .build()
+        );
+
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("SQL_INJECTION")
+                        .inClass("JpaSql").inMethod("getUserWithNativeQuerySafe")
                         .build()
         );
     }

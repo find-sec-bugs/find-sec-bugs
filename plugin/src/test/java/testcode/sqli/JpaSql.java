@@ -44,4 +44,20 @@ public class JpaSql {
         return q.getSingleResult();
     }
 
+
+    //Native query (https://github.com/h3xstream/find-sec-bugs/issues/15)
+    public void getUserWithNativeQueryUnsafe(String password) {
+        String sql = "select * from Users where user = 'admin' and password='"+password+"'";
+        em.createNativeQuery(sql);
+        em.createNativeQuery(sql,"testcode.sqli.UserEntity");
+        em.createNativeQuery(sql, UserEntity.class);
+
+    }
+
+    public void getUserWithNativeQuerySafe() {
+        String sql = "select * from Users where user = 'admin'";
+        em.createNativeQuery(sql);
+        em.createNativeQuery(sql,"testcode.sqli.UserEntity");
+        em.createNativeQuery(sql, UserEntity.class);
+    }
 }

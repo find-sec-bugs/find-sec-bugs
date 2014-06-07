@@ -64,6 +64,13 @@ public class JpaInjectionSource implements InjectionSource {
             } else if (className.equals("javax.persistence.EntityManager") && methodName.equals("createQuery") &&
                     methodSignature.equals("(Ljava/lang/String;Ljava/lang/Class;)Ljavax/persistence/TypedQuery;")) {
                 return new int[]{1};
+            } else if (className.equals("javax.persistence.EntityManager") && methodName.equals("createNativeQuery") &&
+                    methodSignature.equals("(Ljava/lang/String;)Ljavax/persistence/Query;")) {
+                return new int[]{0};
+            } else if (className.equals("javax.persistence.EntityManager") && methodName.equals("createNativeQuery") &&
+                    (methodSignature.equals("(Ljava/lang/String;Ljava/lang/String;)Ljavax/persistence/Query;") ||
+                     methodSignature.equals("(Ljava/lang/String;Ljava/lang/Class;)Ljavax/persistence/Query;"))) {
+                return new int[]{1};
             }
         }
 

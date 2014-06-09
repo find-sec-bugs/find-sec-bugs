@@ -62,7 +62,7 @@
                     </excludes>
                     <properties>
                         <project>Find Security Bugs</project>
-                        <year>2013</year>
+                        <year>2014</year>
                         <owner>Philippe Arteau</owner>
                     </properties>
                 </configuration>

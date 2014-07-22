@@ -1,12 +1,12 @@
-package testcode;
+package testcode.script;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-public class ScriptingCodeInjection {
+public class ScriptEngineSample {
 
-    //TODO : Implement detector for those api
+
 
     public static void scripting(String userInput) throws ScriptException {
 

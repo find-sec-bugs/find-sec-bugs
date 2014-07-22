@@ -45,7 +45,6 @@
     <Detector class="com.h3xstream.findsecbugs.crypto.RsaNoPaddingDetector" reports="RSA_NO_PADDING"/>
     <Detector class="com.h3xstream.findsecbugs.password.GoogleApiKeyDetector" reports="HARD_CODE_PASSWORD"/>
     <Detector class="com.h3xstream.findsecbugs.password.JndiCredentialsDetector" reports="HARD_CODE_PASSWORD"/>
-    <!-- TODO : Disable by default the Struts detector -->
     <Detector class="com.h3xstream.findsecbugs.StrutsValidatorFormDetector" reports="STRUTS_FORM_VALIDATION"/>
     <Detector class="com.h3xstream.findsecbugs.xss.XSSRequestWrapperDetector" reports="XSS_REQUEST_WRAPPER"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.InsufficientKeySizeBlowfishDetector" reports="BLOWFISH_KEY_SIZE"/>
@@ -56,6 +55,7 @@
     <Detector class="com.h3xstream.findsecbugs.crypto.StaticIvDetector" reports="STATIC_IV"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.CipherWithNoIntegrityDetector" reports="ECB_MODE,ORACLE_PADDING,CIPHER_INTEGRITY"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.EsapiEncryptorDetector" reports="ESAPI_ENCRYPTOR"/>
+    <Detector class="com.h3xstream.findsecbugs.injection.script.ScriptEngineInjectionDetector" reports="SCRIPT_ENGINE_INJECTION"/>
 
     <BugPattern type="PREDICTABLE_RANDOM" abbrev="SECPR" category="SECURITY"/>
     <BugPattern type="SERVLET_PARAMETER" abbrev="SECSP" category="SECURITY"/>
@@ -107,6 +107,7 @@
     <BugPattern type="PADDING_ORACLE" abbrev="PADORA" category="SECURITY"/>
     <BugPattern type="CIPHER_INTEGRITY" abbrev="CIPINT" category="SECURITY"/>
     <BugPattern type="ESAPI_ENCRYPTOR" abbrev="ESAPIENC" category="SECURITY"/>
+    <BugPattern type="SCRIPT_ENGINE_INJECTION" abbrev="SCRIPTE" category="SECURITY"/>
 
     <!--
     <Detector class="com.h3xstream.findsecbugs.crypto.StaticIvDetector" reports="STATIC_IV"/>

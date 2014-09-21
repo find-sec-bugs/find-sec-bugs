@@ -16,4 +16,8 @@ public class Cookie {
     public String getPath() {
         return "";
     }
+
+    public void setMaxAge(int i) {
+
+    }
 }

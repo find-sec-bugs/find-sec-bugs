@@ -33,6 +33,18 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+/**
+ * <p>
+ *  The main goal of the this detector is to find encryption being done with static initialization vector (IV).
+ *  By design, the IV should be change for every message encrypt by a system.
+ * </p>
+ * <h3>Note on the implementation</h3>
+ * <p>
+ *  The strategy to find those occurrences is not to backtrack to find the potential source of the bytes being passed.
+ *  It will not be trigger if SecureRandom instance is use. Therefor, it is very likely to trigger false positive if the
+ *  encryption is separate from the IV generation.
+ * </p>
+ */
 public class StaticIvDetector implements Detector {
 
     private static final boolean DEBUG = false;
@@ -67,16 +79,25 @@ public class StaticIvDetector implements Detector {
         ConstantPoolGen cpg = classContext.getConstantPoolGen();
         CFG cfg = classContext.getCFG(m);
 
-        Set<Integer> taintedLocals = new HashSet<Integer>();
+        boolean foundSafeIvGeneration = false;
 
         for (Iterator<Location> i = cfg.locationIterator(); i.hasNext(); ) {
             Location location = nextLocation(i, cpg);
             Instruction inst = location.getHandle().getInstruction();
 
-            if (inst instanceof INVOKESPECIAL) { //MessageDigest.digest is called
+            if (inst instanceof INVOKEVIRTUAL) {
+                INVOKEVIRTUAL invoke = (INVOKEVIRTUAL) inst;
+                if (("java.security.SecureRandom").equals(invoke.getClassName(cpg)) &&
+                        "nextBytes".equals(invoke.getMethodName(cpg))) {
+                    foundSafeIvGeneration = true;
+                }
+            }
+
+            if (!foundSafeIvGeneration && inst instanceof INVOKESPECIAL) { //MessageDigest.digest is called
                 INVOKESPECIAL invoke = (INVOKESPECIAL) inst;
                 if (("javax.crypto.spec.IvParameterSpec").equals(invoke.getClassName(cpg)) &&
                         "<init>".equals(invoke.getMethodName(cpg))) {
+
                     JavaClass clz = classContext.getJavaClass();
                     bugReporter.reportBug(new BugInstance(this, STATIC_IV, Priorities.NORMAL_PRIORITY) //
                             .addClass(clz)
@@ -92,6 +113,7 @@ public class StaticIvDetector implements Detector {
         if(DEBUG) ByteCode.printOpCode(loc.getHandle().getInstruction(), cpg);
         return loc;
     }
+
 
     @Override
     public void report() {

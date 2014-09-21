@@ -63,20 +63,19 @@ public class StaticIvDetectorTest extends BaseDetectorTest {
 
         //Assertions
 
-        for(int line : Arrays.asList(17,36)) {
+        for(int line : Arrays.asList(17,36,55)) {
             verify(reporter).doReportBug( //
                     bugDefinition().bugType("STATIC_IV").inClass("ConstantIv").atLine(line).build()
             );
         }
 
         //Only one report of this bug pattern
-        verify(reporter,times(2)).doReportBug( //
+        verify(reporter,times(3)).doReportBug( //
                 bugDefinition().bugType("STATIC_IV").inClass("ConstantIv").build()
         );
     }
 
-    //FIXME:Variable flow analysis require
-    /*@Test
+    @Test
     public void avoidFalsePositive() throws Exception {
         //Locate test code
         String[] files = {
@@ -93,6 +92,6 @@ public class StaticIvDetectorTest extends BaseDetectorTest {
         verify(reporter,never()).doReportBug( //
                 bugDefinition().bugType("STATIC_IV").inClass("SafeIvGeneration").build()
         );
-    }*/
+    }
 
 }

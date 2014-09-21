@@ -40,7 +40,7 @@ public class InsufficientKeySizeRsaDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         //Assertions
-        for (Integer line : Arrays.asList(15, 23)) {
+        for (Integer line : Arrays.asList(14, 21, 29, 37)) {
             verify(reporter).doReportBug(
                     bugDefinition().bugType("RSA_KEY_SIZE")
                             .inClass("InsufficientKeySizeRsa").atLine(line)
@@ -49,7 +49,7 @@ public class InsufficientKeySizeRsaDetectorTest extends BaseDetectorTest {
         }
 
         //More than two means a false positive was trigger
-        verify(reporter, times(2)).doReportBug(
+        verify(reporter, times(4)).doReportBug(
                 bugDefinition().bugType("RSA_KEY_SIZE").build());
     }
 }

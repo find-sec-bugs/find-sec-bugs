@@ -77,7 +77,7 @@ public class InsufficientKeySizeRsaDetector implements Detector {
             Instruction inst = location.getHandle().getInstruction();
 //            ByteCode.printOpCode(inst, cpg);
 
-            if (inst instanceof INVOKESTATIC) { //MessageDigest.digest is called
+            if (inst instanceof INVOKESTATIC) { //KeyPairGenerator.getInstance is called
                 INVOKESTATIC invoke = (INVOKESTATIC) inst;
                 if ("java.security.KeyPairGenerator".equals(invoke.getClassName(cpg)) && "getInstance".equals(invoke.getMethodName(cpg))) {
                     String value = ByteCode.getConstantLDC(location.getHandle().getPrev(), cpg, String.class);
@@ -85,7 +85,7 @@ public class InsufficientKeySizeRsaDetector implements Detector {
                         createRsaKeyGen = true;
                     }
                 }
-            } else if (inst instanceof INVOKEVIRTUAL) {
+            } else if (inst instanceof INVOKEVIRTUAL) { //KeyPairGenerator.initialize
                 INVOKEVIRTUAL invoke = (INVOKEVIRTUAL) inst;
                 if ("java.security.KeyPairGenerator".equals(invoke.getClassName(cpg)) && "initialize".equals(invoke.getMethodName(cpg))) {
                     Number n = null;
@@ -96,6 +96,23 @@ public class InsufficientKeySizeRsaDetector implements Detector {
                     //init() with a second parameter an instance of SecureRandom
                     else if ("(ILjava/security/SecureRandom;)V".equals(invoke.getSignature(cpg))) {
 
+                        SIPUSH push = ByteCode.getPrevInstruction(location.getHandle(), SIPUSH.class);
+                        if (push != null) {
+                            n = push.getValue();
+                        }
+                    }
+
+                    if (n != null && n.intValue() < 1024) {
+                        initializeWeakKeyLength = true;
+                        locationWeakness = location;
+                    }
+                }
+            } else if (inst instanceof INVOKESPECIAL) { // new RSAKeyGenParameterSpec() is called
+                INVOKESPECIAL invoke = (INVOKESPECIAL) inst;
+                if ("java.security.spec.RSAKeyGenParameterSpec".equals(invoke.getClassName(cpg)) && "<init>".equals(invoke.getMethodName(cpg))) {
+                    Number n = null;
+                    //init() with one parameter
+                    if ("(ILjava/math/BigInteger;)V".equals(invoke.getSignature(cpg))) {
                         SIPUSH push = ByteCode.getPrevInstruction(location.getHandle(), SIPUSH.class);
                         if (push != null) {
                             n = push.getValue();

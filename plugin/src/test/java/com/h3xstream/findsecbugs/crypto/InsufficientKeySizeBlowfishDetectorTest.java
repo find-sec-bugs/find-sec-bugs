@@ -39,7 +39,7 @@ public class InsufficientKeySizeBlowfishDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         //Assertions
-        for (Integer line : Arrays.asList(12, 20)) {
+        for (Integer line : Arrays.asList(18, 26)) {
             verify(reporter).doReportBug(
                     bugDefinition().bugType("BLOWFISH_KEY_SIZE")
                             .inClass("InsufficientKeySizeBlowfish").atLine(line)

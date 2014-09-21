@@ -26,9 +26,15 @@ public class InsecureRandom {
         random.nextInt(); //This should not raise any warning
     }
 
+    public static void scalaRandom() {
+        new scala.util.Random();
+        new scala.util.Random(new scala.Long());
+    }
+
     public static void main(String[] args) {
         newRandomObj();
         mathRandom();
         mathOther();
+        scalaRandom();
     }
 }

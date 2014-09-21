@@ -23,6 +23,8 @@ import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
+
 public class PredictableRandomDetectorTest extends BaseDetectorTest {
 
     @Test
@@ -37,11 +39,12 @@ public class PredictableRandomDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         //Assertions
-        verify(reporter, times(2)).doReportBug(
+        verify(reporter, times(4)).doReportBug( //2 java api + 2 scala variations
                 bugDefinition()
                         .bugType("PREDICTABLE_RANDOM")
                         .build()
         );
+
         //1rst variation new Random()
         verify(reporter).doReportBug(
                 bugDefinition()
@@ -56,6 +59,16 @@ public class PredictableRandomDetectorTest extends BaseDetectorTest {
                         .inClass("InsecureRandom").inMethod("mathRandom").atLine(16)
                         .build()
         );
+
+        //Scala random number generator (mirror of java.util.Random)
+        for(Integer line : Arrays.asList(30,31)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("PREDICTABLE_RANDOM")
+                            .inClass("InsecureRandom").inMethod("scalaRandom").atLine(line)
+                            .build()
+            );
+        }
 
     }
 

@@ -58,6 +58,8 @@
                         <exclude>**/org/owasp/**/**.java</exclude>
                         <exclude>**/org/springframework/**/**.java</exclude>
                         <exclude>**/com/unboundid/ldap/**/**.java</exclude>
+                        <exclude>**/scala/util/**/**.java</exclude>
+                        <exclude>**/scala/Long.java</exclude>
                         <exclude>**/**/ReadMe.java</exclude>
                     </excludes>
                     <properties>

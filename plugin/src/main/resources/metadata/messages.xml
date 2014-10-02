@@ -764,6 +764,23 @@ Just like SQL query, all inputs place inside LDAP query should be escape properl
     </BugPattern>
     <BugCode abbrev="SCRIPTE">Script Engine Injection</BugCode>
 
+    <!-- SPEL Code injection -->
+    <Detector class="com.h3xstream.findsecbugs.injection.script.SpelInjectionDetector">
+        <Details>Identify usage of Spring Expression Language with potentially malicious input.</Details>
+    </Detector>
+
+    <BugPattern type="SPEL_INJECTION">
+        <ShortDescription>Potential code injection when using Spring Expression</ShortDescription>
+        <LongDescription>This code evaluation could be vulnerable code injection</LongDescription>
+        <Details>
+            <![CDATA[
+TODO
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SPELI">Spring Expression Language Injection</BugCode>
+
+
     <!-- Bad Hexa -->
     <Detector class="com.h3xstream.findsecbugs.crypto.BadHexadecimalConversionDetector">
         <Details>Identify Bad hexadecimal concatenation</Details>

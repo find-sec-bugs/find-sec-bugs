@@ -56,6 +56,8 @@
     <Detector class="com.h3xstream.findsecbugs.crypto.CipherWithNoIntegrityDetector" reports="ECB_MODE,ORACLE_PADDING,CIPHER_INTEGRITY"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.EsapiEncryptorDetector" reports="ESAPI_ENCRYPTOR"/>
     <Detector class="com.h3xstream.findsecbugs.injection.script.ScriptEngineInjectionDetector" reports="SCRIPT_ENGINE_INJECTION"/>
+    <Detector class="com.h3xstream.findsecbugs.injection.script.SpelInjectionDetector" reports="SPEL_INJECTION"/>
+
 
     <BugPattern type="PREDICTABLE_RANDOM" abbrev="SECPR" category="SECURITY"/>
     <BugPattern type="SERVLET_PARAMETER" abbrev="SECSP" category="SECURITY"/>
@@ -108,11 +110,7 @@
     <BugPattern type="CIPHER_INTEGRITY" abbrev="CIPINT" category="SECURITY"/>
     <BugPattern type="ESAPI_ENCRYPTOR" abbrev="ESAPIENC" category="SECURITY"/>
     <BugPattern type="SCRIPT_ENGINE_INJECTION" abbrev="SCRIPTE" category="SECURITY"/>
-
-    <!--
-    <Detector class="com.h3xstream.findsecbugs.crypto.StaticIvDetector" reports="STATIC_IV"/>
-    <BugPattern type="STATIC_IV" abbrev="SECSIV" category="SECURITY"/>
-    -->
+    <BugPattern type="SPEL_INJECTION" abbrev="SPELI" category="SECURITY"/>
 
 
 </FindbugsPlugin>

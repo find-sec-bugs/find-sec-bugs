@@ -73,7 +73,7 @@ You may need to validate or sanitize those values before passing them to sensiti
         <LongDescription>The HTTP header Content-Type can be controlled by the client.</LongDescription>
         <Details>
             <![CDATA[
-The HTTP header Content-Type can be controlled by the client. As such, its value should not be used in any security critical decisions.
+<p>The HTTP header Content-Type can be controlled by the client. As such, its value should not be used in any security critical decisions.</p>
 <p>
 <b>Reference</b><br/>
 <a href="http://cwe.mitre.org/data/definitions/807.html">CWE-807: Untrusted Inputs in a Security Decision</a>
@@ -645,7 +645,7 @@ regex meant, this new regex can be evaluated quickly, and is not subject to ReDO
 <p>
 <b>References</b><br/>
 <a href="http://www.jroller.com/sebastianKuebeck/entry/detecting_and_preventing_redos_vulnerabilities">Sebastian Kubeck's Weblog: Detecting and Preventing ReDoS Vulnerabilities</a><br/>
-<sup>[1]</sup> <a href="https://www.owasp.org/index.php/Regular_expression_Denial_of_Service_-_ReDoS">OWASP: Regular expression Denial of Service</a>><br/>
+<sup>[1]</sup> <a href="https://www.owasp.org/index.php/Regular_expression_Denial_of_Service_-_ReDoS">OWASP: Regular expression Denial of Service</a><br/>
 <a href="http://cwe.mitre.org/data/definitions/400.html">CWE-400: Uncontrolled Resource Consumption ('Resource Exhaustion')</a>
 </p>
 ]]>
@@ -873,17 +873,51 @@ Therefore, the primary defense against LDAP injection is strong input validation
         <Details>
             <![CDATA[
 <p>
-    Dymanic code is being evaluate. A concious analysis of the code construction should be made. Malicious code execution
+    Dymanic code is being evaluate. A careful analysis of the code construction should be made. Malicious code execution
     could lead to data leakage or operating system compromised.
 </p>
 <p>
     If the evaluation of user code is intended, a proper sandboxing should be applied (see references).
 </p>
+
+<p><b>Code at risk:</b></p>
+<p>
+<pre>
+public void runCustomTrigger(String script) {
+    ScriptEngineManager factory = new ScriptEngineManager();
+    ScriptEngine engine = factory.getEngineByName("JavaScript");
+
+    engine.eval(script); //Bad things can happen here.
+}
+</pre>
+</p>
+
+<p><b>Solution:</b></p>
+<p>
+Safe evaluation of Javascript code using "Cloudbees Rhino Sandbox" library.<br/>
+<pre>
+public void runCustomTrigger(String script) {
+    SandboxContextFactory contextFactory = new SandboxContextFactory();
+    Context context = contextFactory.makeContext();
+    contextFactory.enterContext(context);
+    try {
+        ScriptableObject prototype = context.initStandardObjects();
+        prototype.setParentScope(null);
+        Scriptable scope = context.newObject(prototype);
+        scope.setPrototype(prototype);
+
+        context.evaluateString(scope,script, null, -1, null);
+    } finally {
+        context.exit();
+    }
+}
+</pre>
+</p>
+
 <p>
 <b>References</b><br/>
-<a href="http://codeutopia.net/blog/2009/01/02/sandboxing-rhino-in-java/">CodeUtopia.net: Sandboxing Rhino in Java</a><br/>
-<a href="https://github.com/cloudbees/rhino-sandbox">Cloudbees Rhino Sandbox</a>: Utility to secure Rhino<br/>
-<a href="http://calumleslie.blogspot.ca/2008/06/simple-jvm-sandboxing.html">Simple JVM sandboxing</a><br/>
+<a href="https://github.com/cloudbees/rhino-sandbox">Cloudbees Rhino Sandbox</a>: Utility to create sandbox with Rhino<br/>
+<a href="http://codeutopia.net/blog/2009/01/02/sandboxing-rhino-in-java/">CodeUtopia.net: Sandboxing Rhino in Java</a>
 </p>
 ]]>
         </Details>
@@ -900,7 +934,33 @@ Therefore, the primary defense against LDAP injection is strong input validation
         <LongDescription>This code evaluation could be vulnerable code injection</LongDescription>
         <Details>
             <![CDATA[
-TODO
+<p>
+    A Spring expression is built with a dynamic value. The source of the value(s) should be verified to avoid
+    that unfiltered values fall into this risky code evaluation.
+</p>
+<p><b>Code at risk:</b></p>
+<p>
+<pre>
+public void parseExpressionInterface(Person personObj,String property) {
+
+        ExpressionParser parser = new SpelExpressionParser();
+
+        //Unsafe if the input is control by the user..
+        Expression exp = parser.parseExpression(property+" == 'Albert'");
+
+        StandardEvaluationContext testContext = new StandardEvaluationContext(personObj);
+        boolean result = exp.getValue(testContext, Boolean.class);
+[...]
+</pre>
+</p>
+<p>
+    <b>References</b><br/>
+    <a href="http://cwe.mitre.org/data/definitions/95.html">CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')</a><br/>
+    <a href="http://cwe.mitre.org/data/definitions/94.html">CWE-94: Improper Control of Generation of Code ('Code Injection')</a><br/>
+    <a href="http://docs.spring.io/spring-framework/docs/3.2.x/spring-framework-reference/html/expressions.html">Spring Expression Language (SpEL) - Official Documentation</a><br/>
+    <a href="https://www.mindedsecurity.com/fileshare/ExpressionLanguageInjection.pdf">Minded Security: Expression Language Injection</a>
+</p>
+
 ]]>
         </Details>
     </BugPattern>
@@ -1531,15 +1591,37 @@ The solution is to avoid using XMLDecoder to parse content from an untrusted sou
         <LongDescription>The initialization vector (IV) is not properly generated</LongDescription>
         <Details>
             <![CDATA[
-            <p>
-                Initialization vector must be regenerated for each message to be encrypted.
-            </p>
-            <p>
-                <b>References</b><br/>
-                <a href="http://en.wikipedia.org/wiki/Initialization_vector">Wikipedia: Initialization vector</a><br/>
-                <a href="http://cwe.mitre.org/data/definitions/329.html">CWE-329: Not Using a Random IV with CBC Mode</a><br/>
-                <a href="https://defuse.ca/cbcmodeiv.htm">Encryption - CBC Mode IV: Secret or Not?</a>
-            </p>
+<p>
+    Initialization vector must be regenerated for each message to be encrypted.
+</p>
+<p><b>Example Vulnerable Code:</b></p>
+<p>
+<pre>
+private static byte[] IV = new byte[16] {(byte)0,(byte)1,(byte)2,[...]};
+
+public void encrypt(String message) throws Exception {
+
+    IvParameterSpec ivSpec = new IvParameterSpec(IV);
+[...]
+</pre>
+<p><b>Safe Code:</b></p>
+<p>
+<pre>
+public void encrypt(String message) throws Exception {
+
+    byte[] iv = new byte[16];
+    new SecureRandom().nextBytes(iv);
+
+    IvParameterSpec ivSpec = new IvParameterSpec(iv);
+[...]
+</pre>
+</p>
+<p>
+    <b>References</b><br/>
+    <a href="http://en.wikipedia.org/wiki/Initialization_vector">Wikipedia: Initialization vector</a><br/>
+    <a href="http://cwe.mitre.org/data/definitions/329.html">CWE-329: Not Using a Random IV with CBC Mode</a><br/>
+    <a href="https://defuse.ca/cbcmodeiv.htm">Encryption - CBC Mode IV: Secret or Not?</a>
+</p>
             ]]>
         </Details>
     </BugPattern>
@@ -1721,7 +1803,7 @@ In the example solution above, the GCM mode introduces an HMAC into the resultin
 <p>
     For Ant users, the jar used should be <a href="http://repo1.maven.org/maven2/org/owasp/esapi/esapi/2.1.0/esapi-2.1.0.jar">esapi-2.1.0.jar</a>.
 </p>
-<p><b>2. Configuration<:/b></p>
+<p><b>2. Configuration:</b></p>
     <p>
     The library version 2.1.0 is still vulnerable to key size being changed in the ciphertext definition (CVE-2013-5960). Some precautions need to be taken.<br/>
     <br/>

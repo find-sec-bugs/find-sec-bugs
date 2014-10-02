@@ -6,10 +6,10 @@
                 website="https://github.com/h3xstream/find-sec-bugs">
 
     <!--
-    Detector : Java class that analyse the bytecode
+    Detector : Java class that analyzes the bytecode
     Bug Pattern : Vulnerability/Code at risk*. All bug patterns are describe in messages.xml.
 
-    * Not all bug pattern are direct vulnerability. For example, the identification of endpoints
+    * Not all bug patterns are direct vulnerabilities. For example, the identification of Struts/Spring/Rest/SOAP endpoints.
     -->
 
     <Detector class="com.h3xstream.findsecbugs.PredictableRandomDetector" reports="PREDICTABLE_RANDOM"/>

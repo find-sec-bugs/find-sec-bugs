@@ -99,7 +99,7 @@ Host: www.example.com
 </pre>
 <p>
 The web container serving your application may redirect requests to your application by default. This would allow
-a malicious user to place any value in the Host header. It is recommended that you not trust this value in any security 
+a malicious user to place any value in the Host header. It is recommended that you do not trust this value in any security
 decisions you make with respect to a request.
 </p>
 <p>
@@ -625,7 +625,7 @@ contains no unauthorized path characters (e.g., / \), and refers to an authorize
     </Detector>
 
     <BugPattern type="REDOS">
-        <ShortDescription>Regex DOS</ShortDescription>
+        <ShortDescription>Regex DOS (ReDOS)</ShortDescription>
         <LongDescription>The regular expression "{0}" is vulnerable to a denial of service attack (ReDOS)</LongDescription>
         <Details>
             <![CDATA[
@@ -1378,7 +1378,7 @@ keyGen.initialize(2048);
         <Details>
             <![CDATA[
 <p>NOTE: If you want this rule to work, you have to precompile your JSPs (which usually isn't done in most build environments)
-and then provide FindSecBugs the path information to the generated class files and the original JSPs themselves. If you are seeing
+and then provide FindBugs the path information to the generated class files and the original JSPs themselves. If you are seeing
 findings for this rule, you know you have your environment set up properly. Also, this XSS in JSP rule looks for similar issues,
 but looks for them in a different way than the existing 'XSS: JSP reflected cross site scripting vulnerability' rule in FindBugs.</p>
 <p>A potential XSS was found. It could be used to execute unwanted JavaScript in a client's browser. (See references)

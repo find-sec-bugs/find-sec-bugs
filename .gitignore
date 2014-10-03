@@ -17,3 +17,6 @@ test-output
 bin/
 build/
 target/
+
+#Maven
+*.versionsBackup

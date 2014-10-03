@@ -40,8 +40,9 @@ rootXml.Detector.each { detector ->
     bugsBinding['nbDetectors']++
 }
 
-downloadUrl = "http://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/1.2.0/findsecbugs-plugin-1.2.0.jar"
-latestVersion = "v 1.2.0"
+downloadUrl = "http://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/1.2.1/findsecbugs-plugin-1.2.1.jar"
+mavenCentralSearch = "http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.h3xstream.findsecbugs%22%20a%3A%22findsecbugs-plugin%22"
+latestVersion = "v 1.2.1"
 
 //Generate
 
@@ -64,7 +65,7 @@ outputFile(outDir,"download.htm").withWriter {
         w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(
                 ['title':'Download'])
         w << engine.createTemplate(getTemplateReader("/download.htm")).make(
-                ['downloadUrl':downloadUrl,'latestVersion':latestVersion])
+                ['downloadUrl':downloadUrl,'latestVersion':latestVersion,'mavenCentralSearch':mavenCentralSearch])
         w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make()
 }
 

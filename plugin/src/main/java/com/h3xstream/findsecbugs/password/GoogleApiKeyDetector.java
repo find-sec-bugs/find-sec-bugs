@@ -54,9 +54,6 @@ public class GoogleApiKeyDetector implements Detector {
     public void visitClassContext(ClassContext classContext) {
         JavaClass javaClass = classContext.getJavaClass();
 
-        //UrlSigner is in the name of the class
-        ConstantPool ctp = javaClass.getConstantPool();
-
         boolean keyStringField = false;
         for (Field f : javaClass.getFields()) {
             if (f.getName().equals("keyString")) { //The expected field name

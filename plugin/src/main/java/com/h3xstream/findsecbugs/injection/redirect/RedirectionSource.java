@@ -46,7 +46,6 @@ public class RedirectionSource implements InjectionSource {
 
         if (ins instanceof INVOKEINTERFACE) {
             String methodName = ins.getMethodName(cpg);
-            String methodSignature = ins.getSignature(cpg);
             String className = ins.getClassName(cpg);
 
             if (className.equals("javax.servlet.http.HttpServletResponse")) {

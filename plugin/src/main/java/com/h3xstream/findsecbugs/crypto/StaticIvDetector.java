@@ -74,7 +74,6 @@ public class StaticIvDetector implements Detector {
 
 
     private void analyzeMethod(Method m, ClassContext classContext) throws CFGBuilderException, DataflowAnalysisException {
-        MethodGen methodGen = classContext.getMethodGen(m);
 
         ConstantPoolGen cpg = classContext.getConstantPoolGen();
         CFG cfg = classContext.getCFG(m);

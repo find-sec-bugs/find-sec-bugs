@@ -30,7 +30,7 @@ import org.apache.bcel.generic.*;
 import java.util.*;
 
 /**
- * Since the output
+ * Basic rule that attempts to find additional XSS that the built-in FB rule didn't find.
  */
 public class JspXssDetector implements Detector {
 
@@ -62,7 +62,6 @@ public class JspXssDetector implements Detector {
 
 
     private void analyzeMethod(Method m, ClassContext classContext) throws CFGBuilderException, DataflowAnalysisException {
-        MethodGen methodGen = classContext.getMethodGen(m);
 
         ConstantPoolGen cpg = classContext.getConstantPoolGen();
         CFG cfg = classContext.getCFG(m);

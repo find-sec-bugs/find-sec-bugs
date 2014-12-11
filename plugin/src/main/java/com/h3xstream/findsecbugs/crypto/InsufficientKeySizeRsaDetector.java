@@ -61,7 +61,6 @@ public class InsufficientKeySizeRsaDetector implements Detector {
     }
 
     private void analyzeMethod(Method m, ClassContext classContext) throws CFGBuilderException, DataflowAnalysisException {
-        MethodGen methodGen = classContext.getMethodGen(m);
 
         //Conditions that needs to fill to identify the vulnerability
         boolean createRsaKeyGen = false;

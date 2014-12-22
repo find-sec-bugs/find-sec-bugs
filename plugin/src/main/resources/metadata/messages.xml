@@ -31,6 +31,7 @@
 <a href="http://jazzy.id.au/default/2010/09/20/cracking_random_number_generators_part_1.html">Cracking Random Number Generators - Part 1 (http://jazzy.id.au)</a><br/>
 <a href="https://www.securecoding.cert.org/confluence/display/java/MSC02-J.+Generate+strong+random+numbers">CERT: MSC02-J. Generate strong random numbers</a><br/>
 <a href="http://cwe.mitre.org/data/definitions/330.html">CWE-330: Use of Insufficiently Random Values</a>
+<a href="http://blog.h3xstream.com/2014/12/predicting-struts-csrf-token-cve-2014.html">Predicting Struts CSRF Token (Example of real-life vulnerability and exploitation)</a>
 </p>
 ]]>
         </Details>
@@ -693,8 +694,7 @@ from an untrusted source.</p>
 <p>
 <b>References</b><br/>
 <a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=61702260">CERT: IDS10-J. Prevent XML external entity attacks</a><br/>
-<a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
-<a href="https://www.owasp.org/index.php/Testing_for_XML_Injection_(OWASP-DV-008)">OWASP: Testing for XML Injection</a><br/>
+<a href="https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing">OWASP.org: XML External Entity (XXE) Processing</a><br/>
 <a href="http://clawslab.nds.rub.de/wiki/index.php/XML_Generic_Entity_Expansion">WS-Attacks.org: XML Generic Entity Expansion</a><br/>
 <a href="http://clawslab.nds.rub.de/wiki/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a><br/>
 <a href="http://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference ('XXE')</a>
@@ -916,8 +916,9 @@ public void runCustomTrigger(String script) {
 
 <p>
 <b>References</b><br/>
-<a href="https://github.com/cloudbees/rhino-sandbox">Cloudbees Rhino Sandbox</a>: Utility to create sandbox with Rhino<br/>
-<a href="http://codeutopia.net/blog/2009/01/02/sandboxing-rhino-in-java/">CodeUtopia.net: Sandboxing Rhino in Java</a>
+<a href="https://github.com/cloudbees/rhino-sandbox">Cloudbees Rhino Sandbox</a>: Utility to create sandbox with Rhino (block access to all classes)<br/>
+<a href="http://codeutopia.net/blog/2009/01/02/sandboxing-rhino-in-java/">CodeUtopia.net: Sandboxing Rhino in Java</a><br/>
+<a href="http://blog.h3xstream.com/2014/11/remote-code-execution-by-design.html">Remote Code Execution .. by design</a>: Example of malicious payload. The samples given could be use to test sandboxing rules.<br/>
 </p>
 ]]>
         </Details>
@@ -958,7 +959,8 @@ public void parseExpressionInterface(Person personObj,String property) {
     <a href="http://cwe.mitre.org/data/definitions/95.html">CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')</a><br/>
     <a href="http://cwe.mitre.org/data/definitions/94.html">CWE-94: Improper Control of Generation of Code ('Code Injection')</a><br/>
     <a href="http://docs.spring.io/spring-framework/docs/3.2.x/spring-framework-reference/html/expressions.html">Spring Expression Language (SpEL) - Official Documentation</a><br/>
-    <a href="https://www.mindedsecurity.com/fileshare/ExpressionLanguageInjection.pdf">Minded Security: Expression Language Injection</a>
+    <a href="https://www.mindedsecurity.com/fileshare/ExpressionLanguageInjection.pdf">Minded Security: Expression Language Injection</a><br/>
+    <a href="http://blog.h3xstream.com/2014/11/remote-code-execution-by-design.html">Remote Code Execution .. by design</a>: Example of malicious payload. The samples given could be use to test sandboxing rules.<br/>
 </p>
 
 ]]>
@@ -1365,9 +1367,10 @@ keyGen.initialize(2048);
 </p>
 <p>
 <b>References</b><br/>
-[1] <a href="http://www.rsa.com/rsalabs/node.asp?id=2218">RSA Laboratories: 3.1.5 How large a key should be used in the RSA cryptosystem?</a><br/>
+[1] <a href="http://www.emc.com/emc-plus/rsa-labs/standards-initiatives/how-large-a-key-should-be-used.htm">RSA Laboratories: 3.1.5 How large a key should be used in the RSA cryptosystem?</a><br/>
 <a href="http://en.wikipedia.org/wiki/Key_size#Asymmetric%5Falgorithm%5Fkey%5Flengths">Wikipedia: Asymmetric algorithm key lengths</a><br/>
-<a href="http://cwe.mitre.org/data/definitions/326.html">CWE-326: Inadequate Encryption Strength</a>
+<a href="http://cwe.mitre.org/data/definitions/326.html">CWE-326: Inadequate Encryption Strength</a><br/>
+<a href="http://www.keylength.com/en/compare/">Keylength.com (BlueKrypt): Aggregate key length recommendations.</a>
 </p>
 ]]>
         </Details>

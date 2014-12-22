@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.injection.sql;
 
+import com.h3xstream.findsecbugs.common.ByteCode;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
 
 import org.apache.bcel.classfile.Constant;
@@ -38,7 +39,9 @@ public class JdoInjectionSource implements InjectionSource {
             if (cnt instanceof ConstantUtf8) {
                 String utf8String = ((ConstantUtf8) cnt).getBytes();
                 //System.out.println("cnt= "+utf8String);
-                if (utf8String.equals("javax/jdo/PersistenceManager")) {
+                if (utf8String.equals("Ljavax/jdo/PersistenceManager;")) {
+                    return true;
+                } else if (utf8String.equals("Ljavax/jdo/Query;")) {
                     return true;
                 }
             }
@@ -60,6 +63,12 @@ public class JdoInjectionSource implements InjectionSource {
                 return new int[]{0};
             } else if (className.equals("javax.jdo.PersistenceManager") && methodName.equals("newQuery") &&
                     methodSignature.equals("(Ljava/lang/String;Ljava/lang/Object;)Ljavax/jdo/Query;")) {
+                return new int[]{0};
+            } else if (className.equals("javax.jdo.Query") && methodName.equals("setFilter") &&
+                    methodSignature.equals("(Ljava/lang/String;)V")) {
+                return new int[]{0};
+            } else if (className.equals("javax.jdo.Query") && methodName.equals("setGrouping") &&
+                    methodSignature.equals("(Ljava/lang/String;)V")) {
                 return new int[]{0};
             }
         }

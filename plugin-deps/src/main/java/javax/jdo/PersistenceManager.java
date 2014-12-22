@@ -4,4 +4,6 @@ public interface PersistenceManager {
     Query newQuery(String s);
 
     Query newQuery(String sql, Object s);
+
+    Query newQuery(Class var1);
 }

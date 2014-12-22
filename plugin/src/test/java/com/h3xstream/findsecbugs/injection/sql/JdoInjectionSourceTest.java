@@ -40,7 +40,7 @@ public class JdoInjectionSourceTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        for (Integer line : Arrays.asList(20, 22)) {
+        for (Integer line : Arrays.asList(22, 24)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("SQL_INJECTION")
@@ -49,8 +49,17 @@ public class JdoInjectionSourceTest extends BaseDetectorTest {
             );
         }
 
+        for (Integer line : Arrays.asList(39, 43, 47)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("SQL_INJECTION")
+                            .inClass("JdoSql").inMethod("testJdoQueriesAdditionalMethodSig").atLine(line)
+                            .build()
+            );
+        }
+
         //Only the previous 2 cases should be marked as vulnerable
-        verify(reporter, times(2)).doReportBug(
+        verify(reporter, times(5)).doReportBug(
                 bugDefinition()
                         .bugType("SQL_INJECTION")
                         .build()

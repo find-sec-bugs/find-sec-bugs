@@ -1,8 +1,10 @@
 package testcode.sqli;
 
+import javax.jdo.Extent;
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
+import java.util.ArrayList;
 
 public class JdoSql {
 
@@ -29,6 +31,23 @@ public class JdoSql {
         pm.newQuery(query);
 
         pm.newQuery("sql", query);
+    }
+
+    public void testJdoQueriesAdditionalMethodSig(String input) {
+        PersistenceManager pm = getPM();
+
+        pm.newQuery(UserEntity.class,new ArrayList(),"id == "+ input); //Injection?
+
+        pm.newQuery(UserEntity.class,new ArrayList(),"id == 1");
+
+        pm.newQuery(UserEntity.class,"id == "+ input); //Injection?
+
+        pm.newQuery(UserEntity.class,"id == 1");
+
+        pm.newQuery((Extent) null,"id == "+input); //Injection?
+
+        pm.newQuery((Extent) null,"id == 1");
+
     }
 
 }

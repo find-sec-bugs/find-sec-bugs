@@ -64,6 +64,15 @@ public class JdoInjectionSource implements InjectionSource {
             } else if (className.equals("javax.jdo.PersistenceManager") && methodName.equals("newQuery") &&
                     methodSignature.equals("(Ljava/lang/String;Ljava/lang/Object;)Ljavax/jdo/Query;")) {
                 return new int[]{0};
+            } else if (className.equals("javax.jdo.PersistenceManager") && methodName.equals("newQuery") &&
+                    methodSignature.equals("(Ljava/lang/Class;Ljava/util/Collection;Ljava/lang/String;)Ljavax/jdo/Query;")) {
+                return new int[]{0};
+            } else if (className.equals("javax.jdo.PersistenceManager") && methodName.equals("newQuery") &&
+                    methodSignature.equals("(Ljava/lang/Class;Ljava/lang/String;)Ljavax/jdo/Query;")) {
+                return new int[]{0};
+            } else if (className.equals("javax.jdo.PersistenceManager") && methodName.equals("newQuery") &&
+                    methodSignature.equals("(Ljavax/jdo/Extent;Ljava/lang/String;)Ljavax/jdo/Query;")) {
+                return new int[]{0};
             } else if (className.equals("javax.jdo.Query") && methodName.equals("setFilter") &&
                     methodSignature.equals("(Ljava/lang/String;)V")) {
                 return new int[]{0};

@@ -119,7 +119,7 @@ public abstract class InjectionDetector implements Detector {
                 arguments:
                 for (int arg : injectableArguments) {
                     Constant value = frame.getStackValue(arg);
-//                    System.out.println(arg + ". " + frame.getStackValue(arg).getConstantString());
+                    System.out.println(arg + ". " + frame.getStackValue(arg).getConstantString());
 //                    int numArguments = frame.getNumArguments(invoke, cpg);
 //                    System.out.println(numArguments);
 

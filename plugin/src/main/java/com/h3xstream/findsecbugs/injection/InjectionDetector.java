@@ -44,8 +44,6 @@ import java.util.List;
  */
 public abstract class InjectionDetector implements Detector {
 
-
-    private ClassContext classContext;
     private BugReporter bugReporter;
 
     protected InjectionDetector(BugReporter bugReporter) {
@@ -85,7 +83,7 @@ public abstract class InjectionDetector implements Detector {
     private void analyzeMethod(ClassContext classContext, Method method, List<InjectionSource> selectedSources) throws DataflowAnalysisException, CFGBuilderException {
 
         JavaClass javaClass = classContext.getJavaClass();
-        this.classContext = classContext;
+
         MethodGen methodGen = classContext.getMethodGen(method);
         if (methodGen == null)
             return;

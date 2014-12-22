@@ -66,7 +66,7 @@ public class TapestryEndpointDetector implements Detector {
             for (Constant c : constants.getConstantPool()) {
                 if (c instanceof ConstantUtf8) {
                     ConstantUtf8 utf8 = (ConstantUtf8) c;
-                    String constantValue = new String(utf8.getBytes());
+                    String constantValue = String.valueOf(utf8.getBytes());
                     if (constantValue.startsWith("Lorg/apache/tapestry5/annotations")) {
                         bugReporter.reportBug(new BugInstance(this, TAPESTRY_ENDPOINT_TYPE, Priorities.LOW_PRIORITY) //
                                 .addClass(javaClass));

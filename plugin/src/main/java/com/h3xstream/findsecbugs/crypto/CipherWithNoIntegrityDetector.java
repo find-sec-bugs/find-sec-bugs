@@ -91,11 +91,13 @@ public class CipherWithNoIntegrityDetector extends OpcodeStackDetector {
                 }
 
                 String[] cipherDefinition = cipherValue.split("/");
-                String cipherMode = cipherDefinition[1];
+                if(cipherDefinition.length > 1) { //Some cipher will not have mode specified (ie: "RSA" .. issue GitHub #24)
+                    String cipherMode = cipherDefinition[1];
 
-                if(!SECURE_CIPHER_MODES.contains(cipherMode)) { //Not a secure mode!
-                    bugReporter.reportBug(new BugInstance(this, CIPHER_INTEGRITY_TYPE, Priorities.HIGH_PRIORITY) //
-                            .addClass(this).addMethod(this).addSourceLine(this));
+                    if (!SECURE_CIPHER_MODES.contains(cipherMode)) { //Not a secure mode!
+                        bugReporter.reportBug(new BugInstance(this, CIPHER_INTEGRITY_TYPE, Priorities.HIGH_PRIORITY) //
+                                .addClass(this).addMethod(this).addSourceLine(this));
+                    }
                 }
             }
         }

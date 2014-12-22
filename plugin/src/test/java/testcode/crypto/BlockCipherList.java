@@ -30,6 +30,7 @@ public class BlockCipherList {
         Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
         Cipher.getInstance("RC2/ECB/PKCS5Padding");
         Cipher.getInstance("ARCFOUR/ECB/NOPADDING");
+        Cipher.getInstance("RSA"); //Just to test a cipher with a different format in the input
     }
 
     /**

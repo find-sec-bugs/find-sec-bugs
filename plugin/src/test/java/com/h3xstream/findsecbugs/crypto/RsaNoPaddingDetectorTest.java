@@ -50,7 +50,7 @@ public class RsaNoPaddingDetectorTest extends BaseDetectorTest {
                         .build()
         );
 
-        verify(reporter, times(1)).doReportBug(
+        verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("RSA_NO_PADDING")
                         .build()

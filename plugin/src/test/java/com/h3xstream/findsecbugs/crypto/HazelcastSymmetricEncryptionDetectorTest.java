@@ -41,7 +41,7 @@ public class HazelcastSymmetricEncryptionDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         //Identify the constructor
-        verify(reporter, times(1)).doReportBug(
+        verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("HAZELCAST_SYMMETRIC_ENCRYPTION")
                         .inClass("HazelcastSymmetric")

@@ -46,7 +46,7 @@ public class ScriptEngineInjectionTest extends BaseDetectorTest {
                         .build()
         );
 
-        verify(reporter,times(1)).doReportBug(
+        verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("SCRIPT_ENGINE_INJECTION")
                         .inClass("ScriptEngineSample")

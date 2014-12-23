@@ -41,7 +41,7 @@ public class SaxParserSafePropertyTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("XXE")
-                        .inClass("SaxParserSafeProperty").inMethod("unsafeNoSpecialSettings").atLine(30)
+                        .inClass("SaxParserSafeProperty").inMethod("unsafeNoSpecialSettings").atLine(26)
                         .build()
         );
     }
@@ -84,7 +84,7 @@ public class SaxParserSafePropertyTest extends BaseDetectorTest {
 
 
         //Only one bug should be trigger
-        verify(reporter,times(1)).doReportBug(
+        verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("XXE")
                         .inClass("SaxParserSafeProperty")

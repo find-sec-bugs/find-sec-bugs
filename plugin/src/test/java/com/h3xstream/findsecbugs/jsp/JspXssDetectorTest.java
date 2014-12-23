@@ -78,7 +78,7 @@ public class JspXssDetectorTest extends BaseDetectorTest {
                         .build()
         );
 
-        verify(reporter, times(1)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
+        verify(reporter).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
     }
 
     @Test
@@ -129,7 +129,7 @@ public class JspXssDetectorTest extends BaseDetectorTest {
                         .build()
         );
 
-        verify(reporter, times(1)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
+        verify(reporter).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
     }
 
     @Test
@@ -150,7 +150,7 @@ public class JspXssDetectorTest extends BaseDetectorTest {
                         .build()
         );
 
-        verify(reporter, times(1)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
+        verify(reporter).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
     }
 
     @Test
@@ -171,7 +171,7 @@ public class JspXssDetectorTest extends BaseDetectorTest {
                         .build()
         );
 
-        verify(reporter, times(1)).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
+        verify(reporter).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
     }
 }
 

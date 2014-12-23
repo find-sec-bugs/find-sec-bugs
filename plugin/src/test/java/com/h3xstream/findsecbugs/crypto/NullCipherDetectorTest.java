@@ -39,7 +39,7 @@ public class NullCipherDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
 
-        verify(reporter, times(1)).doReportBug(
+        verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("NULL_CIPHER")
                         .inClass("NullCipherUse")

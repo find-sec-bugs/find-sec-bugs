@@ -55,12 +55,12 @@ public class ReDosDetectorTest extends BaseDetectorTest {
 
 
         detector.analyseRegexString("((a)+)+");
-        verify(reporter, times(1)).reportBug(bugDefinition().bugType("REDOS").build());
+        verify(reporter).reportBug(bugDefinition().bugType("REDOS").build());
 
         reset(reporter);
 
         detector.analyseRegexString("([b-d])(([a]*))+(0-9)");
-        verify(reporter, times(1)).reportBug(bugDefinition().bugType("REDOS").build());
+        verify(reporter).reportBug(bugDefinition().bugType("REDOS").build());
     }
 
     /**

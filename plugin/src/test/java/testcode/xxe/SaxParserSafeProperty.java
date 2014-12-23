@@ -1,11 +1,7 @@
 package testcode.xxe;
 
-import com.sun.rowset.internal.XmlReaderContentHandler;
-import com.sun.xml.internal.fastinfoset.dom.DOMDocumentSerializer;
 import org.w3c.dom.Document;
-import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 import testcode.xxe.util.PrintHandler;
 
 import javax.xml.XMLConstants;

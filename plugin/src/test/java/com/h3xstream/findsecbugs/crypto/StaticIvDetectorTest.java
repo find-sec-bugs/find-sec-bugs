@@ -45,7 +45,7 @@ public class StaticIvDetectorTest extends BaseDetectorTest {
         );
 
         //Only one report of this bug pattern
-        verify(reporter,times(1)).doReportBug( //
+        verify(reporter).doReportBug( //
                 bugDefinition().bugType("STATIC_IV").inClass("StaticVariableIv").build()
         );
     }

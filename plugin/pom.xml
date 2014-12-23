@@ -107,6 +107,7 @@
                         <!-- Needed for coveralls plugin -->
                         <format>xml</format>
                     </formats>
+                    <check/>
                 </configuration>
             </plugin>
 

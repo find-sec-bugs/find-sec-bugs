@@ -26,7 +26,7 @@ public class SaxParserVulnerable {
             SAXException, IOException {
 
         String xmlString = "<?xml version=\"1.0\"?>" +
-                "<!DOCTYPE foo SYSTEM \"C:/test\"><test>&foo;</test>"; // Tainted input
+                "<!DOCTYPE test [  <!ENTITY foo SYSTEM \"C:/Code/public.txt\"> ]><test>&foo;</test>"; // Tainted input
 
         InputStream is = new ByteArrayInputStream(xmlString.getBytes());
         receiveXMLStream(is, new DefaultHandler());

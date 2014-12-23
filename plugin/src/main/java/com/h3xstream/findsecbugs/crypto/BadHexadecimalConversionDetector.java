@@ -21,16 +21,14 @@ import com.h3xstream.findsecbugs.common.ByteCode;
 import edu.umd.cs.findbugs.Priorities;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
-import org.apache.bcel.generic.ConstantPoolGen;
-import org.apache.bcel.generic.INVOKESTATIC;
-import org.apache.bcel.generic.INVOKEVIRTUAL;
-import org.apache.bcel.generic.Instruction;
-import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.*;
 
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Detector;
 import edu.umd.cs.findbugs.ba.ClassContext;
+
+import java.util.Iterator;
 
 public class BadHexadecimalConversionDetector implements Detector {
 
@@ -65,7 +63,8 @@ public class BadHexadecimalConversionDetector implements Detector {
             if (methodGen == null || methodGen.getInstructionList() == null || methodGen.getInstructionList().getInstructions() == null) {
                 continue; //No instruction .. nothing to do
             }
-            for (Instruction inst : methodGen.getInstructionList().getInstructions()) {
+            for (Iterator itIns = methodGen.getInstructionList().iterator();itIns.hasNext();) {
+                Instruction inst = ((InstructionHandle) itIns.next()).getInstruction();
                 if (DEBUG) {
                     ByteCode.printOpCode(inst, cpg);
                 }

@@ -25,10 +25,9 @@ import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.ba.ClassContext;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
-import org.apache.bcel.generic.GETFIELD;
-import org.apache.bcel.generic.Instruction;
-import org.apache.bcel.generic.InvokeInstruction;
-import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.*;
+
+import java.util.Iterator;
 
 /**
  * The first reflex for developer that encounter web services that have unsigned certificate
@@ -80,7 +79,8 @@ public class WeakTrustManagerDetector implements Detector {
             boolean invokeInst = false;
             boolean loadField = false;
 
-            for (Instruction inst : methodGen.getInstructionList().getInstructions()) {
+            for (Iterator itIns = methodGen.getInstructionList().iterator();itIns.hasNext();) {
+                Instruction inst = ((InstructionHandle) itIns.next()).getInstruction();
                 if (DEBUG)
                     System.out.println(inst.toString(true));
 

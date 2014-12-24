@@ -55,7 +55,9 @@ import java.util.Iterator;
  */
 public class SaxParserXxeDetector extends OpcodeStackDetector {
     private static final boolean DEBUG = false;
-    private static final String XXE_TYPE = "XXE";
+    private static final String XXE_SAX_PARSER_TYPE = "XXE_SAXPARSER";
+    private static final String XXE_XML_READER_TYPE = "XXE_XMLREADER";
+    private static final String XXE_DOCUMENT_TYPE = "XXE_DOCUMENT";
 
     private static final String FEATURE_DISALLOW_DTD = "http://apache.org/xml/features/disallow-doctype-decl";
     private static final String FEATURE_SECURE_PROCESSING = "http://javax.xml.XMLConstants/feature/secure-processing";
@@ -96,7 +98,6 @@ public class SaxParserXxeDetector extends OpcodeStackDetector {
 
             ClassContext classCtx = getClassContext();
             ConstantPoolGen cpg = classCtx.getConstantPoolGen();
-            MethodGen methodGen = classCtx.getMethodGen(getMethod());
 
             CFG cfg = null;
             try {
@@ -151,7 +152,6 @@ public class SaxParserXxeDetector extends OpcodeStackDetector {
 
                     else if ("setXIncludeAware".equals(invoke.getMethodName(cpg))) {
                         ICONST boolConst = ByteCode.getPrevInstruction(location.getHandle(), ICONST.class);
-                        System.out.println(">>>>>>>>>>>"+boolConst.getValue());
                         if (boolConst != null && boolConst.getValue().equals(0)) {
                             hasSetXIncludeAware = true;
                         }
@@ -176,10 +176,22 @@ public class SaxParserXxeDetector extends OpcodeStackDetector {
 
             String simpleClassName = fullClassName.substring(fullClassName.lastIndexOf('/'));
             //Raise a bug
-            bugReporter.reportBug(new BugInstance(this, XXE_TYPE, Priorities.NORMAL_PRIORITY) //
-                    .addClass(this).addMethod(this).addSourceLine(this)
-                    .addString(simpleClassName+"."+method+"(...)"));
 
+            if(fullClassName.equals("javax/xml/parsers/SAXParser")) {
+                bugReporter.reportBug(new BugInstance(this, XXE_SAX_PARSER_TYPE, Priorities.NORMAL_PRIORITY) //
+                        .addClass(this).addMethod(this).addSourceLine(this)
+                        .addString(simpleClassName + "." + method + "(...)"));
+            }
+            else if(fullClassName.equals("org/xml/sax/XMLReader")) {
+                bugReporter.reportBug(new BugInstance(this, XXE_XML_READER_TYPE, Priorities.NORMAL_PRIORITY) //
+                        .addClass(this).addMethod(this).addSourceLine(this)
+                        .addString(simpleClassName + "." + method + "(...)"));
+            }
+            else if(fullClassName.equals("javax/xml/parsers/DocumentBuilder")) {
+                bugReporter.reportBug(new BugInstance(this, XXE_DOCUMENT_TYPE, Priorities.NORMAL_PRIORITY) //
+                        .addClass(this).addMethod(this).addSourceLine(this)
+                        .addString(simpleClassName + "." + method + "(...)"));
+            }
         }
     }
 }

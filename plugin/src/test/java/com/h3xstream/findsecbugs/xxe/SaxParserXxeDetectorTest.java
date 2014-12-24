@@ -41,8 +41,18 @@ public class SaxParserXxeDetectorTest extends BaseDetectorTest {
 
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("XXE")
+                        .bugType("XXE_SAXPARSER")
                         .inClass("SaxParserVulnerable").inMethod("receiveXMLStream").atLine(22)
+                        .build()
+        );
+        Mockito.verify(reporter, Mockito.never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_XMLREADER")
+                        .build()
+        );
+        Mockito.verify(reporter, Mockito.never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_DOCUMENT")
                         .build()
         );
     }
@@ -62,7 +72,17 @@ public class SaxParserXxeDetectorTest extends BaseDetectorTest {
         //Assertions
         Mockito.verify(reporter, Mockito.never()).doReportBug(
                 bugDefinition()
-                        .bugType("XXE")
+                        .bugType("XXE_SAXPARSER")
+                        .build()
+        );
+        Mockito.verify(reporter, Mockito.never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_XMLREADER")
+                        .build()
+        );
+        Mockito.verify(reporter, Mockito.never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_DOCUMENT")
                         .build()
         );
     }
@@ -82,7 +102,17 @@ public class SaxParserXxeDetectorTest extends BaseDetectorTest {
         //Assertions
         Mockito.verify(reporter, Mockito.never()).doReportBug(
                 bugDefinition()
-                        .bugType("XXE")
+                        .bugType("XXE_SAXPARSER")
+                        .build()
+        );
+        Mockito.verify(reporter, Mockito.never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_XMLREADER")
+                        .build()
+        );
+        Mockito.verify(reporter, Mockito.never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_DOCUMENT")
                         .build()
         );
     }
@@ -102,7 +132,7 @@ public class SaxParserXxeDetectorTest extends BaseDetectorTest {
 
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("XXE")
+                        .bugType("XXE_DOCUMENT")
                         .inClass("DocumentBuilderVulnerable").inMethod("receiveXMLStream").atLine(18)
                         .build()
         );

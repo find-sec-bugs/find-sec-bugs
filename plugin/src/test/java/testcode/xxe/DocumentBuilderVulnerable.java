@@ -16,14 +16,14 @@ public class DocumentBuilderVulnerable {
 
         DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document doc = db.parse(in);
-        System.out.println(doc.toString());
+
     }
 
     public static void main(String[] args) throws ParserConfigurationException,
             SAXException, IOException {
 
         String xmlString = "<?xml version=\"1.0\"?>" +
-                "<!DOCTYPE foo SYSTEM \"C:/test\"><test>&foo;</test>"; // Tainted input
+                "<!DOCTYPE test [ <!ENTITY foo SYSTEM \"C:/Code/public.txt\"> ]><test>&foo;</test>"; // Tainted input
 
         InputStream is = new ByteArrayInputStream(xmlString.getBytes());
         receiveXMLStream(is);

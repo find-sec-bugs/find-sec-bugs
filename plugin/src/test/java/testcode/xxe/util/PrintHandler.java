@@ -12,7 +12,8 @@ public class PrintHandler extends DefaultHandler {
 
     public void characters(char ch[], int start, int length)
             throws SAXException {
-        System.out.println("Content = ");
-        System.out.print(new String(ch).substring(start, start + length));
+
+        System.out.println("New content received");
+        System.out.println(new String(ch).substring(start, start + length));
     }
 }

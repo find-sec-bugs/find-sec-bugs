@@ -19,6 +19,7 @@ package com.h3xstream.findsecbugs.xxe;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
+import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.never;
@@ -42,11 +43,22 @@ public class DocumentBuilderSafePropertyTest  extends BaseDetectorTest {
 
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("XXE")
+                        .bugType("XXE_DOCUMENT")
                         .inClass("DocumentBuilderSafeProperty").inMethod("unsafeNoSpecialSettings").atLine(33)
                         .build()
         );
 
+        //Should not trigger the other XXE patterns
+        Mockito.verify(reporter, Mockito.never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_SAXPARSER")
+                        .build()
+        );
+        Mockito.verify(reporter, Mockito.never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_XMLREADER")
+                        .build()
+        );
     }
 
     @Test
@@ -64,21 +76,21 @@ public class DocumentBuilderSafePropertyTest  extends BaseDetectorTest {
 
         verify(reporter, never()).doReportBug(
                 bugDefinition()
-                        .bugType("XXE")
+                        .bugType("XXE_DOCUMENT")
                         .inClass("DocumentBuilderSafeProperty").inMethod("safeSecureProcessing")
                         .build()
         );
 
         verify(reporter, never()).doReportBug(
                 bugDefinition()
-                        .bugType("XXE")
+                        .bugType("XXE_DOCUMENT")
                         .inClass("DocumentBuilderSafeProperty").inMethod("safeDtdDisable")
                         .build()
         );
 
         verify(reporter, never()).doReportBug(
                 bugDefinition()
-                        .bugType("XXE")
+                        .bugType("XXE_DOCUMENT")
                         .inClass("DocumentBuilderSafeProperty").inMethod("safeManualConfiguration")
                         .build()
         );
@@ -100,30 +112,32 @@ public class DocumentBuilderSafePropertyTest  extends BaseDetectorTest {
 
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("XXE")
+                        .bugType("XXE_DOCUMENT")
                         .inClass("DocumentBuilderSafeProperty").inMethod("unsafeManualConfig1").atLine(90)
                         .build()
         );
 
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("XXE")
+                        .bugType("XXE_DOCUMENT")
                         .inClass("DocumentBuilderSafeProperty").inMethod("unsafeManualConfig2").atLine(102)
                         .build()
         );
 
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("XXE")
+                        .bugType("XXE_DOCUMENT")
                         .inClass("DocumentBuilderSafeProperty").inMethod("unsafeManualConfig3").atLine(114)
                         .build()
         );
 
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("XXE")
+                        .bugType("XXE_DOCUMENT")
                         .inClass("DocumentBuilderSafeProperty").inMethod("unsafeManualConfig4").atLine(126)
                         .build()
         );
+
+
     }
 }

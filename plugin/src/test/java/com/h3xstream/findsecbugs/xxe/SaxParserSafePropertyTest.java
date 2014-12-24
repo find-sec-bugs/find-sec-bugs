@@ -19,6 +19,7 @@ package com.h3xstream.findsecbugs.xxe;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
+import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
@@ -40,8 +41,23 @@ public class SaxParserSafePropertyTest extends BaseDetectorTest {
 
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("XXE")
+                        .bugType("XXE_SAXPARSER")
                         .inClass("SaxParserSafeProperty").inMethod("unsafeNoSpecialSettings").atLine(26)
+                        .build()
+        );
+
+
+        //Should not trigger the other XXE patterns
+        Mockito.verify(reporter, Mockito.never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_XMLREADER")
+                        .inClass("SaxParserSafeProperty")
+                        .build()
+        );
+        Mockito.verify(reporter, Mockito.never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_DOCUMENT")
+                        .inClass("SaxParserSafeProperty")
                         .build()
         );
     }
@@ -61,14 +77,14 @@ public class SaxParserSafePropertyTest extends BaseDetectorTest {
 
         verify(reporter, never()).doReportBug(
                 bugDefinition()
-                        .bugType("XXE")
+                        .bugType("XXE_SAXPARSER")
                         .inClass("SaxParserSafeProperty").inMethod("safeIgnoredDtdDisable")
                         .build()
         );
 
         verify(reporter, never()).doReportBug(
                 bugDefinition()
-                        .bugType("XXE")
+                        .bugType("XXE_SAXPARSER")
                         .inClass("SaxParserSafeProperty").inMethod("safeSecureProcessing")
                         .build()
         );
@@ -76,7 +92,7 @@ public class SaxParserSafePropertyTest extends BaseDetectorTest {
         //Assertions
         verify(reporter,never()).doReportBug(
                 bugDefinition()
-                        .bugType("XXE")
+                        .bugType("XXE_SAXPARSER")
                         .inClass("SaxParserSafeProperty").inMethod("safeManualConfiguration")
                         .build()
         );
@@ -86,9 +102,10 @@ public class SaxParserSafePropertyTest extends BaseDetectorTest {
         //Only one bug should be trigger
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("XXE")
+                        .bugType("XXE_SAXPARSER")
                         .inClass("SaxParserSafeProperty")
                         .build()
         );
+
     }
 }

@@ -657,14 +657,16 @@ regex meant, this new regex can be evaluated quickly, and is not subject to ReDO
 
     <!-- SAXParser XXE -->
     <Detector class="com.h3xstream.findsecbugs.xxe.SaxParserXxeDetector">
-        <Details>Identify SAXParser usage vulnerable to XXE</Details>
+        <Details>Identify XML parser usage vulnerable to XXE</Details>
     </Detector>
 
-    <BugPattern type="XXE">
-        <ShortDescription>XXE Vulnerability in XML SAXParser Parser</ShortDescription>
+    <BugPattern type="XXE_SAXPARSER">
+        <ShortDescription>XML parsing vulnerable to XXE (SAXParser)</ShortDescription>
         <LongDescription>The usage of {3} is vulnerable to XML External Entity attacks</LongDescription>
         <Details>
             <![CDATA[
+<!--XXE_GENERIC_START-->
+<h3>Attack</h3>
 <p>XML External Entity (XXE) attacks can occur when an XML parser supports XML entities while processing XML received
 from an untrusted source.</p>
 <p><b>Risk 1: Expose local file content (XXE: <u>X</u>ML e<u>X</u>ternal <u>E</u>ntity)</b></p>
@@ -672,7 +674,6 @@ from an untrusted source.</p>
 <pre>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
 &lt;!DOCTYPE foo [
-   &lt;!ELEMENT foo ANY &gt;
    &lt;!ENTITY xxe SYSTEM &quot;file:///etc/passwd&quot; &gt; ]&gt;
 &lt;foo&gt;&amp;xxe;&lt;/foo&gt;
 </pre>
@@ -680,30 +681,251 @@ from an untrusted source.</p>
 <b>Risk 2: Denial of service (XEE: <u>X</u>ml <u>E</u>ntity <u>E</u>xpansion)</b>
 <p>
 <pre>
-&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
-&lt;!DOCTYPE s [
-&lt;!ENTITY x &quot;OVERLONG_CONTENT_HERE_WITH_MORE_THAN_10^5_CHARACTERS&quot;&gt;
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;!DOCTYPE lolz [
+ &lt;!ENTITY lol &quot;lol&quot;&gt;
+ &lt;!ELEMENT lolz (#PCDATA)&gt;
+ &lt;!ENTITY lol1 &quot;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&quot;&gt;
+ &lt;!ENTITY lol2 &quot;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&quot;&gt;
+ &lt;!ENTITY lol3 &quot;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&quot;&gt;
+[...]
+ &lt;!ENTITY lol9 &quot;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&quot;&gt;
 ]&gt;
-&lt;foo&gt;
-    &amp;x;
-    &amp;x;
-    [...]
-&lt;/foo&gt;
+&lt;lolz&gt;&lol9;&lt;/lolz&gt;
 </pre>
 </p>
+
+<h3>Solution</h3>
+<p>
+In order to avoid exposing dangerous feature of the XML parser, you can do the following change to the code.
+</p>
+<!--XXE_GENERIC_END-->
+
+<p><b>Vulnerable code:</b></p>
+<p>
+<pre>
+SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+
+parser.parse(inputStream, customHandler);
+</pre>
+</p>
+
+<p><b>Solution using "Secure processing" mode:</b></p>
+<p>
+<pre>
+SAXParserFactory spf = SAXParserFactory.newInstance();
+spf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+SAXParser parser = spf.newSAXParser();
+
+parser.parse(inputStream, customHandler);
+</pre>
+</p>
+
+<p><b>Solution disabling DTD:</b></p>
+<p>
+<pre>
+SAXParserFactory spf = SAXParserFactory.newInstance();
+spf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+SAXParser parser = spf.newSAXParser();
+
+parser.parse(inputStream, customHandler);
+</pre>
+</p>
+
 <p>
 <b>References</b><br/>
+<!--XXE_GENERIC_START-->
+<a href="http://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference ('XXE')</a>
 <a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=61702260">CERT: IDS10-J. Prevent XML external entity attacks</a><br/>
 <a href="https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing">OWASP.org: XML External Entity (XXE) Processing</a><br/>
-<a href="http://clawslab.nds.rub.de/wiki/index.php/XML_Generic_Entity_Expansion">WS-Attacks.org: XML Generic Entity Expansion</a><br/>
-<a href="http://clawslab.nds.rub.de/wiki/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a><br/>
-<a href="http://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference ('XXE')</a>
+<a href="http://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a><br/>
+<a href="http://www.ws-attacks.org/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a><br/>
+<a href="http://www.ws-attacks.org/index.php/XML_Entity_Reference_Attack">WS-Attacks.org: XML Entity Reference Attack</a><br/>
+<!--XXE_GENERIC_END-->
+<a href="http://xerces.apache.org/xerces-j/features.html">Xerces complete features list</a>
 </p>
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECXXE">XXE Vulnerability in XML SAXParser Parser</BugCode>
+    <BugCode abbrev="SECXXESAX">XXE Vulnerability using SAXParser</BugCode>
 
+    <BugPattern type="XXE_XMLREADER">
+        <ShortDescription>XML parsing vulnerable to XXE (XMLReader)</ShortDescription>
+        <LongDescription>The usage of {3} is vulnerable to XML External Entity attacks</LongDescription>
+        <Details>
+            <![CDATA[
+<!--XXE_GENERIC_START-->
+<h3>Attack</h3>
+<p>XML External Entity (XXE) attacks can occur when an XML parser supports XML entities while processing XML received
+from an untrusted source.</p>
+<p><b>Risk 1: Expose local file content (XXE: <u>X</u>ML e<u>X</u>ternal <u>E</u>ntity)</b></p>
+<p>
+<pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
+&lt;!DOCTYPE foo [
+   &lt;!ENTITY xxe SYSTEM &quot;file:///etc/passwd&quot; &gt; ]&gt;
+&lt;foo&gt;&amp;xxe;&lt;/foo&gt;
+</pre>
+</p>
+<b>Risk 2: Denial of service (XEE: <u>X</u>ml <u>E</u>ntity <u>E</u>xpansion)</b>
+<p>
+<pre>
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;!DOCTYPE lolz [
+ &lt;!ENTITY lol &quot;lol&quot;&gt;
+ &lt;!ELEMENT lolz (#PCDATA)&gt;
+ &lt;!ENTITY lol1 &quot;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&quot;&gt;
+ &lt;!ENTITY lol2 &quot;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&quot;&gt;
+ &lt;!ENTITY lol3 &quot;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&quot;&gt;
+[...]
+ &lt;!ENTITY lol9 &quot;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&quot;&gt;
+]&gt;
+&lt;lolz&gt;&lol9;&lt;/lolz&gt;
+</pre>
+</p>
+
+<h3>Solution</h3>
+<p>
+In order to avoid exposing dangerous feature of the XML parser, you can do the following change to the code.
+</p>
+<!--XXE_GENERIC_END-->
+
+<p><b>Vulnerable code:</b></p>
+<p>
+<pre>
+XMLReader reader = XMLReaderFactory.createXMLReader();
+reader.setContentHandler(customHandler);
+reader.parse(new InputSource(inputStream));
+</pre>
+</p>
+
+<p><b>Solution using "Secure processing" mode:</b></p>
+<p>
+<pre>
+XMLReader reader = XMLReaderFactory.createXMLReader();
+reader.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+reader.setContentHandler(customHandler);
+
+reader.parse(new InputSource(inputStream));
+</pre>
+</p>
+
+<p><b>Solution disabling DTD:</b></p>
+<p>
+<pre>
+XMLReader reader = XMLReaderFactory.createXMLReader();
+reader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+reader.setContentHandler(customHandler);
+
+reader.parse(new InputSource(inputStream));
+</pre>
+</p>
+
+<p>
+<b>References</b><br/>
+<!--XXE_GENERIC_START-->
+<a href="http://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference ('XXE')</a>
+<a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=61702260">CERT: IDS10-J. Prevent XML external entity attacks</a><br/>
+<a href="https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing">OWASP.org: XML External Entity (XXE) Processing</a><br/>
+<a href="http://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a><br/>
+<a href="http://www.ws-attacks.org/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a><br/>
+<a href="http://www.ws-attacks.org/index.php/XML_Entity_Reference_Attack">WS-Attacks.org: XML Entity Reference Attack</a><br/>
+<!--XXE_GENERIC_END-->
+<a href="http://xerces.apache.org/xerces-j/features.html">Xerces complete features list</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECXXEREAD">XXE Vulnerability using XMLReader</BugCode>
+
+    <BugPattern type="XXE_DOCUMENT">
+        <ShortDescription>XML parsing vulnerable to XXE (DocumentBuilder)</ShortDescription>
+        <LongDescription>The usage of {3} is vulnerable to XML External Entity attacks</LongDescription>
+        <Details>
+            <![CDATA[
+<!--XXE_GENERIC_START-->
+<h3>Attack</h3>
+<p>XML External Entity (XXE) attacks can occur when an XML parser supports XML entities while processing XML received
+from an untrusted source.</p>
+<p><b>Risk 1: Expose local file content (XXE: <u>X</u>ML e<u>X</u>ternal <u>E</u>ntity)</b></p>
+<p>
+<pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
+&lt;!DOCTYPE foo [
+   &lt;!ENTITY xxe SYSTEM &quot;file:///etc/passwd&quot; &gt; ]&gt;
+&lt;foo&gt;&amp;xxe;&lt;/foo&gt;
+</pre>
+</p>
+<b>Risk 2: Denial of service (XEE: <u>X</u>ml <u>E</u>ntity <u>E</u>xpansion)</b>
+<p>
+<pre>
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;!DOCTYPE lolz [
+ &lt;!ENTITY lol &quot;lol&quot;&gt;
+ &lt;!ELEMENT lolz (#PCDATA)&gt;
+ &lt;!ENTITY lol1 &quot;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&quot;&gt;
+ &lt;!ENTITY lol2 &quot;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&quot;&gt;
+ &lt;!ENTITY lol3 &quot;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&quot;&gt;
+[...]
+ &lt;!ENTITY lol9 &quot;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&quot;&gt;
+]&gt;
+&lt;lolz&gt;&lol9;&lt;/lolz&gt;
+</pre>
+</p>
+
+<h3>Solution</h3>
+<p>
+In order to avoid exposing dangerous feature of the XML parser, you can do the following change to the code.
+</p>
+<!--XXE_GENERIC_END-->
+
+<p><b>Vulnerable code:</b></p>
+<p>
+<pre>
+DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+
+Document doc = db.parse(input);
+</pre>
+</p>
+
+<p><b>Solution using "Secure processing" mode:</b></p>
+<p>
+<pre>
+DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+DocumentBuilder db = dbf.newDocumentBuilder();
+
+Document doc = db.parse(input);
+</pre>
+</p>
+
+<p><b>Solution disabling DTD:</b></p>
+<p>
+<pre>
+DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+DocumentBuilder db = dbf.newDocumentBuilder();
+
+Document doc = db.parse(input);
+</pre>
+</p>
+
+<p>
+<b>References</b><br/>
+<!--XXE_GENERIC_START-->
+<a href="http://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference ('XXE')</a>
+<a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=61702260">CERT: IDS10-J. Prevent XML external entity attacks</a><br/>
+<a href="https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing">OWASP.org: XML External Entity (XXE) Processing</a><br/>
+<a href="http://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a><br/>
+<a href="http://www.ws-attacks.org/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a><br/>
+<a href="http://www.ws-attacks.org/index.php/XML_Entity_Reference_Attack">WS-Attacks.org: XML Entity Reference Attack</a><br/>
+<!--XXE_GENERIC_END-->
+<a href="http://xerces.apache.org/xerces2-j/features.html">Xerces2 complete features list</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECXXEDOC">XXE Vulnerability using DocumentBuilder</BugCode>
 
     <!-- XPath Injection for Javax -->
     <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionJavaxDetector">
@@ -736,7 +958,6 @@ could be exposed. This could allow an attacker to access unauthorized data or ma
         </Details>
     </BugPattern>
     <BugCode abbrev="SECXPI">XPath Injection</BugCode>
-
 
     <!-- Struts1 -->
     <Detector class="com.h3xstream.findsecbugs.endpoint.Struts1EndpointDetector">
@@ -1810,7 +2031,7 @@ In the example solution above, the GCM mode introduces an HMAC into the resultin
     <p>
     The library version 2.1.0 is still vulnerable to key size being changed in the ciphertext definition (CVE-2013-5960). Some precautions need to be taken.<br/>
     <br/>
-    <div><b>The cryptographic configuration of ESAPI can also be vulnerable. Please correct if any of these elements are present:</b><br/>
+    <div><b>The cryptographic configuration of ESAPI can also be vulnerable if any of these elements are present:</b><br/>
     <b>Insecure configuration:</b><br/>
     <pre>
 Encryptor.CipherText.useMAC=false

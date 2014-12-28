@@ -15,7 +15,7 @@
     </Detector>
 
     <BugPattern type="PREDICTABLE_RANDOM">
-        <ShortDescription>Predictable Pseudo Random # Generator</ShortDescription>
+        <ShortDescription>Predictable Pseudo Random Number Generator</ShortDescription>
         <LongDescription>Use of {3} is predictable.</LongDescription>
         <Details>
             <![CDATA[
@@ -30,7 +30,7 @@
 <b>References</b><br/>
 <a href="http://jazzy.id.au/default/2010/09/20/cracking_random_number_generators_part_1.html">Cracking Random Number Generators - Part 1 (http://jazzy.id.au)</a><br/>
 <a href="https://www.securecoding.cert.org/confluence/display/java/MSC02-J.+Generate+strong+random+numbers">CERT: MSC02-J. Generate strong random numbers</a><br/>
-<a href="http://cwe.mitre.org/data/definitions/330.html">CWE-330: Use of Insufficiently Random Values</a>
+<a href="http://cwe.mitre.org/data/definitions/330.html">CWE-330: Use of Insufficiently Random Values</a><br/>
 <a href="http://blog.h3xstream.com/2014/12/predicting-struts-csrf-token-cve-2014.html">Predicting Struts CSRF Token (Example of real-life vulnerability and exploitation)</a>
 </p>
 ]]>
@@ -562,7 +562,7 @@ mapped in this way are properly validated before they are used.</p>
 <p><a href="http://csrc.nist.gov/groups/ST/toolkit/secure_hashing.html">NIST</a> recommends the use of SHA-1, SHA-224*, SHA-256, SHA-384, SHA-512, SHA-512/224, or SHA-512/256.</p>
 <p><small>* SHA-224 algorithm is not provided by <a href="http://docs.oracle.com/javase/6/docs/technotes/guides/security/SunProviders.html#SUNProvider"> SUN provider.</a></small></p>
 <p>
-    <b>Example Vulnerable Code:</b><br/>
+    <b>Vulnerable Code:</b><br/>
 <pre>MyProprietaryMessageDigest extends MessageDigest {
     @Override
     protected byte[] engineDigest() {
@@ -661,7 +661,7 @@ regex meant, this new regex can be evaluated quickly, and is not subject to ReDO
     </Detector>
 
     <BugPattern type="XXE_SAXPARSER">
-        <ShortDescription>XML parsing vulnerable to XXE (SAXParser)</ShortDescription>
+        <ShortDescription>XML Parsing Vulnerable to XXE (SAXParser)</ShortDescription>
         <LongDescription>The usage of {3} is vulnerable to XML External Entity attacks</LongDescription>
         <Details>
             <![CDATA[
@@ -750,7 +750,7 @@ parser.parse(inputStream, customHandler);
     <BugCode abbrev="SECXXESAX">XXE Vulnerability using SAXParser</BugCode>
 
     <BugPattern type="XXE_XMLREADER">
-        <ShortDescription>XML parsing vulnerable to XXE (XMLReader)</ShortDescription>
+        <ShortDescription>XML Parsing Vulnerable to XXE (XMLReader)</ShortDescription>
         <LongDescription>The usage of {3} is vulnerable to XML External Entity attacks</LongDescription>
         <Details>
             <![CDATA[
@@ -839,7 +839,7 @@ reader.parse(new InputSource(inputStream));
     <BugCode abbrev="SECXXEREAD">XXE Vulnerability using XMLReader</BugCode>
 
     <BugPattern type="XXE_DOCUMENT">
-        <ShortDescription>XML parsing vulnerable to XXE (DocumentBuilder)</ShortDescription>
+        <ShortDescription>XML Parsing Vulnerable to XXE (DocumentBuilder)</ShortDescription>
         <LongDescription>The usage of {3} is vulnerable to XML External Entity attacks</LongDescription>
         <Details>
             <![CDATA[
@@ -1390,7 +1390,7 @@ The NullCipher is rarely used intentionally in production applications. It imple
 identical to the supplied plaintext. In a few contexts, such as testing, a NullCipher may be appropriate.
 </p>
 <p>
-    <b>Example Vulnerable Code:</b><br/>
+    <b>Vulnerable Code:</b><br/>
 <pre>Cipher doNothingCihper = new NullCipher();
 [...]
 //The ciphertext produced will be identical to the plaintext.
@@ -1422,7 +1422,7 @@ byte[] cipherText = c.doFinal(plainText);</pre>
 The communication channel used is not encrypted. The traffic could be read by an attacker intercepting the network traffic.
 </p>
 <p>
-<b>Example Vulnerable Code:</b><br/>
+<b>Vulnerable Code:</b><br/>
 Plain socket (Cleartext communication):
 <pre>Socket soc = new Socket("www.google.com",80);</pre>
 </p>
@@ -1498,7 +1498,7 @@ byte[] cipherText = c.doFinal(plainText);</pre>
 The software uses the RSA algorithm but does not incorporate Optimal Asymmetric Encryption Padding (OAEP), which might weaken the encryption.
 </p>
 <p>
-<b>Example Vulnerable Code:</b><br/>
+<b>Vulnerable Code:</b><br/>
 <pre>Cipher.getInstance("RSA/NONE/NoPadding")</pre>
 </p>
 <p>
@@ -1537,7 +1537,7 @@ Passwords should not be kept in the source code. The source code can be widely s
 certainly shared in open source. To be managed safely, passwords and secret keys should be stored in separate configuration files or keystores.
 </p>
 <p>
-<p><b>Example Vulnerable Code:</b><br/>
+<p><b>Vulnerable Code:</b><br/>
 <br/>
 <pre>private String SECRET_PASSWORD = "letMeIn!";
 
@@ -1658,7 +1658,7 @@ At least 128 bits of entropy should be used when generating the key if the usage
 If the algorithm can be changed, the AES block cipher should be used instead.
 </p>
 
-<p><b>Example Vulnerable Code:</b><br/>
+<p><b>Vulnerable Code:</b><br/>
 <pre>KeyGenerator keyGen = KeyGenerator.getInstance("Blowfish");
 keyGen.init(64);</pre>
 </p>
@@ -1690,7 +1690,7 @@ keyGen.init(128);</pre>
 <p>"RSA Laboratories currently recommends key sizes of 1024 bits for corporate use and 2048 bits for extremely valuable keys 
 like the root key pair used by a certifying authority". <sup>[1]</sup></p>
 
-<p><b>Example Vulnerable Code:</b><br/>
+<p><b>Vulnerable Code:</b><br/>
 <pre>
 KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
 keyGen.initialize(512);
@@ -1740,7 +1740,7 @@ keyGen.initialize(2048);
     an authentication page is very common.
 </p>
 <p>
-    <b>Example Vulnerable Code:</b></br/>
+    <b>Vulnerable Code:</b></br/>
     <pre>protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     [...]
     resp.sendRedirect(req.getParameter("redirectUrl"));
@@ -1786,7 +1786,7 @@ but looks for them in a different way than the existing 'XSS: JSP reflected cros
 <p>A potential XSS was found. It could be used to execute unwanted JavaScript in a client's browser. (See references)
 </p>
 <p>
-    <b>Example Vulnerable Code:</b>
+    <b>Vulnerable Code:</b>
     <pre><%
 String taintedInput = (String) request.getAttribute("input");
 %>
@@ -1794,7 +1794,7 @@ String taintedInput = (String) request.getAttribute("input");
 <%= taintedInput %></pre>
 </p>
 <p>
-    <b>Safe Code:</b>
+    <b>Solution:</b>
     <pre>
 <%
 String taintedInput = (String) request.getAttribute("input");
@@ -1831,7 +1831,7 @@ which explains these defenses in significant detail.
 A potential XSS was found. It could be used to execute unwanted JavaScript in a client's browser. (See references)
 </p>
 <p>
-    <b>Example Vulnerable Code:</b>
+    <b>Vulnerable Code:</b>
 <pre>protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     String input1 = req.getParameter("input1");
     [...]
@@ -1839,7 +1839,7 @@ A potential XSS was found. It could be used to execute unwanted JavaScript in a 
 }</pre>
 </p>
 <p>
-    <b>Safe Code:</b>
+    <b>Solution:</b>
 <pre>protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     String input1 = req.getParameter("input1");
     [...]
@@ -1900,7 +1900,7 @@ which explains these defenses in significant detail.
 The XML code above will cause the creation of a file with the content "Hello World!".
 </p>
 <p>
-    <b>Example Vulnerable Code:</b></br/>
+    <b>Vulnerable Code:</b></br/>
     <pre>XMLDecoder d = new XMLDecoder(in);
 try {
     Object result = d.readObject();
@@ -1936,7 +1936,7 @@ The solution is to avoid using XMLDecoder to parse content from an untrusted sou
 <p>
     Initialization vector must be regenerated for each message to be encrypted.
 </p>
-<p><b>Example Vulnerable Code:</b></p>
+<p><b>Vulnerable Code:</b></p>
 <p>
 <pre>
 private static byte[] IV = new byte[16] {(byte)0,(byte)1,(byte)2,[...]};
@@ -1946,7 +1946,7 @@ public void encrypt(String message) throws Exception {
     IvParameterSpec ivSpec = new IvParameterSpec(IV);
 [...]
 </pre>
-<p><b>Safe Code:</b></p>
+<p><b>Solution:</b></p>
 <p>
 <pre>
 public void encrypt(String message) throws Exception {

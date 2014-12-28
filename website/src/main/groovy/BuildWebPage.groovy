@@ -11,6 +11,7 @@ def getTemplateReader(String path) {
 //Generated page will be place there
 String outDir = binding.variables.containsKey("project") ? project.build.outputDirectory : System.getProperty("java.io.tmpdir")
 
+
 def outputFile(outDir,file) {
     return new File(outDir, file)
 }
@@ -55,7 +56,7 @@ println "Writing the template to ${outDir}/index.htm"
 outputFile(outDir,"index.htm").withWriter {
     w ->
         w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Home'])
-        w << engine.createTemplate(getTemplateReader("/home.htm")).make(['latestVersion':latestVersion])
+        w << engine.createTemplate(getTemplateReader("/home.htm")).make(['latestVersion':latestVersion,'nbPatterns':bugsBinding['nbPatterns']])
         w << engine.createTemplate(getTemplateReader("/social.htm")).make()
         w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make()
 }
@@ -76,9 +77,16 @@ outputFile(outDir,"tutorials.htm").withWriter {
         w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make()
 }
 
+outputFile(outDir,"security.htm").withWriter {
+    w ->
+        w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Getting Started in Security'])
+        w << engine.createTemplate(getTemplateReader("/security.htm")).make()
+        w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make()
+}
+
 outputFile(outDir,"bugs.htm").withWriter {
     w ->
-        w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Bugs Description'])
+        w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Bug Patterns'])
         w << engine.createTemplate(getTemplateReader("/bugs.htm")).make(bugsBinding)
         w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make()
 }

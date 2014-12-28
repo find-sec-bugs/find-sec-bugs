@@ -1,88 +1,29 @@
-<span class="big_title">Bugs</span>
-<p>
-    The bug patterns identified by the plugin are not automatically vulnerabilities or defects.
-    They represent sensible points of the application that should be analyse closely. A description will
-    always be attach to explain the risk.
-</p>
+<div class="container">
+    <div class="jumbotron jumbotron-ad hidden-print">
 
-<p>
-    Some vulnerability categories covered:
-</p>
-<table>
-    <tr>
-        <td>
-            <ul>
-                <li>Endpoints from various framework</li>
-                <li>Command Injection</li>
-                <li>XPath Injection</li>
-                <li>Xml eXternal Entity (XXE)</li>
-            </ul>
-        </td>
-        <td>
-            <ul>
-                <li>Weak cryptography</li>
-                <li>Tainted inputs</li>
-                <li>Predictable random</li>
-                <li>Specific library weakness</li>
-            </ul>
-        </td>
-        <td>
-            <ul>
-                <li>XSS in JSP page</li>
-                <li>SQL/HQL injection</li>
-                <li>ReDOS</li>
-                <li>Path traversal</li>
-            </ul>
-        </td>
-    </tr>
-</table>
+        <h1><i class="fa fa-crosshairs"></i>&nbsp; Bugs Patterns</h1>
 
-<p>Frameworks support:</p>
-<table>
-    <tr>
-        <td>
-            <ul>
-                <li>Spring MVC</li>
-                <li>Apache Tapestry 5</li>
-                <li>Struts 1</li>
-                <li>Struts 2</li>
-            </ul>
-        </td>
-        <td>
-            <ul>
-                <li>JaxRS (Jersey)</li>
-                <li>JaxWS (Axis2, Metro)</li>
-                <li>J2EE classic Web api</li>
-                <li>Apache Wicket</li>
-            </ul>
-        </td>
-    </tr>
-</table>
+        <p>The complete list of description given when FindBugs identify potential weakness.</p>
 
+    </div>
+</div>
 
-<a name="descriptions"><span class="title">Bugs descriptions</span></a>
-
-<p>Find Security Bugs has a total of <b><% print nbDetectors %></b> detectors and <b><% print nbPatterns
-    %></b> different bug patterns. The complete list of bug patterns are list in this section.
-</p>
+<div class="container">
 
     <%
-    print """
-<table class="bug_list">""";
+
+
 
     bugPatterns.each {b->
     print """
-    <tr>
-        <th class="bug_title"><a name="${b.type}"></a>${b.title} <a href="#${b.type}" title="Permanent link"><img alt="link icon" src="link.png"/></a></th>
-    </tr>
-    <tr>
-        <td class="bug_desc">${b.description}</td>
-    </tr>
+    <section>
+        <a class="anchor" name="${b.type}"></a><h2 class="page-header">${b.title}  <a href="#${b.type}" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+
+        ${b.description}
+    </section>
     """
     }
-
-    print """
-</table>
-""";
 %>
+
+</div>
 

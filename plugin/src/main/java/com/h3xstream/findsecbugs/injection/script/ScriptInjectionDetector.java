@@ -21,20 +21,16 @@ import com.h3xstream.findsecbugs.injection.InjectionDetector;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
 import edu.umd.cs.findbugs.BugReporter;
 
-public class SpelInjectionDetector extends InjectionDetector {
-    private static final String SPEL_INJECTION_TYPE = "SPEL_INJECTION";
+public class ScriptInjectionDetector extends InjectionDetector {
 
-    public SpelInjectionDetector(BugReporter bugReporter) {
+
+    public ScriptInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
     }
 
     @Override
     public InjectionSource[] getInjectionSource() {
-        return new InjectionSource[] {new SpelSource()};
+        return new InjectionSource[] {new ScriptEngineSource(),new SpelSource()};
     }
 
-    @Override
-    public String getBugType() {
-        return SPEL_INJECTION_TYPE;
-    }
 }

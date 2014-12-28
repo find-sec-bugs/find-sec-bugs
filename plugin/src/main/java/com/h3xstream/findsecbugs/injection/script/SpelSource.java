@@ -17,12 +17,16 @@
  */
 package com.h3xstream.findsecbugs.injection.script;
 
+import com.h3xstream.findsecbugs.injection.InjectionPoint;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.generic.*;
 
 public class SpelSource implements InjectionSource {
+
+    private static final String SPEL_INJECTION_TYPE = "SPEL_INJECTION";
+
 
     @Override
     public boolean isCandidate(ConstantPoolGen cpg) {
@@ -39,7 +43,7 @@ public class SpelSource implements InjectionSource {
     }
 
     @Override
-    public int[] getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {
+    public InjectionPoint getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {
         //Signature capture from test class
         //invokeinterface   org/springframework/expression/ExpressionParser.parseExpression (Ljava/lang/String;)Lorg/springframework/expression/Expression;
         //invokevirtual   org/springframework/expression/spel/standard/SpelExpressionParser.parseExpression (Ljava/lang/String;)Lorg/springframework/expression/Expression;
@@ -52,7 +56,7 @@ public class SpelSource implements InjectionSource {
 
             if (className.equals("org.springframework.expression.ExpressionParser") && methodName.equals("parseExpression") &&
                     methodSignature.equals("(Ljava/lang/String;)Lorg/springframework/expression/Expression;")) {
-                return new int[]{0};
+                return new InjectionPoint(new int[]{0},SPEL_INJECTION_TYPE);
             }
         }
         else if(ins instanceof INVOKEVIRTUAL) {
@@ -64,9 +68,11 @@ public class SpelSource implements InjectionSource {
                     className.equals("org.springframework.expression.common.TemplateAwareExpressionParser"))
                     && methodName.equals("parseExpression") &&
                     methodSignature.equals("(Ljava/lang/String;)Lorg/springframework/expression/Expression;")) {
-                return new int[]{0};
+                return new InjectionPoint(new int[]{0},SPEL_INJECTION_TYPE);
             }
         }
-        return new int[0];
+        return InjectionPoint.NONE;
     }
+
+
 }

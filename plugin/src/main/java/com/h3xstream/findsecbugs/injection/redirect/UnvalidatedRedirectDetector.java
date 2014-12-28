@@ -23,7 +23,6 @@ import edu.umd.cs.findbugs.BugReporter;
 
 public class UnvalidatedRedirectDetector extends InjectionDetector {
 
-    private static final String UNVALIDATED_REDIRECT_TYPE = "UNVALIDATED_REDIRECT";
 
     public UnvalidatedRedirectDetector(BugReporter bugReporter) {
         super(bugReporter);
@@ -35,8 +34,4 @@ public class UnvalidatedRedirectDetector extends InjectionDetector {
         return new InjectionSource[]{new RedirectionSource()};
     }
 
-    @Override
-    public String getBugType() {
-        return UNVALIDATED_REDIRECT_TYPE;
-    }
 }

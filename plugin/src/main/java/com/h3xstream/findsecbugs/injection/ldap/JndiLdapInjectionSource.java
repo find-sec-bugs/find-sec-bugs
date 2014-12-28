@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.injection.ldap;
 
+import com.h3xstream.findsecbugs.injection.InjectionPoint;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantUtf8;
@@ -26,6 +27,8 @@ import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InvokeInstruction;
 
 public class JndiLdapInjectionSource implements InjectionSource {
+
+    private static final String LDAP_INJECTION_TYPE = "LDAP_INJECTION";
 
     @Override
     public boolean isCandidate(ConstantPoolGen cpg) {
@@ -43,7 +46,7 @@ public class JndiLdapInjectionSource implements InjectionSource {
     }
 
     @Override
-    public int[] getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {
+    public InjectionPoint getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {
 
         //INVOKEVIRTUAL javax/naming/directory/InitialDirContext.search ((Ljava/lang/String;Ljava/lang/String;Ljavax/naming/directory/SearchControls;)Ljavax/naming/NamingEnumeration;)
         if (ins instanceof INVOKEVIRTUAL) {
@@ -53,9 +56,11 @@ public class JndiLdapInjectionSource implements InjectionSource {
 
             if (className.equals("javax.naming.directory.InitialDirContext") && methodName.equals("search") &&
                     methodSignature.equals("(Ljava/lang/String;Ljava/lang/String;Ljavax/naming/directory/SearchControls;)Ljavax/naming/NamingEnumeration;")) {
-                return new int[]{1, 2};
+                return new InjectionPoint(new int[]{1, 2},LDAP_INJECTION_TYPE);
             }
         }
-        return new int[0];
+        return InjectionPoint.NONE;
     }
+
+
 }

@@ -104,20 +104,22 @@ public abstract class InjectionDetector implements Detector {
 
             //ByteCode.printOpCode( ins, cpg );
 
-            int[] injectableArguments = new int[0];
+            InjectionPoint injectionPoint = null;
             for (InjectionSource source : selectedSources) {
-                injectableArguments = source.getInjectableParameters(invoke, cpg, insHandle);
+                injectionPoint = source.getInjectableParameters(invoke, cpg, insHandle);
                 //System.out.println("Get param from = " + source.getClass().getSimpleName());
-                if (injectableArguments.length > 0) break;
+                if (injectionPoint != InjectionPoint.NONE) {
+                    break;
+                }
             }
 
-            if (injectableArguments.length > 0) {
+            if (injectionPoint != InjectionPoint.NONE) {
 
                 ConstantFrame frame = dataflow.getFactAtLocation(location);
 
 
                 arguments:
-                for (int arg : injectableArguments) {
+                for (int arg : injectionPoint.getInjectableArguments()) {
                     Constant value = frame.getStackValue(arg);
                     System.out.println(arg + ". " + frame.getStackValue(arg).getConstantString());
 //                    int numArguments = frame.getNumArguments(invoke, cpg);
@@ -131,7 +133,7 @@ public abstract class InjectionDetector implements Detector {
                         }
                         if (prev != null && !isSafeValue(prev, cpg, cfg)) {
 
-                            bugReporter.reportBug(new BugInstance(this, getBugType(), Priorities.NORMAL_PRIORITY) //
+                            bugReporter.reportBug(new BugInstance(this, injectionPoint.getBugType(), Priorities.NORMAL_PRIORITY) //
                                     .addClass(javaClass) //
                                     .addMethod(javaClass, method) //
                                     .addSourceLine(classContext, method, location));
@@ -203,8 +205,10 @@ public abstract class InjectionDetector implements Detector {
     public void report() {
     }
 
-
+    /**
+     *
+     * @return
+     */
     public abstract InjectionSource[] getInjectionSource();
 
-    public abstract String getBugType();
 }

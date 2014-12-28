@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.injection.ldap;
 
+import com.h3xstream.findsecbugs.injection.InjectionPoint;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantUtf8;
@@ -30,6 +31,8 @@ import org.apache.bcel.generic.InvokeInstruction;
  * This detector only look at filter parameters from query..
  */
 public class UnboundIdLdapInjectionSource implements InjectionSource {
+
+    private static final String LDAP_INJECTION_TYPE = "LDAP_INJECTION";
 
     @Override
     public boolean isCandidate(ConstantPoolGen cpg) {
@@ -47,7 +50,7 @@ public class UnboundIdLdapInjectionSource implements InjectionSource {
     }
 
     @Override
-    public int[] getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {
+    public InjectionPoint getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {
 
         if (ins instanceof INVOKEVIRTUAL) {
             String methodName = ins.getMethodName(cpg);
@@ -56,10 +59,11 @@ public class UnboundIdLdapInjectionSource implements InjectionSource {
 
             if (className.equals("com.unboundid.ldap.sdk.LDAPConnection") && methodName.equals("search") &&
                     methodSignature.equals("(Ljava/lang/String;Lcom/unboundid/ldap/sdk/SearchScope;Ljava/lang/String;[Ljava/lang/String;)Lcom/unboundid/ldap/sdk/SearchResult;")) {
-                return new int[]{0, 2};
+                return new InjectionPoint(new int[]{0, 2},LDAP_INJECTION_TYPE);
             }
         }
 
-        return new int[0];
+        return InjectionPoint.NONE;
     }
+
 }

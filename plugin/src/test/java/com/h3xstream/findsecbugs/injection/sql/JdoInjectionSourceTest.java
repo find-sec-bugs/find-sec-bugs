@@ -43,7 +43,7 @@ public class JdoInjectionSourceTest extends BaseDetectorTest {
         for (Integer line : Arrays.asList(22, 24)) {
             verify(reporter).doReportBug(
                     bugDefinition()
-                            .bugType("SQL_INJECTION")
+                            .bugType("SQL_INJECTION_JDO")
                             .inClass("JdoSql").inMethod("testJdoQueries").atLine(line)
                             .build()
             );
@@ -52,7 +52,7 @@ public class JdoInjectionSourceTest extends BaseDetectorTest {
         for (Integer line : Arrays.asList(39, 43, 47)) {
             verify(reporter).doReportBug(
                     bugDefinition()
-                            .bugType("SQL_INJECTION")
+                            .bugType("SQL_INJECTION_JDO")
                             .inClass("JdoSql").inMethod("testJdoQueriesAdditionalMethodSig").atLine(line)
                             .build()
             );
@@ -61,7 +61,7 @@ public class JdoInjectionSourceTest extends BaseDetectorTest {
         //Only the previous 2 cases should be marked as vulnerable
         verify(reporter, times(5)).doReportBug(
                 bugDefinition()
-                        .bugType("SQL_INJECTION")
+                        .bugType("SQL_INJECTION_JDO")
                         .build()
         );
     }

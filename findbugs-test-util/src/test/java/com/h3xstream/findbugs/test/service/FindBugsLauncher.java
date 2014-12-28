@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Random;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 

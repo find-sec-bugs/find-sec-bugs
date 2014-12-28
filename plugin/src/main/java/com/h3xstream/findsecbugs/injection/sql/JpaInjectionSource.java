@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.injection.sql;
 
+import com.h3xstream.findsecbugs.injection.InjectionPoint;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
 
 import org.apache.bcel.classfile.Constant;
@@ -32,6 +33,8 @@ import org.apache.bcel.generic.InvokeInstruction;
  * http://docs.oracle.com/javaee/6/api/javax/persistence/package-summary.html
  */
 public class JpaInjectionSource implements InjectionSource {
+
+    protected static final String SQL_INJECTION_TYPE = "SQL_INJECTION_JPA";
 
     @Override
     public boolean isCandidate(ConstantPoolGen cpg) {
@@ -49,7 +52,7 @@ public class JpaInjectionSource implements InjectionSource {
     }
 
     @Override
-    public int[] getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {
+    public InjectionPoint getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {
 
         if (ins instanceof INVOKEINTERFACE) {
             String methodName = ins.getMethodName(cpg);
@@ -60,20 +63,20 @@ public class JpaInjectionSource implements InjectionSource {
 
             if (className.equals("javax.persistence.EntityManager") && methodName.equals("createQuery") &&
                     methodSignature.equals("(Ljava/lang/String;)Ljavax/persistence/Query;")) {
-                return new int[]{0};
+                return new InjectionPoint(new int[]{0}, SQL_INJECTION_TYPE);
             } else if (className.equals("javax.persistence.EntityManager") && methodName.equals("createQuery") &&
                     methodSignature.equals("(Ljava/lang/String;Ljava/lang/Class;)Ljavax/persistence/TypedQuery;")) {
-                return new int[]{1};
+                return new InjectionPoint(new int[]{1}, SQL_INJECTION_TYPE);
             } else if (className.equals("javax.persistence.EntityManager") && methodName.equals("createNativeQuery") &&
                     methodSignature.equals("(Ljava/lang/String;)Ljavax/persistence/Query;")) {
-                return new int[]{0};
+                return new InjectionPoint(new int[]{0}, SQL_INJECTION_TYPE);
             } else if (className.equals("javax.persistence.EntityManager") && methodName.equals("createNativeQuery") &&
                     (methodSignature.equals("(Ljava/lang/String;Ljava/lang/String;)Ljavax/persistence/Query;") ||
                      methodSignature.equals("(Ljava/lang/String;Ljava/lang/Class;)Ljavax/persistence/Query;"))) {
-                return new int[]{1};
+                return new InjectionPoint(new int[]{1}, SQL_INJECTION_TYPE);
             }
         }
 
-        return new int[0];
+        return InjectionPoint.NONE;
     }
 }

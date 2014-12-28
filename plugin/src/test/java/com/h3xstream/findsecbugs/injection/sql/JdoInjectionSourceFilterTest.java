@@ -42,14 +42,14 @@ public class JdoInjectionSourceFilterTest extends BaseDetectorTest {
 
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("SQL_INJECTION")
+                        .bugType("SQL_INJECTION_JDO")
                         .inClass("JdoSqlFilter").inMethod("testJdoUnsafeFilter").atLine(21)
                         .build()
         );
 
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("SQL_INJECTION")
+                        .bugType("SQL_INJECTION_JDO")
                         .inClass("JdoSqlFilter").inMethod("testJdoUnsafeGrouping").atLine(48)
                         .build()
         );
@@ -57,7 +57,7 @@ public class JdoInjectionSourceFilterTest extends BaseDetectorTest {
         //Only the previous 2 cases should be marked as vulnerable
         verify(reporter, times(2)).doReportBug(
                 bugDefinition()
-                        .bugType("SQL_INJECTION")
+                        .bugType("SQL_INJECTION_JDO")
                         .build()
         );
     }

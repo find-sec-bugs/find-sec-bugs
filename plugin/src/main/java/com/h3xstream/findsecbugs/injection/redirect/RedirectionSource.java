@@ -18,12 +18,15 @@
 package com.h3xstream.findsecbugs.injection.redirect;
 
 import com.h3xstream.findsecbugs.common.ByteCode;
+import com.h3xstream.findsecbugs.injection.InjectionPoint;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.generic.*;
 
 public class RedirectionSource implements InjectionSource {
+
+    private static final String UNVALIDATED_REDIRECT_TYPE = "UNVALIDATED_REDIRECT";
 
     @Override
     public boolean isCandidate(ConstantPoolGen cpg) {
@@ -41,7 +44,7 @@ public class RedirectionSource implements InjectionSource {
     }
 
     @Override
-    public int[] getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {
+    public InjectionPoint getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {
         //ByteCode.printOpCode(ins, cpg);
 
         if (ins instanceof INVOKEINTERFACE) {
@@ -50,20 +53,20 @@ public class RedirectionSource implements InjectionSource {
 
             if (className.equals("javax.servlet.http.HttpServletResponse")) {
                 if (methodName.equals("sendRedirect")) {
-                    return new int[]{0};
+                    return new InjectionPoint(new int[]{0},UNVALIDATED_REDIRECT_TYPE);
                 } else if (methodName.equals("addHeader")) {
 
                     LDC ldc = ByteCode.getPrevInstruction(insHandle, LDC.class);
                     if (ldc != null) {
                         Object value = ldc.getValue(cpg);
                         if ("Location".equals(value)) {
-                            return new int[]{0};
+                            return new InjectionPoint(new int[]{0},UNVALIDATED_REDIRECT_TYPE);
                         }
                     }
 
                 }
             }
         }
-        return new int[0];
+        return InjectionPoint.NONE;
     }
 }

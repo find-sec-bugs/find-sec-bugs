@@ -23,7 +23,6 @@ import edu.umd.cs.findbugs.BugReporter;
 
 public class LdapInjectionDetector extends InjectionDetector {
 
-    private static final String LDAP_INJECTION_TYPE = "LDAP_INJECTION";
 
     public LdapInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
@@ -34,8 +33,4 @@ public class LdapInjectionDetector extends InjectionDetector {
         return new InjectionSource[]{new JndiLdapInjectionSource(), new UnboundIdLdapInjectionSource()};
     }
 
-    @Override
-    public String getBugType() {
-        return LDAP_INJECTION_TYPE;
-    }
 }

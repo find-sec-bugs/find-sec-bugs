@@ -23,7 +23,6 @@ import edu.umd.cs.findbugs.BugReporter;
 
 public class SqlInjectionDetector extends InjectionDetector {
 
-    private static final String SQL_INJECTION_TYPE = "SQL_INJECTION";
 
     public SqlInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
@@ -34,8 +33,4 @@ public class SqlInjectionDetector extends InjectionDetector {
         return new InjectionSource[]{new HibernateInjectionSource(), new JdoInjectionSource(), new JpaInjectionSource()};
     }
 
-    @Override
-    public String getBugType() {
-        return SQL_INJECTION_TYPE;
-    }
 }

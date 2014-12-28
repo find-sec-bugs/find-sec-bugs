@@ -15,27 +15,25 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.injection.script;
+package com.h3xstream.findsecbugs.injection;
 
-import com.h3xstream.findsecbugs.injection.InjectionDetector;
-import com.h3xstream.findsecbugs.injection.InjectionSource;
-import edu.umd.cs.findbugs.BugReporter;
+public class InjectionPoint {
+    public static InjectionPoint NONE = new InjectionPoint(new int[0],null);
 
-public class ScriptEngineInjectionDetector extends InjectionDetector {
+    private int[] injectableArguments;
+    private String bugType;
 
-    private static final String SCRIPT_ENGINE_INJECTION_TYPE = "SCRIPT_ENGINE_INJECTION";
 
-    public ScriptEngineInjectionDetector(BugReporter bugReporter) {
-        super(bugReporter);
+    public InjectionPoint( int[] injectableArguments,String bugType) {
+        this.injectableArguments = injectableArguments;
+        this.bugType = bugType;
     }
 
-    @Override
-    public InjectionSource[] getInjectionSource() {
-        return new InjectionSource[] {new ScriptEngineSource()};
+    public int[] getInjectableArguments() {
+        return injectableArguments;
     }
 
-    @Override
     public String getBugType() {
-        return SCRIPT_ENGINE_INJECTION_TYPE;
+        return bugType;
     }
 }

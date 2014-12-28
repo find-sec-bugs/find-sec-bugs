@@ -42,5 +42,6 @@ public interface InjectionSource {
      * @param insHandle instruction handle (needed to look at the instruction around the current instruction)
      * @return
      */
-    int[] getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle);
+    InjectionPoint getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle);
+
 }

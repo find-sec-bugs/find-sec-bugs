@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.injection.script;
 
+import com.h3xstream.findsecbugs.injection.InjectionPoint;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantUtf8;
@@ -26,6 +27,9 @@ import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InvokeInstruction;
 
 public class ScriptEngineSource implements InjectionSource {
+
+    private static final String SCRIPT_ENGINE_INJECTION_TYPE = "SCRIPT_ENGINE_INJECTION";
+
     @Override
     public boolean isCandidate(ConstantPoolGen cpg) {
         for (int i = 0; i < cpg.getSize(); i++) {
@@ -42,7 +46,7 @@ public class ScriptEngineSource implements InjectionSource {
     }
 
     @Override
-    public int[] getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {
+    public InjectionPoint getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {
         //Signature capture from test class
         //invokeinterface   javax/script/ScriptEngine.eval (Ljava/lang/String;)Ljava/lang/Object;
 
@@ -53,9 +57,9 @@ public class ScriptEngineSource implements InjectionSource {
 
             if (className.equals("javax.script.ScriptEngine") && methodName.equals("eval") &&
                     methodSignature.equals("(Ljava/lang/String;)Ljava/lang/Object;")) {
-                return new int[]{0};
+                return new InjectionPoint(new int[]{0},SCRIPT_ENGINE_INJECTION_TYPE);
             }
         }
-        return new int[0];
+        return InjectionPoint.NONE;
     }
 }

@@ -40,13 +40,13 @@ public class JpaInjectionSourceTest extends BaseDetectorTest {
 
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("SQL_INJECTION")
+                        .bugType("SQL_INJECTION_JPA")
                         .inClass("JpaSql").inMethod("getUserByUsername").atLine(16)
                         .build()
         );
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("SQL_INJECTION")
+                        .bugType("SQL_INJECTION_JPA")
                         .inClass("JpaSql").inMethod("getUserByUsernameAlt2").atLine(24)
                         .build()
         );
@@ -55,7 +55,7 @@ public class JpaInjectionSourceTest extends BaseDetectorTest {
         //2 createQuery + 3 createNativeQuery detect
         verify(reporter, times(2+3)).doReportBug(
                 bugDefinition()
-                        .bugType("SQL_INJECTION")
+                        .bugType("SQL_INJECTION_JPA")
                         .build()
         );
     }

@@ -1,51 +1,76 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Download - Find Security Bugs</title>
+
     <link href="http://fonts.googleapis.com/css?family=Squada+One" rel="stylesheet" type="text/css"/>
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/font-awesome.css" rel="stylesheet">
+    <link href="css/fsb-custom-theme.css" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="styles.css"/>
-
-    
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
 <body>
 
-<a href="https://github.com/h3xstream/find-sec-bugs"><img
-        style="position: fixed; top: 0; left: 0; border: 0;z-index:100;"
-        src="https://s3.amazonaws.com/github/ribbons/forkme_left_gray_6d6d6d.png" alt="Fork me on GitHub"/></a>
+
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Find Security Bugs</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/find-sec-bugs/">Home</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">How To <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="dropdown-header">Use the plugin with..</li>
+                        <li><a href="tutorials.htm#Maven">Maven</a></li>
+                        <li><a href="tutorials.htm#Eclipse">Eclipse</a></li>
+                        <li><a href="tutorials.htm#IntelliJ">IntelliJ</a></li>
+                        <li><a href="tutorials.htm#Jenkins">Jenkins</a></li>
+                        <li><a href="tutorials.htm#Sonar">Sonar</a></li>
+                        <li class="divider"></li>
+                        <li class="dropdown-header">Knowledge base</li>
+                        <li><a href="security.htm">Getting started in security</a></li>
+                    </ul>
+                </li>
+                <li><a href="bugs.htm">Bug Patterns</a></li>
+                <li><a href="download.htm">Download</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="license.htm">License</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+
+<br/><br/>
+
 
 <div class="container">
-    <div class="left_column">
+    <div class="jumbotron jumbotron-ad hidden-print">
 
-        <br/><br/><br/><br/><br/>
-
-        <a href="/find-sec-bugs/" class="menu">/home</a><br/>
-        <a href="download.htm" class="menu">/download</a><br/>
-        <a href="tutorials.htm" class="menu">/tutorials</a><br/>
-        <a href="bugs.htm" class="menu">/bugs</a><br/>
-        <a href="license.htm" class="menu">/license</a><br/>
-
-        <br/><br/>
-        <a href="http://travis-ci.org/h3xstream/find-sec-bugs"><img
-                src="https://secure.travis-ci.org/h3xstream/find-sec-bugs.png?branch=master"
-                alt="Build Status"/></a><br/>
-        <br/>
-        <a href='https://coveralls.io/r/h3xstream/find-sec-bugs?branch=master'>
-            <img src='https://coveralls.io/repos/h3xstream/find-sec-bugs/badge.png?branch=master'
-                 alt='Coverage Status' /></a><br/>
-        <br/>
-
-        <br/><br/>
+        <h1><i class="fa fa-download"></i>&nbsp; Downloads</h1>
 
     </div>
+</div>
 
-    <div class="right_column">
+<div class="container">
 
-        <center><a href="https://github.com/h3xstream/find-sec-bugs" class="header_title">Find Security Bugs</a></center>
-        <div class="main_content">
-<span class="big_title">Download</span>
+    <h2 class="page-header">Download links</h2>
 
 <p>
     <script type="text/javascript">
@@ -62,25 +87,53 @@
 </p>
 
 <p>
-    The official releases are push to <a href="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.h3xstream.findsecbugs%22%20a%3A%22findsecbugs-plugin%22">Maven Central repository</a>.
+    The official releases are push to <a href="http://search.maven.org/#search|gav|1|g:%22com.h3xstream.findsecbugs%22 AND a:%22findsecbugs-plugin%22">Maven Central repository</a>.
     The manual download of the jar is only needed for integration with Ant and the IDEs.
 </p>
-<p>
-    <a href="http://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/1.2.1/findsecbugs-plugin-1.2.1.jar" class="download_button"><img src="down.png" alt="download icon" style="vertical-align:middle"/> Get the plugin v 1.2.1</a>
-    <a href="http://findbugs.sourceforge.net/" class="download_button"><img src="down.png" alt="download icon" style="vertical-align:middle"/> Get Find Bugs</a>
-    <br/><br/>
-    <a href="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.h3xstream.findsecbugs%22%20a%3A%22findsecbugs-plugin%22">Browse all the releases</a>
+
+    <div class="actions">
+        <a class="btn btn-default btn-lg" href="http://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/1.2.1/findsecbugs-plugin-1.2.1.jar">
+            <i class="fa fa-download"></i>&nbsp;&nbsp;
+            Get the plugin v 1.2.1
+        </a>
+
+        <a class="btn btn-lg" href="http://findbugs.sourceforge.net/">
+            <i class="fa fa-download"></i>&nbsp;&nbsp;
+            Get Find Bugs
+        </a>
+
+        <a class="btn btn-lg" href="http://search.maven.org/#search|gav|1|g:%22com.h3xstream.findsecbugs%22 AND a:%22findsecbugs-plugin%22">
+            <i class="fa fa-search"></i>&nbsp;&nbsp;
+            Browse all the releases
+        </a>
+    </div>
 </p>
 <p>
     Not sure how to integrate the plugin? Check the <a href="tutorials.htm">Tutorial section</a>.
 </p>
-</div>
-</div>
-<div style="clear:both"></div>
-
 
 </div>
+<br/><br/>
 
+<footer id="footer" class="footer hidden-print">
+    <div class="container text-center">
+        <div>
+            Find Security Bugs 1.2.1
+            <span class="hide-xs">&middot;</span>
+            Created by <a href="https://twitter.com/h3xstream">Philippe Arteau</a>
+        </div>
+        <div>
+            Licensed under <a href="license.html">LGPL</a>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
+
+<!-- Google Analytics -->
 <script type="text/javascript">
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', 'UA-34839255-2']);

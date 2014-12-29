@@ -2,7 +2,7 @@
 
 Find Security Bugs is a plugin for FindBugs that aim to help security audit on Java web application.
 
-Website : http://h3xstream.github.com/find-sec-bugs/
+Website : http://h3xstream.github.io/find-sec-bugs/
 
 ## License
 

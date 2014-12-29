@@ -11,7 +11,7 @@ def getTemplateReader(String path) {
 //Generated page will be place there
 String outDir = binding.variables.containsKey("project") ? project.build.outputDirectory : System.getProperty("java.io.tmpdir")
 
-
+outDir = "C:\\Code\\find-sec-bugs\\website\\src\\main\\resources\\www"
 def outputFile(outDir,file) {
     return new File(outDir, file)
 }
@@ -42,7 +42,7 @@ rootXml.Detector.each { detector ->
 }
 
 downloadUrl = "http://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/1.2.1/findsecbugs-plugin-1.2.1.jar"
-mavenCentralSearch = "http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.h3xstream.findsecbugs%22%20a%3A%22findsecbugs-plugin%22"
+mavenCentralSearch = "http://search.maven.org/#search|gav|1|g:%22com.h3xstream.findsecbugs%22 AND a:%22findsecbugs-plugin%22"
 latestVersion = "v 1.2.1"
 
 //Generate

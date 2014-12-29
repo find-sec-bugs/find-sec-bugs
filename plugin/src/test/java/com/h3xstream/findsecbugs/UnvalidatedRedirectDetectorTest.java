@@ -1,6 +1,6 @@
 /**
  * Find Security Bugs
- * Copyright (c) 2014, Philippe Arteau, All rights reserved.
+ * Copyright (c) Philippe Arteau, All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

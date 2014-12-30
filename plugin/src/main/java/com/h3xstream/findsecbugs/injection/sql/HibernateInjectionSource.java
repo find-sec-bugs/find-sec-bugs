@@ -61,9 +61,16 @@ public class HibernateInjectionSource implements InjectionSource {
             String className = ins.getClassName(cpg);
 
             //Criterion.sqlRestriction
-            if (ins instanceof INVOKESTATIC && className.equals("org.hibernate.criterion.Restrictions") && methodName.equals("sqlRestriction") &&
-                    methodSignature.equals("(Ljava/lang/String;)Lorg/hibernate/criterion/Criterion;")) {
-                return new InjectionPoint(new int[]{0}, SQL_INJECTION_TYPE);
+            if (ins instanceof INVOKESTATIC && className.equals("org.hibernate.criterion.Restrictions") && methodName.equals("sqlRestriction")){
+                if(methodSignature.equals("(Ljava/lang/String;)Lorg/hibernate/criterion/Criterion;")) {
+                    return new InjectionPoint(new int[]{0}, SQL_INJECTION_TYPE);
+                }
+                else if (methodSignature.equals("(Ljava/lang/String;Ljava/lang/Object;Lorg/hibernate/type/Type;)Lorg/hibernate/criterion/Criterion;")) {
+                    return new InjectionPoint(new int[]{2}, SQL_INJECTION_TYPE);
+                }
+                else if (methodSignature.equals("(Ljava/lang/String;[Ljava/lang/Object;[Lorg/hibernate/type/Type;)Lorg/hibernate/criterion/Criterion;")) {
+                    return new InjectionPoint(new int[]{2}, SQL_INJECTION_TYPE);
+                }
             }
             //Session.createQuery
             else if (ins instanceof INVOKEINTERFACE && className.equals("org.hibernate.Session") && methodName.equals("createQuery") &&

@@ -40,7 +40,7 @@ public class HibernateInjectionSourceTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        for (Integer line : Arrays.asList(18, 20, 22)) {
+        for (Integer line : Arrays.asList(20, 22, 24, 28, 29)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("SQL_INJECTION_HIBERNATE")
@@ -50,7 +50,7 @@ public class HibernateInjectionSourceTest extends BaseDetectorTest {
         }
 
         //Only the previous 3 cases should be marked as vulnerable
-        verify(reporter, times(3)).doReportBug(
+        verify(reporter, times(5)).doReportBug(
                 bugDefinition()
                         .bugType("SQL_INJECTION_HIBERNATE")
                         .build()

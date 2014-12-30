@@ -4,6 +4,8 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.StandardBasicTypes;
+import org.hibernate.type.Type;
 
 public class HibernateSql {
 
@@ -21,6 +23,10 @@ public class HibernateSql {
 
         session.createSQLQuery(String.format("select * from TestEntity where id = %s ", input));
 
+        //More sqlRestriction signatures
+
+        criteria.add(Restrictions.sqlRestriction("param1  = ? and param2 = " + input,input, StandardBasicTypes.STRING));
+        criteria.add(Restrictions.sqlRestriction("param1  = ? and param2 = " + input,new String[] {input}, new Type[] {StandardBasicTypes.STRING}));
 
         //OK nothing risky here..
 
@@ -33,5 +39,11 @@ public class HibernateSql {
         final String localSql = "select * from TestEntity " + localSafe;
 
         session.createSQLQuery(localSql);
+
+        //More sqlRestriction signatures (with safe binding)
+
+        criteria.add(Restrictions.sqlRestriction("param1  = ?",input, StandardBasicTypes.STRING));
+        criteria.add(Restrictions.sqlRestriction("param1  = ? and param2 = ?", new String[] {input}, new Type[] {StandardBasicTypes.STRING}));
+
     }
 }

@@ -18,9 +18,6 @@
 package com.h3xstream.findsecbugs.injection;
 
 import com.h3xstream.findsecbugs.common.ByteCode;
-import com.h3xstream.findsecbugs.injection.sql.HibernateInjectionSource;
-import com.h3xstream.findsecbugs.injection.sql.JdoInjectionSource;
-import com.h3xstream.findsecbugs.injection.sql.JpaInjectionSource;
 
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;

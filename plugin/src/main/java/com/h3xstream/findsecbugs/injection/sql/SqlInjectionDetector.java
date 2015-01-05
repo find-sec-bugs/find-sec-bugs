@@ -17,20 +17,17 @@
  */
 package com.h3xstream.findsecbugs.injection.sql;
 
-import com.h3xstream.findsecbugs.injection.InjectionDetector;
-import com.h3xstream.findsecbugs.injection.InjectionSource;
+import com.h3xstream.findsecbugs.injection.InjectionDetectorSkeleton;
 import edu.umd.cs.findbugs.BugReporter;
 
-public class SqlInjectionDetector extends InjectionDetector {
-
+public class SqlInjectionDetector extends InjectionDetectorSkeleton {
 
     public SqlInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
     }
 
     @Override
-    public InjectionSource[] getInjectionSource() {
-        return new InjectionSource[]{new HibernateInjectionSource(), new JdoInjectionSource(), new JpaInjectionSource()};
+    protected String getResourceBaseName() {
+        return toResourceBaseName(this.getClass());
     }
-
 }

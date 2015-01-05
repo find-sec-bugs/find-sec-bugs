@@ -15,19 +15,28 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.injection.ldap;
+package com.h3xstream.findsecbugs.injection;
 
-import com.h3xstream.findsecbugs.injection.InjectionDetectorSkeleton;
 import edu.umd.cs.findbugs.BugReporter;
 
-public class LdapInjectionDetector extends InjectionDetectorSkeleton {
+/**
+ *
+ * @author naokikimura
+ */
+public abstract class InjectionDetectorSkeleton extends InjectionDetector {
 
-    public LdapInjectionDetector(BugReporter bugReporter) {
+    protected static String toResourceBaseName(Class<? extends InjectionDetectorSkeleton> that) {
+        return that.getPackage().getName().replaceAll("\\.", "/");
+    }
+
+    protected InjectionDetectorSkeleton(BugReporter bugReporter) {
         super(bugReporter);
     }
 
     @Override
-    protected String getResourceBaseName() {
-        return toResourceBaseName(this.getClass());
+    public InjectionSource[] getInjectionSource() {
+        return new InjectionSource[]{InjectionSourceImpl.getInstance(getResourceBaseName())};
     }
+
+    protected abstract String getResourceBaseName();
 }

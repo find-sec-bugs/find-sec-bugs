@@ -82,7 +82,10 @@
 <li>a password reset token (sent by email)</li>
 <li>any other secret value</li>
 </ul>
-<p>A quick fix could be to replace the use of <b>java.util.Random</b> with something stronger, such as <b>java.security.SecureRandom</b>.
+<p>
+A quick fix could be to replace the use of <b>java.util.Random</b> with something stronger, such as <b>java.security.SecureRandom</b>.
+</p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://jazzy.id.au/default/2010/09/20/cracking_random_number_generators_part_1.html">Cracking Random Number Generators - Part 1 (http://jazzy.id.au)</a><br/>
@@ -104,6 +107,8 @@ You may need to validate or sanitize those values before passing them to sensiti
 <li>HTML construction (Potential XSS)</li>
 <li>etc...</li>
 </ul>
+
+<br/>
 <p>
 <b>Reference</b><br/>
 <a href="http://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a>
@@ -113,7 +118,10 @@ You may need to validate or sanitize those values before passing them to sensiti
     <section>
         <a class="anchor" name="SERVLET_CONTENT_TYPE"></a><h2 class="page-header">Untrusted Content-Type Header  <a href="#SERVLET_CONTENT_TYPE" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
-        <p>The HTTP header Content-Type can be controlled by the client. As such, its value should not be used in any security critical decisions.</p>
+        <p>
+The HTTP header Content-Type can be controlled by the client. As such, its value should not be used in any security critical decisions.
+</p>
+<br/>
 <p>
 <b>Reference</b><br/>
 <a href="http://cwe.mitre.org/data/definitions/807.html">CWE-807: Untrusted Inputs in a Security Decision</a>
@@ -129,13 +137,13 @@ behavior which is to extract the <code>Host</code> header.</p>
 <pre>
 GET /testpage HTTP/1.1
 Host: www.example.com
-[...]
-</pre>
+[...]</pre>
 <p>
 The web container serving your application may redirect requests to your application by default. This would allow
 a malicious user to place any value in the Host header. It is recommended that you do not trust this value in any security
 decisions you make with respect to a request.
 </p>
+<br/>
 <p>
 <b>Reference</b><br/>
 <a href="http://cwe.mitre.org/data/definitions/807.html">CWE-807: Untrusted Inputs in a Security Decision</a>
@@ -163,6 +171,7 @@ Cookie: JSESSIONID=Any value of the user&#39;s choice!!??'''&quot;&gt;
 considered an unauthenticated user. In addition, the session ID value should never be logged. If it is, then the log file could contain 
 valid active session IDs, allowing an insider to hijack any sessions whose IDs have been logged and are still active.
 </p>
+<br/>
 <p>
 <b>Reference</b><br/>
 <a href="https://www.owasp.org/index.php/Session_Management_Cheat_Sheet">OWASP: Session Management Cheat Sheet</a>
@@ -179,6 +188,7 @@ be passed in.</p>
 the value obtained from <code>HttpServletRequest.getQueryString()</code> should be considered unsafe.
 You may need to validate or sanitize anything pulled from the query string before passing it to sensitive APIs. 
 </p>
+<br/>
 <p>
 <b>Reference</b><br/>
 <a href="http://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a>
@@ -191,6 +201,7 @@ You may need to validate or sanitize anything pulled from the query string befor
         <p>Request headers can easily be altered by the requesting user. In general, no assumption should be made that 
 the request came from a regular browser without modification by an attacker. As such, it is recommended that you 
 not trust this value in any security decisions you make with respect to a request.</p>
+<br/>
 <p>
 <b>Reference</b><br/>
 <a href="http://cwe.mitre.org/data/definitions/807.html">CWE-807: Untrusted Inputs in a Security Decision</a>
@@ -213,6 +224,8 @@ Recommendations:
 <li>No access control should be based on the value of this header.</li>
 <li>No CSRF protection should be based only on this value (<a href="http://www.w3.org/Protocols/HTTP/HTRQ_Headers.html#z14">because it is optional</a>).</li>
 </ul>
+</p>
+<br/>
 <p>
 <b>Reference</b><br/>
 <a href="http://cwe.mitre.org/data/definitions/807.html">CWE-807: Untrusted Inputs in a Security Decision</a>
@@ -224,6 +237,7 @@ Recommendations:
 
         <p>The header "User-Agent" can easily be spoofed by the client. Adopting different behaviors based on the User-Agent (for
 crawler UA) is not recommended.</p>
+<br/>
 <p>
 <b>Reference</b><br/>
 <a href="http://cwe.mitre.org/data/definitions/807.html">CWE-807: Untrusted Inputs in a Security Decision</a>
@@ -236,6 +250,7 @@ crawler UA) is not recommended.</p>
         <p>The information stored in a custom cookie should not be sensitive or related to the session. In most cases, sensitive data should only be stored in session
 and referenced by the user's session cookie. See HttpSession (HttpServletRequest.getSession())</p>
 <p>Custom cookies can be used for information that needs to live longer than and is independent of a specific session.</p>
+<br/>
 <p>
 <b>Reference</b><br/>
 <a href="http://cwe.mitre.org/data/definitions/315.html">CWE-315: Cleartext Storage of Sensitive Information in a Cookie</a>
@@ -249,6 +264,7 @@ and referenced by the user's session cookie. See HttpSession (HttpServletRequest
 If an unfiltered parameter is passed to this file API, files from an arbitrary filesystem location could be read.</p>
 <p>This rule identifies <b>potential</b> path traversal vulnerabilities. In many cases, the constructed file path cannot be controlled
 by the user. If that is the case, the reported instance is a false positive.</p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246952/Path%20Traversal">WASC: Path Traversal</a><br/>
@@ -265,6 +281,7 @@ by the user. If that is the case, the reported instance is a false positive.</p>
 If an unfiltered parameter is passed to this file API, files at an arbitrary filesystem location could be modified.</p>
 <p>This rule identifies <b>potential</b> path traversal vulnerabilities. In many cases, the constructed file path cannot be controlled
 by the user. If that is the case, the reported instance is a false positive.</p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246952/Path%20Traversal">WASC-33: Path Traversal</a><br/>
@@ -278,8 +295,9 @@ by the user. If that is the case, the reported instance is a false positive.</p>
         <a class="anchor" name="COMMAND_INJECTION"></a><h2 class="page-header">Potential Command Injection  <a href="#COMMAND_INJECTION" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>The highlighted API is used to execute a system command. If unfiltered input is passed to this API, it can lead to arbitrary command execution.</p>
+<br/>
 <p>
-<b>Reference</b><br/>
+<b>References</b><br/>
 <a href="https://www.owasp.org/index.php/Command_Injection">OWASP: Command Injection</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
 <a href="http://cwe.mitre.org/data/definitions/78.html">CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')</a>
@@ -302,6 +320,7 @@ that looks at the end of the filename (e.g., endswith ".log") to make sure its a
 </ul>
 <p>If you know you are using a modern version of Java immune to NULL byte injection, you can probably disable this rule.
 </p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246949/Null%20Byte%20Injection">WASC-28: Null Byte Injection</a><br/>
@@ -323,6 +342,7 @@ Detailed information for a proper implementation is at:
 <a href="http://stackoverflow.com/a/6378872/89769">[1]</a> 
 <a href="http://stackoverflow.com/a/5493452/89769">[2]</a>
 </p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246945/Insufficient%20Transport%20Layer%20Protection">WASC-04: Insufficient Transport Layer Protection</a><br/>
@@ -343,6 +363,7 @@ Detailed information for a proper implementation is at:
 <li>The communication should ideally be over SSL.</li>
 </ul>
 </p>
+<br/>
 <p>
 <b>Reference</b><br/>
 <a href="https://www.owasp.org/index.php/Web_Service_Security_Cheat_Sheet">OWASP: Web Service Security Cheat Sheet</a>
@@ -363,6 +384,7 @@ Detailed information for a proper implementation is at:
 <li>If the service supports writes (e.g., via POST), its vulnerability to CSRF should be investigated.<sup>[1]</sup></li>
 </ul>
 </p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="https://www.owasp.org/index.php/REST_Assessment_Cheat_Sheet">OWASP: REST Assessment Cheat Sheet</a><br/>
@@ -398,6 +420,7 @@ inputs in the backing Java class. The mapping is either done with fieldName:</p>
 <p>The page is mapped to the view <code>[/resources/package/PageName].tml.</code></p>
 <p>Each Tapestry page in this application should be researched to make sure all inputs that are automatically 
 mapped in this way are properly validated before they are used.</p>
+<br/>
 <p>
 <b>Reference</b><br/>
 <a href="http://tapestry.apache.org/">Apache Tapestry Home Page</a>
@@ -411,6 +434,7 @@ mapped in this way are properly validated before they are used.</p>
 The current page is mapped to the view [/package/WebPageName].html.</p>
 <p>Each Wicket page in this application should be researched to make sure all inputs that are automatically 
 mapped in this way are properly validated before they are used.</p>
+<br/>
 <p>
 <b>Reference</b><br/>
 <a href="https://wicket.apache.org/">Apache Wicket Home Page</a>
@@ -424,6 +448,7 @@ mapped in this way are properly validated before they are used.</p>
 <p><a href="http://csrc.nist.gov/groups/ST/toolkit/secure_hashing.html">NIST</a> recommends the use of SHA-1, SHA-224*, SHA-256, SHA-384, SHA-512, SHA-512/224, or SHA-512/256.</p>
 <p><small>* SHA-224 algorithm is not provided by <a href="http://docs.oracle.com/javase/6/docs/technotes/guides/security/SunProviders.html#SUNProvider"> SUN provider.</a></small></p>
 <p>Upgrade your implementation to use one of the approved algorithms. Use an algorithm that is sufficiently strong for your specific security needs.</p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://csrc.nist.gov/groups/ST/toolkit/secure_hashing.html">NIST Approved Hashing Algorithms</a><br/>
@@ -455,6 +480,7 @@ mapped in this way are properly validated before they are used.</p>
 <pre>MessageDigest sha256Digest = MessageDigest.getInstance("SHA256");
 sha256Digest.update(password.getBytes());</pre>
 </p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://csrc.nist.gov/groups/ST/toolkit/secure_hashing.html">NIST Approved Hashing Algorithms</a><br/>
@@ -474,6 +500,7 @@ sha256Digest.update(password.getBytes());</pre>
 <p>Therefore, such values should not be passed directly to the filesystem API. If acceptable, the application should generate its 
 own file names and use those. Otherwise, the provided filename should be properly validated to ensure it's properly structured, 
 contains no unauthorized path characters (e.g., / \), and refers to an authorized file.</p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://blogs.securiteam.com/index.php/archives/1268">Securiteam: File upload security recommendations</a><br/>
@@ -497,6 +524,8 @@ Regex due to the + (or a *) inside the parenthesis, and the + (or a *) outside t
 consume the character 'a'. To fix this, the regex should be rewritten to eliminate the ambiguity. For example, this could simply be 
 rewritten as: <b>^a+$</b>, which is presumably what the author meant anyway (any number of a's). Assuming that's what the original 
 regex meant, this new regex can be evaluated quickly, and is not subject to ReDOS.
+</p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://www.jroller.com/sebastianKuebeck/entry/detecting_and_preventing_redos_vulnerabilities">Sebastian Kubeck's Weblog: Detecting and Preventing ReDoS Vulnerabilities</a><br/>
@@ -518,8 +547,7 @@ from an untrusted source.</p>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
 &lt;!DOCTYPE foo [
    &lt;!ENTITY xxe SYSTEM &quot;file:///etc/passwd&quot; &gt; ]&gt;
-&lt;foo&gt;&amp;xxe;&lt;/foo&gt;
-</pre>
+&lt;foo&gt;&amp;xxe;&lt;/foo&gt;</pre>
 </p>
 <b>Risk 2: Denial of service (XEE: <u>X</u>ml <u>E</u>ntity <u>E</u>xpansion)</b>
 <p>
@@ -534,8 +562,7 @@ from an untrusted source.</p>
 [...]
  &lt;!ENTITY lol9 &quot;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&quot;&gt;
 ]&gt;
-&lt;lolz&gt;&lol9;&lt;/lolz&gt;
-</pre>
+&lt;lolz&gt;&lol9;&lt;/lolz&gt;</pre>
 </p>
 
 <h3>Solution</h3>
@@ -544,13 +571,12 @@ In order to avoid exposing dangerous feature of the XML parser, you can do the f
 </p>
 <!--XXE_GENERIC_END-->
 
-<p><b>Vulnerable code:</b></p>
+<p><b>Vulnerable Code:</b></p>
 <p>
 <pre>
 SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
 
-parser.parse(inputStream, customHandler);
-</pre>
+parser.parse(inputStream, customHandler);</pre>
 </p>
 
 <p><b>Solution using "Secure processing" mode:</b></p>
@@ -560,8 +586,7 @@ SAXParserFactory spf = SAXParserFactory.newInstance();
 spf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 SAXParser parser = spf.newSAXParser();
 
-parser.parse(inputStream, customHandler);
-</pre>
+parser.parse(inputStream, customHandler);</pre>
 </p>
 
 <p><b>Solution disabling DTD:</b></p>
@@ -571,14 +596,13 @@ SAXParserFactory spf = SAXParserFactory.newInstance();
 spf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 SAXParser parser = spf.newSAXParser();
 
-parser.parse(inputStream, customHandler);
-</pre>
+parser.parse(inputStream, customHandler);</pre>
 </p>
-
+<br/>
 <p>
 <b>References</b><br/>
 <!--XXE_GENERIC_START-->
-<a href="http://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference ('XXE')</a>
+<a href="http://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference ('XXE')</a><br/>
 <a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=61702260">CERT: IDS10-J. Prevent XML external entity attacks</a><br/>
 <a href="https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing">OWASP.org: XML External Entity (XXE) Processing</a><br/>
 <a href="http://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a><br/>
@@ -602,8 +626,7 @@ from an untrusted source.</p>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
 &lt;!DOCTYPE foo [
    &lt;!ENTITY xxe SYSTEM &quot;file:///etc/passwd&quot; &gt; ]&gt;
-&lt;foo&gt;&amp;xxe;&lt;/foo&gt;
-</pre>
+&lt;foo&gt;&amp;xxe;&lt;/foo&gt;</pre>
 </p>
 <b>Risk 2: Denial of service (XEE: <u>X</u>ml <u>E</u>ntity <u>E</u>xpansion)</b>
 <p>
@@ -618,8 +641,7 @@ from an untrusted source.</p>
 [...]
  &lt;!ENTITY lol9 &quot;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&quot;&gt;
 ]&gt;
-&lt;lolz&gt;&lol9;&lt;/lolz&gt;
-</pre>
+&lt;lolz&gt;&lol9;&lt;/lolz&gt;</pre>
 </p>
 
 <h3>Solution</h3>
@@ -628,13 +650,12 @@ In order to avoid exposing dangerous feature of the XML parser, you can do the f
 </p>
 <!--XXE_GENERIC_END-->
 
-<p><b>Vulnerable code:</b></p>
+<p><b>Vulnerable Code:</b></p>
 <p>
 <pre>
 XMLReader reader = XMLReaderFactory.createXMLReader();
 reader.setContentHandler(customHandler);
-reader.parse(new InputSource(inputStream));
-</pre>
+reader.parse(new InputSource(inputStream));</pre>
 </p>
 
 <p><b>Solution using "Secure processing" mode:</b></p>
@@ -644,8 +665,7 @@ XMLReader reader = XMLReaderFactory.createXMLReader();
 reader.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 reader.setContentHandler(customHandler);
 
-reader.parse(new InputSource(inputStream));
-</pre>
+reader.parse(new InputSource(inputStream));</pre>
 </p>
 
 <p><b>Solution disabling DTD:</b></p>
@@ -655,14 +675,13 @@ XMLReader reader = XMLReaderFactory.createXMLReader();
 reader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 reader.setContentHandler(customHandler);
 
-reader.parse(new InputSource(inputStream));
-</pre>
+reader.parse(new InputSource(inputStream));</pre>
 </p>
-
+<br/>
 <p>
 <b>References</b><br/>
 <!--XXE_GENERIC_START-->
-<a href="http://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference ('XXE')</a>
+<a href="http://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference ('XXE')</a><br/>
 <a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=61702260">CERT: IDS10-J. Prevent XML external entity attacks</a><br/>
 <a href="https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing">OWASP.org: XML External Entity (XXE) Processing</a><br/>
 <a href="http://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a><br/>
@@ -686,8 +705,7 @@ from an untrusted source.</p>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
 &lt;!DOCTYPE foo [
    &lt;!ENTITY xxe SYSTEM &quot;file:///etc/passwd&quot; &gt; ]&gt;
-&lt;foo&gt;&amp;xxe;&lt;/foo&gt;
-</pre>
+&lt;foo&gt;&amp;xxe;&lt;/foo&gt;</pre>
 </p>
 <b>Risk 2: Denial of service (XEE: <u>X</u>ml <u>E</u>ntity <u>E</u>xpansion)</b>
 <p>
@@ -702,8 +720,7 @@ from an untrusted source.</p>
 [...]
  &lt;!ENTITY lol9 &quot;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&quot;&gt;
 ]&gt;
-&lt;lolz&gt;&lol9;&lt;/lolz&gt;
-</pre>
+&lt;lolz&gt;&lol9;&lt;/lolz&gt;</pre>
 </p>
 
 <h3>Solution</h3>
@@ -712,13 +729,12 @@ In order to avoid exposing dangerous feature of the XML parser, you can do the f
 </p>
 <!--XXE_GENERIC_END-->
 
-<p><b>Vulnerable code:</b></p>
+<p><b>Vulnerable Code:</b></p>
 <p>
 <pre>
 DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
-Document doc = db.parse(input);
-</pre>
+Document doc = db.parse(input);</pre>
 </p>
 
 <p><b>Solution using "Secure processing" mode:</b></p>
@@ -728,8 +744,7 @@ DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 DocumentBuilder db = dbf.newDocumentBuilder();
 
-Document doc = db.parse(input);
-</pre>
+Document doc = db.parse(input);</pre>
 </p>
 
 <p><b>Solution disabling DTD:</b></p>
@@ -739,14 +754,13 @@ DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 DocumentBuilder db = dbf.newDocumentBuilder();
 
-Document doc = db.parse(input);
-</pre>
+Document doc = db.parse(input);</pre>
 </p>
-
+<br/>
 <p>
 <b>References</b><br/>
 <!--XXE_GENERIC_START-->
-<a href="http://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference ('XXE')</a>
+<a href="http://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference ('XXE')</a><br/>
 <a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=61702260">CERT: IDS10-J. Prevent XML external entity attacks</a><br/>
 <a href="https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing">OWASP.org: XML External Entity (XXE) Processing</a><br/>
 <a href="http://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a><br/>
@@ -764,6 +778,7 @@ Document doc = db.parse(input);
 XPath injection risks are similar to SQL injection. If the XPath query contains untrusted user input, the complete datasource
 could be exposed. This could allow an attacker to access unauthorized data or maliciously modify the target XML.
 </p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-39: XPath Injection</a><br/>
@@ -809,12 +824,11 @@ Bind variables in prepared statements can be use to easily mitigate the risk of 
 Alternatively to prepare statement, Hibernate Criteria can be used.
 </p>
 <p>
-    <b>Vulnerable code:</b><br/>
+    <b>Vulnerable Code:</b><br/>
     <pre>
 Session session = sessionFactory.openSession();
 Query q = session.createQuery("select t from UserEntity t where id = " + input);
-q.execute();
-    </pre>
+q.execute();</pre>
 </p>
 <p>
     <b>Solution:</b><br/>
@@ -822,8 +836,7 @@ q.execute();
 Session session = sessionFactory.openSession();
 Query q = session.createQuery("select t from UserEntity t where id = :userId");
 q.setString("userId",input);
-q.execute();
-    </pre>
+q.execute();</pre>
 </p>
 <p>
     <b>Solution for dynamic queries (with Hibernate Criteria):</b><br/>
@@ -832,10 +845,9 @@ Session session = sessionFactory.openSession();
 Query q = session.createCriteria(UserEntity.class)
     .add( Restrictions.like("id", input) )
     .list();
-q.execute();
-    </pre>
+q.execute();</pre>
 </p>
-
+<br/>
 <p>
 <b>References (Hibernate)</b><br/>
 <a href="https://docs.jboss.org/hibernate/orm/3.3/reference/en/html/querycriteria.html">Hibernate Documentation: Query Criteria</a><br/>
@@ -859,13 +871,12 @@ The input values included in SQL queries need to be passed in safely.
 Bind variables in prepared statements can be use to easily mitigate the risk of SQL injection.
 </p>
 <p>
-    <b>Vulnerable code:</b><br/>
+    <b>Vulnerable Code:</b><br/>
     <pre>
 PersistenceManager pm = getPM();
 
 Query q = pm.newQuery("select * from Users where name = " + input);
-q.execute();
-    </pre>
+q.execute();</pre>
 </p>
 <p>
     <b>Solution:</b><br/>
@@ -874,9 +885,9 @@ PersistenceManager pm = getPM();
 
 Query q = pm.newQuery("select * from Users where name = nameParam");
 q.declareParameters("String nameParam");
-q.execute(input);
-    </pre>
+q.execute(input);</pre>
 </p>
+<br/>
 <p>
 <b>References (JDO)</b><br/>
 <a href="https://db.apache.org/jdo/object_retrieval.html">JDO: Object Retrieval</a><br/>
@@ -898,7 +909,7 @@ The input values included in SQL queries need to be passed in safely.
 Bind variables in prepared statements can be use to easily mitigate the risk of SQL injection.
 </p>
 <p>
-    <b>Vulnerable code:</b><br/>
+    <b>Vulnerable Code:</b><br/>
     <pre>
 EntityManager pm = getEM();
 
@@ -906,8 +917,7 @@ TypedQuery<UserEntity> q = em.createQuery(
     String.format("select * from Users where name = %s", username),
     UserEntity.class);
 
-UserEntity res = q.getSingleResult();
-    </pre>
+UserEntity res = q.getSingleResult();</pre>
 </p>
 <p>
     <b>Solution:</b><br/>
@@ -916,9 +926,9 @@ TypedQuery<UserEntity> q = em.createQuery(
     "select * from Users where name = usernameParam",UserEntity.class)
     .setParameter("usernameParam", username);
 
-UserEntity res = q.getSingleResult();
-    </pre>
+UserEntity res = q.getSingleResult();</pre>
 </p>
+<br/>
 <p>
 <b>References (JPA)</b><br/>
 <a href="http://docs.oracle.com/javaee/6/tutorial/doc/bnbrg.html">The Java EE 6 Tutorial: Creating Queries Using the Java Persistence Query Language</a><br/>
@@ -944,6 +954,7 @@ Therefore, the primary defense against LDAP injection is strong input validation
     <pre>NamingEnumeration<SearchResult> answers = context.search("dc=People,dc=example,dc=com",
         "(uid=" + username + ")", ctrls);</pre>
 </p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246947/LDAP%20Injection">WASC-29: LDAP Injection</a><br/>
@@ -972,8 +983,7 @@ public void runCustomTrigger(String script) {
     ScriptEngine engine = factory.getEngineByName("JavaScript");
 
     engine.eval(script); //Bad things can happen here.
-}
-</pre>
+}</pre>
 </p>
 
 <p><b>Solution:</b></p>
@@ -994,10 +1004,9 @@ public void runCustomTrigger(String script) {
     } finally {
         context.exit();
     }
-}
-</pre>
+}</pre>
 </p>
-
+<br/>
 <p>
 <b>References</b><br/>
 <a href="https://github.com/cloudbees/rhino-sandbox">Cloudbees Rhino Sandbox</a>: Utility to create sandbox with Rhino (block access to all classes)<br/>
@@ -1025,9 +1034,9 @@ public void parseExpressionInterface(Person personObj,String property) {
 
         StandardEvaluationContext testContext = new StandardEvaluationContext(personObj);
         boolean result = exp.getValue(testContext, Boolean.class);
-[...]
-</pre>
+[...]</pre>
 </p>
+<br/>
 <p>
     <b>References</b><br/>
     <a href="http://cwe.mitre.org/data/definitions/95.html">CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')</a><br/>
@@ -1053,8 +1062,7 @@ for(byte b :resultBytes) {
     stringBuilder.append( Integer.toHexString( b & 0xFF ) );
 }
 
-return stringBuilder.toString();
-</pre>
+return stringBuilder.toString();</pre>
 </p>
 <p>
 This mistake weakens the hash value computed since it introduces more collisions. 
@@ -1064,9 +1072,9 @@ For example, the hash values "0x0679" and "0x6709" would both output as "679" fo
 <p>
 In this situation, the use of toHexString() should be replaced with String.format() as follows:
 <pre>
-stringBuilder.append( String.format( "%02X", b ) );
-</pre>
+stringBuilder.append( String.format( "%02X", b ) );</pre>
 </p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://cwe.mitre.org/data/definitions/704.html">CWE-704: Incorrect Type Conversion or Cast</a>
@@ -1078,6 +1086,7 @@ stringBuilder.append( String.format( "%02X", b ) );
 
         <p>The network communications for Hazelcast is configured to use a symmetric cipher (probably DES or blowfish).</p>
 <p>Those ciphers alone do not provide integrity or secure authentication. The use of asymmetric encryption is preferred.</p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246945/Insufficient%20Transport%20Layer%20Protection">WASC-04: Insufficient Transport Layer Protection</a><br/>
@@ -1104,6 +1113,8 @@ byte[] cipherText = c.doFinal(plainText);</pre>
     <b>Solution:</b><br/>
     Avoid using the NullCipher. Its accidental use can introduce a significant confidentiality risk.
 </p>
+<br/>
+<p>
 <b>Reference</b><br/>
 <a href="http://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky Cryptographic Algorithm</a>
 </p>
@@ -1129,6 +1140,7 @@ SSL Socket (Secure communication):
 make sure you are not subject to man-in-the-middle attacks. Please read the OWASP Transport Layer Protection Cheat Sheet for details on how
 to do this correctly.
 </p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2010-A9">OWASP: Top 10 2010-A9-Insufficient Transport Layer Protection</a><br/>
@@ -1158,6 +1170,7 @@ byte[] cipherText = c.doFinal(plainText);</pre>
 c.init(Cipher.ENCRYPT_MODE, k, iv);
 byte[] cipherText = c.doFinal(plainText);</pre>
 </p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://www.nist.gov/itl/fips/060205_des.cfm">NIST Withdraws Outdated Data Encryption Standard</a><br/>
@@ -1180,6 +1193,7 @@ The software uses the RSA algorithm but does not incorporate Optimal Asymmetric 
 The code should be replaced with:<br/>
 <pre>Cipher.getInstance("RSA/ECB/OAEPWithMD5AndMGF1Padding")</pre>
 </p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://cwe.mitre.org/data/definitions/780.html">CWE-780: Use of RSA Algorithm without OAEP</a><br/>
@@ -1196,12 +1210,13 @@ certainly shared in open source. To be managed safely, passwords and secret keys
 </p>
 <p>
 <p><b>Vulnerable Code:</b><br/>
-<br/>
+
 <pre>private String SECRET_PASSWORD = "letMeIn!";
 
 Properties props = new Properties();
 props.put(Context.SECURITY_CREDENTIALS, "p@ssw0rd");</pre>
 </p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://cwe.mitre.org/data/definitions/321.html">CWE-321: Use of Hard-coded Cryptographic Key</a><br/>
@@ -1231,6 +1246,7 @@ public class RegistrationForm extends ValidatorForm {
 }
 </pre>
 </p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a><br/>
@@ -1266,6 +1282,7 @@ The removal of <code>"vbscript:"</code> is after the replacement of <code>"&lt;s
 For stronger protection, choose a solution that encodes characters automatically in the <b><u>view</u></b> (template, jsp, ...) following
 the XSS protection rules defined in the OWASP XSS Prevention Cheat Sheet.
 </p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site Scripting</a><br/>
@@ -1295,6 +1312,7 @@ keyGen.init(64);</pre>
 <pre>KeyGenerator keyGen = KeyGenerator.getInstance("Blowfish");
 keyGen.init(128);</pre>
 </p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://en.wikipedia.org/wiki/Blowfish_(cipher)">Blowfish (cipher)</a><br/>
@@ -1322,6 +1340,7 @@ KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
 keyGen.initialize(2048);
 </pre>
 </p>
+<br/>
 <p>
 <b>References</b><br/>
 [1] <a href="http://www.emc.com/emc-plus/rsa-labs/standards-initiatives/how-large-a-key-should-be-used.htm">RSA Laboratories: 3.1.5 How large a key should be used in the RSA cryptosystem?</a><br/>
@@ -1366,6 +1385,7 @@ keyGen.initialize(2048);
         <li>Validate that the beginning of the URL is part of a white list</li>
     </ul>
 </p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246981/URL%20Redirector%20Abuse">WASC-38: URL Redirector Abuse</a><br/>
@@ -1407,6 +1427,7 @@ The best defense against XSS is context sensitive output encoding like the examp
 HTML, JavaScript, CSS (styles), and URLs. Please follow the XSS protection rules defined in the OWASP XSS Prevention Cheat Sheet,
 which explains these defenses in significant detail.
 </p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site Scripting</a><br/>
@@ -1446,6 +1467,7 @@ which explains these defenses in significant detail.
 <p>Note that this XSS in Servlet rule looks for similar issues, but looks for them in a different way than the existing 
 'XSS: Servlet reflected cross site scripting vulnerability' and 'XSS: Servlet reflected cross site scripting vulnerability in error page' rules in FindBugs.
 </p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site Scripting</a><br/>
@@ -1493,6 +1515,7 @@ try {
 <b>Solution:</b></br/>
 The solution is to avoid using XMLDecoder to parse content from an untrusted source.
 </p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://blog.diniscruz.com/2013/08/using-xmldecoder-to-execute-server-side.html">Dinis Cruz Blog: Using XMLDecoder to execute server-side Java Code on an Restlet application</a><br/>
@@ -1529,11 +1552,12 @@ public void encrypt(String message) throws Exception {
 [...]
 </pre>
 </p>
+<br/>
 <p>
-    <b>References</b><br/>
-    <a href="http://en.wikipedia.org/wiki/Initialization_vector">Wikipedia: Initialization vector</a><br/>
-    <a href="http://cwe.mitre.org/data/definitions/329.html">CWE-329: Not Using a Random IV with CBC Mode</a><br/>
-    <a href="https://defuse.ca/cbcmodeiv.htm">Encryption - CBC Mode IV: Secret or Not?</a>
+<b>References</b><br/>
+<a href="http://en.wikipedia.org/wiki/Initialization_vector">Wikipedia: Initialization vector</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/329.html">CWE-329: Not Using a Random IV with CBC Mode</a><br/>
+<a href="https://defuse.ca/cbcmodeiv.htm">Encryption - CBC Mode IV: Secret or Not?</a>
 </p>
     </section>
     
@@ -1559,6 +1583,7 @@ byte[] cipherText = c.doFinal(plainText);</pre>
 c.init(Cipher.ENCRYPT_MODE, k, iv);
 byte[] cipherText = c.doFinal(plainText);</pre>
 </p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://en.wikipedia.org/wiki/Authenticated_encryption">Wikipedia: Authenticated encryption</a><br/>
@@ -1569,7 +1594,7 @@ byte[] cipherText = c.doFinal(plainText);</pre>
     </section>
     
     <section>
-        <a class="anchor" name="PADDING_ORACLE"></a><h2 class="page-header">Cipher is susceptible to padding oracle  <a href="#PADDING_ORACLE" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="PADDING_ORACLE"></a><h2 class="page-header">Cipher is Susceptible to Padding Oracle  <a href="#PADDING_ORACLE" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>
     This specific mode of CBC with PKCS5Padding is susceptible to padding oracle attacks. An adversary could potentially decrypt the
@@ -1588,6 +1613,7 @@ byte[] cipherText = c.doFinal(plainText);</pre>
 c.init(Cipher.ENCRYPT_MODE, k, iv);
 byte[] cipherText = c.doFinal(plainText);</pre>
 </p>
+<br/>
 <p>
     <b>References</b><br/>
     <a href="http://www.infobytesec.com/down/paddingoracle_openjam.pdf">Padding Oracles for the masses (by Matias Soler)</a><br/>
@@ -1634,6 +1660,7 @@ byte[] cipherText = c.doFinal(plainText);</pre>
 <p>
 In the example solution above, the GCM mode introduces an HMAC into the resulting encrypted data, providing integrity of the result.
 </p>
+<br/>
 <p>
     <b>References</b><br/>
     <a href="http://en.wikipedia.org/wiki/Authenticated_encryption">Wikipedia: Authenticated encryption</a><br/>
@@ -1674,8 +1701,7 @@ In the example solution above, the GCM mode introduces an HMAC into the resultin
     &lt;groupId&gt;org.owasp.esapi&lt;/groupId&gt;
     &lt;artifactId&gt;esapi&lt;/artifactId&gt;
     &lt;version&gt;2.1.0&lt;/version&gt;
-&lt;/dependency&gt;
-    </pre>
+&lt;/dependency&gt;</pre>
 </p>
 <p>
     For Ant users, the jar used should be <a href="http://repo1.maven.org/maven2/org/owasp/esapi/esapi/2.1.0/esapi-2.1.0.jar">esapi-2.1.0.jar</a>.
@@ -1710,6 +1736,7 @@ Encryptor.CipherTransformation=AES/GCM/NoPadding
 Encryptor.cipher_modes.additional_allowed=</pre>
     </div>
 </p>
+<br/>
 <p>
     <b>References</b><br/>
     <a href="http://owasp-esapi-java.googlecode.com/svn/trunk/documentation/ESAPI-security-bulletin1.pdf">ESAPI Security bulletin 1 (CVE-2013-5679)</a><br/>
@@ -1728,7 +1755,7 @@ Encryptor.cipher_modes.additional_allowed=</pre>
 <footer id="footer" class="footer hidden-print">
     <div class="container text-center">
         <div>
-            Find Security Bugs 1.2.1
+            Find Security Bugs 1.3.0
             <span class="hide-xs">&middot;</span>
             Created by <a href="https://twitter.com/h3xstream">Philippe Arteau</a>
         </div>

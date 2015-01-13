@@ -17,24 +17,32 @@
  */
 package com.h3xstream.findbugs.test.service;
 
-import edu.umd.cs.findbugs.*;
-import edu.umd.cs.findbugs.config.ProjectFilterSettings;
-import edu.umd.cs.findbugs.config.UserPreferences;
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.mockito.Mockito.mock;
 
-import javax.annotation.concurrent.NotThreadSafe;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Random;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
-import static org.mockito.Mockito.mock;
+import javax.annotation.concurrent.NotThreadSafe;
+
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import edu.umd.cs.findbugs.BugReporter;
+import edu.umd.cs.findbugs.DetectorFactoryCollection;
+import edu.umd.cs.findbugs.FindBugs2;
+import edu.umd.cs.findbugs.FindBugsProgress;
+import edu.umd.cs.findbugs.Plugin;
+import edu.umd.cs.findbugs.PluginException;
+import edu.umd.cs.findbugs.Project;
+import edu.umd.cs.findbugs.config.ProjectFilterSettings;
+import edu.umd.cs.findbugs.config.UserPreferences;
 
 @NotThreadSafe
 public class FindBugsLauncher {
@@ -52,12 +60,11 @@ public class FindBugsLauncher {
      * @throws java.io.IOException
      * @throws InterruptedException
      * @throws edu.umd.cs.findbugs.PluginException
+     * @throws URISyntaxException 
      *
      */
     public void analyze(String[] classFiles, BugReporter bugReporter) throws IOException, InterruptedException,
-            PluginException, NoSuchFieldException, IllegalAccessException {
-
-        final ClassLoader cl = getClass().getClassLoader();
+            PluginException, NoSuchFieldException, IllegalAccessException, URISyntaxException {
 
         Project project = new Project();
         project.setProjectName("automate-test-project");
@@ -76,7 +83,7 @@ public class FindBugsLauncher {
             out.write(archive);
             out.close();
 
-            loadedPlugin = Plugin.loadCustomPlugin(f.toURL(), project);
+            loadedPlugin = Plugin.loadCustomPlugin(f.toURI().toURL(), project);
         }
         //FindBugs engine
         FindBugs2 engine = new FindBugs2();
@@ -113,20 +120,37 @@ public class FindBugsLauncher {
      *
      * @return
      * @throws IOException
+     * @throws URISyntaxException 
      */
-    private byte[] buildFakePluginJar() throws IOException {
+    private byte[] buildFakePluginJar() throws IOException, URISyntaxException {
         ClassLoader cl = getClass().getClassLoader();
 
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         JarOutputStream jar = new JarOutputStream(buffer);
 
-        //Add files to the jar stream
-        for (String resource : Arrays.asList("findbugs.xml", "messages.xml", "META-INF/MANIFEST.MF")) {
-            jar.putNextEntry(new ZipEntry(resource));
-            jar.write(IOUtils.toByteArray(cl.getResourceAsStream("metadata/" + resource)));
+        final URL metadata = cl.getResource("metadata");
+        if (metadata != null) {
+            final File dir = new File(metadata.toURI());
+            
+            //Add files to the jar stream
+            addFilesToStream(cl, jar, dir, "");
         }
         jar.finish();
+        jar.close();
 
         return buffer.toByteArray();
+    }
+
+    private void addFilesToStream(final ClassLoader cl, final JarOutputStream jar, final File dir,
+            final String path) throws IOException {
+        for (final File nextFile : dir.listFiles()) {
+            if (nextFile.isFile()) {
+                final String resource = path + nextFile.getName();
+                jar.putNextEntry(new ZipEntry(resource));
+                jar.write(IOUtils.toByteArray(cl.getResourceAsStream("metadata/" + resource)));
+            } else {
+            	addFilesToStream(cl, jar, nextFile, path + nextFile.getName() + "/");
+            }
+        }
     }
 }

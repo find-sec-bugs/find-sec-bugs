@@ -103,7 +103,6 @@ public class SaxParserXxeDetector extends OpcodeStackDetector {
             try {
                 cfg = classCtx.getCFG(getMethod());
             } catch (CFGBuilderException e) {
-                throw new RuntimeException(e);
             }
 
             //The combination of the 4 following is consider safe (expand option is only available with DocumentBuilderFactory)

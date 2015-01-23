@@ -91,7 +91,7 @@ public class CipherWithNoIntegrityDetector extends OpcodeStackDetector {
                 }
 
                 String[] cipherDefinition = cipherValue.split("/");
-                if(cipherDefinition.length > 1) { //Some cipher will not have mode specified (ie: "RSA" .. issue GitHub #24)
+                if(cipherDefinition.length > 1 && !cipherValue.startsWith("RSA/")) { //Some cipher will not have mode specified (ie: "RSA" .. issue GitHub #24)
                     String cipherMode = cipherDefinition[1];
 
                     if (!SECURE_CIPHER_MODES.contains(cipherMode)) { //Not a secure mode!

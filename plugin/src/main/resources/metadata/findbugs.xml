@@ -1,5 +1,5 @@
 <FindbugsPlugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xsi:noNamespaceSchemaLocation="https://findbugs.googlecode.com/svn-history/r13379/trunk/findbugs/etc/findbugsplugin.xsd"
+                xsi:noNamespaceSchemaLocation="http://findsecbugs.h3xstream.com/findbugsplugin.xsd"
                 pluginid="com.h3xstream.findsecbugs"
                 provider="Find Security Bugs"
                 defaultenabled="true"

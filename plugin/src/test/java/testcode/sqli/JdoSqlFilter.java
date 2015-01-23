@@ -37,7 +37,7 @@ public class JdoSqlFilter {
 
     }
 
-    //TODO: The description should recommend the usage of declared parameters such as : http://stackoverflow.com/questions/3742221/jdo-exception-query-requires-1-parameters-yet-2-values-have-been-provided
+
 
     private static final String FIELD_TEST = "test";
 

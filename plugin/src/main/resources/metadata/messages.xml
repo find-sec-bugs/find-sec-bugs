@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MessageCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:noNamespaceSchemaLocation="https://findbugs.googlecode.com/svn-history/r13419/trunk/findbugs/etc/messagecollection.xsd">
+                   xsi:noNamespaceSchemaLocation="http://findsecbugs.h3xstream.com/messagecollection.xsd">
 
     <Plugin>
         <ShortDescription>Find Security Bugs</ShortDescription>
-        <Details>Find Security Bugs has rules that detect vulnerabilities, and also has rules that highlight parts of the source code that should be analyzed during a security audit.
-        </Details>
+        <Details>Find Security Bugs is a plugin that aims to help security audit.</Details>
+        <BugsUrl>http://h3xstream.github.io/find-sec-bugs/</BugsUrl>
+        <AllBugsUrl>http://h3xstream.github.io/find-sec-bugs/</AllBugsUrl>
     </Plugin>
 
     <!-- Predictable Pseudo Random Generator (PRG) -->

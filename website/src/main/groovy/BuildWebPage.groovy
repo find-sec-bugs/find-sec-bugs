@@ -41,9 +41,9 @@ rootXml.Detector.each { detector ->
     bugsBinding['nbDetectors']++
 }
 
-downloadUrl = "http://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/1.2.1/findsecbugs-plugin-1.2.1.jar"
+downloadUrl = "http://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/1.3.0/findsecbugs-plugin-1.3.0.jar"
 mavenCentralSearch = "http://search.maven.org/#search|gav|1|g:%22com.h3xstream.findsecbugs%22 AND a:%22findsecbugs-plugin%22"
-latestVersion = "v 1.2.1"
+latestVersion = "1.3.0"
 
 //Generate
 
@@ -58,7 +58,7 @@ outputFile(outDir,"index.htm").withWriter {
         w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Home'])
         w << engine.createTemplate(getTemplateReader("/home.htm")).make(['latestVersion':latestVersion,'nbPatterns':bugsBinding['nbPatterns']])
         w << engine.createTemplate(getTemplateReader("/social.htm")).make()
-        w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make()
+        w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make(['latestVersion':latestVersion])
 }
 
 outputFile(outDir,"download.htm").withWriter {
@@ -67,28 +67,28 @@ outputFile(outDir,"download.htm").withWriter {
                 ['title':'Download'])
         w << engine.createTemplate(getTemplateReader("/download.htm")).make(
                 ['downloadUrl':downloadUrl,'latestVersion':latestVersion,'mavenCentralSearch':mavenCentralSearch])
-        w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make()
+        w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make(['latestVersion':latestVersion])
 }
 
 outputFile(outDir,"tutorials.htm").withWriter {
     w ->
         w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Tutorials'])
         w << engine.createTemplate(getTemplateReader("/tutorials.htm")).make()
-        w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make()
+        w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make(['latestVersion':latestVersion])
 }
 
 outputFile(outDir,"security.htm").withWriter {
     w ->
         w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Getting Started in Security'])
         w << engine.createTemplate(getTemplateReader("/security.htm")).make()
-        w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make()
+        w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make(['latestVersion':latestVersion])
 }
 
 outputFile(outDir,"bugs.htm").withWriter {
     w ->
         w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Bug Patterns'])
         w << engine.createTemplate(getTemplateReader("/bugs.htm")).make(bugsBinding)
-        w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make()
+        w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make(['latestVersion':latestVersion])
 }
 
 
@@ -96,5 +96,5 @@ outputFile(outDir,"license.htm").withWriter {
     w ->
         w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'License'])
         w << engine.createTemplate(getTemplateReader("/license.htm")).make(bugsBinding)
-        w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make()
+        w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make(['latestVersion':latestVersion])
 }

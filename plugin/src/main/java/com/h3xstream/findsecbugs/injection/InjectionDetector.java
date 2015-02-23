@@ -133,7 +133,7 @@ public abstract class InjectionDetector implements Detector {
                         }
                         if (prev != null && !isSafeValue(prev, cpg, cfg)) {
 
-                            bugReporter.reportBug(new BugInstance(this, injectionPoint.getBugType(), Priorities.NORMAL_PRIORITY) //
+                            bugReporter.reportBug(new BugInstance(this, injectionPoint.getBugType(), Priorities.HIGH_PRIORITY) //
                                     .addClass(javaClass) //
                                     .addMethod(javaClass, method) //
                                     .addSourceLine(classContext, method, location));

@@ -29,6 +29,25 @@
 <p>
 A quick fix could be to replace the use of <b>java.util.Random</b> with something stronger, such as <b>java.security.SecureRandom</b>.
 </p>
+<p>
+<b>Vulnerable Code:</b><br/>
+<pre>String generateSecretToken() {
+    Random r = new Random();
+    return Long.toHexString(r.nextLong());
+}</pre>
+</p>
+<p>
+<b>Solution:</b>
+<pre>import org.apache.commons.codec.binary.Hex;
+
+String generateSecretToken() {
+    SecureRandom secRandom = new SecureRandom();
+
+    byte[] result = new byte[32];
+    secRandom.nextBytes(result);
+    return Hex.encodeHexString(result);
+}</pre>
+</p>
 <br/>
 <p>
 <b>References</b><br/>
@@ -1821,7 +1840,7 @@ String taintedInput = (String) request.getAttribute("input");
 String taintedInput = (String) request.getAttribute("input");
 %>
 [...]
-<%= ESAPI.encoder().encodeForHTML(taintedInput) %>
+<%= Encode.forHtml(taintedInput) %>
     </pre>
 </p>
 <p>
@@ -1835,7 +1854,8 @@ which explains these defenses in significant detail.
 <a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site Scripting</a><br/>
 <a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet">OWASP: XSS Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_%28XSS%29">OWASP: Top 10 2013-A3: Cross-Site Scripting (XSS)</a><br/>
-<a href="http://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a>
+<a href="http://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a><br/>
+<a href="https://code.google.com/p/owasp-java-encoder/">OWASP Java Encoder</a><br/>
 </p>
             ]]>
         </Details>
@@ -1865,7 +1885,7 @@ A potential XSS was found. It could be used to execute unwanted JavaScript in a 
 <pre>protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     String input1 = req.getParameter("input1");
     [...]
-    resp.getWriter().write(ESAPI.encoder().encodeForHTML(input1));
+    resp.getWriter().write(Encode.forHtml(input1));
 }</pre>
 </p>
 <p>
@@ -1882,7 +1902,8 @@ which explains these defenses in significant detail.
 <a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site Scripting</a><br/>
 <a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet">OWASP: XSS Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_%28XSS%29">OWASP: Top 10 2013-A3: Cross-Site Scripting (XSS)</a><br/>
-<a href="http://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a>
+<a href="http://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a><br/>
+<a href="https://code.google.com/p/owasp-java-encoder/">OWASP Java Encoder</a><br/>
 </p>
             ]]>
         </Details>

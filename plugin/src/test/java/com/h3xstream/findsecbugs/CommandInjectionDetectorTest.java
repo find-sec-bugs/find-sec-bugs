@@ -40,7 +40,7 @@ public class CommandInjectionDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         //Assertions
-        for (Integer line : Arrays.asList(18, 20, 24, 28)) {
+        for (Integer line : Arrays.asList(18, 20, 25, 29)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("COMMAND_INJECTION")

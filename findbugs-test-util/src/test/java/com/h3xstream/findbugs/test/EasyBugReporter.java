@@ -78,7 +78,7 @@ public class EasyBugReporter extends AbstractBugReporter {
         bugDetail
                 .append("\n------------------------------------------------------");
         log.info(bugDetail.toString());
-        bugCollection.add(bugInstance);
+        //bugCollection.add(bugInstance);
     }
 
     @Override

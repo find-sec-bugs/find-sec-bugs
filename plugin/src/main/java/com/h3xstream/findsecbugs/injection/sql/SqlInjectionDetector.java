@@ -17,12 +17,12 @@
  */
 package com.h3xstream.findsecbugs.injection.sql;
 
+import com.h3xstream.findsecbugs.injection.AdditionalInjectionSource;
 import com.h3xstream.findsecbugs.injection.InjectionDetector;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
 import edu.umd.cs.findbugs.BugReporter;
 
 public class SqlInjectionDetector extends InjectionDetector {
-
 
     public SqlInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
@@ -30,7 +30,12 @@ public class SqlInjectionDetector extends InjectionDetector {
 
     @Override
     public InjectionSource[] getInjectionSource() {
-        return new InjectionSource[]{new HibernateInjectionSource(), new JdoInjectionSource(), new JpaInjectionSource()};
+        return new InjectionSource[]{
+            new HibernateInjectionSource(),
+            new JdoInjectionSource(),
+            new JpaInjectionSource(),
+            AdditionalInjectionSource.getInstance(this.getClass())
+        };
     }
 
 }

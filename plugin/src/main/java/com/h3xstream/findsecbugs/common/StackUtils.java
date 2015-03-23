@@ -19,10 +19,10 @@ package com.h3xstream.findsecbugs.common;
 
 import edu.umd.cs.findbugs.OpcodeStack;
 
-public class StringTracer {
+public class StackUtils {
 
     public static boolean isConstantString(OpcodeStack.Item item) {
-        return !isVariableString(item);
+        return item.getConstant() != null && item.getConstant() instanceof String;
     }
 
     /**
@@ -30,8 +30,11 @@ public class StringTracer {
      * @return If the given string reference is not a constant
      */
     public static boolean isVariableString(OpcodeStack.Item item) {
-        String value = (String) item.getConstant();
-        return value == null;
+        return !isConstantString(item);
+    }
+
+    public static boolean isConstantInteger(OpcodeStack.Item item) {
+        return item.getConstant() != null && item.getConstant() instanceof Integer;
     }
 
     /**

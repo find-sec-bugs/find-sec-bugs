@@ -17,7 +17,7 @@
  */
 package com.h3xstream.findsecbugs;
 
-import com.h3xstream.findsecbugs.common.StringTracer;
+import com.h3xstream.findsecbugs.common.StackUtils;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.OpcodeStack;
@@ -26,8 +26,6 @@ import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 import edu.umd.cs.findbugs.classfile.FieldDescriptor;
 import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 import org.apache.bcel.Constants;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * This detector does minimal effort to find potential REDOS.
@@ -65,7 +63,7 @@ public class ReDosDetector extends OpcodeStackDetector {
                 && getNameConstantOperand().equals("compile")
                 && getSigConstantOperand().equals("(Ljava/lang/String;)Ljava/util/regex/Pattern;")) {
             OpcodeStack.Item item = stack.getStackItem(0);
-            if (!StringTracer.isVariableString(item)) {
+            if (!StackUtils.isVariableString(item)) {
                 String value = (String) item.getConstant();
                 analyseRegexString(value);
             }
@@ -73,7 +71,7 @@ public class ReDosDetector extends OpcodeStackDetector {
                 && getNameConstantOperand().equals("matches")
                 && getSigConstantOperand().equals("(Ljava/lang/String;)Z")) {
             OpcodeStack.Item item = stack.getStackItem(0);
-            if (!StringTracer.isVariableString(item)) {
+            if (!StackUtils.isVariableString(item)) {
                 String value = (String) item.getConstant();
                 analyseRegexString(value);
             }

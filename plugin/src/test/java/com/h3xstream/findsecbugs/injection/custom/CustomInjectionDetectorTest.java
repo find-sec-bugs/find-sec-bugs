@@ -15,53 +15,44 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.android;
+package com.h3xstream.findsecbugs.injection.custom;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.testng.annotations.Test;
+import org.testng.annotations.BeforeTest;
 
-import static org.mockito.Mockito.*;
+import java.util.Arrays;
 
-public class BroadcastDetectorTest extends BaseDetectorTest {
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+
+public class CustomInjectionDetectorTest extends BaseDetectorTest {
+
+    @BeforeTest
+    public void before() {
+        String path = this.getClass().getResource("CustomInjectionSource.properties").getPath();
+        System.setProperty("com.h3xstream.findsecbugs.injection.custom.sources.files", path);
+    }
 
     @Test
-    public void detectSendBroadcast() throws Exception {
+    public void detectSqljection() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/android/BroadcastIntentActivity")
+                getClassFilePath("testcode/sqli/CustomInjection")
         };
 
         //Run the analysis
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-
-
-        //Assertions
-        verify(reporter).doReportBug(
-                bugDefinition() //
-                        .bugType("ANDROID_BROADCAST") //
-                        .inClass("BroadcastIntentActivity") //
-                        .inMethod("onCreate") //
-                        .atLine(23) //
-                        .build()
-        );
-
-        int line = 25; //First line
-        while(line++ < 30) {
+        for (Integer line : Arrays.asList(16)) {
             verify(reporter).doReportBug(
-                    bugDefinition() //
-                            .bugType("ANDROID_BROADCAST") //
-                            .inClass("BroadcastIntentActivity") //
-                            .inMethod("onCreate") //
-                            .atLine(line) //
+                    bugDefinition()
+                            .bugType("CUSTOM_INJECTION")
+                            .inClass("CustomInjection").inMethod("testQueries").atLine(line)
                             .build()
             );
         }
-
-        //The count make sure no other bug are detect
-        verify(reporter, times(7)).doReportBug(
-                bugDefinition().bugType("ANDROID_BROADCAST").build());
     }
 }

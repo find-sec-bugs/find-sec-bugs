@@ -17,7 +17,7 @@
  */
 package com.h3xstream.findsecbugs.crypto;
 
-import com.h3xstream.findsecbugs.common.StringTracer;
+import com.h3xstream.findsecbugs.common.StackUtils;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.OpcodeStack;
@@ -44,7 +44,7 @@ public class RsaNoPaddingDetector extends OpcodeStackDetector {
         if (seen == Constants.INVOKESTATIC && getClassConstantOperand().equals("javax/crypto/Cipher") &&
                 getNameConstantOperand().equals("getInstance")) {
             OpcodeStack.Item item = stack.getStackItem(stack.getStackDepth() - 1); //The first argument is last
-            if (StringTracer.isConstantString(item)) {
+            if (StackUtils.isConstantString(item)) {
                 String cipherValue = (String) item.getConstant();
                 if (DEBUG) System.out.println(cipherValue);
 

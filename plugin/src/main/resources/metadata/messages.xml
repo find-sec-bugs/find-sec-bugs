@@ -1049,27 +1049,22 @@ This class should be analyzed to make sure that remotely exposed methods are saf
     <BugCode abbrev="SECSC">Spring Endpoint</BugCode>
 
 
-    <!-- SQL Injection -->
-    <Detector class="com.h3xstream.findsecbugs.injection.sql.SqlInjectionDetector">
-        <Details>Identify various kinds of SQL Injection in SQL APIs that accept strings.</Details>
+    <!-- Custom Injection -->
+    <Detector class="com.h3xstream.findsecbugs.injection.custom.CustomInjectionDetector">
+        <Details>Detector that find injection for custom methods.</Details>
     </Detector>
 
-    <BugPattern type="SQL_INJECTION">
-        <ShortDescription>Potential SQL Injection</ShortDescription>
-        <LongDescription>The query is potentially vulnerable SQL injection</LongDescription>
+    <BugPattern type="CUSTOM_INJECTION">
+        <ShortDescription>Potential Injection</ShortDescription>
+        <LongDescription>The use of the method {0} is potentially vulnerable injection.</LongDescription>
         <Details>
             <![CDATA[
 <p>
-The input values included in SQL queries need to be passed in safely. Bind variables in prepared statements can be use to easily mitigate the risk
-of SQL injection. Prepared statement APIs are available for all major database interfaces: JDO, JPA and Hibernate). 
-Alternatively, typed APIs such as Hibernate Criteria and Queries can be used. These APIs look more like standard method calls with parameters,
-than dynamically constructed queries.
+The method is susceptible to injection. The input should be validated and properly escaped.
 </p>
 <p>
     <b>Vulnerable code samples:</b><br/>
-    <pre>Session session = sessionFactory.openSession();
-Query q = session.createQuery("select t from UserEntity t where id = " + input);
-q.execute();</pre>
+    <pre>SqlUtil.execQuery("select * from UserEntity t where id = " + parameterInput);</pre>
 </p>
 <p>
 <b>References</b><br/>
@@ -1083,7 +1078,14 @@ q.execute();</pre>
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECSQLI">SQL Injection</BugCode>
+    <BugCode abbrev="SECCUSTOMI">Custom Injection</BugCode>
+
+
+    <!-- SQL Injection -->
+    <Detector class="com.h3xstream.findsecbugs.injection.sql.SqlInjectionDetector">
+        <Details>Identify various kinds of SQL Injection in SQL APIs that accept strings.</Details>
+    </Detector>
+
 
     <!-- HQL Injection -->
     <BugPattern type="SQL_INJECTION_HIBERNATE">
@@ -2269,6 +2271,9 @@ Encryptor.cipher_modes.additional_allowed=</pre>
 
 
     <!-- Android: External File Access -->
+    <Detector class="com.h3xstream.findsecbugs.android.ExternalFileAccessDetector">
+        <Details>Identity file access on external storage.</Details>
+    </Detector>
     <BugPattern type="ANDROID_EXTERNAL_FILE_ACCESS">
         <ShortDescription>External File Access (Android)</ShortDescription>
         <LongDescription>Potentially unwanted file are being persist to external storage.</LongDescription>
@@ -2308,7 +2313,10 @@ fos.write(string.getBytes());
 
 
 
-    <!-- Android: External File Access -->
+    <!-- Android: Broadcast -->
+    <Detector class="com.h3xstream.findsecbugs.android.BroadcastDetector">
+        <Details>Identity sendBroadcast() call and give security implications and helpful guidelines.</Details>
+    </Detector>
     <BugPattern type="ANDROID_BROADCAST">
         <ShortDescription>Broadcast (Android)</ShortDescription>
         <LongDescription>Broadcast intents could be received by a malicious application.</LongDescription>
@@ -2385,6 +2393,9 @@ sendBroadcast(v1);
 
 
     <!-- Android: World Writable -->
+    <Detector class="com.h3xstream.findsecbugs.android.WorldWritableDetector">
+        <Details>Identity file written with the creation mode MODE_WORLD_READABLE.</Details>
+    </Detector>
     <BugPattern type="ANDROID_WORLD_WRITABLE">
         <ShortDescription>World Writable File (Android)</ShortDescription>
         <LongDescription>The content that is written can be viewed by any application.</LongDescription>
@@ -2430,7 +2441,10 @@ db.insert("USER_INFO", null, values);
     <BugCode abbrev="SECWW">World Writable (Android)</BugCode>
 
 
-    <!-- Android: World Writable -->
+    <!-- Android: Geolocation-->
+    <Detector class="com.h3xstream.findsecbugs.android.GeolocationDetector">
+        <Details>Identity usage of Geolocation API.</Details>
+    </Detector>
     <BugPattern type="ANDROID_GEOLOCATION">
         <ShortDescription>Geolocation (Android)</ShortDescription>
         <LongDescription></LongDescription>

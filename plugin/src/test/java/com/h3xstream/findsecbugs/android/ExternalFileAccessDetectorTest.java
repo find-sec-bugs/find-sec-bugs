@@ -1,3 +1,20 @@
+/**
+ * Find Security Bugs
+ * Copyright (c) Philippe Arteau, All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.
+ */
 package com.h3xstream.findsecbugs.android;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
@@ -17,7 +34,7 @@ public class ExternalFileAccessDetectorTest extends BaseDetectorTest {
     public void detectExternalFileAccess() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/android/ExternalFileAccess")
+                getClassFilePath("testcode/android/ExternalFileAccessActivity")
         };
 
         //Run the analysis
@@ -26,23 +43,21 @@ public class ExternalFileAccessDetectorTest extends BaseDetectorTest {
 
         //Assertions
         int line = 19; //First line
-        while(line++ <= 23) {
+        while(line++ < 23) {
             verify(reporter).doReportBug(
-                    bugDefinition()
-                            .bugType("EXTERNAL_FILE_ACCESS")
-                            .inClass("ExternalFileAccess")
-                            .inMethod("onCreate")
-                            .atLine(line)
+                    bugDefinition() //
+                            .bugType("ANDROID_EXTERNAL_FILE_ACCESS") //
+                            .inClass("ExternalFileAccessActivity") //
+                            .inMethod("onCreate") //
+                            .atLine(line) //
                             .build()
             );
         }
 
         //The count make sure no other bug are detect
         verify(reporter, times(5)).doReportBug(
-                bugDefinition()
-                        .bugType("EXTERNAL_FILE_ACCESS")
-                        .inClass("ExternalFileAccess")
-                        .inMethod("onCreate")
+                bugDefinition() //
+                        .bugType("ANDROID_EXTERNAL_FILE_ACCESS")
                         .build());
     }
 

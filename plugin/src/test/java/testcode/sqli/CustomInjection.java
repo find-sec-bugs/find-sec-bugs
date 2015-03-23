@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.sql.DataSource;
 
-public class JavaSql {
+public class CustomInjection {
 
     public void testQueries(DataSource dataSource, String input) throws SQLException {
         String sql = "select * from Users where name = " + input;

@@ -15,25 +15,21 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.injection.sql;
+package com.h3xstream.findsecbugs.injection.custom;
 
 import com.h3xstream.findsecbugs.injection.InjectionDetector;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
 import edu.umd.cs.findbugs.BugReporter;
 
-public class SqlInjectionDetector extends InjectionDetector {
+public class CustomInjectionDetector extends InjectionDetector {
 
-    public SqlInjectionDetector(BugReporter bugReporter) {
+    public CustomInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
     }
 
     @Override
     public InjectionSource[] getInjectionSource() {
-        return new InjectionSource[]{
-            new HibernateInjectionSource(),
-            new JdoInjectionSource(),
-            new JpaInjectionSource()
-        };
+        return new InjectionSource[] {
+                CustomInjectionSource.getInstance(this.getClass())};
     }
-
 }

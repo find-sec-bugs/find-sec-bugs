@@ -17,7 +17,7 @@
  */
 package com.h3xstream.findsecbugs;
 
-import com.h3xstream.findsecbugs.common.StringTracer;
+import com.h3xstream.findsecbugs.common.StackUtils;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
@@ -46,14 +46,14 @@ public class CommandInjectionDetector extends OpcodeStackDetector {
         if (seen == Constants.INVOKEVIRTUAL && getClassConstantOperand().equals("java/lang/Runtime") &&
                 getNameConstantOperand().equals("exec")) {
 
-            if (StringTracer.isVariableString(stack.getStackItem(0))) {
+            if (StackUtils.isVariableString(stack.getStackItem(0))) {
                 bugReporter.reportBug(new BugInstance(this, COMMAND_INJECTION_TYPE, Priorities.NORMAL_PRIORITY) //
                         .addClass(this).addMethod(this).addSourceLine(this)
                         .addString("Runtime.exec(...)"));
             }
         } else if (seen == Constants.INVOKEVIRTUAL && getClassConstantOperand().equals("java/lang/ProcessBuilder") &&
                 getNameConstantOperand().equals("command")) {
-            if (StringTracer.hasVariableString(stack)) {
+            if (StackUtils.hasVariableString(stack)) {
                 bugReporter.reportBug(new BugInstance(this, COMMAND_INJECTION_TYPE, Priorities.NORMAL_PRIORITY) //
                         .addClass(this).addMethod(this).addSourceLine(this)
                         .addString("ProcessBuilder.command(...)"));

@@ -17,7 +17,7 @@
  */
 package com.h3xstream.findsecbugs.xpath;
 
-import com.h3xstream.findsecbugs.common.StringTracer;
+import com.h3xstream.findsecbugs.common.StackUtils;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
@@ -43,7 +43,7 @@ public class XPathInjectionApacheXPathApiDetector extends OpcodeStackDetector {
                     getNameConstantOperand().equals("selectSingleNode")) {
 
                 //For all 3 methos the query is in the last parameter
-                if (StringTracer.isVariableString(stack.getStackItem(0))) {
+                if (StackUtils.isVariableString(stack.getStackItem(0))) {
 
                     bugReporter.reportBug(new BugInstance(this, XPATH_INJECTION_TYPE, Priorities.NORMAL_PRIORITY) //
                             .addClass(this).addMethod(this).addSourceLine(this) //

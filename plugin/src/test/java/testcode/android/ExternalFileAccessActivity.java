@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
-public class ExternalFileAccess extends Activity {
+public class ExternalFileAccessActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle b) {

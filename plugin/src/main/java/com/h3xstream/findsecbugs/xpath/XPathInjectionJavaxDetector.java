@@ -17,7 +17,7 @@
  */
 package com.h3xstream.findsecbugs.xpath;
 
-import com.h3xstream.findsecbugs.common.StringTracer;
+import com.h3xstream.findsecbugs.common.StackUtils;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
@@ -42,7 +42,7 @@ public class XPathInjectionJavaxDetector extends OpcodeStackDetector {
             if (getNameConstantOperand().equals("compile")
                     && getSigConstantOperand().equals("(Ljava/lang/String;)Ljavax/xml/xpath/XPathExpression;")) {
 
-                if (StringTracer.isVariableString(stack.getStackItem(0))) {
+                if (StackUtils.isVariableString(stack.getStackItem(0))) {
                     bugReporter.reportBug(new BugInstance(this, XPATH_INJECTION_TYPE, Priorities.NORMAL_PRIORITY) //
                             .addClass(this).addMethod(this).addSourceLine(this) //
                             .addString("XPath.compile()"));
@@ -50,7 +50,7 @@ public class XPathInjectionJavaxDetector extends OpcodeStackDetector {
             } else if (getNameConstantOperand().equals("evaluate")
                     && getSigConstantOperand().equals("(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/String;")) {
 
-                if (StringTracer.isVariableString(stack.getStackItem(0))) {
+                if (StackUtils.isVariableString(stack.getStackItem(0))) {
                     bugReporter.reportBug(new BugInstance(this, XPATH_INJECTION_TYPE, Priorities.NORMAL_PRIORITY) //
                             .addClass(this).addMethod(this).addSourceLine(this) //
                             .addString("XPath.evaluate()"));

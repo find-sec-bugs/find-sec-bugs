@@ -17,7 +17,7 @@
  */
 package com.h3xstream.findsecbugs;
 
-import com.h3xstream.findsecbugs.common.StringTracer;
+import com.h3xstream.findsecbugs.common.StackUtils;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.OpcodeStack;
@@ -48,7 +48,7 @@ public class PathTraversalDetector extends OpcodeStackDetector {
 
                 //Constructor with one param.
                 if (getSigConstantOperand().equals("(Ljava/lang/String;)V")) {
-                    if (StringTracer.isVariableString(stack.getStackItem(0))) {
+                    if (StackUtils.isVariableString(stack.getStackItem(0))) {
                         bugReporter.reportBug(new BugInstance(this, PATH_TRAVERSAL_IN_TYPE, Priorities.NORMAL_PRIORITY) //
                                 .addClass(this).addMethod(this).addSourceLine(this) //
                                 .addString("java.io.File"));
@@ -56,7 +56,7 @@ public class PathTraversalDetector extends OpcodeStackDetector {
                     //Constructor with two param.
                 } else if (getSigConstantOperand().equals("(Ljava/lang/String;Ljava/lang/String;)V")) {
 
-                    if (StringTracer.isVariableString(stack.getStackItem(1)) || !StringTracer.isVariableString(stack.getStackItem(0))) {
+                    if (StackUtils.isVariableString(stack.getStackItem(1)) || !StackUtils.isVariableString(stack.getStackItem(0))) {
                         bugReporter.reportBug(new BugInstance(this, PATH_TRAVERSAL_IN_TYPE, Priorities.NORMAL_PRIORITY) //
                                 .addClass(this).addMethod(this).addSourceLine(this) //
                                 .addString("java.io.File"));
@@ -68,7 +68,7 @@ public class PathTraversalDetector extends OpcodeStackDetector {
                     && getNameConstantOperand().equals("<init>")
                     && (getSigConstantOperand().equals("(Ljava/lang/String;Ljava/lang/String;)V"))) {
 
-                if (StringTracer.isVariableString(stack.getStackItem(1)) || !StringTracer.isVariableString(stack.getStackItem(0))) {
+                if (StackUtils.isVariableString(stack.getStackItem(1)) || !StackUtils.isVariableString(stack.getStackItem(0))) {
                     bugReporter.reportBug(new BugInstance(this, PATH_TRAVERSAL_IN_TYPE, Priorities.NORMAL_PRIORITY) //
                             .addClass(this).addMethod(this).addSourceLine(this) //
                             .addString("java.io.RandomAccessFile"));
@@ -77,7 +77,7 @@ public class PathTraversalDetector extends OpcodeStackDetector {
                     && getNameConstantOperand().equals("<init>")
                     && (getSigConstantOperand().equals("(Ljava/lang/String;)V"))) {
 
-                if (StringTracer.isVariableString(stack.getStackItem(0))) {
+                if (StackUtils.isVariableString(stack.getStackItem(0))) {
                     bugReporter.reportBug(new BugInstance(this, PATH_TRAVERSAL_IN_TYPE, Priorities.NORMAL_PRIORITY) //
                             .addClass(this).addMethod(this).addSourceLine(this) //
                             .addString("java.io.FileReader"));
@@ -86,7 +86,7 @@ public class PathTraversalDetector extends OpcodeStackDetector {
                     && getNameConstantOperand().equals("<init>")
                     && getSigConstantOperand().equals("(Ljava/lang/String;)V")) {
 
-                if (StringTracer.isVariableString(stack.getStackItem(0))) {
+                if (StackUtils.isVariableString(stack.getStackItem(0))) {
                     bugReporter.reportBug(new BugInstance(this, PATH_TRAVERSAL_IN_TYPE, Priorities.NORMAL_PRIORITY) //
                             .addClass(this).addMethod(this).addSourceLine(this) //
                             .addString("java.io.FileInputStream"));
@@ -100,7 +100,7 @@ public class PathTraversalDetector extends OpcodeStackDetector {
                     && (getSigConstantOperand().equals("(Ljava/lang/String;)V") ||
                     getSigConstantOperand().equals("(Ljava/lang/String;Z)V"))) {
 
-                if (StringTracer.isVariableString(stack.getStackItem(1))) {
+                if (StackUtils.isVariableString(stack.getStackItem(1))) {
                     bugReporter.reportBug(new BugInstance(this, PATH_TRAVERSAL_OUT_TYPE, Priorities.NORMAL_PRIORITY) //
                             .addClass(this).addMethod(this).addSourceLine(this) //
                             .addString("java.io.FileWriter"));
@@ -117,7 +117,7 @@ public class PathTraversalDetector extends OpcodeStackDetector {
                     param = stack.getStackItem(0);
                 }
 
-                if (StringTracer.isVariableString(param)) {
+                if (StackUtils.isVariableString(param)) {
                     bugReporter.reportBug(new BugInstance(this, PATH_TRAVERSAL_OUT_TYPE, Priorities.NORMAL_PRIORITY) //
                             .addClass(this).addMethod(this).addSourceLine(this) //
                             .addString("java.io.FileOutputStream"));

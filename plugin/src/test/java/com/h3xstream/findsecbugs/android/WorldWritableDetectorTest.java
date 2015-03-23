@@ -15,44 +15,46 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.injection.sql;
+package com.h3xstream.findsecbugs.android;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.testng.annotations.Test;
-import org.testng.annotations.BeforeTest;
 
 import java.util.Arrays;
 
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class AdditionalInjectionSourceTest extends BaseDetectorTest {
+public class WorldWritableDetectorTest  extends BaseDetectorTest {
 
-    @BeforeTest
-    public void before() {
-        String path = this.getClass().getResource("SqlInjectionSource.properties").getPath();
-        System.setProperty("com.h3xstream.findsecbugs.injection.sql.sources.files", path);
-    }
 
     @Test
-    public void detectSqljection() throws Exception {
+    public void detectWorldWritableHandle() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/sqli/JavaSql")
+                getClassFilePath("testcode/android/WorldWritableActivity")
         };
 
         //Run the analysis
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        for (Integer line : Arrays.asList(16)) {
+        //Assertions
+        for(int line : Arrays.asList(18,22,23)) {
             verify(reporter).doReportBug(
-                    bugDefinition()
-                            .bugType("SQL_INJECTION")
-                            .inClass("JavaSql").inMethod("testQueries").atLine(line)
+                    bugDefinition() //
+                            .bugType("ANDROID_WORLD_WRITABLE") //
+                            .inClass("WorldWritableActivity") //
+                            .inMethod("onCreate") //
+                            .atLine(line) //
                             .build()
             );
         }
+
+        //The count make sure no other bug are detect
+        verify(reporter, times(3)).doReportBug(
+                bugDefinition().bugType("ANDROID_WORLD_WRITABLE").build());
     }
 }

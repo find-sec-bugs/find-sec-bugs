@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.injection;
+package com.h3xstream.findsecbugs.injection.custom;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +33,11 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.h3xstream.findsecbugs.common.ByteCode;
+import com.h3xstream.findsecbugs.injection.InjectionDetector;
+import com.h3xstream.findsecbugs.injection.InjectionPoint;
+import com.h3xstream.findsecbugs.injection.InjectionSource;
 import org.apache.bcel.Constants;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantUtf8;
@@ -44,11 +49,13 @@ import org.apache.bcel.generic.InvokeInstruction;
  *
  * @author naokikimura
  */
-public class AdditionalInjectionSource implements InjectionSource {
+public class CustomInjectionSource implements InjectionSource {
 
-    private static final Logger LOG = Logger.getLogger(AdditionalInjectionSource.class.getName());
-    private static final String INJECTION_SOURCE_RESOURCE_NAME = "InjectionSource.properties";
+    private static final Logger LOG = Logger.getLogger(CustomInjectionSource.class.getName());
+    private static final String INJECTION_SOURCE_RESOURCE_NAME = "CustomInjectionSource.properties";
     private static final Map<String, InjectionSource> instanceMap = new HashMap<String, InjectionSource>();
+
+    private static final String CUSTOM_INJECTION_TYPE = "CUSTOM_INJECTION";
 
     static String toResourceBaseName(Class<? extends InjectionDetector> that) {
         return that.getPackage().getName().replaceAll("\\.", "/");
@@ -64,7 +71,7 @@ public class AdditionalInjectionSource implements InjectionSource {
         }
 
         Properties properties = getInjectionSourceProperties(resourceBaseName);
-        AdditionalInjectionSource injectionSource = new AdditionalInjectionSource(properties);
+        CustomInjectionSource injectionSource = new CustomInjectionSource(properties);
         instanceMap.put(resourceBaseName, injectionSource);
         return injectionSource;
     }
@@ -87,7 +94,7 @@ public class AdditionalInjectionSource implements InjectionSource {
             }
         }
         String resourceName = resourceBaseName + "/" + INJECTION_SOURCE_RESOURCE_NAME;
-        URL url = AdditionalInjectionSource.class.getClassLoader().getResource(resourceName);
+        URL url = CustomInjectionSource.class.getClassLoader().getResource(resourceName);
         if (url == null) {
             LOG.severe(resourceName + " not found.");
         }
@@ -100,22 +107,12 @@ public class AdditionalInjectionSource implements InjectionSource {
             return null;
         }
 
-        try {
-            InputStream input = url.openStream();
-            try {
-                properties.load(input);
-            } catch (IOException e) {
-                LOG.log(Level.SEVERE, url + " did not load.", e);
-            } finally {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    LOG.log(Level.SEVERE, url + " did not close.", e);
-                }
-            }
+        try (InputStream input = url.openStream()) {
+            properties.load(input);
         } catch (IOException e) {
             LOG.log(Level.SEVERE, url + " did not open.", e);
         }
+
         return properties;
     }
 
@@ -153,26 +150,13 @@ public class AdditionalInjectionSource implements InjectionSource {
     private final Set<String> candidates;
     private final Map<InvokeIdentifier, InjectionPoint> injectableParametersMap;
 
-    AdditionalInjectionSource(Set<String> candidates, Map<InvokeIdentifier, InjectionPoint> injectableParametersMap) {
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine(String.format("candidates = %s", Arrays.toString(candidates.toArray())));
-            LOG.fine(String.format("injectableParametersMap.keySet = %s", Arrays.toString(injectableParametersMap.keySet().toArray())));
-        }
-        this.candidates = candidates;
-        this.injectableParametersMap = injectableParametersMap;
-    }
-
-    public AdditionalInjectionSource(Properties properties) {
+    public CustomInjectionSource(Properties properties) {
         this(toInjectableParametersMap(properties == null ? new Properties() : properties));
     }
 
-    public AdditionalInjectionSource(Map<InvokeIdentifier, InjectionPoint> injectableParametersMap) {
+    public CustomInjectionSource(Map<InvokeIdentifier, InjectionPoint> injectableParametersMap) {
         this.candidates = toCandidates(injectableParametersMap);
         this.injectableParametersMap = injectableParametersMap;
-    }
-
-    AdditionalInjectionSource() {
-        this(Collections.EMPTY_SET, Collections.EMPTY_MAP);
     }
 
     @Override
@@ -191,6 +175,7 @@ public class AdditionalInjectionSource implements InjectionSource {
 
     @Override
     public InjectionPoint getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {
+        ByteCode.printOpCode(ins, cpg);
         InvokeIdentifier identifier = new InvokeIdentifier(ins, cpg, insHandle);
         InjectionPoint injectionPoint = injectableParametersMap.get(identifier);
         return injectionPoint == null ? InjectionPoint.NONE : injectionPoint;

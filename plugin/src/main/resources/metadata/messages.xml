@@ -1056,11 +1056,12 @@ This class should be analyzed to make sure that remotely exposed methods are saf
 
     <BugPattern type="CUSTOM_INJECTION">
         <ShortDescription>Potential Injection</ShortDescription>
-        <LongDescription>The use of the method {0} is potentially vulnerable injection.</LongDescription>
+        <LongDescription>The use of the method {3} is potentially vulnerable injection.</LongDescription>
         <Details>
             <![CDATA[
 <p>
 The method is susceptible to injection. The input should be validated and properly escaped.
+This issue will only be trigger if a system properties is set (<code>-Dcom.h3xstream.findsecbugs.injection.custom.sources.files=/opt/somedir/findbugs/MyCustomApi.properties</code>).
 </p>
 <p>
     <b>Vulnerable code samples:</b><br/>
@@ -1083,7 +1084,7 @@ The method is susceptible to injection. The input should be validated and proper
 
     <!-- SQL Injection -->
     <Detector class="com.h3xstream.findsecbugs.injection.sql.SqlInjectionDetector">
-        <Details>Identify various kinds of SQL Injection in SQL APIs that accept strings.</Details>
+        <Details>Identify various kinds of SQL Injection in SQL APIs that accept strings (Hibernate, JPA and JDO).</Details>
     </Detector>
 
 
@@ -2301,6 +2302,7 @@ fos = openFileOutput(filename, Context.MODE_PRIVATE);
 fos.write(string.getBytes());
 </pre>
 </p>
+<br/>
 <p>
     <b>References</b><br/>
     <a href="https://www.securecoding.cert.org/confluence/display/java/DRD00-J.+Do+not+store+sensitive+information+on+external+storage+%28SD+card%29+unless+encrypted+first">CERT: DRD00-J: Do not store sensitive information on external storage [...]</a><br/>
@@ -2378,6 +2380,7 @@ sendBroadcast(v1);
 &lt;/manifest&gt;
 </pre>
 </p>
+<br/>
 <p>
     <b>References</b><br/>
     <a href="https://www.securecoding.cert.org/confluence/display/java/DRD03-J.+Do+not+broadcast+sensitive+information+using+an+implicit+intent">CERT: DRD03-J. Do not broadcast sensitive information using an implicit intent</a><br/>
@@ -2430,10 +2433,11 @@ values.put("rememberMeToken", token);
 db.insert("USER_INFO", null, values);
 </pre>
 </p>
+<br/>
 <p>
     <b>References</b><br/>
     <a href="https://www.securecoding.cert.org/confluence/display/java/DRD11-J.+Ensure+that+sensitive+data+is+kept+secure">CERT: DRD11-J. Ensure that sensitive data is kept secure</a><br/>
-    <a href="http://developer.android.com/reference/android/content/Context.html#MODE_PRIVATE">Android Official Doc: MODE_PRIVATE</a>
+    <a href="http://developer.android.com/reference/android/content/Context.html#MODE_PRIVATE">Android Official Doc: Context.MODE_PRIVATE</a>
 </p>
 ]]>
         </Details>
@@ -2441,29 +2445,45 @@ db.insert("USER_INFO", null, values);
     <BugCode abbrev="SECWW">World Writable (Android)</BugCode>
 
 
-    <!-- Android: Geolocation-->
+    <!-- Android: Geolocation -->
     <Detector class="com.h3xstream.findsecbugs.android.GeolocationDetector">
         <Details>Identity usage of Geolocation API.</Details>
     </Detector>
     <BugPattern type="ANDROID_GEOLOCATION">
-        <ShortDescription>Geolocation (Android)</ShortDescription>
-        <LongDescription></LongDescription>
+        <ShortDescription>WebView with Geolocation Activated (Android)</ShortDescription>
+        <LongDescription>WebView with Geolocation Activated</LongDescription>
         <Details>
             <![CDATA[
 <p>
-
+    It suggest to ask the user for a confirmation about obtaining its geolocation.
 </p>
 <p>
     <b>Code at risk:</b><br/>
 <pre>
-TODO
+webView.setWebChromeClient(new WebChromeClient() {
+    @Override
+    public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
+        callback.invoke(origin, true, false);
+    }
+});
+</pre>
+</p>
+<p>
+    <b>Suggest code:</b><br/>
+
+    Limit the sampling of geolocation and ask the user for confirmation.
+<pre>
+webView.setWebChromeClient(new WebChromeClient() {
+    @Override
+    public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
+        callback.invoke(origin, true, false);
+
+        //Ask the user for confirmation
+    }
+});
 </pre>
 </p>
 <br/>
-<p>
-    <b>Solution:</b><br/>
-    Limit the sampling of geolocation.
-</p>
 <p>
     <b>References</b><br/>
     <a href="https://www.securecoding.cert.org/confluence/display/java/DRD15-J.+Consider+privacy+concerns+when+using+Geolocation+API">CERT: DRD15-J. Consider privacy concerns when using Geolocation API</a><br/>
@@ -2474,4 +2494,99 @@ TODO
         </Details>
     </BugPattern>
     <BugCode abbrev="SECGEO">Geolocation (Android)</BugCode>
+
+
+    <!-- Android: WebView with JavaScript Enabled -->
+    <Detector class="com.h3xstream.findsecbugs.android.WebViewJavascriptEnabledDetector">
+        <Details>Identity WebView with JavaScript Enabled.</Details>
+    </Detector>
+    <BugPattern type="ANDROID_WEB_VIEW_JAVASCRIPT">
+        <ShortDescription>WebView with JavaScript Enabled (Android)</ShortDescription>
+        <LongDescription>WebView with JavaScript Enabled</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    Enabling JavaScript for the WebView means that it is now susceptible to XSS. The page render should be inspected
+    for potential reflected XSS, stored XSS and DOM XSS.<br/>
+<pre>
+WebView myWebView = (WebView) findViewById(R.id.webView);
+WebSettings webSettings = myWebView.getSettings();
+webSettings.setJavaScriptEnabled(true);
+</pre>
+</p>
+
+<p>
+    <b>Code at risk:</b><br/>
+Enabling is JavaScript is not a bad practice. It just means that the backend code need to be audit for potential XSS.
+The XSS can also be introduce client-side with DOM XSS.
+<pre>
+function updateDescription(newDescription) {
+    $("#userDescription").html(newDescription);
+}
+</pre>
+</p>
+<br/>
+<p>
+    <b>References</b><br/>
+    <a href="http://www.technotalkative.com/issue-using-setjavascriptenabled-can-introduce-xss-vulnerabilities-application-review-carefully/">Issue: Using setJavaScriptEnabled can introduce XSS vulnerabilities</a><br/>
+    <a href="http://developer.android.com/guide/webapps/webview.html#UsingJavaScript">Android Official Doc: WebView</a><br/>
+    <a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site Scripting</a><br/>
+    <a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet">OWASP: XSS Prevention Cheat Sheet</a><br/>
+    <a href="https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_%28XSS%29">OWASP: Top 10 2013-A3: Cross-Site Scripting (XSS)</a><br/>
+    <a href="http://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECWVJ">WebView with JavaScript Enabled (Android)</BugCode>
+
+
+    <!-- Android:  -->
+    <Detector class="com.h3xstream.findsecbugs.android.WebViewJavascriptInterfaceDetector">
+        <Details>Identity WebView with a Java bridge (Javascript Interface).</Details>
+    </Detector>
+    <BugPattern type="ANDROID_WEB_VIEW_JAVASCRIPT_INTERFACE">
+        <ShortDescription>WebView with Javascript Interface (Android)</ShortDescription>
+        <LongDescription>WebView with Javascript Interface (Android)</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    The use Javascript Interface could expose the WebView to risky API. If an XSS is trigger in the WebView, the class
+    could be call by the malicious JavaScript code.
+</p>
+
+<p>
+    <b>Code at risk:</b><br/>
+    <pre>
+WebView myWebView = (WebView) findViewById(R.id.webView);
+
+myWebView.addJavascriptInterface(new FileWriteUtil(this), "fileWriteUtil");
+
+WebSettings webSettings = myWebView.getSettings();
+webSettings.setJavaScriptEnabled(true);
+
+[...]
+class FileWriteUtil {
+    Context mContext;
+
+    FileOpenUtil(Context c) {
+        mContext = c;
+    }
+
+    public void writeToFile(String data, String filename, String tag) {
+        [...]
+    }
+}
+    </pre>
+</p>
+<br/>
+<p>
+    <b>References</b><br/>
+    <a href="http://developer.android.com/reference/android/webkit/WebView.html#addJavascriptInterface%28java.lang.Object,%20java.lang.String%29">Android Official Doc: WebView.addJavascriptInterface()</a><br/>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECWVJI">WebView with a Java bridge (Javascript Interface) (Android)</BugCode>
+
 </MessageCollection>

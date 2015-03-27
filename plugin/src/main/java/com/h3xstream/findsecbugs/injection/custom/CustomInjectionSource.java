@@ -23,8 +23,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -34,7 +32,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.h3xstream.findsecbugs.common.ByteCode;
 import com.h3xstream.findsecbugs.injection.InjectionDetector;
 import com.h3xstream.findsecbugs.injection.InjectionPoint;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
@@ -54,6 +51,9 @@ public class CustomInjectionSource implements InjectionSource {
     private static final Logger LOG = Logger.getLogger(CustomInjectionSource.class.getName());
     private static final String INJECTION_SOURCE_RESOURCE_NAME = "CustomInjectionSource.properties";
     private static final Map<String, InjectionSource> instanceMap = new HashMap<String, InjectionSource>();
+
+    private static final String PROPERTY_SEPARATOR = "\\Q|\\E";
+    private static final String PARAM_IDX_SEPARATOR = ",";
 
     private static final String CUSTOM_INJECTION_TYPE = "CUSTOM_INJECTION";
 
@@ -127,14 +127,21 @@ public class CustomInjectionSource implements InjectionSource {
     private static Map<InvokeIdentifier, InjectionPoint>  toInjectableParametersMap(Properties properties) {
         Map<InvokeIdentifier, InjectionPoint> map = new HashMap<InvokeIdentifier, InjectionPoint>(properties.size());
         for (String propertyName : properties.stringPropertyNames()) {
-            String[] value = properties.getProperty(propertyName).split(";");
-            String[] values = value[0].split(",");
+            //
+            String[] value = properties.getProperty(propertyName).split(PROPERTY_SEPARATOR);
+            String[] values = value[0].split(PARAM_IDX_SEPARATOR);
             int[] parameters = new int[values.length];
             for (int i = 0; i < values.length; i++) {
                 parameters[i] = Integer.parseInt(values[i].trim());
             }
-            String bugType = value.length < 2 ? null : value[1].trim();
-            map.put(InvokeIdentifier.valueOf(propertyName), new InjectionPoint(parameters, bugType));
+            String bugType = value.length < 2 ? CUSTOM_INJECTION_TYPE : value[1].trim();
+
+            InjectionPoint ip = new InjectionPoint(parameters, bugType);
+
+            InvokeIdentifier invoke = InvokeIdentifier.valueOf(propertyName);
+            ip.setInjectableMethod(invoke.className + "." + invoke.methodName);
+
+            map.put(invoke,ip);
         }
         return map;
     }
@@ -175,7 +182,7 @@ public class CustomInjectionSource implements InjectionSource {
 
     @Override
     public InjectionPoint getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {
-        ByteCode.printOpCode(ins, cpg);
+        //ByteCode.printOpCode(ins, cpg);
         InvokeIdentifier identifier = new InvokeIdentifier(ins, cpg, insHandle);
         InjectionPoint injectionPoint = injectableParametersMap.get(identifier);
         return injectionPoint == null ? InjectionPoint.NONE : injectionPoint;
@@ -215,22 +222,13 @@ public class CustomInjectionSource implements InjectionSource {
                 this.kind = kind;
             }
 
-            static Kind valueOf(short kind) {
-                for (Kind value : Kind.values()) {
-                    if (kind == value.kind) {
-                        return value;
-                    }
-                }
-                throw new IllegalArgumentException();
-            }
-
             static Kind valueOf(InvokeInstruction ins) {
                 return Kind.valueOf(ins.getClass().getSimpleName());
             }
         }
 
         public static InvokeIdentifier valueOf(String value) {
-            String[] parts = value.split("(\\s|\\.|:)", 4);
+            String[] parts = value.split(PROPERTY_SEPARATOR, 4);
             return new InvokeIdentifier(parts[1], parts[2], parts[3], Kind.valueOf(parts[0]));
         }
 
@@ -241,36 +239,15 @@ public class CustomInjectionSource implements InjectionSource {
 
         @Override
         public int hashCode() {
-            int hash = 3;
-            hash = 97 * hash + (this.methodName != null ? this.methodName.hashCode() : 0);
-            hash = 97 * hash + (this.methodSignature != null ? this.methodSignature.hashCode() : 0);
-            hash = 97 * hash + (this.className != null ? this.className.hashCode() : 0);
-            hash = 97 * hash + (this.kind != null ? this.kind.hashCode() : 0);
-            return hash;
+            return toString().hashCode();
         }
 
         @Override
         public boolean equals(Object obj) {
-            if (obj == null) {
+            if (obj == null || getClass() != obj.getClass()) {
                 return false;
             }
-            if (getClass() != obj.getClass()) {
-                return false;
-            }
-            final InvokeIdentifier other = (InvokeIdentifier) obj;
-            if ((this.methodName == null) ? (other.methodName != null) : !this.methodName.equals(other.methodName)) {
-                return false;
-            }
-            if ((this.methodSignature == null) ? (other.methodSignature != null) : !this.methodSignature.equals(other.methodSignature)) {
-                return false;
-            }
-            if ((this.className == null) ? (other.className != null) : !this.className.equals(other.className)) {
-                return false;
-            }
-            if ((this.kind == null) ? (other.kind != null) : !this.kind.equals(other.kind)) {
-                return false;
-            }
-            return true;
+            return toString().equals(obj.toString());
         }
     }
 

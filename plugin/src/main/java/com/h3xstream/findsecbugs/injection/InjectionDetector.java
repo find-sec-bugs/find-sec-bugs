@@ -17,11 +17,6 @@
  */
 package com.h3xstream.findsecbugs.injection;
 
-import com.h3xstream.findsecbugs.common.ByteCode;
-import com.h3xstream.findsecbugs.injection.sql.HibernateInjectionSource;
-import com.h3xstream.findsecbugs.injection.sql.JdoInjectionSource;
-import com.h3xstream.findsecbugs.injection.sql.JpaInjectionSource;
-
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Detector;
@@ -132,11 +127,14 @@ public abstract class InjectionDetector implements Detector {
                             prev = getPreviousLocation(cfg, prev, true);
                         }
                         if (prev != null && !isSafeValue(prev, cpg, cfg)) {
-
-                            bugReporter.reportBug(new BugInstance(this, injectionPoint.getBugType(), Priorities.HIGH_PRIORITY) //
+                            BugInstance bugInstance = new BugInstance(this, injectionPoint.getBugType(), Priorities.HIGH_PRIORITY) //
                                     .addClass(javaClass) //
                                     .addMethod(javaClass, method) //
-                                    .addSourceLine(classContext, method, location));
+                                    .addSourceLine(classContext, method, location);
+                            if(injectionPoint.getInjectableMethod()!= null) {
+                                bugInstance.addString(injectionPoint.getInjectableMethod());
+                            }
+                            bugReporter.reportBug(bugInstance);
                             break arguments;
                             //System.out.println("!!!");
                         }

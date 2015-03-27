@@ -21,6 +21,7 @@ public class InjectionPoint {
     public static InjectionPoint NONE = new InjectionPoint(new int[0],null);
 
     private int[] injectableArguments;
+    private String injectableMethod;
     private String bugType;
 
 
@@ -35,5 +36,13 @@ public class InjectionPoint {
 
     public String getBugType() {
         return bugType;
+    }
+
+    public String getInjectableMethod() {
+        return injectableMethod;
+    }
+
+    public void setInjectableMethod(String injectableMethod) {
+        this.injectableMethod = injectableMethod;
     }
 }

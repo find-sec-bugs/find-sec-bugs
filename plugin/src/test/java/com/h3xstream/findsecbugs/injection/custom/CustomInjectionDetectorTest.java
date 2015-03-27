@@ -36,7 +36,7 @@ public class CustomInjectionDetectorTest extends BaseDetectorTest {
     }
 
     @Test
-    public void detectSqljection() throws Exception {
+    public void detectInjection() throws Exception {
         //Locate test code
         String[] files = {
                 getClassFilePath("testcode/sqli/CustomInjection")
@@ -46,13 +46,11 @@ public class CustomInjectionDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        for (Integer line : Arrays.asList(16)) {
-            verify(reporter).doReportBug(
-                    bugDefinition()
-                            .bugType("CUSTOM_INJECTION")
-                            .inClass("CustomInjection").inMethod("testQueries").atLine(line)
-                            .build()
-            );
-        }
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("CUSTOM_INJECTION")
+                        .inClass("CustomInjection").inMethod("testQueries").atLine(16)
+                        .build()
+        );
     }
 }

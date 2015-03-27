@@ -17,7 +17,7 @@
               reports="SERVLET_PARAMETER,SERVLET_CONTENT_TYPE,SERVLET_SERVER_NAME,SERVLET_SESSION_ID,SERVLET_QUERY_STRING,SERVLET_HEADER,SERVLET_HEADER_REFERER,SERVLET_HEADER_USER_AGENT"/>
     <Detector class="com.h3xstream.findsecbugs.endpoint.CookieDetector" reports="COOKIE_USAGE"/>
     <Detector class="com.h3xstream.findsecbugs.PathTraversalDetector" reports="PATH_TRAVERSAL_IN,PATH_TRAVERSAL_OUT"/>
-    <Detector class="com.h3xstream.findsecbugs.CommandInjectionDetector" reports="COMMAND_INJECTION"/>
+    <Detector class="com.h3xstream.findsecbugs.injection.command.CommandInjectionDetector" reports="COMMAND_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.WeakFilenameUtilsMethodDetector" reports="WEAK_FILENAMEUTILS"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.WeakTrustManagerDetector" reports="WEAK_TRUST_MANAGER"/>
     <Detector class="com.h3xstream.findsecbugs.endpoint.JaxWsEndpointDetector" reports="JAXWS_ENDPOINT"/>

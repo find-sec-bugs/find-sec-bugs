@@ -341,7 +341,7 @@ by the user. If that is the case, the reported instance is a false positive.</p>
 
 
     <!-- Command injection -->
-    <Detector class="com.h3xstream.findsecbugs.CommandInjectionDetector">
+    <Detector class="com.h3xstream.findsecbugs.injection.command.CommandInjectionDetector">
         <Details>Identify sources of command injection</Details>
     </Detector>
 

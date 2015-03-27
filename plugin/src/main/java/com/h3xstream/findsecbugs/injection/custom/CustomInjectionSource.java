@@ -107,7 +107,8 @@ public class CustomInjectionSource implements InjectionSource {
             return null;
         }
 
-        try (InputStream input = url.openStream()) {
+        try {
+            InputStream input = url.openStream();
             properties.load(input);
         } catch (IOException e) {
             LOG.log(Level.SEVERE, url + " did not open.", e);

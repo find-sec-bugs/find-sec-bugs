@@ -41,9 +41,24 @@ rootXml.Detector.each { detector ->
     bugsBinding['nbDetectors']++
 }
 
+//Version and download links
+
 downloadUrl = "http://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/1.3.0/findsecbugs-plugin-1.3.0.jar"
 mavenCentralSearch = "http://search.maven.org/#search|gav|1|g:%22com.h3xstream.findsecbugs%22 AND a:%22findsecbugs-plugin%22"
 latestVersion = "1.3.0"
+
+//Screenshots
+
+screenshots = []
+screenshots.add(['title':'Eclipse',
+                 'description':'<a href="http://marketplace.eclipse.org/content/findbugs-eclipse-plugin">Eclipse plugin</a> with FindSecurityBugs detectors.',
+                 'path':'images/screens/eclipse.png'])
+screenshots.add(['title':'IntelliJ / Android Studio',
+                 'description':'<a href="https://plugins.jetbrains.com/plugin/3847?pr=idea">IntelliJ plugin</a> with FindSecurityBugs detectors.',
+                 'path':'images/screens/intellij.png'])
+screenshots.add(['title':'Sonar Qube',
+                 'description':'<a href="http://docs.sonarqube.org/display/SONAR/Findbugs+Plugin">Sonar Qube</a> with FindSecurityBugs detectors.',
+                 'path':'images/screens/sonar.png'])
 
 //Generate
 
@@ -56,7 +71,9 @@ println "Writing the template to ${outDir}/index.htm"
 outputFile(outDir,"index.htm").withWriter {
     w ->
         w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Home'])
-        w << engine.createTemplate(getTemplateReader("/home.htm")).make(['latestVersion':latestVersion,'nbPatterns':bugsBinding['nbPatterns']])
+        w << engine.createTemplate(getTemplateReader("/home.htm")).make(['latestVersion':latestVersion,
+                                                                         'nbPatterns':bugsBinding['nbPatterns'],
+                                                                         'screenshots':screenshots])
         w << engine.createTemplate(getTemplateReader("/social.htm")).make()
         w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make(['latestVersion':latestVersion])
 }

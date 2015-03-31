@@ -4,6 +4,20 @@ Find Security Bugs is a plugin for FindBugs that aims to help security audit on 
 
 Website : http://h3xstream.github.io/find-sec-bugs/
 
+## Screenshots
+
+### Eclipse
+
+![Eclipse](http://h3xstream.github.io/find-sec-bugs/images/screens/eclipse.png)
+
+### IntelliJ / Android Studio
+
+![IntelliJ](http://h3xstream.github.io/find-sec-bugs/images/screens/intellij.png)
+
+### Sonar Qube
+
+![SonarQube](http://h3xstream.github.io/find-sec-bugs/images/screens/sonar.png)
+
 ## License
 
 This software is release under [LGPL](http://www.gnu.org/licenses/lgpl.html).

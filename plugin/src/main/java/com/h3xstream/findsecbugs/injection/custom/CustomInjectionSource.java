@@ -55,6 +55,7 @@ public class CustomInjectionSource implements InjectionSource {
     private static final String PROPERTY_SEPARATOR = "\\Q|\\E";
     private static final String PARAM_IDX_SEPARATOR = ",";
 
+    private static final String SYSTEM_PROPERTY = "findsecbugs.injection.sources";
     private static final String CUSTOM_INJECTION_TYPE = "CUSTOM_INJECTION";
 
     static String toResourceBaseName(Class<? extends InjectionDetector> that) {
@@ -77,8 +78,7 @@ public class CustomInjectionSource implements InjectionSource {
     }
 
     static Properties getInjectionSourceProperties(String resourceBaseName) {
-        String propertyName = resourceBaseName.replaceAll("/", ".") + ".sources.files";
-        String propertyValue = System.getProperty(propertyName);
+        String propertyValue = System.getProperty(SYSTEM_PROPERTY);
         String[] resourcePaths = propertyValue == null ? new String[0] : propertyValue.split("\\Q" + File.pathSeparatorChar + "\\E");
         List<URL> urls = new ArrayList<URL>(resourcePaths.length);
         for (String resourcePath : resourcePaths) {

@@ -67,7 +67,7 @@ public class GeolocationDetector implements Detector {
                 continue;
             }
 
-            //Since the logic implemented need to be analyze pretty much by a human, all implementation will flagged.
+            //Since the logic implemented need to be analyze by a human, all implementation will be flagged.
 
             bugReporter.reportBug(new BugInstance(this, ANDROID_GEOLOCATION_TYPE, Priorities.NORMAL_PRIORITY) //
                     .addClassAndMethod(javaClass, m));

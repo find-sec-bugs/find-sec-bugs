@@ -43,7 +43,7 @@ public class ExternalFileAccessDetectorTest extends BaseDetectorTest {
 
         //Assertions
         int line = 19; //First line
-        while(line++ < 23) {
+        while(line++ < 25) {
             verify(reporter).doReportBug(
                     bugDefinition() //
                             .bugType("ANDROID_EXTERNAL_FILE_ACCESS") //
@@ -55,7 +55,7 @@ public class ExternalFileAccessDetectorTest extends BaseDetectorTest {
         }
 
         //The count make sure no other bug are detect
-        verify(reporter, times(5)).doReportBug(
+        verify(reporter, times(7)).doReportBug(
                 bugDefinition() //
                         .bugType("ANDROID_EXTERNAL_FILE_ACCESS")
                         .build());

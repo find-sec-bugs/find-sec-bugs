@@ -21,6 +21,8 @@ public class ExternalFileAccessActivity extends Activity {
         File mainExternalDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File[] externalDirs  = getExternalFilesDirs(Environment.DIRECTORY_MUSIC);
         File[] mediaDirs     = getExternalMediaDirs();
+        File externalDir = Environment.getExternalStorageDirectory();
+        File pictureDir  = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 
         File newPicture = new File(mainExternalDir,"test.gif");
         try {

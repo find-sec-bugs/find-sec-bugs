@@ -48,6 +48,13 @@ public class ExternalFileAccessDetector extends OpcodeStackDetector {
             bugReporter.reportBug(new BugInstance(this, ANDROID_EXTERNAL_FILE_ACCESS_TYPE, Priorities.NORMAL_PRIORITY) //
                     .addClass(this).addMethod(this).addSourceLine(this));
         }
+        else if(seen == Constants.INVOKESTATIC && getClassConstantOperand().equals("android/os/Environment") && (
+                getNameConstantOperand().equals("getExternalStorageDirectory") ||
+                getNameConstantOperand().equals("getExternalStoragePublicDirectory")
+            )) {
+            bugReporter.reportBug(new BugInstance(this, ANDROID_EXTERNAL_FILE_ACCESS_TYPE, Priorities.NORMAL_PRIORITY) //
+                    .addClass(this).addMethod(this).addSourceLine(this));
+        }
     }
 
 }

@@ -1060,13 +1060,27 @@ This class should be analyzed to make sure that remotely exposed methods are saf
         <Details>
             <![CDATA[
 <p>
-The method is susceptible to injection. The input should be validated and properly escaped.
-This issue will only be trigger if a system properties is set (<code>-Dcom.h3xstream.findsecbugs.injection.custom.sources.files=/opt/somedir/findbugs/MyCustomApi.properties</code>).
+The method identified is susceptible to injection. The input should be validated and properly escaped.
 </p>
 <p>
     <b>Vulnerable code samples:</b><br/>
     <pre>SqlUtil.execQuery("select * from UserEntity t where id = " + parameterInput);</pre>
 </p>
+<br/>
+<p>
+    <b>Configuring additional injection sources:</b><br/>
+    To use this detector manual configuration is required.<br/>
+    <br/>
+    Create a configuration file that follow the format:
+    <pre>&lt;&lt;Invoke instruction&gt;&gt;|&lt;&lt;Class name&gt;&gt;|&lt;&lt;Method&gt;&gt;|&lt;&lt;Parameters signature&gt;&gt;=&lt;&lt;Index of the parameter injectable&gt;&gt;|&lt;&lt;Detector description to display&gt;&gt;</pre>
+    For example:
+    <pre>INVOKEVIRTUAL|testcode/sqli/MySqlWrapper|executeQuery|(Ljava/lang/String;)Ljava/sql/ResultSet;=0|CUSTOM_INJECTION
+[...]</pre>
+    <br/>
+    This issue will only be trigger if a system properties is set.
+    <pre>-Dfindsecbugs.injection.sources=${basedir}/rules/InjectionSources.properties</pre>
+</p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-19: SQL Injection</a><br/>
@@ -2277,14 +2291,14 @@ Encryptor.cipher_modes.additional_allowed=</pre>
     </Detector>
     <BugPattern type="ANDROID_EXTERNAL_FILE_ACCESS">
         <ShortDescription>External File Access (Android)</ShortDescription>
-        <LongDescription>Potentially unwanted file are being persist to external storage.</LongDescription>
+        <LongDescription>Files could be saved to external storage.</LongDescription>
         <Details>
             <![CDATA[
 <p>
     The application write data to external storage (potentially SD card). There are multiple security implication to this
     action. First, file store on SD card will be accessible to the application having the
     <a href="http://developer.android.com/reference/android/Manifest.permission.html#READ_EXTERNAL_STORAGE"><code>READ_EXTERNAL_STORAGE</code></a> permission.
-    Also, if the data persist contains confidential information about the user, encrypting the content would be needed.
+    Also, if the data persisted contains confidential information about the user, encryption would be needed.
 </p>
 <p>
     <b>Code at risk:</b><br/>
@@ -2424,20 +2438,16 @@ fos = openFileOutput(filename, MODE_PRIVATE);
 </p>
 <p>
     <b>Solution (using local SQLite Database):</b><br/>
-<pre>
-SQLiteDatabase db = [...]
 
-ContentValues values = new ContentValues();
-values.put("username", userName);
-values.put("rememberMeToken", token);
-db.insert("USER_INFO", null, values);
-</pre>
+Using a local SQLite database is probably the best solution to store structured data. Make sure the database file is not
+create on external storage. See references below for implementation guidelines.
 </p>
 <br/>
 <p>
     <b>References</b><br/>
     <a href="https://www.securecoding.cert.org/confluence/display/java/DRD11-J.+Ensure+that+sensitive+data+is+kept+secure">CERT: DRD11-J. Ensure that sensitive data is kept secure</a><br/>
-    <a href="http://developer.android.com/reference/android/content/Context.html#MODE_PRIVATE">Android Official Doc: Context.MODE_PRIVATE</a>
+    <a href="http://developer.android.com/reference/android/content/Context.html#MODE_PRIVATE">Android Official Doc: Context.MODE_PRIVATE</a><br/>
+    <a href="http://www.vogella.com/tutorials/AndroidSQLite/article.html#databasetutorial_database">vogella.com: Android SQLite database and content provider - Tutorial</a>
 </p>
 ]]>
         </Details>

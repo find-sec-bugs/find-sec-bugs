@@ -10,6 +10,7 @@
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/font-awesome.css" rel="stylesheet">
     <link href="css/fsb-custom-theme.css" rel="stylesheet">
+    <link href="css/agency.css" rel="stylesheet">
 
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -115,11 +116,17 @@
     </div> <!-- jumbotron -->
 </div> <!-- container -->
 
-<div class="container">
-    <section id="features" class="feature-list">
+
+<section id="features" class="feature-list">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Features</h2>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-4 col-sm-6">
-                <h4><i class="fa fa-crosshairs"></i> 56 different bug patterns</h4>
+                <h4><i class="fa fa-crosshairs"></i> 63 different bug patterns</h4>
                 Include bug pattern detection for <a href="bugs.htm">various vulnerability types</a>.
             </div>
             <div class="col-md-4 col-sm-6">
@@ -129,13 +136,15 @@
             <div class="col-md-4 col-sm-6">
                 <h4><i class="fa fa-plug"></i> Integrate with your IDE</h4>
                 Plugins are available for <a target="_blank" href="http://findbugs.sourceforge.net/manual/eclipse.html">Eclipse</a>,
-                <a target="_blank" href="https://plugins.jetbrains.com/plugin/3847?pr=idea">IntelliJ</a> and
-                <a target="_blank" href="https://netbeans.org/kb/docs/java/code-inspect.html#fb">NetBeans</a>. Command line integration is available with Ant
-                and Maven.
+                <a target="_blank" href="https://plugins.jetbrains.com/plugin/3847?pr=idea">IntelliJ</a>,
+                <a href="http://developer.android.com/tools/studio/index.html">Android Studio</a> and
+                <a target="_blank" href="https://netbeans.org/kb/docs/java/code-inspect.html#fb">NetBeans</a>.
+                Command line integration is available with Ant and Maven.
             </div>
             <div class="col-md-4 col-sm-6">
                 <h4><i class="fa fa-cogs"></i> Continuous integration</h4>
-                Can be used with systems such as <a target="_blank" href="https://wiki.jenkins-ci.org/display/JENKINS/FindBugs+Plugin">Jenkins</a> and <a target="_blank" href="http://docs.sonarqube.org/display/SONAR/Findbugs+Plugin">SonarQube</a>.
+                Can be used with systems such as <a target="_blank" href="https://wiki.jenkins-ci.org/display/JENKINS/FindBugs+Plugin">Jenkins</a> and
+                <a target="_blank" href="http://docs.sonarqube.org/display/SONAR/Findbugs+Plugin">SonarQube</a>.
             </div>
             <div class="col-md-4 col-sm-6">
                 <h4><i class="fa fa-check"></i> OWASP TOP 10 and CWE coverage</h4>
@@ -146,7 +155,141 @@
                 The project is open-source and is <a target="_blank" href="https://github.com/h3xstream/find-sec-bugs/graphs/contributors">open for contributions</a>.
             </div>
         </div>
-    </section>
+    </div>
+</section>
+
+
+<section id="portfolio" class="bg-light-gray">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Screenshots</h2>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-4 col-sm-6 portfolio-item">
+                <a href="#portfolioModal0" class="portfolio-link" data-toggle="modal">
+                    <div class="portfolio-hover">
+                        <div class="portfolio-hover-content">
+                            <i class="fa fa-search-plus fa-3x"></i>
+                        </div>
+                    </div>
+                    <img src="images/screens/eclipse.png" class="img-responsive" alt="">
+                </a>
+                <div class="portfolio-caption">
+                    <h4>Eclipse</h4>
+                    <p class="text-muted"></p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 col-sm-6 portfolio-item">
+                <a href="#portfolioModal1" class="portfolio-link" data-toggle="modal">
+                    <div class="portfolio-hover">
+                        <div class="portfolio-hover-content">
+                            <i class="fa fa-search-plus fa-3x"></i>
+                        </div>
+                    </div>
+                    <img src="images/screens/intellij.png" class="img-responsive" alt="">
+                </a>
+                <div class="portfolio-caption">
+                    <h4>IntelliJ / Android Studio</h4>
+                    <p class="text-muted"></p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 col-sm-6 portfolio-item">
+                <a href="#portfolioModal2" class="portfolio-link" data-toggle="modal">
+                    <div class="portfolio-hover">
+                        <div class="portfolio-hover-content">
+                            <i class="fa fa-search-plus fa-3x"></i>
+                        </div>
+                    </div>
+                    <img src="images/screens/sonar.png" class="img-responsive" alt="">
+                </a>
+                <div class="portfolio-caption">
+                    <h4>Sonar Qube</h4>
+                    <p class="text-muted"></p>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+
+
+<div class="portfolio-modal modal fade" id="portfolioModal0" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <div class="modal-body">
+                        <h2>Eclipse</h2>
+                        <p class="item-intro text-muted"><a href="http://marketplace.eclipse.org/content/findbugs-eclipse-plugin">Eclipse plugin</a> with FindSecurityBugs detectors.</p>
+                        <img class="img-responsive" src="images/screens/eclipse.png" alt="">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="portfolio-modal modal fade" id="portfolioModal1" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <div class="modal-body">
+                        <h2>IntelliJ / Android Studio</h2>
+                        <p class="item-intro text-muted"><a href="https://plugins.jetbrains.com/plugin/3847?pr=idea">IntelliJ plugin</a> with FindSecurityBugs detectors.</p>
+                        <img class="img-responsive" src="images/screens/intellij.png" alt="">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="portfolio-modal modal fade" id="portfolioModal2" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <div class="modal-body">
+                        <h2>Sonar Qube</h2>
+                        <p class="item-intro text-muted"><a href="http://docs.sonarqube.org/display/SONAR/Findbugs+Plugin">Sonar Qube</a> with FindSecurityBugs detectors.</p>
+                        <img class="img-responsive" src="images/screens/sonar.png" alt="">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Google Plus -->

@@ -17,3 +17,12 @@ margin-right: 10px;}
 .feature-list .col-md-4 {
 padding:10px;
 }
+
+section.darker_section {
+color:#FFF;
+backgroud-color:#415C77;
+}
+
+section {
+padding-bottom: 40px;
+}

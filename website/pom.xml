@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.h3xstream.findsecbugs</groupId>
         <artifactId>findsecbugs-root-pom</artifactId>
-        <version>1.4.0-SNAPSHOT</version>
+        <version>1.4.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>

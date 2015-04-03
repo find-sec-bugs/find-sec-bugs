@@ -43,9 +43,9 @@ rootXml.Detector.each { detector ->
 
 //Version and download links
 
-downloadUrl = "http://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/1.3.0/findsecbugs-plugin-1.3.0.jar"
+downloadUrl = "http://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/1.4.0/findsecbugs-plugin-1.4.0.jar"
 mavenCentralSearch = "http://search.maven.org/#search|gav|1|g:%22com.h3xstream.findsecbugs%22 AND a:%22findsecbugs-plugin%22"
-latestVersion = "1.3.0"
+latestVersion = "1.4.0"
 
 //Screenshots
 
@@ -57,7 +57,7 @@ screenshots.add(['title':'IntelliJ / Android Studio',
                  'description':'<a href="https://plugins.jetbrains.com/plugin/3847?pr=idea">IntelliJ plugin</a> with FindSecurityBugs detectors.',
                  'path':'images/screens/intellij.png'])
 screenshots.add(['title':'Sonar Qube',
-                 'description':'<a href="http://docs.sonarqube.org/display/SONAR/Findbugs+Plugin">Sonar Qube</a> with FindSecurityBugs detectors.',
+                 'description':'<a href="http://docs.sonarqube.org/display/SONAR/Findbugs+Plugin">Sonar Qube</a> with FindBugs plugin (version 3.2+).',
                  'path':'images/screens/sonar.png'])
 
 //Generate

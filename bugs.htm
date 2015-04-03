@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bug Patterns - Find Security Bugs</title>
 
+    <link rel="shortcut icon" href="images/favicon.png">
     <link href="http://fonts.googleapis.com/css?family=Squada+One" rel="stylesheet" type="text/css"/>
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/font-awesome.css" rel="stylesheet">
@@ -1833,8 +1834,10 @@ fos.write(string.getBytes());
 <br/>
 <p>
     <b>References</b><br/>
+    <a href="http://developer.android.com/training/articles/security-tips.html#ExternalStorage">Android Official Doc: Security Tips</a><br/>
     <a href="https://www.securecoding.cert.org/confluence/display/java/DRD00-J.+Do+not+store+sensitive+information+on+external+storage+%28SD+card%29+unless+encrypted+first">CERT: DRD00-J: Do not store sensitive information on external storage [...]</a><br/>
-    <a href="http://developer.android.com/guide/topics/data/data-storage.html#filesExternal">Android Official Doc: Using the External Storage</a>
+    <a href="http://developer.android.com/guide/topics/data/data-storage.html#filesExternal">Android Official Doc: Using the External Storage</a><br/>
+    <a href="https://www.owasp.org/index.php/Mobile_Top_10_2014-M2">OWASP Mobile Top 10 2014-M2: Insecure Data Storage</a><br/>
 </p>
     </section>
     
@@ -1842,7 +1845,7 @@ fos.write(string.getBytes());
         <a class="anchor" name="ANDROID_BROADCAST"></a><h2 class="page-header">Broadcast (Android)  <a href="#ANDROID_BROADCAST" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>
-    Broadcast intents can be listen by any application with the appropriate permission. It suggest to avoid transmitting
+    Broadcast intents can be listen by any application with the appropriate permission. It is suggest to avoid transmitting
     sensitive information when possible.
 </p>
 <p>
@@ -1939,8 +1942,10 @@ create on external storage. See references below for implementation guidelines.
 <p>
     <b>References</b><br/>
     <a href="https://www.securecoding.cert.org/confluence/display/java/DRD11-J.+Ensure+that+sensitive+data+is+kept+secure">CERT: DRD11-J. Ensure that sensitive data is kept secure</a><br/>
+    <a href="http://developer.android.com/training/articles/security-tips.html#InternalStorage">Android Official Doc: Security Tips</a><br/>
     <a href="http://developer.android.com/reference/android/content/Context.html#MODE_PRIVATE">Android Official Doc: Context.MODE_PRIVATE</a><br/>
-    <a href="http://www.vogella.com/tutorials/AndroidSQLite/article.html#databasetutorial_database">vogella.com: Android SQLite database and content provider - Tutorial</a>
+    <a href="http://www.vogella.com/tutorials/AndroidSQLite/article.html#databasetutorial_database">vogella.com: Android SQLite database and content provider - Tutorial</a><br/>
+    <a href="https://www.owasp.org/index.php/Mobile_Top_10_2014-M2">OWASP Mobile Top 10 2014-M2: Insecure Data Storage</a><br/>
 </p>
     </section>
     
@@ -1948,7 +1953,7 @@ create on external storage. See references below for implementation guidelines.
         <a class="anchor" name="ANDROID_GEOLOCATION"></a><h2 class="page-header">WebView with Geolocation Activated (Android)  <a href="#ANDROID_GEOLOCATION" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>
-    It suggest to ask the user for a confirmation about obtaining its geolocation.
+    It is suggest to ask the user for a confirmation about obtaining its geolocation.
 </p>
 <p>
     <b>Code at risk:</b><br/>
@@ -2068,9 +2073,9 @@ class FileWriteUtil {
 <footer id="footer" class="footer hidden-print">
     <div class="container text-center">
         <div>
-            Find Security Bugs 1.3.0
+            Find Security Bugs 1.4.0
             <span class="hide-xs">&middot;</span>
-            Created by <a href="https://twitter.com/h3xstream">Philippe Arteau</a>
+            Created by <a target="_blank" href="https://twitter.com/h3xstream">Philippe Arteau</a>
         </div>
         <div>
             Licensed under <a href="license.htm">LGPL</a>

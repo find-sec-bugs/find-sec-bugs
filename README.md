@@ -4,6 +4,11 @@ Find Security Bugs is a plugin for FindBugs that aims to help security audit on 
 
 Website : http://h3xstream.github.io/find-sec-bugs/
 
+## Notable contributions
+
+ - [Naoki Kimura](https://github.com/naokikimura) : Detector for [injection in custom API](http://h3xstream.github.io/find-sec-bugs/bugs.htm#CUSTOM_INJECTION), Translation of messages in Japanese
+ - [Dave Wichers](https://github.com/davewichers) : Improvement to vulnerability descriptions
+
 ## Screenshots
 
 ### Eclipse

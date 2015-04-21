@@ -30,14 +30,14 @@
 手っ取り早い解決策は <b>java.util.Random</b> の使用を <b>java.security.SecureRandom</b> などのより強固なものに置き換えてください。
 </p>
 <p>
-<b>Vulnerable Code:</b><br/>
+<b>脆弱なコード:</b><br/>
 <pre>String generateSecretToken() {
     Random r = new Random();
     return Long.toHexString(r.nextLong());
 }</pre>
 </p>
 <p>
-<b>Solution:</b>
+<b>解決策:</b>
 <pre>import org.apache.commons.codec.binary.Hex;
 
 String generateSecretToken() {

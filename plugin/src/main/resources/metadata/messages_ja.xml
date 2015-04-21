@@ -1040,38 +1040,38 @@ XPath インジェクションのリスクは、SQL インジェクションに�
 
     <!-- Custom Injection -->
     <Detector class="com.h3xstream.findsecbugs.injection.custom.CustomInjectionDetector">
-        <Details>Detector that find injection for custom methods.</Details>
+        <Details>カスタムメソッドに対するインジェクションを発見する検出器。</Details>
     </Detector>
 
     <BugPattern type="CUSTOM_INJECTION">
-        <ShortDescription>Potential Injection</ShortDescription>
-        <LongDescription>The use of the method {3} is potentially vulnerable injection.</LongDescription>
+        <ShortDescription>インジェクションの可能性</ShortDescription>
+        <LongDescription>メソッド {3} の使用は、インジェクションに脆弱な可能性があります。</LongDescription>
         <Details>
             <![CDATA[
 <p>
-The method identified is susceptible to injection. The input should be validated and properly escaped.
+特定されたメソッドはインジェクションの影響を受けやすいです。入力は、検証して適切にエスケープする必要があります。
 </p>
 <p>
-    <b>Vulnerable code samples:</b><br/>
+    <b>脆弱なコードのサンプル:</b><br/>
     <pre>SqlUtil.execQuery("select * from UserEntity t where id = " + parameterInput);</pre>
 </p>
 <br/>
 <p>
-    <b>Configuring additional injection sources:</b><br/>
-    To use this detector manual configuration is required.<br/>
+    <b>追加のインジェクションソースの構成:</b><br/>
+    この検出器を使用するには手動での設定が必要です。<br/>
     <br/>
-    Create a configuration file that follow the format:
-    <pre>&lt;&lt;Invoke instruction&gt;&gt;|&lt;&lt;Class name&gt;&gt;|&lt;&lt;Method&gt;&gt;|&lt;&lt;Parameters signature&gt;&gt;=&lt;&lt;Index of the parameter injectable&gt;&gt;|&lt;&lt;Detector description to display&gt;&gt;</pre>
-    For example:
+    形式に従って設定ファイルを作成します:
+    <pre>&lt;&lt;呼び出し命令&gt;&gt;|&lt;&lt;クラス名&gt;&gt;|&lt;&lt;メソッド&gt;&gt;|&lt;&lt;パラメーターシグネチャー&gt;&gt;=&lt;&lt;インジェクション可能なパラメーターのインデックス&gt;&gt;|&lt;&lt;検出器の説明の表示&gt;&gt;</pre>
+    例えば:
     <pre>INVOKEVIRTUAL|testcode/sqli/MySqlWrapper|executeQuery|(Ljava/lang/String;)Ljava/sql/ResultSet;=0|CUSTOM_INJECTION
 [...]</pre>
     <br/>
-    This issue will only be trigger if a system properties is set.
+    この問題はシステムプロパティが設定されてはじめて動作します。
     <pre>-Dfindsecbugs.injection.sources=${basedir}/rules/InjectionSources.properties</pre>
 </p>
 <br/>
 <p>
-<b>References</b><br/>
+<b>参考文献</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-19: SQL Injection</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
 <a href="https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet">OWASP: SQL Injection Prevention Cheat Sheet</a><br/>
@@ -1082,7 +1082,7 @@ The method identified is susceptible to injection. The input should be validated
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECCUSTOMI">Custom Injection</BugCode>
+    <BugCode abbrev="SECCUSTOMI">カスタムインジェクション</BugCode>
 
 
     <!-- SQL Injection -->

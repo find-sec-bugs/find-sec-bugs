@@ -2459,18 +2459,18 @@ create on external storage. See references below for implementation guidelines.
 
     <!-- Android: Geolocation -->
     <Detector class="com.h3xstream.findsecbugs.android.GeolocationDetector">
-        <Details>Identity usage of Geolocation API.</Details>
+        <Details>ジオロケーション API の使用を特定します。</Details>
     </Detector>
     <BugPattern type="ANDROID_GEOLOCATION">
-        <ShortDescription>WebView with Geolocation Activated (Android)</ShortDescription>
-        <LongDescription>WebView with Geolocation Activated</LongDescription>
+        <ShortDescription>ジオロケーションが作動した WebView (Android)</ShortDescription>
+        <LongDescription>ジオロケーションが作動した WebView</LongDescription>
         <Details>
             <![CDATA[
 <p>
-    It is suggest to ask the user for a confirmation about obtaining its geolocation.
+    その地理位置情報の取得についてユーザーに確認を求めることをお勧めします。
 </p>
 <p>
-    <b>Code at risk:</b><br/>
+    <b>リスクのあるコード:</b><br/>
 <pre>
 webView.setWebChromeClient(new WebChromeClient() {
     @Override
@@ -2481,23 +2481,23 @@ webView.setWebChromeClient(new WebChromeClient() {
 </pre>
 </p>
 <p>
-    <b>Suggest code:</b><br/>
+    <b>推奨するコード:</b><br/>
 
-    Limit the sampling of geolocation and ask the user for confirmation.
+    地理位置情報のサンプリングを制限し、ユーザーに確認を求める。
 <pre>
 webView.setWebChromeClient(new WebChromeClient() {
     @Override
     public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
         callback.invoke(origin, true, false);
 
-        //Ask the user for confirmation
+        //ユーザーに確認を求める
     }
 });
 </pre>
 </p>
 <br/>
 <p>
-    <b>References</b><br/>
+    <b>参考文献</b><br/>
     <a href="https://www.securecoding.cert.org/confluence/display/java/DRD15-J.+Consider+privacy+concerns+when+using+Geolocation+API">CERT: DRD15-J. Consider privacy concerns when using Geolocation API</a><br/>
     <a href="http://en.wikipedia.org/wiki/W3C_Geolocation_API">Wikipedia: W3C Geolocation API</a><br/>
     <a href="http://dev.w3.org/geo/api/spec-source.html">W3C: Geolocation Specification</a><br/>
@@ -2505,7 +2505,7 @@ webView.setWebChromeClient(new WebChromeClient() {
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECGEO">Geolocation (Android)</BugCode>
+    <BugCode abbrev="SECGEO">ジオロケーション (Android)</BugCode>
 
 
     <!-- Android: WebView with JavaScript Enabled -->

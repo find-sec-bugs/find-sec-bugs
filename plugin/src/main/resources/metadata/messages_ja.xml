@@ -2264,7 +2264,7 @@ Encryptor.CipherText.useMAC=true
 Encryptor.EncryptionAlgorithm=AES
 Encryptor.CipherTransformation=AES/GCM/NoPadding
 
-#CBC mode should be removed to avoid padding oracle
+#パディングオラクルを避けるために CBC モードを削除する必要があります
 Encryptor.cipher_modes.additional_allowed=</pre>
     </div>
 </p>

@@ -2555,20 +2555,19 @@ function updateDescription(newDescription) {
 
     <!-- Android:  -->
     <Detector class="com.h3xstream.findsecbugs.android.WebViewJavascriptInterfaceDetector">
-        <Details>Identity WebView with a Java bridge (Javascript Interface).</Details>
+        <Details>Java ブリッジ (Javascript インタフェース) を備える WebView を特定します。</Details>
     </Detector>
     <BugPattern type="ANDROID_WEB_VIEW_JAVASCRIPT_INTERFACE">
-        <ShortDescription>WebView with Javascript Interface (Android)</ShortDescription>
-        <LongDescription>WebView with Javascript Interface (Android)</LongDescription>
+        <ShortDescription>Javascript インタフェースを備える WebView (Android)</ShortDescription>
+        <LongDescription>Javascript インタフェースを備える WebView (Android)</LongDescription>
         <Details>
             <![CDATA[
 <p>
-    The use Javascript Interface could expose the WebView to risky API. If an XSS is trigger in the WebView, the class
-    could be call by the malicious JavaScript code.
+    JavaScript インタフェースの使用は、 WebView を危険な API にさらす可能性があります。 XSS が WebView でトリガーの場合、そのクラスは悪意のある JavaScript コードによって呼び出される可能性があります。
 </p>
 
 <p>
-    <b>Code at risk:</b><br/>
+    <b>リスクのあるコード:</b><br/>
     <pre>
 WebView myWebView = (WebView) findViewById(R.id.webView);
 
@@ -2593,12 +2592,12 @@ class FileWriteUtil {
 </p>
 <br/>
 <p>
-    <b>References</b><br/>
+    <b>参考文献</b><br/>
     <a href="http://developer.android.com/reference/android/webkit/WebView.html#addJavascriptInterface%28java.lang.Object,%20java.lang.String%29">Android Official Doc: WebView.addJavascriptInterface()</a><br/>
 </p>
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECWVJI">WebView with a Java bridge (Javascript Interface) (Android)</BugCode>
+    <BugCode abbrev="SECWVJI">Java ブリッジ (Javascript インタフェース) を備える WebView (Android)</BugCode>
 
 </MessageCollection>

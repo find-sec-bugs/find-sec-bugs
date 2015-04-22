@@ -2285,21 +2285,20 @@ Encryptor.cipher_modes.additional_allowed=</pre>
 
     <!-- Android: External File Access -->
     <Detector class="com.h3xstream.findsecbugs.android.ExternalFileAccessDetector">
-        <Details>Identity file access on external storage.</Details>
+        <Details>外部ストレージ上のファイルへのアクセスを特定します。</Details>
     </Detector>
     <BugPattern type="ANDROID_EXTERNAL_FILE_ACCESS">
-        <ShortDescription>External File Access (Android)</ShortDescription>
-        <LongDescription>Files could be saved to external storage.</LongDescription>
+        <ShortDescription>外部ファイルアクセス (Android)</ShortDescription>
+        <LongDescription>ファイルが外部ストレージに保存される可能性があります。</LongDescription>
         <Details>
             <![CDATA[
 <p>
-    The application write data to external storage (potentially SD card). There are multiple security implication to this
-    action. First, file store on SD card will be accessible to the application having the
-    <a href="http://developer.android.com/reference/android/Manifest.permission.html#READ_EXTERNAL_STORAGE"><code>READ_EXTERNAL_STORAGE</code></a> permission.
-    Also, if the data persisted contains confidential information about the user, encryption would be needed.
+    このアプリケーションは外部ストレージ (SD カードである可能性があります) にデータを書き込みます。このアクションには複数のセキュリティへの影響があります。
+    まず、 SD カード上のファイルストアは <a href="http://developer.android.com/reference/android/Manifest.permission.html#READ_EXTERNAL_STORAGE"><code>READ_EXTERNAL_STORAGE</code></a> 権限を持つアプリケーションにアクセスできるようになります。
+    また、永続化したデータにユーザーに関する機密情報が含まれている場合は、暗号化が必要でしょう。
 </p>
 <p>
-    <b>Code at risk:</b><br/>
+    <b>リスクのあるコード:</b><br/>
 <pre>
 file file = new File(getExternalFilesDir(TARGET_TYPE), filename);
 fos = new FileOutputStream(file);
@@ -2308,7 +2307,7 @@ fos.flush();
 </pre>
 </p>
 <p>
-    <b>Better alternative:</b><br/>
+    <b>より良い代替手段:</b><br/>
 <pre>
 fos = openFileOutput(filename, Context.MODE_PRIVATE);
 fos.write(string.getBytes());
@@ -2316,7 +2315,7 @@ fos.write(string.getBytes());
 </p>
 <br/>
 <p>
-    <b>References</b><br/>
+    <b>参考文献</b><br/>
     <a href="http://developer.android.com/training/articles/security-tips.html#ExternalStorage">Android Official Doc: Security Tips</a><br/>
     <a href="https://www.securecoding.cert.org/confluence/display/java/DRD00-J.+Do+not+store+sensitive+information+on+external+storage+%28SD+card%29+unless+encrypted+first">CERT: DRD00-J: Do not store sensitive information on external storage [...]</a><br/>
     <a href="http://developer.android.com/guide/topics/data/data-storage.html#filesExternal">Android Official Doc: Using the External Storage</a><br/>
@@ -2325,7 +2324,7 @@ fos.write(string.getBytes());
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECEFA">External File Access (Android)</BugCode>
+    <BugCode abbrev="SECEFA">外部ファイルアクセス (Android)</BugCode>
 
 
 

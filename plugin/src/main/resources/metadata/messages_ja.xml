@@ -2330,19 +2330,19 @@ fos.write(string.getBytes());
 
     <!-- Android: Broadcast -->
     <Detector class="com.h3xstream.findsecbugs.android.BroadcastDetector">
-        <Details>Identity sendBroadcast() call and give security implications and helpful guidelines.</Details>
+        <Details>sendBroadcast() の呼び出しを特定し、セキュリティへの影響と有益なガイドラインを提供します。</Details>
     </Detector>
     <BugPattern type="ANDROID_BROADCAST">
-        <ShortDescription>Broadcast (Android)</ShortDescription>
-        <LongDescription>Broadcast intents could be received by a malicious application.</LongDescription>
+        <ShortDescription>ブロードキャスト (Android)</ShortDescription>
+        <LongDescription>ブロードキャストインテントは、悪意のあるアプリケーションによって受信される可能性があります。</LongDescription>
         <Details>
             <![CDATA[
 <p>
-    Broadcast intents can be listen by any application with the appropriate permission. It is suggest to avoid transmitting
-    sensitive information when possible.
+    ブロードキャストインテントは、適切な権限を持つ任意のアプリケーションで受け取ることができます。
+    できる限り機密情報の送信を避けることをお勧めします。
 </p>
 <p>
-    <b>Code at risk:</b><br/>
+    <b>リスクのあるコード:</b><br/>
 <pre>
 Intent i = new Intent();
 i.setAction("com.insecure.action.UserConnected");
@@ -2355,7 +2355,7 @@ this.sendBroadcast(v1);
 </p>
 <br/>
 <p>
-    <b>Solution (if possible):</b><br/>
+    <b>解決策 (可能なら):</b><br/>
 <pre>
 Intent i = new Intent();
 i.setAction("com.secure.action.UserConnected");
@@ -2365,7 +2365,7 @@ sendBroadcast(v1);
 </p>
 <br/>
 <p>
-    <b>Configuration (receiver)<sup>[1] Source: StackOverflow</sup>:</b><br/>
+    <b>設定 (レシーバー)<sup>[1] 出典: StackOverflow</sup>:</b><br/>
 <pre>
 &lt;manifest ...&gt;
 
@@ -2385,7 +2385,7 @@ sendBroadcast(v1);
 </pre>
 </p>
 <p>
-    <b>Configuration (receiver)<sup>[1] Source: StackOverflow</sup>:</b><br/>
+    <b>設定 (レシーバー)<sup>[1] 出典: StackOverflow</sup>:</b><br/>
 <pre>
 &lt;manifest&gt;
     &lt;!-- We declare we own the permission to send broadcast to the above receiver --&gt;
@@ -2395,7 +2395,7 @@ sendBroadcast(v1);
 </p>
 <br/>
 <p>
-    <b>References</b><br/>
+    <b>参考文献</b><br/>
     <a href="https://www.securecoding.cert.org/confluence/display/java/DRD03-J.+Do+not+broadcast+sensitive+information+using+an+implicit+intent">CERT: DRD03-J. Do not broadcast sensitive information using an implicit intent</a><br/>
     <a href="http://developer.android.com/reference/android/content/BroadcastReceiver.html#Security">Android Official Doc: BroadcastReceiver (Security)</a><br/>
     <a href="http://developer.android.com/guide/topics/manifest/receiver-element.html">Android Official Doc: Receiver configuration (see <code>android:permission</code>)</a><br/>
@@ -2405,7 +2405,7 @@ sendBroadcast(v1);
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECBROAD">Broadcast (Android)</BugCode>
+    <BugCode abbrev="SECBROAD">ブロードキャスト (Android)</BugCode>
 
 
     <!-- Android: World Writable -->

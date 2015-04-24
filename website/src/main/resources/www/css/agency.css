@@ -80,7 +80,7 @@
 
 
 .portfolio-modal .modal-content {
-    padding: 100px 0;
+    padding: 10px 0;
     min-height: 100%;
     border: 0;
     border-radius: 0;
@@ -131,7 +131,7 @@
 
 .portfolio-modal .close-modal .lr {
     z-index: 1051;
-    width: 1px;
+    width: 2px;
     height: 75px;
     margin-left: 35px;
     background-color: #222;
@@ -142,7 +142,7 @@
 
 .portfolio-modal .close-modal .lr .rl {
     z-index: 1052;
-    width: 1px;
+    width: 2px;
     height: 75px;
     background-color: #222;
     -webkit-transform: rotate(90deg);

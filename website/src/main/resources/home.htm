@@ -107,7 +107,7 @@
             screenshots.eachWithIndex {s,idx->
             print """
             <div class="col-md-4 col-sm-6 portfolio-item">
-                <a href="#portfolioModal${idx}" class="portfolio-link" data-toggle="modal">
+                <a href="#screenshot${idx}" class="portfolio-link" data-toggle="modal">
                     <div class="portfolio-hover">
                         <div class="portfolio-hover-content">
                             <i class="fa fa-search-plus fa-3x"></i>
@@ -130,7 +130,7 @@
 screenshots.eachWithIndex {s,idx->
 print """
 
-<div class="portfolio-modal modal fade" id="portfolioModal${idx}" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="portfolio-modal modal fade" id="screenshot${idx}" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-content">
         <div class="close-modal" data-dismiss="modal">
             <div class="lr">
@@ -140,7 +140,7 @@ print """
         </div>
         <div class="container">
             <div class="row">
-                <div class="col-lg-8 col-lg-offset-2">
+                <div class="col-lg-10 col-lg-offset-1">
                     <div class="modal-body">
                         <h2>${s.title}</h2>
                         <p class="item-intro text-muted">${s.description}</p>

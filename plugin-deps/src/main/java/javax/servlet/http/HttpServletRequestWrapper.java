@@ -35,4 +35,9 @@ public class HttpServletRequestWrapper extends ServletRequestWrapper implements 
     public HttpSession getSession() {
         return null;
     }
+
+    @Override
+    public HttpSession getSession(boolean create) {
+        return null;
+    }
 }

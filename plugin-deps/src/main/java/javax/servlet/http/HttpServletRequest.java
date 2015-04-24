@@ -14,4 +14,6 @@ public interface HttpServletRequest extends ServletRequest {
     Cookie[] getCookies();
 
     HttpSession getSession();
+
+    HttpSession getSession(boolean create);
 }

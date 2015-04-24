@@ -60,7 +60,7 @@ def xml = new MarkupBuilder(new PrintWriter(System.out))
 
 
 xml.rules {
-    mkp.comment "This file is auto-generated. It is generated from FindSecurityBugs messages.xml file."
+    mkp.comment "This file is auto-generated."
 
     rootXml.BugPattern.each { pattern ->
 
@@ -84,6 +84,9 @@ xml.rules {
             }
             if (pattern.ShortDescription.text().toLowerCase().contains('injection')) {
                 tag("injection")
+            }
+            if (pattern.ShortDescription.text().toLowerCase().contains('android')) {
+                tag("android")
             }
             if (pattern.attribute("type") in cryptoBugs) {
                 tag("cryptography")

@@ -1598,6 +1598,10 @@ The code should be replaced with:<br/>
     </BugPattern>
     <BugCode abbrev="SECRNP">RSA NoPadding</BugCode>
 
+    <!-- Hard coded passwords and keys in various method calls -->
+    <Detector class="com.h3xstream.findsecbugs.password.ConstantPasswordDetector">
+        <Details>Identify hardcoded password in KeyStore initialization</Details>
+    </Detector>
 
     <!-- Hard coded Google API key -->
     <Detector class="com.h3xstream.findsecbugs.password.GoogleApiKeyDetector">

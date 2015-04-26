@@ -22,6 +22,7 @@ import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
@@ -45,12 +46,41 @@ public class XmlReaderDetectorTest extends BaseDetectorTest {
                         .inClass("XmlReaderVulnerable").inMethod("receiveXMLStream").atLine(22)
                         .build()
         );
-        Mockito.verify(reporter, Mockito.never()).doReportBug(
+        verify(reporter, never()).doReportBug(
                 bugDefinition()
                         .bugType("XXE_SAXPARSER")
                         .build()
         );
-        Mockito.verify(reporter, Mockito.never()).doReportBug(
+        Mockito.verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_DOCUMENT")
+                        .build()
+        );
+    }
+
+    @Test
+    public void avoidFalsePositive() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/xxe/XmlReaderSafeProperty")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+        //Assertions
+        verify(reporter,never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_XMLREADER")
+                        .build()
+        );
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_SAXPARSER")
+                        .build()
+        );
+        verify(reporter, never()).doReportBug(
                 bugDefinition()
                         .bugType("XXE_DOCUMENT")
                         .build()

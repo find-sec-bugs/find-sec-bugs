@@ -158,4 +158,19 @@
         <version>4.1.0.RELEASE</version>
     </dependency>
 
+
+    <!-- Used for security filter -->
+
+    <dependency>
+        <groupId>org.acegisecurity</groupId>
+        <artifactId>acegi-security</artifactId>
+        <version>1.0.7</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-web</artifactId>
+        <version>4.0.0.RELEASE</version>
+    </dependency>
+
 </dependencies>

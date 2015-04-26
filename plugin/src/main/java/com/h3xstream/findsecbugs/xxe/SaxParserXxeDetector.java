@@ -128,8 +128,10 @@ public class SaxParserXxeDetector extends OpcodeStackDetector {
                 }
 
                 //DTD disallow
-                if(inst instanceof INVOKEVIRTUAL) {
-                    INVOKEVIRTUAL invoke = (INVOKEVIRTUAL) inst;
+                //SAXParser.setFeature and DocumentBuilder.setFeature => INVOKEVIRTUAL
+                //XMLReader.setFeature => INVOKEINTERFACE
+                if(inst instanceof INVOKEVIRTUAL || inst instanceof INVOKEINTERFACE) {
+                    InvokeInstruction invoke = (InvokeInstruction) inst;
                     if ("setFeature".equals(invoke.getMethodName(cpg))) {
                         LDC loadConst = ByteCode.getPrevInstruction(location.getHandle(), LDC.class);
 

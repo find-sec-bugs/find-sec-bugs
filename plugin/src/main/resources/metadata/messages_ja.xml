@@ -2410,19 +2410,19 @@ sendBroadcast(v1);
 
     <!-- Android: World Writable -->
     <Detector class="com.h3xstream.findsecbugs.android.WorldWritableDetector">
-        <Details>Identity file written with the creation mode MODE_WORLD_READABLE.</Details>
+        <Details>作成モード MODE_WORLD_READABLE で書き込まれたファイルを特定します。</Details>
     </Detector>
     <BugPattern type="ANDROID_WORLD_WRITABLE">
-        <ShortDescription>World Writable File (Android)</ShortDescription>
-        <LongDescription>The content that is written can be viewed by any application.</LongDescription>
+        <ShortDescription>ワールドライタブルファイル (Android)</ShortDescription>
+        <LongDescription>書き込まれたコンテンツは、任意のアプリケーションで表示することができます。</LongDescription>
         <Details>
             <![CDATA[
 <p>
-    The file written in this context is using the creation mode <code>MODE_WORLD_READABLE</code>. It might not be the
-    expected behavior to exposed the content being written.
+    このコンテキストで書き込まれたファイルは、作成モード <code>MODE_WORLD_READABLE</code> を使用しています。
+    これは、書き込まれたコンテンツを露呈することが期待された動作ではないかもしれません。
 </p>
 <p>
-    <b>Code at risk:</b><br/>
+    <b>リスクのあるコード:</b><br/>
 <pre>
 fos = openFileOutput(filename, MODE_WORLD_READABLE);
 fos.write(userInfo.getBytes());
@@ -2430,20 +2430,20 @@ fos.write(userInfo.getBytes());
 </p>
 <br/>
 <p>
-    <b>Solution (using MODE_PRIVATE):</b><br/>
+    <b>解決策 (MODE_PRIVATE を用いた):</b><br/>
 <pre>
 fos = openFileOutput(filename, MODE_PRIVATE);
 </pre>
 </p>
 <p>
-    <b>Solution (using local SQLite Database):</b><br/>
+    <b>解決策 (ローカル SQLite データベースを用いた):</b><br/>
 
-Using a local SQLite database is probably the best solution to store structured data. Make sure the database file is not
-create on external storage. See references below for implementation guidelines.
+    ローカル SQLite データベースを使用することが、おそらく構造化データを格納するための最適なソリューションです。
+    データベースファイルが外部ストレージに作成されていないことを確認してください。実装ガイドラインについては、下記の参考文献を参照してください。
 </p>
 <br/>
 <p>
-    <b>References</b><br/>
+    <b>参考文献</b><br/>
     <a href="https://www.securecoding.cert.org/confluence/display/java/DRD11-J.+Ensure+that+sensitive+data+is+kept+secure">CERT: DRD11-J. Ensure that sensitive data is kept secure</a><br/>
     <a href="http://developer.android.com/training/articles/security-tips.html#InternalStorage">Android Official Doc: Security Tips</a><br/>
     <a href="http://developer.android.com/reference/android/content/Context.html#MODE_PRIVATE">Android Official Doc: Context.MODE_PRIVATE</a><br/>
@@ -2453,7 +2453,7 @@ create on external storage. See references below for implementation guidelines.
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECWW">World Writable (Android)</BugCode>
+    <BugCode abbrev="SECWW">ワールドライタブル (Android)</BugCode>
 
 
     <!-- Android: Geolocation -->

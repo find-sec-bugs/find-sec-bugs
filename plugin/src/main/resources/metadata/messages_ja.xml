@@ -2509,16 +2509,16 @@ webView.setWebChromeClient(new WebChromeClient() {
 
     <!-- Android: WebView with JavaScript Enabled -->
     <Detector class="com.h3xstream.findsecbugs.android.WebViewJavascriptEnabledDetector">
-        <Details>Identity WebView with JavaScript Enabled.</Details>
+        <Details>JavaScript が使用可能な WebView を特定します。</Details>
     </Detector>
     <BugPattern type="ANDROID_WEB_VIEW_JAVASCRIPT">
-        <ShortDescription>WebView with JavaScript Enabled (Android)</ShortDescription>
-        <LongDescription>WebView with JavaScript Enabled</LongDescription>
+        <ShortDescription>JavaScript が使用可能な WebView (Android)</ShortDescription>
+        <LongDescription>JavaScript が使用可能な WebView</LongDescription>
         <Details>
             <![CDATA[
 <p>
-    Enabling JavaScript for the WebView means that it is now susceptible to XSS. The page render should be inspected
-    for potential reflected XSS, stored XSS and DOM XSS.<br/>
+    WebView に対して JavaScript を有効にすることは、直ちに XSS の影響を受けやすくなることを意味します。
+    潜在的な反射型 XSS や格納型 XSS 、 DOM ベース XSS のためにページレンダリングを検査する必要があります。<br/>
 <pre>
 WebView myWebView = (WebView) findViewById(R.id.webView);
 WebSettings webSettings = myWebView.getSettings();
@@ -2527,9 +2527,9 @@ webSettings.setJavaScriptEnabled(true);
 </p>
 
 <p>
-    <b>Code at risk:</b><br/>
-Enabling is JavaScript is not a bad practice. It just means that the backend code need to be audit for potential XSS.
-The XSS can also be introduce client-side with DOM XSS.
+    <b>リスクのあるコード:</b><br/>
+    JavaScript を有効にすることは悪い習慣ではありません。これは、バックエンドのコードは XSS の可能性が監査される必要があること意味しています。
+    DOM ベース XSS が原因でクライアント側でも XSS が取り込まれる可能性があります。
 <pre>
 function updateDescription(newDescription) {
     $("#userDescription").html(newDescription);
@@ -2538,7 +2538,7 @@ function updateDescription(newDescription) {
 </p>
 <br/>
 <p>
-    <b>References</b><br/>
+    <b>参考文献</b><br/>
     <a href="http://www.technotalkative.com/issue-using-setjavascriptenabled-can-introduce-xss-vulnerabilities-application-review-carefully/">Issue: Using setJavaScriptEnabled can introduce XSS vulnerabilities</a><br/>
     <a href="http://developer.android.com/guide/webapps/webview.html#UsingJavaScript">Android Official Doc: WebView</a><br/>
     <a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site Scripting</a><br/>
@@ -2549,7 +2549,7 @@ function updateDescription(newDescription) {
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECWVJ">WebView with JavaScript Enabled (Android)</BugCode>
+    <BugCode abbrev="SECWVJ">JavaScript が使用可能な WebView (Android)</BugCode>
 
 
     <!-- Android:  -->

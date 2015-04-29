@@ -5,8 +5,8 @@
     <Plugin>
         <ShortDescription>Find Security Bugs</ShortDescription>
         <Details>Find Security Bugs は、セキュリティ監査を支援することを目的とするプラグインです。</Details>
-        <BugsUrl>http://h3xstream.github.io/find-sec-bugs/</BugsUrl>
-        <AllBugsUrl>http://h3xstream.github.io/find-sec-bugs/</AllBugsUrl>
+        <BugsUrl>http://h3xstream.github.io/find-sec-bugs/bugs.htm</BugsUrl>
+        <AllBugsUrl>http://h3xstream.github.io/find-sec-bugs/bugs.htm</AllBugsUrl>
     </Plugin>
 
     <!-- Predictable Pseudo Random Generator (PRG) -->
@@ -28,6 +28,25 @@
 </ul>
 <p>
 手っ取り早い解決策は <b>java.util.Random</b> の使用を <b>java.security.SecureRandom</b> などのより強固なものに置き換えてください。
+</p>
+<p>
+<b>脆弱なコード:</b><br/>
+<pre>String generateSecretToken() {
+    Random r = new Random();
+    return Long.toHexString(r.nextLong());
+}</pre>
+</p>
+<p>
+<b>解決策:</b>
+<pre>import org.apache.commons.codec.binary.Hex;
+
+String generateSecretToken() {
+    SecureRandom secRandom = new SecureRandom();
+
+    byte[] result = new byte[32];
+    secRandom.nextBytes(result);
+    return Hex.encodeHexString(result);
+}</pre>
 </p>
 <br/>
 <p>
@@ -317,7 +336,7 @@ HttpSession (HttpServletRequest.getSession()) を参照してください。</p>
 
 
     <!-- Command injection -->
-    <Detector class="com.h3xstream.findsecbugs.CommandInjectionDetector">
+    <Detector class="com.h3xstream.findsecbugs.injection.command.CommandInjectionDetector">
         <Details>コマンドインジェクションの発生源を特定します。</Details>
     </Detector>
 
@@ -1019,9 +1038,56 @@ XPath インジェクションのリスクは、SQL インジェクションに�
     <BugCode abbrev="SECSC">Spring エンドポイント</BugCode>
 
 
+    <!-- Custom Injection -->
+    <Detector class="com.h3xstream.findsecbugs.injection.custom.CustomInjectionDetector">
+        <Details>カスタムメソッドに対するインジェクションを発見する検出器。</Details>
+    </Detector>
+
+    <BugPattern type="CUSTOM_INJECTION">
+        <ShortDescription>インジェクションの可能性</ShortDescription>
+        <LongDescription>メソッド {3} の使用は、インジェクションに脆弱な可能性があります。</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+特定されたメソッドはインジェクションの影響を受けやすいです。入力は、検証して適切にエスケープする必要があります。
+</p>
+<p>
+    <b>脆弱なコードのサンプル:</b><br/>
+    <pre>SqlUtil.execQuery("select * from UserEntity t where id = " + parameterInput);</pre>
+</p>
+<br/>
+<p>
+    <b>追加のインジェクションソースの構成:</b><br/>
+    この検出器を使用するには手動での設定が必要です。<br/>
+    <br/>
+    形式に従って設定ファイルを作成します:
+    <pre>&lt;&lt;呼び出し命令&gt;&gt;|&lt;&lt;クラス名&gt;&gt;|&lt;&lt;メソッド&gt;&gt;|&lt;&lt;パラメーターシグネチャー&gt;&gt;=&lt;&lt;インジェクション可能なパラメーターのインデックス&gt;&gt;|&lt;&lt;検出器の説明の表示&gt;&gt;</pre>
+    例えば:
+    <pre>INVOKEVIRTUAL|testcode/sqli/MySqlWrapper|executeQuery|(Ljava/lang/String;)Ljava/sql/ResultSet;=0|CUSTOM_INJECTION
+[...]</pre>
+    <br/>
+    この問題はシステムプロパティが設定されてはじめて動作します。
+    <pre>-Dfindsecbugs.injection.sources=${basedir}/rules/InjectionSources.properties</pre>
+</p>
+<br/>
+<p>
+<b>参考文献</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-19: SQL Injection</a><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
+<a href="https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet">OWASP: SQL Injection Prevention Cheat Sheet</a><br/>
+<a href="https://www.owasp.org/index.php/Query_Parameterization_Cheat_Sheet">OWASP: Query Parameterization Cheat Sheet</a><br/>
+<a href="http://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECCUSTOMI">カスタムインジェクション</BugCode>
+
+
     <!-- SQL Injection -->
     <Detector class="com.h3xstream.findsecbugs.injection.sql.SqlInjectionDetector">
-        <Details>文字列を受け入れる SQL API における様々な種類の SQL インジェクションを特定します。</Details>
+        <Details>文字列を受け入れる SQL API における様々な種類の SQL インジェクションを特定します (Hibernate, JPA and JDO)。</Details>
     </Detector>
 
     <!-- HQL Injection -->
@@ -1524,6 +1590,10 @@ byte[] cipherText = c.doFinal(plainText);</pre>
     </BugPattern>
     <BugCode abbrev="SECRNP">RSA NoPadding</BugCode>
 
+    <!-- Hard coded passwords and keys in various method calls -->
+    <Detector class="com.h3xstream.findsecbugs.password.ConstantPasswordDetector">
+        <Details>キーストアの初期化でハードコードされたパスワードを特定します。</Details>
+    </Detector>
 
     <!-- Hard coded Google API key -->
     <Detector class="com.h3xstream.findsecbugs.password.GoogleApiKeyDetector">
@@ -1820,7 +1890,7 @@ String taintedInput = (String) request.getAttribute("input");
 String taintedInput = (String) request.getAttribute("input");
 %>
 [...]
-<%= ESAPI.encoder().encodeForHTML(taintedInput) %>
+<%= Encode.forHtml(taintedInput) %>
     </pre>
 </p>
 <p>
@@ -1834,7 +1904,8 @@ XSS に対する最善の防御策は、上記の例のような状況に応じ�
 <a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site Scripting</a><br/>
 <a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet">OWASP: XSS Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_%28XSS%29">OWASP: Top 10 2013-A3: Cross-Site Scripting (XSS)</a><br/>
-<a href="http://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a>
+<a href="http://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a><br/>
+<a href="https://code.google.com/p/owasp-java-encoder/">OWASP Java Encoder</a><br/>
 </p>
             ]]>
         </Details>
@@ -1863,7 +1934,7 @@ XSS に対する最善の防御策は、上記の例のような状況に応じ�
 <pre>protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     String input1 = req.getParameter("input1");
     [...]
-    resp.getWriter().write(ESAPI.encoder().encodeForHTML(input1));
+    resp.getWriter().write(Encode.forHtml(input1));
 }</pre>
 </p>
 <p>
@@ -1880,7 +1951,8 @@ XSS に対する最善の防御策は、上記の例のような状況に応じ�
 <a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site Scripting</a><br/>
 <a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet">OWASP: XSS Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_%28XSS%29">OWASP: Top 10 2013-A3: Cross-Site Scripting (XSS)</a><br/>
-<a href="http://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a>
+<a href="http://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a><br/>
+<a href="https://code.google.com/p/owasp-java-encoder/">OWASP Java Encoder</a><br/>
 </p>
             ]]>
         </Details>
@@ -2196,7 +2268,7 @@ Encryptor.CipherText.useMAC=true
 Encryptor.EncryptionAlgorithm=AES
 Encryptor.CipherTransformation=AES/GCM/NoPadding
 
-#鍵長のダウングレードを避けるために CBC モードを削除する必要があります
+#パディングオラクルを避けるために CBC モードを削除する必要があります
 Encryptor.cipher_modes.additional_allowed=</pre>
     </div>
 </p>
@@ -2206,11 +2278,329 @@ Encryptor.cipher_modes.additional_allowed=</pre>
     <a href="http://owasp-esapi-java.googlecode.com/svn/trunk/documentation/ESAPI-security-bulletin1.pdf">ESAPI Security bulletin 1 (CVE-2013-5679)</a><br/>
     <a href="http://nvd.nist.gov/view/vuln/detail?vulnId=CVE-2013-5679">Vulnerability Summary for CVE-2013-5679</a><br/>
     <a href="http://www.synacktiv.com/ressources/synacktiv_owasp_esapi_hmac_bypass.pdf">Synactiv: Bypassing HMAC validation in OWASP ESAPI symmetric encryption</a><br/>
-    <a href="http://cwe.mitre.org/data/definitions/310.html">CWE-310: Cryptographic Issues</a>
+    <a href="http://cwe.mitre.org/data/definitions/310.html">CWE-310: Cryptographic Issues</a><br/>
+    <a href="http://lists.owasp.org/pipermail/esapi-dev/2015-March/002533.html">ESAPI-dev mailing list: Status of CVE-2013-5960</a><br/>
 </p>
 ]]>
         </Details>
     </BugPattern>
     <BugCode abbrev="ESAPIENC">ESAPI Encryptor</BugCode>
+
+
+    <!-- Android: External File Access -->
+    <Detector class="com.h3xstream.findsecbugs.android.ExternalFileAccessDetector">
+        <Details>外部ストレージ上のファイルへのアクセスを特定します。</Details>
+    </Detector>
+    <BugPattern type="ANDROID_EXTERNAL_FILE_ACCESS">
+        <ShortDescription>外部ファイルアクセス (Android)</ShortDescription>
+        <LongDescription>ファイルが外部ストレージに保存される可能性があります。</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    このアプリケーションは外部ストレージ (SD カードである可能性があります) にデータを書き込みます。このアクションには複数のセキュリティへの影響があります。
+    まず、 SD カード上のファイルストアは <a href="http://developer.android.com/reference/android/Manifest.permission.html#READ_EXTERNAL_STORAGE"><code>READ_EXTERNAL_STORAGE</code></a> 権限を持つアプリケーションにアクセスできるようになります。
+    また、永続化したデータにユーザーに関する機密情報が含まれている場合は、暗号化が必要でしょう。
+</p>
+<p>
+    <b>リスクのあるコード:</b><br/>
+<pre>
+file file = new File(getExternalFilesDir(TARGET_TYPE), filename);
+fos = new FileOutputStream(file);
+fos.write(confidentialData.getBytes());
+fos.flush();
+</pre>
+</p>
+<p>
+    <b>より良い代替手段:</b><br/>
+<pre>
+fos = openFileOutput(filename, Context.MODE_PRIVATE);
+fos.write(string.getBytes());
+</pre>
+</p>
+<br/>
+<p>
+    <b>参考文献</b><br/>
+    <a href="http://developer.android.com/training/articles/security-tips.html#ExternalStorage">Android Official Doc: Security Tips</a><br/>
+    <a href="https://www.securecoding.cert.org/confluence/display/java/DRD00-J.+Do+not+store+sensitive+information+on+external+storage+%28SD+card%29+unless+encrypted+first">CERT: DRD00-J: Do not store sensitive information on external storage [...]</a><br/>
+    <a href="http://developer.android.com/guide/topics/data/data-storage.html#filesExternal">Android Official Doc: Using the External Storage</a><br/>
+    <a href="https://www.owasp.org/index.php/Mobile_Top_10_2014-M2">OWASP Mobile Top 10 2014-M2: Insecure Data Storage</a><br/>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECEFA">外部ファイルアクセス (Android)</BugCode>
+
+
+
+    <!-- Android: Broadcast -->
+    <Detector class="com.h3xstream.findsecbugs.android.BroadcastDetector">
+        <Details>sendBroadcast() の呼び出しを特定し、セキュリティへの影響と有益なガイドラインを提供します。</Details>
+    </Detector>
+    <BugPattern type="ANDROID_BROADCAST">
+        <ShortDescription>ブロードキャスト (Android)</ShortDescription>
+        <LongDescription>ブロードキャストインテントは、悪意のあるアプリケーションによって受信される可能性があります。</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    ブロードキャストインテントは、適切な権限を持つ任意のアプリケーションで受け取ることができます。
+    できる限り機密情報の送信を避けることをお勧めします。
+</p>
+<p>
+    <b>リスクのあるコード:</b><br/>
+<pre>
+Intent i = new Intent();
+i.setAction("com.insecure.action.UserConnected");
+i.putExtra("username", user);
+i.putExtra("email", email);
+i.putExtra("session", newSessionId);
+
+this.sendBroadcast(v1);
+</pre>
+</p>
+<br/>
+<p>
+    <b>解決策 (可能なら):</b><br/>
+<pre>
+Intent i = new Intent();
+i.setAction("com.secure.action.UserConnected");
+
+sendBroadcast(v1);
+</pre>
+</p>
+<br/>
+<p>
+    <b>設定 (レシーバー)<sup>[1] 出典: StackOverflow</sup>:</b><br/>
+<pre>
+&lt;manifest ...&gt;
+
+    &lt;!-- Permission declaration --&gt;
+    &lt;permission android:name="my.app.PERMISSION" /&gt;
+
+    &lt;receiver
+        android:name="my.app.BroadcastReceiver"
+        android:permission="com.secure.PERMISSION"&gt; &lt;!-- Permission enforcement --&gt;
+        &lt;intent-filter>
+            &lt;action android:name="com.secure.action.UserConnected" /&gt;
+        &lt;/intent-filter&gt;
+    &lt;/receiver&gt;
+
+    ...
+&lt;/manifest>
+</pre>
+</p>
+<p>
+    <b>設定 (レシーバー)<sup>[1] 出典: StackOverflow</sup>:</b><br/>
+<pre>
+&lt;manifest&gt;
+    &lt;!-- We declare we own the permission to send broadcast to the above receiver --&gt;
+    &lt;uses-permission android:name="my.app.PERMISSION" /&gt;
+&lt;/manifest&gt;
+</pre>
+</p>
+<br/>
+<p>
+    <b>参考文献</b><br/>
+    <a href="https://www.securecoding.cert.org/confluence/display/java/DRD03-J.+Do+not+broadcast+sensitive+information+using+an+implicit+intent">CERT: DRD03-J. Do not broadcast sensitive information using an implicit intent</a><br/>
+    <a href="http://developer.android.com/reference/android/content/BroadcastReceiver.html#Security">Android Official Doc: BroadcastReceiver (Security)</a><br/>
+    <a href="http://developer.android.com/guide/topics/manifest/receiver-element.html">Android Official Doc: Receiver configuration (see <code>android:permission</code>)</a><br/>
+    <sup>[1]</sup> <a href="http://stackoverflow.com/a/21513368/89769">StackOverflow: How to set permissions in broadcast sender and receiver in android</a><br/>
+
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECBROAD">ブロードキャスト (Android)</BugCode>
+
+
+    <!-- Android: World Writable -->
+    <Detector class="com.h3xstream.findsecbugs.android.WorldWritableDetector">
+        <Details>作成モード MODE_WORLD_READABLE で書き込まれたファイルを特定します。</Details>
+    </Detector>
+    <BugPattern type="ANDROID_WORLD_WRITABLE">
+        <ShortDescription>ワールドライタブルファイル (Android)</ShortDescription>
+        <LongDescription>書き込まれたコンテンツは、任意のアプリケーションで表示することができます。</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    このコンテキストで書き込まれたファイルは、作成モード <code>MODE_WORLD_READABLE</code> を使用しています。
+    これは、書き込まれたコンテンツを露呈することが期待された動作ではないかもしれません。
+</p>
+<p>
+    <b>リスクのあるコード:</b><br/>
+<pre>
+fos = openFileOutput(filename, MODE_WORLD_READABLE);
+fos.write(userInfo.getBytes());
+</pre>
+</p>
+<br/>
+<p>
+    <b>解決策 (MODE_PRIVATE を用いた):</b><br/>
+<pre>
+fos = openFileOutput(filename, MODE_PRIVATE);
+</pre>
+</p>
+<p>
+    <b>解決策 (ローカル SQLite データベースを用いた):</b><br/>
+
+    ローカル SQLite データベースを使用することが、おそらく構造化データを格納するための最適なソリューションです。
+    データベースファイルが外部ストレージに作成されていないことを確認してください。実装ガイドラインについては、下記の参考文献を参照してください。
+</p>
+<br/>
+<p>
+    <b>参考文献</b><br/>
+    <a href="https://www.securecoding.cert.org/confluence/display/java/DRD11-J.+Ensure+that+sensitive+data+is+kept+secure">CERT: DRD11-J. Ensure that sensitive data is kept secure</a><br/>
+    <a href="http://developer.android.com/training/articles/security-tips.html#InternalStorage">Android Official Doc: Security Tips</a><br/>
+    <a href="http://developer.android.com/reference/android/content/Context.html#MODE_PRIVATE">Android Official Doc: Context.MODE_PRIVATE</a><br/>
+    <a href="http://www.vogella.com/tutorials/AndroidSQLite/article.html#databasetutorial_database">vogella.com: Android SQLite database and content provider - Tutorial</a><br/>
+    <a href="https://www.owasp.org/index.php/Mobile_Top_10_2014-M2">OWASP Mobile Top 10 2014-M2: Insecure Data Storage</a><br/>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECWW">ワールドライタブル (Android)</BugCode>
+
+
+    <!-- Android: Geolocation -->
+    <Detector class="com.h3xstream.findsecbugs.android.GeolocationDetector">
+        <Details>ジオロケーション API の使用を特定します。</Details>
+    </Detector>
+    <BugPattern type="ANDROID_GEOLOCATION">
+        <ShortDescription>ジオロケーションが作動した WebView (Android)</ShortDescription>
+        <LongDescription>ジオロケーションが作動した WebView</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    その地理位置情報の取得についてユーザーに確認を求めることをお勧めします。
+</p>
+<p>
+    <b>リスクのあるコード:</b><br/>
+<pre>
+webView.setWebChromeClient(new WebChromeClient() {
+    @Override
+    public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
+        callback.invoke(origin, true, false);
+    }
+});
+</pre>
+</p>
+<p>
+    <b>推奨するコード:</b><br/>
+
+    地理位置情報のサンプリングを制限し、ユーザーに確認を求める。
+<pre>
+webView.setWebChromeClient(new WebChromeClient() {
+    @Override
+    public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
+        callback.invoke(origin, true, false);
+
+        //ユーザーに確認を求める
+    }
+});
+</pre>
+</p>
+<br/>
+<p>
+    <b>参考文献</b><br/>
+    <a href="https://www.securecoding.cert.org/confluence/display/java/DRD15-J.+Consider+privacy+concerns+when+using+Geolocation+API">CERT: DRD15-J. Consider privacy concerns when using Geolocation API</a><br/>
+    <a href="http://en.wikipedia.org/wiki/W3C_Geolocation_API">Wikipedia: W3C Geolocation API</a><br/>
+    <a href="http://dev.w3.org/geo/api/spec-source.html">W3C: Geolocation Specification</a><br/>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECGEO">ジオロケーション (Android)</BugCode>
+
+
+    <!-- Android: WebView with JavaScript Enabled -->
+    <Detector class="com.h3xstream.findsecbugs.android.WebViewJavascriptEnabledDetector">
+        <Details>JavaScript が使用可能な WebView を特定します。</Details>
+    </Detector>
+    <BugPattern type="ANDROID_WEB_VIEW_JAVASCRIPT">
+        <ShortDescription>JavaScript が使用可能な WebView (Android)</ShortDescription>
+        <LongDescription>JavaScript が使用可能な WebView</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    WebView に対して JavaScript を有効にすることは、直ちに XSS の影響を受けやすくなることを意味します。
+    潜在的な反射型 XSS や格納型 XSS 、 DOM ベース XSS のためにページレンダリングを検査する必要があります。<br/>
+<pre>
+WebView myWebView = (WebView) findViewById(R.id.webView);
+WebSettings webSettings = myWebView.getSettings();
+webSettings.setJavaScriptEnabled(true);
+</pre>
+</p>
+
+<p>
+    <b>リスクのあるコード:</b><br/>
+    JavaScript を有効にすることは悪い習慣ではありません。これは、バックエンドのコードは XSS の可能性が監査される必要があること意味しています。
+    DOM ベース XSS が原因でクライアント側でも XSS が取り込まれる可能性があります。
+<pre>
+function updateDescription(newDescription) {
+    $("#userDescription").html(newDescription);
+}
+</pre>
+</p>
+<br/>
+<p>
+    <b>参考文献</b><br/>
+    <a href="http://www.technotalkative.com/issue-using-setjavascriptenabled-can-introduce-xss-vulnerabilities-application-review-carefully/">Issue: Using setJavaScriptEnabled can introduce XSS vulnerabilities</a><br/>
+    <a href="http://developer.android.com/guide/webapps/webview.html#UsingJavaScript">Android Official Doc: WebView</a><br/>
+    <a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site Scripting</a><br/>
+    <a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet">OWASP: XSS Prevention Cheat Sheet</a><br/>
+    <a href="https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_%28XSS%29">OWASP: Top 10 2013-A3: Cross-Site Scripting (XSS)</a><br/>
+    <a href="http://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECWVJ">JavaScript が使用可能な WebView (Android)</BugCode>
+
+
+    <!-- Android:  -->
+    <Detector class="com.h3xstream.findsecbugs.android.WebViewJavascriptInterfaceDetector">
+        <Details>Java ブリッジ (Javascript インタフェース) を備える WebView を特定します。</Details>
+    </Detector>
+    <BugPattern type="ANDROID_WEB_VIEW_JAVASCRIPT_INTERFACE">
+        <ShortDescription>Javascript インタフェースを備える WebView (Android)</ShortDescription>
+        <LongDescription>Javascript インタフェースを備える WebView (Android)</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    JavaScript インタフェースの使用は、 WebView を危険な API にさらす可能性があります。 XSS が WebView でトリガーの場合、そのクラスは悪意のある JavaScript コードによって呼び出される可能性があります。
+</p>
+
+<p>
+    <b>リスクのあるコード:</b><br/>
+    <pre>
+WebView myWebView = (WebView) findViewById(R.id.webView);
+
+myWebView.addJavascriptInterface(new FileWriteUtil(this), "fileWriteUtil");
+
+WebSettings webSettings = myWebView.getSettings();
+webSettings.setJavaScriptEnabled(true);
+
+[...]
+class FileWriteUtil {
+    Context mContext;
+
+    FileOpenUtil(Context c) {
+        mContext = c;
+    }
+
+    public void writeToFile(String data, String filename, String tag) {
+        [...]
+    }
+}
+    </pre>
+</p>
+<br/>
+<p>
+    <b>参考文献</b><br/>
+    <a href="http://developer.android.com/reference/android/webkit/WebView.html#addJavascriptInterface%28java.lang.Object,%20java.lang.String%29">Android Official Doc: WebView.addJavascriptInterface()</a><br/>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECWVJI">Java ブリッジ (Javascript インタフェース) を備える WebView (Android)</BugCode>
 
 </MessageCollection>

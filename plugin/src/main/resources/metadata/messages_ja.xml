@@ -5,8 +5,8 @@
     <Plugin>
         <ShortDescription>Find Security Bugs</ShortDescription>
         <Details>Find Security Bugs は、セキュリティ監査を支援することを目的とするプラグインです。</Details>
-        <BugsUrl>http://h3xstream.github.io/find-sec-bugs/</BugsUrl>
-        <AllBugsUrl>http://h3xstream.github.io/find-sec-bugs/</AllBugsUrl>
+        <BugsUrl>http://h3xstream.github.io/find-sec-bugs/bugs.htm</BugsUrl>
+        <AllBugsUrl>http://h3xstream.github.io/find-sec-bugs/bugs.htm</AllBugsUrl>
     </Plugin>
 
     <!-- Predictable Pseudo Random Generator (PRG) -->
@@ -1590,6 +1590,10 @@ byte[] cipherText = c.doFinal(plainText);</pre>
     </BugPattern>
     <BugCode abbrev="SECRNP">RSA NoPadding</BugCode>
 
+    <!-- Hard coded passwords and keys in various method calls -->
+    <Detector class="com.h3xstream.findsecbugs.password.ConstantPasswordDetector">
+        <Details>Identify hardcoded password in KeyStore initialization</Details>
+    </Detector>
 
     <!-- Hard coded Google API key -->
     <Detector class="com.h3xstream.findsecbugs.password.GoogleApiKeyDetector">

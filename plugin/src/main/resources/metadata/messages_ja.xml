@@ -1592,7 +1592,7 @@ byte[] cipherText = c.doFinal(plainText);</pre>
 
     <!-- Hard coded passwords and keys in various method calls -->
     <Detector class="com.h3xstream.findsecbugs.password.ConstantPasswordDetector">
-        <Details>Identify hardcoded password in KeyStore initialization</Details>
+        <Details>キーストアの初期化でハードコードされたパスワードを特定します。</Details>
     </Detector>
 
     <!-- Hard coded Google API key -->

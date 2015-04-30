@@ -5,8 +5,8 @@
     <Plugin>
         <ShortDescription>Find Security Bugs</ShortDescription>
         <Details>Find Security Bugs は、セキュリティ監査を支援することを目的とするプラグインです。</Details>
-        <BugsUrl>http://h3xstream.github.io/find-sec-bugs/bugs.htm</BugsUrl>
-        <AllBugsUrl>http://h3xstream.github.io/find-sec-bugs/bugs.htm</AllBugsUrl>
+        <BugsUrl>http://h3xstream.github.io/find-sec-bugs/bugs_ja.htm</BugsUrl>
+        <AllBugsUrl>http://h3xstream.github.io/find-sec-bugs/bugs_ja.htm</AllBugsUrl>
     </Plugin>
 
     <!-- Predictable Pseudo Random Generator (PRG) -->

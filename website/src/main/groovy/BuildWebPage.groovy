@@ -1,7 +1,8 @@
 import groovy.text.SimpleTemplateEngine
 
 //Contains the bug descriptions
-InputStream messagesStream = getClass().getResourceAsStream("/metadata/messages.xml")
+InputStream messagesStreamEn = getClass().getResourceAsStream("/metadata/messages.xml")
+InputStream messagesStreamJa = getClass().getResourceAsStream("/metadata/messages_ja.xml")
 
 //Html Template of the documentation page
 def getTemplateReader(String path) {
@@ -19,27 +20,33 @@ def outputFile(outDir,file) {
 //Loading detectors
 
 println "Importing message from messages.xml"
-rootXml = new XmlParser().parse(messagesStream)
+bugsBindingEn = buildMapping(messagesStreamEn)
+bugsBindingJa = buildMapping(messagesStreamJa)
 
-println "Mapping the descriptions to the templates"
-def bugsBinding = [:]
-bugsBinding['bugPatterns'] = []
+def buildMapping(InputStream xmlStream) {
+    rootXml = new XmlParser().parse(xmlStream)
+    println "Mapping the descriptions to the templates"
+    def bugsBinding = [:]
+    bugsBinding['bugPatterns'] = []
 
-bugsBinding['nbPatterns'] = 0
-bugsBinding['nbDetectors'] = 0
+    bugsBinding['nbPatterns'] = 0
+    bugsBinding['nbDetectors'] = 0
 
-rootXml.BugPattern.each { pattern ->
-    bugsBinding['bugPatterns'].add(
-            ['title': pattern.ShortDescription.text(),
-             'description': pattern.Details.text(),
-             'type':pattern.attribute("type")])
-    println pattern.ShortDescription.text()
-    bugsBinding['nbPatterns']++
+    rootXml.BugPattern.each { pattern ->
+        bugsBinding['bugPatterns'].add(
+                ['title': pattern.ShortDescription.text(),
+                 'description': pattern.Details.text(),
+                 'type':pattern.attribute("type")])
+        println pattern.ShortDescription.text()
+        bugsBinding['nbPatterns']++
+    }
+
+    rootXml.Detector.each { detector ->
+        bugsBinding['nbDetectors']++
+    }
+    return bugsBinding;
 }
 
-rootXml.Detector.each { detector ->
-    bugsBinding['nbDetectors']++
-}
 
 //Version and download links
 
@@ -72,7 +79,7 @@ outputFile(outDir,"index.htm").withWriter {
     w ->
         w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Home'])
         w << engine.createTemplate(getTemplateReader("/home.htm")).make(['latestVersion':latestVersion,
-                                                                         'nbPatterns':bugsBinding['nbPatterns'],
+                                                                         'nbPatterns':bugsBindingEn['nbPatterns'],
                                                                          'screenshots':screenshots])
         w << engine.createTemplate(getTemplateReader("/social.htm")).make()
         w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make(['latestVersion':latestVersion])
@@ -104,7 +111,14 @@ outputFile(outDir,"security.htm").withWriter {
 outputFile(outDir,"bugs.htm").withWriter {
     w ->
         w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Bug Patterns'])
-        w << engine.createTemplate(getTemplateReader("/bugs.htm")).make(bugsBinding)
+        w << engine.createTemplate(getTemplateReader("/bugs.htm")).make(bugsBindingEn)
+        w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make(['latestVersion':latestVersion])
+}
+
+outputFile(outDir,"bugs_ja.htm").withWriter {
+    w ->
+        w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Bug Patterns'])
+        w << engine.createTemplate(getTemplateReader("/bugs.htm")).make(bugsBindingJa)
         w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make(['latestVersion':latestVersion])
 }
 
@@ -112,6 +126,6 @@ outputFile(outDir,"bugs.htm").withWriter {
 outputFile(outDir,"license.htm").withWriter {
     w ->
         w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'License'])
-        w << engine.createTemplate(getTemplateReader("/license.htm")).make(bugsBinding)
+        w << engine.createTemplate(getTemplateReader("/license.htm"))
         w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make(['latestVersion':latestVersion])
 }

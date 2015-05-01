@@ -26,3 +26,16 @@ backgroud-color:#415C77;
 section#features {
 padding-bottom: 40px;
 }
+
+
+#sidebar_lang.affix-top {
+    position: static;
+    margin-top:30px;
+    width:228px;
+  }
+
+#sidebar_lang.affix {
+position: fixed;
+top:70px;
+width:228px;
+}

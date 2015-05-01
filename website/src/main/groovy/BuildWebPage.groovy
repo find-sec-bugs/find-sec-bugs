@@ -21,7 +21,9 @@ def outputFile(outDir,file) {
 
 println "Importing message from messages.xml"
 bugsBindingEn = buildMapping(messagesStreamEn)
+bugsBindingEn['lang'] = 'en'
 bugsBindingJa = buildMapping(messagesStreamJa)
+bugsBindingJa['lang'] = 'ja'
 
 def buildMapping(InputStream xmlStream) {
     rootXml = new XmlParser().parse(xmlStream)
@@ -126,6 +128,6 @@ outputFile(outDir,"bugs_ja.htm").withWriter {
 outputFile(outDir,"license.htm").withWriter {
     w ->
         w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'License'])
-        w << engine.createTemplate(getTemplateReader("/license.htm"))
+        w << engine.createTemplate(getTemplateReader("/license.htm")).make()
         w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make(['latestVersion':latestVersion])
 }

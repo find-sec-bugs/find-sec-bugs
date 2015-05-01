@@ -8,7 +8,14 @@
     </div>
 </div>
 
+
+
+
+
+
 <div class="container">
+    <div class="row">
+        <div class="col-md-11" id="mainCol">
 
     <%
 
@@ -24,6 +31,28 @@
     """
     }
 %>
+        </div>
 
+        <div class="col-md-1" id="rightCol">
+
+            <div  id="sidebar_lang">
+                <h4>Languages:</h4>
+                <ul class="nav nav-pills nav-stacked">
+                    <% if(lang == 'en') {
+                        print """<li class="active"><a href="#">English</a></li>"""
+                    }else {
+                        print """<li><a href="bugs.htm">English</a></li>"""
+                    }
+                    %>
+                    <% if(lang == 'ja') {
+                        print """<li class="active"><a href="#">Japanese</a></li>"""
+                    }else {
+                        print """<li><a href="bugs_ja.htm">Japanese</a></li>"""
+                    }
+                    %>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
 

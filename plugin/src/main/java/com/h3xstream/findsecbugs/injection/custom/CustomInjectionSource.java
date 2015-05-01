@@ -96,7 +96,7 @@ public class CustomInjectionSource implements InjectionSource {
         String resourceName = resourceBaseName + "/" + INJECTION_SOURCE_RESOURCE_NAME;
         URL url = CustomInjectionSource.class.getClassLoader().getResource(resourceName);
         if (url == null) {
-            LOG.severe(resourceName + " not found.");
+            LOG.info(resourceName + " not found.");
         }
         return loadProperties(urls.toArray(new URL[urls.size()]), loadProperties(url, null));
     }

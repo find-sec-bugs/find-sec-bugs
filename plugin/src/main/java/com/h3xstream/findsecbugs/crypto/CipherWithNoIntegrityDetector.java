@@ -80,7 +80,8 @@ public class CipherWithNoIntegrityDetector extends OpcodeStackDetector {
 
                 //Ref for the list of potential ciphers : http://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#impl
                 //Note: Not all ECB mode are vulnerable. see RSA/ECB/*
-                if (cipherValue.contains("AES/ECB/") || cipherValue.contains("DES/ECB/") || cipherValue.contains("DESede/ECB/")) {
+                if (cipherValue.contains("AES/ECB/") || cipherValue.contains("DES/ECB/") || cipherValue.contains("DESede/ECB/")
+                        || cipherValue.equals("AES") || cipherValue.equals("DES") || cipherValue.equals("DESede")) {
                     bugReporter.reportBug(new BugInstance(this, ECB_MODE_TYPE, Priorities.HIGH_PRIORITY) //
                             .addClass(this).addMethod(this).addSourceLine(this));
                 }
@@ -98,6 +99,10 @@ public class CipherWithNoIntegrityDetector extends OpcodeStackDetector {
                         bugReporter.reportBug(new BugInstance(this, CIPHER_INTEGRITY_TYPE, Priorities.HIGH_PRIORITY) //
                                 .addClass(this).addMethod(this).addSourceLine(this));
                     }
+                }
+                if (cipherValue.equals("AES") || cipherValue.equals("DES") || cipherValue.equals("DESede")) {
+                    bugReporter.reportBug(new BugInstance(this, CIPHER_INTEGRITY_TYPE, Priorities.HIGH_PRIORITY)
+                            .addClass(this).addMethod(this).addSourceLine(this));
                 }
             }
         }

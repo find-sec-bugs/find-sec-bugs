@@ -1613,6 +1613,11 @@ The code should be replaced with:<br/>
         <Details>Identify hardcoded credentials in context initialization</Details>
     </Detector>
 
+    <!-- Hard coded OAuth Secret Key -->
+    <Detector class="com.h3xstream.findsecbugs.password.SpringOAuthSecretDetector">
+        <Details>Identify hardcoded OAuth secret key</Details>
+    </Detector>
+
     <BugPattern type="HARD_CODE_PASSWORD">
         <ShortDescription>Hard Coded Password</ShortDescription>
         <LongDescription>Hard coded password found</LongDescription>

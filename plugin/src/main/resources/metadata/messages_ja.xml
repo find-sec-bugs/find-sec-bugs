@@ -166,7 +166,8 @@ Cookie: JSESSIONID=Any value of the user&#39;s choice!!??'''&quot;&gt;
 <br/>
 <p>
 <b>参考文献</b><br/>
-<a href="https://www.owasp.org/index.php/Session_Management_Cheat_Sheet">OWASP: Session Management Cheat Sheet</a>
+<a href="https://www.owasp.org/index.php/Session_Management_Cheat_Sheet">OWASP: Session Management Cheat Sheet</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a>
 </p>
 ]]>
         </Details>
@@ -447,7 +448,8 @@ OS レベルであるので、たとえ Java 自体が Null バイトを気に�
 <br/>
 <p>
 <b>参考文献</b><br/>
-<a href="https://www.owasp.org/index.php/Web_Service_Security_Cheat_Sheet">OWASP: Web Service Security Cheat Sheet</a>
+<a href="https://www.owasp.org/index.php/Web_Service_Security_Cheat_Sheet">OWASP: Web Service Security Cheat Sheet</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a>
 </p>
 ]]>
         </Details>
@@ -483,7 +485,8 @@ OS レベルであるので、たとえ Java 自体が Null バイトを気に�
 <a href="https://www.owasp.org/index.php/REST_Security_Cheat_Sheet">OWASP: REST Security Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Web_Service_Security_Cheat_Sheet">OWASP: Web Service Security Cheat Sheet</a><br/>
 1. <a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)">OWASP: Cross-Site Request Forgery</a><br/>
-<a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29_Prevention_Cheat_Sheet">OWASP: CSRF Prevention Cheat Sheet</a>
+<a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29_Prevention_Cheat_Sheet">OWASP: CSRF Prevention Cheat Sheet</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a>
 </p>
 ]]>
         </Details>
@@ -525,7 +528,8 @@ OS レベルであるので、たとえ Java 自体が Null バイトを気に�
 <br/>
 <p>
 <b>参考文献</b><br/>
-<a href="http://tapestry.apache.org/">Apache Tapestry Home Page</a>
+<a href="http://tapestry.apache.org/">Apache Tapestry Home Page</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a>
 </p>
 ]]>
         </Details>
@@ -1324,6 +1328,8 @@ public void runCustomTrigger(String script) {
 <a href="https://github.com/cloudbees/rhino-sandbox">Cloudbees Rhino Sandbox</a>: Rhino のサンドボックスを作成するためのユーティリティ (すべてのクラスへのアクセスをブロック)<br/>
 <a href="http://codeutopia.net/blog/2009/01/02/sandboxing-rhino-in-java/">CodeUtopia.net: Sandboxing Rhino in Java</a><br/>
 <a href="http://blog.h3xstream.com/2014/11/remote-code-execution-by-design.html">Remote Code Execution .. by design</a>: 悪意のあるペイロードの例。示したサンプルは、サンドボックスのルールをテストするために使用することができます。<br/>
+<a href="http://cwe.mitre.org/data/definitions/94.html">CWE-94: Improper Control of Generation of Code ('Code Injection')</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/95.html">CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')</a><br/>
 </p>
 ]]>
         </Details>
@@ -2324,6 +2330,7 @@ fos.write(string.getBytes());
     <a href="https://www.securecoding.cert.org/confluence/display/java/DRD00-J.+Do+not+store+sensitive+information+on+external+storage+%28SD+card%29+unless+encrypted+first">CERT: DRD00-J: Do not store sensitive information on external storage [...]</a><br/>
     <a href="http://developer.android.com/guide/topics/data/data-storage.html#filesExternal">Android Official Doc: Using the External Storage</a><br/>
     <a href="https://www.owasp.org/index.php/Mobile_Top_10_2014-M2">OWASP Mobile Top 10 2014-M2: Insecure Data Storage</a><br/>
+    <a href="https://cwe.mitre.org/data/definitions/312.html">CWE-312: Cleartext Storage of Sensitive Information</a>
 </p>
 ]]>
         </Details>
@@ -2404,7 +2411,8 @@ sendBroadcast(v1);
     <a href="http://developer.android.com/reference/android/content/BroadcastReceiver.html#Security">Android Official Doc: BroadcastReceiver (Security)</a><br/>
     <a href="http://developer.android.com/guide/topics/manifest/receiver-element.html">Android Official Doc: Receiver configuration (see <code>android:permission</code>)</a><br/>
     <sup>[1]</sup> <a href="http://stackoverflow.com/a/21513368/89769">StackOverflow: How to set permissions in broadcast sender and receiver in android</a><br/>
-
+    <a href="https://cwe.mitre.org/data/definitions/925.html">CWE-925: Improper Verification of Intent by Broadcast Receiver</a><br/>
+    <a href="https://cwe.mitre.org/data/definitions/927.html">CWE-927: Use of Implicit Intent for Sensitive Communication</a>
 </p>
 ]]>
         </Details>
@@ -2453,6 +2461,7 @@ fos = openFileOutput(filename, MODE_PRIVATE);
     <a href="http://developer.android.com/reference/android/content/Context.html#MODE_PRIVATE">Android Official Doc: Context.MODE_PRIVATE</a><br/>
     <a href="http://www.vogella.com/tutorials/AndroidSQLite/article.html#databasetutorial_database">vogella.com: Android SQLite database and content provider - Tutorial</a><br/>
     <a href="https://www.owasp.org/index.php/Mobile_Top_10_2014-M2">OWASP Mobile Top 10 2014-M2: Insecure Data Storage</a><br/>
+    <a href="https://cwe.mitre.org/data/definitions/312.html">CWE-312: Cleartext Storage of Sensitive Information</a>
 </p>
 ]]>
         </Details>
@@ -2536,7 +2545,7 @@ webSettings.setJavaScriptEnabled(true);
     DOM ベース XSS が原因でクライアント側でも XSS が取り込まれる可能性があります。
 <pre>
 function updateDescription(newDescription) {
-    $("#userDescription").html(newDescription);
+    $("#userDescription").html("<p>"+newDescription+"</p>");
 }
 </pre>
 </p>
@@ -2597,6 +2606,7 @@ class FileWriteUtil {
 <p>
     <b>参考文献</b><br/>
     <a href="http://developer.android.com/reference/android/webkit/WebView.html#addJavascriptInterface%28java.lang.Object,%20java.lang.String%29">Android Official Doc: WebView.addJavascriptInterface()</a><br/>
+    <a href="https://cwe.mitre.org/data/definitions/749.html">CWE-749: Exposed Dangerous Method or Function</a>
 </p>
 ]]>
         </Details>

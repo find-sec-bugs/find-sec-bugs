@@ -37,7 +37,7 @@ public class SpringOAuthSecretDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
-        printOpCode(seen);
+        //printOpCode(seen);
 
         //  SpringOAuthSecretDetector: [0069]  invokevirtual   org/springframework/security/oauth2/config/annotation/builders/ClientDetailsServiceBuilder$ClientBuilder.secret (Ljava/lang/String;)Lorg/springframework/security/oauth2/config/annotation/builders/ClientDetailsServiceBuilder$ClientBuilder;
 

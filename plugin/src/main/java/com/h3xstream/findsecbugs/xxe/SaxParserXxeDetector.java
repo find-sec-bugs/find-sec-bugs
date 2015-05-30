@@ -36,8 +36,8 @@ import java.util.Iterator;
 /**
  * The SaxParser use the Xerces XML Parser engine.
  * <ul>
- *   <li>SAXParser/XMLReader -> Xerces 1</li>
- *   <li>DocumentBuilder -> Xerces 2</li>
+ *   <li>SAXParser/XMLReader -&gt; Xerces 1</li>
+ *   <li>DocumentBuilder -&gt; Xerces 2</li>
  * </ul>
  *
  * 3 equivalent APIs are covered by this detector.

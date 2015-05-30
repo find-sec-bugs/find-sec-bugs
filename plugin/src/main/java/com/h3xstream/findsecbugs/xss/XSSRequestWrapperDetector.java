@@ -30,7 +30,7 @@ import org.apache.bcel.generic.MethodGen;
 /**
  * Various flavor of XSSRequestWrapper exist to do some debatable prevention. It can be considered as a Web Application
  * Firewall.
- * <br/>
+ * <br>
  * Some implementations to detect:
  * http://java.dzone.com/articles/stronger-anti-cross-site
  * http://www.javacodegeeks.com/2012/07/anti-cross-site-scripting-xss-filter.html

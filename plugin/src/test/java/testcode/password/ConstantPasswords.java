@@ -119,9 +119,9 @@ public class ConstantPasswords {
     public void bad9() throws SQLException {
         String pass = "secret9";
         Connection connection = DriverManager.getConnection("url", "user", PWD1);
-        System.out.println(connection.getSchema());
+        System.out.println(connection.getCatalog());
         connection = DriverManager.getConnection("url", "user", pass);
-        System.out.println(connection.getSchema());
+        System.out.println(connection.getCatalog());
     }
 
     public void bad10() throws Exception {

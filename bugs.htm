@@ -202,8 +202,10 @@ valid active session IDs, allowing an insider to hijack any sessions whose IDs h
 </p>
 <br/>
 <p>
-<b>Reference</b><br/>
-<a href="https://www.owasp.org/index.php/Session_Management_Cheat_Sheet">OWASP: Session Management Cheat Sheet</a>
+<b>References</b><br/>
+<a href="https://www.owasp.org/index.php/Session_Management_Cheat_Sheet">OWASP: Session Management Cheat Sheet</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a>
+
 </p>
     </section>
     
@@ -394,8 +396,9 @@ Detailed information for a proper implementation is at:
 </p>
 <br/>
 <p>
-<b>Reference</b><br/>
-<a href="https://www.owasp.org/index.php/Web_Service_Security_Cheat_Sheet">OWASP: Web Service Security Cheat Sheet</a>
+<b>References</b><br/>
+<a href="https://www.owasp.org/index.php/Web_Service_Security_Cheat_Sheet">OWASP: Web Service Security Cheat Sheet</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a>
 </p>
     </section>
     
@@ -420,7 +423,8 @@ Detailed information for a proper implementation is at:
 <a href="https://www.owasp.org/index.php/REST_Security_Cheat_Sheet">OWASP: REST Security Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Web_Service_Security_Cheat_Sheet">OWASP: Web Service Security Cheat Sheet</a><br/>
 1. <a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)">OWASP: Cross-Site Request Forgery</a><br/>
-<a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29_Prevention_Cheat_Sheet">OWASP: CSRF Prevention Cheat Sheet</a>
+<a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29_Prevention_Cheat_Sheet">OWASP: CSRF Prevention Cheat Sheet</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a>
 </p>
     </section>
     
@@ -451,8 +455,9 @@ inputs in the backing Java class. The mapping is either done with fieldName:</p>
 mapped in this way are properly validated before they are used.</p>
 <br/>
 <p>
-<b>Reference</b><br/>
-<a href="http://tapestry.apache.org/">Apache Tapestry Home Page</a>
+<b>References</b><br/>
+<a href="http://tapestry.apache.org/">Apache Tapestry Home Page</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a>
 </p>
     </section>
     
@@ -465,8 +470,9 @@ The current page is mapped to the view [/package/WebPageName].html.</p>
 mapped in this way are properly validated before they are used.</p>
 <br/>
 <p>
-<b>Reference</b><br/>
-<a href="https://wicket.apache.org/">Apache Wicket Home Page</a>
+<b>References</b><br/>
+<a href="https://wicket.apache.org/">Apache Wicket Home Page</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a>
 </p>
     </section>
     
@@ -885,7 +891,7 @@ The method identified is susceptible to injection. The input should be validated
 
         <p>
 The input values included in SQL queries need to be passed in safely.
-Bind variables in prepared statements can be use to easily mitigate the risk of SQL injection.
+Bind variables in prepared statements can be used to easily mitigate the risk of SQL injection.
 Alternatively to prepare statement, Hibernate Criteria can be used.
 </p>
 <p>
@@ -921,7 +927,7 @@ q.execute();</pre>
 <b>References (SQL injection)</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-19: SQL Injection</a><br/>
 <a href="http://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a><br/>
-<a href="http://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a>
+<a href="http://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
 <a href="https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet">OWASP: SQL Injection Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Query_Parameterization_Cheat_Sheet">OWASP: Query Parameterization Cheat Sheet</a><br/>
@@ -933,7 +939,7 @@ q.execute();</pre>
 
         <p>
 The input values included in SQL queries need to be passed in safely.
-Bind variables in prepared statements can be use to easily mitigate the risk of SQL injection.
+Bind variables in prepared statements can be used to easily mitigate the risk of SQL injection.
 </p>
 <p>
     <b>Vulnerable Code:</b><br/>
@@ -959,7 +965,7 @@ q.execute(input);</pre>
 <b>References (SQL injection)</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-19: SQL Injection</a><br/>
 <a href="http://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a><br/>
-<a href="http://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a>
+<a href="http://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
 <a href="https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet">OWASP: SQL Injection Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Query_Parameterization_Cheat_Sheet">OWASP: Query Parameterization Cheat Sheet</a><br/>
@@ -971,7 +977,7 @@ q.execute(input);</pre>
 
         <p>
 The input values included in SQL queries need to be passed in safely.
-Bind variables in prepared statements can be use to easily mitigate the risk of SQL injection.
+Bind variables in prepared statements can be used to easily mitigate the risk of SQL injection.
 </p>
 <p>
     <b>Vulnerable Code:</b><br/>
@@ -1000,7 +1006,7 @@ UserEntity res = q.getSingleResult();</pre>
 <b>References (SQL injection)</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-19: SQL Injection</a><br/>
 <a href="http://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a><br/>
-<a href="http://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a>
+<a href="http://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
 <a href="https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet">OWASP: SQL Injection Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Query_Parameterization_Cheat_Sheet">OWASP: Query Parameterization Cheat Sheet</a><br/>
@@ -1076,7 +1082,9 @@ public void runCustomTrigger(String script) {
 <b>References</b><br/>
 <a href="https://github.com/cloudbees/rhino-sandbox">Cloudbees Rhino Sandbox</a>: Utility to create sandbox with Rhino (block access to all classes)<br/>
 <a href="http://codeutopia.net/blog/2009/01/02/sandboxing-rhino-in-java/">CodeUtopia.net: Sandboxing Rhino in Java</a><br/>
-<a href="http://blog.h3xstream.com/2014/11/remote-code-execution-by-design.html">Remote Code Execution .. by design</a>: Example of malicious payload. The samples given could be use to test sandboxing rules.<br/>
+<a href="http://blog.h3xstream.com/2014/11/remote-code-execution-by-design.html">Remote Code Execution .. by design</a>: Example of malicious payload. The samples given could be used to test sandboxing rules.<br/>
+<a href="http://cwe.mitre.org/data/definitions/94.html">CWE-94: Improper Control of Generation of Code ('Code Injection')</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/95.html">CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')</a><br/>
 </p>
     </section>
     
@@ -1108,7 +1116,7 @@ public void parseExpressionInterface(Person personObj,String property) {
     <a href="http://cwe.mitre.org/data/definitions/94.html">CWE-94: Improper Control of Generation of Code ('Code Injection')</a><br/>
     <a href="http://docs.spring.io/spring-framework/docs/3.2.x/spring-framework-reference/html/expressions.html">Spring Expression Language (SpEL) - Official Documentation</a><br/>
     <a href="https://www.mindedsecurity.com/fileshare/ExpressionLanguageInjection.pdf">Minded Security: Expression Language Injection</a><br/>
-    <a href="http://blog.h3xstream.com/2014/11/remote-code-execution-by-design.html">Remote Code Execution .. by design</a>: Example of malicious payload. The samples given could be use to test sandboxing rules.<br/>
+    <a href="http://blog.h3xstream.com/2014/11/remote-code-execution-by-design.html">Remote Code Execution .. by design</a>: Example of malicious payload. The samples given could be used to test sandboxing rules.<br/>
 </p>
     </section>
     
@@ -1180,7 +1188,7 @@ byte[] cipherText = c.doFinal(plainText);</pre>
 </p>
 <br/>
 <p>
-<b>Reference</b><br/>
+<b>References</b><br/>
 <a href="http://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky Cryptographic Algorithm</a>
 </p>
     </section>
@@ -1846,6 +1854,7 @@ fos.write(string.getBytes());
     <a href="https://www.securecoding.cert.org/confluence/display/java/DRD00-J.+Do+not+store+sensitive+information+on+external+storage+%28SD+card%29+unless+encrypted+first">CERT: DRD00-J: Do not store sensitive information on external storage [...]</a><br/>
     <a href="http://developer.android.com/guide/topics/data/data-storage.html#filesExternal">Android Official Doc: Using the External Storage</a><br/>
     <a href="https://www.owasp.org/index.php/Mobile_Top_10_2014-M2">OWASP Mobile Top 10 2014-M2: Insecure Data Storage</a><br/>
+    <a href="https://cwe.mitre.org/data/definitions/312.html">CWE-312: Cleartext Storage of Sensitive Information</a>
 </p>
     </section>
     
@@ -1915,7 +1924,8 @@ sendBroadcast(v1);
     <a href="http://developer.android.com/reference/android/content/BroadcastReceiver.html#Security">Android Official Doc: BroadcastReceiver (Security)</a><br/>
     <a href="http://developer.android.com/guide/topics/manifest/receiver-element.html">Android Official Doc: Receiver configuration (see <code>android:permission</code>)</a><br/>
     <sup>[1]</sup> <a href="http://stackoverflow.com/a/21513368/89769">StackOverflow: How to set permissions in broadcast sender and receiver in android</a><br/>
-
+    <a href="https://cwe.mitre.org/data/definitions/925.html">CWE-925: Improper Verification of Intent by Broadcast Receiver</a><br/>
+    <a href="https://cwe.mitre.org/data/definitions/927.html">CWE-927: Use of Implicit Intent for Sensitive Communication</a>
 </p>
     </section>
     
@@ -1954,6 +1964,7 @@ create on external storage. See references below for implementation guidelines.
     <a href="http://developer.android.com/reference/android/content/Context.html#MODE_PRIVATE">Android Official Doc: Context.MODE_PRIVATE</a><br/>
     <a href="http://www.vogella.com/tutorials/AndroidSQLite/article.html#databasetutorial_database">vogella.com: Android SQLite database and content provider - Tutorial</a><br/>
     <a href="https://www.owasp.org/index.php/Mobile_Top_10_2014-M2">OWASP Mobile Top 10 2014-M2: Insecure Data Storage</a><br/>
+    <a href="https://cwe.mitre.org/data/definitions/312.html">CWE-312: Cleartext Storage of Sensitive Information</a>
 </p>
     </section>
     
@@ -2017,7 +2028,7 @@ Enabling is JavaScript is not a bad practice. It just means that the backend cod
 The XSS can also be introduce client-side with DOM XSS.
 <pre>
 function updateDescription(newDescription) {
-    $("#userDescription").html(newDescription);
+    $("#userDescription").html("<p>"+newDescription+"</p>");
 }
 </pre>
 </p>
@@ -2069,6 +2080,7 @@ class FileWriteUtil {
 <p>
     <b>References</b><br/>
     <a href="http://developer.android.com/reference/android/webkit/WebView.html#addJavascriptInterface%28java.lang.Object,%20java.lang.String%29">Android Official Doc: WebView.addJavascriptInterface()</a><br/>
+    <a href="https://cwe.mitre.org/data/definitions/749.html">CWE-749: Exposed Dangerous Method or Function</a>
 </p>
     </section>
     
@@ -2093,7 +2105,7 @@ class FileWriteUtil {
 <footer id="footer" class="footer hidden-print">
     <div class="container text-center">
         <div>
-            Find Security Bugs 1.4.0
+            Find Security Bugs 1.4.1
             <span class="hide-xs">&middot;</span>
             Created by <a target="_blank" href="https://twitter.com/h3xstream">Philippe Arteau</a>
         </div>

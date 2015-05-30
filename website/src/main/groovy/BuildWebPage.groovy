@@ -52,9 +52,10 @@ def buildMapping(InputStream xmlStream) {
 
 //Version and download links
 
-downloadUrl = "http://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/1.4.0/findsecbugs-plugin-1.4.0.jar"
+downloadUrl = "http://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/1.4.1/findsecbugs-plugin-1.4.1.jar"
 mavenCentralSearch = "http://search.maven.org/#search|gav|1|g:%22com.h3xstream.findsecbugs%22 AND a:%22findsecbugs-plugin%22"
-latestVersion = "1.4.0"
+latestVersion = "1.4.1"
+latestUpdateDate = "30th May 2015"
 
 //Screenshots
 
@@ -81,6 +82,7 @@ outputFile(outDir,"index.htm").withWriter {
     w ->
         w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Home','section':'home'])
         w << engine.createTemplate(getTemplateReader("/home.htm")).make(['latestVersion':latestVersion,
+                                                                         'latestUpdateDate':latestUpdateDate,
                                                                          'nbPatterns':bugsBindingEn['nbPatterns'],
                                                                          'screenshots':screenshots])
         w << engine.createTemplate(getTemplateReader("/social.htm")).make()

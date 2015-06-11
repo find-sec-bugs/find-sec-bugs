@@ -50,10 +50,13 @@ public class BaseDetectorTest {
         findBugsLauncher.analyze(classFiles, bugReporter);
     }
 
+    public void analyze(String[] classFiles, String[] classpath, BugReporter bugReporter) throws Exception {
+        findBugsLauncher.analyze(classFiles, classpath, bugReporter);
+    }
+
     public BugInstanceMatcherBuilder bugDefinition() {
         return new BugInstanceMatcherBuilder();
     }
-
 
     public static BugInstance anyBugs() {
         return Matchers.<BugInstance>any();

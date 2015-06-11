@@ -63,13 +63,34 @@ public class FindBugsLauncher {
      * @throws URISyntaxException 
      *
      */
-    public void analyze(String[] classFiles, BugReporter bugReporter) throws IOException, InterruptedException,
-            PluginException, NoSuchFieldException, IllegalAccessException, URISyntaxException {
+	public void analyze(String[] classFiles, BugReporter bugReporter) throws IOException, InterruptedException,
+	        PluginException, NoSuchFieldException, IllegalAccessException, URISyntaxException {
+		analyze(classFiles, new String[] {}, bugReporter);
+	}
 
+    /**
+     * Launch an analysis on the given source files.
+     *
+     * @param classFiles
+     * @param classPaths
+     * @param bugReporter
+     * @throws java.io.IOException
+     * @throws InterruptedException
+     * @throws edu.umd.cs.findbugs.PluginException
+     * @throws URISyntaxException
+     *
+     */
+    public void analyze(String[] classFiles, String[] classPaths, BugReporter bugReporter) throws IOException, InterruptedException,
+    		PluginException, NoSuchFieldException, IllegalAccessException, URISyntaxException {
         Project project = new Project();
         project.setProjectName("automate-test-project");
         for (String file : classFiles) {
             project.addFile(file);
+        }
+
+        // Add classpath list to project's auxclasspath
+        for (String classpath : classPaths) {
+        	project.addAuxClasspathEntry(classpath);
         }
 
         if (loadedPlugin == null) {
@@ -85,6 +106,7 @@ public class FindBugsLauncher {
 
             loadedPlugin = Plugin.loadCustomPlugin(f.toURI().toURL(), project);
         }
+
         //FindBugs engine
         FindBugs2 engine = new FindBugs2();
         engine.setNoClassOk(true);

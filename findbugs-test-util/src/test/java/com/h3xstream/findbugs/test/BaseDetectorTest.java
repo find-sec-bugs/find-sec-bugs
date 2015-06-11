@@ -45,15 +45,22 @@ public class BaseDetectorTest {
     public String getJspFilePath(String path) {
         return classFileLocator.getJspFilePath(path);
     }
+    
+    public String getJarFilePath(String path) {
+        return classFileLocator.getJarFilePath(path);
+    }
 
     public void analyze(String[] classFiles, BugReporter bugReporter) throws Exception {
         findBugsLauncher.analyze(classFiles, bugReporter);
     }
 
+    public void analyze(String[] classFiles, String[] classPaths, BugReporter bugReporter) throws Exception {
+        findBugsLauncher.analyze(classFiles, classPaths, bugReporter);
+    }
+
     public BugInstanceMatcherBuilder bugDefinition() {
         return new BugInstanceMatcherBuilder();
     }
-
 
     public static BugInstance anyBugs() {
         return Matchers.<BugInstance>any();

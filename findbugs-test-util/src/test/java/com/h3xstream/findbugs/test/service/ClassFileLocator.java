@@ -44,6 +44,13 @@ public class ClassFileLocator {
         assertNotNull(url, "No jsp file found for the path = " + path);
         return getFilenameFromUrl(url);
     }
+    
+    public String getJarFilePath(String path) {
+        ClassLoader cl = getClass().getClassLoader();
+        URL url = cl.getResource(path);
+        assertNotNull(url, "No jar found for the path = " + path);
+        return getFilenameFromUrl(url);
+    }
 
     private String getFilenameFromUrl(URL url) {
         String filename = url.toString();

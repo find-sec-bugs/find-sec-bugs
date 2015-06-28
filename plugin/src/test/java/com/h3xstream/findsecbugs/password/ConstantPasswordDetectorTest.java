@@ -30,7 +30,8 @@ public class ConstantPasswordDetectorTest extends BaseDetectorTest {
     @Test
     public void detectHardCodePasswordsAndKeys() throws Exception {
         String[] files = {
-                getClassFilePath("testcode/password/ConstantPasswords")
+                getClassFilePath("testcode/password/ConstantPasswords"),
+                getClassFilePath("testcode/oauth/SpringServerConfig")
         };
 
         EasyBugReporter reporter = spy(new EasyBugReporter());
@@ -51,7 +52,14 @@ public class ConstantPasswordDetectorTest extends BaseDetectorTest {
             );
         }
 
-        verify(reporter, times(lines.size())).doReportBug(
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("HARD_CODE_PASSWORD")
+                        .inClass("SpringServerConfig").atLine(22)
+                        .build()
+        );
+        
+        verify(reporter, times(lines.size() + 1)).doReportBug(
                 bugDefinition().bugType("HARD_CODE_PASSWORD").build());
     }
 }

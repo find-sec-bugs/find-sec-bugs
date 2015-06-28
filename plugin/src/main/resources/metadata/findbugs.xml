@@ -47,7 +47,6 @@
     <Detector class="com.h3xstream.findsecbugs.password.ConstantPasswordDetector" reports="HARD_CODE_PASSWORD"/>
     <Detector class="com.h3xstream.findsecbugs.password.GoogleApiKeyDetector" reports="HARD_CODE_PASSWORD"/>
     <Detector class="com.h3xstream.findsecbugs.password.JndiCredentialsDetector" reports="HARD_CODE_PASSWORD"/>
-    <Detector class="com.h3xstream.findsecbugs.password.SpringOAuthSecretDetector" reports="HARD_CODE_PASSWORD"/>
     <Detector class="com.h3xstream.findsecbugs.StrutsValidatorFormDetector" reports="STRUTS_FORM_VALIDATION"/>
     <Detector class="com.h3xstream.findsecbugs.xss.XSSRequestWrapperDetector" reports="XSS_REQUEST_WRAPPER"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.InsufficientKeySizeBlowfishDetector" reports="BLOWFISH_KEY_SIZE"/>

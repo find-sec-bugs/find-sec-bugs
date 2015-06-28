@@ -150,6 +150,27 @@ public class ConstantPasswords {
         new DSAPrivateKeySpec(bigInteger, null, null, null);
     }
 
+    public void bad13() throws Exception {
+        String pwd = null;
+        if (PWD2[3] < 'u') { // non-trivial condition
+            pwd = "hardcoded";
+        }
+        if (pwd != null) {
+            KeyStore.getInstance("JKS").load( // should be reported
+                    new FileInputStream("keystore"), pwd.toCharArray());
+        }
+    }
+    
+    public Connection bad14() throws Exception {
+        String pwd;
+        if (PWD2[2] % 2 == 1) { // non-trivial condition
+            pwd = "hardcoded1";
+        } else { // different constant but still hard coded
+            pwd = "hardcoded2";
+        }
+        return DriverManager.getConnection("url", "user", pwd);
+    }
+    
     public void good1() throws Exception {
         KeyStore ks = KeyStore.getInstance("JKS");
         ks.load(new FileInputStream("keystore"), getPassword());

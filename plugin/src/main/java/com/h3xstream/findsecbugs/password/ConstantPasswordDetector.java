@@ -19,6 +19,7 @@ package com.h3xstream.findsecbugs.password;
 
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
+import edu.umd.cs.findbugs.OpcodeStack;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 import java.io.BufferedReader;
@@ -38,6 +39,7 @@ import org.apache.bcel.classfile.Method;
  * 
  * @author David Formanek
  */
+@OpcodeStack.CustomUserValue
 public class ConstantPasswordDetector extends OpcodeStackDetector {
 
     private static final String HARD_CODE_PASSWORD_TYPE = "HARD_CODE_PASSWORD";
@@ -120,6 +122,14 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
+        // trace hard coded Strings (possibly null)
+        for (int i = 0; i < stack.getStackDepth(); i++) {
+            OpcodeStack.Item stackItem = stack.getStackItem(i);
+            if (stackItem.getConstant() != null || stackItem.isNull()) {
+                stackItem.setUserValue(Boolean.TRUE);
+            }
+        }
+        
         if (getMethodName().equals(STATIC_INITIALIZER_NAME) && staticInitializerSeen) {
             // prevent double analysis of static initializer
             return;
@@ -209,10 +219,10 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
 
     private void checkArrayConversion(final String currentMethod) {
         final String methodToCharArray = "java/lang/String.toCharArray()[C";
-        if (methodToCharArray.equals(currentMethod) && hasConstantOnStack(0)) {
+        if (methodToCharArray.equals(currentMethod) && hasHardCodedStackItem(0)) {
             constCharArraySeenLocally = true;
         }
-        if (currentMethod.startsWith("java/lang/String.getBytes(") && hasConstantOnStack(0)) {
+        if (currentMethod.startsWith("java/lang/String.getBytes(") && hasHardCodedStackItem(0)) {
             constByteArraySeenLocally = true;
         }
     }
@@ -220,8 +230,8 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
     private void checkBigIntegerDeclaration(final String currentMethod) {
         final String constructorString = "java/math/BigInteger.<init>(Ljava/lang/String;)V";
         final String constructorStringRadix = "java/math/BigInteger.<init>(Ljava/lang/String;I)V";
-        if ((constructorString.equals(currentMethod) && hasConstantOnStack(0))
-                || (constructorStringRadix.equals(currentMethod)) && hasConstantOnStack(1)) {
+        if ((constructorString.equals(currentMethod) && hasHardCodedStackItem(0))
+                || (constructorStringRadix.equals(currentMethod)) && hasHardCodedStackItem(1)) {
             constBigIntegerSeenLocally = true;
         }
         if ("java/math/BigInteger.<init>([B)V".equals(currentMethod)
@@ -243,7 +253,7 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
             reportIfInSet(calledMethod, bigIntegerMethods);
         }
         if (stringMethods.containsKey(calledMethod)) {
-            if (hasConstantOnStack(stringMethods.get(calledMethod))) {
+            if (hasHardCodedStackItem(stringMethods.get(calledMethod))) {
                 reportBug(calledMethod, Priorities.HIGH_PRIORITY);
             }
         }
@@ -261,8 +271,8 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
         return constBigIntegerSeenLocally || (bigIntegerFieldLoaded && constBigIntegerFieldDefined);
     }
 
-    private boolean hasConstantOnStack(int position) {
-        return stack.getStackItem(position).getConstant() != null;
+    private boolean hasHardCodedStackItem(int position) {
+        return stack.getStackItem(position).getUserValue() != null;
     }
 
     private String getCalledMethodName() {

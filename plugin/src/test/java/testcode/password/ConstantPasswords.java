@@ -144,8 +144,8 @@ public class ConstantPasswords {
         new DSAPrivateKeySpec(big, null, null, null);
     }
 
-    public void bad12() {
-        byte[] key = "secret8".getBytes();
+    public void bad12() throws Exception {
+        byte[] key = "secret8".getBytes("UTF-8");
         BigInteger bigInteger = new BigInteger(key);
         new DSAPrivateKeySpec(bigInteger, null, null, null);
     }
@@ -183,6 +183,14 @@ public class ConstantPasswords {
         ks.load(new FileInputStream("keystore"), pwdArray);
     }
 
+    public void good3() throws Exception {
+        String key = "hard coded";
+        key = new String(getPassword()); // no longer hard coded
+        String message = "can be hard coded";
+        byte[] byteStringToEncrypt = message.getBytes("UTF-8");
+        new SecretKeySpec(key.getBytes(), "AES"); // should not report
+    }
+    
     private static char[] getPassword() {
         char[] password = new char[3];
         // some operations to simulate non-constant password

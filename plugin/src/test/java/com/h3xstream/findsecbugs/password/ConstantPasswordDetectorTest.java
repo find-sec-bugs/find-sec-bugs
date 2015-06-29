@@ -40,8 +40,8 @@ public class ConstantPasswordDetectorTest extends BaseDetectorTest {
         List<Integer> lines = Arrays.asList(
                 44, 52, 57, 62, 67, 72, 80, 86, 87, 88, 89, 91, 92, 93, 94, 100,
                 101, 102, 104, 105, 106, 107, 108, 109, 110, 116, 121, 123, 129,
-                130, 131, 133, 134, 135, 136, 137, 138, 144, 150, 36, 37, 39,
-                159, 171
+                130, 131, 133, 134, 135, 136, 137, 138, 144, 150, 159, 171
+                //36, 37, 39 // fields
         );
         for (Integer line : lines) {
             verify(reporter).doReportBug(

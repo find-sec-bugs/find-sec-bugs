@@ -17,6 +17,8 @@
  */
 package com.h3xstream.findsecbugs.injection;
 
+import com.h3xstream.findsecbugs.common.ByteCode;
+import com.h3xstream.findsecbugs.injection.util.ByteCodeReplay;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Detector;
@@ -31,13 +33,14 @@ import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.*;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
  * Class inspired by the detector FindSqlInjection
  */
 public abstract class InjectionDetector implements Detector {
+
+    private static final boolean DEBUG = false;
 
     private BugReporter bugReporter;
 
@@ -76,7 +79,7 @@ public abstract class InjectionDetector implements Detector {
     }
 
     private void analyzeMethod(ClassContext classContext, Method method, List<InjectionSource> selectedSources) throws DataflowAnalysisException, CFGBuilderException {
-
+        if(DEBUG) System.out.println(">>> "+method.getName()+"() <<<");
         JavaClass javaClass = classContext.getJavaClass();
 
         MethodGen methodGen = classContext.getMethodGen(method);
@@ -87,17 +90,20 @@ public abstract class InjectionDetector implements Detector {
         CFG cfg = classContext.getCFG(method);
 
 
+
+
         ConstantDataflow dataflow = classContext.getConstantDataflow(method);
-        for (Iterator<Location> i = cfg.locationIterator(); i.hasNext(); ) {
-            Location location = i.next();
+        for (Location location: cfg.orderedLocations() ) {
 
             InstructionHandle insHandle = location.getHandle();
             Instruction ins = insHandle.getInstruction();
+
+            if(DEBUG) ByteCode.printOpCode(insHandle, cpg);
+
             if (!(ins instanceof InvokeInstruction))
                 continue;
             InvokeInstruction invoke = (InvokeInstruction) ins;
 
-            //ByteCode.printOpCode( ins, cpg );
 
             InjectionPoint injectionPoint = null;
             for (InjectionSource source : selectedSources) {
@@ -112,34 +118,30 @@ public abstract class InjectionDetector implements Detector {
 
                 ConstantFrame frame = dataflow.getFactAtLocation(location);
 
-
-                arguments:
-                for (int arg : injectionPoint.getInjectableArguments()) {
+                boolean constant = true;
+                constant : for (int arg : injectionPoint.getInjectableArguments()) {
                     Constant value = frame.getStackValue(arg);
-                    //System.out.println(arg + ". " + frame.getStackValue(arg).getConstantString());
-//                    int numArguments = frame.getNumArguments(invoke, cpg);
-//                    System.out.println(numArguments);
 
                     if (value == null || !value.isConstantString()) {
-
-                        Location prev = getPreviousLocation(cfg, location, true);
-                        for (int a = 0; a < arg; a++) {
-                            prev = getPreviousLocation(cfg, prev, true);
-                        }
-                        if (prev != null && !isSafeValue(prev, cpg, cfg)) {
-                            BugInstance bugInstance = new BugInstance(this, injectionPoint.getBugType(), Priorities.HIGH_PRIORITY) //
-                                    .addClass(javaClass) //
-                                    .addMethod(javaClass, method) //
-                                    .addSourceLine(classContext, method, location);
-                            if(injectionPoint.getInjectableMethod()!= null) {
-                                bugInstance.addString(injectionPoint.getInjectableMethod());
-                            }
-                            bugReporter.reportBug(bugInstance);
-                            break arguments;
-                            //System.out.println("!!!");
-                        }
+                        constant = false;
+                        break constant;
                     }
                 }
+
+                boolean tainted = isTaintedValue(location,injectionPoint.getInjectableArguments(), cpg, cfg);
+                if (!constant) {
+                    BugInstance bugInstance = new BugInstance(this, injectionPoint.getBugType(),
+                            tainted ? Priorities.HIGH_PRIORITY : Priorities.LOW_PRIORITY) //
+                            .addClass(javaClass) //
+                            .addMethod(javaClass, method) //
+                            .addSourceLine(classContext, method, location);
+
+                    if(injectionPoint.getInjectableMethod()!= null) {
+                        bugInstance.addString(injectionPoint.getInjectableMethod());
+                    }
+                    bugReporter.reportBug(bugInstance);
+                }
+
             }
 
         }
@@ -158,6 +160,7 @@ public abstract class InjectionDetector implements Detector {
     }
 
     private Location getPreviousLocation(CFG cfg, Location startLocation, boolean skipNops) {
+
         Location loc = startLocation;
         InstructionHandle prev = getPreviousInstruction(loc.getHandle(), skipNops);
         if (prev != null)
@@ -197,6 +200,32 @@ public abstract class InjectionDetector implements Detector {
             }
         }
         return false;
+    }
+
+    private boolean isTaintedValue(Location targetLocation, int[] arguments, ConstantPoolGen cpg, CFG cfg) {
+
+        ByteCodeReplay replay = new ByteCodeReplay(cpg);
+
+        if(DEBUG) {
+            System.out.println("+++++++++++++++++++++++++++++++++++");
+            System.out.println("Starting the replay");
+            System.out.println("+++++++++++++++++++++++++++++++++++");
+        }
+        for (Location loc: cfg.orderedLocations() ) {
+            InstructionHandle instructionHandle = loc.getHandle();
+            instructionHandle.getInstruction();
+
+            if(loc.getHandle().getPosition() == targetLocation.getHandle().getPosition()){
+
+                return replay.isTaintedStackParameter(instructionHandle, arguments);
+            }
+            else {
+                replay.exec(instructionHandle);
+            }
+        }
+
+        System.err.println("Unable to reach the targeted location.");
+        return true;
     }
 
     @Override

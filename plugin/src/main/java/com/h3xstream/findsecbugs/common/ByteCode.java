@@ -21,6 +21,12 @@ import org.apache.bcel.generic.*;
 
 public class ByteCode {
 
+
+    public static void printOpCode(InstructionHandle insHandle, ConstantPoolGen cpg) {
+        System.out.print("[" + String.format("%02d", insHandle.getPosition()) + "] ");
+        printOpCode(insHandle.getInstruction(),cpg);
+    }
+
     /**
      * Print the the detail of the given instruction (class, method, etc.)
      *
@@ -28,11 +34,37 @@ public class ByteCode {
      * @param cpg Constant Pool
      */
     public static void printOpCode(Instruction ins, ConstantPoolGen cpg) {
+
         if (ins instanceof InvokeInstruction) {
             InvokeInstruction invokeIns = (InvokeInstruction) ins;
             System.out.println(ins.getClass().getSimpleName() + " " + invokeIns.getClassName(cpg).replaceAll("\\.", "/") + "." + invokeIns.getMethodName(cpg) + " (" + invokeIns.getSignature(cpg) + ")");
+        } else if (ins instanceof LDC) {
+            LDC i = (LDC) ins;
+            System.out.println(ins.getClass().getSimpleName() + " \""+i.getValue(cpg).toString()+"\"");
+        } else if (ins instanceof NEW) {
+            NEW i = (NEW) ins;
+            ObjectType type = i.getLoadClassType(cpg);
+            System.out.println(ins.getClass().getSimpleName() + " " + type.toString());
+        } else if (ins instanceof LoadInstruction) {
+            LoadInstruction i = (LoadInstruction) ins;
+            System.out.println(ins.getClass().getSimpleName() +" "+i.getIndex() + " => [stack]");
+        } else if (ins instanceof StoreInstruction) {
+            StoreInstruction i = (StoreInstruction) ins;
+            System.out.println(ins.getClass().getSimpleName() +" (?prev?) => "+i.getIndex() + "");
+        } else if (ins instanceof FieldInstruction) {
+            FieldInstruction i = (FieldInstruction) ins;
+            System.out.println(ins.getClass().getSimpleName() +" "+i.getFieldName(cpg) + "");
+        }  else if (ins instanceof IfInstruction) {
+            IfInstruction i = (IfInstruction) ins;
+            System.out.println(ins.getClass().getSimpleName() +" target => "+i.getTarget().toString()+ "");
+        } else if (ins instanceof ICONST) {
+            ICONST i = (ICONST) ins;
+            System.out.println(ins.getClass().getSimpleName() +" "+i.getValue());
+        } else if (ins instanceof GOTO) {
+            GOTO i = (GOTO) ins;
+            System.out.println(ins.getClass().getSimpleName() +" target => "+i.getTarget().toString());
         } else {
-            System.out.println(ins.getClass().getSimpleName() + " " + ins.toString());
+            System.out.println(ins.getClass().getSimpleName());
         }
     }
 

@@ -59,7 +59,7 @@ public class UnboundIdLdapInjectionSource implements InjectionSource {
 
             if (className.equals("com.unboundid.ldap.sdk.LDAPConnection") && methodName.equals("search") &&
                     methodSignature.equals("(Ljava/lang/String;Lcom/unboundid/ldap/sdk/SearchScope;Ljava/lang/String;[Ljava/lang/String;)Lcom/unboundid/ldap/sdk/SearchResult;")) {
-                return new InjectionPoint(new int[]{0, 2},LDAP_INJECTION_TYPE);
+                return new InjectionPoint(new int[]{1, 3},LDAP_INJECTION_TYPE);
             }
         }
 

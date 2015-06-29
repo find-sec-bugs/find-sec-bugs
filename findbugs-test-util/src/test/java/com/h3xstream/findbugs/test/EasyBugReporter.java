@@ -62,6 +62,7 @@ public class EasyBugReporter extends AbstractBugReporter {
                 .append("\nNew Bug Instance: [" + ++bugInstanceCount + "]")
                 .append("\n  message=" + bugInstance.getMessage())
                 .append("\n  bugType=" + bugInstance.getBugPattern().getType())
+                .append("  priority=" + bugInstance.getPriorityString())
                 .append("  category=" + bugInstance.getCategoryAbbrev());
         if (bugInstance.getPrimaryClass() != null) {
             bugDetail.append("\n  class=" + bugInstance.getPrimaryClass().getClassName());

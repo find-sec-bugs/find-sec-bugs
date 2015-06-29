@@ -46,24 +46,33 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
     private final BugReporter bugReporter;
     private boolean staticInitializerSeen = false;
 
-    // configuration files with password methods
-    private static final String PASSWORD_METHODS_DIR = "password-methods";
-    private static final String STRING_METHODS_FILENAME = "password-methods-string.txt";
+    // configuration file with password methods
+    private static final String CONFIG_DIR = "password-methods";
+    private static final String METHODS_FILENAME = "password-methods-all.txt";
 
+    // full method names
+    private static final String GET_BYTES_STRING = "java/lang/String.getBytes(Ljava/lang/String;)[B";
+    private static final String GET_BYTES = "java/lang/String.getBytes()[B";
+    private static final String TO_CHAR_ARRAY = "java/lang/String.toCharArray()[C";
+    private static final String BIGINTEGER_CONSTRUCTOR_STRING = "java/math/BigInteger.<init>(Ljava/lang/String;)V";
+    private static final String BIGINTEGER_CONSTRUCTOR_STRING_RADIX = "java/math/BigInteger.<init>(Ljava/lang/String;I)V";
+    private static final String BIGINTEGER_CONSTRUCTOR_BYTE = "java/math/BigInteger.<init>([B)V";
+    private static final String BIGINTEGER_BYTE_SIGNUM = "java/math/BigInteger.<init>(I[B)V";
+    
     // suspicious variable names with password or keys
     private static final String PASSWORD_NAMES = ".*(pass|pwd|psw|secret|key|cipher|crypt|des|aes).*";
     private static final Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_NAMES, Pattern.CASE_INSENSITIVE);
 
-    private final Map<String, Integer> stringMethods = new HashMap<String, Integer>();
-
+    private final Map<String, Integer> sinkMethods = new HashMap<String, Integer>();
     private boolean isFirstArrayStore = false;
-    private boolean isHardCodedTypeConversion = false;
+    private boolean wasToConstArrayConversion = false;
     private Set<String> hardCodedFields = new HashSet<String>();
+    private String calledMethod = null;
     
     public ConstantPasswordDetector(BugReporter bugReporter) {
         this.bugReporter = bugReporter;
         try {
-            loadMap(STRING_METHODS_FILENAME, stringMethods, "#");
+            loadMap(METHODS_FILENAME, sinkMethods, "#");
         } catch (IOException ex) {
             throw new RuntimeException("cannot load resources", ex);
         }
@@ -82,159 +91,169 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
             }
         }
         isFirstArrayStore = false;
-        isHardCodedTypeConversion = false;
+        wasToConstArrayConversion = false;
         //hardCodedFields.clear();
     }
 
     @Override
     public void visit(Method method) {
         isFirstArrayStore = false;
-        isHardCodedTypeConversion = false;
+        wasToConstArrayConversion = false;
     }
 
     @Override
     public void sawOpcode(int seen) {
-        if (getMethodName().equals(STATIC_INITIALIZER_NAME) && staticInitializerSeen) {
-            // prevent double analysis of static initializer
+        if (isAlreadyAnalyzed()) {
             return;
         }
-        if (stack.getStackDepth() == 0) {
-            System.out.println("empty stack");
-        }
-        // trace hard coded Strings (possibly null)
-        for (int i = 0; i < stack.getStackDepth(); i++) {
-            OpcodeStack.Item stackItem = stack.getStackItem(i);
-            if (stackItem.getConstant() != null || stackItem.isNull()) {
-                stackItem.setUserValue(Boolean.TRUE);
-                System.out.println("setting uv to item " + i);
-            }
-            XField xField = stackItem.getXField();
-            if (xField != null) {
-                System.out.println("checking field " + xField);
-                String[] split = xField.toString().split(" ");
-                if (split.length > 1) { // could be 1 in Android
-                    String sig = split[split.length - 1];
-                    if ("[C".equals(sig) || "[B".equals(sig)
-                            || "Ljava/math/BigInteger;".equals(sig)) {
-                        String field = split[split.length - 2] + sig;
-                        if (hardCodedFields.contains(field)) {
-                            stackItem.setUserValue(Boolean.TRUE);
-                            System.out.println("const field source: " + field);
-                        } else {
-                            System.out.println("field " + field + " not in set");
-                        }
-                    }
-                }
-            }
-            System.out.println("item " + i + ": " + stackItem);
-        }
-        printOpCode(seen);
-        
+        markHardCodedItemsFromFlow();
+        printOpCode(seen); // debug
         if (seen == NEWARRAY) {
             isFirstArrayStore = true;
         }
-        if (seen == CASTORE || seen == BASTORE || seen == SASTORE || seen == IASTORE) { // TODO add ICONST_X
-            if (isFirstArrayStore
-                    && stack.getStackItem(0).getUserValue() != null 
-                    && stack.getStackItem(1).getUserValue() != null) {
-                stack.getStackItem(2).setUserValue(Boolean.TRUE);
-                isFirstArrayStore = false;
-            }
-            if (stack.getStackItem(0).getUserValue() == null
-                    || stack.getStackItem(1).getUserValue() == null) {
-                stack.getStackItem(2).setUserValue(null);
-            }
+        if (isStoringToArray(seen)) {
+            markArraysHardCodedOrNot();
+            isFirstArrayStore = false;
         }
-        if (isHardCodedTypeConversion && stack.getStackDepth() > 0) {
-            stack.getStackItem(0).setUserValue(Boolean.TRUE);
+        if (wasToConstArrayConversion) {
+            markTopItemHardCoded();
+            wasToConstArrayConversion = false;
+        }
+        if (seen == PUTFIELD || seen == PUTSTATIC) {
+            saveArrayFieldIfHardCoded();
+        }
+        if (isInvokeInstruction(seen)) {
+            calledMethod = getCalledMethodName();
+            wasToConstArrayConversion = isToConstArrayConversion();
+            markBigIntegerHardCodedOrNot();
+            reportBadSink();
+        }
+    }
+
+    private boolean isAlreadyAnalyzed() {
+        return getMethodName().equals(STATIC_INITIALIZER_NAME) && staticInitializerSeen;
+    }
+
+    private void markHardCodedItemsFromFlow() {
+        for (int i = 0; i < stack.getStackDepth(); i++) {
+            OpcodeStack.Item stackItem = stack.getStackItem(i);
+            if (stackItem.getConstant() != null || stackItem.isNull()) {
+                setHardCodedItem(stackItem);
+                System.out.println("setting uv to item " + i);
+            }
+            if (hasHardCodedFieldSource(stackItem)) {
+                setHardCodedItem(stackItem);
+                System.out.println("field in set");
+            } else {
+                System.out.println("field not in set");
+            }
+            System.out.println("item " + i + ": " + stackItem);
+        }
+    }
+    
+    private boolean hasHardCodedFieldSource(OpcodeStack.Item stackItem) {
+        XField xField = stackItem.getXField();
+        if (xField == null) {
+            return false;
+        }
+        System.out.println("checking field " + xField);
+        String[] split = xField.toString().split(" ");
+        int length = split.length;
+        if (length < 2) {
+            return false;
+        }
+        String fieldSignature = split[split.length - 1];
+        if (!"[C".equals(fieldSignature)
+                && !"[B".equals(fieldSignature)
+                && !"Ljava/math/BigInteger;".equals(fieldSignature)) {
+            return false;
+        }
+        String fieldName = split[split.length - 2] + fieldSignature;
+        System.out.println("Checking if '" + fieldName + "' is in field set");
+        return hardCodedFields.contains(fieldName);
+    }
+    
+    private static boolean isStoringToArray(int seen) {
+        // TODO add ICONST_X
+        return seen == CASTORE || seen == BASTORE || seen == SASTORE || seen == IASTORE;
+    }
+
+    private void markArraysHardCodedOrNot() {
+        if (isFirstArrayStore
+                && hasHardCodedStackItem(0)
+                && hasHardCodedStackItem(1)) {
+            setHardCodedItem(2);
+        }
+        if (!hasHardCodedStackItem(0) || !hasHardCodedStackItem(1)) {
+            // then array not hard coded
+            stack.getStackItem(2).setUserValue(null);
+        }
+    }
+
+    private void markTopItemHardCoded() {
+            assert stack.getStackDepth() > 0;
+            setHardCodedItem(0);
             System.out.println("Setting uv: " + stack.getStackItem(0));
-            isHardCodedTypeConversion = false;
             System.out.println("isHardCodedTypeConversion=false");
-        }
-        /*if (isBigIntegerInitialization && stack.getStackDepth() > 0) {
-            stack.getStackItem(0).setUserValue(Boolean.TRUE);
-            isBigIntegerInitialization = false;
-        }*/
-        if (seen == PUTFIELD || seen == PUTSTATIC) { // TODO ignore String
-            if (stack.getStackItem(0).getUserValue() != null) {
-                String fieldName = getDottedClassConstantOperand() + "."
-                        + getNameConstantOperand() + getSigConstantOperand();
+    }
+
+    private void saveArrayFieldIfHardCoded() {
+            if (hasHardCodedStackItem(0)) {
+                String fieldName = getFullFieldName();
                 hardCodedFields.add(fieldName);
                 System.out.println("added to fields: " + fieldName);
             }
+    }
+    
+    private static boolean isInvokeInstruction(int seen) {
+        return seen >= INVOKEVIRTUAL && seen <= INVOKEINTERFACE;
+    }
+    
+    private boolean isToConstArrayConversion() {
+        return isInMethodWithConst(TO_CHAR_ARRAY, 0)
+                || isInMethodWithConst(GET_BYTES, 0)
+                || isInMethodWithConst(GET_BYTES_STRING, 1); 
+    }
+
+    private void markBigIntegerHardCodedOrNot() {
+        if (isInMethodWithConst(BIGINTEGER_CONSTRUCTOR_STRING, 0)
+                || isInMethodWithConst(BIGINTEGER_CONSTRUCTOR_BYTE, 0)) {
+            setHardCodedItem(1);
+        } else if (isInMethodWithConst(BIGINTEGER_CONSTRUCTOR_STRING_RADIX, 1)
+                || isInMethodWithConst(BIGINTEGER_BYTE_SIGNUM, 0)) {
+            setHardCodedItem(2);
         }
-        /*if (isLoadingField) {
-            stack.getStackItem(0).setUserValue(Boolean.TRUE);
-            isLoadingField = false;
-        }
-        if (seen == GETFIELD || seen == GETSTATIC) {
-            String fieldName = getNameConstantOperand();
-            System.out.println("fields: " + hardCodedFields);
-            if (hardCodedFields.contains(fieldName)) {
-                //isLoadingField = true; // TODO remove?
-            }
-        }*/
-        
-        if (seen < INVOKEVIRTUAL || seen > INVOKEINTERFACE) {
-            // not a method invocation, getCalledMethodName would fail
-            return;
-        }
-        final String calledMethod = getCalledMethodName();
-        
-        final String methodToCharArray = "java/lang/String.toCharArray()[C";
-        if (methodToCharArray.equals(calledMethod) && hasHardCodedStackItem(0)) {
-            isHardCodedTypeConversion = true;
-        }
-        if (calledMethod.equals("java/lang/String.getBytes()[B") && hasHardCodedStackItem(0)) {
-            isHardCodedTypeConversion = true;
-            System.out.println("isHardCodedTypeConversion=true");
-        }
-        if (calledMethod.equals("java/lang/String.getBytes(Ljava/lang/String;)[B") && hasHardCodedStackItem(1)) {
-            isHardCodedTypeConversion = true;
-            System.out.println("isHardCodedTypeConversion=true");
-        }
-        
-        final String constructorString = "java/math/BigInteger.<init>(Ljava/lang/String;)V";
-        final String constructorStringRadix = "java/math/BigInteger.<init>(Ljava/lang/String;I)V";
-        final String constructorByte = "java/math/BigInteger.<init>([B)V";
-        final String constructorByteSignum = "java/math/BigInteger.<init>(I[B)V";
-        if (constructorString.equals(calledMethod) && hasHardCodedStackItem(0)) {
-            stack.getStackItem(1).setUserValue(Boolean.TRUE);
-        } else if (constructorStringRadix.equals(calledMethod) && hasHardCodedStackItem(1)) {
-            stack.getStackItem(2).setUserValue(Boolean.TRUE);
-        } else if (constructorByte.equals(calledMethod) && hasHardCodedStackItem(0)) {
-            stack.getStackItem(1).setUserValue(Boolean.TRUE);
-        } else if (constructorByteSignum.equals(calledMethod) && hasHardCodedStackItem(0)) {
-            stack.getStackItem(2).setUserValue(Boolean.TRUE);
-        }
-        
-        if (stringMethods.containsKey(calledMethod)) {
-            int offset = stringMethods.get(calledMethod);
+    }
+    
+    private void reportBadSink() {
+        if (sinkMethods.containsKey(calledMethod)) {
+            int offset = sinkMethods.get(calledMethod);
             if (hasHardCodedStackItem(offset) && !stack.getStackItem(offset).isNull()) {
                 reportBug(calledMethod, Priorities.HIGH_PRIORITY);
             }
         }
     }
+    
+    private void setHardCodedItem(int stackOffset) {
+        setHardCodedItem(stack.getStackItem(stackOffset));
+    }
 
-    /*private void checkFieldLoaded(int seen) {
-        if ((seen != GETSTATIC && seen != GETFIELD)) {
-            return;
-        }
-        if (!getClassName().equals(getClassConstantOperand())) {
-            return;
-        }
-        final String sig = getSigConstantOperand();
-        if ("[C".equals(sig)) {
-            charArrayFieldLoaded = true;
-        } else if ("[B".equals(sig)) {
-            byteArrayFieldLoaded = true;
-        } else if ("Ljava/math/BigInteger;".equals(sig)) {
-            bigIntegerFieldLoaded = true;
-        }
-    }*/
+    private void setHardCodedItem(OpcodeStack.Item stackItem) {
+        stackItem.setUserValue(Boolean.TRUE);
+    }
 
-    private boolean hasHardCodedStackItem(int position) {
-        return stack.getStackItem(position).getUserValue() != null;
+    private boolean hasHardCodedStackItem(int stackOffset) {
+        return stack.getStackItem(stackOffset).getUserValue() != null;
+    }
+    
+    private boolean isInMethodWithConst(String method, int stackOffset) {
+        return method.equals(calledMethod) && hasHardCodedStackItem(stackOffset);
+    }
+    
+    private String getFullFieldName() {
+        String fieldName = getDottedClassConstantOperand() + "."
+                + getNameConstantOperand() + getSigConstantOperand();
+        return fieldName;
     }
 
     private String getCalledMethodName() {
@@ -272,7 +291,7 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
     }
 
     private BufferedReader getReader(String filename) {
-        String path = PASSWORD_METHODS_DIR + "/" + filename;
+        String path = CONFIG_DIR + "/" + filename;
         return new BufferedReader(new InputStreamReader(
                 getClass().getClassLoader().getResourceAsStream(path)
         ));

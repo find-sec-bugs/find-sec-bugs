@@ -171,6 +171,9 @@ public class ConstantPasswords {
         return DriverManager.getConnection("url", "user", pwd);
     }
     
+    private byte[] pwd4; // not considered hard coded
+    private char[] pwd5 = null;
+    
     public void good1() throws Exception {
         KeyStore ks = KeyStore.getInstance("JKS");
         ks.load(new FileInputStream("keystore"), getPassword());

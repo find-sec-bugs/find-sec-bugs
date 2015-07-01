@@ -86,7 +86,7 @@ public class StaticIvDetector implements Detector {
 
             if (inst instanceof INVOKEVIRTUAL) {
                 INVOKEVIRTUAL invoke = (INVOKEVIRTUAL) inst;
-                if (("java.security.SecureRandom").equals(invoke.getClassName(cpg)) &&
+                if ("java.security.SecureRandom".equals(invoke.getClassName(cpg)) &&
                         "nextBytes".equals(invoke.getMethodName(cpg))) {
                     foundSafeIvGeneration = true;
                 }

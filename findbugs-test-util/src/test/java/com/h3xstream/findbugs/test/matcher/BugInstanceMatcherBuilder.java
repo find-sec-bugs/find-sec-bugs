@@ -32,6 +32,7 @@ public class BugInstanceMatcherBuilder {
     private String fieldName;
     private Integer lineNumber;
     private Integer lineNumberApprox;
+    private String priority;
 
     public BugInstanceMatcherBuilder bugType(String bugType) {
         this.bugType = bugType;
@@ -63,6 +64,11 @@ public class BugInstanceMatcherBuilder {
         return this;
     }
 
+    public BugInstanceMatcherBuilder withPriority(String priority) {
+        this.priority = priority;
+        return this;
+    }
+
     /**
      * @return Mockito Matcher
      */
@@ -71,7 +77,7 @@ public class BugInstanceMatcherBuilder {
 //            throw new RuntimeException("The field position is not kept after compilation. " +
 //                    "The lineNumber can be set when a fieldName is defined.");
 //        }
-        return Matchers.argThat(new BugInstanceMatcher(bugType, className, methodName, fieldName, lineNumber, lineNumberApprox));
+        return Matchers.argThat(new BugInstanceMatcher(bugType, className, methodName, fieldName, lineNumber, lineNumberApprox, priority));
     }
 
 }

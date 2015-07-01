@@ -127,7 +127,7 @@ public class ConstantPasswords {
     public void bad10() throws Exception {
         BigInteger bigInteger = new BigInteger("12345", 5);
         new DSAPrivateKeySpec(bigInteger, null, null, null);
-        new DSAPublicKeySpec(bigInteger, null, null, null);
+        new DSAPublicKeySpec(bigInteger, null, bigInteger, null); // report once
         new DHPrivateKeySpec(bigInteger, null, null);
         new DHPublicKeySpec(bigInteger, null, null);
         new ECPrivateKeySpec(bigInteger, null);
@@ -173,6 +173,7 @@ public class ConstantPasswords {
     
     private byte[] pwd4; // not considered hard coded
     private char[] pwd5 = null;
+    private char[] pwd6 = new char[7];
     
     public void good1() throws Exception {
         KeyStore ks = KeyStore.getInstance("JKS");
@@ -192,6 +193,8 @@ public class ConstantPasswords {
         String message = "can be hard coded";
         byte[] byteStringToEncrypt = message.getBytes("UTF-8");
         new SecretKeySpec(key.getBytes(), "AES"); // should not report
+        byte[] bytes = {0, 0, 7};
+        new PBEKeySpec(getPassword(), bytes, 1); // different parameter hard coded
     }
     
     private static char[] getPassword() {

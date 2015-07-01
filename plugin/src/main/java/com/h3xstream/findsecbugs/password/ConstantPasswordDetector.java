@@ -66,7 +66,7 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
             = ".*(pass|pwd|psw|secret|key|cipher|crypt|des|aes|mac|private|sign|cert).*";
     private static final Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_NAMES, Pattern.CASE_INSENSITIVE);
 
-    private final Map<String, Integer> sinkMethods = new HashMap<String, Integer>();
+    private final Map<String, Collection<Integer>> sinkMethods = new HashMap<String, Collection<Integer>>();
     private boolean isFirstArrayStore = false;
     private boolean wasToConstArrayConversion = false;
     private static final Set<String> hardCodedFields = new HashSet<String>();
@@ -119,7 +119,7 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
         String fieldName = fullFieldName.substring(classNameLength);
         return PASSWORD_PATTERN.matcher(fieldName).matches();
     }
-    
+
     @Override
     public void visit(Method method) {
         isFirstArrayStore = false;
@@ -189,7 +189,6 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
     }
 
     private static boolean isStoringToArray(int seen) {
-        // TODO add ICONST_X
         return seen == CASTORE || seen == BASTORE || seen == SASTORE || seen == IASTORE;
     }
 
@@ -239,15 +238,22 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
     }
 
     private void reportBadSink() {
-        if (sinkMethods.containsKey(calledMethod)) {
-            int offset = sinkMethods.get(calledMethod);
+        if (!sinkMethods.containsKey(calledMethod)) {
+            return;
+        }
+        Collection<Integer> offsets = sinkMethods.get(calledMethod);
+        Collection<Integer> offsetsToReport = new ArrayList<Integer>();
+        for (Integer offset : offsets) {
             if (hasHardCodedStackItem(offset) && !stack.getStackItem(offset).isNull()) {
+                offsetsToReport.add(offset);
                 String sourceField = getStackFieldName(offset);
                 if (sourceField != null) {
                     reportedFields.add(sourceField);
                 }
-                reportBugSink(Priorities.HIGH_PRIORITY, offset);
             }
+        }
+        if (!offsetsToReport.isEmpty()) {
+            reportBugSink(Priorities.HIGH_PRIORITY, offsets);
         }
     }
 
@@ -263,18 +269,20 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
         return split[split.length - 2] + split[split.length - 1];
     }
 
-    private void reportBugSink(int priority, int paramIndex) {
-        OpcodeStack.Item stackItem = stack.getStackItem(paramIndex);
+    private void reportBugSink(int priority, Collection<Integer> offsets) {
         BugInstance bugInstance = new BugInstance(
                 this, HARD_CODE_PASSWORD_TYPE, priority)
                 .addClass(this).addMethod(this)
-                .addSourceLine(this).addCalledMethod(this)
-                .addParameterAnnotation(paramIndex,
+                .addSourceLine(this).addCalledMethod(this);
+        for (Integer paramIndex : offsets) {
+            OpcodeStack.Item stackItem = stack.getStackItem(paramIndex);
+            bugInstance.addParameterAnnotation(paramIndex,
                         "Hard coded parameter number (in reverse order) is")
                 .addFieldOrMethodValueSource(stackItem);
-        Object constant = stackItem.getConstant();
-        if (constant != null) {
-            bugInstance.addString(constant.toString());
+            Object constant = stackItem.getConstant();
+            if (constant != null) {
+                bugInstance.addString(constant.toString());
+            }
         }
         bugReporter.reportBug(bugInstance);
     }
@@ -313,7 +321,7 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
         return fieldName;
     }
 
-    private boolean isSupportedSignature(String signature) {
+    private static boolean isSupportedSignature(String signature) {
         return "[C".equals(signature)
                 || "[B".equals(signature)
                 || "Ljava/math/BigInteger;".equals(signature);
@@ -324,7 +332,8 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
         return getClassConstantOperand() + "." + methodNameWithSignature;
     }
 
-    private void loadMap(String filename, Map<String, Integer> map, String separator) throws IOException {
+    private void loadMap(String filename, Map<String, Collection<Integer>> map,
+            String separator) throws IOException {
         BufferedReader reader = null;
         try {
             reader = getReader(filename);
@@ -338,7 +347,12 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
                     continue;
                 }
                 String[] tuple = line.split(separator);
-                map.put(tuple[0], Integer.parseInt(tuple[1]));
+                int count = tuple.length - 1;
+                Collection<Integer> parameters = new ArrayList<Integer>(count);
+                for (int i = 0; i < count; i++) {
+                    parameters.add(Integer.parseInt(tuple[i + 1]));
+                }
+                map.put(tuple[0], parameters);
             }
         } finally {
             if (reader != null) {

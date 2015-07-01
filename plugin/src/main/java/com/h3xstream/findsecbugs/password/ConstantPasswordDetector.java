@@ -26,6 +26,8 @@ import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -98,11 +100,13 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
 
     @Override
     public void visitAfter(JavaClass obj) {
+        Collection<String> fieldsToReport = new ArrayList<String>();
         for (String field : hardCodedFields) {
             if (isSuspiciousName(field, obj) && !reportedFields.contains(field)) {
-                reportBugSource(field, Priorities.NORMAL_PRIORITY);
+                fieldsToReport.add(field);
             }
         }
+        reportBugSource(fieldsToReport, Priorities.NORMAL_PRIORITY);
         // TODO global analysis
         hardCodedFields.clear();
         reportedFields.clear();
@@ -128,7 +132,6 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
             return;
         }
         markHardCodedItemsFromFlow();
-        printOpCode(seen); // debug
         if (seen == NEWARRAY) {
             isFirstArrayStore = true;
         }
@@ -160,13 +163,10 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
             OpcodeStack.Item stackItem = stack.getStackItem(i);
             if (stackItem.getConstant() != null || stackItem.isNull()) {
                 setHardCodedItem(stackItem);
-                System.out.println("setting uv to item " + i);
             }
             if (hasHardCodedFieldSource(stackItem)) {
                 setHardCodedItem(stackItem);
-                System.out.println("field in set");
             }
-            System.out.println("item " + i + ": " + stackItem);
         }
     }
 
@@ -175,7 +175,6 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
         if (xField == null) {
             return false;
         }
-        System.out.println("checking field " + xField);
         String[] split = xField.toString().split(" ");
         int length = split.length;
         if (length < 2) {
@@ -186,7 +185,6 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
             return false;
         }
         String fieldName = split[length - 2] + fieldSignature;
-        System.out.println("Checking if '" + fieldName + "' is in field set");
         return hardCodedFields.contains(fieldName);
     }
 
@@ -208,7 +206,6 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
     private void markTopItemHardCoded() {
         assert stack.getStackDepth() > 0;
         setHardCodedItem(0);
-        System.out.println("Setting uv: " + stack.getStackItem(0));
     }
 
     private void saveArrayFieldIfHardCoded() {
@@ -282,10 +279,16 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
         bugReporter.reportBug(bugInstance);
     }
 
-    private void reportBugSource(String value, int priority) {
-        bugReporter.reportBug(new BugInstance(this, HARD_CODE_PASSWORD_TYPE, priority)
-                .addClass(this).addString(
-                        "is hard coded in field " + value + " with suspicious name"));
+    private void reportBugSource(Collection<String> fields, int priority) {
+        if (fields.isEmpty()) {
+            return;
+        }
+        BugInstance bug = new BugInstance(
+                this, HARD_CODE_PASSWORD_TYPE, priority).addClass(this);
+        for (String field : fields) {
+            bug.addString("is hard coded in field " + field + " with suspicious name");
+        }
+        bugReporter.reportBug(bug);
     }
 
     private void setHardCodedItem(int stackOffset) {

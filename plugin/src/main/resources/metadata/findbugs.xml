@@ -5,6 +5,9 @@
                 defaultenabled="true"
                 website="https://github.com/h3xstream/find-sec-bugs">
 
+    <!-- Registers engine for taint analysis dataflow -->
+    <EngineRegistrar class="com.h3xstream.findsecbugs.taintanalysis.EngineRegistrar"/>
+    
     <!--
     Detector : Java class that analyzes the bytecode
     Bug Pattern : Vulnerability/Code at risk*. All bug patterns are describe in messages.xml.

@@ -19,6 +19,7 @@ package com.h3xstream.findsecbugs.injection.command;
 
 import com.h3xstream.findsecbugs.injection.InjectionDetector;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
+import com.h3xstream.findsecbugs.injection.TaintDetector;
 import edu.umd.cs.findbugs.BugReporter;
 
 /**
@@ -28,7 +29,7 @@ import edu.umd.cs.findbugs.BugReporter;
  * @see java.lang.Runtime
  * @see com.h3xstream.findsecbugs.injection.command.CommandInjectionSource
  */
-public class CommandInjectionDetector  extends InjectionDetector {
+public class CommandInjectionDetector  extends TaintDetector {
 
     public CommandInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);

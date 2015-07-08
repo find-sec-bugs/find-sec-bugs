@@ -73,7 +73,15 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
     @Override
     public void meetInto(TaintFrame fact, Edge edge, TaintFrame result)
             throws DataflowAnalysisException {
-        // TODO consider edges
+        if (fact.isValid() && edge.isExceptionEdge()) {
+            TaintFrame copy = null;
+            // creates modifiable copy
+            copy = modifyFrame(fact, copy);
+            copy.clearStack();
+            // do not trust values that are safe just when an exception occurs
+            copy.pushValue(new Taint(Taint.State.UNKNOWN));
+            fact = copy;
+        }
         mergeInto(fact, result);
     }
 }

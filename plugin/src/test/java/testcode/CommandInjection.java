@@ -1,6 +1,10 @@
 package testcode;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 
@@ -51,5 +55,21 @@ public class CommandInjection {
         String safe = "yyy";
         String unsafe = safe.replace("y", builder2.toString());
         Runtime.getRuntime().exec(unsafe.toLowerCase().substring(1).intern());
+    }
+    
+    public void badWithException() throws Exception {
+        String data = "";
+        File file = new File("C:\\data.txt");
+        FileInputStream streamFileInput;
+        InputStreamReader readerInputStream;
+        BufferedReader readerBuffered;
+        try {
+            streamFileInput = new FileInputStream(file);
+            readerInputStream = new InputStreamReader(streamFileInput, "UTF-8");
+            readerBuffered = new BufferedReader(readerInputStream);
+            data = readerBuffered.readLine();
+        } catch (IOException ex) {
+        }
+        Runtime.getRuntime().exec(data);
     }
 }

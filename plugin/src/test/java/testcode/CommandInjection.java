@@ -30,4 +30,26 @@ public class CommandInjection {
                 .start();
     }
 
+    public void bad(String tainted) throws IOException {
+        StringBuilder builder = new StringBuilder("<" + tainted + ">");
+        builder.insert(3, tainted).append("");
+        builder.reverse();
+        StringBuilder builder2 = new StringBuilder("xxx");
+        builder2.append(builder);
+        String safe = "yyy";
+        String unsafe = safe.replace("y", builder2.toString());
+        Runtime.getRuntime().exec(unsafe.toLowerCase().substring(1).intern());
+    }
+    
+    public void good() throws IOException {
+        String hardcoded = "constant";
+        StringBuilder builder = new StringBuilder("<" + hardcoded + ">");
+        builder.insert(3, hardcoded).append("");
+        builder.reverse();
+        StringBuilder builder2 = new StringBuilder("xxx");
+        builder2.append(builder);
+        String safe = "yyy";
+        String unsafe = safe.replace("y", builder2.toString());
+        Runtime.getRuntime().exec(unsafe.toLowerCase().substring(1).intern());
+    }
 }

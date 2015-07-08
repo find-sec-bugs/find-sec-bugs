@@ -22,8 +22,10 @@ import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class CommandInjectionDetectorTest extends BaseDetectorTest {
@@ -39,14 +41,30 @@ public class CommandInjectionDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
+        List<Integer> lines = Arrays.asList(18, 20, 25, 29, 41);
+        
         //Assertions
-        for (Integer line : Arrays.asList(18, 20, 25, 29)) {
+        for (Integer line : lines) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("COMMAND_INJECTION")
-                            .inClass("CommandInjection").inMethod("main").atLine(line)
+                            .inClass("CommandInjection").atLine(line)
+                            .withPriority("Medium")
                             .build()
             );
         }
+        
+        verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("COMMAND_INJECTION")
+                            .inClass("CommandInjection").atLine(53)
+                            .withPriority("Low")
+                            .build()
+            );
+        
+        verify(reporter, times(lines.size())).doReportBug(
+                bugDefinition().bugType("COMMAND_INJECTION").withPriority("Medium").build());
+        verify(reporter, times(1)).doReportBug(
+                bugDefinition().bugType("COMMAND_INJECTION").withPriority("Low").build());
     }
 }

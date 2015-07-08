@@ -1,1 +1,2 @@
 java/lang/StringBuilder.append(Ljava/lang/String;)Ljava/lang/StringBuilder;#0#1
+java/lang/StringBuilder.<init>(Ljava/lang/String;)V#0#1

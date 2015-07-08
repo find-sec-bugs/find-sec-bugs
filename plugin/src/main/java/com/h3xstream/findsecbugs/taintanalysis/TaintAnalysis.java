@@ -66,7 +66,7 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
         fact.clearStack();
         int numSlots = fact.getNumSlots();
         for (int i = 0; i < numSlots; ++i) {
-            fact.setValue(i, Taint.UNKNOWN);
+            fact.setValue(i, new Taint(Taint.State.UNKNOWN));
         }
     }
 

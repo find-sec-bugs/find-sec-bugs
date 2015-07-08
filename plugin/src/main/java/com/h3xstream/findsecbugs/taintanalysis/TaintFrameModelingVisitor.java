@@ -32,6 +32,7 @@ import java.util.Map;
 import org.apache.bcel.Constants;
 import org.apache.bcel.generic.ACONST_NULL;
 import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.FieldOrMethod;
 import org.apache.bcel.generic.INVOKEINTERFACE;
 import org.apache.bcel.generic.INVOKESPECIAL;
 import org.apache.bcel.generic.INVOKESTATIC;
@@ -41,7 +42,6 @@ import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.LDC2_W;
 import org.apache.bcel.generic.LoadInstruction;
 import org.apache.bcel.generic.NEW;
-import org.apache.bcel.generic.StoreInstruction;
 
 /**
  * Visitor to make instruction transfer of taint values easier
@@ -58,6 +58,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     private static final Collection<Integer> PARAM_0;
     private final Map<String, Collection<Integer>> transferMethods
             = new HashMap<String, Collection<Integer>>();
+    private final Map<String, Integer> transferMutables = new HashMap<String, Integer>();
     
     static {
         Collection<Integer> param0 = new ArrayList<Integer>(1);
@@ -68,7 +69,8 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     public TaintFrameModelingVisitor(ConstantPoolGen cpg) {
         super(cpg);
         try {
-            loadMap(TRANSFER_METHODS_FILENAME, transferMethods, "#");
+            // separator is regex
+            loadMaps(TRANSFER_METHODS_FILENAME, "\\|", "#");
         } catch (IOException ex) {
             throw new RuntimeException("cannot load resources", ex);
         }
@@ -101,24 +103,6 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         pushSafe();
     }
     
-    /*@Override
-    public void handleStoreInstruction(StoreInstruction obj) {
-        try {
-            int numConsumed = obj.consumeStack(cpg);
-            if (numConsumed == Constants.UNPREDICTABLE) {
-                throw new InvalidBytecodeException("Unpredictable stack consumption");
-            }
-            int index = obj.getIndex();
-            while (numConsumed-- > 0) {
-                Taint value = getFrame().popValue();
-                value.invalidateLocalVariableIndex();
-                getFrame().setValue(index++, value);
-            }
-        } catch (DataflowAnalysisException e) {
-            throw new InvalidBytecodeException(e.toString());
-        }
-    }*/
-    
     @Override
     public void handleLoadInstruction(LoadInstruction obj) {
         int numProduced = obj.produceStack(cpg);
@@ -128,6 +112,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         int index = obj.getIndex() + numProduced;
         while (numProduced-- > 0) {
             Taint value = getFrame().getValue(--index);
+            // set local variable origin of a stack value
             value.setLocalVariableIndex(index);
             getFrame().pushValue(value);
         }
@@ -154,9 +139,8 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     }
 
     private void visitInvoke(InvokeInstruction obj) {
-        String className = obj.getReferenceType(cpg).toString();
         String methodNameWithSig = obj.getMethodName(cpg) + obj.getSignature(cpg);
-        String fullMethodName = ClassName.toSlashedClassName(className) + "." + methodNameWithSig;
+        String fullMethodName = getSlashedClassName(obj) + "." + methodNameWithSig;
         Collection<Integer> transferParameters;
         if (TO_STRING_METHOD.equals(methodNameWithSig)) {
             transferParameters = PARAM_0;
@@ -164,34 +148,16 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             transferParameters = transferMethods.getOrDefault(fullMethodName, EMPTY_PARAMS);
         }
         Taint taint = getMethodTaint(transferParameters);
-        
-        if (fullMethodName.equals("java/lang/StringBuilder.append(Ljava/lang/String;)Ljava/lang/StringBuilder;")) {
-            int mutableStackPosition = 1; // StringBuilder
-            try {
-                Taint stackValue = getFrame().getStackValue(mutableStackPosition);
-                if (stackValue.hasValidLocalVariableIndex()) {
-                    int index = stackValue.getLocalVariableIndex();
-                    getFrame().setValue(index, taint);
-                }
-                // else we are not able to transfer taint
-            } catch (DataflowAnalysisException ex) {
-                throw new RuntimeException("Bad mutable stack position specification", ex);
-            }
-        }
-        
+        transferTaintToMutables(fullMethodName, taint);
         modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taint);
-        if (fullMethodName.contains("<init>")
-                && transferMethods.containsKey(fullMethodName)
-                && getFrame().getStackDepth() != 0) {
-            try {
-                Taint popValue = getFrame().popValue();
-                getFrame().pushValue(Taint.merge(popValue, taint));
-            } catch (DataflowAnalysisException ex) {
-                assert false;
-            }
-        }
+        transferTaintToStackTop(fullMethodName, taint);
     }
 
+    private String getSlashedClassName(FieldOrMethod obj) {
+        String className = obj.getReferenceType(cpg).toString();
+        return ClassName.toSlashedClassName(className);
+    }
+    
     private Taint getMethodTaint(Collection<Integer> transferParameters) {
         Taint taint = null;
         for (Integer transferParameter : transferParameters) {
@@ -207,13 +173,42 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         }
         return taint;
     }
+    
+    private void transferTaintToMutables(String fullMethodName, Taint taint) throws RuntimeException {
+        if (transferMutables.containsKey(fullMethodName)) {
+            int mutableStackPosition = transferMutables.get(fullMethodName);
+            try {
+                Taint stackValue = getFrame().getStackValue(mutableStackPosition);
+                if (stackValue.hasValidLocalVariableIndex()) {
+                    int index = stackValue.getLocalVariableIndex();
+                    getFrame().setValue(index, taint);
+                }
+                // else we are not able to transfer taint
+            } catch (DataflowAnalysisException ex) {
+                throw new RuntimeException("Bad mutable stack position specification", ex);
+            }
+        }
+    }
 
+    private void transferTaintToStackTop(String fullMethodName, Taint taint) {
+        if (fullMethodName.contains("<init>")
+                && transferMethods.containsKey(fullMethodName)
+                && getFrame().getStackDepth() != 0) {
+            try {
+                Taint popValue = getFrame().popValue();
+                getFrame().pushValue(Taint.merge(popValue, taint));
+            } catch (DataflowAnalysisException ex) {
+                assert false; // stack depth is not zero
+            }
+        }
+    }
+    
     private void pushSafe() {
         getFrame().pushValue(new Taint(Taint.State.SAFE));
     }
     
-    private void loadMap(String filename, Map<String, Collection<Integer>> map,
-            String separator) throws IOException {
+    private void loadMaps(String filename, String outerSeparator, String innerSparator)
+            throws IOException {
         BufferedReader reader = null;
         try {
             reader = getReader(filename);
@@ -226,18 +221,35 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                 if (line.isEmpty()) {
                     continue;
                 }
-                String[] tuple = line.split(separator);
-                int count = tuple.length - 1;
-                Collection<Integer> parameters = new ArrayList<Integer>(count);
-                for (int i = 0; i < count; i++) {
-                    parameters.add(Integer.parseInt(tuple[i + 1]));
-                }
-                map.put(tuple[0], parameters);
+                loadLineToMaps(line, outerSeparator, innerSparator);
             }
+        } catch (NumberFormatException ex) {
+            throw new IOException("Stack positions must be numbers", ex);
         } finally {
             if (reader != null) {
                 reader.close();
             }
+        }
+    }
+
+    private void loadLineToMaps(String line, String outerSeparator, String innerSparator)
+            throws IOException, NumberFormatException {
+        String[] outerTuple = line.split(outerSeparator);
+        Integer mutablePosition = null;
+        if (outerTuple.length > 2) {
+            throw new IOException("More mutables not supported");
+        } else if (outerTuple.length == 2) {
+            mutablePosition = Integer.parseInt(outerTuple[1]);
+        }
+        String[] innerTuple = outerTuple[0].split(innerSparator);
+        int count = innerTuple.length - 1;
+        Collection<Integer> parameters = new ArrayList<Integer>(count);
+        for (int i = 0; i < count; i++) {
+            parameters.add(Integer.parseInt(innerTuple[i + 1]));
+        }
+        transferMethods.put(innerTuple[0], parameters);
+        if (mutablePosition != null) {
+            transferMutables.put(innerTuple[0], mutablePosition);
         }
     }
 

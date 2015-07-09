@@ -58,10 +58,11 @@ public class JdoInjectionSourceTest extends BaseDetectorTest {
             );
         }
 
-        //Only the previous 2 cases should be marked as vulnerable
+        //Only the previous 5 cases should be marked as vulnerable
         verify(reporter, times(5)).doReportBug(
                 bugDefinition()
                         .bugType("SQL_INJECTION_JDO")
+                        .withPriority("Medium")
                         .build()
         );
     }

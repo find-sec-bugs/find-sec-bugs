@@ -51,11 +51,12 @@ public class JpaInjectionSourceTest extends BaseDetectorTest {
                         .build()
         );
 
-        //Only the previous 2 cases should be marked as vulnerable
+        //Only the previous 5 cases should be marked as vulnerable
         //2 createQuery + 3 createNativeQuery detect
         verify(reporter, times(2+3)).doReportBug(
                 bugDefinition()
                         .bugType("SQL_INJECTION_JPA")
+                        .withPriority("Medium")
                         .build()
         );
     }
@@ -88,6 +89,7 @@ public class JpaInjectionSourceTest extends BaseDetectorTest {
                 bugDefinition()
                         .bugType("SQL_INJECTION_JPA")
                         .inClass("JpaSql").inMethod("getUserWithNativeQueryUnsafe")
+                        .withPriority("Medium")
                         .build()
         );
 
@@ -95,6 +97,7 @@ public class JpaInjectionSourceTest extends BaseDetectorTest {
                 bugDefinition()
                         .bugType("SQL_INJECTION_JPA")
                         .inClass("JpaSql").inMethod("getUserWithNativeQuerySafe")
+                        .withPriority("Medium")
                         .build()
         );
     }

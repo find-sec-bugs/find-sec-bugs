@@ -17,12 +17,11 @@
  */
 package com.h3xstream.findsecbugs.injection.ldap;
 
-import com.h3xstream.findsecbugs.injection.InjectionDetector;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
+import com.h3xstream.findsecbugs.injection.TaintDetector;
 import edu.umd.cs.findbugs.BugReporter;
 
-public class LdapInjectionDetector extends InjectionDetector {
-
+public class LdapInjectionDetector extends TaintDetector {
 
     public LdapInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
@@ -32,5 +31,4 @@ public class LdapInjectionDetector extends InjectionDetector {
     public InjectionSource[] getInjectionSource() {
         return new InjectionSource[]{new JndiLdapInjectionSource(), new UnboundIdLdapInjectionSource()};
     }
-
 }

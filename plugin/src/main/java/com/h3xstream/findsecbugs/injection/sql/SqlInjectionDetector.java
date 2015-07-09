@@ -17,11 +17,11 @@
  */
 package com.h3xstream.findsecbugs.injection.sql;
 
-import com.h3xstream.findsecbugs.injection.InjectionDetector;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
+import com.h3xstream.findsecbugs.injection.TaintDetector;
 import edu.umd.cs.findbugs.BugReporter;
 
-public class SqlInjectionDetector extends InjectionDetector {
+public class SqlInjectionDetector extends TaintDetector {
 
     public SqlInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
@@ -35,5 +35,4 @@ public class SqlInjectionDetector extends InjectionDetector {
             new JpaInjectionSource()
         };
     }
-
 }

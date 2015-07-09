@@ -89,7 +89,6 @@ public abstract class TaintDetector implements Detector {
 
     private void analyzeMethod(ClassContext classContext, Method method, List<InjectionSource> selectedSources)
             throws DataflowAnalysisException, CFGBuilderException, CheckedAnalysisException {
-        System.out.println("Analysing " + method);
         JavaClass javaClass = classContext.getJavaClass();
         TaintDataflow dataflow = getTaintDataFlow(javaClass, method);
         CFG cfg = classContext.getCFG(method);
@@ -98,9 +97,6 @@ public abstract class TaintDetector implements Detector {
             Location location = i.next();
             InstructionHandle handle = location.getHandle();
             Instruction instruction = handle.getInstruction();
-            TaintFrame fact = dataflow.getFactAtLocation(location);
-            System.out.println(fact);
-            ByteCode.printOpCode(handle, cpg);
             if (!(instruction instanceof InvokeInstruction)) {
                 continue;
             }
@@ -115,7 +111,7 @@ public abstract class TaintDetector implements Detector {
             if (injectionPoint == null || injectionPoint == InjectionPoint.NONE) {
                 continue;
             }
-            //TaintFrame fact = dataflow.getFactAtLocation(location);
+            TaintFrame fact = dataflow.getFactAtLocation(location);
             if (!fact.isValid()) {
                 continue;
             }

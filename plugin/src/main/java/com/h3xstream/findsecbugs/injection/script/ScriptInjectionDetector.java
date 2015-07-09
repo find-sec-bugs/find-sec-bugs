@@ -17,12 +17,11 @@
  */
 package com.h3xstream.findsecbugs.injection.script;
 
-import com.h3xstream.findsecbugs.injection.InjectionDetector;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
+import com.h3xstream.findsecbugs.injection.TaintDetector;
 import edu.umd.cs.findbugs.BugReporter;
 
-public class ScriptInjectionDetector extends InjectionDetector {
-
+public class ScriptInjectionDetector extends TaintDetector {
 
     public ScriptInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
@@ -32,5 +31,4 @@ public class ScriptInjectionDetector extends InjectionDetector {
     public InjectionSource[] getInjectionSource() {
         return new InjectionSource[] {new ScriptEngineSource(),new SpelSource()};
     }
-
 }

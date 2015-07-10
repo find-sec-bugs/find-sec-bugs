@@ -74,6 +74,7 @@ public abstract class StringBuilderSuspicious {
 
     public abstract void modifyMe(StringBuilder buffer);
 
+    // I think this should be reported with low priority only, everything visible is constant
     public UserEntity queryUnknownTransformation(String username,String onlyActive) {
         StringBuilder sql = new StringBuilder("select * from Users where name = usernameParam");
         sql.append(" and active = true");

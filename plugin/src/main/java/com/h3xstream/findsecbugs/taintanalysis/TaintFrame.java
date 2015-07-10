@@ -15,20 +15,19 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.injection.script;
+package com.h3xstream.findsecbugs.taintanalysis;
 
-import com.h3xstream.findsecbugs.injection.InjectionSource;
-import com.h3xstream.findsecbugs.injection.TaintDetector;
-import edu.umd.cs.findbugs.BugReporter;
+import edu.umd.cs.findbugs.ba.Frame;
 
-public class ScriptInjectionDetector extends TaintDetector {
+/**
+ * Representation of the dataflow value (fact) modeling taint state of local
+ * variables and values on stack, consists of {@link Taint} values
+ * 
+ * @author David Formanek
+ */
+public class TaintFrame extends Frame<Taint> {
 
-    public ScriptInjectionDetector(BugReporter bugReporter) {
-        super(bugReporter);
-    }
-
-    @Override
-    public InjectionSource[] getInjectionSource() {
-        return new InjectionSource[] {new ScriptEngineSource(),new SpelSource()};
+    public TaintFrame(int numLocals) {
+        super(numLocals);
     }
 }

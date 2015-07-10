@@ -15,20 +15,20 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.injection.script;
+package com.h3xstream.findsecbugs.taintanalysis;
 
-import com.h3xstream.findsecbugs.injection.InjectionSource;
-import com.h3xstream.findsecbugs.injection.TaintDetector;
-import edu.umd.cs.findbugs.BugReporter;
+import edu.umd.cs.findbugs.classfile.IAnalysisCache;
+import edu.umd.cs.findbugs.classfile.IAnalysisEngineRegistrar;
 
-public class ScriptInjectionDetector extends TaintDetector {
-
-    public ScriptInjectionDetector(BugReporter bugReporter) {
-        super(bugReporter);
-    }
+/**
+ * Registers taint analysis with analysis cache
+ * 
+ * @author David Formanek
+ */
+public class EngineRegistrar implements IAnalysisEngineRegistrar {
 
     @Override
-    public InjectionSource[] getInjectionSource() {
-        return new InjectionSource[] {new ScriptEngineSource(),new SpelSource()};
+    public void registerAnalysisEngines(IAnalysisCache cache) {
+        new TaintDataflowEngine().registerWith(cache);
     }
 }

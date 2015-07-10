@@ -56,7 +56,7 @@ public class UnvalidatedRedirectDetectorTest extends BaseDetectorTest {
         );
 
         verify(reporter, times(2)).doReportBug(
-                bugDefinition().bugType("UNVALIDATED_REDIRECT").build()
+                bugDefinition().bugType("UNVALIDATED_REDIRECT").withPriority("Medium").build()
         );
     }
 }

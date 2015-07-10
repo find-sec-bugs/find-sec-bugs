@@ -43,13 +43,15 @@ public class ScriptEngineInjectionTest extends BaseDetectorTest {
                         .bugType("SCRIPT_ENGINE_INJECTION")
                         .inClass("ScriptEngineSample")
                         .atLine(16)
+                        .withPriority("Medium")
                         .build()
         );
 
-        verify(reporter).doReportBug(
+        verify(reporter, times(1)).doReportBug(
                 bugDefinition()
                         .bugType("SCRIPT_ENGINE_INJECTION")
                         .inClass("ScriptEngineSample")
+                        .withPriority("Medium")
                         .build()
         );
     }

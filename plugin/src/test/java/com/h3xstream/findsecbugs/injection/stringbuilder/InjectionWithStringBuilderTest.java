@@ -26,6 +26,7 @@ import java.util.Arrays;
 
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class InjectionWithStringBuilderTest extends BaseDetectorTest {
@@ -44,27 +45,32 @@ public class InjectionWithStringBuilderTest extends BaseDetectorTest {
         //Assertions
         verify(reporter).doReportBug(bugDefinition()
                         .bugType("SQL_INJECTION_JPA").inClass("StringBuilderSuspicious")
-                        .inMethod("queryTaintedValueInConstructor").build()
+                        .inMethod("queryTaintedValueInConstructor").withPriority("Medium").build()
         );
         verify(reporter).doReportBug(bugDefinition()
                         .bugType("SQL_INJECTION_JPA").inClass("StringBuilderSuspicious")
-                        .inMethod("queryTaintedValueInAppendMethod1").build()
+                        .inMethod("queryTaintedValueInAppendMethod1").withPriority("Medium").build()
         );
         verify(reporter).doReportBug(bugDefinition()
                         .bugType("SQL_INJECTION_JPA").inClass("StringBuilderSuspicious")
-                        .inMethod("queryTaintedValueInAppendMethod2").build()
+                        .inMethod("queryTaintedValueInAppendMethod2").withPriority("Medium").build()
         );
         verify(reporter).doReportBug(bugDefinition()
                         .bugType("SQL_INJECTION_JPA").inClass("StringBuilderSuspicious")
-                        .inMethod("queryUnknownSource1").build()
+                        .inMethod("queryUnknownSource1").withPriority("Medium").build()
         );
         verify(reporter).doReportBug(bugDefinition()
                         .bugType("SQL_INJECTION_JPA").inClass("StringBuilderSuspicious")
-                        .inMethod("queryUnknownSource2").build()
+                        .inMethod("queryUnknownSource2").withPriority("Medium").build()
         );
         verify(reporter).doReportBug(bugDefinition()
                         .bugType("SQL_INJECTION_JPA").inClass("StringBuilderSuspicious")
-                        .inMethod("queryUnknownTransformation").build()
+                        .inMethod("queryUnknownTransformation").withPriority("Low").build()
+        );
+        
+        verify(reporter, times(5)).doReportBug(bugDefinition()
+                        .bugType("SQL_INJECTION_JPA").inClass("StringBuilderSuspicious")
+                        .withPriority("Medium").build()
         );
     }
 
@@ -83,9 +89,9 @@ public class InjectionWithStringBuilderTest extends BaseDetectorTest {
 
         //Assertions
         //Currently, the false positives are still rise but with Low priority. (To avoid hiding potential critical vulnerability.)
-        verify(reporter, never()).doReportBug(bugDefinition().bugType("SQL_INJECTION_JPA").withPriority("High").build());
-        verify(reporter,never()).doReportBug(bugDefinition().bugType("SQL_INJECTION_JDO").withPriority("High").build());
-        verify(reporter,never()).doReportBug(bugDefinition().bugType("SQL_INJECTION_HIBERNATE").withPriority("High").build());
+        verify(reporter, never()).doReportBug(bugDefinition().bugType("SQL_INJECTION_JPA").withPriority("Medium").build());
+        verify(reporter,never()).doReportBug(bugDefinition().bugType("SQL_INJECTION_JDO").withPriority("Medium").build());
+        verify(reporter,never()).doReportBug(bugDefinition().bugType("SQL_INJECTION_HIBERNATE").withPriority("Medium").build());
     }
 
 }

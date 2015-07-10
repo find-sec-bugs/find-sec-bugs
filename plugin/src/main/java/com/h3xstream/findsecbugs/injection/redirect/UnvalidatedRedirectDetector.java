@@ -17,21 +17,18 @@
  */
 package com.h3xstream.findsecbugs.injection.redirect;
 
-import com.h3xstream.findsecbugs.injection.InjectionDetector;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
+import com.h3xstream.findsecbugs.injection.TaintDetector;
 import edu.umd.cs.findbugs.BugReporter;
 
-public class UnvalidatedRedirectDetector extends InjectionDetector {
-
+public class UnvalidatedRedirectDetector extends TaintDetector {
 
     public UnvalidatedRedirectDetector(BugReporter bugReporter) {
         super(bugReporter);
     }
 
-
     @Override
     public InjectionSource[] getInjectionSource() {
         return new InjectionSource[]{new RedirectionSource()};
     }
-
 }

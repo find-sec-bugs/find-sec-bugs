@@ -15,20 +15,19 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.injection.script;
+package com.h3xstream.findsecbugs.taintanalysis;
 
-import com.h3xstream.findsecbugs.injection.InjectionSource;
-import com.h3xstream.findsecbugs.injection.TaintDetector;
-import edu.umd.cs.findbugs.BugReporter;
+import edu.umd.cs.findbugs.ba.CFG;
+import edu.umd.cs.findbugs.ba.Dataflow;
 
-public class ScriptInjectionDetector extends TaintDetector {
+/**
+ * Analysis object storing the result of taint analysis on a method
+ * 
+ * @author David Formanek
+ */
+public class TaintDataflow extends Dataflow<TaintFrame, TaintAnalysis> {
 
-    public ScriptInjectionDetector(BugReporter bugReporter) {
-        super(bugReporter);
-    }
-
-    @Override
-    public InjectionSource[] getInjectionSource() {
-        return new InjectionSource[] {new ScriptEngineSource(),new SpelSource()};
+    public TaintDataflow(CFG cfg, TaintAnalysis analysis) {
+        super(cfg, analysis);
     }
 }

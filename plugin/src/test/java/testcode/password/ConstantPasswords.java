@@ -127,7 +127,7 @@ public class ConstantPasswords {
     public void bad10() throws Exception {
         BigInteger bigInteger = new BigInteger("12345", 5);
         new DSAPrivateKeySpec(bigInteger, null, null, null);
-        new DSAPublicKeySpec(bigInteger, null, null, null);
+        new DSAPublicKeySpec(bigInteger, null, bigInteger, null); // report once
         new DHPrivateKeySpec(bigInteger, null, null);
         new DHPublicKeySpec(bigInteger, null, null);
         new ECPrivateKeySpec(bigInteger, null);
@@ -144,12 +144,37 @@ public class ConstantPasswords {
         new DSAPrivateKeySpec(big, null, null, null);
     }
 
-    public void bad12() {
-        byte[] key = "secret8".getBytes();
+    public void bad12() throws Exception {
+        byte[] key = "secret8".getBytes("UTF-8");
         BigInteger bigInteger = new BigInteger(key);
         new DSAPrivateKeySpec(bigInteger, null, null, null);
     }
 
+    public void bad13() throws Exception {
+        String pwd = null;
+        if (PWD2[3] < 'u') { // non-trivial condition
+            pwd = "hardcoded";
+        }
+        if (pwd != null) {
+            KeyStore.getInstance("JKS").load( // should be reported
+                    new FileInputStream("keystore"), pwd.toCharArray());
+        }
+    }
+    
+    public Connection bad14() throws Exception {
+        String pwd;
+        if (PWD2[2] % 2 == 1) { // non-trivial condition
+            pwd = "hardcoded1";
+        } else { // different constant but still hard coded
+            pwd = "hardcoded2";
+        }
+        return DriverManager.getConnection("url", "user", pwd);
+    }
+    
+    private byte[] pwd4; // not considered hard coded
+    private char[] pwd5 = null;
+    private char[] pwd6 = new char[7];
+    
     public void good1() throws Exception {
         KeyStore ks = KeyStore.getInstance("JKS");
         ks.load(new FileInputStream("keystore"), getPassword());
@@ -162,6 +187,16 @@ public class ConstantPasswords {
         ks.load(new FileInputStream("keystore"), pwdArray);
     }
 
+    public void good3() throws Exception {
+        String key = "hard coded";
+        key = new String(getPassword()); // no longer hard coded
+        String message = "can be hard coded";
+        byte[] byteStringToEncrypt = message.getBytes("UTF-8");
+        new SecretKeySpec(key.getBytes(), "AES"); // should not report
+        byte[] bytes = {0, 0, 7};
+        new PBEKeySpec(getPassword(), bytes, 1); // different parameter hard coded
+    }
+    
     private static char[] getPassword() {
         char[] password = new char[3];
         // some operations to simulate non-constant password

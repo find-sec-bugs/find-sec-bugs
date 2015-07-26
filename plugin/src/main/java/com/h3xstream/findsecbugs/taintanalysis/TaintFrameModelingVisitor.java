@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.apache.bcel.Constants;
+import org.apache.bcel.generic.AALOAD;
 import org.apache.bcel.generic.ACONST_NULL;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.FieldOrMethod;
@@ -143,6 +144,17 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         visitInvoke(obj);
     }
 
+    @Override
+    public void visitAALOAD(AALOAD obj) {
+        try {
+            Taint arrayTaint = getFrame().getStackValue(1);
+            Taint pushTaint = new Taint(arrayTaint.getState());
+            modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), pushTaint);
+        } catch (DataflowAnalysisException ex) {
+            throw new InvalidBytecodeException("Not enough values on the stack", ex);
+        }
+    }
+    
     private void visitInvoke(InvokeInstruction obj) {
         String methodNameWithSig = obj.getMethodName(cpg) + obj.getSignature(cpg);
         String fullMethodName = getSlashedClassName(obj) + "." + methodNameWithSig;

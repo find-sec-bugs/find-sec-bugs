@@ -41,7 +41,7 @@ public class CommandInjectionDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        List<Integer> lines = Arrays.asList(22, 24, 29, 33, 45, 73);
+        List<Integer> lines = Arrays.asList(22, 24, 29, 33, 45);
         
         //Assertions
         for (Integer line : lines) {
@@ -57,6 +57,14 @@ public class CommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("COMMAND_INJECTION")
+                            .inClass("CommandInjection").atLine(73)
+                            .withPriority("High")
+                            .build()
+            );
+        
+        verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("COMMAND_INJECTION")
                             .inClass("CommandInjection").atLine(57)
                             .withPriority("Low")
                             .build()
@@ -64,6 +72,8 @@ public class CommandInjectionDetectorTest extends BaseDetectorTest {
         
         verify(reporter, times(lines.size())).doReportBug(
                 bugDefinition().bugType("COMMAND_INJECTION").withPriority("Medium").build());
+        verify(reporter, times(1)).doReportBug(
+                bugDefinition().bugType("COMMAND_INJECTION").withPriority("High").build());
         verify(reporter, times(1)).doReportBug(
                 bugDefinition().bugType("COMMAND_INJECTION").withPriority("Low").build());
     }

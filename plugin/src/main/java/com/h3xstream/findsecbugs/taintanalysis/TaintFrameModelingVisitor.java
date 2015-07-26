@@ -28,7 +28,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import org.apache.bcel.Constants;
 import org.apache.bcel.generic.ACONST_NULL;
 import org.apache.bcel.generic.ConstantPoolGen;
@@ -52,12 +54,14 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     private static final String CONFIG_DIR = "taint-config";
     private static final String TRANSFER_METHODS_FILENAME = "transfer-methods.txt";
+    private static final String TAINT_SOURCES_FILENAME = "taint-sources.txt";
     
     private static final String TO_STRING_METHOD = "toString()Ljava/lang/String;";
     private static final Collection<Integer> EMPTY_PARAMS = Collections.emptyList();
     private static final Collection<Integer> PARAM_0;
     private final Map<String, Collection<Integer>> transferMethods
             = new HashMap<String, Collection<Integer>>();
+    private final Set<String> taintSources = new HashSet<String>();
     private final Map<String, Integer> transferMutables = new HashMap<String, Integer>();
     
     static {
@@ -71,6 +75,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         try {
             // separator is regex
             loadMaps(TRANSFER_METHODS_FILENAME, "\\|", "#");
+            loadSet(TAINT_SOURCES_FILENAME, taintSources);
         } catch (IOException ex) {
             throw new RuntimeException("cannot load resources", ex);
         }
@@ -141,13 +146,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     private void visitInvoke(InvokeInstruction obj) {
         String methodNameWithSig = obj.getMethodName(cpg) + obj.getSignature(cpg);
         String fullMethodName = getSlashedClassName(obj) + "." + methodNameWithSig;
-        Collection<Integer> transferParameters;
-        if (TO_STRING_METHOD.equals(methodNameWithSig)) {
-            transferParameters = PARAM_0;
-        } else {
-            transferParameters = transferMethods.getOrDefault(fullMethodName, EMPTY_PARAMS);
-        }
-        Taint taint = getMethodTaint(transferParameters);
+        Taint taint = getMethodTaint(methodNameWithSig, fullMethodName);
         transferTaintToMutables(fullMethodName, taint);
         modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taint);
         transferTaintToStackTop(fullMethodName, taint);
@@ -156,6 +155,19 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     private String getSlashedClassName(FieldOrMethod obj) {
         String className = obj.getReferenceType(cpg).toString();
         return ClassName.toSlashedClassName(className);
+    }
+    
+    private Taint getMethodTaint(String methodNameWithSig, String fullMethodName) {
+        if (taintSources.contains(fullMethodName)) {
+            return new Taint(Taint.State.TAINTED);
+        }
+        Collection<Integer> transferParameters;
+        if (TO_STRING_METHOD.equals(methodNameWithSig)) {
+            transferParameters = PARAM_0;
+        } else {
+            transferParameters = transferMethods.getOrDefault(fullMethodName, EMPTY_PARAMS);
+        }
+        return getMethodTaint(transferParameters);
     }
     
     private Taint getMethodTaint(Collection<Integer> transferParameters) {
@@ -253,6 +265,28 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         }
     }
 
+    private void loadSet(String filename, Set<String> set) throws IOException {
+        BufferedReader reader = null;
+        try {
+            reader = getReader(filename);
+            for (;;) {
+                String line = reader.readLine();
+                if (line == null) {
+                    break;
+                }
+                line = line.trim();
+                if (line.isEmpty()) {
+                    continue;
+                }
+                set.add(line);
+            }
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
+        }
+    }
+    
     private BufferedReader getReader(String filename) {
         String path = CONFIG_DIR + "/" + filename;
         return new BufferedReader(new InputStreamReader(

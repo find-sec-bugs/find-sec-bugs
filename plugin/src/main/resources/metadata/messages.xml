@@ -1607,7 +1607,7 @@ The code should be replaced with:<br/>
 
     <!-- Hard coded passwords and keys in various method calls -->
     <Detector class="com.h3xstream.findsecbugs.password.ConstantPasswordDetector">
-        <Details>Identify hardcoded password in KeyStore initialization</Details>
+        <Details>Identify hardcoded passwords and keys</Details>
     </Detector>
 
     <!-- Hard coded Google API key -->
@@ -1628,6 +1628,7 @@ The code should be replaced with:<br/>
 <p>
 Passwords should not be kept in the source code. The source code can be widely shared in an enterprise environment, and is
 certainly shared in open source. To be managed safely, passwords and secret keys should be stored in separate configuration files or keystores.
+(Hard coded keys are reported separately by <i>Hard Coded Key</i> pattern)
 </p>
 <p>
 <p><b>Vulnerable Code:</b><br/>
@@ -1640,13 +1641,41 @@ props.put(Context.SECURITY_CREDENTIALS, "p@ssw0rd");</pre>
 <br/>
 <p>
 <b>References</b><br/>
-<a href="http://cwe.mitre.org/data/definitions/321.html">CWE-321: Use of Hard-coded Cryptographic Key</a><br/>
 <a href="http://cwe.mitre.org/data/definitions/259.html">CWE-259: Use of Hard-coded Password</a>
 </p>
 ]]>
         </Details>
     </BugPattern>
     <BugCode abbrev="SECHCP">Hard Coded Password</BugCode>
+
+<BugPattern type="HARD_CODE_KEY">
+        <ShortDescription>Hard Coded Key</ShortDescription>
+        <LongDescription>Hard coded cryptographic key found</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Cryptographic keys should not be kept in the source code. The source code can be widely shared in an enterprise environment, and is
+certainly shared in open source. To be managed safely, passwords and secret keys should be stored in separate configuration files or keystores.
+(Hard coded passwords are reported separately by <i>Hard Coded Password</i> pattern)
+</p>
+<p>
+<p><b>Vulnerable Code:</b><br/>
+
+<pre>byte[] key = {1, 2, 3, 4, 5, 6, 7, 8};
+SecretKeySpec spec = new SecretKeySpec(key, "AES");
+Cipher aes = Cipher.getInstance("AES");
+aes.init(Cipher.ENCRYPT_MODE, spec);
+return aesCipher.doFinal(secretData);</pre> 
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="http://cwe.mitre.org/data/definitions/321.html">CWE-321: Use of Hard-coded Cryptographic Key</a><br/>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECHCK">Hard Coded Key</BugCode>
 
 
     <!-- Struts Form Validation -->

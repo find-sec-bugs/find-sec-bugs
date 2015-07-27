@@ -47,7 +47,7 @@
     <Detector class="com.h3xstream.findsecbugs.crypto.UnencryptedSocketDetector" reports="UNENCRYPTED_SOCKET"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.DesUsageDetector" reports="DES_USAGE"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.RsaNoPaddingDetector" reports="RSA_NO_PADDING"/>
-    <Detector class="com.h3xstream.findsecbugs.password.ConstantPasswordDetector" reports="HARD_CODE_PASSWORD"/>
+    <Detector class="com.h3xstream.findsecbugs.password.ConstantPasswordDetector" reports="HARD_CODE_PASSWORD,HARD_CODE_KEY"/>
     <Detector class="com.h3xstream.findsecbugs.password.GoogleApiKeyDetector" reports="HARD_CODE_PASSWORD"/>
     <Detector class="com.h3xstream.findsecbugs.password.JndiCredentialsDetector" reports="HARD_CODE_PASSWORD"/>
     <Detector class="com.h3xstream.findsecbugs.StrutsValidatorFormDetector" reports="STRUTS_FORM_VALIDATION"/>
@@ -109,7 +109,8 @@
     <BugPattern type="UNENCRYPTED_SOCKET" abbrev="SECUS" category="SECURITY"/>
     <BugPattern type="DES_USAGE" abbrev="SECDU" category="SECURITY"/>
     <BugPattern type="RSA_NO_PADDING" abbrev="SECRNP" category="SECURITY"/>
-    <BugPattern type="HARD_CODE_PASSWORD" abbrev="SECHCP" category="SECURITY"/>
+    <BugPattern type="HARD_CODE_PASSWORD" abbrev="SECHCP" category="SECURITY" cweid="259"/>
+    <BugPattern type="HARD_CODE_KEY" abbrev="SECHCK" category="SECURITY" cweid="321"/>
     <BugPattern type="STRUTS_FORM_VALIDATION" abbrev="SECSFV" category="SECURITY"/>
     <BugPattern type="XSS_REQUEST_WRAPPER" abbrev="SECXRW" category="SECURITY"/>
     <BugPattern type="RSA_KEY_SIZE" abbrev="SECRKS" category="SECURITY"/>

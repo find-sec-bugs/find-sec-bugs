@@ -1,12 +1,46 @@
 # Change Log
 
+## [version-1.4.1](https://github.com/h3xstream/find-sec-bugs/tree/version-1.4.1) (2015-05-30)
+
+[Full Changelog](https://github.com/h3xstream/find-sec-bugs/compare/version-1.4.0...version-1.4.1)
+
+**Implemented enhancements:**
+
+- Create a tutorial for IntelliJ IDE [\#51](https://github.com/h3xstream/find-sec-bugs/issues/51)
+
+- Detector hard coded Spring OAuth secret key [\#57](https://github.com/h3xstream/find-sec-bugs/issues/57)
+
+- Add CWE references to messages \(few missing\) [\#52](https://github.com/h3xstream/find-sec-bugs/issues/52)
+
+- Create a japanese page on the micro-website for the bug patterns [\#50](https://github.com/h3xstream/find-sec-bugs/issues/50)
+
+- NetBeans tutorial [\#45](https://github.com/h3xstream/find-sec-bugs/issues/45)
+
+- Update the documentation for Sonar Qube [\#44](https://github.com/h3xstream/find-sec-bugs/issues/44)
+
+**Fixed bugs:**
+
+- XXE - reader False Positive [\#47](https://github.com/h3xstream/find-sec-bugs/issues/47)
+
+- Fix URLs in messages.xml [\#43](https://github.com/h3xstream/find-sec-bugs/issues/43)
+
+- CustomInjectionSource.properties not found [\#42](https://github.com/h3xstream/find-sec-bugs/issues/42)
+
+**Merged pull requests:**
+
+- ECB and no integrity detection + tests [\#53](https://github.com/h3xstream/find-sec-bugs/pull/53) ([formanek](https://github.com/formanek))
+
+- Update messages\_ja.xml [\#49](https://github.com/h3xstream/find-sec-bugs/pull/49) ([naokikimura](https://github.com/naokikimura))
+
+- Detector for hard coded passwords and cryptographic keys [\#46](https://github.com/h3xstream/find-sec-bugs/pull/46) ([formanek](https://github.com/formanek))
+
 ## [version-1.4.0](https://github.com/h3xstream/find-sec-bugs/tree/version-1.4.0) (2015-04-03)
 
 [Full Changelog](https://github.com/h3xstream/find-sec-bugs/compare/version-1.3.1...version-1.4.0)
 
 **Implemented enhancements:**
 
-- Upgrade to findbugs 3.0.0 or higher. [\#37](https://github.com/h3xstream/find-sec-bugs/issues/37)
+- Support java 8 - upgrade to findbugs 3.0.0 or higher. [\#37](https://github.com/h3xstream/find-sec-bugs/issues/37)
 
 - New Android Security detectors [\#39](https://github.com/h3xstream/find-sec-bugs/issues/39)
 
@@ -40,8 +74,6 @@
 
 - Copy all files in metadata folder [\#30](https://github.com/h3xstream/find-sec-bugs/pull/30) ([jsotuyod](https://github.com/jsotuyod))
 
-- Externalize Injection sources [\#28](https://github.com/h3xstream/find-sec-bugs/pull/28) ([naokikimura](https://github.com/naokikimura))
-
 ## [version-1.3.0](https://github.com/h3xstream/find-sec-bugs/tree/version-1.3.0) (2015-01-02)
 
 [Full Changelog](https://github.com/h3xstream/find-sec-bugs/compare/version-1.2.1...version-1.3.0)
@@ -51,6 +83,8 @@
 - XXE - Separate guidelines \(XMLReader/SaxParser/DocumentParser\) [\#27](https://github.com/h3xstream/find-sec-bugs/issues/27)
 
 - XXE - Avoid false positive when secure features are set. [\#26](https://github.com/h3xstream/find-sec-bugs/issues/26)
+
+- Fix links in the descriptions [\#25](https://github.com/h3xstream/find-sec-bugs/issues/25)
 
 - JDO Query - Potential Injections [\#23](https://github.com/h3xstream/find-sec-bugs/issues/23)
 
@@ -82,3 +116,38 @@
 
 - Add scala.util.Random to PredictableRandomDetector [\#17](https://github.com/h3xstream/find-sec-bugs/pull/17) ([HairyFotr](https://github.com/HairyFotr))
 
+- Add test cases for native queries and parameterized queries. [\#16](https://github.com/h3xstream/find-sec-bugs/pull/16) ([domak](https://github.com/domak))
+
+## [version-1.2.0](https://github.com/h3xstream/find-sec-bugs/tree/version-1.2.0) (2013-10-30)
+
+[Full Changelog](https://github.com/h3xstream/find-sec-bugs/compare/version-1.1.0...version-1.2.0)
+
+**Fixed bugs:**
+
+- Findbugs Security Plugin [\#5](https://github.com/h3xstream/find-sec-bugs/issues/5)
+
+**Merged pull requests:**
+
+- Clarify the test scope of test dependencies. [\#13](https://github.com/h3xstream/find-sec-bugs/pull/13) ([dbaxa](https://github.com/dbaxa))
+
+## [version-1.1.0](https://github.com/h3xstream/find-sec-bugs/tree/version-1.1.0) (2013-07-11)
+
+[Full Changelog](https://github.com/h3xstream/find-sec-bugs/compare/version-1.0.0...version-1.1.0)
+
+**Fixed bugs:**
+
+- NullPointerException at BadHexadecimalConversionDetector.java:65 [\#3](https://github.com/h3xstream/find-sec-bugs/issues/3)
+
+**Merged pull requests:**
+
+- Various fixes for findbugs.xml, messages.xml and ECB detection [\#9](https://github.com/h3xstream/find-sec-bugs/pull/9) ([samuelreed](https://github.com/samuelreed))
+
+- Bug fix for BadHexadecimalConversionDetector [\#4](https://github.com/h3xstream/find-sec-bugs/pull/4) ([pcavezzan](https://github.com/pcavezzan))
+
+- Removed duplicate entry of bug pattern SERVLET\_HEADER. [\#1](https://github.com/h3xstream/find-sec-bugs/pull/1) ([uhafner](https://github.com/uhafner))
+
+## [version-1.0.0](https://github.com/h3xstream/find-sec-bugs/tree/version-1.0.0) (2012-10-20)
+
+
+
+\* *This Change Log was automatically generated by [github_changelog_generator](https://github.com/skywinder/Github-Changelog-Generator)*

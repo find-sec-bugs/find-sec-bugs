@@ -37,15 +37,26 @@ public class ConstantPasswordDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        List<Integer> lines = Arrays.asList(
-                44, 52, 57, 62, 67, 72, 80, 86, 87, 88, 89, 91, 92, 93, 94, 100,
-                101, 102, 104, 105, 106, 107, 108, 109, 110, 116, 121, 123, 129,
-                130, 131, 133, 134, 135, 136, 137, 138, 144, 150, 159, 171
+        List<Integer> linesPasswords = Arrays.asList(
+                44, 52, 57, 62, 67, 72, 80, 86, 87, 88, 89, 91, 92, 93, 94,
+                121, 123, 159, 171
         );
-        for (Integer line : lines) {
+        List<Integer> linesKeys = Arrays.asList(
+                100, 101, 102, 104, 105, 106, 107, 108, 109, 110, 116, 129,
+                130, 131, 133, 134, 135, 136, 137, 138, 144, 150
+        );
+        for (Integer line : linesPasswords) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("HARD_CODE_PASSWORD")
+                            .inClass("ConstantPasswords").atLine(line)
+                            .build()
+            );
+        }
+        for (Integer line : linesKeys) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("HARD_CODE_KEY")
                             .inClass("ConstantPasswords").atLine(line)
                             .build()
             );
@@ -58,7 +69,10 @@ public class ConstantPasswordDetectorTest extends BaseDetectorTest {
                         .build()
         );
         
-        verify(reporter, times(lines.size() + 2)).doReportBug(
+        // +1 for OAuth and +1 for hard coded public key field
+        verify(reporter, times(linesPasswords.size() + 1)).doReportBug(
                 bugDefinition().bugType("HARD_CODE_PASSWORD").build());
+        verify(reporter, times(linesKeys.size() + 1)).doReportBug(
+                bugDefinition().bugType("HARD_CODE_KEY").build());
     }
 }

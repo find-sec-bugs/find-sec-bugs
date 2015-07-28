@@ -39,12 +39,13 @@ import org.apache.bcel.classfile.Method;
 /**
  * General detector for hard coded passwords and cryptographic keys
  *
- * @author David Formanek
+ * @author David Formanek (Y Soft Corporation, a.s.)
  */
 @OpcodeStack.CustomUserValue
 public class ConstantPasswordDetector extends OpcodeStackDetector {
 
     private static final String HARD_CODE_PASSWORD_TYPE = "HARD_CODE_PASSWORD";
+    private static final String HARD_CODE_KEY_TYPE = "HARD_CODE_KEY";
     private final BugReporter bugReporter;
     private boolean staticInitializerSeen = false;
 
@@ -270,8 +271,16 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
     }
 
     private void reportBugSink(int priority, Collection<Integer> offsets) {
-        BugInstance bugInstance = new BugInstance(
-                this, HARD_CODE_PASSWORD_TYPE, priority)
+        String bugType = HARD_CODE_KEY_TYPE;
+        for (Integer paramIndex : offsets) {
+            OpcodeStack.Item stackItem = stack.getStackItem(paramIndex);
+            String signature = stackItem.getSignature();
+            if ("Ljava/lang/String;".equals(signature) || "[C".equals(signature)) {
+                bugType = HARD_CODE_PASSWORD_TYPE;
+                break;
+            }
+        }
+        BugInstance bugInstance = new BugInstance(this, bugType, priority)
                 .addClass(this).addMethod(this)
                 .addSourceLine(this).addCalledMethod(this);
         for (Integer paramIndex : offsets) {
@@ -291,8 +300,14 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
         if (fields.isEmpty()) {
             return;
         }
-        BugInstance bug = new BugInstance(
-                this, HARD_CODE_PASSWORD_TYPE, priority).addClass(this);
+        String bugType = HARD_CODE_KEY_TYPE;
+        for (String field : fields) {
+            if (field.endsWith("[C")) {
+                bugType = HARD_CODE_PASSWORD_TYPE;
+                break;
+            }
+        }
+        BugInstance bug = new BugInstance(this, bugType, priority).addClass(this);
         for (String field : fields) {
             bug.addString("is hard coded in field " + field + " with suspicious name");
         }

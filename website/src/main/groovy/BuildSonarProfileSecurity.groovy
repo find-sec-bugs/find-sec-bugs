@@ -44,11 +44,9 @@ majorBugs = [
         "XSS_REQUEST_WRAPPER",
         "UNVALIDATED_REDIRECT",
         "ANDROID_EXTERNAL_FILE_ACCESS",
-        "ANDROID_BROADCAST",
-        "ANDROID_WORLD_WRITABLE",
-        "ANDROID_WEB_VIEW_JAVASCRIPT",
-        "ANDROID_WEB_VIEW_JAVASCRIPT_INTERFACE"
+        "ANDROID_WORLD_WRITABLE"
 ]
+
 criticalBugs = [
         "COMMAND_INJECTION",
         "XXE_SAXPARSER",
@@ -66,6 +64,9 @@ criticalBugs = [
         "SPEL_INJECTION"
 ]
 
+
+exclusions = ['CUSTOM_INJECTION']
+
 def includePattern(String type) {
     return (type in criticalBugs || type in majorBugs || type in cryptoBugs);
 }
@@ -77,11 +78,13 @@ xml.FindBugsFilter {
 
         type = pat.attribute("type")
 
-        if(type in criticalBugs || type in majorBugs || type in cryptoBugs) {
+        if(type in criticalBugs || type in majorBugs || type in cryptoBugs)
+        //{
+        if(!(type in exclusions))
             Match {
                 Bug(pattern: pat.attribute("type"))
             }
-        }
+        //}
     }
 
 

@@ -664,6 +664,10 @@ contains no unauthorized path characters (e.g., / \), and refers to an authorize
 <p>
 <b>References</b><br/>
 <a href="http://blogs.securiteam.com/index.php/archives/1268">Securiteam: File upload security recommendations</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/22.html">CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')</a><br/>
+<a href="http://projects.webappsec.org/w/page/13246952/Path%20Traversal">WASC-33: Path Traversal</a><br/>
+<a href="https://www.owasp.org/index.php/Path_Traversal">OWASP: Path Traversal</a><br/>
+<a href="http://capec.mitre.org/data/definitions/126.html">CAPEC-126: Path Traversal</a><br/>
 <a href="http://cwe.mitre.org/data/definitions/22.html">CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')</a>
 </p>
 ]]>
@@ -1486,7 +1490,7 @@ byte[] cipherText = c.doFinal(plainText);</pre>
 </p>
 <br/>
 <p>
-<b>References</b><br/>
+<b>Reference</b><br/>
 <a href="http://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky Cryptographic Algorithm</a>
 </p>
 ]]>

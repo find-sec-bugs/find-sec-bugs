@@ -17,11 +17,11 @@
  */
 package com.h3xstream.findsecbugs.injection.custom;
 
-import com.h3xstream.findsecbugs.injection.InjectionDetector;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
+import com.h3xstream.findsecbugs.injection.TaintDetector;
 import edu.umd.cs.findbugs.BugReporter;
 
-public class CustomInjectionDetector extends InjectionDetector {
+public class CustomInjectionDetector extends TaintDetector {
 
     public CustomInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);

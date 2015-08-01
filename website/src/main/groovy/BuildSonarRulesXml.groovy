@@ -31,7 +31,9 @@ majorBugs = [
         "BAD_HEXA_CONVERSION",
         "HARD_CODE_PASSWORD",
         "XSS_REQUEST_WRAPPER",
-        "UNVALIDATED_REDIRECT"
+        "UNVALIDATED_REDIRECT",
+        "ANDROID_EXTERNAL_FILE_ACCESS",
+        "ANDROID_WORLD_WRITABLE"
 ]
 criticalBugs = [
         "COMMAND_INJECTION",
@@ -64,6 +66,10 @@ xml.rules {
 
     rootXml.BugPattern.each { pattern ->
 
+        if(pattern.attribute("type").equals('CUSTOM_INJECTION')) { //Custom injection is not export for Sonar analysis
+            return
+        }
+
         rule(key: pattern.attribute("type"),
                 priority: getSonarPriority(pattern.attribute("type"))) {
 
@@ -71,25 +77,52 @@ xml.rules {
             configKey(pattern.attribute("type"))
             description(pattern.Details.text())
 
-            //
-            if (pattern.Details.text().toLowerCase().contains('owasp') &&
-                    pattern.Details.text().toLowerCase().contains('top 10')) {
-                tag("owasp-top10")
+            //OWASP TOP 10 2013
+            if (pattern.Details.text().toLowerCase().contains('injection') || pattern.Details.text().contains('A1-Injection')) {
+                tag("owasp-a1")
+                tag("injection")
             }
+            if (pattern.Details.text().contains('A2-Broken_Authentication_and_Session_Management')) {
+                tag("owasp-a2")
+            }
+            if (pattern.Details.text().contains('A3-Cross-Site_Scripting')) {
+                tag("owasp-a3")
+            }
+            if (pattern.Details.text().contains('A4-Insecure_Direct_Object_References') || pattern.Details.text().contains('Path_Traversal')) {
+                tag("owasp-a4")
+            }
+            if (pattern.Details.text().contains('A5-Security_Misconfiguration')) {
+                tag("owasp-a5")
+            }
+            if (pattern.attribute('type').equals('HARD_CODE_PASSWORD') ||
+                    pattern.attribute("type") in cryptoBugs ||
+                    pattern.Details.text().contains('A6-Sensitive_Data_Exposure')) {
+                tag("owasp-a6")
+                tag("cryptography")
+            }
+            if (pattern.Details.text().contains('A7-Missing_Function_Level_Access_Control')) {
+                tag("owasp-a7")
+            }
+            if (pattern.Details.text().toLowerCase().contains('A8-Cross-Site_Request_Forgery')) {
+                tag("owasp-a8")
+            }
+            if (pattern.Details.text().toLowerCase().contains('A9-Using_Components_with_Known_Vulnerabilities')) {
+                tag("owasp-a9")
+            }
+            if (pattern.Details.text().toLowerCase().contains('A10-Unvalidated_Redirects_and_Forwards')) {
+                tag("owasp-a10")
+            }
+
+            //
+
             if (pattern.Details.text().toLowerCase().contains('wasc')) {
                 tag("wasc")
             }
             if (pattern.Details.text().toLowerCase().contains('cwe')) {
                 tag("cwe")
             }
-            if (pattern.ShortDescription.text().toLowerCase().contains('injection')) {
-                tag("injection")
-            }
             if (pattern.ShortDescription.text().toLowerCase().contains('android')) {
                 tag("android")
-            }
-            if (pattern.attribute("type") in cryptoBugs) {
-                tag("cryptography")
             }
             tag("security")
         }

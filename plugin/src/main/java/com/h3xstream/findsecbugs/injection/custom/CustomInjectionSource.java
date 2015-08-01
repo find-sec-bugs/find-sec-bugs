@@ -32,9 +32,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.h3xstream.findsecbugs.injection.InjectionDetector;
 import com.h3xstream.findsecbugs.injection.InjectionPoint;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
+import com.h3xstream.findsecbugs.injection.TaintDetector;
 import org.apache.bcel.Constants;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantUtf8;
@@ -58,11 +58,11 @@ public class CustomInjectionSource implements InjectionSource {
     private static final String SYSTEM_PROPERTY = "findsecbugs.injection.sources";
     private static final String CUSTOM_INJECTION_TYPE = "CUSTOM_INJECTION";
 
-    static String toResourceBaseName(Class<? extends InjectionDetector> that) {
+    static String toResourceBaseName(Class<? extends TaintDetector> that) {
         return that.getPackage().getName().replaceAll("\\.", "/");
     }
 
-    public static InjectionSource getInstance(Class<? extends InjectionDetector> that) {
+    public static InjectionSource getInstance(Class<? extends TaintDetector> that) {
         return getInstance(toResourceBaseName(that));
     }
 

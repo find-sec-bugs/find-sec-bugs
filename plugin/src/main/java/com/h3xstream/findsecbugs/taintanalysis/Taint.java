@@ -17,11 +17,16 @@
  */
 package com.h3xstream.findsecbugs.taintanalysis;
 
+import edu.umd.cs.findbugs.ba.Location;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Representation of taint dataflow facts (dataflow values) for each slot
  * in {@link TaintFrame}
  * 
- * @author David Formanek
+ * @author David Formanek (Y Soft Corporation, a.s.)
  */
 public class Taint {
 
@@ -60,6 +65,7 @@ public class Taint {
     private State state;
     private static final int INVALID_INDEX = -1;
     private int localVariableIndex = INVALID_INDEX;
+    private final Set<Location> taintLocations = new HashSet<Location>();
     
     public Taint(State state) {
         if (state == null) {
@@ -101,6 +107,14 @@ public class Taint {
         localVariableIndex = INVALID_INDEX;
     }
     
+    public void addTaintLocation(Location location) {
+        taintLocations.add(location);
+    }
+    
+    public Set<Location> getTaintedLocations() {
+        return Collections.unmodifiableSet(taintLocations);
+    }
+    
     public boolean isSafe() {
         return state.isSafe;
     }
@@ -116,6 +130,8 @@ public class Taint {
             && a.getLocalVariableIndex() == b.getLocalVariableIndex()) {
             result.setLocalVariableIndex(a.getLocalVariableIndex());
         }
+        result.taintLocations.addAll(a.getTaintedLocations());
+        result.taintLocations.addAll(b.getTaintedLocations());
         return result;
     }
 

@@ -17,7 +17,6 @@
  */
 package com.h3xstream.findsecbugs.injection;
 
-import com.h3xstream.findsecbugs.common.ByteCode;
 import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import com.h3xstream.findsecbugs.taintanalysis.TaintDataflow;
 import com.h3xstream.findsecbugs.taintanalysis.TaintFrame;
@@ -25,6 +24,7 @@ import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Detector;
 import edu.umd.cs.findbugs.Priorities;
+import edu.umd.cs.findbugs.SourceLineAnnotation;
 import edu.umd.cs.findbugs.ba.CFG;
 import edu.umd.cs.findbugs.ba.CFGBuilderException;
 import edu.umd.cs.findbugs.ba.ClassContext;
@@ -48,7 +48,7 @@ import org.apache.bcel.generic.MethodGen;
 /**
  * Detector designed for extension to detect injection vulnerabilities
  * 
- * @author David Formanek
+ * @author David Formanek (Y Soft Corporation, a.s.)
  */
 public abstract class TaintDetector implements Detector {
 
@@ -139,6 +139,10 @@ public abstract class TaintDetector implements Detector {
         bugInstance.addSourceLine(classContext, method, location);
         if(injectionPoint.getInjectableMethod()!= null) {
             bugInstance.addString(injectionPoint.getInjectableMethod());
+        }
+        for (Location taintLocation : taint.getTaintedLocations()) {
+            SourceLineAnnotation taintSource = SourceLineAnnotation.fromVisitedInstruction(classContext, method, taintLocation);
+            bugInstance.addSourceLine(taintSource);
         }
         bugReporter.reportBug(bugInstance);
     }

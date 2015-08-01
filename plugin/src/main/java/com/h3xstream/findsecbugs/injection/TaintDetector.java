@@ -35,6 +35,7 @@ import edu.umd.cs.findbugs.classfile.CheckedAnalysisException;
 import edu.umd.cs.findbugs.classfile.Global;
 import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.bcel.classfile.JavaClass;
@@ -124,6 +125,22 @@ public abstract class TaintDetector implements Detector {
 
     private void reportBug(InjectionPoint injectionPoint, ClassContext classContext,
             Method method, Location location, Taint taint) {
+        BugInstance bugInstance = getBugInstance(injectionPoint, taint);
+        JavaClass javaClass = classContext.getJavaClass();
+        bugInstance.addClass(javaClass).addMethod(javaClass, method);
+        bugInstance.addSourceLine(classContext, method, location);
+        if (injectionPoint.getInjectableMethod()!= null) {
+            bugInstance.addString(injectionPoint.getInjectableMethod());
+        }
+        if (taint.hasTaintedLocations()) {
+            addSourceLines(classContext, method, taint.getTaintedLocations(), bugInstance);
+        } else {
+            addSourceLines(classContext, method, taint.getPossibleTaintedLocations(), bugInstance);
+        }
+        bugReporter.reportBug(bugInstance);
+    }
+
+    private BugInstance getBugInstance(InjectionPoint injectionPoint, Taint taint) {
         int priority;
         if (taint.isTainted()) {
             priority = Priorities.HIGH_PRIORITY;
@@ -132,21 +149,18 @@ public abstract class TaintDetector implements Detector {
         } else {
             priority = Priorities.LOW_PRIORITY;
         }
-        String bugType = injectionPoint.getBugType();
-        BugInstance bugInstance = new BugInstance(this, bugType, priority);
-        JavaClass javaClass = classContext.getJavaClass();
-        bugInstance.addClass(javaClass).addMethod(javaClass, method);
-        bugInstance.addSourceLine(classContext, method, location);
-        if(injectionPoint.getInjectableMethod()!= null) {
-            bugInstance.addString(injectionPoint.getInjectableMethod());
-        }
-        for (Location taintLocation : taint.getTaintedLocations()) {
-            SourceLineAnnotation taintSource = SourceLineAnnotation.fromVisitedInstruction(classContext, method, taintLocation);
+        return new BugInstance(this, injectionPoint.getBugType(), priority);
+    }
+    
+    private void addSourceLines(ClassContext classContext, Method method,
+            Collection<Location> locations, BugInstance bugInstance) {
+        for (Location location : locations) {
+            SourceLineAnnotation taintSource = SourceLineAnnotation
+                    .fromVisitedInstruction(classContext, method, location);
             bugInstance.addSourceLine(taintSource);
         }
-        bugReporter.reportBug(bugInstance);
     }
-
+    
     private TaintDataflow getTaintDataFlow(JavaClass javaClass, Method method)
             throws CheckedAnalysisException {
         MethodDescriptor descriptor = BCELUtil.getMethodDescriptor(javaClass, method);

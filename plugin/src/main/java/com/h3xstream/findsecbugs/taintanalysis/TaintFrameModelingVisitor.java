@@ -197,6 +197,9 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         if (taint == null) {
             taint = getDefaultValue();
         }
+        if (taint.getState() == Taint.State.UNKNOWN) {
+            taint.addTaintLocation(getLocation(), false);
+        }
         return taint;
     }
     

@@ -66,6 +66,7 @@ public class Taint {
     private static final int INVALID_INDEX = -1;
     private int localVariableIndex = INVALID_INDEX;
     private final Set<Location> taintLocations = new HashSet<Location>();
+    private final Set<Location> possibleTaintLocations = new HashSet<Location>();
     
     public Taint(State state) {
         if (state == null) {
@@ -108,11 +109,27 @@ public class Taint {
     }
     
     public void addTaintLocation(Location location) {
-        taintLocations.add(location);
+        addTaintLocation(location, true);
+    }
+    
+    public void addTaintLocation(Location location, boolean isKnownTaintSource) {
+        if (isKnownTaintSource) {
+           taintLocations.add(location); 
+        } else {
+           possibleTaintLocations.add(location); 
+        }
     }
     
     public Set<Location> getTaintedLocations() {
         return Collections.unmodifiableSet(taintLocations);
+    }
+    
+    public boolean hasTaintedLocations() {
+        return !taintLocations.isEmpty();
+    }
+    
+    public Set<Location> getPossibleTaintedLocations() {
+        return Collections.unmodifiableSet(possibleTaintLocations);
     }
     
     public boolean isSafe() {
@@ -132,6 +149,8 @@ public class Taint {
         }
         result.taintLocations.addAll(a.getTaintedLocations());
         result.taintLocations.addAll(b.getTaintedLocations());
+        result.possibleTaintLocations.addAll(a.getPossibleTaintedLocations());
+        result.possibleTaintLocations.addAll(b.getPossibleTaintedLocations());
         return result;
     }
 

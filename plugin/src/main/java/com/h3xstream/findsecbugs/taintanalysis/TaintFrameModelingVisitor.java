@@ -49,7 +49,7 @@ import org.apache.bcel.generic.NEW;
 /**
  * Visitor to make instruction transfer of taint values easier
  *
- * @author David Formanek
+ * @author David Formanek (Y Soft Corporation, a.s.)
  */
 public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Taint, TaintFrame> {
 
@@ -171,7 +171,9 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     
     private Taint getMethodTaint(String methodNameWithSig, String fullMethodName) {
         if (taintSources.contains(fullMethodName)) {
-            return new Taint(Taint.State.TAINTED);
+            Taint taint = new Taint(Taint.State.TAINTED);
+            taint.addTaintLocation(getLocation());
+            return taint;
         }
         Collection<Integer> transferParameters;
         if (TO_STRING_METHOD.equals(methodNameWithSig)) {
@@ -194,6 +196,9 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         }
         if (taint == null) {
             taint = getDefaultValue();
+        }
+        if (taint.getState() == Taint.State.UNKNOWN) {
+            taint.addTaintLocation(getLocation(), false);
         }
         return taint;
     }

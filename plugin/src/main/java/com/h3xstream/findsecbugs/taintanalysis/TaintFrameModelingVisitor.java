@@ -21,16 +21,9 @@ import edu.umd.cs.findbugs.ba.AbstractFrameModelingVisitor;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
 import edu.umd.cs.findbugs.ba.InvalidBytecodeException;
 import edu.umd.cs.findbugs.util.ClassName;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.io.InputStream;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import org.apache.bcel.Constants;
 import org.apache.bcel.generic.AALOAD;
 import org.apache.bcel.generic.ACONST_NULL;
@@ -53,32 +46,26 @@ import org.apache.bcel.generic.NEW;
  */
 public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Taint, TaintFrame> {
 
-    private static final String CONFIG_DIR = "taint-config";
-    private static final String TRANSFER_METHODS_FILENAME = "transfer-methods.txt";
-    private static final String TAINT_SOURCES_FILENAME = "taint-sources.txt";
-    
+    private static final String METHODS_SUMMARIES_PATH = "taint-config/methods-summaries.txt";
     private static final String TO_STRING_METHOD = "toString()Ljava/lang/String;";
-    private static final Collection<Integer> EMPTY_PARAMS = Collections.emptyList();
-    private static final Collection<Integer> PARAM_0;
-    private final Map<String, Collection<Integer>> transferMethods
-            = new HashMap<String, Collection<Integer>>();
-    private final Set<String> taintSources = new HashSet<String>();
-    private final Map<String, Integer> transferMutables = new HashMap<String, Integer>();
-    
-    static {
-        Collection<Integer> param0 = new ArrayList<Integer>(1);
-        param0.add(0);
-        PARAM_0 = Collections.unmodifiableCollection(param0);
-    }
+    private final TaintMethodSummaryMap methodSummaries = new TaintMethodSummaryMap();
     
     public TaintFrameModelingVisitor(ConstantPoolGen cpg) {
         super(cpg);
+        InputStream stream = null;
         try {
-            // separator is regex
-            loadMaps(TRANSFER_METHODS_FILENAME, "\\|", "#");
-            loadSet(TAINT_SOURCES_FILENAME, taintSources);
+            stream = getClass().getClassLoader().getResourceAsStream(METHODS_SUMMARIES_PATH);
+            methodSummaries.load(stream);
         } catch (IOException ex) {
             throw new RuntimeException("cannot load resources", ex);
+        } finally {
+            if (stream != null) {
+                try {
+                    stream.close();
+                } catch (IOException ex) {
+                    throw new RuntimeException("cannot close stream", ex);
+                }
+            }
         }
     }
 
@@ -159,6 +146,9 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         String methodNameWithSig = obj.getMethodName(cpg) + obj.getSignature(cpg);
         String fullMethodName = getSlashedClassName(obj) + "." + methodNameWithSig;
         Taint taint = getMethodTaint(methodNameWithSig, fullMethodName);
+        if (taint.getState() == Taint.State.UNKNOWN) {
+            taint.addTaintLocation(getLocation(), false);
+        }
         transferTaintToMutables(fullMethodName, taint);
         modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taint);
         transferTaintToStackTop(fullMethodName, taint);
@@ -170,18 +160,25 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     }
     
     private Taint getMethodTaint(String methodNameWithSig, String fullMethodName) {
-        if (taintSources.contains(fullMethodName)) {
-            Taint taint = new Taint(Taint.State.TAINTED);
-            taint.addTaintLocation(getLocation());
+        TaintMethodSummary methodSummary = methodSummaries.get(fullMethodName);
+        if (methodSummary == null) {
+            if (TO_STRING_METHOD.equals(methodNameWithSig)) {
+                methodSummary = TaintMethodSummary.getDefaultToStringSummary();
+            } else {
+                return getDefaultValue();
+            }
+        }
+        if (methodSummary.hasConstantOutputTaint()) {
+            Taint taint = new Taint(methodSummary.getOutputTaint());
+            if (taint.getState() == Taint.State.TAINTED) {
+                taint.addTaintLocation(getLocation(), true);
+            }
             return taint;
         }
-        Collection<Integer> transferParameters;
-        if (TO_STRING_METHOD.equals(methodNameWithSig)) {
-            transferParameters = PARAM_0;
-        } else {
-            transferParameters = transferMethods.getOrDefault(fullMethodName, EMPTY_PARAMS);
+        if (methodSummary.hasTransferParameters()) {
+            return getMethodTaint(methodSummary.getTransferParameters());
         }
-        return getMethodTaint(transferParameters);
+        throw new IllegalStateException("invalid method summary");
     }
     
     private Taint getMethodTaint(Collection<Integer> transferParameters) {
@@ -197,31 +194,30 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         if (taint == null) {
             taint = getDefaultValue();
         }
-        if (taint.getState() == Taint.State.UNKNOWN) {
-            taint.addTaintLocation(getLocation(), false);
-        }
         return taint;
     }
     
     private void transferTaintToMutables(String fullMethodName, Taint taint) throws RuntimeException {
-        if (transferMutables.containsKey(fullMethodName)) {
-            int mutableStackPosition = transferMutables.get(fullMethodName);
-            try {
-                Taint stackValue = getFrame().getStackValue(mutableStackPosition);
-                if (stackValue.hasValidLocalVariableIndex()) {
-                    int index = stackValue.getLocalVariableIndex();
-                    getFrame().setValue(index, taint);
-                }
-                // else we are not able to transfer taint
-            } catch (DataflowAnalysisException ex) {
-                throw new RuntimeException("Bad mutable stack position specification", ex);
+        TaintMethodSummary methodSummary = methodSummaries.get(fullMethodName);
+        if (methodSummary == null || !methodSummary.hasMutableStackPosition()) {
+            return;
+        }
+        int mutableStackPosition = methodSummary.getMutableStackPosition();
+        try {
+            Taint stackValue = getFrame().getStackValue(mutableStackPosition);
+            if (stackValue.hasValidLocalVariableIndex()) {
+                int index = stackValue.getLocalVariableIndex();
+                getFrame().setValue(index, taint);
             }
+            // else we are not able to transfer taint
+        } catch (DataflowAnalysisException ex) {
+            throw new RuntimeException("Bad mutable stack position specification", ex);
         }
     }
 
     private void transferTaintToStackTop(String fullMethodName, Taint taint) {
         if (fullMethodName.contains("<init>")
-                && transferMethods.containsKey(fullMethodName)
+                && methodSummaries.get(fullMethodName) != null
                 && getFrame().getStackDepth() != 0) {
             try {
                 Taint popValue = getFrame().popValue();
@@ -234,80 +230,5 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     
     private void pushSafe() {
         getFrame().pushValue(new Taint(Taint.State.SAFE));
-    }
-    
-    private void loadMaps(String filename, String outerSeparator, String innerSparator)
-            throws IOException {
-        BufferedReader reader = null;
-        try {
-            reader = getReader(filename);
-            for (;;) {
-                String line = reader.readLine();
-                if (line == null) {
-                    break;
-                }
-                line = line.trim();
-                if (line.isEmpty()) {
-                    continue;
-                }
-                loadLineToMaps(line, outerSeparator, innerSparator);
-            }
-        } catch (NumberFormatException ex) {
-            throw new IOException("Stack positions must be numbers", ex);
-        } finally {
-            if (reader != null) {
-                reader.close();
-            }
-        }
-    }
-
-    private void loadLineToMaps(String line, String outerSeparator, String innerSparator)
-            throws IOException, NumberFormatException {
-        String[] outerTuple = line.split(outerSeparator);
-        Integer mutablePosition = null;
-        if (outerTuple.length > 2) {
-            throw new IOException("More mutables not supported");
-        } else if (outerTuple.length == 2) {
-            mutablePosition = Integer.parseInt(outerTuple[1]);
-        }
-        String[] innerTuple = outerTuple[0].split(innerSparator);
-        int count = innerTuple.length - 1;
-        Collection<Integer> parameters = new ArrayList<Integer>(count);
-        for (int i = 0; i < count; i++) {
-            parameters.add(Integer.parseInt(innerTuple[i + 1]));
-        }
-        transferMethods.put(innerTuple[0], parameters);
-        if (mutablePosition != null) {
-            transferMutables.put(innerTuple[0], mutablePosition);
-        }
-    }
-
-    private void loadSet(String filename, Set<String> set) throws IOException {
-        BufferedReader reader = null;
-        try {
-            reader = getReader(filename);
-            for (;;) {
-                String line = reader.readLine();
-                if (line == null) {
-                    break;
-                }
-                line = line.trim();
-                if (line.isEmpty()) {
-                    continue;
-                }
-                set.add(line);
-            }
-        } finally {
-            if (reader != null) {
-                reader.close();
-            }
-        }
-    }
-    
-    private BufferedReader getReader(String filename) {
-        String path = CONFIG_DIR + "/" + filename;
-        return new BufferedReader(new InputStreamReader(
-                getClass().getClassLoader().getResourceAsStream(path)
-        ));
     }
 }

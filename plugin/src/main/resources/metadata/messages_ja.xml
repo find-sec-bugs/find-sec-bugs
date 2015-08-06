@@ -1623,6 +1623,7 @@ byte[] cipherText = c.doFinal(plainText);</pre>
 <p>
 パスワードは、ソースコード内に保持すべきではありません。ソースコードは、企業環境では広く共有されることがあり、オープンソースでは確実に共有されています。
 安全に管理されるようにするには、パスワードや秘密鍵は別個の設定ファイルやキーストアに保存するべきです。
+(ハードコードされた鍵は別途<i>ハードコードされた鍵</i>パターンで報告されます)
 </p>
 <p>
 <p><b>脆弱なコード:</b><br/>
@@ -1635,13 +1636,41 @@ props.put(Context.SECURITY_CREDENTIALS, "p@ssw0rd");</pre>
 <br/>
 <p>
 <b>参考文献</b><br/>
-<a href="http://cwe.mitre.org/data/definitions/321.html">CWE-321: Use of Hard-coded Cryptographic Key</a><br/>
 <a href="http://cwe.mitre.org/data/definitions/259.html">CWE-259: Use of Hard-coded Password</a>
 </p>
 ]]>
         </Details>
     </BugPattern>
     <BugCode abbrev="SECHCP">ハードコードされたパスワード</BugCode>
+
+<BugPattern type="HARD_CODE_KEY">
+        <ShortDescription>ハードコードされた鍵</ShortDescription>
+        <LongDescription>ハードコードされた暗号化鍵を発見しました。</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+暗号化鍵は、ソースコード内に保持すべきではありません。ソースコードは、企業環境では広く共有されることがあり、オープンソースでは確実に共有されています。
+安全に管理されるようにするには、パスワードや秘密鍵は別個の設定ファイルやキーストアに保存するべきです。
+(ハードコードされたパスワードは別途<i>ハードコードされたパスワード</i>パターンで報告されます)
+</p>
+<p>
+<p><b>脆弱なコード:</b><br/>
+
+<pre>byte[] key = {1, 2, 3, 4, 5, 6, 7, 8};
+SecretKeySpec spec = new SecretKeySpec(key, "AES");
+Cipher aes = Cipher.getInstance("AES");
+aes.init(Cipher.ENCRYPT_MODE, spec);
+return aesCipher.doFinal(secretData);</pre> 
+</p>
+<br/>
+<p>
+<b>参考文献</b><br/>
+<a href="http://cwe.mitre.org/data/definitions/321.html">CWE-321: Use of Hard-coded Cryptographic Key</a><br/>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECHCK">ハードコードされた鍵</BugCode>
 
 
     <!-- Struts Form Validation -->

@@ -47,27 +47,12 @@ import org.apache.bcel.generic.NEW;
  */
 public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Taint, TaintFrame> {
 
-    private static final String METHODS_SUMMARIES_PATH = "taint-config/methods-summaries.txt";
     private static final String TO_STRING_METHOD = "toString()Ljava/lang/String;";
-    private final TaintMethodSummaryMap methodSummaries = new TaintMethodSummaryMap();
+    private final TaintMethodSummaryMap methodSummaries;
     
-    public TaintFrameModelingVisitor(ConstantPoolGen cpg) {
+    public TaintFrameModelingVisitor(ConstantPoolGen cpg, TaintMethodSummaryMap methodSummaries) {
         super(cpg);
-        InputStream stream = null;
-        try {
-            stream = getClass().getClassLoader().getResourceAsStream(METHODS_SUMMARIES_PATH);
-            methodSummaries.load(stream);
-        } catch (IOException ex) {
-            throw new RuntimeException("cannot load resources", ex);
-        } finally {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (IOException ex) {
-                    throw new RuntimeException("cannot close stream", ex);
-                }
-            }
-        }
+        this.methodSummaries = methodSummaries;
     }
 
     @Override

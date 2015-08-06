@@ -37,10 +37,10 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
     private final MethodGen methodGen;
     private final TaintFrameModelingVisitor visitor;
     
-    public TaintAnalysis(MethodGen methodGen, DepthFirstSearch dfs) {
+    public TaintAnalysis(MethodGen methodGen, DepthFirstSearch dfs, TaintMethodSummaryMap methodSummaries) {
         super(dfs);
         this.methodGen = methodGen;
-        this.visitor = new TaintFrameModelingVisitor(methodGen.getConstantPool());
+        this.visitor = new TaintFrameModelingVisitor(methodGen.getConstantPool(), methodSummaries);
     }
 
     @Override

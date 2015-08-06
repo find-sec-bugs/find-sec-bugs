@@ -30,8 +30,8 @@ public class TaintMethodSummary {
 
     private Collection<Integer> transferParameters = null;
     private Taint outputTaint = null;
-    private static final int NO_POSITION = -1;
-    private int mutableStackPosition = NO_POSITION;
+    private static final int INVALID_INDEX = -1;
+    private int mutableStackIndex = INVALID_INDEX;
     private static final TaintMethodSummary defaultToStringSummary = new TaintMethodSummary();
     
     static {
@@ -58,19 +58,19 @@ public class TaintMethodSummary {
         this.transferParameters = transferParameters;
     }
 
-    public int getMutableStackPosition() {
-        if (!hasMutableStackPosition()) {
-            throw new IllegalStateException("stack position not set");
+    public int getMutableStackIndex() {
+        if (!hasMutableStackIndex()) {
+            throw new IllegalStateException("stack index not set");
         }
-        return mutableStackPosition;
+        return mutableStackIndex;
     }
 
-    public boolean hasMutableStackPosition() {
-        return mutableStackPosition != NO_POSITION;
+    public boolean hasMutableStackIndex() {
+        return mutableStackIndex != INVALID_INDEX;
     }
     
-    public void setMutableStackPosition(int mutableStackPosition) {
-        this.mutableStackPosition = mutableStackPosition;
+    public void setMutableStackIndex(int mutableStackIndex) {
+        this.mutableStackIndex = mutableStackIndex;
     }
     
     public Taint getOutputTaint() {
@@ -104,9 +104,9 @@ public class TaintMethodSummary {
         } else {
             throw new IllegalStateException("output taint nor parameters not set");
         }
-        if (hasMutableStackPosition()) {
+        if (hasMutableStackIndex()) {
             sb.append("#");
-            sb.append(mutableStackPosition);
+            sb.append(mutableStackIndex);
         }
         return sb.toString();
     }
@@ -129,7 +129,7 @@ public class TaintMethodSummary {
         if (tuple.length == 2) {
             str = tuple[0];
             try {
-                summary.setMutableStackPosition(Integer.parseInt(tuple[1]));
+                summary.setMutableStackIndex(Integer.parseInt(tuple[1]));
             } catch (NumberFormatException ex) {
                 throw new IOException("Cannot parse mutable stack offset", ex);
             }

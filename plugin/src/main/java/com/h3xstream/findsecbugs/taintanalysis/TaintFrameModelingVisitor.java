@@ -25,7 +25,6 @@ import edu.umd.cs.findbugs.util.ClassName;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
-import java.util.Set;
 import org.apache.bcel.Constants;
 import org.apache.bcel.generic.AALOAD;
 import org.apache.bcel.generic.ACONST_NULL;
@@ -145,29 +144,33 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     }
     
     private void visitInvoke(InvokeInstruction obj) {
-        String methodNameWithSig = obj.getMethodName(cpg) + obj.getSignature(cpg);
-        String fullMethodName = getSlashedClassName(obj) + "." + methodNameWithSig;
-        Taint taint = getMethodTaint(methodNameWithSig, fullMethodName);
+        TaintMethodSummary methodSummary = getMethodSummary(obj);
+        Taint taint = getMethodTaint(methodSummary);
         if (taint.getState() == Taint.State.UNKNOWN) {
             taint.addTaintLocation(getLocation(), false);
         }
-        transferTaintToMutables(fullMethodName, taint);
+        transferTaintToMutables(methodSummary, taint);
         modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taint);
     }
 
+    private TaintMethodSummary getMethodSummary(InvokeInstruction obj) {
+        String methodNameWithSig = obj.getMethodName(cpg) + obj.getSignature(cpg);
+        String fullMethodName = getSlashedClassName(obj) + "." + methodNameWithSig;
+        TaintMethodSummary methodSummary = methodSummaries.get(fullMethodName);
+        if (methodSummary == null && TO_STRING_METHOD.equals(methodNameWithSig)) {
+            methodSummary = TaintMethodSummary.getDefaultToStringSummary();
+        }
+        return methodSummary;
+    }
+    
     private String getSlashedClassName(FieldOrMethod obj) {
         String className = obj.getReferenceType(cpg).toString();
         return ClassName.toSlashedClassName(className);
     }
     
-    private Taint getMethodTaint(String methodNameWithSig, String fullMethodName) {
-        TaintMethodSummary methodSummary = methodSummaries.get(fullMethodName);
+    private Taint getMethodTaint(TaintMethodSummary methodSummary) {
         if (methodSummary == null) {
-            if (TO_STRING_METHOD.equals(methodNameWithSig)) {
-                methodSummary = TaintMethodSummary.getDefaultToStringSummary();
-            } else {
-                return getDefaultValue();
-            }
+            return getDefaultValue();
         }
         if (methodSummary.hasConstantOutputTaint()) {
             Taint taint = new Taint(methodSummary.getOutputTaint());
@@ -177,13 +180,14 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             return taint;
         }
         if (methodSummary.hasTransferParameters()) {
-            return getMethodTaint(methodSummary.getTransferParameters());
+            return mergeTransferParameters(methodSummary.getTransferParameters());
         }
         throw new IllegalStateException("invalid method summary");
     }
     
-    private Taint getMethodTaint(Collection<Integer> transferParameters) {
+    private Taint mergeTransferParameters(Collection<Integer> transferParameters) {
         Taint taint = null;
+        assert !transferParameters.isEmpty();
         for (Integer transferParameter : transferParameters) {
             try {
                 Taint value = getFrame().getStackValue(transferParameter);
@@ -192,20 +196,17 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                 throw new RuntimeException("Bad transfer parameter specification", ex);
             }
         }
-        if (taint == null) {
-            taint = getDefaultValue();
-        }
+        assert taint != null;
         return taint;
     }
     
-    private void transferTaintToMutables(String fullMethodName, Taint taint) throws RuntimeException {
-        TaintMethodSummary methodSummary = methodSummaries.get(fullMethodName);
-        if (methodSummary == null || !methodSummary.hasMutableStackPosition()) {
+    private void transferTaintToMutables(TaintMethodSummary methodSummary, Taint taint) throws RuntimeException {
+        if (methodSummary == null || !methodSummary.hasMutableStackIndex()) {
             return;
         }
-        int mutableStackPosition = methodSummary.getMutableStackPosition();
+        int mutableStackIndex = methodSummary.getMutableStackIndex();
         try {
-            Taint stackValue = getFrame().getStackValue(mutableStackPosition);
+            Taint stackValue = getFrame().getStackValue(mutableStackIndex);
             // needed especially for constructors
             stackValue.setState(taint.getState());
             for (Location location : taint.getTaintedLocations()) {
@@ -220,7 +221,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             }
             // else we are not able to transfer taint to a local variable
         } catch (DataflowAnalysisException ex) {
-            throw new RuntimeException("Bad mutable stack position specification", ex);
+            throw new RuntimeException("Bad mutable stack index specification", ex);
         }
     }
 

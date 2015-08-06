@@ -20,10 +20,12 @@ package com.h3xstream.findsecbugs.taintanalysis;
 import edu.umd.cs.findbugs.ba.AbstractFrameModelingVisitor;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
 import edu.umd.cs.findbugs.ba.InvalidBytecodeException;
+import edu.umd.cs.findbugs.ba.Location;
 import edu.umd.cs.findbugs.util.ClassName;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.Set;
 import org.apache.bcel.Constants;
 import org.apache.bcel.generic.AALOAD;
 import org.apache.bcel.generic.ACONST_NULL;
@@ -151,7 +153,6 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         }
         transferTaintToMutables(fullMethodName, taint);
         modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taint);
-        transferTaintToStackTop(fullMethodName, taint);
     }
 
     private String getSlashedClassName(FieldOrMethod obj) {
@@ -205,29 +206,24 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         int mutableStackPosition = methodSummary.getMutableStackPosition();
         try {
             Taint stackValue = getFrame().getStackValue(mutableStackPosition);
+            // needed especially for constructors
+            stackValue.setState(taint.getState());
+            for (Location location : taint.getTaintedLocations()) {
+                stackValue.addTaintLocation(location, true);
+            }
+            for (Location location : taint.getPossibleTaintedLocations()) {
+                stackValue.addTaintLocation(location, false);
+            }
             if (stackValue.hasValidLocalVariableIndex()) {
                 int index = stackValue.getLocalVariableIndex();
                 getFrame().setValue(index, taint);
             }
-            // else we are not able to transfer taint
+            // else we are not able to transfer taint to a local variable
         } catch (DataflowAnalysisException ex) {
             throw new RuntimeException("Bad mutable stack position specification", ex);
         }
     }
 
-    private void transferTaintToStackTop(String fullMethodName, Taint taint) {
-        if (fullMethodName.contains("<init>")
-                && methodSummaries.get(fullMethodName) != null
-                && getFrame().getStackDepth() != 0) {
-            try {
-                Taint popValue = getFrame().popValue();
-                getFrame().pushValue(Taint.merge(popValue, taint));
-            } catch (DataflowAnalysisException ex) {
-                assert false; // stack depth is not zero
-            }
-        }
-    }
-    
     private void pushSafe() {
         getFrame().pushValue(new Taint(Taint.State.SAFE));
     }

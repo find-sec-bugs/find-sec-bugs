@@ -64,15 +64,28 @@ public class Taint {
     
     private State state;
     private static final int INVALID_INDEX = -1;
-    private int localVariableIndex = INVALID_INDEX;
-    private final Set<Location> taintLocations = new HashSet<Location>();
-    private final Set<Location> possibleTaintLocations = new HashSet<Location>();
+    private int localVariableIndex;
+    private final Set<Location> taintLocations;
+    private final Set<Location> possibleTaintLocations;
     
     public Taint(State state) {
         if (state == null) {
             throw new NullPointerException("state not set");
         }
         this.state = state;
+        this.localVariableIndex = INVALID_INDEX;
+        this.possibleTaintLocations = new HashSet<Location>();
+        this.taintLocations = new HashSet<Location>();
+    }
+    
+    public Taint(Taint taint) {
+        if (taint == null) {
+            throw new NullPointerException("taint is null");
+        }
+        this.state = taint.state;
+        this.localVariableIndex = taint.localVariableIndex;
+        this.taintLocations = new HashSet<Location>(taint.taintLocations);
+        this.possibleTaintLocations = new HashSet<Location>(taint.possibleTaintLocations);
     }
     
     public State getState() {
@@ -106,10 +119,6 @@ public class Taint {
     
     public void invalidateLocalVariableIndex() {
         localVariableIndex = INVALID_INDEX;
-    }
-    
-    public void addTaintLocation(Location location) {
-        addTaintLocation(location, true);
     }
     
     public void addTaintLocation(Location location, boolean isKnownTaintSource) {

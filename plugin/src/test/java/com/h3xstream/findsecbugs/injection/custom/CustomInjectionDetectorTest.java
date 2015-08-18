@@ -17,14 +17,10 @@
  */
 package com.h3xstream.findsecbugs.injection.custom;
 
-import ch.qos.logback.classic.Level;
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
-import com.sun.media.jfxmedia.logging.Logger;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeTest;
-
-import java.util.Arrays;
 
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;

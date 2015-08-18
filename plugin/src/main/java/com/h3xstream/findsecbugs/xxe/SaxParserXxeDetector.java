@@ -175,9 +175,9 @@ public class SaxParserXxeDetector extends OpcodeStackDetector {
             }
 
 
-            String simpleClassName = fullClassName.substring(fullClassName.lastIndexOf('/'));
-            //Raise a bug
+            String simpleClassName = fullClassName.substring(fullClassName.lastIndexOf('/')+1);
 
+            //Raise a bug
             if(fullClassName.equals("javax/xml/parsers/SAXParser")) {
                 bugReporter.reportBug(new BugInstance(this, XXE_SAX_PARSER_TYPE, Priorities.NORMAL_PRIORITY) //
                         .addClass(this).addMethod(this).addSourceLine(this)

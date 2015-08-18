@@ -17,8 +17,10 @@
  */
 package com.h3xstream.findsecbugs.injection.custom;
 
+import ch.qos.logback.classic.Level;
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
+import com.sun.media.jfxmedia.logging.Logger;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeTest;
 
@@ -37,6 +39,8 @@ public class CustomInjectionDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectInjection() throws Exception {
+        //Logger.setLevel(Level.DEBUG.levelInt);
+
         //Locate test code
         String[] files = {
                 getClassFilePath("testcode/sqli/CustomInjection")

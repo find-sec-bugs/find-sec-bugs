@@ -112,4 +112,24 @@ public class StaticIvDetectorTest extends BaseDetectorTest {
                 bugDefinition().bugType("STATIC_IV").inClass("StaticIvDecrypt").build()
         );
     }
+
+
+    @Test
+    public void avoidFalsePositiveGenerateWithKeyGenerator() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/crypto/iv/SafeApacheCamelCipherPair")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+        //Assertions
+
+        //Not bug should be report
+        verify(reporter,never()).doReportBug( //
+                bugDefinition().bugType("STATIC_IV").inClass("SafeApacheCamelCipherPair").build()
+        );
+    }
 }

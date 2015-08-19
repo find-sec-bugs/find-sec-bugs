@@ -85,16 +85,21 @@ public class StaticIvDetector implements Detector {
         boolean atLeastOneDecryptCipher = false;
         boolean atLeastOneEncryptCipher = false;
 
+        boolean ivFetchFromCipher = false;
+
         //First pass : it look for encryption and decryption mode to detect if the method does decryption only
         for (Iterator<Location> i = cfg.locationIterator(); i.hasNext(); ) {
             Location location = nextLocation(i, cpg);
             Instruction inst = location.getHandle().getInstruction();
 
+
+            ByteCode.printOpCode(inst,cpg);
+
+
             if (inst instanceof INVOKEVIRTUAL) {
                 INVOKEVIRTUAL invoke = (INVOKEVIRTUAL) inst;
 
-                //  [0023]  invokevirtual   javax/crypto/Cipher.init (ILjava/security/Key;Ljava/security/spec/AlgorithmParameterSpec;)V
-
+                //INVOKEVIRTUAL javax/crypto/Cipher.init ((ILjava/security/Key;)V)
                 if (("javax.crypto.Cipher").equals(invoke.getClassName(cpg)) &&
                         "init".equals(invoke.getMethodName(cpg))) {
 
@@ -112,15 +117,19 @@ public class StaticIvDetector implements Detector {
                         }
                     }
                 }
+
+                //INVOKEVIRTUAL javax/crypto/Cipher.getIV (()[B)
+                else if (("javax.crypto.Cipher").equals(invoke.getClassName(cpg)) &&
+                        "getIV".equals(invoke.getMethodName(cpg))) {
+                    ivFetchFromCipher = true;
+                }
             }
         }
 
-        //Second pass : It look for
+        //Second pass : It look for encryption method and a potential preceding SecureRandom usage
         for (Iterator<Location> i = cfg.locationIterator(); i.hasNext(); ) {
             Location location = nextLocation(i, cpg);
             Instruction inst = location.getHandle().getInstruction();
-
-            ByteCode.printOpCode(inst,cpg);
 
             if (inst instanceof INVOKEVIRTUAL) {
                 INVOKEVIRTUAL invoke = (INVOKEVIRTUAL) inst;
@@ -128,10 +137,12 @@ public class StaticIvDetector implements Detector {
                         "nextBytes".equals(invoke.getMethodName(cpg))) {
                     foundSafeIvGeneration = true;
                 }
-
             }
 
-            if ((!atLeastOneDecryptCipher || atLeastOneEncryptCipher) && !foundSafeIvGeneration && inst instanceof INVOKESPECIAL) { //MessageDigest.digest is called
+            else if (inst instanceof INVOKESPECIAL &&
+                    !ivFetchFromCipher //IV was generate with the KeyGenerator
+                    && (!atLeastOneDecryptCipher || atLeastOneEncryptCipher) //The cipher is in decrypt mode (no iv generation)
+                    && !foundSafeIvGeneration) {
                 INVOKESPECIAL invoke = (INVOKESPECIAL) inst;
                 if (("javax.crypto.spec.IvParameterSpec").equals(invoke.getClassName(cpg)) &&
                         "<init>".equals(invoke.getMethodName(cpg))) {

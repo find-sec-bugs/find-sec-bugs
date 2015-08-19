@@ -22,12 +22,11 @@ import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
 import edu.umd.cs.findbugs.ba.InvalidBytecodeException;
 import edu.umd.cs.findbugs.ba.Location;
 import edu.umd.cs.findbugs.util.ClassName;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collection;
 import org.apache.bcel.Constants;
 import org.apache.bcel.generic.AALOAD;
 import org.apache.bcel.generic.ACONST_NULL;
+import org.apache.bcel.generic.ARETURN;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.FieldOrMethod;
 import org.apache.bcel.generic.INVOKEINTERFACE;
@@ -49,10 +48,12 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     private static final String TO_STRING_METHOD = "toString()Ljava/lang/String;";
     private final TaintMethodSummaryMap methodSummaries;
+    private final TaintMethodSummary analyzedMethodSummary;
     
     public TaintFrameModelingVisitor(ConstantPoolGen cpg, TaintMethodSummaryMap methodSummaries) {
         super(cpg);
         this.methodSummaries = methodSummaries;
+        analyzedMethodSummary = new TaintMethodSummary();
     }
 
     @Override
@@ -212,5 +213,25 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     private void pushSafe() {
         getFrame().pushValue(new Taint(Taint.State.SAFE));
+    }
+    
+    @Override
+    public void visitARETURN(ARETURN obj) {
+        try {
+            Taint returnTaint = getFrame().getTopValue();
+            if (analyzedMethodSummary.hasConstantOutputTaint()) {
+                Taint currentTaint = analyzedMethodSummary.getOutputTaint();
+                analyzedMethodSummary.setOuputTaint(Taint.merge(returnTaint, currentTaint));
+            } else {
+                analyzedMethodSummary.setOuputTaint(returnTaint);
+            }
+        } catch (DataflowAnalysisException ex) {
+            throw new InvalidBytecodeException("empty stack before reference return");
+        }
+        handleNormalInstruction(obj);
+    }
+    
+    public TaintMethodSummary getAnalyzedMethodSummary() {
+        return analyzedMethodSummary;
     }
 }

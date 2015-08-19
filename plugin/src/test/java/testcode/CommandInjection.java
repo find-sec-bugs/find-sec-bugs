@@ -72,4 +72,27 @@ public class CommandInjection {
         }
         Runtime.getRuntime().exec(data);
     }
+    
+    public void badInterMethod() throws Exception {
+        Runtime.getRuntime().exec(taintSource());
+    }
+    
+    public void goodInterMethod() throws Exception {
+        Runtime.getRuntime().exec(safeSource());
+    }
+    
+    public String taintSource() throws Exception {
+        File file = new File("C:\\data.txt");
+        FileInputStream streamFileInput;
+        InputStreamReader readerInputStream;
+        BufferedReader readerBuffered;
+        streamFileInput = new FileInputStream(file);
+        readerInputStream = new InputStreamReader(streamFileInput, "UTF-8");
+        readerBuffered = new BufferedReader(readerInputStream);
+        return readerBuffered.readLine();
+    }
+    
+    public String safeSource() {
+        return "not " + "tainted";
+    }
 }

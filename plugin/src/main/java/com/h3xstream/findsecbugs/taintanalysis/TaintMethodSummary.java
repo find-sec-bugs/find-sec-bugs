@@ -88,6 +88,13 @@ public class TaintMethodSummary {
         this.outputTaint = outputTaint;
     }
 
+    public boolean isInformative() {
+        if (hasConstantOutputTaint()) {
+            return outputTaint.getState() != Taint.State.UNKNOWN;
+        }
+        return hasTransferParameters();
+    }
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

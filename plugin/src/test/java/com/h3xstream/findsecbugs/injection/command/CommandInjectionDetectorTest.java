@@ -41,10 +41,12 @@ public class CommandInjectionDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        List<Integer> lines = Arrays.asList(22, 24, 29, 33, 45);
+        List<Integer> linesMedium = Arrays.asList(22, 24, 29, 33, 45);
+        List<Integer> linesHigh = Arrays.asList(73, 77);
+        List<Integer> linesLow = Arrays.asList(57, 81);
         
         //Assertions
-        for (Integer line : lines) {
+        for (Integer line : linesMedium) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("COMMAND_INJECTION")
@@ -54,27 +56,31 @@ public class CommandInjectionDetectorTest extends BaseDetectorTest {
             );
         }
         
-        verify(reporter).doReportBug(
+        for (Integer line : linesHigh) {
+            verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("COMMAND_INJECTION")
-                            .inClass("CommandInjection").atLine(73)
+                            .inClass("CommandInjection").atLine(line)
                             .withPriority("High")
                             .build()
             );
+        }
         
-        verify(reporter).doReportBug(
+        for (Integer line : linesLow) {
+            verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("COMMAND_INJECTION")
-                            .inClass("CommandInjection").atLine(57)
+                            .inClass("CommandInjection").atLine(line)
                             .withPriority("Low")
                             .build()
             );
+        }
         
-        verify(reporter, times(lines.size())).doReportBug(
+        verify(reporter, times(linesMedium.size())).doReportBug(
                 bugDefinition().bugType("COMMAND_INJECTION").withPriority("Medium").build());
-        verify(reporter, times(1)).doReportBug(
+        verify(reporter, times(linesHigh.size())).doReportBug(
                 bugDefinition().bugType("COMMAND_INJECTION").withPriority("High").build());
-        verify(reporter, times(1)).doReportBug(
+        verify(reporter, times(linesLow.size())).doReportBug(
                 bugDefinition().bugType("COMMAND_INJECTION").withPriority("Low").build());
     }
 }

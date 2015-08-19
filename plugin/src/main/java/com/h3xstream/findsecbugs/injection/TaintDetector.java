@@ -69,11 +69,9 @@ public abstract class TaintDetector implements Detector {
             }
         }
         if (selectedSources.isEmpty()) {
-            return;
+            //return; // analysis still must be requested
         }
-        JavaClass javaClass = classContext.getJavaClass();
-        Method[] methodList = javaClass.getMethods();
-        for (Method method : methodList) {
+        for (Method method : classContext.getMethodsInCallOrder()) {
             MethodGen methodGen = classContext.getMethodGen(method);
             if (methodGen == null) {
                 continue;

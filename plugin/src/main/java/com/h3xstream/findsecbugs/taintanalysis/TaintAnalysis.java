@@ -36,6 +36,7 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
 
     private final MethodGen methodGen;
     private final TaintFrameModelingVisitor visitor;
+    private TaintMethodSummary analyzedMethodSummary;
     
     public TaintAnalysis(MethodGen methodGen, DepthFirstSearch dfs, TaintMethodSummaryMap methodSummaries) {
         super(dfs);
@@ -53,6 +54,7 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
             throws DataflowAnalysisException {
         visitor.setFrameAndLocation(fact, new Location(handle, block));
         visitor.analyzeInstruction(handle.getInstruction());
+        analyzedMethodSummary = visitor.getAnalyzedMethodSummary();
     }
 
     @Override
@@ -83,5 +85,9 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
             fact = copy;
         }
         mergeInto(fact, result);
+    }
+    
+    public TaintMethodSummary getAnalyzedMethodSummary() {
+        return analyzedMethodSummary;
     }
 }

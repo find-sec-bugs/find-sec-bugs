@@ -17,7 +17,6 @@
  */
 package com.h3xstream.findsecbugs.taintanalysis;
 
-import edu.umd.cs.findbugs.ba.Location;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -65,8 +64,8 @@ public class Taint {
     private State state;
     private static final int INVALID_INDEX = -1;
     private int localVariableIndex;
-    private final Set<Location> taintLocations;
-    private final Set<Location> possibleTaintLocations;
+    private final Set<TaintLocation> taintLocations;
+    private final Set<TaintLocation> possibleTaintLocations;
     
     public Taint(State state) {
         if (state == null) {
@@ -74,8 +73,8 @@ public class Taint {
         }
         this.state = state;
         this.localVariableIndex = INVALID_INDEX;
-        this.possibleTaintLocations = new HashSet<Location>();
-        this.taintLocations = new HashSet<Location>();
+        this.possibleTaintLocations = new HashSet<TaintLocation>();
+        this.taintLocations = new HashSet<TaintLocation>();
     }
     
     public Taint(Taint taint) {
@@ -84,8 +83,8 @@ public class Taint {
         }
         this.state = taint.state;
         this.localVariableIndex = taint.localVariableIndex;
-        this.taintLocations = new HashSet<Location>(taint.taintLocations);
-        this.possibleTaintLocations = new HashSet<Location>(taint.possibleTaintLocations);
+        this.taintLocations = new HashSet<TaintLocation>(taint.taintLocations);
+        this.possibleTaintLocations = new HashSet<TaintLocation>(taint.possibleTaintLocations);
     }
     
     public State getState() {
@@ -121,7 +120,7 @@ public class Taint {
         localVariableIndex = INVALID_INDEX;
     }
     
-    public void addTaintLocation(Location location, boolean isKnownTaintSource) {
+    public void addTaintLocation(TaintLocation location, boolean isKnownTaintSource) {
         if (isKnownTaintSource) {
            taintLocations.add(location); 
         } else {
@@ -129,7 +128,7 @@ public class Taint {
         }
     }
     
-    public Set<Location> getTaintedLocations() {
+    public Set<TaintLocation> getTaintedLocations() {
         return Collections.unmodifiableSet(taintLocations);
     }
     
@@ -137,7 +136,7 @@ public class Taint {
         return !taintLocations.isEmpty();
     }
     
-    public Set<Location> getPossibleTaintedLocations() {
+    public Set<TaintLocation> getPossibleTaintedLocations() {
         return Collections.unmodifiableSet(possibleTaintLocations);
     }
     
@@ -172,11 +171,7 @@ public class Taint {
         if (!(obj instanceof Taint)) {
             return false;
         }
-        final Taint other = (Taint) obj;
-        if (this.state != other.state) {
-            return false;
-        }
-        return true;
+        return this.state == ((Taint) obj).state;
     }
 
     @Override

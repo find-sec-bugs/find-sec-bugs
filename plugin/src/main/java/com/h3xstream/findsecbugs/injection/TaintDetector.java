@@ -20,6 +20,7 @@ package com.h3xstream.findsecbugs.injection;
 import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import com.h3xstream.findsecbugs.taintanalysis.TaintDataflow;
 import com.h3xstream.findsecbugs.taintanalysis.TaintFrame;
+import com.h3xstream.findsecbugs.taintanalysis.TaintLocation;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Detector;
@@ -131,9 +132,9 @@ public abstract class TaintDetector implements Detector {
             bugInstance.addString(injectionPoint.getInjectableMethod());
         }
         if (taint.hasTaintedLocations()) {
-            addSourceLines(classContext, method, taint.getTaintedLocations(), bugInstance);
+            addSourceLines(taint.getTaintedLocations(), bugInstance);
         } else {
-            addSourceLines(classContext, method, taint.getPossibleTaintedLocations(), bugInstance);
+            addSourceLines(taint.getPossibleTaintedLocations(), bugInstance);
         }
         bugReporter.reportBug(bugInstance);
     }
@@ -150,11 +151,10 @@ public abstract class TaintDetector implements Detector {
         return new BugInstance(this, injectionPoint.getBugType(), priority);
     }
     
-    private void addSourceLines(ClassContext classContext, Method method,
-            Collection<Location> locations, BugInstance bugInstance) {
-        for (Location location : locations) {
-            SourceLineAnnotation taintSource = SourceLineAnnotation
-                    .fromVisitedInstruction(classContext, method, location);
+    private void addSourceLines(Collection<TaintLocation> locations, BugInstance bugInstance) {
+        for (TaintLocation location : locations) {
+            SourceLineAnnotation taintSource = SourceLineAnnotation.fromVisitedInstruction(
+                    location.getMethodDescriptor(), location.getPosition());
             bugInstance.addSourceLine(taintSource);
         }
     }

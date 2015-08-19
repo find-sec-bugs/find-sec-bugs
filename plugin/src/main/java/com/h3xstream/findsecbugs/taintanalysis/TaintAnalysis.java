@@ -23,6 +23,7 @@ import edu.umd.cs.findbugs.ba.DepthFirstSearch;
 import edu.umd.cs.findbugs.ba.Edge;
 import edu.umd.cs.findbugs.ba.FrameDataflowAnalysis;
 import edu.umd.cs.findbugs.ba.Location;
+import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.MethodGen;
 
@@ -38,14 +39,17 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
     private final TaintFrameModelingVisitor visitor;
     private TaintMethodSummary analyzedMethodSummary;
     
-    public TaintAnalysis(MethodGen methodGen, DepthFirstSearch dfs, TaintMethodSummaryMap methodSummaries) {
+    public TaintAnalysis(MethodGen methodGen, DepthFirstSearch dfs,
+            MethodDescriptor descriptor, TaintMethodSummaryMap methodSummaries) {
         super(dfs);
         this.methodGen = methodGen;
-        this.visitor = new TaintFrameModelingVisitor(methodGen.getConstantPool(), methodSummaries);
+        this.visitor = new TaintFrameModelingVisitor(
+                methodGen.getConstantPool(), descriptor, methodSummaries);
     }
 
     @Override
-    protected void mergeValues(TaintFrame frame, TaintFrame result, int i) throws DataflowAnalysisException {
+    protected void mergeValues(TaintFrame frame, TaintFrame result, int i)
+            throws DataflowAnalysisException {
         result.setValue(i, Taint.merge(result.getValue(i), frame.getValue(i)));
     }
 

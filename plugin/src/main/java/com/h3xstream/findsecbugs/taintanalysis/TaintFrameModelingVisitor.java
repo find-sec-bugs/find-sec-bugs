@@ -20,7 +20,7 @@ package com.h3xstream.findsecbugs.taintanalysis;
 import edu.umd.cs.findbugs.ba.AbstractFrameModelingVisitor;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
 import edu.umd.cs.findbugs.ba.InvalidBytecodeException;
-import edu.umd.cs.findbugs.ba.Location;
+import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 import edu.umd.cs.findbugs.util.ClassName;
 import java.util.Collection;
 import org.apache.bcel.Constants;
@@ -47,11 +47,14 @@ import org.apache.bcel.generic.NEW;
 public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Taint, TaintFrame> {
 
     private static final String TO_STRING_METHOD = "toString()Ljava/lang/String;";
+    private final MethodDescriptor methodDescriptor;
     private final TaintMethodSummaryMap methodSummaries;
     private final TaintMethodSummary analyzedMethodSummary;
     
-    public TaintFrameModelingVisitor(ConstantPoolGen cpg, TaintMethodSummaryMap methodSummaries) {
+    public TaintFrameModelingVisitor(ConstantPoolGen cpg, MethodDescriptor methodDescriptor,
+            TaintMethodSummaryMap methodSummaries) {
         super(cpg);
+        this.methodDescriptor = methodDescriptor;
         this.methodSummaries = methodSummaries;
         analyzedMethodSummary = new TaintMethodSummary();
     }
@@ -133,7 +136,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         TaintMethodSummary methodSummary = getMethodSummary(obj);
         Taint taint = getMethodTaint(methodSummary);
         if (taint.getState() == Taint.State.UNKNOWN) {
-            taint.addTaintLocation(getLocation(), false);
+            taint.addTaintLocation(getTaintLocation(), false);
         }
         transferTaintToMutables(methodSummary, taint);
         modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taint);
@@ -161,7 +164,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         if (methodSummary.hasConstantOutputTaint()) {
             Taint taint = new Taint(methodSummary.getOutputTaint());
             if (taint.getState() == Taint.State.TAINTED) {
-                taint.addTaintLocation(getLocation(), true);
+                taint.addTaintLocation(getTaintLocation(), true);
             }
             return taint;
         }
@@ -195,10 +198,10 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             Taint stackValue = getFrame().getStackValue(mutableStackIndex);
             // needed especially for constructors
             stackValue.setState(taint.getState());
-            for (Location location : taint.getTaintedLocations()) {
+            for (TaintLocation location : taint.getTaintedLocations()) {
                 stackValue.addTaintLocation(location, true);
             }
-            for (Location location : taint.getPossibleTaintedLocations()) {
+            for (TaintLocation location : taint.getPossibleTaintedLocations()) {
                 stackValue.addTaintLocation(location, false);
             }
             if (stackValue.hasValidLocalVariableIndex()) {
@@ -213,6 +216,10 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     private void pushSafe() {
         getFrame().pushValue(new Taint(Taint.State.SAFE));
+    }
+    
+    private TaintLocation getTaintLocation() {
+        return new TaintLocation(methodDescriptor, getLocation().getHandle().getPosition());
     }
     
     @Override

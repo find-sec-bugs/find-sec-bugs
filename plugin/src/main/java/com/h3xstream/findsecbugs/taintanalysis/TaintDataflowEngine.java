@@ -62,7 +62,7 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
         CFG cfg = cache.getMethodAnalysis(CFG.class, descriptor);
         DepthFirstSearch dfs = cache.getMethodAnalysis(DepthFirstSearch.class, descriptor);
         MethodGen methodGen = cache.getMethodAnalysis(MethodGen.class, descriptor);
-        TaintAnalysis analysis = new TaintAnalysis(methodGen, dfs, methodSummaries);
+        TaintAnalysis analysis = new TaintAnalysis(methodGen, dfs, descriptor, methodSummaries);
         TaintDataflow flow = new TaintDataflow(cfg, analysis);
         flow.execute();
         TaintMethodSummary taintMethodSummary = analysis.getAnalyzedMethodSummary();

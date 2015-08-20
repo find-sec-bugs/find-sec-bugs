@@ -30,11 +30,11 @@ import java.util.Set;
 public class Taint {
 
     public enum State {
-        SAFE(true, false),
-        NULL(true, false),
+        TAINTED(false, true),
         UNKNOWN(false, false),
-        TAINTED(false, true);
-    
+        SAFE(true, false),
+        NULL(true, false);
+        
         private final boolean isSafe;
         private final boolean isTainted;
 
@@ -66,15 +66,18 @@ public class Taint {
     private int localVariableIndex;
     private final Set<TaintLocation> taintLocations;
     private final Set<TaintLocation> possibleTaintLocations;
+    private final Set<Integer> taintParameters;
+    private Taint nonParametricTaint = null;
     
     public Taint(State state) {
         if (state == null) {
             throw new NullPointerException("state not set");
         }
         this.state = state;
-        this.localVariableIndex = INVALID_INDEX;
-        this.possibleTaintLocations = new HashSet<TaintLocation>();
-        this.taintLocations = new HashSet<TaintLocation>();
+        localVariableIndex = INVALID_INDEX;
+        possibleTaintLocations = new HashSet<TaintLocation>();
+        taintLocations = new HashSet<TaintLocation>();
+        taintParameters = new HashSet<Integer>();
     }
     
     public Taint(Taint taint) {
@@ -82,9 +85,10 @@ public class Taint {
             throw new NullPointerException("taint is null");
         }
         this.state = taint.state;
-        this.localVariableIndex = taint.localVariableIndex;
-        this.taintLocations = new HashSet<TaintLocation>(taint.taintLocations);
-        this.possibleTaintLocations = new HashSet<TaintLocation>(taint.possibleTaintLocations);
+        localVariableIndex = taint.localVariableIndex;
+        taintLocations = new HashSet<TaintLocation>(taint.taintLocations);
+        possibleTaintLocations = new HashSet<TaintLocation>(taint.possibleTaintLocations);
+        taintParameters = new HashSet<Integer>(taint.getTaintParameters());
     }
     
     public State getState() {
@@ -149,7 +153,35 @@ public class Taint {
         return state.isTainted;
     }
     
+    public void addTaintParameter(int parameterIndex) {
+        if (parameterIndex < 0) {
+            throw new IllegalArgumentException("index cannot be negative");
+        }
+        taintParameters.add(parameterIndex);
+    }
+    
+    public boolean hasTaintParameters() {
+        return !taintParameters.isEmpty();
+    }
+    
+    public Set<Integer> getTaintParameters() {
+        return Collections.unmodifiableSet(taintParameters);
+    }
+    
+    public Taint getNonParametricTaint() {
+        return nonParametricTaint;
+    }
+    
     public static Taint merge(Taint a, Taint b) {
+        if (a == null) {
+            if (b == null) {
+                return null;
+            } else {
+                return new Taint(b);
+            }
+        } else if (b == null) {
+            return new Taint(a);
+        }
         Taint result = new Taint(State.merge(a.getState(), b.getState()));
         if (a.hasValidLocalVariableIndex() && b.hasValidLocalVariableIndex()
             && a.getLocalVariableIndex() == b.getLocalVariableIndex()) {
@@ -159,6 +191,19 @@ public class Taint {
         result.taintLocations.addAll(b.getTaintedLocations());
         result.possibleTaintLocations.addAll(a.getPossibleTaintedLocations());
         result.possibleTaintLocations.addAll(b.getPossibleTaintedLocations());
+        
+        if (a.hasTaintParameters()) {
+            result.taintParameters.addAll(a.getTaintParameters());
+            if (b.hasTaintParameters()) {
+                result.taintParameters.addAll(b.getTaintParameters());
+                result.nonParametricTaint = merge(a.nonParametricTaint, b.nonParametricTaint);
+            } else {
+                result.nonParametricTaint = merge(a.nonParametricTaint, b);
+            }
+        } else if (b.hasTaintParameters()) {
+            result.taintParameters.addAll(b.getTaintParameters());
+            result.nonParametricTaint = merge(a, b.nonParametricTaint);
+        }
         return result;
     }
 
@@ -176,13 +221,13 @@ public class Taint {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 47 * hash + (this.state != null ? this.state.hashCode() : 0);
-        return hash;
+        assert state != null;
+        return state.hashCode();
     }
     
     @Override
     public String toString() {
+        assert state != null;
         String str = state.name().substring(0, 1);
         if (hasValidLocalVariableIndex()) {
             str += localVariableIndex;

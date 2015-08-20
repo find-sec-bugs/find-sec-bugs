@@ -81,6 +81,36 @@ public class CommandInjection {
         Runtime.getRuntime().exec(safeSource());
     }
     
+    public void badWithTaintSink() throws Exception {
+        taintSink("safe", System.getenv("x"));
+    }
+    
+    private void taintSink(String param1, String param2) throws Exception {
+        Runtime.getRuntime().exec(param1 + " safe " + param2);
+    }
+    
+    public void badWithDoubleTaintSink() throws Exception {
+        taintSinkTransfer(System.getenv("y"));
+    }
+    
+    public void taintSinkTransfer(String str) throws Exception {
+        taintSink2(str.toLowerCase());
+    }
+    
+    public static void taintSink2(String param) throws Exception {
+        Runtime.getRuntime().exec(param);
+    }
+    
+    public void badCombo() throws Exception {
+        String str = taintSourceDouble().toUpperCase();
+        str = str.concat("aaa" + "bbb");
+        comboSink(new StringBuilder(str).substring(1));
+    }
+    
+    public void comboSink(String str) throws Exception {
+        Runtime.getRuntime().exec(str);
+    }
+    
     public String taintSource() throws Exception {
         File file = new File("C:\\data.txt");
         FileInputStream streamFileInput;
@@ -90,6 +120,10 @@ public class CommandInjection {
         readerInputStream = new InputStreamReader(streamFileInput, "UTF-8");
         readerBuffered = new BufferedReader(readerInputStream);
         return readerBuffered.readLine();
+    }
+    
+    public String taintSourceDouble() throws Exception {
+        return taintSource() + safeSource();
     }
     
     public String safeSource() {

@@ -20,9 +20,13 @@ package com.h3xstream.findsecbugs.taintanalysis;
 import edu.umd.cs.findbugs.ba.AbstractFrameModelingVisitor;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
 import edu.umd.cs.findbugs.ba.InvalidBytecodeException;
+import edu.umd.cs.findbugs.ba.generic.GenericSignatureParser;
 import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 import edu.umd.cs.findbugs.util.ClassName;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import org.apache.bcel.Constants;
 import org.apache.bcel.generic.AALOAD;
 import org.apache.bcel.generic.ACONST_NULL;
@@ -38,6 +42,7 @@ import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.LDC2_W;
 import org.apache.bcel.generic.LoadInstruction;
 import org.apache.bcel.generic.NEW;
+import org.apache.bcel.generic.StoreInstruction;
 
 /**
  * Visitor to make instruction transfer of taint values easier
@@ -48,17 +53,38 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     private static final String TO_STRING_METHOD = "toString()Ljava/lang/String;";
     private final MethodDescriptor methodDescriptor;
+    private final int parameterStackSize;
     private final TaintMethodSummaryMap methodSummaries;
     private final TaintMethodSummary analyzedMethodSummary;
+    private final Set<Integer> writtenIndeces;
     
     public TaintFrameModelingVisitor(ConstantPoolGen cpg, MethodDescriptor methodDescriptor,
             TaintMethodSummaryMap methodSummaries) {
         super(cpg);
         this.methodDescriptor = methodDescriptor;
         this.methodSummaries = methodSummaries;
+        parameterStackSize = getParameterStackSize(methodDescriptor);
         analyzedMethodSummary = new TaintMethodSummary();
+        writtenIndeces = new HashSet<Integer>();
     }
 
+    private int getParameterStackSize(MethodDescriptor methodDescriptor) {
+        // static methods does not have reference to this
+        int stackSize = methodDescriptor.isStatic() ? -1 : 0;
+        GenericSignatureParser parser = new GenericSignatureParser(methodDescriptor.getSignature());
+        Iterator<String> iterator = parser.parameterSignatureIterator();
+        while (iterator.hasNext()) {
+            String parameter = iterator.next();
+            if (parameter.equals("D") || parameter.equals("J")) {
+                // double and long types takes two slots
+                stackSize += 2;
+            } else {
+                stackSize++;
+            }
+        }
+        return stackSize;
+    }
+    
     @Override
     public Taint getDefaultValue() {
         return new Taint(Taint.State.UNKNOWN);
@@ -87,6 +113,24 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     }
     
     @Override
+    public void handleStoreInstruction(StoreInstruction obj) {
+        try {
+            int numConsumed = obj.consumeStack(cpg);
+            if (numConsumed == Constants.UNPREDICTABLE) {
+                throw new InvalidBytecodeException("Unpredictable stack consumption");
+            }
+            int index = obj.getIndex();
+            while (numConsumed-- > 0) {
+                Taint value = getFrame().popValue();
+                writtenIndeces.add(index);
+                getFrame().setValue(index++, value);
+            }
+        } catch (DataflowAnalysisException ex) {
+            throw new InvalidBytecodeException(ex.toString());
+        }
+    }
+    
+    @Override
     public void handleLoadInstruction(LoadInstruction obj) {
         int numProduced = obj.produceStack(cpg);
         if (numProduced == Constants.UNPREDICTABLE) {
@@ -97,6 +141,12 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             Taint value = getFrame().getValue(--index);
             // set local variable origin of a stack value
             value.setLocalVariableIndex(index);
+            if (!writtenIndeces.contains(index)) {
+                // it must be parameter if not written to local variable
+                int stackOffset = parameterStackSize - index;
+                assert stackOffset >= 0; // since there is unwritten index
+                value.addTaintParameter(stackOffset);
+            }
             getFrame().pushValue(value);
         }
     }

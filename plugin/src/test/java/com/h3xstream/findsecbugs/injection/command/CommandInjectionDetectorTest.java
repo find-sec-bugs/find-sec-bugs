@@ -42,7 +42,7 @@ public class CommandInjectionDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         List<Integer> linesMedium = Arrays.asList(22, 24, 29, 33, 45);
-        List<Integer> linesHigh = Arrays.asList(73, 77);
+        List<Integer> linesHigh = Arrays.asList(73, 77, 89, 101, 111);
         List<Integer> linesLow = Arrays.asList(57, 81);
         
         //Assertions

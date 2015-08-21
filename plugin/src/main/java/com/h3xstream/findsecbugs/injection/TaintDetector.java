@@ -39,9 +39,11 @@ import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 import edu.umd.cs.findbugs.util.ClassName;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -131,8 +133,11 @@ public abstract class TaintDetector implements Detector {
                     if (finalTaint.isTainted()) {
                         BugInstance bugInstance = sink.getBugInstance();
                         bugInstance.setPriority(Priorities.HIGH_PRIORITY);
+                        bugInstance.addSourceLine(classContext, method, handle);
                     } else if (finalTaint.hasTaintParameters()) {
-                        delayBugToReport(currentMethod, finalTaint, sink.getBugInstance());
+                        BugInstance bugInstance = sink.getBugInstance();
+                        bugInstance.addSourceLine(classContext, method, handle);
+                        delayBugToReport(currentMethod, finalTaint, bugInstance);
                     }
                 }
             }
@@ -196,10 +201,25 @@ public abstract class TaintDetector implements Detector {
     }
     
     private void addSourceLines(Collection<TaintLocation> locations, BugInstance bugInstance) {
+        List<SourceLineAnnotation> annotations = new LinkedList<SourceLineAnnotation>();
         for (TaintLocation location : locations) {
             SourceLineAnnotation taintSource = SourceLineAnnotation.fromVisitedInstruction(
                     location.getMethodDescriptor(), location.getPosition());
-            bugInstance.addSourceLine(taintSource);
+            annotations.add(taintSource);
+        }
+        Collections.sort(annotations);
+        SourceLineAnnotation annotation = null;
+        for (Iterator<SourceLineAnnotation> it = annotations.iterator(); it.hasNext();) {
+            SourceLineAnnotation prev = annotation;
+            annotation = it.next();
+            if (prev != null && prev.getClassName().equals(annotation.getClassName())
+                    && prev.getStartLine() == annotation.getStartLine()) {
+                // keep only one annotation per line
+                it.remove();
+            }
+        }
+        for (SourceLineAnnotation sourceLine : annotations) {
+            bugInstance.addSourceLine(sourceLine);
         }
     }
     

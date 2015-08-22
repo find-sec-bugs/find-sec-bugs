@@ -78,7 +78,7 @@ public class CommandInjection {
     }
     
     public void goodInterMethod() throws Exception {
-        Runtime.getRuntime().exec(safeSource());
+        Runtime.getRuntime().exec(safeSource(0));
     }
     
     public void badWithTaintSink() throws Exception {
@@ -133,11 +133,13 @@ public class CommandInjection {
     }
     
     public String taintSourceDouble() throws Exception {
-        return taintSource("safe, but result will be tainted") + safeSource();
+        return taintSource("safe, but result will be tainted") + safeSource(1);
     }
     
-    public String safeSource() {
-        return "not " + "tainted";
+    public String safeSource(long number) {
+        String safe = 3.14 + (number * 2) + "xx".toUpperCase() + null + Integer.toString(7);
+        safe.concat(new Double(10.0).toString() + Long.toHexString(number));
+        return new StringBuilder(safe).insert(1, 'c') + String.valueOf(true) + 0.1f;
     }
     
     public String combine(String x, String y) {

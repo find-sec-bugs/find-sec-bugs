@@ -1,4 +1,4 @@
-package testcode;
+package testcode.command;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -121,6 +121,11 @@ public class CommandInjection {
         Runtime.getRuntime().exec(combine("safe", safe));
     }
     
+    public void interClass() throws IOException {
+        Runtime.getRuntime().exec(MoreMethods.tainted());
+        Runtime.getRuntime().exec((new MoreMethods()).safe());
+    }
+    
     public String taintSource(String param) throws Exception {
         File file = new File("C:\\data.txt");
         FileInputStream streamFileInput;
@@ -146,5 +151,9 @@ public class CommandInjection {
         StringBuilder sb = new StringBuilder("safe");
         sb.append(x);
         return sb.toString() + y.concat("aaa");
+    }
+    
+    public void call() throws IOException {
+        MoreMethods.sink(System.getenv(""));
     }
 }

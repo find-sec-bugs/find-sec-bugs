@@ -18,7 +18,6 @@
 package com.h3xstream.findsecbugs.taintanalysis;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -28,36 +27,19 @@ import java.util.Collection;
  */
 public class TaintMethodSummary {
 
-    private Collection<Integer> transferParameters = null;
     private Taint outputTaint = null;
     private static final int INVALID_INDEX = -1;
     private int mutableStackIndex = INVALID_INDEX;
     private static final TaintMethodSummary defaultToStringSummary = new TaintMethodSummary();
     
     static {
-        ArrayList<Integer> params = new ArrayList<Integer>(1);
-        params.add(0);
-        defaultToStringSummary.setTransferParameters(params);
+        defaultToStringSummary.outputTaint = new Taint(Taint.State.UNKNOWN);
+        defaultToStringSummary.outputTaint.addTaintParameter(0);
     }
     
     public TaintMethodSummary() {
     }
     
-    public Collection<Integer> getTransferParameters() {
-        if (!hasTransferParameters()) {
-            throw new IllegalStateException("transfer parameters not set");
-        }
-        return transferParameters;
-    }
-
-    public boolean hasTransferParameters() {
-        return transferParameters != null && !transferParameters.isEmpty();
-    }
-    
-    public void setTransferParameters(Collection<Integer> transferParameters) {
-        this.transferParameters = transferParameters;
-    }
-
     public int getMutableStackIndex() {
         if (!hasMutableStackIndex()) {
             throw new IllegalStateException("stack index not set");
@@ -74,14 +56,7 @@ public class TaintMethodSummary {
     }
     
     public Taint getOutputTaint() {
-        if (!hasConstantOutputTaint()) {
-            throw new IllegalStateException("output taint is not set");
-        }
         return outputTaint;
-    }
-    
-    public boolean hasConstantOutputTaint() {
-        return outputTaint != null;
     }
     
     public void setOuputTaint(Taint outputTaint) {
@@ -89,18 +64,29 @@ public class TaintMethodSummary {
     }
 
     public boolean isInformative() {
-        if (hasConstantOutputTaint()) {
-            return outputTaint.getState() != Taint.State.UNKNOWN;
+        if (outputTaint == null) {
+            return false;
         }
-        return hasTransferParameters();
+        if (outputTaint.getState() != Taint.State.UNKNOWN) {
+            return true;
+        }
+        if (!outputTaint.hasTaintParameters()) {
+            return false;
+        }
+        // TODO consider non-parametric taint too
+        return outputTaint.getNonParametricTaint() == null;
     }
     
     @Override
     public String toString() {
+        if (outputTaint == null) {
+            return "";
+        }
         StringBuilder sb = new StringBuilder();
-        if (hasConstantOutputTaint()) {
+        if (outputTaint.getState() != Taint.State.UNKNOWN) {
             sb.append(outputTaint.getState().name());
-        } else if (hasTransferParameters()) {
+        } else if (outputTaint.hasTaintParameters()) {
+            Collection<Integer> transferParameters = outputTaint.getTaintParameters();
             int count = transferParameters.size();
             Integer[] array = transferParameters.toArray(new Integer[count]);
             sb.append(array[0]);
@@ -109,7 +95,7 @@ public class TaintMethodSummary {
                 sb.append(array[i]);
             }
         } else {
-            throw new IllegalStateException("output taint nor parameters not set");
+            sb.append(Taint.State.UNKNOWN.name());
         }
         if (hasMutableStackIndex()) {
             sb.append("#");
@@ -150,15 +136,15 @@ public class TaintMethodSummary {
         } else {
             tuple = str.split(",");
             int count = tuple.length;
-            Collection<Integer> parameters = new ArrayList<Integer>(count);
+            Taint taint = new Taint(Taint.State.UNKNOWN);
             for (int i = 0; i < count; i++) {
                 try {
-                    parameters.add(Integer.parseInt(tuple[i].trim()));
+                    taint.addTaintParameter(Integer.parseInt(tuple[i].trim()));
                 } catch (NumberFormatException ex) {
                     throw new IOException("Cannot parse parameter offset " + i, ex);
                 }
             }
-            summary.setTransferParameters(parameters);
+            summary.setOuputTaint(taint);
         }
         return summary;
     }

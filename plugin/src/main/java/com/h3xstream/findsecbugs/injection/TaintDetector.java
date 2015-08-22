@@ -135,6 +135,7 @@ public abstract class TaintDetector implements Detector {
                         bugInstance.setPriority(Priorities.HIGH_PRIORITY);
                         bugInstance.addSourceLine(classContext, method, handle);
                     } else if (finalTaint.hasTaintParameters()) {
+                        assert finalTaint.getState() == Taint.State.UNKNOWN;
                         BugInstance bugInstance = sink.getBugInstance();
                         bugInstance.addSourceLine(classContext, method, handle);
                         delayBugToReport(currentMethod, finalTaint, bugInstance);

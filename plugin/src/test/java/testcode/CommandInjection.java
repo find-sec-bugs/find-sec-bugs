@@ -74,7 +74,7 @@ public class CommandInjection {
     }
     
     public void badInterMethod() throws Exception {
-        Runtime.getRuntime().exec(taintSource());
+        Runtime.getRuntime().exec(taintSource(""));
     }
     
     public void goodInterMethod() throws Exception {
@@ -111,7 +111,17 @@ public class CommandInjection {
         Runtime.getRuntime().exec(str);
     }
     
-    public String taintSource() throws Exception {
+    public void badTransfer() throws IOException {
+        String tainted = System.getenv("zzz");
+        Runtime.getRuntime().exec(combine("safe", tainted));
+    }
+    
+    public void goodTransfer() throws IOException {
+        String safe = "zzz";
+        Runtime.getRuntime().exec(combine("safe", safe));
+    }
+    
+    public String taintSource(String param) throws Exception {
         File file = new File("C:\\data.txt");
         FileInputStream streamFileInput;
         InputStreamReader readerInputStream;
@@ -119,14 +129,20 @@ public class CommandInjection {
         streamFileInput = new FileInputStream(file);
         readerInputStream = new InputStreamReader(streamFileInput, "UTF-8");
         readerBuffered = new BufferedReader(readerInputStream);
-        return readerBuffered.readLine();
+        return param + readerBuffered.readLine();
     }
     
     public String taintSourceDouble() throws Exception {
-        return taintSource() + safeSource();
+        return taintSource("safe, but result will be tainted") + safeSource();
     }
     
     public String safeSource() {
         return "not " + "tainted";
+    }
+    
+    public String combine(String x, String y) {
+        StringBuilder sb = new StringBuilder("safe");
+        sb.append(x);
+        return sb.toString() + y.concat("aaa");
     }
 }

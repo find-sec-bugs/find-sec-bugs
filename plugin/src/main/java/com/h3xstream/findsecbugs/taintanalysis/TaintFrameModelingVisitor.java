@@ -175,7 +175,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     public void visitAALOAD(AALOAD obj) {
         try {
             Taint arrayTaint = getFrame().getStackValue(1);
-            Taint pushTaint = new Taint(arrayTaint.getState());
+            Taint pushTaint = new Taint(arrayTaint);
             modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), pushTaint);
         } catch (DataflowAnalysisException ex) {
             throw new InvalidBytecodeException("Not enough values on the stack", ex);
@@ -211,17 +211,17 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         if (methodSummary == null) {
             return getDefaultValue();
         }
-        if (methodSummary.hasConstantOutputTaint()) {
-            Taint taint = new Taint(methodSummary.getOutputTaint());
+        Taint taint = methodSummary.getOutputTaint();
+        if (taint.getState() == Taint.State.UNKNOWN && taint.hasTaintParameters()) {
+            return mergeTransferParameters(taint.getTaintParameters());
+        } else {
             if (taint.getState() == Taint.State.TAINTED) {
+                taint = new Taint(taint);
+                // we do not want to add locations to the method summary
                 taint.addTaintLocation(getTaintLocation(), true);
             }
             return taint;
         }
-        if (methodSummary.hasTransferParameters()) {
-            return mergeTransferParameters(methodSummary.getTransferParameters());
-        }
-        throw new IllegalStateException("invalid method summary");
     }
     
     private Taint mergeTransferParameters(Collection<Integer> transferParameters) {
@@ -230,7 +230,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         for (Integer transferParameter : transferParameters) {
             try {
                 Taint value = getFrame().getStackValue(transferParameter);
-                taint = (taint == null) ? value : Taint.merge(taint, value);
+                taint = Taint.merge(taint, value);
             } catch (DataflowAnalysisException ex) {
                 throw new RuntimeException("Bad transfer parameter specification", ex);
             }
@@ -248,6 +248,11 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             Taint stackValue = getFrame().getStackValue(mutableStackIndex);
             // needed especially for constructors
             stackValue.setState(taint.getState());
+            if (taint.hasTaintParameters()) {
+                for (Integer taintParameter : taint.getTaintParameters()) {
+                    stackValue.addTaintParameter(taintParameter);
+                }
+            }
             for (TaintLocation location : taint.getTaintedLocations()) {
                 stackValue.addTaintLocation(location, true);
             }
@@ -276,12 +281,8 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     public void visitARETURN(ARETURN obj) {
         try {
             Taint returnTaint = getFrame().getTopValue();
-            if (analyzedMethodSummary.hasConstantOutputTaint()) {
-                Taint currentTaint = analyzedMethodSummary.getOutputTaint();
-                analyzedMethodSummary.setOuputTaint(Taint.merge(returnTaint, currentTaint));
-            } else {
-                analyzedMethodSummary.setOuputTaint(returnTaint);
-            }
+            Taint currentTaint = analyzedMethodSummary.getOutputTaint();
+            analyzedMethodSummary.setOuputTaint(Taint.merge(returnTaint, currentTaint));
         } catch (DataflowAnalysisException ex) {
             throw new InvalidBytecodeException("empty stack before reference return");
         }

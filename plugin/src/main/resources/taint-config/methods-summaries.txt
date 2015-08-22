@@ -45,10 +45,10 @@ java/sql/ResultSet.getString(Ljava/lang/String;)Ljava/lang/String;:TAINTED
 
 
 
-java/lang/StringBuilder.<init>()V:0#0
-java/lang/StringBuilder.<init>(Ljava/lang/CharSequence;)V:0,1#1
-java/lang/StringBuilder.<init>(I)V:1#1
-java/lang/StringBuilder.<init>(Ljava/lang/String;)V:0,1#1
+java/lang/StringBuilder.<init>()V:SAFE
+java/lang/StringBuilder.<init>(Ljava/lang/CharSequence;)V:0#1
+java/lang/StringBuilder.<init>(I)V:SAFE
+java/lang/StringBuilder.<init>(Ljava/lang/String;)V:0#1
 
 java/lang/StringBuilder.append(Ljava/lang/String;)Ljava/lang/StringBuilder;:0,1#1
 java/lang/StringBuilder.append(Ljava/lang/StringBuffer;)Ljava/lang/StringBuilder;:0,1#1
@@ -71,10 +71,10 @@ java/lang/StringBuilder.subSequence(II)Ljava/lang/CharSequence;:2
 java/lang/StringBuilder.trimToSize()V:0#0
 
 
-java/lang/StringBuffer.<init>()V:0#0
-java/lang/StringBuffer.<init>(Ljava/lang/CharSequence;)V:0,1#1
-java/lang/StringBuffer.<init>(I)V:1#1
-java/lang/StringBuffer.<init>(Ljava/lang/String;)V:0,1#1
+java/lang/StringBuffer.<init>()V:SAFE
+java/lang/StringBuffer.<init>(Ljava/lang/CharSequence;)V:0#1
+java/lang/StringBuffer.<init>(I)V:SAFE
+java/lang/StringBuffer.<init>(Ljava/lang/String;)V:0#1
 
 java/lang/StringBuffer.append(Ljava/lang/String;)Ljava/lang/StringBuffer;:0,1#1
 java/lang/StringBuffer.append(Ljava/lang/StringBuffer;)Ljava/lang/StringBuffer;:0,1#1
@@ -97,9 +97,9 @@ java/lang/StringBuffer.subSequence(II)Ljava/lang/CharSequence;:2
 java/lang/StringBuffer.trimToSize()V:0#0
 
 
-java/lang/String.<init>(Ljava/lang/String;)V:0#0
-java/lang/String.<init>(Ljava/lang/StringBuilder;)V:0#0
-java/lang/String.<init>(Ljava/lang/StringBuffer;)V:0#0
+java/lang/String.<init>(Ljava/lang/String;)V:0#1
+java/lang/String.<init>(Ljava/lang/StringBuilder;)V:0#1
+java/lang/String.<init>(Ljava/lang/StringBuffer;)V:0#1
 
 java/lang/String.concat(Ljava/lang/String;)Ljava/lang/String;:0,1
 java/lang/String.intern()Ljava/lang/String;:0
@@ -122,8 +122,8 @@ java/lang/String.valueof(Ljava/lang/object)Ljava/lang/String;:0,1
 java/lang/CharSequence.subSequence(II)Ljava/lang/CharSequence;:2
 
 
-java/util/StringTokenizer.<init>(Ljava/lang/String;)V:0#0
-java/util/StringTokenizer.<init>(Ljava/lang/String;Ljava/lang/String;)V:1#1
-java/util/StringTokenizer.<init>(Ljava/lang/String;Ljava/lang/String;B)V:2#2
-java/util/StringTokenizer.nextToken()Ljava/lang/String;:0#0
-java/util/StringTokenizer.nextToken(Ljava/lang/String;)Ljava/lang/String;:1#1
+java/util/StringTokenizer.<init>(Ljava/lang/String;)V:0#1
+java/util/StringTokenizer.<init>(Ljava/lang/String;Ljava/lang/String;)V:1#2
+java/util/StringTokenizer.<init>(Ljava/lang/String;Ljava/lang/String;B)V:2#3
+java/util/StringTokenizer.nextToken()Ljava/lang/String;:0
+java/util/StringTokenizer.nextToken(Ljava/lang/String;)Ljava/lang/String;:1

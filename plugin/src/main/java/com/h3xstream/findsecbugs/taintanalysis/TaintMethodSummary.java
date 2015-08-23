@@ -30,11 +30,15 @@ public class TaintMethodSummary {
     private Taint outputTaint = null;
     private static final int INVALID_INDEX = -1;
     private int mutableStackIndex = INVALID_INDEX;
-    private static final TaintMethodSummary defaultToStringSummary = new TaintMethodSummary();
+    public static final TaintMethodSummary DEFAULT_TOSTRING_SUMMARY;
+    public static final TaintMethodSummary SAFE_SUMMARY;
     
     static {
-        defaultToStringSummary.outputTaint = new Taint(Taint.State.UNKNOWN);
-        defaultToStringSummary.outputTaint.addTaintParameter(0);
+        DEFAULT_TOSTRING_SUMMARY = new TaintMethodSummary();
+        DEFAULT_TOSTRING_SUMMARY.outputTaint = new Taint(Taint.State.UNKNOWN);
+        DEFAULT_TOSTRING_SUMMARY.outputTaint.addTaintParameter(0);
+        SAFE_SUMMARY = new TaintMethodSummary();
+        SAFE_SUMMARY.outputTaint = new Taint(Taint.State.SAFE);
     }
     
     public TaintMethodSummary() {
@@ -64,6 +68,10 @@ public class TaintMethodSummary {
     }
 
     public boolean isInformative() {
+        if (this == DEFAULT_TOSTRING_SUMMARY || this == SAFE_SUMMARY) {
+            // these are loaded automatically, do not need to store them
+            return false;
+        }
         if (outputTaint == null) {
             return false;
         }
@@ -100,10 +108,6 @@ public class TaintMethodSummary {
             sb.append(mutableStackIndex);
         }
         return sb.toString();
-    }
-    
-    public static TaintMethodSummary getDefaultToStringSummary() {
-        return defaultToStringSummary;
     }
     
     /**

@@ -52,11 +52,26 @@ import org.apache.bcel.generic.StoreInstruction;
 public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Taint, TaintFrame> {
 
     private static final String TO_STRING_METHOD = "toString()Ljava/lang/String;";
+    private static final Set<String> SAFE_OBJECT_TYPES;
     private final MethodDescriptor methodDescriptor;
     private final int parameterStackSize;
     private final TaintMethodSummaryMap methodSummaries;
     private final TaintMethodSummary analyzedMethodSummary;
     private final Set<Integer> writtenIndeces;
+    
+    static {
+        // these data types cannot have taint state other than SAFE or NULL
+        SAFE_OBJECT_TYPES = new HashSet<String>(9);
+        SAFE_OBJECT_TYPES.add("Ljava/lang/Boolean;");
+        SAFE_OBJECT_TYPES.add("Ljava/lang/Character;");
+        SAFE_OBJECT_TYPES.add("Ljava/lang/Double;");
+        SAFE_OBJECT_TYPES.add("Ljava/lang/Float;");
+        SAFE_OBJECT_TYPES.add("Ljava/lang/Integer;");
+        SAFE_OBJECT_TYPES.add("Ljava/lang/Long;");
+        SAFE_OBJECT_TYPES.add("Ljava/lang/Byte;");
+        SAFE_OBJECT_TYPES.add("Ljava/lang/Short;");
+        SAFE_OBJECT_TYPES.add("Ljava/lang/BigDecimal;");
+    }
     
     public TaintFrameModelingVisitor(ConstantPoolGen cpg, MethodDescriptor methodDescriptor,
             TaintMethodSummaryMap methodSummaries) {
@@ -193,13 +208,22 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     }
 
     private TaintMethodSummary getMethodSummary(InvokeInstruction obj) {
-        String methodNameWithSig = obj.getMethodName(cpg) + obj.getSignature(cpg);
+        String signature = obj.getSignature(cpg);
+        String returnType = getReturnType(signature);
+        if (SAFE_OBJECT_TYPES.contains(returnType)) {
+            return TaintMethodSummary.SAFE_SUMMARY;
+        }
+        String methodNameWithSig = obj.getMethodName(cpg) + signature;
         String fullMethodName = getSlashedClassName(obj) + "." + methodNameWithSig;
         TaintMethodSummary methodSummary = methodSummaries.get(fullMethodName);
         if (methodSummary == null && TO_STRING_METHOD.equals(methodNameWithSig)) {
-            methodSummary = TaintMethodSummary.getDefaultToStringSummary();
+            return TaintMethodSummary.DEFAULT_TOSTRING_SUMMARY;
         }
         return methodSummary;
+    }
+    
+    private static String getReturnType(String signature) {
+        return signature.substring(signature.indexOf(')') + 1);
     }
     
     private String getSlashedClassName(FieldOrMethod obj) {
@@ -290,6 +314,12 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     }
     
     public TaintMethodSummary getAnalyzedMethodSummary() {
+        assert analyzedMethodSummary != null;
+        if (SAFE_OBJECT_TYPES.contains(getReturnType(methodDescriptor.getSignature()))
+                && (analyzedMethodSummary.getOutputTaint() == null
+                || analyzedMethodSummary.getOutputTaint().getState() != Taint.State.NULL)) {
+            return TaintMethodSummary.SAFE_SUMMARY;
+        }
         return analyzedMethodSummary;
     }
 }

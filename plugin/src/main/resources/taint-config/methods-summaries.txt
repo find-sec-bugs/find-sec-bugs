@@ -189,3 +189,6 @@ java/lang/Byte.toString()Ljava/lang/String;:SAFE
 java/lang/Byte.toString(B)Ljava/lang/String;:SAFE
 java/lang/Short.toString()Ljava/lang/String;:SAFE
 java/lang/Short.toString(S)Ljava/lang/String;:SAFE
+java/lang/BigDecimal.toEngineeringString()Ljava/lang/String;:SAFE
+java/lang/BigDecimal.toPlainString()Ljava/lang/String;:SAFE
+java/lang/BigDecimal.toString()Ljava/lang/String;:SAFE

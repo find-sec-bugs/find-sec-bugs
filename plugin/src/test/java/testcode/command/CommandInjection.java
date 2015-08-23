@@ -144,7 +144,9 @@ public class CommandInjection {
     public String safeSource(long number) {
         String safe = 3.14 + (number * 2) + "xx".toUpperCase() + null + Integer.toString(7);
         safe.concat(new Double(10.0).toString() + Long.toHexString(number));
-        return new StringBuilder(safe).insert(1, 'c') + String.valueOf(true) + 0.1f;
+        StringBuilder sb = new StringBuilder(safe).insert(1, 'c');
+        sb.append(new Integer(0)).append(Double.valueOf("1.0")); // object taint transfer
+        return sb + String.valueOf(true) + 0.1f;
     }
     
     public String combine(String x, String y) {

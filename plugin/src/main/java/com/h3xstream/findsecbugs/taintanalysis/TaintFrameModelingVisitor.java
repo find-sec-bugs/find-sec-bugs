@@ -68,7 +68,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         writtenIndeces = new HashSet<Integer>();
     }
 
-    private int getParameterStackSize(MethodDescriptor methodDescriptor) {
+    private static int getParameterStackSize(MethodDescriptor methodDescriptor) {
         // static methods does not have reference to this
         int stackSize = methodDescriptor.isStatic() ? -1 : 0;
         GenericSignatureParser parser = new GenericSignatureParser(methodDescriptor.getSignature());
@@ -185,7 +185,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     private void visitInvoke(InvokeInstruction obj) {
         TaintMethodSummary methodSummary = getMethodSummary(obj);
         Taint taint = getMethodTaint(methodSummary);
-        if (taint.getState() == Taint.State.UNKNOWN) {
+        if (taint.isUnknown()) {
             taint.addTaintLocation(getTaintLocation(), false);
         }
         transferTaintToMutables(methodSummary, taint);
@@ -212,10 +212,10 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             return getDefaultValue();
         }
         Taint taint = methodSummary.getOutputTaint();
-        if (taint.getState() == Taint.State.UNKNOWN && taint.hasTaintParameters()) {
+        if (taint.isUnknown() && taint.hasTaintParameters()) {
             return mergeTransferParameters(taint.getTaintParameters());
         } else {
-            if (taint.getState() == Taint.State.TAINTED) {
+            if (taint.isTainted()) {
                 taint = new Taint(taint);
                 // we do not want to add locations to the method summary
                 taint.addTaintLocation(getTaintLocation(), true);
@@ -284,7 +284,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             Taint currentTaint = analyzedMethodSummary.getOutputTaint();
             analyzedMethodSummary.setOuputTaint(Taint.merge(returnTaint, currentTaint));
         } catch (DataflowAnalysisException ex) {
-            throw new InvalidBytecodeException("empty stack before reference return");
+            throw new InvalidBytecodeException("empty stack before reference return", ex);
         }
         handleNormalInstruction(obj);
     }

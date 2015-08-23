@@ -67,7 +67,7 @@ public class TaintMethodSummary {
         if (outputTaint == null) {
             return false;
         }
-        if (outputTaint.getState() != Taint.State.UNKNOWN) {
+        if (!outputTaint.isUnknown()) {
             return true;
         }
         if (!outputTaint.hasTaintParameters()) {
@@ -83,9 +83,7 @@ public class TaintMethodSummary {
             return "";
         }
         StringBuilder sb = new StringBuilder();
-        if (outputTaint.getState() != Taint.State.UNKNOWN) {
-            sb.append(outputTaint.getState().name());
-        } else if (outputTaint.hasTaintParameters()) {
+        if (outputTaint.isUnknown() && outputTaint.hasTaintParameters()) {
             Collection<Integer> transferParameters = outputTaint.getTaintParameters();
             int count = transferParameters.size();
             Integer[] array = transferParameters.toArray(new Integer[count]);
@@ -95,7 +93,7 @@ public class TaintMethodSummary {
                 sb.append(array[i]);
             }
         } else {
-            sb.append(Taint.State.UNKNOWN.name());
+            sb.append(outputTaint.getState().name());
         }
         if (hasMutableStackIndex()) {
             sb.append("#");

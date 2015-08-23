@@ -30,17 +30,19 @@ import java.util.Set;
 public class Taint {
 
     public enum State {
-        TAINTED(false, true),
-        UNKNOWN(false, false),
-        SAFE(true, false),
-        NULL(true, false);
+        TAINTED(false, true, false),
+        UNKNOWN(false, false, true),
+        SAFE(true, false, false),
+        NULL(true, false, false);
         
         private final boolean isSafe;
         private final boolean isTainted;
+        private final boolean isUnknown;
 
-        State(boolean isSafe, boolean isTainted) {
+        State(boolean isSafe, boolean isTainted, boolean isUnknown) {
             this.isSafe = isSafe;
             this.isTainted = isTainted;
+            this.isUnknown = isUnknown;
         }
         
         public static State merge(State a, State b) {
@@ -151,6 +153,10 @@ public class Taint {
     public boolean isTainted() {
         // in context of taint analysis, null value is safe too
         return state.isTainted;
+    }
+    
+    public boolean isUnknown() {
+        return state.isUnknown;
     }
     
     public void addTaintParameter(int parameterIndex) {

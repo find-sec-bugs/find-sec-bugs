@@ -67,6 +67,13 @@ public class TaintMethodSummary {
         this.outputTaint = outputTaint;
     }
 
+    public static TaintMethodSummary getDefaultConstructorSummary(int stackSize) {
+        TaintMethodSummary summary = new TaintMethodSummary();
+        summary.outputTaint = new Taint(Taint.State.UNKNOWN);
+        summary.mutableStackIndex = stackSize;
+        return summary;
+    }
+    
     public boolean isInformative() {
         if (this == DEFAULT_TOSTRING_SUMMARY || this == SAFE_SUMMARY) {
             // these are loaded automatically, do not need to store them

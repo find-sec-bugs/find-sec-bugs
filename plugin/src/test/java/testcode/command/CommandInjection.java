@@ -126,6 +126,10 @@ public class CommandInjection {
         Runtime.getRuntime().exec((new MoreMethods()).safe());
     }
     
+    public void unconfiguredObject() throws IOException {
+        Runtime.getRuntime().exec(new Object().toString());
+    }
+    
     public String taintSource(String param) throws Exception {
         File file = new File("C:\\data.txt");
         FileInputStream streamFileInput;

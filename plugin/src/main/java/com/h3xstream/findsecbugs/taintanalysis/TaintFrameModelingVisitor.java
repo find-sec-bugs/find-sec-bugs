@@ -73,20 +73,20 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         SAFE_OBJECT_TYPES.add("Ljava/lang/BigDecimal;");
     }
     
-    public TaintFrameModelingVisitor(ConstantPoolGen cpg, MethodDescriptor methodDescriptor,
+    public TaintFrameModelingVisitor(ConstantPoolGen cpg, MethodDescriptor method,
             TaintMethodSummaryMap methodSummaries) {
         super(cpg);
-        this.methodDescriptor = methodDescriptor;
+        this.methodDescriptor = method;
         this.methodSummaries = methodSummaries;
-        parameterStackSize = getParameterStackSize(methodDescriptor);
+        parameterStackSize = getParameterStackSize(method.getSignature(), method.isStatic());
         analyzedMethodSummary = new TaintMethodSummary();
         writtenIndeces = new HashSet<Integer>();
     }
 
-    private static int getParameterStackSize(MethodDescriptor methodDescriptor) {
+    private static int getParameterStackSize(String signature, boolean isStatic) {
         // static methods does not have reference to this
-        int stackSize = methodDescriptor.isStatic() ? -1 : 0;
-        GenericSignatureParser parser = new GenericSignatureParser(methodDescriptor.getSignature());
+        int stackSize = isStatic ? -1 : 0;
+        GenericSignatureParser parser = new GenericSignatureParser(signature);
         Iterator<String> iterator = parser.parameterSignatureIterator();
         while (iterator.hasNext()) {
             String parameter = iterator.next();
@@ -213,11 +213,19 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         if (SAFE_OBJECT_TYPES.contains(returnType)) {
             return TaintMethodSummary.SAFE_SUMMARY;
         }
-        String methodNameWithSig = obj.getMethodName(cpg) + signature;
-        String fullMethodName = getSlashedClassName(obj) + "." + methodNameWithSig;
+        String className = getSlashedClassName(obj);
+        String methodName = obj.getMethodName(cpg);
+        String methodNameWithSig = methodName + signature;
+        String fullMethodName = className + "." + methodNameWithSig;
         TaintMethodSummary methodSummary = methodSummaries.get(fullMethodName);
         if (methodSummary == null && TO_STRING_METHOD.equals(methodNameWithSig)) {
             return TaintMethodSummary.DEFAULT_TOSTRING_SUMMARY;
+        }
+        if (methodSummary == null
+                && Constants.CONSTRUCTOR_NAME.equals(methodName)
+                && !SAFE_OBJECT_TYPES.contains("L" + className + ";")) {
+            int stackSize = getParameterStackSize(signature, false);
+            return TaintMethodSummary.getDefaultConstructorSummary(stackSize);
         }
         return methodSummary;
     }

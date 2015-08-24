@@ -41,6 +41,7 @@ majorBugs = [
         "REDOS",
         "BAD_HEXA_CONVERSION",
         "HARD_CODE_PASSWORD",
+        "HARD_CODE_KEY",
         "XSS_REQUEST_WRAPPER",
         "UNVALIDATED_REDIRECT",
         "ANDROID_EXTERNAL_FILE_ACCESS",

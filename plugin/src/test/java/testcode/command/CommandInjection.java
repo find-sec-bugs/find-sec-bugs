@@ -127,7 +127,11 @@ public class CommandInjection {
     }
     
     public void unconfiguredObject() throws IOException {
-        Runtime.getRuntime().exec(new Object().toString());
+        Runtime.getRuntime().exec(parametricUnknownSource("safe, but result unknown"));
+    }
+    
+    public String parametricUnknownSource(String str) {
+        return str + new Object().toString() + "xx";
     }
     
     public String taintSource(String param) throws Exception {

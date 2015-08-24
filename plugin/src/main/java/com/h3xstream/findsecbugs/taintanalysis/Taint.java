@@ -91,6 +91,7 @@ public class Taint {
         taintLocations = new HashSet<TaintLocation>(taint.taintLocations);
         possibleTaintLocations = new HashSet<TaintLocation>(taint.possibleTaintLocations);
         taintParameters = new HashSet<Integer>(taint.getTaintParameters());
+        nonParametricTaint = taint.nonParametricTaint;
     }
     
     public State getState() {
@@ -178,6 +179,10 @@ public class Taint {
         return nonParametricTaint;
     }
     
+    public void setNonParametricTaint(Taint taint) {
+        nonParametricTaint = taint;
+    }
+    
     public static Taint merge(Taint a, Taint b) {
         if (a == null) {
             if (b == null) {
@@ -197,18 +202,16 @@ public class Taint {
         result.taintLocations.addAll(b.getTaintedLocations());
         result.possibleTaintLocations.addAll(a.getPossibleTaintedLocations());
         result.possibleTaintLocations.addAll(b.getPossibleTaintedLocations());
-        
-        if (a.hasTaintParameters()) {
-            result.taintParameters.addAll(a.getTaintParameters());
-            if (b.hasTaintParameters()) {
-                result.taintParameters.addAll(b.getTaintParameters());
-                result.nonParametricTaint = merge(a.nonParametricTaint, b.nonParametricTaint);
-            } else {
-                result.nonParametricTaint = merge(a.nonParametricTaint, b);
+        if (a.hasTaintParameters() || b.hasTaintParameters()) {
+            result.taintParameters.addAll(a.taintParameters);
+            result.taintParameters.addAll(b.taintParameters);
+            Taint taint = merge(a.nonParametricTaint, b.nonParametricTaint);
+            if (!a.hasTaintParameters()) {
+                taint = merge(taint, a);
+            } else if (!b.hasTaintParameters()) {
+                taint = merge(taint, b);
             }
-        } else if (b.hasTaintParameters()) {
-            result.taintParameters.addAll(b.getTaintParameters());
-            result.nonParametricTaint = merge(a, b.nonParametricTaint);
+            result.nonParametricTaint = taint;
         }
         return result;
     }
@@ -237,6 +240,10 @@ public class Taint {
         String str = state.name().substring(0, 1);
         if (hasValidLocalVariableIndex()) {
             str += localVariableIndex;
+        }
+        str += taintParameters;
+        if (nonParametricTaint != null) {
+            str += nonParametricTaint;
         }
         return str;
     }

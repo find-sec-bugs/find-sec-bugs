@@ -85,11 +85,7 @@ public class TaintMethodSummary {
         if (!outputTaint.isUnknown()) {
             return true;
         }
-        if (!outputTaint.hasTaintParameters()) {
-            return false;
-        }
-        // TODO consider non-parametric taint too
-        return outputTaint.getNonParametricTaint() == null;
+        return outputTaint.hasTaintParameters();
     }
     
     @Override
@@ -104,15 +100,17 @@ public class TaintMethodSummary {
             Integer[] array = transferParameters.toArray(new Integer[count]);
             sb.append(array[0]);
             for (int i = 1; i < count; i++) {
-                sb.append(",");
-                sb.append(array[i]);
+                sb.append(",").append(array[i]);
+            }
+            Taint nonParametricTaint = outputTaint.getNonParametricTaint();
+            if (nonParametricTaint != null) {
+                sb.append(",").append(nonParametricTaint.getState().name());
             }
         } else {
             sb.append(outputTaint.getState().name());
         }
         if (hasMutableStackIndex()) {
-            sb.append("#");
-            sb.append(mutableStackIndex);
+            sb.append("#").append(mutableStackIndex);
         }
         return sb.toString();
     }

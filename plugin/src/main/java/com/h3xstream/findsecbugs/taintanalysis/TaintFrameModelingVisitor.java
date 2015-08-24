@@ -245,15 +245,15 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         }
         Taint taint = methodSummary.getOutputTaint();
         if (taint.isUnknown() && taint.hasTaintParameters()) {
-            return mergeTransferParameters(taint.getTaintParameters());
-        } else {
-            if (taint.isTainted()) {
-                taint = new Taint(taint);
-                // we do not want to add locations to the method summary
-                taint.addTaintLocation(getTaintLocation(), true);
-            }
-            return taint;
+            Taint taintMerge = mergeTransferParameters(taint.getTaintParameters());
+            return Taint.merge(taint.getNonParametricTaint(), taintMerge);
         }
+        if (taint.isTainted()) {
+            taint = new Taint(taint);
+            // we do not want to add locations to the method summary
+            taint.addTaintLocation(getTaintLocation(), true);
+        }
+        return taint;
     }
     
     private Taint mergeTransferParameters(Collection<Integer> transferParameters) {
@@ -285,6 +285,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                     stackValue.addTaintParameter(taintParameter);
                 }
             }
+            stackValue.setNonParametricTaint(taint.getNonParametricTaint());
             for (TaintLocation location : taint.getTaintedLocations()) {
                 stackValue.addTaintLocation(location, true);
             }

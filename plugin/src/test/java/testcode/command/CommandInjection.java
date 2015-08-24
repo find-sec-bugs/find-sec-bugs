@@ -130,6 +130,22 @@ public class CommandInjection {
         Runtime.getRuntime().exec(parametricUnknownSource("safe, but result unknown"));
     }
     
+    public void stringArrays(String param) throws Exception {
+        Runtime.getRuntime().exec(transferThroughArray(taintSource("")));
+        Runtime.getRuntime().exec(transferThroughArray("const" + param));
+        Runtime.getRuntime().exec(transferThroughArray("const"));
+    }
+    
+    private String transferThroughArray(String in) {
+        String[] strings = new String[3];
+        strings[0] = "safe1";
+        strings[1] = in;
+        strings[2] = "safe2";
+        // whole array is tainted, index is not important
+        String str = "safe3" + strings[1].trim();
+        return str.split("a")[0];
+    }
+    
     public String parametricUnknownSource(String str) {
         return str + new Object().toString() + "xx";
     }

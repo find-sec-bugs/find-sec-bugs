@@ -237,14 +237,16 @@ public class Taint {
     @Override
     public String toString() {
         assert state != null;
-        String str = state.name().substring(0, 1);
+        StringBuilder sb = new StringBuilder(state.name().substring(0, 1));
         if (hasValidLocalVariableIndex()) {
-            str += localVariableIndex;
+            sb.append(localVariableIndex);
         }
-        str += taintParameters;
+        if (!taintParameters.isEmpty()) {
+            sb.append(taintParameters);
+        }
         if (nonParametricTaint != null) {
-            str += nonParametricTaint;
+            sb.append('(').append(nonParametricTaint).append(')');
         }
-        return str;
+        return sb.toString();
     }
 }

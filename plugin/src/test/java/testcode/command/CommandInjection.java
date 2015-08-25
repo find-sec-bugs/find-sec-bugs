@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class CommandInjection {
@@ -13,7 +14,6 @@ public class CommandInjection {
     public static void main(String[] args) throws IOException {
 
         String input = args.length > 0 ? args[0] : ";cat /etc/passwd";
-
         List<String> cmd = Arrays.asList("ls", "-l", input);
 
         //Runtime exec()
@@ -136,6 +136,12 @@ public class CommandInjection {
         Runtime.getRuntime().exec(transferThroughArray("const"));
     }
     
+    public void lists(String param) throws Exception {
+        Runtime.getRuntime().exec(transferThroughList(taintSource(""), 0));
+        Runtime.getRuntime().exec(transferThroughList("const" + param, 0));
+        Runtime.getRuntime().exec(transferThroughList("const", 0));
+    }
+    
     private String transferThroughArray(String in) {
         String[] strings = new String[3];
         strings[0] = "safe1";
@@ -144,6 +150,21 @@ public class CommandInjection {
         // whole array is tainted, index is not important
         String str = "safe3" + strings[1].trim();
         return str.split("a")[0];
+    }
+    
+    private String transferThroughList(String in, int index) {
+        LinkedList<String> list = new LinkedList<String>();
+        //list.add(System.getenv(""));
+        //list.clear(); // works, but cause magical problems if combined with iterators
+        list.add(1, "xx");
+        list.addFirst(in);
+        list.addLast("yy");
+        list.push(in);
+        return list.element() + list.get(index) + list.getFirst() + list.getLast()
+                + list.peek() + list.peekFirst() + list.peekLast() + list.poll()
+                + list.pollFirst() + list.pollLast() + list.pop() + list.remove()
+                + list.remove(index) + list.removeFirst() + list.removeLast()
+                + list.set(index, "safe") + list.toString();
     }
     
     public String parametricUnknownSource(String str) {
@@ -170,12 +191,12 @@ public class CommandInjection {
         safe.concat(new Double(10.0).toString() + Long.toHexString(number));
         StringBuilder sb = new StringBuilder(safe).insert(1, 'c');
         sb.append(new Integer(0)).append(Double.valueOf("1.0")); // object taint transfer
-        return sb + String.valueOf(true) + 0.1f;
+        return sb + String.valueOf(true) + 0.1f + new String();
     }
     
     public String combine(String x, String y) {
         StringBuilder sb = new StringBuilder("safe");
-        sb.append(x);
+        sb.append((Object) x);
         return sb.toString() + y.concat("aaa");
     }
     

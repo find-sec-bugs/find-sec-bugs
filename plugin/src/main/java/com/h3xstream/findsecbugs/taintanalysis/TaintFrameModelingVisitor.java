@@ -33,6 +33,7 @@ import org.apache.bcel.generic.AASTORE;
 import org.apache.bcel.generic.ACONST_NULL;
 import org.apache.bcel.generic.ANEWARRAY;
 import org.apache.bcel.generic.ARETURN;
+import org.apache.bcel.generic.CHECKCAST;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.FieldOrMethod;
 import org.apache.bcel.generic.INVOKEINTERFACE;
@@ -224,6 +225,11 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         }
     }
 
+    @Override
+    public void visitCHECKCAST(CHECKCAST obj) {
+        // keep the top of stack unchanged
+    }
+    
     private void visitInvoke(InvokeInstruction obj) {
         TaintMethodSummary methodSummary = getMethodSummary(obj);
         Taint taint = getMethodTaint(methodSummary);
@@ -280,6 +286,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             // we do not want to add locations to the method summary
             taint.addTaintLocation(getTaintLocation(), true);
         }
+        assert taint != null;
         return taint;
     }
 
@@ -304,9 +311,9 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         }
         int mutableStackIndex = methodSummary.getMutableStackIndex();
         try {
-            Taint stackValue = getFrame().getStackValue(mutableStackIndex);
-            // needed especially for constructors
-            transferTaint(stackValue, taint);
+                Taint stackValue = getFrame().getStackValue(mutableStackIndex);
+                // needed especially for constructors
+                transferTaint(stackValue, taint);
         } catch (DataflowAnalysisException ex) {
             throw new RuntimeException("Bad mutable stack index specification", ex);
         }

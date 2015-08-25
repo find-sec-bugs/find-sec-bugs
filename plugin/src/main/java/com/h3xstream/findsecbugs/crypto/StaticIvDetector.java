@@ -29,6 +29,7 @@ import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.*;
 
+import javax.crypto.Cipher;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -79,7 +80,53 @@ public class StaticIvDetector implements Detector {
         CFG cfg = classContext.getCFG(m);
 
         boolean foundSafeIvGeneration = false;
+        //Detect if the method is doing decryption only. If it is the case, IV should not be generated from this point
+        //therefore it is a false positive
+        boolean atLeastOneDecryptCipher = false;
+        boolean atLeastOneEncryptCipher = false;
 
+        boolean ivFetchFromCipher = false;
+
+        //First pass : it look for encryption and decryption mode to detect if the method does decryption only
+        for (Iterator<Location> i = cfg.locationIterator(); i.hasNext(); ) {
+            Location location = nextLocation(i, cpg);
+            Instruction inst = location.getHandle().getInstruction();
+
+
+            ByteCode.printOpCode(inst,cpg);
+
+
+            if (inst instanceof INVOKEVIRTUAL) {
+                INVOKEVIRTUAL invoke = (INVOKEVIRTUAL) inst;
+
+                //INVOKEVIRTUAL javax/crypto/Cipher.init ((ILjava/security/Key;)V)
+                if (("javax.crypto.Cipher").equals(invoke.getClassName(cpg)) &&
+                        "init".equals(invoke.getMethodName(cpg))) {
+
+                    ICONST iconst = ByteCode.getPrevInstruction(location.getHandle(), ICONST.class);
+                    if (iconst != null) {
+                        int mode = iconst.getValue().intValue();
+
+                        switch (mode) {
+                            case Cipher.ENCRYPT_MODE:
+                                atLeastOneEncryptCipher = true;
+                                break;
+                            case Cipher.DECRYPT_MODE:
+                                atLeastOneDecryptCipher = true;
+                                break;
+                        }
+                    }
+                }
+
+                //INVOKEVIRTUAL javax/crypto/Cipher.getIV (()[B)
+                else if (("javax.crypto.Cipher").equals(invoke.getClassName(cpg)) &&
+                        "getIV".equals(invoke.getMethodName(cpg))) {
+                    ivFetchFromCipher = true;
+                }
+            }
+        }
+
+        //Second pass : It look for encryption method and a potential preceding SecureRandom usage
         for (Iterator<Location> i = cfg.locationIterator(); i.hasNext(); ) {
             Location location = nextLocation(i, cpg);
             Instruction inst = location.getHandle().getInstruction();
@@ -92,7 +139,10 @@ public class StaticIvDetector implements Detector {
                 }
             }
 
-            if (!foundSafeIvGeneration && inst instanceof INVOKESPECIAL) { //MessageDigest.digest is called
+            else if (inst instanceof INVOKESPECIAL &&
+                    !ivFetchFromCipher //IV was generate with the KeyGenerator
+                    && (!atLeastOneDecryptCipher || atLeastOneEncryptCipher) //The cipher is in decrypt mode (no iv generation)
+                    && !foundSafeIvGeneration) {
                 INVOKESPECIAL invoke = (INVOKESPECIAL) inst;
                 if (("javax.crypto.spec.IvParameterSpec").equals(invoke.getClassName(cpg)) &&
                         "<init>".equals(invoke.getMethodName(cpg))) {

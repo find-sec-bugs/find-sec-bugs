@@ -173,6 +173,14 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency> <!-- TODO Remove and replace by stub before release.. -->
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>4.2.0.RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+
+
         <dependency>
             <groupId>com.h3xstream.findsecbugs</groupId>
             <artifactId>findsecbugs-plugin-deps</artifactId>

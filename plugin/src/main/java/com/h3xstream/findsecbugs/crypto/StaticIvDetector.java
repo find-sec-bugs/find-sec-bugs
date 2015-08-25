@@ -93,7 +93,7 @@ public class StaticIvDetector implements Detector {
             Instruction inst = location.getHandle().getInstruction();
 
 
-            ByteCode.printOpCode(inst,cpg);
+            //ByteCode.printOpCode(inst,cpg);
 
 
             if (inst instanceof INVOKEVIRTUAL) {

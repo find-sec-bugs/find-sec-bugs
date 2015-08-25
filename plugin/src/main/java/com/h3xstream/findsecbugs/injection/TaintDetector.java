@@ -125,13 +125,22 @@ public abstract class TaintDetector implements Detector {
 
     private void reportBug(InjectionPoint injectionPoint, ClassContext classContext,
             Method method, Location location, Taint taint) {
-        BugInstance bugInstance = getBugInstance(injectionPoint, taint);
+
+        //Priority based on tainted
+        int priority = getPriority(taint);
+
+        BugInstance bugInstance = new BugInstance(this, injectionPoint.getBugType(),priority);
+
+        //Additional info attached to the bug instance
         JavaClass javaClass = classContext.getJavaClass();
         bugInstance.addClass(javaClass).addMethod(javaClass, method);
         bugInstance.addSourceLine(classContext, method, location);
+
+        //Sink info
         if (injectionPoint.getInjectableMethod()!= null) {
             bugInstance.addString(injectionPoint.getInjectableMethod());
         }
+        //Source info
         if (taint.hasTaintedLocations()) {
             addSourceLines(classContext, method, taint.getTaintedLocations(), bugInstance);
         } else {
@@ -140,16 +149,16 @@ public abstract class TaintDetector implements Detector {
         bugReporter.reportBug(bugInstance);
     }
 
-    private BugInstance getBugInstance(InjectionPoint injectionPoint, Taint taint) {
-        int priority;
+    private int getPriority(Taint taint) {
         if (taint.isTainted()) {
-            priority = Priorities.HIGH_PRIORITY;
+            //The chain from tainted variable to sink is confirm. (The vulnerability is confirm.)
+            return Priorities.HIGH_PRIORITY;
         } else if (!taint.isSafe()) {
-            priority = Priorities.NORMAL_PRIORITY;
+            //The taint analysis could NOT confirm that the input come from safe source. (Vulnerable code but not confirm. A review is needed)
+            return Priorities.NORMAL_PRIORITY;
         } else {
-            priority = Priorities.LOW_PRIORITY;
+            return Priorities.LOW_PRIORITY;
         }
-        return new BugInstance(this, injectionPoint.getBugType(), priority);
     }
     
     private void addSourceLines(ClassContext classContext, Method method,

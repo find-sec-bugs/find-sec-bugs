@@ -18,6 +18,11 @@
 package com.h3xstream.findsecbugs.injection;
 
 public class InjectionPoint {
+
+    /**
+     * This instance is use to represent "null" as no injection point.
+     * It is a cleaner option than returning NULL by contract. (see Null Object pattern)
+     */
     public static InjectionPoint NONE = new InjectionPoint(new int[0],null);
 
     private int[] injectableArguments;

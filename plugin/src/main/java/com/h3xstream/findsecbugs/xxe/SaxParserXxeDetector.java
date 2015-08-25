@@ -54,7 +54,6 @@ import java.util.Iterator;
  * </ul>
  */
 public class SaxParserXxeDetector extends OpcodeStackDetector {
-    private static final boolean DEBUG = false;
     private static final String XXE_SAX_PARSER_TYPE = "XXE_SAXPARSER";
     private static final String XXE_XML_READER_TYPE = "XXE_XMLREADER";
     private static final String XXE_DOCUMENT_TYPE = "XXE_DOCUMENT";
@@ -114,9 +113,7 @@ public class SaxParserXxeDetector extends OpcodeStackDetector {
             for (Iterator<Location> i = cfg.locationIterator(); i.hasNext();) {
                 Location location = i.next();
                 Instruction inst = location.getHandle().getInstruction();
-                if (DEBUG) {
-                    ByteCode.printOpCode(inst, cpg);
-                }
+                //ByteCode.printOpCode(inst, cpg);
 
 
                 //(2nd solution for secure parsing proposed by the CERT) Look for entity custom resolver

@@ -17,24 +17,31 @@
  */
 package com.h3xstream.findsecbugs.injection.sql;
 
+import com.h3xstream.findsecbugs.common.ByteCode;
+import com.h3xstream.findsecbugs.injection.InjectionPoint;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
-import com.h3xstream.findsecbugs.injection.TaintDetector;
-import edu.umd.cs.findbugs.BugReporter;
+import org.apache.bcel.classfile.Constant;
+import org.apache.bcel.classfile.ConstantUtf8;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.InstructionHandle;
+import org.apache.bcel.generic.InvokeInstruction;
 
-public class SqlInjectionDetector extends TaintDetector {
+/**
+ *
+ */
+public class JdbcInjectionSource implements InjectionSource {
 
-    public SqlInjectionDetector(BugReporter bugReporter) {
-        super(bugReporter);
+    protected static final String SQL_INJECTION_TYPE = "SQL_INJECTION_JDBC";
+
+    @Override
+    public boolean isCandidate(ConstantPoolGen cpg) {
+        return true;
     }
 
     @Override
-    public InjectionSource[] getInjectionSource() {
-        return new InjectionSource[] {
-            new HibernateInjectionSource(),
-            new JdoInjectionSource(),
-            new JpaInjectionSource(),
-            new JdbcInjectionSource(),
-            new SpringJdbcInjectionSource()
-        };
+    public InjectionPoint getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {
+
+
+        return InjectionPoint.NONE;
     }
 }

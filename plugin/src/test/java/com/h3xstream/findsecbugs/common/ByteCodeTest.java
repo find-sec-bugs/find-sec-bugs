@@ -27,6 +27,10 @@ import java.io.PrintStream;
 import static org.mockito.Mockito.*;
 
 public class ByteCodeTest {
+
+    /**
+     * For test coverage mostly .. not that useful.
+     */
     @Test
     public void probeByteCodeDebug() {
         PrintStream sysOut = mock(PrintStream.class);

@@ -60,7 +60,7 @@ public class CommandInjectionDetectorTest extends BaseDetectorTest {
                             .inClass("CommandInjection").atLine(73)
                             .withPriority("High")
                             .build()
-            );
+        );
         
         verify(reporter).doReportBug(
                     bugDefinition()
@@ -68,8 +68,8 @@ public class CommandInjectionDetectorTest extends BaseDetectorTest {
                             .inClass("CommandInjection").atLine(57)
                             .withPriority("Low")
                             .build()
-            );
-        
+        );
+
         verify(reporter, times(lines.size())).doReportBug(
                 bugDefinition().bugType("COMMAND_INJECTION").withPriority("Medium").build());
         verify(reporter, times(1)).doReportBug(

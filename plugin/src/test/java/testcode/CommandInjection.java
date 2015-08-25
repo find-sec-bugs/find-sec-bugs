@@ -72,4 +72,18 @@ public class CommandInjection {
         }
         Runtime.getRuntime().exec(data);
     }
+
+
+    /**
+    public void falsePositivesSamples() throws IOException {
+        //Those should not be flagged.
+        Runtime.getRuntime().exec("/bin/ps -ef");
+        Runtime.getRuntime().exec("/bin/ps -ef",new String[0]);
+        Runtime.getRuntime().exec("/bin/ps -ef",new String[0],new File(""));
+        String[] cmd = {"/bin/ps","-ef"};
+        Runtime.getRuntime().exec(cmd);
+        Runtime.getRuntime().exec(cmd,new String[0]);
+        Runtime.getRuntime().exec(cmd,new String[0],new File(""));
+    }
+    */
 }

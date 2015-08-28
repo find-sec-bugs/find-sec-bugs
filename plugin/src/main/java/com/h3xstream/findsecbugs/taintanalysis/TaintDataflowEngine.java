@@ -28,7 +28,8 @@ import java.io.InputStream;
 import org.apache.bcel.generic.MethodGen;
 
 /**
- * Requests or creates needed objects and execute taint analysis
+ * Requests or creates needed objects and execute taint analysis,
+ * extends taint method summaries with analyzed methods
  * 
  * @author David Formanek
  */
@@ -61,18 +62,24 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
         CFG cfg = cache.getMethodAnalysis(CFG.class, descriptor);
         DepthFirstSearch dfs = cache.getMethodAnalysis(DepthFirstSearch.class, descriptor);
         MethodGen methodGen = cache.getMethodAnalysis(MethodGen.class, descriptor);
-        TaintAnalysis analysis = new TaintAnalysis(methodGen, dfs, methodSummaries);
+        TaintAnalysis analysis = new TaintAnalysis(methodGen, dfs, descriptor, methodSummaries);
         TaintDataflow flow = new TaintDataflow(cfg, analysis);
         flow.execute();
+        TaintMethodSummary taintMethodSummary = analysis.getAnalyzedMethodSummary();
+        if (taintMethodSummary.isInformative()) {
+            methodSummaries.put(getSlashedMethodName(methodGen), taintMethodSummary);
+        }
         return flow;
     }
 
+    private String getSlashedMethodName(MethodGen methodGen) {
+        String methodNameWithSignature = methodGen.getName() + methodGen.getSignature();
+        String slashedClassName = methodGen.getClassName().replace('.', '/');
+        return slashedClassName + "." + methodNameWithSignature;
+    }
+    
     @Override
     public void registerWith(IAnalysisCache iac) {
         iac.registerMethodAnalysisEngine(TaintDataflow.class, this);
-    }
-    
-    public boolean canRecompute() {
-        return true;
     }
 }

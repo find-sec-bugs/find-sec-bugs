@@ -39,6 +39,8 @@ public class CommandInjectionSource implements InjectionSource {
                 String utf8String = ((ConstantUtf8) cnt).getBytes();
                 if (utf8String.startsWith("java/lang/Runtime")) {
                     return true;
+                } else if (utf8String.startsWith("java/lang/ProcessBuilder")) {
+                    return true;
                 }
             }
         }

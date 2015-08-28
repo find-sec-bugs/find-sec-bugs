@@ -56,6 +56,10 @@ public class TaintMethodSummaryMap extends HashMap<String, TaintMethodSummary> {
     }
     
     private void putFromLine(String line) throws IOException {
+        if (line.startsWith("-")) {
+            // for comments or removing summary temporarily
+            return;
+        }
         String[] tuple = line.split("\\:");
         if (tuple.length != 2) {
             throw new IOException("Line format is not 'method name:summary info'");

@@ -18,7 +18,6 @@
 package com.h3xstream.findsecbugs.taintanalysis;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -28,36 +27,23 @@ import java.util.Collection;
  */
 public class TaintMethodSummary {
 
-    private Collection<Integer> transferParameters = null;
     private Taint outputTaint = null;
     private static final int INVALID_INDEX = -1;
     private int mutableStackIndex = INVALID_INDEX;
-    private static final TaintMethodSummary defaultToStringSummary = new TaintMethodSummary();
+    public static final TaintMethodSummary DEFAULT_TOSTRING_SUMMARY;
+    public static final TaintMethodSummary SAFE_SUMMARY;
     
     static {
-        ArrayList<Integer> params = new ArrayList<Integer>(1);
-        params.add(0);
-        defaultToStringSummary.setTransferParameters(params);
+        DEFAULT_TOSTRING_SUMMARY = new TaintMethodSummary();
+        DEFAULT_TOSTRING_SUMMARY.outputTaint = new Taint(Taint.State.UNKNOWN);
+        DEFAULT_TOSTRING_SUMMARY.outputTaint.addTaintParameter(0);
+        SAFE_SUMMARY = new TaintMethodSummary();
+        SAFE_SUMMARY.outputTaint = new Taint(Taint.State.SAFE);
     }
     
     public TaintMethodSummary() {
     }
     
-    public Collection<Integer> getTransferParameters() {
-        if (!hasTransferParameters()) {
-            throw new IllegalStateException("transfer parameters not set");
-        }
-        return transferParameters;
-    }
-
-    public boolean hasTransferParameters() {
-        return transferParameters != null && !transferParameters.isEmpty();
-    }
-    
-    public void setTransferParameters(Collection<Integer> transferParameters) {
-        this.transferParameters = transferParameters;
-    }
-
     public int getMutableStackIndex() {
         if (!hasMutableStackIndex()) {
             throw new IllegalStateException("stack index not set");
@@ -74,45 +60,59 @@ public class TaintMethodSummary {
     }
     
     public Taint getOutputTaint() {
-        if (!hasConstantOutputTaint()) {
-            throw new IllegalStateException("output taint is not set");
-        }
         return outputTaint;
-    }
-    
-    public boolean hasConstantOutputTaint() {
-        return outputTaint != null;
     }
     
     public void setOuputTaint(Taint outputTaint) {
         this.outputTaint = outputTaint;
     }
 
+    public static TaintMethodSummary getDefaultConstructorSummary(int stackSize) {
+        TaintMethodSummary summary = new TaintMethodSummary();
+        summary.outputTaint = new Taint(Taint.State.UNKNOWN);
+        summary.mutableStackIndex = stackSize;
+        return summary;
+    }
+    
+    public boolean isInformative() {
+        if (this == DEFAULT_TOSTRING_SUMMARY || this == SAFE_SUMMARY) {
+            // these are loaded automatically, do not need to store them
+            return false;
+        }
+        if (outputTaint == null) {
+            return false;
+        }
+        if (!outputTaint.isUnknown()) {
+            return true;
+        }
+        return outputTaint.hasTaintParameters();
+    }
+    
     @Override
     public String toString() {
+        if (outputTaint == null) {
+            return "";
+        }
         StringBuilder sb = new StringBuilder();
-        if (hasConstantOutputTaint()) {
-            sb.append(outputTaint.getState().name());
-        } else if (hasTransferParameters()) {
+        if (outputTaint.isUnknown() && outputTaint.hasTaintParameters()) {
+            Collection<Integer> transferParameters = outputTaint.getTaintParameters();
             int count = transferParameters.size();
             Integer[] array = transferParameters.toArray(new Integer[count]);
             sb.append(array[0]);
             for (int i = 1; i < count; i++) {
-                sb.append(",");
-                sb.append(array[i]);
+                sb.append(",").append(array[i]);
+            }
+            Taint nonParametricTaint = outputTaint.getNonParametricTaint();
+            if (nonParametricTaint != null) {
+                sb.append(",").append(nonParametricTaint.getState().name());
             }
         } else {
-            throw new IllegalStateException("output taint nor parameters not set");
+            sb.append(outputTaint.getState().name());
         }
         if (hasMutableStackIndex()) {
-            sb.append("#");
-            sb.append(mutableStackIndex);
+            sb.append("#").append(mutableStackIndex);
         }
         return sb.toString();
-    }
-    
-    public static TaintMethodSummary getDefaultToStringSummary() {
-        return defaultToStringSummary;
     }
     
     /**
@@ -143,15 +143,15 @@ public class TaintMethodSummary {
         } else {
             tuple = str.split(",");
             int count = tuple.length;
-            Collection<Integer> parameters = new ArrayList<Integer>(count);
+            Taint taint = new Taint(Taint.State.UNKNOWN);
             for (int i = 0; i < count; i++) {
                 try {
-                    parameters.add(Integer.parseInt(tuple[i].trim()));
+                    taint.addTaintParameter(Integer.parseInt(tuple[i].trim()));
                 } catch (NumberFormatException ex) {
                     throw new IOException("Cannot parse parameter offset " + i, ex);
                 }
             }
-            summary.setTransferParameters(parameters);
+            summary.setOuputTaint(taint);
         }
         return summary;
     }

@@ -103,6 +103,7 @@
     <BugPattern type="SQL_INJECTION_JDO" abbrev="SECSQLIJDO" category="SECURITY"/>
     <BugPattern type="SQL_INJECTION_JPA" abbrev="SECSQLIJPA" category="SECURITY"/>
     <BugPattern type="SQL_INJECTION_SPRING_JDBC" abbrev="SECSQLISPRJDBC" category="SECURITY"/>
+    <BugPattern type="SQL_INJECTION_JDBC" abbrev="SECSQLIJDBC" category="SECURITY"/>
     <BugPattern type="LDAP_INJECTION" abbrev="SECLDAPI" category="SECURITY"/>
     <BugPattern type="BAD_HEXA_CONVERSION" abbrev="SECBHC" category="SECURITY"/>
     <BugPattern type="HAZELCAST_SYMMETRIC_ENCRYPTION" abbrev="SECHAZ" category="SECURITY"/>

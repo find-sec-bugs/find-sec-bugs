@@ -173,4 +173,10 @@
         <version>4.0.0.RELEASE</version>
     </dependency>
 
+    <dependency> 
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-jdbc</artifactId>
+        <version>4.2.0.RELEASE</version>
+        <scope>test</scope>
+    </dependency>
 </dependencies>

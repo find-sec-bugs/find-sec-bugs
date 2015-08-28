@@ -1,7 +1,5 @@
 package testcode.sqli;
 
-import org.springframework.jdbc.core.BatchUpdateUtils;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;

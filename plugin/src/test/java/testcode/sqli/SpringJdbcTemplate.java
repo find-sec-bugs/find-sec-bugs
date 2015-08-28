@@ -129,17 +129,17 @@ public class SpringJdbcTemplate {
         }
     }
 
-    public class TestCallableStatementCallback<UserEntity> implements CallableStatementCallback<Object> {
+    public class TestCallableStatementCallback<UserEntity> implements CallableStatementCallback<UserEntity> {
         @Override
-        public Object doInCallableStatement(CallableStatement callableStatement) throws SQLException, DataAccessException {
+        public UserEntity doInCallableStatement(CallableStatement callableStatement) throws SQLException, DataAccessException {
             return null;
         }
     }
 
-    public class TestParameterizedPreparedStatementSetter<UserEntity> implements ParameterizedPreparedStatementSetter {
+    public class TestParameterizedPreparedStatementSetter<UserEntity> implements ParameterizedPreparedStatementSetter<UserEntity> {
 
         @Override
-        public void setValues(PreparedStatement preparedStatement, Object o) throws SQLException {
+        public void setValues(PreparedStatement preparedStatement, UserEntity o) throws SQLException {
 
         }
     }
@@ -156,17 +156,17 @@ public class SpringJdbcTemplate {
             return 10;
         }
     }
-    public class TestRowMapper<UserEntity> implements RowMapper {
+    public class TestRowMapper<UserEntity> implements RowMapper<UserEntity> {
 
         @Override
-        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        public UserEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
             return null;
         }
     }
-    public class TestResultSetExtractor implements ResultSetExtractor {
+    public class TestResultSetExtractor<UserEntity> implements ResultSetExtractor<UserEntity> {
 
         @Override
-        public Object extractData(ResultSet rs) throws SQLException, DataAccessException {
+        public UserEntity extractData(ResultSet rs) throws SQLException, DataAccessException {
             return null;
         }
     }

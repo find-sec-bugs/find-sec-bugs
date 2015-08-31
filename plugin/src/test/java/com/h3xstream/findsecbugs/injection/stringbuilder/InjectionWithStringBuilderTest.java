@@ -63,13 +63,12 @@ public class InjectionWithStringBuilderTest extends BaseDetectorTest {
                         .bugType("SQL_INJECTION_JPA").inClass("StringBuilderSuspicious")
                         .inMethod("queryUnknownSource2").withPriority("Medium").build()
         );
-        //FIXME: This is a huge failure from the Taint analysis. Fix ASAP..
-        /*
-        verify(reporter).doReportBug(bugDefinition()
+
+        verify(reporter,never()).doReportBug(bugDefinition()
                         .bugType("SQL_INJECTION_JPA").inClass("StringBuilderSuspicious")
-                        .inMethod("queryUnknownTransformation").withPriority("Low").build()
+                        .inMethod("queryUnknownTransformation").build()
         );
-        */
+
         verify(reporter, times(5)).doReportBug(bugDefinition()
                         .bugType("SQL_INJECTION_JPA").inClass("StringBuilderSuspicious")
                         .withPriority("Medium").build()

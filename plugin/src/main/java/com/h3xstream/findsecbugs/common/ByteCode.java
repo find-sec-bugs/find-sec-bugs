@@ -37,7 +37,7 @@ public class ByteCode {
 
         if (ins instanceof InvokeInstruction) {
             InvokeInstruction invokeIns = (InvokeInstruction) ins;
-            System.out.println(ins.getClass().getSimpleName() + " " + invokeIns.getClassName(cpg).replaceAll("\\.", "/") + "." + invokeIns.getMethodName(cpg) + " (" + invokeIns.getSignature(cpg) + ")");
+            System.out.println(ins.getClass().getSimpleName() + " " + invokeIns.getClassName(cpg).replaceAll("\\.", "/") + "." + invokeIns.getMethodName(cpg) + invokeIns.getSignature(cpg));
         } else if (ins instanceof LDC) {
             LDC i = (LDC) ins;
             System.out.println(ins.getClass().getSimpleName() + " \""+i.getValue(cpg).toString()+"\"");

@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.taintanalysis;
 
+import com.h3xstream.findsecbugs.common.ByteCode;
 import edu.umd.cs.findbugs.ba.AbstractFrameModelingVisitor;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
 import edu.umd.cs.findbugs.ba.InvalidBytecodeException;
@@ -81,9 +82,9 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         super(cpg);
         this.methodDescriptor = method;
         this.methodSummaries = methodSummaries;
-        parameterStackSize = getParameterStackSize(method.getSignature(), method.isStatic());
-        analyzedMethodSummary = new TaintMethodSummary();
-        writtenIndeces = new HashSet<Integer>();
+        this.parameterStackSize = getParameterStackSize(method.getSignature(), method.isStatic());
+        this.analyzedMethodSummary = new TaintMethodSummary();
+        this.writtenIndeces = new HashSet<Integer>();
     }
 
     private static int getParameterStackSize(String signature, boolean isStatic) {
@@ -229,15 +230,44 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     public void visitCHECKCAST(CHECKCAST obj) {
         // keep the top of stack unchanged
     }
-    
+
+    /**
+     * Regroup the method invocations (INVOKEINTERFACE, INVOKESPECIAL, INVOKESTATIC, INVOKEVIRTUAL)
+     * @param obj
+     */
     private void visitInvoke(InvokeInstruction obj) {
+        //ByteCode.printOpCode(obj,cpg);
         TaintMethodSummary methodSummary = getMethodSummary(obj);
         Taint taint = getMethodTaint(methodSummary);
         if (taint.isUnknown()) {
             taint.addTaintLocation(getTaintLocation(), false);
         }
+
+        /**
+         * Tainting parameters that are move to unknown location where they could be altered.
+         * <code>
+         * StringBuilder str = new StringBuilder("select * from ...")
+         * unknownMethodModify(str); //The parameter str need to become tainted.
+         * sensibleApi.query(str);
+         * </code>
+         * Ref: testcode.sqli.stringbuilder.StringBuilderSuspicious#queryUnknownTransformation(java.lang.String, java.lang.String)
+         */
+        if(methodSummary == null) { //The method is unknown
+            boolean isStaticInvoke = obj instanceof INVOKESTATIC;
+            int stackSize = getParameterStackSize(obj.getSignature(cpg), isStaticInvoke);
+            for(int i=0;i < stackSize-(isStaticInvoke?0:1);i++) {
+                try {
+                    //The parameter become tainted
+                    getFrame().getStackValue(i).setState(Taint.State.TAINTED);
+                } catch (DataflowAnalysisException ex) {
+                    throw new RuntimeException("Failed to add taint parameter pass to external method.",ex);
+                }
+            }
+        }
+
         transferTaintToMutables(methodSummary, taint);
         modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taint);
+
     }
 
     private TaintMethodSummary getMethodSummary(InvokeInstruction obj) {
@@ -257,7 +287,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         if (methodSummary == null
                 && Constants.CONSTRUCTOR_NAME.equals(methodName)
                 && !SAFE_OBJECT_TYPES.contains("L" + className + ";")) {
-            int stackSize = getParameterStackSize(signature, false);
+            int stackSize = getParameterStackSize(signature, obj instanceof INVOKESTATIC);
             return TaintMethodSummary.getDefaultConstructorSummary(stackSize);
         }
         return methodSummary;

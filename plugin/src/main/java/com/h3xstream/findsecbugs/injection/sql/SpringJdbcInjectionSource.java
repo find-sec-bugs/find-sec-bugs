@@ -115,7 +115,7 @@ public class SpringJdbcInjectionSource implements InjectionSource {
             else if (methodName.equals("queryForObject")) {
                 //INVOKEVIRTUAL org/springframework/jdbc/core/JdbcTemplate.queryForObject ((Ljava/lang/String;Lorg/springframework/jdbc/core/RowMapper;)Ljava/lang/Object;)
                 if (methodSignature.equals("(Ljava/lang/String;Lorg/springframework/jdbc/core/RowMapper;)Ljava/lang/Object;")) {
-                    return new InjectionPoint(new int[]{2}, SQL_INJECTION_TYPE);
+                    return new InjectionPoint(new int[]{1}, SQL_INJECTION_TYPE);
                 }
                 //INVOKEVIRTUAL org/springframework/jdbc/core/JdbcTemplate.queryForObject ((Ljava/lang/String;Lorg/springframework/jdbc/core/RowMapper;[Ljava/lang/Object;)Ljava/lang/Object;)
                 else if (methodSignature.equals("(Ljava/lang/String;Lorg/springframework/jdbc/core/RowMapper;[Ljava/lang/Object;)Ljava/lang/Object;")) {
@@ -136,11 +136,11 @@ public class SpringJdbcInjectionSource implements InjectionSource {
                 }
                 //INVOKEVIRTUAL org/springframework/jdbc/core/JdbcTemplate.queryForObject ((Ljava/lang/String;[Ljava/lang/Object;[ILjava/lang/Class;)Ljava/lang/Object;)
                 else if (methodSignature.equals("(Ljava/lang/String;[Ljava/lang/Object;[ILjava/lang/Class;)Ljava/lang/Object;")) {
-                    return new InjectionPoint(new int[]{2}, SQL_INJECTION_TYPE);
+                    return new InjectionPoint(new int[]{3}, SQL_INJECTION_TYPE);
                 }
                 //INVOKEVIRTUAL org/springframework/jdbc/core/JdbcTemplate.queryForObject ((Ljava/lang/String;[Ljava/lang/Object;[ILorg/springframework/jdbc/core/RowMapper;)Ljava/lang/Object;)
                 else if (methodSignature.equals("(Ljava/lang/String;[Ljava/lang/Object;[ILorg/springframework/jdbc/core/RowMapper;)Ljava/lang/Object;")) {
-                    return new InjectionPoint(new int[]{2}, SQL_INJECTION_TYPE);
+                    return new InjectionPoint(new int[]{3}, SQL_INJECTION_TYPE);
                 }
                 //INVOKEVIRTUAL org/springframework/jdbc/core/JdbcTemplate.queryForObject ((Ljava/lang/String;[Ljava/lang/Object;Lorg/springframework/jdbc/core/RowMapper;)Ljava/lang/Object;)
                 else if (methodSignature.equals("(Ljava/lang/String;[Ljava/lang/Object;Lorg/springframework/jdbc/core/RowMapper;)Ljava/lang/Object;")) {

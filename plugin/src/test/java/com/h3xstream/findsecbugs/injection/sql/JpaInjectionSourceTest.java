@@ -56,7 +56,6 @@ public class JpaInjectionSourceTest extends BaseDetectorTest {
         verify(reporter, times(2+3)).doReportBug(
                 bugDefinition()
                         .bugType("SQL_INJECTION_JPA")
-                        .withPriority("Medium")
                         .build()
         );
     }
@@ -89,7 +88,6 @@ public class JpaInjectionSourceTest extends BaseDetectorTest {
                 bugDefinition()
                         .bugType("SQL_INJECTION_JPA")
                         .inClass("JpaSql").inMethod("getUserWithNativeQueryUnsafe")
-                        .withPriority("Medium")
                         .build()
         );
 
@@ -97,7 +95,6 @@ public class JpaInjectionSourceTest extends BaseDetectorTest {
                 bugDefinition()
                         .bugType("SQL_INJECTION_JPA")
                         .inClass("JpaSql").inMethod("getUserWithNativeQuerySafe")
-                        .withPriority("Medium")
                         .build()
         );
     }

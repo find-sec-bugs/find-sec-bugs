@@ -117,8 +117,16 @@ public abstract class TaintDetector implements Detector {
             checkTaintSink(getFullMethodName(cpg, invoke), fact, sourceLine, currentMethod);
             InjectionPoint injectionPoint = getInjectionPoint(invoke, cpg, handle, selectedSources);
             for (int offset : injectionPoint.getInjectableArguments()) {
+
+
                 Taint parameterTaint = fact.getStackValue(offset);
-                BugInstance bugInstance = getBugInstance(injectionPoint, parameterTaint);
+
+                int priority =  getPriority(parameterTaint);
+                if(priority == Priorities.IGNORE_PRIORITY) {
+                    continue;
+                }
+                BugInstance bugInstance = new BugInstance(this, injectionPoint.getBugType(), priority);
+
                 bugInstance.addClassAndMethod(classContext.getJavaClass(), method);
                 bugInstance.addSourceLine(sourceLine);
                 if (injectionPoint.getInjectableMethod()!= null) {
@@ -202,16 +210,15 @@ public abstract class TaintDetector implements Detector {
         methodsWithSinks.put(method, sinkSet);
     }
     
-    private BugInstance getBugInstance(InjectionPoint injectionPoint, Taint taint) {
-        int priority;
+    private int getPriority(Taint taint) {
+
         if (taint.isTainted()) {
-            priority = Priorities.HIGH_PRIORITY;
+            return Priorities.HIGH_PRIORITY;
         } else if (!taint.isSafe()) {
-            priority = Priorities.NORMAL_PRIORITY;
+            return Priorities.NORMAL_PRIORITY;
         } else {
-            priority = Priorities.LOW_PRIORITY;
+            return Priorities.IGNORE_PRIORITY;
         }
-        return new BugInstance(this, injectionPoint.getBugType(), priority);
     }
     
     private static void addSourceLines(Collection<TaintLocation> locations, BugInstance bugInstance) {

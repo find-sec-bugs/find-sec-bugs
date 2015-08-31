@@ -21,9 +21,7 @@ import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 public class UnvalidatedRedirectDetectorTest extends BaseDetectorTest {
 
@@ -60,6 +58,9 @@ public class UnvalidatedRedirectDetectorTest extends BaseDetectorTest {
         );
         verify(reporter, times(1)).doReportBug(
                 bugDefinition().bugType("UNVALIDATED_REDIRECT").withPriority("High").build()
+        );
+        verify(reporter, never()).doReportBug(
+                bugDefinition().bugType("UNVALIDATED_REDIRECT").withPriority("Low").build()
         );
     }
 }

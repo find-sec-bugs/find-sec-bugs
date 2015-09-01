@@ -296,36 +296,21 @@ java/util/LinkedList.removeIf(Ljava/util/function/Predicate;)Z:1#1
 
 -Injection API should not alter their parameters (The following signature should be removed at long term)
 
-javax/jdo/PersistenceManager.newQuery(Ljava/lang/Class;Ljava/util/Collection;Ljava/lang/String;)Ljavax/jdo/Query;:SAFE
-javax/jdo/PersistenceManager.newQuery(Ljava/lang/Class;Ljava/util/Collection;Ljava/lang/String;)Ljavax/jdo/Query;:SAFE
-javax/jdo/PersistenceManager.newQuery(Ljava/lang/Class;Ljava/lang/String;)Ljavax/jdo/Query;:SAFE
-javax/jdo/PersistenceManager.newQuery(Ljava/lang/Class;Ljava/lang/String;)Ljavax/jdo/Query;:SAFE
-javax/jdo/PersistenceManager.newQuery(Ljavax/jdo/Extent;Ljava/lang/String;)Ljavax/jdo/Query;:SAFE
-javax/jdo/PersistenceManager.newQuery(Ljavax/jdo/Extent;Ljava/lang/String;)Ljavax/jdo/Query;:SAFE
-javax/jdo/PersistenceManager.newQuery(Ljava/lang/String;)Ljavax/jdo/Query;:SAFE
-javax/jdo/PersistenceManager.newQuery(Ljava/lang/String;Ljava/lang/Object;)Ljavax/jdo/Query;:SAFE
-javax/jdo/PersistenceManager.newQuery(Ljava/lang/String;)Ljavax/jdo/Query;:SAFE
-javax/jdo/PersistenceManager.newQuery(Ljava/lang/String;)Ljavax/jdo/Query;:SAFE
-javax/jdo/PersistenceManager.newQuery(Ljava/lang/String;Ljava/lang/Object;)Ljavax/jdo/Query;:SAFE
+-javax/jdo/PersistenceManager.newQuery(Ljava/lang/Class;)Ljavax/jdo/Query;:UNKNOWN
+-javax/jdo/PersistenceManager.newQuery(Ljava/lang/Class;Ljava/util/Collection;)Ljavax/jdo/Query;:UNKNOWN
+-javax/jdo/PersistenceManager.newQuery(Ljava/lang/Class;Ljava/util/Collection;Ljava/lang/String;)Ljavax/jdo/Query;:UNKNOWN
+-javax/jdo/PersistenceManager.newQuery(Ljava/lang/Class;Ljava/lang/String;)Ljavax/jdo/Query;:UNKNOWN
+-javax/jdo/PersistenceManager.newQuery(Ljavax/jdo/Extent;)Ljavax/jdo/Query;:UNKNOWN
+-javax/jdo/PersistenceManager.newQuery(Ljavax/jdo/Extent;Ljava/lang/String;)Ljavax/jdo/Query;:UNKNOWN
+-javax/jdo/PersistenceManager.newQuery(Ljava/lang/Object;)Ljavax/jdo/Query;:UNKNOWN
+-javax/jdo/PersistenceManager.newQuery(Ljava/lang/String;Ljava/lang/Object;)Ljavax/jdo/Query;:UNKNOWN
 
-com/unboundid/ldap/sdk/LDAPConnection.search(Ljava/lang/String;Lcom/unboundid/ldap/sdk/SearchScope;Ljava/lang/String;[Ljava/lang/String;)Lcom/unboundid/ldap/sdk/SearchResult;:SAFE
+-com/unboundid/ldap/sdk/LDAPConnection.search(Ljava/lang/String;Lcom/unboundid/ldap/sdk/SearchScope;Ljava/lang/String;[Ljava/lang/String;)Lcom/unboundid/ldap/sdk/SearchResult;:UNKNOWN
 
-javax/naming/directory/InitialDirContext.search(Ljava/lang/String;Ljava/lang/String;Ljavax/naming/directory/SearchControls;)Ljavax/naming/NamingEnumeration;:SAFE
+-javax/naming/directory/InitialDirContext.search(Ljava/lang/String;Ljava/lang/String;Ljavax/naming/directory/SearchControls;)Ljavax/naming/NamingEnumeration;:UNKNOWN
 
-javax/servlet/http/HttpServletResponse.sendRedirect(Ljava/lang/String;)V:SAFE
-
-javax/jdo/PersistenceManager.newQuery(Ljava/lang/String;Ljava/lang/Object;)Ljavax/jdo/Query;:SAFE
-javax/jdo/PersistenceManager.newQuery(Ljava/lang/String;)Ljavax/jdo/Query;:SAFE
-javax/jdo/PersistenceManager.newQuery(Ljava/lang/String;)Ljavax/jdo/Query;:SAFE
-javax/jdo/PersistenceManager.newQuery(Ljava/lang/String;Ljava/lang/Object;)Ljavax/jdo/Query;:SAFE
-
-org/hibernate/criterion/Restrictions.sqlRestriction(Ljava/lang/String;)Lorg/hibernate/criterion/Criterion;:SAFE
-org/hibernate/Session.createQuery(Ljava/lang/String;)Lorg/hibernate/Query;:SAFE
-org/hibernate/Session.createSQLQuery(Ljava/lang/String;)Lorg/hibernate/SQLQuery;:SAFE
-org/hibernate/criterion/Restrictions.sqlRestriction(Ljava/lang/String;Ljava/lang/Object;Lorg/hibernate/type/Type;)Lorg/hibernate/criterion/Criterion;:SAFE
-org/hibernate/criterion/Restrictions.sqlRestriction(Ljava/lang/String;[Ljava/lang/Object;[Lorg/hibernate/type/Type;)Lorg/hibernate/criterion/Criterion;:SAFE
-org/hibernate/criterion/Restrictions.sqlRestriction(Ljava/lang/String;)Lorg/hibernate/criterion/Criterion;:SAFE
-org/hibernate/Session.createQuery(Ljava/lang/String;)Lorg/hibernate/Query;:SAFE
-org/hibernate/Session.createSQLQuery(Ljava/lang/String;)Lorg/hibernate/SQLQuery;:SAFE
-org/hibernate/criterion/Restrictions.sqlRestriction(Ljava/lang/String;Ljava/lang/Object;Lorg/hibernate/type/Type;)Lorg/hibernate/criterion/Criterion;:SAFE
-org/hibernate/criterion/Restrictions.sqlRestriction(Ljava/lang/String;[Ljava/lang/Object;[Lorg/hibernate/type/Type;)Lorg/hibernate/criterion/Criterion;:SAFE
+-org/hibernate/criterion/Restrictions.sqlRestriction(Ljava/lang/String;Ljava/lang/Object;Lorg/hibernate/type/Type;)Lorg/hibernate/criterion/Criterion;:UNKNOWN
+-org/hibernate/criterion/Restrictions.sqlRestriction(Ljava/lang/String;[Ljava/lang/Object;[Lorg/hibernate/type/Type;)Lorg/hibernate/criterion/Criterion;:UNKNOWN
+-org/hibernate/criterion/Restrictions.sqlRestriction(Ljava/lang/String;)Lorg/hibernate/criterion/Criterion;:UNKNOWN
+-org/hibernate/criterion/Restrictions.sqlRestriction(Ljava/lang/String;Ljava/lang/Object;Lorg/hibernate/type/Type;)Lorg/hibernate/criterion/Criterion;:UNKNOWN
+-org/hibernate/criterion/Restrictions.sqlRestriction(Ljava/lang/String;[Ljava/lang/Object;[Lorg/hibernate/type/Type;)Lorg/hibernate/criterion/Criterion;:UNKNOWN

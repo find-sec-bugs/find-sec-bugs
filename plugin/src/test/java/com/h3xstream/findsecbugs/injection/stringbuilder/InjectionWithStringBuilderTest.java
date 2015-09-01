@@ -20,14 +20,11 @@ package com.h3xstream.findsecbugs.injection.stringbuilder;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
-import org.testng.annotations.Test;
-
-import java.util.Arrays;
-
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import org.testng.annotations.Test;
 
 public class InjectionWithStringBuilderTest extends BaseDetectorTest {
 
@@ -64,12 +61,12 @@ public class InjectionWithStringBuilderTest extends BaseDetectorTest {
                         .inMethod("queryUnknownSource2").withPriority("Medium").build()
         );
 
-        verify(reporter,never()).doReportBug(bugDefinition()
+        verify(reporter, times(1)).doReportBug(bugDefinition()
                         .bugType("SQL_INJECTION_JPA").inClass("StringBuilderSuspicious")
                         .inMethod("queryUnknownTransformation").build()
         );
 
-        verify(reporter, times(5)).doReportBug(bugDefinition()
+        verify(reporter, times(6)).doReportBug(bugDefinition()
                         .bugType("SQL_INJECTION_JPA").inClass("StringBuilderSuspicious")
                         .withPriority("Medium").build()
         );

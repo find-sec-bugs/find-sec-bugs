@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class CommandInjection {
+public abstract class CommandInjection {
 
     public static void main(String[] args) throws IOException {
 
@@ -140,6 +140,18 @@ public class CommandInjection {
         Runtime.getRuntime().exec(transferThroughList(taintSource(""), 0));
         Runtime.getRuntime().exec(transferThroughList("const" + param, 0));
         Runtime.getRuntime().exec(transferThroughList("const", 0));
+    }
+    
+    abstract void unknown(String str, String s);
+    abstract void unknown(StringBuilder sb);
+    
+    public void testUnknown() throws IOException {
+        String str = "xx";
+        unknown(str, "");
+        Runtime.getRuntime().exec(str);
+        StringBuilder sb = new StringBuilder("xx");
+        unknown(sb);
+        Runtime.getRuntime().exec(sb.toString());
     }
     
     private String transferThroughArray(String in) {

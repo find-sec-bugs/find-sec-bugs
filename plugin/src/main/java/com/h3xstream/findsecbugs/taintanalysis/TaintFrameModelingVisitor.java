@@ -283,7 +283,6 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         }
         transferTaintToMutables(methodSummary, taint);
         modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taint);
-
     }
 
     private TaintMethodSummary getMethodSummary(InvokeInstruction obj) {
@@ -297,11 +296,13 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         String methodNameWithSig = methodName + signature;
         String fullMethodName = className + "." + methodNameWithSig;
         TaintMethodSummary methodSummary = methodSummaries.get(fullMethodName);
-        if (methodSummary == null && TO_STRING_METHOD.equals(methodNameWithSig)) {
+        if (methodSummary != null) {
+            return methodSummary;
+        }
+        if (TO_STRING_METHOD.equals(methodNameWithSig)) {
             return TaintMethodSummary.DEFAULT_TOSTRING_SUMMARY;
         }
-        if (methodSummary == null
-                && Constants.CONSTRUCTOR_NAME.equals(methodName)
+        if (Constants.CONSTRUCTOR_NAME.equals(methodName)
                 && !SAFE_OBJECT_TYPES.contains("L" + className + ";")) {
             int stackSize = getParameterStackSize(signature, obj instanceof INVOKESTATIC);
             return TaintMethodSummary.getDefaultConstructorSummary(stackSize);
@@ -352,14 +353,15 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     }
 
     private void transferTaintToMutables(TaintMethodSummary methodSummary, Taint taint) throws RuntimeException {
-        if (methodSummary == null || !methodSummary.hasMutableStackIndex()) {
+        if (methodSummary == null || !methodSummary.hasMutableStackIndeces()) {
             return;
         }
-        int mutableStackIndex = methodSummary.getMutableStackIndex();
         try {
+            for (Integer mutableStackIndex : methodSummary.getMutableStackIndeces()) {
                 Taint stackValue = getFrame().getStackValue(mutableStackIndex);
                 // needed especially for constructors
                 transferTaint(stackValue, taint);
+            }
         } catch (DataflowAnalysisException ex) {
             throw new RuntimeException("Bad mutable stack index specification", ex);
         }

@@ -117,7 +117,8 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         Iterator<String> iterator = parser.parameterSignatureIterator();
         while (iterator.hasNext()) {
             String parameter = iterator.next();
-            if (parameter.startsWith("L") && !OBJECT_TYPES_NOT_TO_MODIFY.contains(parameter)) {
+            if ((parameter.startsWith("L") || parameter.startsWith("["))
+                    && !OBJECT_TYPES_NOT_TO_MODIFY.contains(parameter)) {
                 indices.add(stackIndex);
             }
             if (parameter.equals("D") || parameter.equals("J")) {

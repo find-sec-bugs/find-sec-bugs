@@ -57,7 +57,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     private static final String TO_STRING_METHOD = "toString()Ljava/lang/String;";
     private static final Set<String> SAFE_OBJECT_TYPES;
-    private static final Set<String> OBJECT_TYPES_NOT_TO_MODIFY;
+    private static final Set<String> IMMUTABLE_OBJECT_TYPES;
     private final MethodDescriptor methodDescriptor;
     private final int parameterStackSize;
     private final TaintMethodSummaryMap methodSummaries;
@@ -77,10 +77,9 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         SAFE_OBJECT_TYPES.add("Ljava/lang/Short;");
         SAFE_OBJECT_TYPES.add("Ljava/lang/BigDecimal;");
         // these data types are not modified, when passed as a parameter to an unknown method
-        OBJECT_TYPES_NOT_TO_MODIFY = new HashSet<String>(SAFE_OBJECT_TYPES.size() + 2);
-        OBJECT_TYPES_NOT_TO_MODIFY.addAll(SAFE_OBJECT_TYPES);
-        OBJECT_TYPES_NOT_TO_MODIFY.add("Ljava/lang/String;");
-        OBJECT_TYPES_NOT_TO_MODIFY.add("Ljava/lang/Object;");
+        IMMUTABLE_OBJECT_TYPES = new HashSet<String>(SAFE_OBJECT_TYPES.size() + 1);
+        IMMUTABLE_OBJECT_TYPES.addAll(SAFE_OBJECT_TYPES);
+        IMMUTABLE_OBJECT_TYPES.add("Ljava/lang/String;");
     }
 
     public TaintFrameModelingVisitor(ConstantPoolGen cpg, MethodDescriptor method,
@@ -118,7 +117,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         while (iterator.hasNext()) {
             String parameter = iterator.next();
             if ((parameter.startsWith("L") || parameter.startsWith("["))
-                    && !OBJECT_TYPES_NOT_TO_MODIFY.contains(parameter)) {
+                    && !IMMUTABLE_OBJECT_TYPES.contains(parameter)) {
                 indices.add(stackIndex);
             }
             if (parameter.equals("D") || parameter.equals("J")) {
@@ -271,7 +270,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         if (taint.isUnknown()) {
             taint.addTaintLocation(getTaintLocation(), false);
         }
-        if (methodSummary == null) {
+        if (methodSummary == null && !"equals".equals(obj.getMethodName(cpg))) {
             Collection<Integer> mutableStackIndices = getMutableStackIndices(obj.getSignature(cpg));
             for (Integer index : mutableStackIndices) {
                 try {

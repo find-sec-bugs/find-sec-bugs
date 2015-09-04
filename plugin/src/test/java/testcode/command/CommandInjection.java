@@ -28,7 +28,6 @@ public abstract class CommandInjection {
         new ProcessBuilder()
                 .command("ls", "-l", input)
                 .start();
-
         new ProcessBuilder()
                 .command(cmd)
                 .start();
@@ -47,10 +46,11 @@ public abstract class CommandInjection {
     
     public void good() throws IOException {
         String hardcoded = "constant";
+        boolean b = "xxx".equals(hardcoded);
         StringBuilder builder = new StringBuilder("<" + hardcoded + ">");
         builder.insert(3, hardcoded).append("");
         builder.reverse();
-        StringBuilder builder2 = new StringBuilder("xxx");
+        StringBuilder builder2 = b ? new StringBuilder("xxx"): new StringBuilder(8);
         builder2.append(builder);
         String safe = "yyy";
         String unsafe = safe.replace("y", builder2.toString());

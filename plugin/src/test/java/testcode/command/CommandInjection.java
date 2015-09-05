@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class CommandInjection {
+public abstract class CommandInjection {
 
     public static void main(String[] args) throws IOException {
 
@@ -28,7 +28,6 @@ public class CommandInjection {
         new ProcessBuilder()
                 .command("ls", "-l", input)
                 .start();
-
         new ProcessBuilder()
                 .command(cmd)
                 .start();
@@ -47,10 +46,11 @@ public class CommandInjection {
     
     public void good() throws IOException {
         String hardcoded = "constant";
+        boolean b = "xxx".equals(hardcoded);
         StringBuilder builder = new StringBuilder("<" + hardcoded + ">");
         builder.insert(3, hardcoded).append("");
         builder.reverse();
-        StringBuilder builder2 = new StringBuilder("xxx");
+        StringBuilder builder2 = b ? new StringBuilder("xxx"): new StringBuilder(8);
         builder2.append(builder);
         String safe = "yyy";
         String unsafe = safe.replace("y", builder2.toString());
@@ -140,6 +140,18 @@ public class CommandInjection {
         Runtime.getRuntime().exec(transferThroughList(taintSource(""), 0));
         Runtime.getRuntime().exec(transferThroughList("const" + param, 0));
         Runtime.getRuntime().exec(transferThroughList("const", 0));
+    }
+    
+    abstract void unknown(String str, String s);
+    abstract void unknown(StringBuilder sb);
+    
+    public void testUnknown() throws IOException {
+        String str = "xx";
+        unknown(str, "");
+        Runtime.getRuntime().exec(str);
+        StringBuilder sb = new StringBuilder("xx");
+        unknown(sb);
+        Runtime.getRuntime().exec(sb.toString());
     }
     
     private String transferThroughArray(String in) {

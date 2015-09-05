@@ -17,13 +17,13 @@
  */
 package com.h3xstream.findsecbugs.taintanalysis;
 
-import com.h3xstream.findsecbugs.common.ByteCode;
 import edu.umd.cs.findbugs.ba.AbstractFrameModelingVisitor;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
 import edu.umd.cs.findbugs.ba.InvalidBytecodeException;
 import edu.umd.cs.findbugs.ba.generic.GenericSignatureParser;
 import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 import edu.umd.cs.findbugs.util.ClassName;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -56,7 +56,9 @@ import org.apache.bcel.generic.StoreInstruction;
 public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Taint, TaintFrame> {
 
     private static final String TO_STRING_METHOD = "toString()Ljava/lang/String;";
+    private static final String EQUALS_METHOD = "equals(Ljava/lang/Object;)Z";
     private static final Set<String> SAFE_OBJECT_TYPES;
+    private static final Set<String> IMMUTABLE_OBJECT_TYPES;
     private final MethodDescriptor methodDescriptor;
     private final int parameterStackSize;
     private final TaintMethodSummaryMap methodSummaries;
@@ -75,6 +77,10 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         SAFE_OBJECT_TYPES.add("Ljava/lang/Byte;");
         SAFE_OBJECT_TYPES.add("Ljava/lang/Short;");
         SAFE_OBJECT_TYPES.add("Ljava/lang/BigDecimal;");
+        // these data types are not modified, when passed as a parameter to an unknown method
+        IMMUTABLE_OBJECT_TYPES = new HashSet<String>(SAFE_OBJECT_TYPES.size() + 1);
+        IMMUTABLE_OBJECT_TYPES.addAll(SAFE_OBJECT_TYPES);
+        IMMUTABLE_OBJECT_TYPES.add("Ljava/lang/String;");
     }
 
     public TaintFrameModelingVisitor(ConstantPoolGen cpg, MethodDescriptor method,
@@ -102,6 +108,30 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             }
         }
         return stackSize;
+    }
+
+    private static Collection<Integer> getMutableStackIndices(String signature) {
+        ArrayList<Integer> indices = new ArrayList<Integer>();
+        int stackIndex = 0;
+        GenericSignatureParser parser = new GenericSignatureParser(signature);
+        Iterator<String> iterator = parser.parameterSignatureIterator();
+        while (iterator.hasNext()) {
+            String parameter = iterator.next();
+            if ((parameter.startsWith("L") || parameter.startsWith("["))
+                    && !IMMUTABLE_OBJECT_TYPES.contains(parameter)) {
+                indices.add(stackIndex);
+            }
+            if (parameter.equals("D") || parameter.equals("J")) {
+                // double and long types takes two slots
+                stackIndex += 2;
+            } else {
+                stackIndex++;
+            }
+        }
+        for (int i = 0; i < indices.size(); i++) {
+            indices.set(i, stackIndex - indices.get(i) - 1);
+        }
+        return indices;
     }
 
     @Override
@@ -232,42 +262,20 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     }
 
     /**
-     * Regroup the method invocations (INVOKEINTERFACE, INVOKESPECIAL, INVOKESTATIC, INVOKEVIRTUAL)
-     * @param obj
+     * Regroup the method invocations (INVOKEINTERFACE, INVOKESPECIAL,
+     * INVOKESTATIC, INVOKEVIRTUAL)
+     *
+     * @param obj one of the invoke instructions
      */
     private void visitInvoke(InvokeInstruction obj) {
-        //ByteCode.printOpCode(obj,cpg);
         TaintMethodSummary methodSummary = getMethodSummary(obj);
         Taint taint = getMethodTaint(methodSummary);
         if (taint.isUnknown()) {
             taint.addTaintLocation(getTaintLocation(), false);
         }
-
-        /**
-         * Tainting parameters that are move to unknown location where they could be altered.
-         * <code>
-         * StringBuilder str = new StringBuilder("select * from ...")
-         * unknownMethodModify(str); //The parameter str need to become tainted.
-         * sensibleApi.query(str);
-         * </code>
-         * Ref: testcode.sqli.stringbuilder.StringBuilderSuspicious#queryUnknownTransformation(java.lang.String, java.lang.String)
-         */
-        if(methodSummary == null) { //The method is unknown
-            boolean isStaticInvoke = obj instanceof INVOKESTATIC;
-            int stackSize = getParameterStackSize(obj.getSignature(cpg), isStaticInvoke);
-            for(int i=0;i < stackSize-(isStaticInvoke?0:1);i++) {
-                try {
-                    //The parameter become tainted
-                    getFrame().getStackValue(i).setState(Taint.State.TAINTED);
-                } catch (DataflowAnalysisException ex) {
-                    throw new RuntimeException("Failed to add taint parameter pass to external method.",ex);
-                }
-            }
-        }
-
+        taintMutableArguments(methodSummary, obj);
         transferTaintToMutables(methodSummary, taint);
         modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taint);
-
     }
 
     private TaintMethodSummary getMethodSummary(InvokeInstruction obj) {
@@ -281,11 +289,16 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         String methodNameWithSig = methodName + signature;
         String fullMethodName = className + "." + methodNameWithSig;
         TaintMethodSummary methodSummary = methodSummaries.get(fullMethodName);
-        if (methodSummary == null && TO_STRING_METHOD.equals(methodNameWithSig)) {
+        if (methodSummary != null) {
+            return methodSummary;
+        }
+        if (TO_STRING_METHOD.equals(methodNameWithSig)) {
             return TaintMethodSummary.DEFAULT_TOSTRING_SUMMARY;
         }
-        if (methodSummary == null
-                && Constants.CONSTRUCTOR_NAME.equals(methodName)
+        if (EQUALS_METHOD.equals(methodNameWithSig)) {
+            return TaintMethodSummary.DEFAULT_EQUALS_SUMMARY;
+        }
+        if (Constants.CONSTRUCTOR_NAME.equals(methodName)
                 && !SAFE_OBJECT_TYPES.contains("L" + className + ";")) {
             int stackSize = getParameterStackSize(signature, obj instanceof INVOKESTATIC);
             return TaintMethodSummary.getDefaultConstructorSummary(stackSize);
@@ -320,6 +333,23 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         return taint;
     }
 
+    private void taintMutableArguments(TaintMethodSummary methodSummary, InvokeInstruction obj) {
+        if (methodSummary != null
+                && methodSummary != TaintMethodSummary.SAFE_SUMMARY
+                && !Constants.CONSTRUCTOR_NAME.equals(obj.getMethodName(cpg))) {
+            return;
+        }
+        Collection<Integer> mutableStackIndices = getMutableStackIndices(obj.getSignature(cpg));
+        for (Integer index : mutableStackIndices) {
+            try {
+                Taint stackValue = getFrame().getStackValue(index);
+                stackValue.setState(Taint.State.merge(stackValue.getState(), Taint.State.UNKNOWN));
+            } catch (DataflowAnalysisException ex) {
+                throw new InvalidBytecodeException("Not enough values on the stack", ex);
+            }
+        }
+    }
+    
     private Taint mergeTransferParameters(Collection<Integer> transferParameters) {
         Taint taint = null;
         assert !transferParameters.isEmpty();
@@ -336,14 +366,15 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     }
 
     private void transferTaintToMutables(TaintMethodSummary methodSummary, Taint taint) throws RuntimeException {
-        if (methodSummary == null || !methodSummary.hasMutableStackIndex()) {
+        if (methodSummary == null || !methodSummary.hasMutableStackIndeces()) {
             return;
         }
-        int mutableStackIndex = methodSummary.getMutableStackIndex();
         try {
+            for (Integer mutableStackIndex : methodSummary.getMutableStackIndeces()) {
                 Taint stackValue = getFrame().getStackValue(mutableStackIndex);
                 // needed especially for constructors
                 transferTaint(stackValue, taint);
+            }
         } catch (DataflowAnalysisException ex) {
             throw new RuntimeException("Bad mutable stack index specification", ex);
         }

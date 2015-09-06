@@ -527,6 +527,10 @@ sha256Digest.update(password.getBytes());</pre>
 <p>
 <b>参考文献</b><br/>
 <a href="http://blogs.securiteam.com/index.php/archives/1268">Securiteam: File upload security recommendations</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/22.html">CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')</a><br/>
+<a href="http://projects.webappsec.org/w/page/13246952/Path%20Traversal">WASC-33: Path Traversal</a><br/>
+<a href="https://www.owasp.org/index.php/Path_Traversal">OWASP: Path Traversal</a><br/>
+<a href="http://capec.mitre.org/data/definitions/126.html">CAPEC-126: Path Traversal</a><br/>
 <a href="http://cwe.mitre.org/data/definitions/22.html">CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')</a>
 </p>
     </section>
@@ -999,6 +1003,74 @@ UserEntity res = q.getSingleResult();</pre>
     </section>
     
     <section>
+        <a class="anchor" name="SQL_INJECTION_SPRING_JDBC"></a><h2 class="page-header">潜在的な JDBC インジェクション (Spring JDBC)  <a href="#SQL_INJECTION_SPRING_JDBC" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+
+        <p>
+SQL クエリーに含まれる入力値は安全に渡される必要があります。
+プリペアードステートメントのバインド変数は、SQL インジェクションのリスクを容易に軽減するために使用することができます。
+</p>
+
+<p>
+    <b>脆弱なコード:</b><br/>
+    <pre>JdbcTemplate jdbc = new JdbcTemplate();
+int count = jdbc.queryForObject("select count(*) from Users where name = '"+paramName+"'", Integer.class);
+</pre>
+</p>
+<p>
+    <b>解決策:</b><br/>
+    <pre>JdbcTemplate jdbc = new JdbcTemplate();
+int count = jdbc.queryForObject("select count(*) from Users where name = ?", Integer.class, paramName);</pre>
+</p>
+<br/>
+
+<b>参考文献 (Spring JDBC)</b><br/>
+<a href="http://docs.spring.io/spring-framework/docs/current/spring-framework-reference/html/jdbc.html">Spring Official Documentation: Data access with JDBC</a><br/>
+<b>参考文献 (SQL インジェクション)</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-19: SQL Injection</a><br/>
+<a href="http://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
+<a href="https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet">OWASP: SQL Injection Prevention Cheat Sheet</a><br/>
+<a href="https://www.owasp.org/index.php/Query_Parameterization_Cheat_Sheet">OWASP: Query Parameterization Cheat Sheet</a><br/>
+</p>
+    </section>
+    
+    <section>
+        <a class="anchor" name="SQL_INJECTION_JDBC"></a><h2 class="page-header">潜在的な JDBC インジェクション  <a href="#SQL_INJECTION_JDBC" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+
+        <p>
+SQL クエリーに含まれる入力値は安全に渡される必要があります。
+プリペアードステートメントのバインド変数は、SQL インジェクションのリスクを容易に軽減するために使用することができます。
+</p>
+
+<p>
+    <b>脆弱なコード:</b><br/>
+    <pre>Connection conn = [...];
+Statement stmt = con.createStatement();
+ResultSet rs = stmt.executeQuery("update COFFEES set SALES = "+nbSales+" where COF_NAME = '"+coffeeName+"'");</pre>
+</p>
+<p>
+    <b>解決策:</b><br/>
+    <pre>Connection conn = [...];
+conn.prepareStatement("update COFFEES set SALES = ? where COF_NAME = ?");
+updateSales.setInt(1, nbSales);
+updateSales.setString(2, coffeeName);</pre>
+</p>
+<br/>
+
+<b>参考文献 (JDBC)</b><br/>
+<a href="http://docs.oracle.com/javase/tutorial/jdbc/basics/prepared.html">Oracle Documentation: The Java Tutorials &gt; Prepared Statements</a><br/>
+<b>参考文献 (SQL インジェクション)</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-19: SQL Injection</a><br/>
+<a href="http://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
+<a href="https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet">OWASP: SQL Injection Prevention Cheat Sheet</a><br/>
+<a href="https://www.owasp.org/index.php/Query_Parameterization_Cheat_Sheet">OWASP: Query Parameterization Cheat Sheet</a><br/>
+</p>
+    </section>
+    
+    <section>
         <a class="anchor" name="LDAP_INJECTION"></a><h2 class="page-header">潜在的な LDAP インジェクション  <a href="#LDAP_INJECTION" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>
@@ -1263,6 +1335,7 @@ byte[] cipherText = c.doFinal(plainText);</pre>
         <p>
 パスワードは、ソースコード内に保持すべきではありません。ソースコードは、企業環境では広く共有されることがあり、オープンソースでは確実に共有されています。
 安全に管理されるようにするには、パスワードや秘密鍵は別個の設定ファイルやキーストアに保存するべきです。
+(ハードコードされた鍵は別途<i>ハードコードされた鍵</i>パターンで報告されます)
 </p>
 <p>
 <p><b>脆弱なコード:</b><br/>
@@ -1275,8 +1348,31 @@ props.put(Context.SECURITY_CREDENTIALS, "p@ssw0rd");</pre>
 <br/>
 <p>
 <b>参考文献</b><br/>
-<a href="http://cwe.mitre.org/data/definitions/321.html">CWE-321: Use of Hard-coded Cryptographic Key</a><br/>
 <a href="http://cwe.mitre.org/data/definitions/259.html">CWE-259: Use of Hard-coded Password</a>
+</p>
+    </section>
+    
+    <section>
+        <a class="anchor" name="HARD_CODE_KEY"></a><h2 class="page-header">ハードコードされた鍵  <a href="#HARD_CODE_KEY" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+
+        <p>
+暗号化鍵は、ソースコード内に保持すべきではありません。ソースコードは、企業環境では広く共有されることがあり、オープンソースでは確実に共有されています。
+安全に管理されるようにするには、パスワードや秘密鍵は別個の設定ファイルやキーストアに保存するべきです。
+(ハードコードされたパスワードは別途<i>ハードコードされたパスワード</i>パターンで報告されます)
+</p>
+<p>
+<p><b>脆弱なコード:</b><br/>
+
+<pre>byte[] key = {1, 2, 3, 4, 5, 6, 7, 8};
+SecretKeySpec spec = new SecretKeySpec(key, "AES");
+Cipher aes = Cipher.getInstance("AES");
+aes.init(Cipher.ENCRYPT_MODE, spec);
+return aesCipher.doFinal(secretData);</pre> 
+</p>
+<br/>
+<p>
+<b>参考文献</b><br/>
+<a href="http://cwe.mitre.org/data/definitions/321.html">CWE-321: Use of Hard-coded Cryptographic Key</a><br/>
 </p>
     </section>
     

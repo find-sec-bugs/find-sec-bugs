@@ -35,7 +35,6 @@ public class SpringJdbcInjectionSource implements InjectionSource {
 
     @Override
     public InjectionPoint getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {
-        //FIXME : Add the deprecated API queryForLong, queryForInt, ..
 
         //ByteCode.printOpCode(ins,cpg);
 
@@ -254,6 +253,36 @@ public class SpringJdbcInjectionSource implements InjectionSource {
                 }
                 //INVOKEVIRTUAL org/springframework/jdbc/core/JdbcTemplate.queryForRowSet ((Ljava/lang/String;[Ljava/lang/Object;[I)Lorg/springframework/jdbc/support/rowset/SqlRowSet;)
                 else if (methodSignature.equals("(Ljava/lang/String;[Ljava/lang/Object;[I)Lorg/springframework/jdbc/support/rowset/SqlRowSet;")) {
+                    return new InjectionPoint(new int[]{2}, SQL_INJECTION_TYPE);
+                }
+            }
+
+            else if (methodName.equals("queryForInt")) {
+                //INVOKEVIRTUAL org/springframework/jdbc/core/JdbcTemplate.queryForRowSet ((Ljava/lang/String;)I)
+                if (methodSignature.equals("(Ljava/lang/String;)I")) {
+                    return new InjectionPoint(new int[]{0}, SQL_INJECTION_TYPE);
+                }
+                //INVOKEVIRTUAL org/springframework/jdbc/core/JdbcTemplate.queryForRowSet ((Ljava/lang/String;[Ljava/lang/Object;)I)
+                else if (methodSignature.equals("(Ljava/lang/String;[Ljava/lang/Object;)I")) {
+                    return new InjectionPoint(new int[]{1}, SQL_INJECTION_TYPE);
+                }
+                //INVOKEVIRTUAL org/springframework/jdbc/core/JdbcTemplate.queryForRowSet ((Ljava/lang/String;[Ljava/lang/Object;[I)I)
+                else if (methodSignature.equals("(Ljava/lang/String;[Ljava/lang/Object;[I)I")) {
+                    return new InjectionPoint(new int[]{2}, SQL_INJECTION_TYPE);
+                }
+            }
+
+            else if (methodName.equals("queryForLong")) {
+                //INVOKEVIRTUAL org/springframework/jdbc/core/JdbcTemplate.queryForRowSet ((Ljava/lang/String;)J)
+                if (methodSignature.equals("(Ljava/lang/String;)J")) {
+                    return new InjectionPoint(new int[]{0}, SQL_INJECTION_TYPE);
+                }
+                //INVOKEVIRTUAL org/springframework/jdbc/core/JdbcTemplate.queryForRowSet ((Ljava/lang/String;[Ljava/lang/Object;)J)
+                else if (methodSignature.equals("(Ljava/lang/String;[Ljava/lang/Object;)J")) {
+                    return new InjectionPoint(new int[]{1}, SQL_INJECTION_TYPE);
+                }
+                //INVOKEVIRTUAL org/springframework/jdbc/core/JdbcTemplate.queryForRowSet ((Ljava/lang/String;[Ljava/lang/Object;[I)J)
+                else if (methodSignature.equals("(Ljava/lang/String;[Ljava/lang/Object;[I)J")) {
                     return new InjectionPoint(new int[]{2}, SQL_INJECTION_TYPE);
                 }
             }

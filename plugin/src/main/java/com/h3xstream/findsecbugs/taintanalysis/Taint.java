@@ -231,20 +231,6 @@ public class Taint {
         result.nonParametricTaint = taint;
         }
         return result;
-        /*
-        result.taintLocations.addAll(a.taintLocations);
-        result.taintLocations.addAll(b.taintLocations);
-        result.possibleTaintLocations.addAll(a.possibleTaintLocations);
-        result.possibleTaintLocations.addAll(b.possibleTaintLocations);
-        result.taintParameters.addAll(a.taintParameters);
-        result.taintParameters.addAll(b.taintParameters);
-        Taint taint = merge(a.nonParametricTaint, b.nonParametricTaint);
-        if (a.nonParametricTaint != null && b.nonParametricTaint == null) {
-            taint = merge(taint, b);
-        } else if (b.nonParametricTaint != null && a.nonParametricTaint == null) {
-            taint = merge(taint, a);
-        }
-        */
     }
 
     @Override

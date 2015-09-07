@@ -70,6 +70,7 @@ public class CommandInjectionSource implements InjectionSource {
                 return ip;
             }
         }
+        /*
         else if(ins instanceof INVOKESPECIAL) {
             String methodName = ins.getMethodName(cpg);
             String className = ins.getClassName(cpg);
@@ -82,6 +83,7 @@ public class CommandInjectionSource implements InjectionSource {
                 return ip;
             }
         }
+        */
         return InjectionPoint.NONE;
     }
 }

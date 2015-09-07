@@ -19,6 +19,7 @@ package com.h3xstream.findsecbugs.taintanalysis;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -52,7 +53,7 @@ public class TaintMethodSummary {
         if (!hasMutableStackIndeces()) {
             throw new IllegalStateException("stack indeces not set");
         }
-        return mutableStackIndices;
+        return Collections.unmodifiableCollection(mutableStackIndices);
     }
 
     public boolean hasMutableStackIndeces() {
@@ -61,20 +62,36 @@ public class TaintMethodSummary {
     }
     
     public void addMutableStackIndex(int mutableStackIndex) {
+        if (mutableStackIndex < 0) {
+            throw new IllegalArgumentException("negative index");
+        }
         mutableStackIndices.add(mutableStackIndex);
     }
     
     public Taint getOutputTaint() {
-        return outputTaint;
+        if (outputTaint == null) {
+            return null;
+        }
+        return new Taint(outputTaint);
     }
     
-    public void setOuputTaint(Taint outputTaint) {
-        this.outputTaint = outputTaint;
+    public void setOuputTaint(Taint taint) {
+        if (taint == null) {
+            this.outputTaint = null;
+            return;
+        }
+        Taint taintCopy = new Taint(taint);
+        taintCopy.invalidateLocalVariableIndex();
+        this.outputTaint = taintCopy;
     }
 
     public static TaintMethodSummary getDefaultConstructorSummary(int stackSize) {
+        if (stackSize < 0) {
+            throw new IllegalArgumentException("negative index");
+        }
         TaintMethodSummary summary = new TaintMethodSummary();
         summary.outputTaint = new Taint(Taint.State.UNKNOWN);
+        summary.mutableStackIndices.add(stackSize - 1);
         summary.mutableStackIndices.add(stackSize);
         return summary;
     }
@@ -123,6 +140,7 @@ public class TaintMethodSummary {
     }
     
     private static void appendJoined(StringBuilder sb, Collection<Integer> objects) {
+        assert sb != null && objects != null;
         int count = objects.size();
         Integer[] array = objects.toArray(new Integer[count]);
         sb.append(array[0]);
@@ -139,6 +157,9 @@ public class TaintMethodSummary {
      * @throws java.io.IOException for bad format of paramter
      */
     public static TaintMethodSummary load(String str) throws IOException {
+        if (str == null) {
+            throw new NullPointerException("string is null");
+        }
         str = str.trim();
         String[] tuple = str.split("#");
         TaintMethodSummary summary = new TaintMethodSummary();
@@ -176,6 +197,7 @@ public class TaintMethodSummary {
     }
     
     private static boolean isTaintStateValue(String value) {
+        assert value != null && !value.isEmpty();
         Taint.State[] states = Taint.State.values();
         for (Taint.State state : states) {
             if (state.name().equals(value)) {

@@ -47,7 +47,7 @@ public class Taint {
         
         public static State merge(State a, State b) {
             if (a == null || b == null) {
-                throw new NullPointerException("use UKNOWN instead of null");
+                throw new NullPointerException("use State.UNKNOWN instead of null");
             }
             if (a == TAINTED || b == TAINTED) {
                 return TAINTED;
@@ -76,10 +76,10 @@ public class Taint {
             throw new NullPointerException("state not set");
         }
         this.state = state;
-        localVariableIndex = INVALID_INDEX;
-        possibleTaintLocations = new HashSet<TaintLocation>();
-        taintLocations = new HashSet<TaintLocation>();
-        taintParameters = new HashSet<Integer>();
+        this.localVariableIndex = INVALID_INDEX;
+        this.possibleTaintLocations = new HashSet<TaintLocation>();
+        this.taintLocations = new HashSet<TaintLocation>();
+        this.taintParameters = new HashSet<Integer>();
     }
     
     public Taint(Taint taint) {
@@ -87,14 +87,22 @@ public class Taint {
             throw new NullPointerException("taint is null");
         }
         this.state = taint.state;
-        localVariableIndex = taint.localVariableIndex;
-        taintLocations = new HashSet<TaintLocation>(taint.taintLocations);
-        possibleTaintLocations = new HashSet<TaintLocation>(taint.possibleTaintLocations);
-        taintParameters = new HashSet<Integer>(taint.getTaintParameters());
-        nonParametricTaint = taint.nonParametricTaint;
+        this.localVariableIndex = taint.localVariableIndex;
+        this.taintLocations = new HashSet<TaintLocation>(taint.taintLocations);
+        this.possibleTaintLocations = new HashSet<TaintLocation>(taint.possibleTaintLocations);
+        this.taintParameters = new HashSet<Integer>(taint.getTaintParameters());
+        this.nonParametricTaint = taint.nonParametricTaint;
+        if (taint.nonParametricTaint == null) {
+            this.nonParametricTaint = null;
+        } else if (taint.nonParametricTaint.nonParametricTaint == null) {
+            this.nonParametricTaint = new Taint(taint.nonParametricTaint);
+        } else {
+            throw new IllegalArgumentException("copying non-parametric taint recursively");
+        }
     }
     
     public State getState() {
+        assert state != null;
         return state;
     }
     
@@ -109,6 +117,7 @@ public class Taint {
         if (localVariableIndex == INVALID_INDEX) {
             throw new IllegalStateException("index not set or has been invalidated");
         }
+        assert localVariableIndex >= 0;
         return localVariableIndex;
     }
     
@@ -128,6 +137,9 @@ public class Taint {
     }
     
     public void addTaintLocation(TaintLocation location, boolean isKnownTaintSource) {
+        if (location == null) {
+            throw new NullPointerException("location is null");
+        }
         if (isKnownTaintSource) {
            taintLocations.add(location); 
         } else {
@@ -180,6 +192,11 @@ public class Taint {
     }
     
     public void setNonParametricTaint(Taint taint) {
+        if (taint != null && taint.nonParametricTaint != null) {
+            throw new IllegalArgumentException(
+                    "setting non-parametric taint with its own non-parametric taint"
+            );
+        }
         nonParametricTaint = taint;
     }
     
@@ -198,22 +215,36 @@ public class Taint {
             && a.getLocalVariableIndex() == b.getLocalVariableIndex()) {
             result.setLocalVariableIndex(a.getLocalVariableIndex());
         }
-        result.taintLocations.addAll(a.getTaintedLocations());
-        result.taintLocations.addAll(b.getTaintedLocations());
-        result.possibleTaintLocations.addAll(a.getPossibleTaintedLocations());
-        result.possibleTaintLocations.addAll(b.getPossibleTaintedLocations());
+        result.taintLocations.addAll(a.taintLocations);
+        result.taintLocations.addAll(b.taintLocations);
+        result.possibleTaintLocations.addAll(a.possibleTaintLocations);
+        result.possibleTaintLocations.addAll(b.possibleTaintLocations);
         if (a.hasTaintParameters() || b.hasTaintParameters()) {
-            result.taintParameters.addAll(a.taintParameters);
-            result.taintParameters.addAll(b.taintParameters);
-            Taint taint = merge(a.nonParametricTaint, b.nonParametricTaint);
+        result.taintParameters.addAll(a.taintParameters);
+        result.taintParameters.addAll(b.taintParameters);
+        Taint taint = merge(a.nonParametricTaint, b.nonParametricTaint);
             if (!a.hasTaintParameters()) {
                 taint = merge(taint, a);
             } else if (!b.hasTaintParameters()) {
                 taint = merge(taint, b);
-            }
-            result.nonParametricTaint = taint;
+        }
+        result.nonParametricTaint = taint;
         }
         return result;
+        /*
+        result.taintLocations.addAll(a.taintLocations);
+        result.taintLocations.addAll(b.taintLocations);
+        result.possibleTaintLocations.addAll(a.possibleTaintLocations);
+        result.possibleTaintLocations.addAll(b.possibleTaintLocations);
+        result.taintParameters.addAll(a.taintParameters);
+        result.taintParameters.addAll(b.taintParameters);
+        Taint taint = merge(a.nonParametricTaint, b.nonParametricTaint);
+        if (a.nonParametricTaint != null && b.nonParametricTaint == null) {
+            taint = merge(taint, b);
+        } else if (b.nonParametricTaint != null && a.nonParametricTaint == null) {
+            taint = merge(taint, a);
+        }
+        */
     }
 
     @Override

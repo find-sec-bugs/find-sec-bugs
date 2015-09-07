@@ -38,7 +38,7 @@ public abstract class CommandInjection {
         builder.insert(3, tainted).append("");
         builder.reverse();
         StringBuilder builder2 = new StringBuilder("xxx");
-        builder2.append(builder);
+        builder2.append("").append(builder);
         String safe = "yyy";
         String unsafe = safe.replace("y", builder2.toString());
         Runtime.getRuntime().exec(unsafe.toLowerCase().substring(1).intern());
@@ -51,7 +51,7 @@ public abstract class CommandInjection {
         builder.insert(3, hardcoded).append("");
         builder.reverse();
         StringBuilder builder2 = b ? new StringBuilder("xxx"): new StringBuilder(8);
-        builder2.append(builder);
+        builder2.append("").append(builder);
         String safe = "yyy";
         String unsafe = safe.replace("y", builder2.toString());
         Runtime.getRuntime().exec(unsafe.toLowerCase().substring(1).intern());
@@ -166,10 +166,10 @@ public abstract class CommandInjection {
     
     private String transferThroughList(String in, int index) {
         LinkedList<String> list = new LinkedList<String>();
-        //list.add(System.getenv(""));
-        //list.clear(); // works, but cause magical problems if combined with iterators
+        list.add(System.getenv("")); // taints the list
+        list.clear(); // makes the list safe again
         list.add(1, "xx");
-        list.addFirst(in);
+        list.addFirst(in); // can taint the list
         list.addLast("yy");
         list.push(in);
         return list.element() + list.get(index) + list.getFirst() + list.getLast()

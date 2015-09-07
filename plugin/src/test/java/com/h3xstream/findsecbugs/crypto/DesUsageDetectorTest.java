@@ -40,7 +40,7 @@ public class DesUsageDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         //Assertions
-        for (Integer line : Arrays.asList(20, 21, 22, 23, 24, 25, 26, 27)) {
+        for (Integer line : Arrays.asList(20, 21, 22, 23, 24, 25, 26, 27,34)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("DES_USAGE")

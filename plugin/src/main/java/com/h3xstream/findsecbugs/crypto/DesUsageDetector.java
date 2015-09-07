@@ -61,7 +61,7 @@ public class DesUsageDetector extends OpcodeStackDetector {
                 String cipherValue = (String) item.getConstant();
                 if (DEBUG) System.out.println(cipherValue);
 
-                if (cipherValue.startsWith("DES/") || cipherValue.startsWith("DESede/")) {
+                if (cipherValue.equals("DES") || cipherValue.startsWith("DES/") || cipherValue.startsWith("DESede/")) {
                     bugReporter.reportBug(new BugInstance(this, DES_USAGE_TYPE, Priorities.NORMAL_PRIORITY) //
                             .addClass(this).addMethod(this).addSourceLine(this));
                 }

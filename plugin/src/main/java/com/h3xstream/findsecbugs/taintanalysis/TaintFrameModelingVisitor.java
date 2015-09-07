@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.taintanalysis;
 
+import com.h3xstream.findsecbugs.common.ByteCode;
 import edu.umd.cs.findbugs.ba.AbstractFrameModelingVisitor;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
 import edu.umd.cs.findbugs.ba.InvalidBytecodeException;
@@ -41,11 +42,14 @@ import org.apache.bcel.generic.INVOKEINTERFACE;
 import org.apache.bcel.generic.INVOKESPECIAL;
 import org.apache.bcel.generic.INVOKESTATIC;
 import org.apache.bcel.generic.INVOKEVIRTUAL;
+import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.LDC2_W;
 import org.apache.bcel.generic.LoadInstruction;
 import org.apache.bcel.generic.NEW;
+import org.apache.bcel.generic.ObjectType;
+import org.apache.bcel.generic.StackProducer;
 import org.apache.bcel.generic.StoreInstruction;
 
 /**
@@ -134,41 +138,61 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         return indices;
     }
 
+
     @Override
     public Taint getDefaultValue() {
         return new Taint(Taint.State.UNKNOWN);
     }
 
+/* Uncomment to view most of the instruction as they are process by the TaintFrameModelingVisitor.
     @Override
-    public void visitLDC(LDC obj) {
-        pushSafe();
+    public void visitStackProducer(StackProducer obj) {
+        if(obj instanceof Instruction) {
+            ByteCode.printOpCode((Instruction) obj, cpg);
+        }
+    }
+*/
+
+    @Override
+    public void visitLDC(LDC ldc) {
+        Object value = ldc.getValue(cpg);
+        if(value instanceof String) {
+            pushSafe("\"" + (String) value + "\"");
+        }
+        else {
+            pushSafe("LDC " + ldc.getType(cpg).getSignature());
+        }
+
     }
 
     @Override
     public void visitLDC2_W(LDC2_W obj) {
         // double and long type takes two slots in BCEL
-        pushSafe();
-        pushSafe();
+        pushSafe("partial long/double");
+        pushSafe("partial long/double");
     }
 
     @Override
     public void visitACONST_NULL(ACONST_NULL obj) {
-        getFrame().pushValue(new Taint(Taint.State.NULL));
+        getFrame().pushValue(new Taint(Taint.State.NULL).setDebugInfo("NULL"));
     }
 
     @Override
     public void visitNEW(NEW obj) {
-        pushSafe();
+
+        ObjectType type = obj.getLoadClassType(cpg);
+        pushSafe("new " + type.getClassName() + "()");
     }
 
+
     @Override
-    public void handleStoreInstruction(StoreInstruction obj) {
+    public void handleStoreInstruction(StoreInstruction storeIns) {
         try {
-            int numConsumed = obj.consumeStack(cpg);
+            int numConsumed = storeIns.consumeStack(cpg);
             if (numConsumed == Constants.UNPREDICTABLE) {
                 throw new InvalidBytecodeException("Unpredictable stack consumption");
             }
-            int index = obj.getIndex();
+            int index = storeIns.getIndex();
             while (numConsumed-- > 0) {
                 Taint value = getFrame().popValue();
                 writtenIndeces.add(index);
@@ -180,12 +204,12 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     }
 
     @Override
-    public void handleLoadInstruction(LoadInstruction obj) {
-        int numProduced = obj.produceStack(cpg);
+    public void handleLoadInstruction(LoadInstruction loadIns) {
+        int numProduced = loadIns.produceStack(cpg);
         if (numProduced == Constants.UNPREDICTABLE) {
             throw new InvalidBytecodeException("Unpredictable stack production");
         }
-        int index = obj.getIndex() + numProduced;
+        int index = loadIns.getIndex() + numProduced;
         while (numProduced-- > 0) {
             Taint value = getFrame().getValue(--index);
             // set local variable origin of a stack value
@@ -224,7 +248,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     public void visitANEWARRAY(ANEWARRAY obj) {
         try {
             getFrame().popValue();
-            pushSafe();
+            pushSafe("new " + obj.getLoadClassType(cpg) + "[]");
         } catch (DataflowAnalysisException ex) {
             throw new InvalidBytecodeException("Array length not in the stack", ex);
         }
@@ -265,17 +289,21 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
      * Regroup the method invocations (INVOKEINTERFACE, INVOKESPECIAL,
      * INVOKESTATIC, INVOKEVIRTUAL)
      *
-     * @param obj one of the invoke instructions
+     * @param invoke Invoke instruction
      */
-    private void visitInvoke(InvokeInstruction obj) {
-        TaintMethodSummary methodSummary = getMethodSummary(obj);
+    private void visitInvoke(InvokeInstruction invoke) {
+        TaintMethodSummary methodSummary = getMethodSummary(invoke);
         Taint taint = getMethodTaint(methodSummary);
+
+        //Keep the source method name
+        taint.setDebugInfo(invoke.getMethodName(cpg) + "()");
+
         if (taint.isUnknown()) {
             taint.addTaintLocation(getTaintLocation(), false);
         }
-        taintMutableArguments(methodSummary, obj);
+        taintMutableArguments(methodSummary, invoke);
         transferTaintToMutables(methodSummary, taint);
-        modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taint);
+        modelInstruction(invoke, getNumWordsConsumed(invoke), getNumWordsProduced(invoke), taint);
     }
 
     private TaintMethodSummary getMethodSummary(InvokeInstruction obj) {
@@ -400,8 +428,8 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         } // else we are not able to transfer taint to a local variable
     }
 
-    private void pushSafe() {
-        getFrame().pushValue(new Taint(Taint.State.SAFE));
+    private void pushSafe(String debugInfo) {
+        getFrame().pushValue(new Taint(Taint.State.SAFE).setDebugInfo(debugInfo));
     }
 
     private TaintLocation getTaintLocation() {
@@ -428,5 +456,30 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             return TaintMethodSummary.SAFE_SUMMARY;
         }
         return analyzedMethodSummary;
+    }
+
+    /**
+     * For debugging purpose.
+     */
+    private void printStackState() {
+
+        try {
+            System.out.println("============================");
+            System.out.println("[[ Stack ]]");
+            int stackDepth = getFrame().getStackDepth();
+            for (int i = 0; i < stackDepth; i++) {
+                Taint taintValue = getFrame().getStackValue(i);
+                System.out.println(String.format("%s. %s {%s}", i, taintValue.getState().toString(), taintValue.getDebugInfo()));
+            }
+            if(stackDepth == 0) {
+                System.out.println("Empty");
+            }
+            System.out.println("============================");
+
+        }
+        catch (DataflowAnalysisException e) {
+            System.out.println("Oups "+e.getMessage());
+        }
+
     }
 }

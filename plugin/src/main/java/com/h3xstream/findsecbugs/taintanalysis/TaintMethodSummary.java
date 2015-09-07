@@ -134,7 +134,7 @@ public class TaintMethodSummary {
     /**
      * Loads method summary from String
      * 
-     * @param str (state or parameter indeces to merge separated by comma)#mutable position
+     * @param str (state or parameter indices to merge separated by comma)#mutable position
      * @return initialized object with taint method summary
      * @throws java.io.IOException for bad format of paramter
      */

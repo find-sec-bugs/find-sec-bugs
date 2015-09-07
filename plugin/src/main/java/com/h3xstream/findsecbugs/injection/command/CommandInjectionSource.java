@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.injection.command;
 
+import com.h3xstream.findsecbugs.common.ByteCode;
 import com.h3xstream.findsecbugs.injection.InjectionPoint;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
 import org.apache.bcel.classfile.Constant;
@@ -25,7 +26,6 @@ import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InvokeInstruction;
-
 public class CommandInjectionSource implements InjectionSource {
 
     private static final String COMMAND_INJECTION_TYPE = "COMMAND_INJECTION";
@@ -50,6 +50,8 @@ public class CommandInjectionSource implements InjectionSource {
     @Override
     public InjectionPoint getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {
 
+        //ByteCode.printOpCode(ins,cpg);
+
         if (ins instanceof INVOKEVIRTUAL) {
             String methodName = ins.getMethodName(cpg);
             String className = ins.getClassName(cpg);
@@ -58,10 +60,24 @@ public class CommandInjectionSource implements InjectionSource {
                 InjectionPoint ip = new InjectionPoint(new int[]{0}, COMMAND_INJECTION_TYPE);
                 ip.setInjectableMethod("Runtime.exec(...)");
                 return ip;
-            }
-            else if (className.equals("java.lang.ProcessBuilder") && methodName.equals("command")) {
+            } else if (className.equals("java.lang.ProcessBuilder") && methodName.equals("command")) {
+                //INVOKEVIRTUAL java/lang/ProcessBuilder.command([Ljava/lang/String;)Ljava/lang/ProcessBuilder;
+                //INVOKEVIRTUAL java/lang/ProcessBuilder.command(Ljava/util/List;)Ljava/lang/ProcessBuilder;
+
                 InjectionPoint ip = new InjectionPoint(new int[]{0}, COMMAND_INJECTION_TYPE);
                 ip.setInjectableMethod("ProcessBuilder.command(...)");
+                return ip;
+            }
+        }
+        else if(ins instanceof INVOKESPECIAL) {
+            String methodName = ins.getMethodName(cpg);
+            String className = ins.getClassName(cpg);
+            if (className.equals("java.lang.ProcessBuilder") && methodName.equals("<init>")) {
+                //INVOKESPECIAL java/lang/ProcessBuilder.<init>([Ljava/lang/String;)V
+                //INVOKESPECIAL java/lang/ProcessBuilder.<init>(Ljava/util/List;)V
+
+                InjectionPoint ip = new InjectionPoint(new int[]{0}, COMMAND_INJECTION_TYPE);
+                ip.setInjectableMethod("ProcessBuilder(...)");
                 return ip;
             }
         }

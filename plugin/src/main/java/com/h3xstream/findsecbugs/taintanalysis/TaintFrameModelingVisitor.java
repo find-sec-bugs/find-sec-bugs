@@ -199,12 +199,12 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         while (numProduced-- > 0) {
             Taint value = getFrame().getValue(--index);
             // set local variable origin of a stack value
-            value.setLocalVariableIndex(index);
+            value.setVariableIndex(index);
             if (!writtenIndeces.contains(index)) {
                 // it must be parameter if not written to local variable
                 int stackOffset = parameterStackSize - index - 1;
                 assert stackOffset >= 0; // since there is unwritten index
-                value.addTaintParameter(stackOffset);
+                value.addParameter(stackOffset);
             }
             getFrame().pushValue(new Taint(value));
         }
@@ -289,7 +289,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         Taint taint = getMethodTaint(methodSummary);
         assert taint != null;
         if (taint.isUnknown()) {
-            taint.addTaintLocation(getTaintLocation(), false);
+            taint.addLocation(getTaintLocation(), false);
         }
         taintMutableArguments(methodSummary, obj);
         transferTaintToMutables(methodSummary, taint); // adds variable index to taint too
@@ -342,13 +342,13 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         Taint taint = methodSummary.getOutputTaint();
         assert taint != null;
         assert taint != methodSummary.getOutputTaint() : "defensive copy not made";
-        if (taint.isUnknown() && taint.hasTaintParameters()) {
-            Taint merge = mergeTransferParameters(taint.getTaintParameters());
+        if (taint.isUnknown() && taint.hasParameters()) {
+            Taint merge = mergeTransferParameters(taint.getParameters());
             assert merge != null;
-            return Taint.merge(taint.getNonParametricTaint(), merge);
+            return Taint.merge(Taint.valueOf(taint.getNonParametricState()), merge);
         }
         if (taint.isTainted()) {
-            taint.addTaintLocation(getTaintLocation(), true);
+            taint.addLocation(getTaintLocation(), true);
         }
         return taint;
     }
@@ -408,21 +408,21 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                 getFrame().setValue(getFrame().getStackLocation(mutableStackIndex), new Taint(taint));
             }
         } catch (DataflowAnalysisException ex) {
-            assert false; // stack depth is checked
+            assert false : ex.getMessage(); // stack depth is checked
         }
     }
 
     private void setLocalVariableTaint(Taint valueTaint, Taint indexTaint) {
         assert valueTaint != null && indexTaint != null;
-        if (!indexTaint.hasValidLocalVariableIndex()) {
+        if (!indexTaint.hasValidVariableIndex()) {
             return;
         }
-        int index = indexTaint.getLocalVariableIndex();
+        int index = indexTaint.getVariableIndex();
         if (index >= getFrame().getNumLocals()) {
             assert false : "Out of bounds local variable index in " + methodDescriptor;
             return; // ignore if assertions disabled
         }
-        valueTaint.setLocalVariableIndex(index);
+        valueTaint.setVariableIndex(index);
         getFrame().setValue(index, valueTaint);
     }
     

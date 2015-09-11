@@ -243,22 +243,33 @@ public class Taint {
 
     @Override
     public boolean equals(Object obj) {
-        // consider taint state only in equals
         if (obj == null) {
             return false;
         }
         if (!(obj instanceof Taint)) {
             return false;
         }
-        return this.state == ((Taint) obj).state;
+        Taint other = (Taint) obj;
+        return this.state == other.state
+                && this.variableIndex == other.variableIndex
+                && this.taintLocations.equals(other.taintLocations)
+                && this.unknownLocations.equals(other.unknownLocations)
+                && this.parameters.equals(other.parameters)
+                && this.nonParametricState == other.nonParametricState;
     }
 
     @Override
     public int hashCode() {
-        assert state != null;
-        return state.hashCode();
+        int hash = 3;
+        hash = 31 * hash + state.hashCode();
+        hash = 31 * hash + variableIndex;
+        hash = 31 * hash + taintLocations.hashCode();
+        hash = 31 * hash + unknownLocations.hashCode();
+        hash = 31 * hash + parameters.hashCode();
+        hash = 31 * hash + nonParametricState.hashCode();
+        return hash;
     }
-    
+
     @Override
     public String toString() {
         assert state != null;

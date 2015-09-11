@@ -60,10 +60,8 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     private static final Set<String> SAFE_OBJECT_TYPES;
     private static final Set<String> IMMUTABLE_OBJECT_TYPES;
     private final MethodDescriptor methodDescriptor;
-    private final int parameterStackSize;
     private final TaintMethodSummaryMap methodSummaries;
     private final TaintMethodSummary analyzedMethodSummary;
-    private final Set<Integer> writtenIndeces;
 
     static {
         // these data types cannot have taint state other than SAFE or NULL
@@ -94,9 +92,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         }
         this.methodDescriptor = method;
         this.methodSummaries = methodSummaries;
-        this.parameterStackSize = getParameterStackSize(method.getSignature(), method.isStatic());
         this.analyzedMethodSummary = new TaintMethodSummary();
-        this.writtenIndeces = new HashSet<Integer>();
     }
 
     private static int getParameterStackSize(String signature, boolean isStatic) {
@@ -180,8 +176,8 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             }
             int index = obj.getIndex();
             while (numConsumed-- > 0) {
-                Taint value = getFrame().popValue();
-                writtenIndeces.add(index);
+                Taint value = new Taint(getFrame().popValue());
+                value.setVariableIndex(index);
                 getFrame().setValue(index++, value);
             }
         } catch (DataflowAnalysisException ex) {
@@ -198,14 +194,8 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         int index = obj.getIndex() + numProduced;
         while (numProduced-- > 0) {
             Taint value = getFrame().getValue(--index);
-            // set local variable origin of a stack value
-            value.setVariableIndex(index);
-            if (!writtenIndeces.contains(index)) {
-                // it must be parameter if not written to local variable
-                int stackOffset = parameterStackSize - index - 1;
-                assert stackOffset >= 0; // since there is unwritten index
-                value.addParameter(stackOffset);
-            }
+            assert value.hasValidVariableIndex() : "index not set in " + methodDescriptor;
+            assert index == value.getVariableIndex(): "bad index in " + methodDescriptor;
             getFrame().pushValue(new Taint(value));
         }
     }

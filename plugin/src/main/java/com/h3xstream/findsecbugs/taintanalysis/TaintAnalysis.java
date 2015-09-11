@@ -23,7 +23,9 @@ import edu.umd.cs.findbugs.ba.DepthFirstSearch;
 import edu.umd.cs.findbugs.ba.Edge;
 import edu.umd.cs.findbugs.ba.FrameDataflowAnalysis;
 import edu.umd.cs.findbugs.ba.Location;
+import edu.umd.cs.findbugs.ba.generic.GenericSignatureParser;
 import edu.umd.cs.findbugs.classfile.MethodDescriptor;
+import java.util.Iterator;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.MethodGen;
 
@@ -38,6 +40,7 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
     private final MethodGen methodGen;
     private final TaintFrameModelingVisitor visitor;
     private TaintMethodSummary analyzedMethodSummary;
+    private final int parameterStackSize;
     
     public TaintAnalysis(MethodGen methodGen, DepthFirstSearch dfs,
             MethodDescriptor descriptor, TaintMethodSummaryMap methodSummaries) {
@@ -45,6 +48,8 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
         this.methodGen = methodGen;
         this.visitor = new TaintFrameModelingVisitor(
                 methodGen.getConstantPool(), descriptor, methodSummaries);
+        this.parameterStackSize = getParameterStackSize(
+                descriptor.getSignature(), descriptor.isStatic());
     }
 
     @Override
@@ -71,8 +76,17 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
         fact.setValid();
         fact.clearStack();
         int numSlots = fact.getNumSlots();
+        int numLocals = fact.getNumLocals();
         for (int i = 0; i < numSlots; ++i) {
-            fact.setValue(i, new Taint(Taint.State.UNKNOWN));
+            Taint value = new Taint(Taint.State.UNKNOWN);
+            if (i < numLocals) {
+                value.setVariableIndex(i);
+                if (i < parameterStackSize) {
+                    int stackOffset = parameterStackSize - i - 1;
+                    value.addParameter(stackOffset);
+                }
+            }
+            fact.setValue(i, value);
         }
     }
 
@@ -93,5 +107,23 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
     
     public TaintMethodSummary getAnalyzedMethodSummary() {
         return analyzedMethodSummary;
+    }
+    
+    private static int getParameterStackSize(String signature, boolean isStatic) {
+        assert signature != null && !signature.isEmpty();
+        // static methods does not have reference to this
+        int stackSize = isStatic ? 0 : 1;
+        GenericSignatureParser parser = new GenericSignatureParser(signature);
+        Iterator<String> iterator = parser.parameterSignatureIterator();
+        while (iterator.hasNext()) {
+            String parameter = iterator.next();
+            if (parameter.equals("D") || parameter.equals("J")) {
+                // double and long types takes two slots
+                stackSize += 2;
+            } else {
+                stackSize++;
+            }
+        }
+        return stackSize;
     }
 }

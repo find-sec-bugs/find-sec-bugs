@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.endpoint;
+package com.h3xstream.findsecbugs.file;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
@@ -26,24 +26,33 @@ import java.util.Arrays;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-public class CookieDetectorTest extends BaseDetectorTest {
+public class PathTraversalDetectorTest extends BaseDetectorTest {
 
     @Test
-    public void detectCookieUsage() throws Exception {
+    public void detectPathTraversal() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/CookieUsage")
+                getClassFilePath("testcode/PathTraversal")
         };
 
         //Run the analysis
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        for (Integer line : Arrays.asList(15, 16, 17)) {
+        for (Integer line : Arrays.asList(10, 11, 13, 15, 17)) {
             verify(reporter).doReportBug(
                     bugDefinition()
-                            .bugType("COOKIE_USAGE")
-                            .inClass("CookieUsage").inMethod("doGet").atLine(15)
+                            .bugType("PATH_TRAVERSAL_IN")
+                            .inClass("PathTraversal").inMethod("main").atLine(line)
+                            .build()
+            );
+        }
+
+        for (Integer line : Arrays.asList(20, 21, 23, 24)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("PATH_TRAVERSAL_OUT")
+                            .inClass("PathTraversal").inMethod("main").atLine(line)
                             .build()
             );
         }

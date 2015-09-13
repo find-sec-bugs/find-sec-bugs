@@ -1,4 +1,4 @@
-package testcode;
+package testcode.cookie;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;

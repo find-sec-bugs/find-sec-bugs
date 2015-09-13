@@ -15,41 +15,37 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs;
+package com.h3xstream.findsecbugs.cookie;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
+
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-public class FileUploadFilenameDetectorTest extends BaseDetectorTest {
+public class CookieReadDetectorTest extends BaseDetectorTest {
 
     @Test
-    public void detectTaintedFilename() throws Exception {
+    public void detectCookieUsage() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/FileUploadCommon"),
-                getClassFilePath("testcode/FileUploadWicket")
+                getClassFilePath("testcode/cookie/CookieUsage")
         };
 
         //Run the analysis
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        verify(reporter).doReportBug(
-                bugDefinition()
-                        .bugType("FILE_UPLOAD_FILENAME")
-                        .inClass("FileUploadWicket").inMethod("handleFile").atLine(16)
-                        .build()
-        );
-
-        verify(reporter).doReportBug(
-                bugDefinition()
-                        .bugType("FILE_UPLOAD_FILENAME")
-                        .inClass("FileUploadCommon").inMethod("handleFile").atLine(17)
-                        .build()
-        );
+        for (Integer line : Arrays.asList(15, 16, 17)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("COOKIE_USAGE")
+                            .inClass("CookieUsage").inMethod("doGet").atLine(line)
+                            .build()
+            );
+        }
     }
 }

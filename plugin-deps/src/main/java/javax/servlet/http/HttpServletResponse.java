@@ -1,6 +1,7 @@
 package javax.servlet.http;
 
 import javax.servlet.ServletResponse;
+import java.io.IOException;
 
 public interface HttpServletResponse extends ServletResponse {
 
@@ -8,5 +9,5 @@ public interface HttpServletResponse extends ServletResponse {
 
     void addHeader(String header, String value);
 
-    void sendRedirect(String url);
+    void sendRedirect(String url) throws IOException;
 }

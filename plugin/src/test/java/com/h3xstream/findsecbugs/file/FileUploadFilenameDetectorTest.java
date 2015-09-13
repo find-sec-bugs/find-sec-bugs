@@ -15,46 +15,41 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs;
+package com.h3xstream.findsecbugs.file;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-public class PathTraversalDetectorTest extends BaseDetectorTest {
+public class FileUploadFilenameDetectorTest extends BaseDetectorTest {
 
     @Test
-    public void detectPathTraversal() throws Exception {
+    public void detectTaintedFilename() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/PathTraversal")
+                getClassFilePath("testcode/FileUploadCommon"),
+                getClassFilePath("testcode/FileUploadWicket")
         };
 
         //Run the analysis
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        for (Integer line : Arrays.asList(10, 11, 13, 15, 17)) {
-            verify(reporter).doReportBug(
-                    bugDefinition()
-                            .bugType("PATH_TRAVERSAL_IN")
-                            .inClass("PathTraversal").inMethod("main").atLine(line)
-                            .build()
-            );
-        }
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("FILE_UPLOAD_FILENAME")
+                        .inClass("FileUploadWicket").inMethod("handleFile").atLine(16)
+                        .build()
+        );
 
-        for (Integer line : Arrays.asList(20, 21, 23, 24)) {
-            verify(reporter).doReportBug(
-                    bugDefinition()
-                            .bugType("PATH_TRAVERSAL_OUT")
-                            .inClass("PathTraversal").inMethod("main").atLine(line)
-                            .build()
-            );
-        }
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("FILE_UPLOAD_FILENAME")
+                        .inClass("FileUploadCommon").inMethod("handleFile").atLine(17)
+                        .build()
+        );
     }
 }

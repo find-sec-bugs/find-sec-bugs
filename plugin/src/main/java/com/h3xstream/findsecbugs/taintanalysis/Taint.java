@@ -70,7 +70,6 @@ public class Taint {
     private final Set<TaintLocation> possibleTaintLocations;
     private final Set<Integer> taintParameters;
     private Taint nonParametricTaint = null;
-    private String debugInfo = "?";
 
     public Taint(State state) {
         if (state == null) {
@@ -93,8 +92,6 @@ public class Taint {
         possibleTaintLocations = new HashSet<TaintLocation>(taint.possibleTaintLocations);
         taintParameters = new HashSet<Integer>(taint.getTaintParameters());
         nonParametricTaint = taint.nonParametricTaint;
-
-        debugInfo = "from("+taint.debugInfo +")";
     }
     
     public State getState() {
@@ -217,8 +214,6 @@ public class Taint {
             }
             result.nonParametricTaint = taint;
         }
-
-        result.setDebugInfo("[" + a.getDebugInfo() + "]+[" + b.getDebugInfo() + "]");
         return result;
     }
 
@@ -253,18 +248,6 @@ public class Taint {
         if (nonParametricTaint != null) {
             sb.append('(').append(nonParametricTaint).append(')');
         }
-        if (debugInfo != null) {
-            sb.append(" {").append(debugInfo).append('}');
-        }
         return sb.toString();
-    }
-
-    public String getDebugInfo() {
-        return debugInfo;
-    }
-
-    public Taint setDebugInfo(String debugInfo) {
-        this.debugInfo = debugInfo;
-        return this;
     }
 }

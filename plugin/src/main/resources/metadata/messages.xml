@@ -268,7 +268,7 @@ crawler UA) is not recommended.</p>
 
 
     <!-- Cookie usage -->
-    <Detector class="com.h3xstream.findsecbugs.endpoint.CookieDetector">
+    <Detector class="com.h3xstream.findsecbugs.cookie.CookieReadDetector">
         <Details>Identity direct cookie usage</Details>
     </Detector>
 
@@ -292,7 +292,7 @@ and referenced by the user's session cookie. See HttpSession (HttpServletRequest
 
 
     <!-- Path traversal -->
-    <Detector class="com.h3xstream.findsecbugs.PathTraversalDetector">
+    <Detector class="com.h3xstream.findsecbugs.file.PathTraversalDetector">
         <Details>Identify filesystem access requests that take a path as a parameter.</Details>
     </Detector>
 
@@ -642,7 +642,7 @@ sha256Digest.update(password.getBytes());</pre>
 
 
     <!-- FileUpload Filename -->
-    <Detector class="com.h3xstream.findsecbugs.FileUploadFilenameDetector">
+    <Detector class="com.h3xstream.findsecbugs.file.FileUploadFilenameDetector">
         <Details>The filename given by FileUpload API can be tampered with by the client.</Details>
     </Detector>
 
@@ -2731,5 +2731,64 @@ class FileWriteUtil {
         </Details>
     </BugPattern>
     <BugCode abbrev="SECWVJI">WebView with a Java bridge (Javascript Interface) (Android)</BugCode>
+
+    <!-- Cookie usage -->
+    <Detector class="com.h3xstream.findsecbugs.cookie.InsecureCookieDetector">
+        <Details>Identity cookie where the secure flag is not set</Details>
+    </Detector>
+
+    <BugPattern type="INSECURE_COOKIE">
+        <ShortDescription>Cookie without the secure flag</ShortDescription>
+        <LongDescription>Cookie without the secure flag could be sent in cleartext if a HTTP URL is visited.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+TODO
+</p>
+
+<p>
+<b>Code at risk:</b><br/>
+<pre>
+Cookie cookie = new Cookie("userName",userName);
+response.addCookie(cookie);
+</pre>
+</p>
+
+<p>
+<b>Solution (Specific configuration):</b><br/>
+<pre>
+Cookie cookie = new Cookie("userName",userName);
+cookie.setSecure(true);
+cookie.setHttpOnly(true);
+</pre>
+</p>
+
+<p>
+<b>Solution (Servlet 3.0 configuration):</b><br/>
+<pre>
+&lt;web-app xmlns="http://java.sun.com/xml/ns/javaee" version="3.0"&gt;
+[...]
+&lt;session-config&gt;
+ &lt;cookie-config&gt;
+  &lt;http-only&gt;true&lt;/http-only&gt;
+  &lt;secure&gt;true&lt;/secure&gt;
+ &lt;/cookie-config&gt;
+&lt;/session-config&gt;
+&lt;/web-app&gt;
+</pre>
+</p>
+<br/>
+<p>
+<b>Reference</b><br/>
+<a href="https://cwe.mitre.org/data/definitions/614.html">CWE-614: Sensitive Cookie in HTTPS Session Without 'Secure' Attribute</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/315.html">CWE-315: Cleartext Storage of Sensitive Information in a Cookie</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/311.html">CWE-311: Missing Encryption of Sensitive Data</a><br/>
+<a href="https://www.owasp.org/index.php/SecureFlag">OWASP: Secure Flag</a><br/>
+<a href="https://www.rapid7.com/db/vulnerabilities/http-cookie-secure-flag">Rapid7: Missing Secure Flag From SSL Cookie</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECIC">Cookie without the secure flag</BugCode>
 
 </MessageCollection>

@@ -59,7 +59,7 @@ public class ByteCode {
             System.out.println(ins.getClass().getSimpleName() +" target => "+i.getTarget().toString()+ "");
         } else if (ins instanceof ICONST) {
             ICONST i = (ICONST) ins;
-            System.out.println(ins.getClass().getSimpleName() +" "+i.getValue());
+            System.out.println(ins.getClass().getSimpleName() +" "+i.getValue()+" ("+i.getType(cpg)+")");
         } else if (ins instanceof GOTO) {
             GOTO i = (GOTO) ins;
             System.out.println(ins.getClass().getSimpleName() +" target => "+i.getTarget().toString());
@@ -80,11 +80,22 @@ public class ByteCode {
     public static <T> T getConstantLDC(InstructionHandle h, ConstantPoolGen cpg, Class<T> clazz) {
         Instruction prevIns = h.getInstruction();
         if (prevIns instanceof LDC) {
-            LDC ldcCipher = (LDC) prevIns;
-            Object val = ldcCipher.getValue(cpg);
+            LDC ldcInst = (LDC) prevIns;
+            Object val = ldcInst.getValue(cpg);
             if (val.getClass().equals(clazz)) {
                 return clazz.cast(val);
             }
+        }
+
+        return null;
+    }
+
+    public static Integer getConstantInt(InstructionHandle h) {
+        Instruction prevIns = h.getInstruction();
+        if (prevIns instanceof ICONST) {
+            ICONST ldcCipher = (ICONST) prevIns;
+            Number num = ldcCipher.getValue();
+            return num.intValue();
         }
 
         return null;

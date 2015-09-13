@@ -264,7 +264,7 @@ Cookie: JSESSIONID=Any value of the user&#39;s choice!!??'''&quot;&gt;
 
 
     <!-- Cookie usage -->
-    <Detector class="com.h3xstream.findsecbugs.endpoint.CookieDetector">
+    <Detector class="com.h3xstream.findsecbugs.cookie.CookieReadDetector">
         <Details>直接的なクッキーの利用を特定します。</Details>
     </Detector>
 
@@ -288,7 +288,7 @@ HttpSession (HttpServletRequest.getSession()) を参照してください。</p>
 
 
     <!-- Path traversal -->
-    <Detector class="com.h3xstream.findsecbugs.PathTraversalDetector">
+    <Detector class="com.h3xstream.findsecbugs.file.PathTraversalDetector">
         <Details>パラメーターを通じたファイルシステムへのアクセス要求を特定します。</Details>
     </Detector>
 
@@ -631,7 +631,7 @@ sha256Digest.update(password.getBytes());</pre>
 
 
     <!-- FileUpload Filename -->
-    <Detector class="com.h3xstream.findsecbugs.FileUploadFilenameDetector">
+    <Detector class="com.h3xstream.findsecbugs.file.FileUploadFilenameDetector">
         <Details>ファイルアップロード API によって与えられたファイル名はクライアントによって改ざんされていることがあります。</Details>
     </Detector>
 

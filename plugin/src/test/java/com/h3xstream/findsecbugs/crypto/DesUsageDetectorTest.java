@@ -24,12 +24,13 @@ import org.testng.annotations.Test;
 import java.util.Arrays;
 
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class DesUsageDetectorTest extends BaseDetectorTest {
 
     @Test
-    public void detectDes() throws Exception {
+    public void detectDesCipher() throws Exception {
         //Locate test code
         String[] files = {
                 getClassFilePath("testcode/crypto/BlockCipherList")
@@ -40,7 +41,7 @@ public class DesUsageDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         //Assertions
-        for (Integer line : Arrays.asList(20, 21, 22, 23, 24, 25, 26, 27,34)) {
+        for (Integer line : Arrays.asList(20, 21, 22, 23, 24, 25, 26, 27, 33, 34)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("DES_USAGE")
@@ -50,5 +51,45 @@ public class DesUsageDetectorTest extends BaseDetectorTest {
                             .build()
             );
         }
+
+        //Nothing more than the previous 10
+        verify(reporter, times(10)).doReportBug(
+                bugDefinition()
+                        .bugType("DES_USAGE")
+                        .inClass("BlockCipherList")
+                        .build()
+        );
+    }
+
+    @Test
+    public void detectDesKeyGeneration() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/crypto/DesKeyGeneration")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+        //Assertions
+        for (Integer line : Arrays.asList(11,12,13,14,15,16,17,18,19,20)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("DES_USAGE")
+                            .inClass("DesKeyGeneration")
+                            .inMethod("weakDesKeyGenerator")
+                            .atLine(line)
+                            .build()
+            );
+        }
+
+        //Nothing more than the previous 4
+        verify(reporter, times(10)).doReportBug(
+                bugDefinition()
+                        .bugType("DES_USAGE")
+                        .inClass("DesKeyGeneration")
+                        .build()
+        );
     }
 }

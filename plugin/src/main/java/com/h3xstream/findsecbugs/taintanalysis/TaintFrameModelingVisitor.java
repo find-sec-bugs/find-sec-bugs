@@ -55,7 +55,7 @@ import org.apache.bcel.generic.StoreInstruction;
  */
 public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Taint, TaintFrame> {
 
-    private static final String TO_STRING_METHOD = "toString()Ljava/lang/String;";
+    private static final String TOSTRING_METHOD = "toString()Ljava/lang/String;";
     private static final String EQUALS_METHOD = "equals(Ljava/lang/Object;)Z";
     private static final Set<String> SAFE_OBJECT_TYPES;
     private static final Set<String> IMMUTABLE_OBJECT_TYPES;
@@ -76,7 +76,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         SAFE_OBJECT_TYPES.add("Ljava/lang/Short;");
         SAFE_OBJECT_TYPES.add("Ljava/math/BigDecimal;");
         // these data types are not modified, when passed as a parameter to an unknown method
-        IMMUTABLE_OBJECT_TYPES = new HashSet<String>(SAFE_OBJECT_TYPES.size() + 1);
+        IMMUTABLE_OBJECT_TYPES = new HashSet<String>(SAFE_OBJECT_TYPES.size() + 7);
         IMMUTABLE_OBJECT_TYPES.addAll(SAFE_OBJECT_TYPES);
         IMMUTABLE_OBJECT_TYPES.add("Ljava/lang/String;");
         IMMUTABLE_OBJECT_TYPES.add("Ljava/math/BigInteger;");
@@ -183,7 +183,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         while (numProduced-- > 0) {
             Taint value = getFrame().getValue(--index);
             assert value.hasValidVariableIndex() : "index not set in " + methodDescriptor;
-            assert index == value.getVariableIndex(): "bad index in " + methodDescriptor;
+            assert index == value.getVariableIndex() : "bad index in " + methodDescriptor;
             getFrame().pushValue(new Taint(value));
         }
     }
@@ -288,7 +288,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         if (methodSummary != null) {
             return methodSummary;
         }
-        if (TO_STRING_METHOD.equals(methodNameWithSig)) {
+        if (TOSTRING_METHOD.equals(methodNameWithSig)) {
             return TaintMethodSummary.DEFAULT_TOSTRING_SUMMARY;
         }
         if (EQUALS_METHOD.equals(methodNameWithSig)) {
@@ -349,7 +349,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                 Taint taint = Taint.merge(stackValue, getDefaultValue());
                 if (stackValue.hasValidVariableIndex()) {
                     // set back the index removed during merging
-                    taint.setVariableIndex(stackValue.getVariableIndex()); 
+                    taint.setVariableIndex(stackValue.getVariableIndex());
                 }
                 taint.addLocation(getTaintLocation(), false);
                 getFrame().setValue(getFrame().getStackLocation(index), taint);
@@ -359,7 +359,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             }
         }
     }
-    
+
     private Taint mergeTransferParameters(Collection<Integer> transferParameters) {
         assert transferParameters != null && !transferParameters.isEmpty();
         Taint taint = null;
@@ -412,7 +412,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         valueTaint.setVariableIndex(index);
         getFrame().setValue(index, valueTaint);
     }
-    
+
     private void pushSafe() {
         getFrame().pushValue(new Taint(Taint.State.SAFE));
     }

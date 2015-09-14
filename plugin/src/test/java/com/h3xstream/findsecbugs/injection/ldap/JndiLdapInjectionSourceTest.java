@@ -43,12 +43,11 @@ public class JndiLdapInjectionSourceTest extends BaseDetectorTest {
                         .bugType("LDAP_INJECTION")
                         .inClass("JndiLdap")
                         .atLine(45)
-                        .withPriority("Medium")
                         .build()
         );
         
         verify(reporter, times(1)).doReportBug(
-                bugDefinition().bugType("LDAP_INJECTION").withPriority("Medium").build()
+                bugDefinition().bugType("LDAP_INJECTION").build()
         );
     }
 }

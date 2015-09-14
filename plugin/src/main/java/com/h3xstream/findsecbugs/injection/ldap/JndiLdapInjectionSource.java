@@ -17,11 +17,13 @@
  */
 package com.h3xstream.findsecbugs.injection.ldap;
 
+import com.h3xstream.findsecbugs.common.ByteCode;
 import com.h3xstream.findsecbugs.injection.InjectionPoint;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.INVOKEINTERFACE;
 import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InvokeInstruction;
@@ -47,18 +49,40 @@ public class JndiLdapInjectionSource implements InjectionSource {
 
     @Override
     public InjectionPoint getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {
+        //ByteCode.printOpCode(ins, cpg);
+        // Bytecode of the test cases:
+        //        INVOKESPECIAL javax/naming/ldap/LdapName.<init>(Ljava/lang/String;)V
+        //        INVOKEVIRTUAL javax/naming/directory/InitialDirContext.search(Ljavax/naming/Name;Ljava/lang/String;Ljavax/naming/directory/SearchControls;)Ljavax/naming/NamingEnumeration;
+        //        INVOKESPECIAL javax/naming/ldap/LdapName.<init>(Ljava/lang/String;)V
+        //        INVOKEVIRTUAL javax/naming/directory/InitialDirContext.search(Ljavax/naming/Name;Ljava/lang/String;[Ljava/lang/Object;Ljavax/naming/directory/SearchControls;)Ljavax/naming/NamingEnumeration;
+        //        INVOKEVIRTUAL javax/naming/directory/InitialDirContext.search(Ljava/lang/String;Ljava/lang/String;Ljavax/naming/directory/SearchControls;)Ljavax/naming/NamingEnumeration;
+        //        INVOKEVIRTUAL javax/naming/directory/InitialDirContext.search(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;Ljavax/naming/directory/SearchControls;)Ljavax/naming/NamingEnumeration;
 
-        //INVOKEVIRTUAL javax/naming/directory/InitialDirContext.search ((Ljava/lang/String;Ljava/lang/String;Ljavax/naming/directory/SearchControls;)Ljavax/naming/NamingEnumeration;)
-        if (ins instanceof INVOKEVIRTUAL) {
-            String methodName = ins.getMethodName(cpg);
-            String methodSignature = ins.getSignature(cpg);
-            String className = ins.getClassName(cpg);
 
-            if (className.equals("javax.naming.directory.InitialDirContext") && methodName.equals("search") &&
-                    methodSignature.equals("(Ljava/lang/String;Ljava/lang/String;Ljavax/naming/directory/SearchControls;)Ljavax/naming/NamingEnumeration;")) {
-                return new InjectionPoint(new int[]{1, 2},LDAP_INJECTION_TYPE);
+        String methodName = ins.getMethodName(cpg);
+        String methodSignature = ins.getSignature(cpg);
+        String className = ins.getClassName(cpg);
+
+            if ((ins instanceof INVOKEVIRTUAL && className.equals("javax.naming.directory.InitialDirContext") && methodName.equals("search")) ||
+                (ins instanceof INVOKEINTERFACE && className.equals("javax.naming.directory.DirContext") && methodName.equals("search")) ||
+                (ins instanceof INVOKEVIRTUAL && className.equals("javax.naming.ldap.InitialLdapContext") && methodName.equals("search")) ||
+                (ins instanceof INVOKEINTERFACE && className.equals("javax.naming.ldap.LdapContext") && methodName.equals("search")) ||
+                (ins instanceof INVOKEVIRTUAL && className.equals("com.sun.jndi.ldap.LdapCtx") && methodName.equals("search")) ||
+                (ins instanceof INVOKEINTERFACE && className.equals("javax.naming.event.EventDirContext") && methodName.equals("search"))) {
+
+                if(methodSignature.equals("(Ljavax/naming/Name;Ljava/lang/String;Ljavax/naming/directory/SearchControls;)Ljavax/naming/NamingEnumeration;")) {
+                    return new InjectionPoint(new int[]{1}, LDAP_INJECTION_TYPE);
+                }
+                else if(methodSignature.equals("(Ljavax/naming/Name;Ljava/lang/String;[Ljava/lang/Object;Ljavax/naming/directory/SearchControls;)Ljavax/naming/NamingEnumeration;")) {
+                    return new InjectionPoint(new int[]{2},LDAP_INJECTION_TYPE);
+                }
+                else if(methodSignature.equals("(Ljava/lang/String;Ljava/lang/String;Ljavax/naming/directory/SearchControls;)Ljavax/naming/NamingEnumeration;")) {
+                    return new InjectionPoint(new int[]{1, 2},LDAP_INJECTION_TYPE);
+                }
+                else if(methodSignature.equals("(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;Ljavax/naming/directory/SearchControls;)Ljavax/naming/NamingEnumeration;")) {
+                    return new InjectionPoint(new int[]{2, 3},LDAP_INJECTION_TYPE);
+                }
             }
-        }
         return InjectionPoint.NONE;
     }
 

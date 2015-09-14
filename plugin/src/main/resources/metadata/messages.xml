@@ -2743,7 +2743,9 @@ class FileWriteUtil {
         <Details>
             <![CDATA[
 <p>
-TODO
+A new cookie is created without the <code>Secure</code> flag set.
+The <code>Secure</code> flag is a directive to the browser to make sure that the cookie is not sent for insecure
+communication (<code>http://</code>).
 </p>
 
 <p>

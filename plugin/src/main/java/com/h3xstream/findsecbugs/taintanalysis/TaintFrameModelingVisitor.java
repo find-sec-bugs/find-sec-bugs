@@ -95,24 +95,6 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         this.analyzedMethodSummary = new TaintMethodSummary();
     }
 
-    private static int getParameterStackSize(String signature, boolean isStatic) {
-        assert signature != null && !signature.isEmpty();
-        // static methods does not have reference to this
-        int stackSize = isStatic ? 0 : 1;
-        GenericSignatureParser parser = new GenericSignatureParser(signature);
-        Iterator<String> iterator = parser.parameterSignatureIterator();
-        while (iterator.hasNext()) {
-            String parameter = iterator.next();
-            if (parameter.equals("D") || parameter.equals("J")) {
-                // double and long types takes two slots
-                stackSize += 2;
-            } else {
-                stackSize++;
-            }
-        }
-        return stackSize;
-    }
-
     private static Collection<Integer> getMutableStackIndices(String signature) {
         assert signature != null && !signature.isEmpty();
         ArrayList<Integer> indices = new ArrayList<Integer>();
@@ -308,8 +290,12 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         }
         if (Constants.CONSTRUCTOR_NAME.equals(methodName)
                 && !SAFE_OBJECT_TYPES.contains("L" + className + ";")) {
-            int stackSize = getParameterStackSize(signature, false);
-            return TaintMethodSummary.getDefaultConstructorSummary(stackSize);
+            try {
+                int stackSize = getFrame().getNumArgumentsIncludingObjectInstance(obj, cpg);
+                return TaintMethodSummary.getDefaultConstructorSummary(stackSize);
+            } catch (DataflowAnalysisException ex) {
+                throw new InvalidBytecodeException(ex.getMessage(), ex);
+            }
         }
         return methodSummary;
     }
@@ -353,8 +339,13 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         for (Integer index : mutableStackIndices) {
             assert index >= 0 && index < getFrame().getStackDepth();
             try {
-                Taint taint = new Taint(getFrame().getStackValue(index));
-                taint.setState(Taint.State.merge(taint.getState(), Taint.State.UNKNOWN));
+                Taint stackValue = getFrame().getStackValue(index);
+                Taint taint = Taint.merge(stackValue, getDefaultValue());
+                if (stackValue.hasValidVariableIndex()) {
+                    // set back the index removed during merging
+                    taint.setVariableIndex(stackValue.getVariableIndex()); 
+                }
+                taint.addLocation(getTaintLocation(), false);
                 getFrame().setValue(getFrame().getStackLocation(index), taint);
                 setLocalVariableTaint(taint, taint);
             } catch (DataflowAnalysisException ex) {

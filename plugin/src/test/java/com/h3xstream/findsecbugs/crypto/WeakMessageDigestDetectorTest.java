@@ -85,4 +85,33 @@ public class WeakMessageDigestDetectorTest extends BaseDetectorTest {
                         .build()
         );
     }
+
+    @Test
+    public void detectWeakDigestAdditionalSignatures() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/crypto/WeakMessageDigestAdditionalSig")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+        //Message Digest
+        for(int line : Arrays.asList(11,12,13,14,15,16,17,18,19,20,21)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("WEAK_MESSAGE_DIGEST")
+                            .inClass("WeakMessageDigestAdditionalSig").inMethod("weakDigestMoreSig").atLine(line)
+                            .build()
+            );
+        }
+
+        verify(reporter,times(11)).doReportBug(
+                bugDefinition()
+                        .bugType("WEAK_MESSAGE_DIGEST")
+                        .inClass("WeakMessageDigestAdditionalSig").inMethod("weakDigestMoreSig")
+                        .build()
+        );
+    }
 }

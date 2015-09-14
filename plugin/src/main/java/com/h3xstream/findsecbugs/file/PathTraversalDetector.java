@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs;
+package com.h3xstream.findsecbugs.file;
 
 import com.h3xstream.findsecbugs.common.StackUtils;
 import edu.umd.cs.findbugs.BugInstance;

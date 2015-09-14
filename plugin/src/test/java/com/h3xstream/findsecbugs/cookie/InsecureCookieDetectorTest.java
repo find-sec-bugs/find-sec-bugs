@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs;
+package com.h3xstream.findsecbugs.cookie;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
@@ -23,36 +23,49 @@ import org.testng.annotations.Test;
 
 import java.util.Arrays;
 
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-public class PathTraversalDetectorTest extends BaseDetectorTest {
+public class InsecureCookieDetectorTest extends BaseDetectorTest {
 
     @Test
-    public void detectPathTraversal() throws Exception {
+    public void detectInsecureCookieBasic() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/PathTraversal")
+                getClassFilePath("testcode/cookie/InsecureCookieSamples")
         };
 
         //Run the analysis
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        for (Integer line : Arrays.asList(10, 11, 13, 15, 17)) {
+        for (String method : Arrays.asList("unsafeCookie1", "unsafeCookie2", "unsafeCookie4", "unsafeCookie5")) {
             verify(reporter).doReportBug(
                     bugDefinition()
-                            .bugType("PATH_TRAVERSAL_IN")
-                            .inClass("PathTraversal").inMethod("main").atLine(line)
+                            .bugType("INSECURE_COOKIE")
+                            .inClass("InsecureCookieSamples").inMethod(method)
                             .build()
             );
         }
+    }
 
-        for (Integer line : Arrays.asList(20, 21, 23, 24)) {
-            verify(reporter).doReportBug(
+    @Test
+    public void avoidBasicFalsePositive() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/cookie/InsecureCookieSamples")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+        for (String method : Arrays.asList("safeCookie1", "safeCookie2")) {
+            verify(reporter,never()).doReportBug(
                     bugDefinition()
-                            .bugType("PATH_TRAVERSAL_OUT")
-                            .inClass("PathTraversal").inMethod("main").atLine(line)
+                            .bugType("INSECURE_COOKIE")
+                            .inClass("InsecureCookieSamples").inMethod(method)
                             .build()
             );
         }

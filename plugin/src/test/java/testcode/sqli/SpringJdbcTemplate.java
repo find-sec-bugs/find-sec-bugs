@@ -110,6 +110,20 @@ public class SpringJdbcTemplate {
     }
 
 
+    public void queryForInt(String sql) throws DataAccessException {
+        //Query for int (3 signatures)
+        jdbcTemplate.queryForInt(sql);
+        jdbcTemplate.queryForInt(sql, new Object[0]);
+        jdbcTemplate.queryForInt(sql, new Object[0], new int[]{Types.VARCHAR});
+    }
+
+    public void queryForLong(String sql) throws DataAccessException {
+        //Query for long (3 signatures)
+        jdbcTemplate.queryForLong(sql);
+        jdbcTemplate.queryForLong(sql, new Object[0]);
+        jdbcTemplate.queryForLong(sql, new Object[0], new int[]{Types.VARCHAR});
+    }
+
     //Bunch of Mock classes
 
     public class StoredProcCall implements CallableStatementCreator {

@@ -264,4 +264,62 @@ public class SpringJdbcOperationsAndTemplateTest extends BaseDetectorTest {
                         .build()
         );
     }
+
+    @Test
+    public void detectQueryInt() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/sqli/SpringJdbcOperations"),
+                getClassFilePath("testcode/sqli/SpringJdbcTemplate")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+        //Exact match of the number of vulnerability rise
+        verify(reporter, times(3)).doReportBug(
+                bugDefinition()
+                        .bugType("SQL_INJECTION_SPRING_JDBC")
+                        .inClass("SpringJdbcTemplate")
+                        .inMethod("queryForInt")
+                        .build()
+        );
+        verify(reporter, times(3)).doReportBug(
+                bugDefinition()
+                        .bugType("SQL_INJECTION_SPRING_JDBC")
+                        .inClass("SpringJdbcOperations")
+                        .inMethod("queryForInt")
+                        .build()
+        );
+    }
+
+    @Test
+    public void detectQueryLong() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/sqli/SpringJdbcOperations"),
+                getClassFilePath("testcode/sqli/SpringJdbcTemplate")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+        //Exact match of the number of vulnerability rise
+        verify(reporter, times(3)).doReportBug(
+                bugDefinition()
+                        .bugType("SQL_INJECTION_SPRING_JDBC")
+                        .inClass("SpringJdbcTemplate")
+                        .inMethod("queryForLong")
+                        .build()
+        );
+        verify(reporter, times(3)).doReportBug(
+                bugDefinition()
+                        .bugType("SQL_INJECTION_SPRING_JDBC")
+                        .inClass("SpringJdbcOperations")
+                        .inMethod("queryForLong")
+                        .build()
+        );
+    }
 }

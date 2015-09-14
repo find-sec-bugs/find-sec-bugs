@@ -15,23 +15,23 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.injection.ldap;
+package com.h3xstream.findsecbugs.file;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class JndiLdapInjectionSourceTest extends BaseDetectorTest {
+public class FileUploadFilenameDetectorTest extends BaseDetectorTest {
 
     @Test
-    public void detectLdapInjectionInQuery() throws Exception {
+    public void detectTaintedFilename() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/ldap/JndiLdap")
+                getClassFilePath("testcode/FileUploadCommon"),
+                getClassFilePath("testcode/FileUploadWicket")
         };
 
         //Run the analysis
@@ -40,14 +40,16 @@ public class JndiLdapInjectionSourceTest extends BaseDetectorTest {
 
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("LDAP_INJECTION")
-                        .inClass("JndiLdap")
-                        .atLine(45)
+                        .bugType("FILE_UPLOAD_FILENAME")
+                        .inClass("FileUploadWicket").inMethod("handleFile").atLine(16)
                         .build()
         );
-        
-        verify(reporter, times(1)).doReportBug(
-                bugDefinition().bugType("LDAP_INJECTION").build()
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("FILE_UPLOAD_FILENAME")
+                        .inClass("FileUploadCommon").inMethod("handleFile").atLine(17)
+                        .build()
         );
     }
 }

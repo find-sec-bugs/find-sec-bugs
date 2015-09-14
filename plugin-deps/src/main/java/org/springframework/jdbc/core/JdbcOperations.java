@@ -156,4 +156,18 @@ public interface JdbcOperations {
     Map<String, Object> call(CallableStatementCreator csc, List<SqlParameter> declaredParameters)
             throws DataAccessException;
 
+
+
+    //Spring 3.2.1
+    //http://docs.spring.io/spring-framework/docs/2.0.x/api/org/springframework/jdbc/core/JdbcTemplate.html
+
+    int queryForInt(String sql);
+    int queryForInt(String sql, Object[] args);
+    int queryForInt(String sql, Object[] args, int[] argTypes);
+
+
+    long queryForLong(String sql);
+    long queryForLong(String sql, Object[] args);
+    long queryForLong(String sql, Object[] args, int[] argTypes);
+
 }

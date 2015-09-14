@@ -14,7 +14,7 @@ public class UnvalidatedRedirectServlet extends HttpServlet {
         unvalidatedRedirect1(resp, url);
     }
 
-    private void unvalidatedRedirect1(HttpServletResponse resp, String url) {
+    private void unvalidatedRedirect1(HttpServletResponse resp, String url) throws IOException {
         if (url != null) {
             resp.sendRedirect(url);
         }
@@ -28,7 +28,7 @@ public class UnvalidatedRedirectServlet extends HttpServlet {
 
     ///The following cases are safe for sure
 
-    public void falsePositiveRedirect1(HttpServletResponse resp) {
+    public void falsePositiveRedirect1(HttpServletResponse resp) throws IOException {
         String url = "/Home";
         if (url != null) {
             resp.sendRedirect(url);

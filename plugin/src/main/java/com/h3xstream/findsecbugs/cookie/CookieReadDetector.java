@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.endpoint;
+package com.h3xstream.findsecbugs.cookie;
 
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
@@ -23,13 +23,13 @@ import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 import org.apache.bcel.Constants;
 
-public class CookieDetector extends OpcodeStackDetector {
+public class CookieReadDetector extends OpcodeStackDetector {
 
     private static final String COOKIE_USAGE_TYPE = "COOKIE_USAGE";
 
     private BugReporter bugReporter;
 
-    public CookieDetector(BugReporter bugReporter) {
+    public CookieReadDetector(BugReporter bugReporter) {
         this.bugReporter = bugReporter;
     }
 

@@ -86,10 +86,9 @@ public class InjectionWithStringBuilderTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         //Assertions
-        //Currently, the false positives are still rise but with Low priority. (To avoid hiding potential critical vulnerability.)
-        verify(reporter, never()).doReportBug(bugDefinition().bugType("SQL_INJECTION_JPA").withPriority("Medium").build());
-        verify(reporter,never()).doReportBug(bugDefinition().bugType("SQL_INJECTION_JDO").withPriority("Medium").build());
-        verify(reporter,never()).doReportBug(bugDefinition().bugType("SQL_INJECTION_HIBERNATE").withPriority("Medium").build());
+        verify(reporter, never()).doReportBug(bugDefinition().bugType("SQL_INJECTION_JPA").build());
+        verify(reporter,never()).doReportBug(bugDefinition().bugType("SQL_INJECTION_JDO").build());
+        verify(reporter,never()).doReportBug(bugDefinition().bugType("SQL_INJECTION_HIBERNATE").build());
     }
 
 }

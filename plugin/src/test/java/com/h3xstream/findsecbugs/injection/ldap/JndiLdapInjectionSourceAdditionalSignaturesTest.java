@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.crypto;
+package com.h3xstream.findsecbugs.injection.ldap;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
@@ -27,69 +27,60 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class DesUsageDetectorTest extends BaseDetectorTest {
+public class JndiLdapInjectionSourceAdditionalSignaturesTest extends BaseDetectorTest {
 
     @Test
-    public void detectDesCipher() throws Exception {
+    public void detectLdapInjectionInQuery() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/crypto/BlockCipherList")
+                getClassFilePath("testcode/ldap/JndiLdapAdditionalSignature")
         };
 
         //Run the analysis
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        //Assertions
-        for (Integer line : Arrays.asList(20, 21, 22, 23, 24, 25, 26, 27, 33, 34)) {
+        for(Integer line : Arrays.asList(39, 40, 41, 42, /**/ 44, 45, 46, 47, /**/ 49, 50, 51, 52, /**/ 54, 55, 56, 57)) {
             verify(reporter).doReportBug(
                     bugDefinition()
-                            .bugType("DES_USAGE")
-                            .inClass("BlockCipherList")
-                            .inMethod("main")
+                            .bugType("LDAP_INJECTION")
+                            .inClass("JndiLdapAdditionalSignature")
                             .atLine(line)
                             .build()
             );
         }
 
-        //Nothing more than the previous 10
-        verify(reporter, times(10)).doReportBug(
-                bugDefinition()
-                        .bugType("DES_USAGE")
-                        .inClass("BlockCipherList")
-                        .build()
+
+        verify(reporter, times(16)).doReportBug(
+                bugDefinition().bugType("LDAP_INJECTION").inMethod("moreLdapInjections").build()
         );
     }
 
     @Test
-    public void detectDesKeyGeneration() throws Exception {
+    public void detectLdapInjectionInQuerySunApi() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/crypto/DesKeyGeneration")
+                getClassFilePath("testcode/ldap/JndiLdapAdditionalSignature")
         };
 
         //Run the analysis
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        //Assertions
-        for (Integer line : Arrays.asList(11,12,13,14,15,16,17,18,19,20)) {
+        for(Integer line : Arrays.asList(83, 84, 85, 86, /**/ 88, 89, 90, 91)) {
             verify(reporter).doReportBug(
                     bugDefinition()
-                            .bugType("DES_USAGE")
-                            .inClass("DesKeyGeneration")
-                            .inMethod("weakDesKeyGenerator")
+                            .bugType("LDAP_INJECTION")
+                            .inClass("JndiLdapAdditionalSignature")
                             .atLine(line)
                             .build()
             );
         }
 
-        //Nothing more than the previous 4
-        verify(reporter, times(10)).doReportBug(
-                bugDefinition()
-                        .bugType("DES_USAGE")
-                        .inClass("DesKeyGeneration")
-                        .build()
+
+        verify(reporter, times(8)).doReportBug(
+                bugDefinition().bugType("LDAP_INJECTION").inMethod("ldapInjectionSunApi").build()
         );
     }
+
 }

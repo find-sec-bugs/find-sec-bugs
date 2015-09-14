@@ -42,13 +42,23 @@ public class WeakMessageDigestDetector extends OpcodeStackDetector {
     public void sawOpcode(int seen) {
         //printOpCode(seen);
         if (seen == Constants.INVOKESTATIC && getClassConstantOperand().equals("java/security/MessageDigest") &&
-                getNameConstantOperand().equals("getInstance") &&
-                getSigConstantOperand().equals("(Ljava/lang/String;)Ljava/security/MessageDigest;")) {
+                getNameConstantOperand().equals("getInstance")) {
 
-            //Extract the value being push..
-            OpcodeStack.Item top = stack.getStackItem(0);
-            String algorithm = (String) top.getConstant(); //Null if the value passed isn't constant
-
+            OpcodeStack.Item item;
+            if(getSigConstantOperand().equals("(Ljava/lang/String;)Ljava/security/MessageDigest;")) {
+                //Extract the value being push..
+                item = stack.getStackItem(0);
+            }
+            else if(getSigConstantOperand().equals("(Ljava/lang/String;Ljava/lang/String;)Ljava/security/MessageDigest;")) {
+                item = stack.getStackItem(1);
+            }
+            else if(getSigConstantOperand().equals("(Ljava/lang/String;Ljava/security/Provider;)Ljava/security/MessageDigest;")) {
+                item = stack.getStackItem(1);
+            }
+            else {
+                return;
+            }
+            String algorithm = (String) item.getConstant(); //Null if the value passed isn't constant
             analyzeHashingFunction(algorithm);
         }
 
@@ -85,7 +95,7 @@ public class WeakMessageDigestDetector extends OpcodeStackDetector {
 
         algorithm = algorithm.toUpperCase();
 
-        if ("MD2".equals(algorithm) || "MD5".equals(algorithm)) {
+        if ("MD2".equals(algorithm) || "MD4".equals(algorithm) || "MD5".equals(algorithm)) {
             bugReporter.reportBug(new BugInstance(this, WEAK_MESSAGE_DIGEST_TYPE, Priorities.NORMAL_PRIORITY) //
                     .addClass(this).addMethod(this).addSourceLine(this) //
                     .addString(algorithm));

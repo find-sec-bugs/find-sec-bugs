@@ -54,16 +54,51 @@ public class DesUsageDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
-        if (seen == Constants.INVOKESTATIC && getClassConstantOperand().equals("javax/crypto/Cipher") &&
-                getNameConstantOperand().equals("getInstance")) {
-            OpcodeStack.Item item = stack.getStackItem(stack.getStackDepth() - 1); //The first argument is last
-            if (StackUtils.isConstantString(item)) {
-                String cipherValue = (String) item.getConstant();
-                if (DEBUG) System.out.println(cipherValue);
+        //printOpCode(seen);
 
-                if (cipherValue.startsWith("DES/") || cipherValue.startsWith("DESede/")) {
-                    bugReporter.reportBug(new BugInstance(this, DES_USAGE_TYPE, Priorities.NORMAL_PRIORITY) //
-                            .addClass(this).addMethod(this).addSourceLine(this));
+        //Cover Cipher.getInstance(...)
+        if (seen == Constants.INVOKESTATIC) {
+            if(getClassConstantOperand().equals("javax/crypto/Cipher") && getNameConstantOperand().equals("getInstance")) {
+                OpcodeStack.Item item;
+                if (getSigConstantOperand().equals("(Ljava/lang/String;)Ljavax/crypto/Cipher;")) {
+                    item = stack.getStackItem(0); //The first argument is last
+                } else if (getSigConstantOperand().equals("(Ljava/lang/String;Ljava/lang/String;)Ljavax/crypto/Cipher;")) {
+                    item = stack.getStackItem(1);
+                } else if (getSigConstantOperand().equals("(Ljava/lang/String;Ljava/security/Provider;)Ljavax/crypto/Cipher;")) {
+                    item = stack.getStackItem(1);
+                } else {
+                    return;
+                }
+
+
+                if (StackUtils.isConstantString(item)) {
+                    String cipherValue = ((String) item.getConstant()).toLowerCase();
+
+                    if (cipherValue.equals("des") || cipherValue.startsWith("des/") || cipherValue.startsWith("desede/")) {
+                        bugReporter.reportBug(new BugInstance(this, DES_USAGE_TYPE, Priorities.NORMAL_PRIORITY) //
+                                .addClass(this).addMethod(this).addSourceLine(this));
+                    }
+                }
+            }
+            if(getClassConstantOperand().equals("javax/crypto/KeyGenerator") && getNameConstantOperand().equals("getInstance")) {
+                OpcodeStack.Item item;
+                if (getSigConstantOperand().equals("(Ljava/lang/String;)Ljavax/crypto/KeyGenerator;")) {
+                    item = stack.getStackItem(0); //The first argument is last
+                } else if (getSigConstantOperand().equals("(Ljava/lang/String;Ljava/lang/String;)Ljavax/crypto/KeyGenerator;")) {
+                    item = stack.getStackItem(1);
+                } else if (getSigConstantOperand().equals("(Ljava/lang/String;Ljava/security/Provider;)Ljavax/crypto/KeyGenerator;")) {
+                    item = stack.getStackItem(1);
+                } else {
+                    return;
+                }
+
+                if (StackUtils.isConstantString(item)) {
+                    String cipherValue = ((String) item.getConstant()).toLowerCase();
+
+                    if (cipherValue.equals("des") || cipherValue.equals("desede")) {
+                        bugReporter.reportBug(new BugInstance(this, DES_USAGE_TYPE, Priorities.NORMAL_PRIORITY) //
+                                .addClass(this).addMethod(this).addSourceLine(this));
+                    }
                 }
             }
         }

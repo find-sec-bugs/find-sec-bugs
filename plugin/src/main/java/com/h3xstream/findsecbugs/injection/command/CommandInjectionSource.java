@@ -79,6 +79,7 @@ public class CommandInjectionSource implements InjectionSource {
                 InjectionPoint ip = new InjectionPoint(new int[]{0}, COMMAND_INJECTION_TYPE);
                 ip.setInjectableMethod("ProcessBuilder(...)");
                 return ip;
+            }
         }
         return InjectionPoint.NONE;
     }

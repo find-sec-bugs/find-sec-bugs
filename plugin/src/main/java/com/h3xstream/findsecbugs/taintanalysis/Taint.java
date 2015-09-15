@@ -218,6 +218,8 @@ public class Taint {
         }
         assert a != null && b != null;
         Taint result = new Taint(State.merge(a.getState(), b.getState()));
+        if (a.variableIndex == b.variableIndex) {
+            result.variableIndex = a.variableIndex;
         }
         result.taintLocations.addAll(a.taintLocations);
         result.taintLocations.addAll(b.taintLocations);

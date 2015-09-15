@@ -20,6 +20,8 @@ package com.h3xstream.findsecbugs.injection.command;
 import com.h3xstream.findsecbugs.common.ByteCode;
 import com.h3xstream.findsecbugs.injection.InjectionPoint;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.generic.ConstantPoolGen;
@@ -27,10 +29,21 @@ import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.INVOKESPECIAL;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InvokeInstruction;
+
 public class CommandInjectionSource implements InjectionSource {
 
     private static final String COMMAND_INJECTION_TYPE = "COMMAND_INJECTION";
-
+    private static final Map<String, int[]> injectableArgumentsMap;
+    
+    static {
+        injectableArgumentsMap = new HashMap<String, int[]>();
+        injectableArgumentsMap.put("(Ljava/lang/String;)Ljava/lang/Process;", new int[]{0});
+        injectableArgumentsMap.put("([Ljava/lang/String;)Ljava/lang/Process;", new int[]{0});
+        injectableArgumentsMap.put("(Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/Process;", new int[]{0, 1});
+        injectableArgumentsMap.put("([Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/Process;", new int[]{0, 1});
+        injectableArgumentsMap.put("(Ljava/lang/String;[Ljava/lang/String;Ljava/io/File;)Ljava/lang/Process;", new int[]{1, 2});
+        injectableArgumentsMap.put("([Ljava/lang/String;[Ljava/lang/String;Ljava/io/File;)Ljava/lang/Process;", new int[]{1, 2});
+    }
 
     @Override
     public boolean isCandidate(ConstantPoolGen cpg) {
@@ -52,15 +65,20 @@ public class CommandInjectionSource implements InjectionSource {
     public InjectionPoint getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {
 
         //ByteCode.printOpCode(ins,cpg);
-
         if (ins instanceof INVOKEVIRTUAL) {
             String methodName = ins.getMethodName(cpg);
             String className = ins.getClassName(cpg);
 
             if (className.equals("java.lang.Runtime") && methodName.equals("exec")) {
-                InjectionPoint ip = new InjectionPoint(new int[]{0}, COMMAND_INJECTION_TYPE);
-                ip.setInjectableMethod("Runtime.exec(...)");
-                return ip;
+                String signature = ins.getSignature(cpg);
+                int[] injectableArguments = injectableArgumentsMap.get(signature);
+                if (injectableArguments != null) {
+                    InjectionPoint ip = new InjectionPoint(injectableArguments, COMMAND_INJECTION_TYPE);
+                    ip.setInjectableMethod("Runtime.exec(...)");
+                    return ip;
+                } else {
+                    assert false : "unknown exec signature " + signature;
+                }
             } else if (className.equals("java.lang.ProcessBuilder") && methodName.equals("command")) {
                 //INVOKEVIRTUAL java/lang/ProcessBuilder.command([Ljava/lang/String;)Ljava/lang/ProcessBuilder;
                 //INVOKEVIRTUAL java/lang/ProcessBuilder.command(Ljava/util/List;)Ljava/lang/ProcessBuilder;
@@ -69,7 +87,7 @@ public class CommandInjectionSource implements InjectionSource {
                 ip.setInjectableMethod("ProcessBuilder.command(...)");
                 return ip;
             }
-        } else if(ins instanceof INVOKESPECIAL) {
+        } else if (ins instanceof INVOKESPECIAL) {
             String methodName = ins.getMethodName(cpg);
             String className = ins.getClassName(cpg);
             if (className.equals("java.lang.ProcessBuilder") && methodName.equals("<init>")) {

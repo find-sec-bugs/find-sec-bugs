@@ -53,7 +53,6 @@ public class HibernateInjectionSourceTest extends BaseDetectorTest {
         verify(reporter, times(5)).doReportBug(
                 bugDefinition()
                         .bugType("SQL_INJECTION_HIBERNATE")
-                        .withPriority("Medium")
                         .build()
         );
     }

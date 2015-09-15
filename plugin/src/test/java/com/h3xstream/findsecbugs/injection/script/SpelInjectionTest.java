@@ -45,7 +45,6 @@ public class SpelInjectionTest extends BaseDetectorTest {
                             .bugType("SPEL_INJECTION")
                             .inClass("SpelSample")
                             .atLine(line)
-                            .withPriority("Medium")
                             .build()
             );
         }
@@ -55,7 +54,6 @@ public class SpelInjectionTest extends BaseDetectorTest {
                 bugDefinition()
                         .bugType("SPEL_INJECTION")
                         .inClass("SpelSample")
-                        .withPriority("Medium")
                         .build()
         );
     }

@@ -62,11 +62,11 @@ public class Taint {
                 return SAFE;
             }
             if (a == NULL || b == NULL) {
-            return NULL;
-        }
+                return NULL;
+            }
             assert a == INVALID && b == INVALID;
             return INVALID;
-    }
+        }
     }
     
     private State state;

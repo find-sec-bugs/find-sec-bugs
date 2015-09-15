@@ -42,23 +42,23 @@ public class InjectionWithStringBuilderTest extends BaseDetectorTest {
         //Assertions
         verify(reporter).doReportBug(bugDefinition()
                         .bugType("SQL_INJECTION_JPA").inClass("StringBuilderSuspicious")
-                        .inMethod("queryTaintedValueInConstructor").withPriority("Medium").build()
+                        .inMethod("queryTaintedValueInConstructor").build()
         );
         verify(reporter).doReportBug(bugDefinition()
                         .bugType("SQL_INJECTION_JPA").inClass("StringBuilderSuspicious")
-                        .inMethod("queryTaintedValueInAppendMethod1").withPriority("Medium").build()
+                        .inMethod("queryTaintedValueInAppendMethod1").build()
         );
         verify(reporter).doReportBug(bugDefinition()
                         .bugType("SQL_INJECTION_JPA").inClass("StringBuilderSuspicious")
-                        .inMethod("queryTaintedValueInAppendMethod2").withPriority("Medium").build()
+                        .inMethod("queryTaintedValueInAppendMethod2").build()
         );
         verify(reporter).doReportBug(bugDefinition()
                         .bugType("SQL_INJECTION_JPA").inClass("StringBuilderSuspicious")
-                        .inMethod("queryUnknownSource1").withPriority("Medium").build()
+                        .inMethod("queryUnknownSource1").build()
         );
         verify(reporter).doReportBug(bugDefinition()
                         .bugType("SQL_INJECTION_JPA").inClass("StringBuilderSuspicious")
-                        .inMethod("queryUnknownSource2").withPriority("Medium").build()
+                        .inMethod("queryUnknownSource2").build()
         );
 
         verify(reporter, times(1)).doReportBug(bugDefinition()
@@ -68,7 +68,7 @@ public class InjectionWithStringBuilderTest extends BaseDetectorTest {
 
         verify(reporter, times(6)).doReportBug(bugDefinition()
                         .bugType("SQL_INJECTION_JPA").inClass("StringBuilderSuspicious")
-                        .withPriority("Medium").build()
+                        .build()
         );
     }
 

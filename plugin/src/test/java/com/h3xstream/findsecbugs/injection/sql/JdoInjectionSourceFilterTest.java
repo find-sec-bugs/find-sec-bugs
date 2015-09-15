@@ -58,7 +58,6 @@ public class JdoInjectionSourceFilterTest extends BaseDetectorTest {
         verify(reporter, times(2)).doReportBug(
                 bugDefinition()
                         .bugType("SQL_INJECTION_JDO")
-                        .withPriority("Medium")
                         .build()
         );
     }

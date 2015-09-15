@@ -43,12 +43,11 @@ public class UnboundIdLdapInjectionSourceTest extends BaseDetectorTest {
                         .bugType("LDAP_INJECTION")
                         .inClass("UnboundIdLdap")
                         .atLine(16)
-                        .withPriority("Medium")
                         .build()
         );
         
         verify(reporter, times(1)).doReportBug(
-                bugDefinition().bugType("LDAP_INJECTION").withPriority("Medium").build()
+                bugDefinition().bugType("LDAP_INJECTION").build()
         );
     }
 }

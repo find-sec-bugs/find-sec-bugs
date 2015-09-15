@@ -43,7 +43,6 @@ public class ScriptEngineInjectionTest extends BaseDetectorTest {
                         .bugType("SCRIPT_ENGINE_INJECTION")
                         .inClass("ScriptEngineSample")
                         .atLine(16)
-                        .withPriority("Medium")
                         .build()
         );
 
@@ -51,7 +50,6 @@ public class ScriptEngineInjectionTest extends BaseDetectorTest {
                 bugDefinition()
                         .bugType("SCRIPT_ENGINE_INJECTION")
                         .inClass("ScriptEngineSample")
-                        .withPriority("Medium")
                         .build()
         );
     }

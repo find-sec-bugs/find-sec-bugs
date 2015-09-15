@@ -59,7 +59,7 @@
     <Detector class="com.h3xstream.findsecbugs.jsp.JspXssDetector" reports="XSS_JSP_PRINT,XSS_SERVLET" />
     <Detector class="com.h3xstream.findsecbugs.XmlDecoderDetector" reports="XML_DECODER"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.StaticIvDetector" reports="STATIC_IV"/>
-    <Detector class="com.h3xstream.findsecbugs.crypto.CipherWithNoIntegrityDetector" reports="ECB_MODE,ORACLE_PADDING,CIPHER_INTEGRITY"/>
+    <Detector class="com.h3xstream.findsecbugs.crypto.CipherWithNoIntegrityDetector" reports="ECB_MODE,PADDING_ORACLE,CIPHER_INTEGRITY"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.EsapiEncryptorDetector" reports="ESAPI_ENCRYPTOR"/>
     <Detector class="com.h3xstream.findsecbugs.injection.script.ScriptInjectionDetector" reports="SCRIPT_ENGINE_INJECTION,SPEL_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.android.ExternalFileAccessDetector" reports="ANDROID_EXTERNAL_FILE_ACCESS"/>

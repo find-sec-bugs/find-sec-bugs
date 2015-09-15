@@ -83,8 +83,7 @@ public class JndiLdapInjectionSourceAdditionalSignaturesTest extends BaseDetecto
         );
     }
 
-    //FIXME:Broken test
-    //@Test
+    @Test
     public void detectLdapInjectionEdgeCase() throws Exception {
         //Locate test code
         String[] files = {

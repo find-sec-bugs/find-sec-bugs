@@ -31,8 +31,7 @@ import static org.mockito.Mockito.verify;
  * Test some additional signatures for ProcessBuilder.
  */
 public class CommandInjectionDetectorAdvancedTest extends BaseDetectorTest {
-
-    /*FAILING Test
+    
     @Test
     public void avoidFalsePositive() throws Exception {
         //Locate test code
@@ -54,7 +53,6 @@ public class CommandInjectionDetectorAdvancedTest extends BaseDetectorTest {
         );
 
     }
-
 
     @Test
     public void detectSuspicious() throws Exception {
@@ -106,6 +104,5 @@ public class CommandInjectionDetectorAdvancedTest extends BaseDetectorTest {
         }
 
     }
-*/
 
 }

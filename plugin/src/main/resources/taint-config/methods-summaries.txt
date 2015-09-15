@@ -46,9 +46,9 @@ java/sql/ResultSet.getString(Ljava/lang/String;)Ljava/lang/String;:TAINTED
 
 
 java/lang/StringBuilder.<init>()V:SAFE
-java/lang/StringBuilder.<init>(Ljava/lang/CharSequence;)V:0#1
+java/lang/StringBuilder.<init>(Ljava/lang/CharSequence;)V:0#1,2
 java/lang/StringBuilder.<init>(I)V:SAFE
-java/lang/StringBuilder.<init>(Ljava/lang/String;)V:0#1
+java/lang/StringBuilder.<init>(Ljava/lang/String;)V:0#1,2
 
 java/lang/StringBuilder.append(Ljava/lang/String;)Ljava/lang/StringBuilder;:0,1#1
 java/lang/StringBuilder.append(Ljava/lang/StringBuffer;)Ljava/lang/StringBuilder;:0,1#1
@@ -86,9 +86,9 @@ java/lang/StringBuilder.trimToSize()V:0#0
 
 
 java/lang/StringBuffer.<init>()V:SAFE
-java/lang/StringBuffer.<init>(Ljava/lang/CharSequence;)V:0#1
+java/lang/StringBuffer.<init>(Ljava/lang/CharSequence;)V:0#1,2
 java/lang/StringBuffer.<init>(I)V:SAFE
-java/lang/StringBuffer.<init>(Ljava/lang/String;)V:0#1
+java/lang/StringBuffer.<init>(Ljava/lang/String;)V:0#1,2
 
 java/lang/StringBuffer.append(Ljava/lang/String;)Ljava/lang/StringBuffer;:0,1#1
 java/lang/StringBuffer.append(Ljava/lang/StringBuffer;)Ljava/lang/StringBuffer;:0,1#1
@@ -126,9 +126,9 @@ java/lang/StringBuffer.trimToSize()V:0#0
 
 
 java/lang/String.<init>()V:SAFE
-java/lang/String.<init>(Ljava/lang/String;)V:0#1
-java/lang/String.<init>(Ljava/lang/StringBuilder;)V:0#1
-java/lang/String.<init>(Ljava/lang/StringBuffer;)V:0#1
+java/lang/String.<init>(Ljava/lang/String;)V:0#1,2
+java/lang/String.<init>(Ljava/lang/StringBuilder;)V:0#1,2
+java/lang/String.<init>(Ljava/lang/StringBuffer;)V:0#1,2
 
 java/lang/String.concat(Ljava/lang/String;)Ljava/lang/String;:0,1
 java/lang/String.intern()Ljava/lang/String;:0
@@ -157,9 +157,9 @@ java/lang/String.valueOf(Ljava/lang/Object)Ljava/lang/String;:0,1
 java/lang/CharSequence.subSequence(II)Ljava/lang/CharSequence;:2
 
 
-java/util/StringTokenizer.<init>(Ljava/lang/String;)V:0#1
-java/util/StringTokenizer.<init>(Ljava/lang/String;Ljava/lang/String;)V:1#2
-java/util/StringTokenizer.<init>(Ljava/lang/String;Ljava/lang/String;B)V:2#3
+java/util/StringTokenizer.<init>(Ljava/lang/String;)V:0#1,2
+java/util/StringTokenizer.<init>(Ljava/lang/String;Ljava/lang/String;)V:1#2,3
+java/util/StringTokenizer.<init>(Ljava/lang/String;Ljava/lang/String;B)V:2#3,4
 java/util/StringTokenizer.nextToken()Ljava/lang/String;:0
 java/util/StringTokenizer.nextToken(Ljava/lang/String;)Ljava/lang/String;:1
 
@@ -198,7 +198,7 @@ java/lang/BigDecimal.toString()Ljava/lang/String;:SAFE
 java/util/Collection.add(Ljava/lang/Object;)Z:0,1#1
 java/util/Collection.add(Ljava/lang/Object;)Z:0,1#1
 java/util/Collection.addAll(Ljava/util/Collection;)Z:0,1#1
--java/util/Collection.clear()V:SAFE#0
+java/util/Collection.clear()V:SAFE#0
 java/util/Collection.remove(Ljava/lang/Object;)Z:1
 java/util/Collection.removeAll(Ljava/util/Collection;)Z:1
 java/util/Collection.removeIf(Ljava/util/function/Predicate;)Z:1#1
@@ -211,7 +211,7 @@ java/util/List.add(Ljava/lang/Object;)Z:0,1#1
 java/util/List.add(ILjava/lang/Object;)V:0,2#2
 java/util/List.addAll(Ljava/util/Collection;)Z:0,1#1
 java/util/List.addAll(ILjava/util/Collection;)Z:0,2#2
--java/util/List.clear()V:SAFE#0
+java/util/List.clear()V:SAFE#0
 java/util/List.get(I)Ljava/lang/Object;:1
 java/util/List.remove()Ljava/lang/Object;:0
 java/util/List.remove(I)Ljava/lang/Object;:1
@@ -230,12 +230,12 @@ java/util/List.forEach(Ljava/util/function/Consumer;)V:1
 
 java/util/ArrayList.<init>()V:SAFE
 java/util/ArrayList.<init>(I)V:SAFE
-java/util/ArrayList.<init>(Ljava/util/Collection;)V:0#1
+java/util/ArrayList.<init>(Ljava/util/Collection;)V:0#1,2
 java/util/ArrayList.add(Ljava/lang/Object;)Z:0,1#1
 java/util/ArrayList.add(ILjava/lang/Object;)V:0,2#2
 java/util/ArrayList.addAll(Ljava/util/Collection;)Z:0,1#1
 java/util/ArrayList.addAll(ILjava/util/Collection;)Z:0,2#2
--java/util/ArrayList.clear()V:SAFE#0
+java/util/ArrayList.clear()V:SAFE#0
 java/util/ArrayList.ensureCapacity(I)V:1
 java/util/ArrayList.forEach(Ljava/util/function/Consumer;)V:1
 java/util/ArrayList.get(I)Ljava/lang/Object;:1
@@ -255,14 +255,14 @@ java/util/ArrayList.trimToSize()V:0
 
 
 java/util/LinkedList.<init>()V:SAFE
-java/util/LinkedList.<init>(Ljava/util/Collection;)V:0#1
+java/util/LinkedList.<init>(Ljava/util/Collection;)V:0#1,2
 java/util/LinkedList.add(Ljava/lang/Object;)Z:0,1#1
 java/util/LinkedList.add(ILjava/lang/Object;)V:0,2#2
 java/util/LinkedList.addAll(Ljava/util/Collection;)Z:0,1#1
 java/util/LinkedList.addAll(ILjava/util/Collection;)Z:0,2#2
 java/util/LinkedList.addFirst(Ljava/lang/Object;)V:0,1#1
 java/util/LinkedList.addLast(Ljava/lang/Object;)V:0,1#1
--java/util/LinkedList.clear()V:SAFE#0
+java/util/LinkedList.clear()V:SAFE#0
 java/util/LinkedList.element()Ljava/lang/Object;:0
 java/util/LinkedList.get(I)Ljava/lang/Object;:1
 java/util/LinkedList.getFirst()Ljava/lang/Object;:0
@@ -298,6 +298,7 @@ java/util/LinkedList.removeIf(Ljava/util/function/Predicate;)Z:1#1
 
 javax/jdo/PersistenceManager.newQuery(Ljava/lang/Object;)Ljavax/jdo/Query;:UNKNOWN
 javax/jdo/PersistenceManager.newQuery(Ljava/lang/String;Ljava/lang/Object;)Ljavax/jdo/Query;:UNKNOWN
+java/util/Arrays.asList([Ljava/lang/Object;)Ljava/util/List;:0
 
 java/util/logging/Logger.entering(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;)V:UNKNOWN
 java/util/logging/Logger.entering(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V:UNKNOWN

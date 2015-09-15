@@ -34,7 +34,7 @@ public class TaintMethodSummaryMap extends HashMap<String, TaintMethodSummary> {
     private static final long serialVersionUID = 1L;
     
     public void load(InputStream input) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
         for (;;) {
                 String line = reader.readLine();
                 if (line == null) {

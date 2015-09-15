@@ -69,9 +69,7 @@ public class CommandInjectionSource implements InjectionSource {
                 ip.setInjectableMethod("ProcessBuilder.command(...)");
                 return ip;
             }
-        }
-        /*
-        else if(ins instanceof INVOKESPECIAL) {
+        } else if(ins instanceof INVOKESPECIAL) {
             String methodName = ins.getMethodName(cpg);
             String className = ins.getClassName(cpg);
             if (className.equals("java.lang.ProcessBuilder") && methodName.equals("<init>")) {
@@ -81,9 +79,7 @@ public class CommandInjectionSource implements InjectionSource {
                 InjectionPoint ip = new InjectionPoint(new int[]{0}, COMMAND_INJECTION_TYPE);
                 ip.setInjectableMethod("ProcessBuilder(...)");
                 return ip;
-            }
         }
-        */
         return InjectionPoint.NONE;
     }
 }

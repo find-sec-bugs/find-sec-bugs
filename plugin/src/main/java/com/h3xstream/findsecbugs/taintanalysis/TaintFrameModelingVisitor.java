@@ -55,15 +55,13 @@ import org.apache.bcel.generic.StoreInstruction;
  */
 public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Taint, TaintFrame> {
 
-    private static final String TO_STRING_METHOD = "toString()Ljava/lang/String;";
+    private static final String TOSTRING_METHOD = "toString()Ljava/lang/String;";
     private static final String EQUALS_METHOD = "equals(Ljava/lang/Object;)Z";
     private static final Set<String> SAFE_OBJECT_TYPES;
     private static final Set<String> IMMUTABLE_OBJECT_TYPES;
     private final MethodDescriptor methodDescriptor;
-    private final int parameterStackSize;
     private final TaintMethodSummaryMap methodSummaries;
     private final TaintMethodSummary analyzedMethodSummary;
-    private final Set<Integer> writtenIndeces;
 
     static {
         // these data types cannot have taint state other than SAFE or NULL
@@ -76,41 +74,35 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         SAFE_OBJECT_TYPES.add("Ljava/lang/Long;");
         SAFE_OBJECT_TYPES.add("Ljava/lang/Byte;");
         SAFE_OBJECT_TYPES.add("Ljava/lang/Short;");
-        SAFE_OBJECT_TYPES.add("Ljava/lang/BigDecimal;");
+        SAFE_OBJECT_TYPES.add("Ljava/math/BigDecimal;");
         // these data types are not modified, when passed as a parameter to an unknown method
-        IMMUTABLE_OBJECT_TYPES = new HashSet<String>(SAFE_OBJECT_TYPES.size() + 1);
+        IMMUTABLE_OBJECT_TYPES = new HashSet<String>(SAFE_OBJECT_TYPES.size() + 7);
         IMMUTABLE_OBJECT_TYPES.addAll(SAFE_OBJECT_TYPES);
         IMMUTABLE_OBJECT_TYPES.add("Ljava/lang/String;");
+        IMMUTABLE_OBJECT_TYPES.add("Ljava/math/BigInteger;");
+        IMMUTABLE_OBJECT_TYPES.add("Ljava/io/File;");
+        IMMUTABLE_OBJECT_TYPES.add("Ljava/util/Locale;");
+        IMMUTABLE_OBJECT_TYPES.add("Ljava/net/Inet4Address;");
+        IMMUTABLE_OBJECT_TYPES.add("Ljava/net/Inet6Address;");
+        IMMUTABLE_OBJECT_TYPES.add("Ljava/net/InetSocketAddress;");
     }
 
     public TaintFrameModelingVisitor(ConstantPoolGen cpg, MethodDescriptor method,
             TaintMethodSummaryMap methodSummaries) {
         super(cpg);
+        if (method == null) {
+            throw new NullPointerException("null method descriptor");
+        }
+        if (methodSummaries == null) {
+            throw new NullPointerException("null method summaries");
+        }
         this.methodDescriptor = method;
         this.methodSummaries = methodSummaries;
-        this.parameterStackSize = getParameterStackSize(method.getSignature(), method.isStatic());
         this.analyzedMethodSummary = new TaintMethodSummary();
-        this.writtenIndeces = new HashSet<Integer>();
-    }
-
-    private static int getParameterStackSize(String signature, boolean isStatic) {
-        // static methods does not have reference to this
-        int stackSize = isStatic ? -1 : 0;
-        GenericSignatureParser parser = new GenericSignatureParser(signature);
-        Iterator<String> iterator = parser.parameterSignatureIterator();
-        while (iterator.hasNext()) {
-            String parameter = iterator.next();
-            if (parameter.equals("D") || parameter.equals("J")) {
-                // double and long types takes two slots
-                stackSize += 2;
-            } else {
-                stackSize++;
-            }
-        }
-        return stackSize;
     }
 
     private static Collection<Integer> getMutableStackIndices(String signature) {
+        assert signature != null && !signature.isEmpty();
         ArrayList<Integer> indices = new ArrayList<Integer>();
         int stackIndex = 0;
         GenericSignatureParser parser = new GenericSignatureParser(signature);
@@ -129,7 +121,9 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             }
         }
         for (int i = 0; i < indices.size(); i++) {
-            indices.set(i, stackIndex - indices.get(i) - 1);
+            int reverseIndex = stackIndex - indices.get(i) - 1;
+            assert reverseIndex >= 0;
+            indices.set(i, reverseIndex);
         }
         return indices;
     }
@@ -170,12 +164,12 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             }
             int index = obj.getIndex();
             while (numConsumed-- > 0) {
-                Taint value = getFrame().popValue();
-                writtenIndeces.add(index);
+                Taint value = new Taint(getFrame().popValue());
+                value.setVariableIndex(index);
                 getFrame().setValue(index++, value);
             }
         } catch (DataflowAnalysisException ex) {
-            throw new InvalidBytecodeException(ex.toString());
+            throw new InvalidBytecodeException(ex.toString(), ex);
         }
     }
 
@@ -188,15 +182,9 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         int index = obj.getIndex() + numProduced;
         while (numProduced-- > 0) {
             Taint value = getFrame().getValue(--index);
-            // set local variable origin of a stack value
-            value.setLocalVariableIndex(index);
-            if (!writtenIndeces.contains(index)) {
-                // it must be parameter if not written to local variable
-                int stackOffset = parameterStackSize - index;
-                assert stackOffset >= 0; // since there is unwritten index
-                value.addTaintParameter(stackOffset);
-            }
-            getFrame().pushValue(value);
+            assert value.hasValidVariableIndex() : "index not set in " + methodDescriptor;
+            assert index == value.getVariableIndex() : "bad index in " + methodDescriptor;
+            getFrame().pushValue(new Taint(value));
         }
     }
 
@@ -237,8 +225,16 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             getFrame().popValue(); // array index
             Taint arrayTaint = getFrame().popValue();
             Taint merge = Taint.merge(valueTaint, arrayTaint);
-            // when varargs are used, taint is transfered to duplicated value too
-            transferTaint(arrayTaint, merge);
+            setLocalVariableTaint(merge, arrayTaint);
+            Taint stackTop = null;
+            if (getFrame().getStackDepth() > 0) {
+                stackTop = getFrame().getTopValue();
+            }
+            // varargs use duplicated values
+            if (stackTop == arrayTaint) {
+                getFrame().popValue();
+                getFrame().pushValue(new Taint(merge));
+            }
         } catch (DataflowAnalysisException ex) {
             throw new InvalidBytecodeException("Not enough values on the stack", ex);
         }
@@ -248,9 +244,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     public void visitAALOAD(AALOAD obj) {
         try {
             getFrame().popValue(); // array index
-            Taint arrayTaint = getFrame().popValue();
             // just transfer the taint from array to value at any index
-            getFrame().pushValue(new Taint(arrayTaint));
         } catch (DataflowAnalysisException ex) {
             throw new InvalidBytecodeException("Not enough values on the stack", ex);
         }
@@ -268,14 +262,16 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
      * @param obj one of the invoke instructions
      */
     private void visitInvoke(InvokeInstruction obj) {
+        assert obj != null;
         TaintMethodSummary methodSummary = getMethodSummary(obj);
         Taint taint = getMethodTaint(methodSummary);
+        assert taint != null;
         if (taint.isUnknown()) {
-            taint.addTaintLocation(getTaintLocation(), false);
+            taint.addLocation(getTaintLocation(), false);
         }
         taintMutableArguments(methodSummary, obj);
-        transferTaintToMutables(methodSummary, taint);
-        modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taint);
+        transferTaintToMutables(methodSummary, taint); // adds variable index to taint too
+        modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), new Taint(taint));
     }
 
     private TaintMethodSummary getMethodSummary(InvokeInstruction obj) {
@@ -292,7 +288,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         if (methodSummary != null) {
             return methodSummary;
         }
-        if (TO_STRING_METHOD.equals(methodNameWithSig)) {
+        if (TOSTRING_METHOD.equals(methodNameWithSig)) {
             return TaintMethodSummary.DEFAULT_TOSTRING_SUMMARY;
         }
         if (EQUALS_METHOD.equals(methodNameWithSig)) {
@@ -300,17 +296,23 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         }
         if (Constants.CONSTRUCTOR_NAME.equals(methodName)
                 && !SAFE_OBJECT_TYPES.contains("L" + className + ";")) {
-            int stackSize = getParameterStackSize(signature, obj instanceof INVOKESTATIC);
-            return TaintMethodSummary.getDefaultConstructorSummary(stackSize);
+            try {
+                int stackSize = getFrame().getNumArgumentsIncludingObjectInstance(obj, cpg);
+                return TaintMethodSummary.getDefaultConstructorSummary(stackSize);
+            } catch (DataflowAnalysisException ex) {
+                throw new InvalidBytecodeException(ex.getMessage(), ex);
+            }
         }
         return methodSummary;
     }
 
     private static String getReturnType(String signature) {
+        assert signature != null && signature.contains(")");
         return signature.substring(signature.indexOf(')') + 1);
     }
 
     private String getSlashedClassName(FieldOrMethod obj) {
+        assert obj != null;
         String className = obj.getReferenceType(cpg).toString();
         return ClassName.toSlashedClassName(className);
     }
@@ -320,16 +322,16 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             return getDefaultValue();
         }
         Taint taint = methodSummary.getOutputTaint();
-        if (taint.isUnknown() && taint.hasTaintParameters()) {
-            Taint taintMerge = mergeTransferParameters(taint.getTaintParameters());
-            return Taint.merge(taint.getNonParametricTaint(), taintMerge);
+        assert taint != null;
+        assert taint != methodSummary.getOutputTaint() : "defensive copy not made";
+        if (taint.isUnknown() && taint.hasParameters()) {
+            Taint merge = mergeTransferParameters(taint.getParameters());
+            assert merge != null;
+            return Taint.merge(Taint.valueOf(taint.getNonParametricState()), merge);
         }
         if (taint.isTainted()) {
-            taint = new Taint(taint);
-            // we do not want to add locations to the method summary
-            taint.addTaintLocation(getTaintLocation(), true);
+            taint.addLocation(getTaintLocation(), true);
         }
-        assert taint != null;
         return taint;
     }
 
@@ -341,18 +343,26 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         }
         Collection<Integer> mutableStackIndices = getMutableStackIndices(obj.getSignature(cpg));
         for (Integer index : mutableStackIndices) {
+            assert index >= 0 && index < getFrame().getStackDepth();
             try {
                 Taint stackValue = getFrame().getStackValue(index);
-                stackValue.setState(Taint.State.merge(stackValue.getState(), Taint.State.UNKNOWN));
+                Taint taint = Taint.merge(stackValue, getDefaultValue());
+                if (stackValue.hasValidVariableIndex()) {
+                    // set back the index removed during merging
+                    taint.setVariableIndex(stackValue.getVariableIndex());
+                }
+                taint.addLocation(getTaintLocation(), false);
+                getFrame().setValue(getFrame().getStackLocation(index), taint);
+                setLocalVariableTaint(taint, taint);
             } catch (DataflowAnalysisException ex) {
                 throw new InvalidBytecodeException("Not enough values on the stack", ex);
             }
         }
     }
-    
+
     private Taint mergeTransferParameters(Collection<Integer> transferParameters) {
+        assert transferParameters != null && !transferParameters.isEmpty();
         Taint taint = null;
-        assert !transferParameters.isEmpty();
         for (Integer transferParameter : transferParameters) {
             try {
                 Taint value = getFrame().getStackValue(transferParameter);
@@ -365,39 +375,42 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         return taint;
     }
 
-    private void transferTaintToMutables(TaintMethodSummary methodSummary, Taint taint) throws RuntimeException {
+    private void transferTaintToMutables(TaintMethodSummary methodSummary, Taint taint) {
+        assert taint != null;
         if (methodSummary == null || !methodSummary.hasMutableStackIndeces()) {
             return;
         }
         try {
+            int stackDepth = getFrame().getStackDepth();
             for (Integer mutableStackIndex : methodSummary.getMutableStackIndeces()) {
+                assert mutableStackIndex >= 0;
+                if (mutableStackIndex >= stackDepth) {
+                    if (!Constants.CONSTRUCTOR_NAME.equals(methodDescriptor.getName())) {
+                        assert false : "Out of bounds mutables in " + methodDescriptor;
+                    }
+                    continue; // ignore if assertions disabled or if in constructor
+                }
                 Taint stackValue = getFrame().getStackValue(mutableStackIndex);
-                // needed especially for constructors
-                transferTaint(stackValue, taint);
+                setLocalVariableTaint(taint, stackValue);
+                getFrame().setValue(getFrame().getStackLocation(mutableStackIndex), new Taint(taint));
             }
         } catch (DataflowAnalysisException ex) {
-            throw new RuntimeException("Bad mutable stack index specification", ex);
+            assert false : ex.getMessage(); // stack depth is checked
         }
     }
 
-    private void transferTaint(Taint to, Taint from) {
-        to.setState(from.getState());
-        if (from.hasTaintParameters()) {
-            for (Integer taintParameter : from.getTaintParameters()) {
-                to.addTaintParameter(taintParameter);
-            }
+    private void setLocalVariableTaint(Taint valueTaint, Taint indexTaint) {
+        assert valueTaint != null && indexTaint != null;
+        if (!indexTaint.hasValidVariableIndex()) {
+            return;
         }
-        to.setNonParametricTaint(from.getNonParametricTaint());
-        for (TaintLocation location : from.getTaintedLocations()) {
-            to.addTaintLocation(location, true);
+        int index = indexTaint.getVariableIndex();
+        if (index >= getFrame().getNumLocals()) {
+            assert false : "Out of bounds local variable index in " + methodDescriptor;
+            return; // ignore if assertions disabled
         }
-        for (TaintLocation location : from.getPossibleTaintedLocations()) {
-            to.addTaintLocation(location, false);
-        }
-        if (to.hasValidLocalVariableIndex()) {
-            int index = to.getLocalVariableIndex();
-            getFrame().setValue(index, from);
-        } // else we are not able to transfer taint to a local variable
+        valueTaint.setVariableIndex(index);
+        getFrame().setValue(index, valueTaint);
     }
 
     private void pushSafe() {

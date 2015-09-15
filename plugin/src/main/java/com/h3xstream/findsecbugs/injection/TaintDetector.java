@@ -55,7 +55,7 @@ import org.apache.bcel.generic.MethodGen;
 
 /**
  * Detector designed for extension to detect injection vulnerabilities
- * 
+ *
  * @author David Formanek (Y Soft Corporation, a.s.)
  */
 public abstract class TaintDetector implements Detector {
@@ -117,19 +117,16 @@ public abstract class TaintDetector implements Detector {
             checkTaintSink(getFullMethodName(cpg, invoke), fact, sourceLine, currentMethod);
             InjectionPoint injectionPoint = getInjectionPoint(invoke, cpg, handle, selectedSources);
             for (int offset : injectionPoint.getInjectableArguments()) {
-
-
                 Taint parameterTaint = fact.getStackValue(offset);
-
-                int priority =  getPriority(parameterTaint);
-                if(priority == Priorities.IGNORE_PRIORITY) {
+                int priority = getPriority(parameterTaint);
+                if (priority == Priorities.IGNORE_PRIORITY) {
                     continue;
                 }
                 BugInstance bugInstance = new BugInstance(this, injectionPoint.getBugType(), priority);
 
                 bugInstance.addClassAndMethod(classContext.getJavaClass(), method);
                 bugInstance.addSourceLine(sourceLine);
-                if (injectionPoint.getInjectableMethod()!= null) {
+                if (injectionPoint.getInjectableMethod() != null) {
                     bugInstance.addString(injectionPoint.getInjectableMethod());
                 }
                 reportBug(bugInstance, parameterTaint, currentMethod);
@@ -147,13 +144,13 @@ public abstract class TaintDetector implements Detector {
     }
 
     private void checkTaintSink(String calledMethod, TaintFrame fact,
-            SourceLineAnnotation sourceLine, String currentMethod)throws DataflowAnalysisException {
+            SourceLineAnnotation sourceLine, String currentMethod) throws DataflowAnalysisException {
         if (methodsWithSinks.containsKey(calledMethod)) {
             Set<TaintSink> sinks = methodsWithSinks.get(calledMethod);
             for (TaintSink sink : sinks) {
                 Taint sinkTaint = sink.getTaint();
-                Set<Integer> taintParameters = sinkTaint.getTaintParameters();
-                Taint finalTaint = sinkTaint.getNonParametricTaint();
+                Set<Integer> taintParameters = sinkTaint.getParameters();
+                Taint finalTaint = Taint.valueOf(sinkTaint.getNonParametricState());
                 for (Integer offset : taintParameters) {
                     Taint parameterTaint = fact.getStackValue(offset);
                     finalTaint = Taint.merge(finalTaint, parameterTaint);
@@ -165,7 +162,7 @@ public abstract class TaintDetector implements Detector {
                     BugInstance bugInstance = sink.getBugInstance();
                     bugInstance.setPriority(Priorities.HIGH_PRIORITY);
                     bugInstance.addSourceLine(sourceLine);
-                } else if (finalTaint.hasTaintParameters()) {
+                } else if (finalTaint.hasParameters()) {
                     assert finalTaint.isUnknown();
                     BugInstance bugInstance = sink.getBugInstance();
                     bugInstance.addSourceLine(sourceLine);
@@ -189,14 +186,10 @@ public abstract class TaintDetector implements Detector {
         }
         return injectionPoint;
     }
-    
+
     private void reportBug(BugInstance bugInstance, Taint taint, String currentMethod) {
-        if (taint.hasTaintedLocations()) {
-            addSourceLines(taint.getTaintedLocations(), bugInstance);
-        } else {
-            addSourceLines(taint.getPossibleTaintedLocations(), bugInstance);
-        }
-        if (bugInstance.getPriority() == Priorities.NORMAL_PRIORITY && taint.hasTaintParameters()) {
+        addSourceLines(taint.getLocations(), bugInstance);
+        if (bugInstance.getPriority() == Priorities.NORMAL_PRIORITY && taint.hasParameters()) {
             delayBugToReport(currentMethod, taint, bugInstance);
         } else {
             bugReporter.reportBug(bugInstance);
@@ -209,9 +202,8 @@ public abstract class TaintDetector implements Detector {
         sinkSet.add(taintSink);
         methodsWithSinks.put(method, sinkSet);
     }
-    
-    private int getPriority(Taint taint) {
 
+    private int getPriority(Taint taint) {
         if (taint.isTainted()) {
             return Priorities.HIGH_PRIORITY;
         } else if (!taint.isSafe()) {
@@ -220,7 +212,7 @@ public abstract class TaintDetector implements Detector {
             return Priorities.IGNORE_PRIORITY;
         }
     }
-    
+
     private static void addSourceLines(Collection<TaintLocation> locations, BugInstance bugInstance) {
         List<SourceLineAnnotation> annotations = new LinkedList<SourceLineAnnotation>();
         for (TaintLocation location : locations) {
@@ -243,31 +235,31 @@ public abstract class TaintDetector implements Detector {
             bugInstance.addSourceLine(sourceLine);
         }
     }
-    
+
     private static TaintDataflow getTaintDataFlow(ClassContext classContext, Method method)
             throws CheckedAnalysisException {
         MethodDescriptor descriptor = BCELUtil.getMethodDescriptor(classContext.getJavaClass(), method);
         return Global.getAnalysisCache().getMethodAnalysis(TaintDataflow.class, descriptor);
     }
-    
+
     private void logException(ClassContext classContext, Method method, Exception ex) {
         bugReporter.logError("Exception while analyzing "
                 + classContext.getFullyQualifiedMethodName(method), ex);
     }
-    
+
     private static String getFullMethodName(ConstantPoolGen cpg, InvokeInstruction invoke) {
         String dottedClassName = invoke.getReferenceType(cpg).toString();
         StringBuilder builder = new StringBuilder(ClassName.toSlashedClassName(dottedClassName));
         builder.append(".").append(invoke.getMethodName(cpg)).append(invoke.getSignature(cpg));
         return builder.toString();
     }
-    
+
     private static String getFullMethodName(MethodGen methodGen) {
         String methodNameWithSignature = methodGen.getName() + methodGen.getSignature();
         String slashedClassName = methodGen.getClassName().replace('.', '/');
         return slashedClassName + "." + methodNameWithSignature;
     }
-    
+
     @Override
     public void report() {
         Set<BugInstance> bugs = new HashSet<BugInstance>();

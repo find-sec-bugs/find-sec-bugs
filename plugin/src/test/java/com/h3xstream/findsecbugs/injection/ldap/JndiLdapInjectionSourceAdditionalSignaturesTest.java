@@ -83,4 +83,26 @@ public class JndiLdapInjectionSourceAdditionalSignaturesTest extends BaseDetecto
         );
     }
 
+    //FIXME:Broken test
+    //@Test
+    public void detectLdapInjectionEdgeCase() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/ldap/JndiLdapSpecial")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("LDAP_INJECTION")
+                        .inClass("JndiLdapSpecial")
+                        .atLine(16)
+                        .build()
+        );
+
+    }
+
 }

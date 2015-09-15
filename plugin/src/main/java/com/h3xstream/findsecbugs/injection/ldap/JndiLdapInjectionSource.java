@@ -38,8 +38,22 @@ public class JndiLdapInjectionSource implements InjectionSource {
             Constant cnt = cpg.getConstant(i);
             if (cnt instanceof ConstantUtf8) {
                 String utf8String = ((ConstantUtf8) cnt).getBytes();
-//                System.out.println("cnt= "+utf8String);
                 if (utf8String.equals("javax/naming/directory/InitialDirContext")) {
+                    return true;
+                }
+                if (utf8String.equals("javax/naming/directory/DirContext")) {
+                    return true;
+                }
+                if (utf8String.equals("javax/naming/ldap/InitialLdapContext")) {
+                    return true;
+                }
+                if (utf8String.equals("javax/naming/ldap/LdapContext")) {
+                    return true;
+                }
+                if (utf8String.equals("com/sun/jndi/ldap/LdapCtx")) {
+                    return true;
+                }
+                if (utf8String.equals("javax/naming/event/EventDirContext")) {
                     return true;
                 }
             }

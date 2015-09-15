@@ -23,14 +23,14 @@ public class InjectionPoint {
      * This instance is use to represent "null" as no injection point.
      * It is a cleaner option than returning NULL by contract. (see Null Object pattern)
      */
-    public static InjectionPoint NONE = new InjectionPoint(new int[0],null);
+    public static final InjectionPoint NONE = new InjectionPoint(new int[0], null);
 
-    private int[] injectableArguments;
+    private final int[] injectableArguments;
     private String injectableMethod;
-    private String bugType;
+    private final String bugType;
 
 
-    public InjectionPoint( int[] injectableArguments,String bugType) {
+    public InjectionPoint(int[] injectableArguments, String bugType) {
         this.injectableArguments = injectableArguments;
         this.bugType = bugType;
     }

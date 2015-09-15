@@ -40,7 +40,7 @@ public class CommandInjectionDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        List<Integer> linesMedium = Arrays.asList(22, 24, 29, 32, 44, 130, 135, 141, 154);
+        List<Integer> linesMedium = Arrays.asList(20, 21, 22, 23, 24, 25, 29, 32, 44, 130, 135, 141, 154);
         List<Integer> linesHigh = Arrays.asList(73, 77, 89, 101, 111, 116, 125, 134, 140);
         //List<Integer> linesLow = Arrays.asList(57, 81, 121, 126, 136, 142);
         

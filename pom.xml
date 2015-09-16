@@ -7,7 +7,7 @@
     <artifactId>findsecbugs-root-pom</artifactId>
 
     <packaging>pom</packaging>
-    <version>1.4.3</version>
+    <version>1.4.4-SNAPSHOT</version>
 
     <name>Find Security Bugs root</name>
 

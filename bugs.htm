@@ -2180,6 +2180,57 @@ class FileWriteUtil {
 </p>
     </section>
     
+    <section>
+        <a class="anchor" name="INSECURE_COOKIE"></a><h2 class="page-header">Cookie without the secure flag  <a href="#INSECURE_COOKIE" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+
+        <p>
+A new cookie is created without the <code>Secure</code> flag set.
+The <code>Secure</code> flag is a directive to the browser to make sure that the cookie is not sent for insecure
+communication (<code>http://</code>).
+</p>
+
+<p>
+<b>Code at risk:</b><br/>
+<pre>
+Cookie cookie = new Cookie("userName",userName);
+response.addCookie(cookie);
+</pre>
+</p>
+
+<p>
+<b>Solution (Specific configuration):</b><br/>
+<pre>
+Cookie cookie = new Cookie("userName",userName);
+cookie.setSecure(true);
+cookie.setHttpOnly(true);
+</pre>
+</p>
+
+<p>
+<b>Solution (Servlet 3.0 configuration):</b><br/>
+<pre>
+&lt;web-app xmlns="http://java.sun.com/xml/ns/javaee" version="3.0"&gt;
+[...]
+&lt;session-config&gt;
+ &lt;cookie-config&gt;
+  &lt;http-only&gt;true&lt;/http-only&gt;
+  &lt;secure&gt;true&lt;/secure&gt;
+ &lt;/cookie-config&gt;
+&lt;/session-config&gt;
+&lt;/web-app&gt;
+</pre>
+</p>
+<br/>
+<p>
+<b>Reference</b><br/>
+<a href="https://cwe.mitre.org/data/definitions/614.html">CWE-614: Sensitive Cookie in HTTPS Session Without 'Secure' Attribute</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/315.html">CWE-315: Cleartext Storage of Sensitive Information in a Cookie</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/311.html">CWE-311: Missing Encryption of Sensitive Data</a><br/>
+<a href="https://www.owasp.org/index.php/SecureFlag">OWASP: Secure Flag</a><br/>
+<a href="https://www.rapid7.com/db/vulnerabilities/http-cookie-secure-flag">Rapid7: Missing Secure Flag From SSL Cookie</a>
+</p>
+    </section>
+    
         </div>
 
         <div class="col-md-1" id="rightCol">
@@ -2201,7 +2252,7 @@ class FileWriteUtil {
 <footer id="footer" class="footer hidden-print">
     <div class="container text-center">
         <div>
-            Find Security Bugs 1.4.1
+            Find Security Bugs 1.4.3
             <span class="hide-xs">&middot;</span>
             Created by <a target="_blank" href="https://twitter.com/h3xstream">Philippe Arteau</a>
         </div>

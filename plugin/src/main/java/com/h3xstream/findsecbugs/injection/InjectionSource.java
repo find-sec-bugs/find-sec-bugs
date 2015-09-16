@@ -29,7 +29,7 @@ public interface InjectionSource {
      * its constant pool gen. All classes dependencies can be found in this pool.
      *
      * @param cpg
-     * @return
+     * @return If the current class need to be analyzed.
      */
     boolean isCandidate(ConstantPoolGen cpg);
 
@@ -40,7 +40,7 @@ public interface InjectionSource {
      * @param ins       Instruction visit
      * @param cpg       ConstantPool (needed to find the class name and method name associate to instruction)
      * @param insHandle instruction handle (needed to look at the instruction around the current instruction)
-     * @return
+     * @return Precision about the parameter at risk for the current instruction visit. (InjectionPoint.NONE when the method is safe)
      */
     InjectionPoint getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle);
 

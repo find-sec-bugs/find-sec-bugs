@@ -198,7 +198,8 @@ public abstract class TaintDetector implements Detector {
 
     private void delayBugToReport(String method, Taint taint, BugInstance bug) {
         TaintSink taintSink = new TaintSink(taint, bug);
-        Set<TaintSink> sinkSet = methodsWithSinks.getOrDefault(method, new HashSet<TaintSink>());
+        Set<TaintSink> sinkSet = methodsWithSinks.get(method);
+        if(sinkSet == null) sinkSet = new HashSet<TaintSink>();
         sinkSet.add(taintSink);
         methodsWithSinks.put(method, sinkSet);
     }

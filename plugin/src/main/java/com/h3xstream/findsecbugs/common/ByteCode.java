@@ -75,7 +75,7 @@ public class ByteCode {
      * @param h Instruction Handle
      * @param cpg Constant Pool
      * @param clazz Type of the constant being read
-     * @return
+     * @return The constant value if any is found
      */
     public static <T> T getConstantLDC(InstructionHandle h, ConstantPoolGen cpg, Class<T> clazz) {
         Instruction prevIns = h.getInstruction();
@@ -105,7 +105,7 @@ public class ByteCode {
      * Extract the number from a push operation (BIPUSH/SIPUSH).
      *
      * @param h Instruction Handle
-     * @return
+     * @return The constant number if any is found
      */
     public static Number getPushNumber(InstructionHandle h) {
         Instruction prevIns = h.getInstruction();
@@ -122,9 +122,9 @@ public class ByteCode {
     /**
      * Get the previous instruction matching the given type of instruction (second parameter)
      *
-     * @param startHandle
-     * @param clazz       Type of instruction to look for
-     * @return
+     * @param startHandle Location to start from
+     * @param clazz Type of instruction to look for
+     * @return The instruction found (null if not found)
      */
     public static <T> T getPrevInstruction(InstructionHandle startHandle, Class<T> clazz) {
         InstructionHandle curHandle = startHandle;

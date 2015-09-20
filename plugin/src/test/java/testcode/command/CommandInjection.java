@@ -215,4 +215,13 @@ public abstract class CommandInjection {
     public void call() throws IOException {
         MoreMethods.sink(System.getenv(""));
     }
+    
+    public void callInterface() throws IOException {
+        InterfaceWithSink obj = new MoreMethods();
+        if (obj.hashCode() % 2 == 0) {
+            System.out.println(obj.toString());
+        } // just to confuse the analysis a bit
+        unknown(new StringBuilder().append(obj));
+        obj.sink2(System.getenv(""));
+    }
 }

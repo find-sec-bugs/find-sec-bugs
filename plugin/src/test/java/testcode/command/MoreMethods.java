@@ -2,7 +2,7 @@ package testcode.command;
 
 import java.io.IOException;
 
-public class MoreMethods {
+public class MoreMethods implements InterfaceWithSink {
     
     public static String tainted() {
         return System.getenv("var");
@@ -13,6 +13,11 @@ public class MoreMethods {
     }
     
     public static void sink(String param) throws IOException {
+        Runtime.getRuntime().exec(param);
+    }
+    
+    @Override
+    public void sink2(String param) throws IOException {
         Runtime.getRuntime().exec(param);
     }
 }

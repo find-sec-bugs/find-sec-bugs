@@ -114,7 +114,7 @@ public abstract class TaintDetector implements Detector {
             }
             SourceLineAnnotation sourceLine = SourceLineAnnotation
                     .fromVisitedInstruction(classContext, method, handle);
-            checkTaintSink(getFullMethodName(cpg, invoke), fact, sourceLine, currentMethod);
+            checkTaintSink(getFullMethodName(cpg, invoke, fact), fact, sourceLine, currentMethod);
             InjectionPoint injectionPoint = getInjectionPoint(invoke, cpg, handle, selectedSources);
             for (int offset : injectionPoint.getInjectableArguments()) {
                 Taint parameterTaint = fact.getStackValue(offset);
@@ -123,7 +123,6 @@ public abstract class TaintDetector implements Detector {
                     continue;
                 }
                 BugInstance bugInstance = new BugInstance(this, injectionPoint.getBugType(), priority);
-
                 bugInstance.addClassAndMethod(classContext.getJavaClass(), method);
                 bugInstance.addSourceLine(sourceLine);
                 if (injectionPoint.getInjectableMethod() != null) {
@@ -199,7 +198,9 @@ public abstract class TaintDetector implements Detector {
     private void delayBugToReport(String method, Taint taint, BugInstance bug) {
         TaintSink taintSink = new TaintSink(taint, bug);
         Set<TaintSink> sinkSet = methodsWithSinks.get(method);
-        if(sinkSet == null) sinkSet = new HashSet<TaintSink>();
+        if (sinkSet == null) {
+            sinkSet = new HashSet<TaintSink>();
+        }
         sinkSet.add(taintSink);
         methodsWithSinks.put(method, sinkSet);
     }
@@ -248,9 +249,23 @@ public abstract class TaintDetector implements Detector {
                 + classContext.getFullyQualifiedMethodName(method), ex);
     }
 
-    private static String getFullMethodName(ConstantPoolGen cpg, InvokeInstruction invoke) {
-        String dottedClassName = invoke.getReferenceType(cpg).toString();
-        StringBuilder builder = new StringBuilder(ClassName.toSlashedClassName(dottedClassName));
+    private static String getFullMethodName(ConstantPoolGen cpg, InvokeInstruction invoke, TaintFrame frame) {
+        String className = null;
+        try {
+            int instanceIndex = frame.getNumArgumentsIncludingObjectInstance(invoke, cpg) - 1;
+            if (instanceIndex != -1) {
+                assert instanceIndex < frame.getStackDepth();
+                Taint instanceTaint = frame.getStackValue(instanceIndex);
+                className = instanceTaint.getRealInstanceClassName();
+            }
+        } catch (DataflowAnalysisException ex) {
+            assert false : ex.getMessage();
+        }
+        if (className == null) {
+            String dottedClassName = invoke.getReferenceType(cpg).toString();
+            className = ClassName.toSlashedClassName(dottedClassName);
+        }
+        StringBuilder builder = new StringBuilder(className);
         builder.append(".").append(invoke.getMethodName(cpg)).append(invoke.getSignature(cpg));
         return builder.toString();
     }

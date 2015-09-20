@@ -86,8 +86,8 @@ public class TaintMethodSummary {
     }
 
     public static TaintMethodSummary getDefaultConstructorSummary(int stackSize) {
-        if (stackSize < 0) {
-            throw new IllegalArgumentException("negative index");
+        if (stackSize < 1) {
+            throw new IllegalArgumentException("stack size less than 1");
         }
         TaintMethodSummary summary = new TaintMethodSummary();
         summary.outputTaint = new Taint(Taint.State.UNKNOWN);

@@ -83,9 +83,17 @@ public class CommandInjectionDetectorTest extends BaseDetectorTest {
                 .build()
         );
         
+        verify(reporter).doReportBug(
+            bugDefinition()
+                .bugType("COMMAND_INJECTION")
+                .inClass("MoreMethods").atLine(21)
+                .withPriority("High")
+                .build()
+        );
+        
         verify(reporter, times(linesMedium.size())).doReportBug(
                 bugDefinition().bugType("COMMAND_INJECTION").withPriority("Medium").build());
-        verify(reporter, times(linesHigh.size() + 1)).doReportBug(
+        verify(reporter, times(linesHigh.size() + 2)).doReportBug(
                 bugDefinition().bugType("COMMAND_INJECTION").withPriority("High").build());
         verify(reporter, never()).doReportBug(
                 bugDefinition().bugType("COMMAND_INJECTION").withPriority("Low").build());

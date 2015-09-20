@@ -152,7 +152,9 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     @Override
     public void visitNEW(NEW obj) {
-        pushSafe();
+        Taint taint = new Taint(Taint.State.SAFE);
+        taint.setRealInstanceClass(obj.getLoadClassType(cpg));
+        getFrame().pushValue(taint);
     }
 
     @Override
@@ -351,6 +353,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                     // set back the index removed during merging
                     taint.setVariableIndex(stackValue.getVariableIndex());
                 }
+                taint.setRealInstanceClass(stackValue.getRealInstanceClass());
                 taint.addLocation(getTaintLocation(), false);
                 getFrame().setValue(getFrame().getStackLocation(index), taint);
                 setLocalVariableTaint(taint, taint);
@@ -392,6 +395,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                 }
                 Taint stackValue = getFrame().getStackValue(mutableStackIndex);
                 setLocalVariableTaint(taint, stackValue);
+                taint.setRealInstanceClass(stackValue.getRealInstanceClass());
                 getFrame().setValue(getFrame().getStackLocation(mutableStackIndex), new Taint(taint));
             }
         } catch (DataflowAnalysisException ex) {

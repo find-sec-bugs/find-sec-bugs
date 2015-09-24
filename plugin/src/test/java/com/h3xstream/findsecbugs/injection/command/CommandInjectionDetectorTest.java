@@ -33,7 +33,8 @@ public class CommandInjectionDetectorTest extends BaseDetectorTest {
         //Locate test code
         String[] files = {
                 getClassFilePath("testcode/command/CommandInjection"),
-                getClassFilePath("testcode/command/MoreMethods")
+                getClassFilePath("testcode/command/MoreMethods"),
+                getClassFilePath("testcode/command/SubClass")
         };
 
         //Run the analysis
@@ -41,7 +42,7 @@ public class CommandInjectionDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         List<Integer> linesMedium = Arrays.asList(20, 21, 22, 23, 24, 25, 29, 32, 44, 130, 135, 141, 154);
-        List<Integer> linesHigh = Arrays.asList(73, 77, 89, 101, 111, 116, 125, 134, 140);
+        List<Integer> linesHigh = Arrays.asList(73, 77, 89, 101, 111, 116, 125, 134, 140/*, 233*/);
         //List<Integer> linesLow = Arrays.asList(57, 81, 121, 126, 136, 142);
         
         //Assertions
@@ -91,9 +92,24 @@ public class CommandInjectionDetectorTest extends BaseDetectorTest {
                 .build()
         );
         
+        verify(reporter).doReportBug(
+            bugDefinition()
+                .bugType("COMMAND_INJECTION")
+                .inClass("SubClass").atLine(9)
+                .withPriority("High")
+                .build()
+        );
+        verify(reporter).doReportBug(
+            bugDefinition()
+                .bugType("COMMAND_INJECTION")
+                .inClass("SubClass").atLine(10)
+                .withPriority("High")
+                .build()
+        );
+        
         verify(reporter, times(linesMedium.size())).doReportBug(
                 bugDefinition().bugType("COMMAND_INJECTION").withPriority("Medium").build());
-        verify(reporter, times(linesHigh.size() + 2)).doReportBug(
+        verify(reporter, times(linesHigh.size() + 4)).doReportBug(
                 bugDefinition().bugType("COMMAND_INJECTION").withPriority("High").build());
         verify(reporter, never()).doReportBug(
                 bugDefinition().bugType("COMMAND_INJECTION").withPriority("Low").build());

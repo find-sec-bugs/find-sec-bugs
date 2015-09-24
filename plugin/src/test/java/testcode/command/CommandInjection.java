@@ -209,19 +209,25 @@ public abstract class CommandInjection {
     public String combine(String x, String y) {
         StringBuilder sb = new StringBuilder("safe");
         sb.append((Object) x);
-        return sb.toString() + y.concat("aaa");
+        return sb.toString().trim() + y.concat("aaa");
     }
 
     public void call() throws IOException {
         MoreMethods.sink(System.getenv(""));
     }
     
-    public void callInterface() throws IOException {
-        InterfaceWithSink obj = new MoreMethods();
-        if (obj.hashCode() % 2 == 0) {
-            System.out.println(obj.toString());
+    public void callInterface(InterfaceWithSink obj1) throws IOException {
+        InterfaceWithSink obj2 = new MoreMethods();
+        if (obj2.hashCode() % 2 == 0) {
+            System.out.println(obj2.toString());
         } // just to confuse the analysis a bit
-        unknown(new StringBuilder().append(obj));
-        obj.sink2(System.getenv(""));
+        unknown(new StringBuilder().append(obj2));
+        obj2.sink2(System.getenv(""));
+        obj1.sink2(System.getenv("")); // should not be reported
     }
+    
+    // TODO this should be supported too
+    /*public InterfaceWithSink getNewMoreMethods() {
+        return new MoreMethods();
+    }*/
 }

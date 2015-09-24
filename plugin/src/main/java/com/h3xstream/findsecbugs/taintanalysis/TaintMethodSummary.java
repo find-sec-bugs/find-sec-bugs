@@ -113,7 +113,13 @@ public class TaintMethodSummary {
         if (!outputTaint.isUnknown()) {
             return true;
         }
-        return outputTaint.hasParameters();
+        if (outputTaint.hasParameters()) {
+            return true;
+        }
+        /*if (outputTaint.getRealInstanceClass() != null) {
+            return true;
+        }*/
+        return false;
     }
 
     @Override

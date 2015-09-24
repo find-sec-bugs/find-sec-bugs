@@ -19,7 +19,10 @@ package com.h3xstream.findsecbugs.taintanalysis;
 
 import edu.umd.cs.findbugs.ba.AbstractFrameModelingVisitor;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
+import edu.umd.cs.findbugs.ba.Hierarchy2;
 import edu.umd.cs.findbugs.ba.InvalidBytecodeException;
+import edu.umd.cs.findbugs.ba.XFactory;
+import edu.umd.cs.findbugs.ba.XMethod;
 import edu.umd.cs.findbugs.ba.generic.GenericSignatureParser;
 import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 import edu.umd.cs.findbugs.util.ClassName;
@@ -273,7 +276,9 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         }
         taintMutableArguments(methodSummary, obj);
         transferTaintToMutables(methodSummary, taint); // adds variable index to taint too
-        modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), new Taint(taint));
+        Taint taintCopy = new Taint(taint);
+        taintCopy.setRealInstanceClass(null); // return type is not the instance type always
+        modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taintCopy);
     }
 
     private TaintMethodSummary getMethodSummary(InvokeInstruction obj) {
@@ -285,8 +290,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         String className = getSlashedClassName(obj);
         String methodName = obj.getMethodName(cpg);
         String methodNameWithSig = methodName + signature;
-        String fullMethodName = className + "." + methodNameWithSig;
-        TaintMethodSummary methodSummary = methodSummaries.get(fullMethodName);
+        TaintMethodSummary methodSummary = getInitialMethodSummary(getInstanceMethod(obj));
         if (methodSummary != null) {
             return methodSummary;
         }
@@ -308,6 +312,47 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         return methodSummary;
     }
 
+    private TaintMethodSummary getInitialMethodSummary(XMethod method) {
+        String methodName = toFullMethodName(method);
+        TaintMethodSummary methodSummary = methodSummaries.get(methodName);
+        if (methodSummary != null) {
+            return methodSummary;
+        }
+        XMethod superMethod = Hierarchy2.findFirstSuperMethod(method);
+        if (superMethod != null) {
+            // search for super method summaries recursively
+            return getInitialMethodSummary(superMethod);
+        }
+        // TODO check interfaces too
+        return null;
+    }
+    
+    private XMethod getInstanceMethod(InvokeInstruction invoke) {
+        String className = null;
+        try {
+            int instanceIndex = getFrame().getNumArgumentsIncludingObjectInstance(invoke, cpg) - 1;
+            if (instanceIndex != -1) {
+                assert instanceIndex < getFrame().getStackDepth();
+                Taint instanceTaint = getFrame().getStackValue(instanceIndex);
+                className = instanceTaint.getRealInstanceClassName();
+            }
+        } catch (DataflowAnalysisException ex) {
+            assert false : ex.getMessage();
+        }
+        if (className == null) {
+            String dottedClassName = invoke.getReferenceType(cpg).toString();
+            className = ClassName.toSlashedClassName(dottedClassName);
+        }
+        return XFactory.createXMethodUsingSlashedClassName(className,
+                invoke.getMethodName(cpg), invoke.getSignature(cpg), invoke instanceof INVOKESTATIC
+        );
+    }
+    
+    private static String toFullMethodName(XMethod method) {
+        MethodDescriptor md = method.getMethodDescriptor();
+        return md.getSlashedClassName() + "." + md.getName() + md.getSignature();
+    }
+    
     private static String getReturnType(String signature) {
         assert signature != null && signature.contains(")");
         return signature.substring(signature.indexOf(')') + 1);
@@ -395,8 +440,10 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                 }
                 Taint stackValue = getFrame().getStackValue(mutableStackIndex);
                 setLocalVariableTaint(taint, stackValue);
-                taint.setRealInstanceClass(stackValue.getRealInstanceClass());
-                getFrame().setValue(getFrame().getStackLocation(mutableStackIndex), new Taint(taint));
+                Taint taintCopy = new Taint(taint);
+                // do not set instance to return values, can be different type
+                taintCopy.setRealInstanceClass(stackValue.getRealInstanceClass());
+                getFrame().setValue(getFrame().getStackLocation(mutableStackIndex), taintCopy);
             }
         } catch (DataflowAnalysisException ex) {
             assert false : ex.getMessage(); // stack depth is checked

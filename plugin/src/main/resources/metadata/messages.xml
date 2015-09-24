@@ -1065,7 +1065,7 @@ This class should be analyzed to make sure that remotely exposed methods are saf
 
     <BugPattern type="CUSTOM_INJECTION">
         <ShortDescription>Potential Injection</ShortDescription>
-        <LongDescription>The use of the method {3} is potentially vulnerable injection.</LongDescription>
+        <LongDescription>The use of the method {3} is potentially vulnerable to injection.</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -1168,7 +1168,7 @@ q.execute();</pre>
     <!-- JDOQL Injection -->
     <BugPattern type="SQL_INJECTION_JDO">
         <ShortDescription>Potential SQL/JDOQL Injection (JDO)</ShortDescription>
-        <LongDescription>The query is potentially vulnerable SQL/JDOQL injection</LongDescription>
+        <LongDescription>The query is potentially vulnerable to SQL/JDOQL injection</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -1377,7 +1377,7 @@ Therefore, the primary defense against LDAP injection is strong input validation
 
     <BugPattern type="SCRIPT_ENGINE_INJECTION">
         <ShortDescription>Potential code injection when using Script Engine</ShortDescription>
-        <LongDescription>This code evaluation could be vulnerable code injection</LongDescription>
+        <LongDescription>This code evaluation could be vulnerable to code injection</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -1440,7 +1440,7 @@ public void runCustomTrigger(String script) {
 
     <BugPattern type="SPEL_INJECTION">
         <ShortDescription>Potential code injection when using Spring Expression</ShortDescription>
-        <LongDescription>This code evaluation could be vulnerable code injection</LongDescription>
+        <LongDescription>This code evaluation could be vulnerable to code injection</LongDescription>
         <Details>
             <![CDATA[
 <p>

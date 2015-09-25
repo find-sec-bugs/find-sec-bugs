@@ -21,6 +21,10 @@ public class MoreMethods implements InterfaceWithSink {
         Runtime.getRuntime().exec(param);
     }
     
+    public void sink3(String param) throws IOException {
+        Runtime.getRuntime().exec(param);
+    }
+    
     public static String tainted2() {
         return System.getenv("var2");
     }

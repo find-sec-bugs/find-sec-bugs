@@ -8,5 +8,6 @@ public class SubClass extends MoreMethods {
         Runtime.getRuntime().exec(safe());
         Runtime.getRuntime().exec(tainted());
         Runtime.getRuntime().exec(tainted2());
+        sink3(System.getenv(""));
     }
 }

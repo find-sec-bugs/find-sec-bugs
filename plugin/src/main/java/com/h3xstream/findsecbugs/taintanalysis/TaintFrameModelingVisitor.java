@@ -18,9 +18,12 @@
 package com.h3xstream.findsecbugs.taintanalysis;
 
 import edu.umd.cs.findbugs.ba.AbstractFrameModelingVisitor;
+import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
+import edu.umd.cs.findbugs.ba.Hierarchy;
 import edu.umd.cs.findbugs.ba.Hierarchy2;
 import edu.umd.cs.findbugs.ba.InvalidBytecodeException;
+import edu.umd.cs.findbugs.ba.JavaClassAndMethod;
 import edu.umd.cs.findbugs.ba.XFactory;
 import edu.umd.cs.findbugs.ba.XMethod;
 import edu.umd.cs.findbugs.ba.generic.GenericSignatureParser;
@@ -32,6 +35,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import org.apache.bcel.Constants;
+import org.apache.bcel.Repository;
+import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.AALOAD;
 import org.apache.bcel.generic.AASTORE;
 import org.apache.bcel.generic.ACONST_NULL;
@@ -287,12 +292,23 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         if (SAFE_OBJECT_TYPES.contains(returnType)) {
             return TaintMethodSummary.SAFE_SUMMARY;
         }
-        String className = getSlashedClassName(obj);
+        String className = getInstanceClassName(obj);
         String methodName = obj.getMethodName(cpg);
-        String methodNameWithSig = methodName + signature;
-        TaintMethodSummary methodSummary = getInitialMethodSummary(getInstanceMethod(obj));
-        if (methodSummary != null) {
-            return methodSummary;
+        String methodNameWithSig = methodName.concat(signature);
+        String fullMethodName = className + "." + methodNameWithSig;
+        TaintMethodSummary summary = methodSummaries.get(fullMethodName);
+        if (summary != null) {
+            return summary;
+        }
+        try {
+            JavaClass javaClass = Repository.lookupClass(className);
+            assert javaClass != null;
+            summary = getSuperMethodSummary(javaClass, ".".concat(methodNameWithSig));
+            if (summary != null) {
+                return summary;
+            }
+        } catch (ClassNotFoundException ex) {
+            AnalysisContext.reportMissingClass(ex);
         }
         if (TOSTRING_METHOD.equals(methodNameWithSig)) {
             return TaintMethodSummary.DEFAULT_TOSTRING_SUMMARY;
@@ -309,59 +325,49 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                 throw new InvalidBytecodeException(ex.getMessage(), ex);
             }
         }
-        return methodSummary;
-    }
-
-    private TaintMethodSummary getInitialMethodSummary(XMethod method) {
-        String methodName = toFullMethodName(method);
-        TaintMethodSummary methodSummary = methodSummaries.get(methodName);
-        if (methodSummary != null) {
-            return methodSummary;
-        }
-        XMethod superMethod = Hierarchy2.findFirstSuperMethod(method);
-        if (superMethod != null) {
-            // search for super method summaries recursively
-            return getInitialMethodSummary(superMethod);
-        }
-        // TODO check interfaces too
         return null;
     }
     
-    private XMethod getInstanceMethod(InvokeInstruction invoke) {
-        String className = null;
+    private String getInstanceClassName(InvokeInstruction invoke) {
         try {
             int instanceIndex = getFrame().getNumArgumentsIncludingObjectInstance(invoke, cpg) - 1;
             if (instanceIndex != -1) {
                 assert instanceIndex < getFrame().getStackDepth();
                 Taint instanceTaint = getFrame().getStackValue(instanceIndex);
-                className = instanceTaint.getRealInstanceClassName();
+                String className = instanceTaint.getRealInstanceClassName();
+                if (className != null) {
+                    return className;
+                }
             }
         } catch (DataflowAnalysisException ex) {
             assert false : ex.getMessage();
         }
-        if (className == null) {
-            String dottedClassName = invoke.getReferenceType(cpg).toString();
-            className = ClassName.toSlashedClassName(dottedClassName);
-        }
-        return XFactory.createXMethodUsingSlashedClassName(className,
-                invoke.getMethodName(cpg), invoke.getSignature(cpg), invoke instanceof INVOKESTATIC
-        );
+        String dottedClassName = invoke.getReferenceType(cpg).toString();
+        return ClassName.toSlashedClassName(dottedClassName);
     }
     
-    private static String toFullMethodName(XMethod method) {
-        MethodDescriptor md = method.getMethodDescriptor();
-        return md.getSlashedClassName() + "." + md.getName() + md.getSignature();
+    private TaintMethodSummary getSuperMethodSummary(JavaClass javaClass, String method)
+            throws ClassNotFoundException {
+        for (JavaClass superClass : javaClass.getSuperClasses()) {
+            String fullMethodName = superClass.getClassName().replace('.', '/').concat(method);
+            TaintMethodSummary summary = methodSummaries.get(fullMethodName);
+            if (summary != null) {
+                return summary;
+            }
+        }
+        for (JavaClass interfaceClass : javaClass.getAllInterfaces()) {
+            String fullMethodName = interfaceClass.getClassName().replace('.', '/').concat(method);
+            TaintMethodSummary summary = methodSummaries.get(fullMethodName);
+            if (summary != null) {
+                return summary;
+            }
+        }
+        return null;
     }
     
     private static String getReturnType(String signature) {
         assert signature != null && signature.contains(")");
         return signature.substring(signature.indexOf(')') + 1);
-    }
-
-    private String getSlashedClassName(FieldOrMethod obj) {
-        assert obj != null;
-        String className = obj.getReferenceType(cpg).toString();
-        return ClassName.toSlashedClassName(className);
     }
 
     private Taint getMethodTaint(TaintMethodSummary methodSummary) {

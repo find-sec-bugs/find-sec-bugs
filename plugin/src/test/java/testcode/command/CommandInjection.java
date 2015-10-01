@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,7 +24,6 @@ public abstract class CommandInjection {
         r.exec(cmd.toArray(new String[cmd.size()]));
         r.exec(cmd.toArray(new String[cmd.size()]), null);
         r.exec(cmd.toArray(new String[cmd.size()]), null, null);
-
         //ProcessBuilder
         new ProcessBuilder()
                 .command("ls", "-l", input)
@@ -209,7 +209,15 @@ public abstract class CommandInjection {
     public String combine(String x, String y) {
         StringBuilder sb = new StringBuilder("safe");
         sb.append((Object) x);
-        return sb.toString().trim() + y.concat("aaa");
+        HashSet<String> set = new HashSet<String>();
+        set.add("ooo");
+        set.add(sb.append("x").append("y").toString().toLowerCase());
+        for (String str : set) {
+            if (str.equals(y.toLowerCase())) {
+                return str;
+            }
+        }
+        return new StringBuilder(y).toString().trim() + "a".concat("aaa");
     }
 
     public void call() throws IOException {

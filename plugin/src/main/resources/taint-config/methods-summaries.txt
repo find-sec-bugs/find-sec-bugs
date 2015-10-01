@@ -46,6 +46,14 @@ java/sql/ResultSet.getString(Ljava/lang/String;)Ljava/lang/String;:TAINTED
 
 
 
+java/lang/Object.clone()Ljava/lang/Object;:0
+java/lang/Object.equals(Ljava/lang/Object;)Z:UNKNOWN
+
+
+java/lang/Appendable.append(Ljava/lang/CharSequence;)Ljava/lang/Appendable;:0,1#1
+java/lang/Appendable.append(Ljava/lang/CharSequence;II)Ljava/lang/Appendable;:2,3#3
+
+
 java/lang/StringBuilder.<init>()V:SAFE
 java/lang/StringBuilder.<init>(Ljava/lang/CharSequence;)V:0#1,2
 java/lang/StringBuilder.<init>(I)V:SAFE
@@ -158,6 +166,8 @@ java/lang/String.valueOf(Ljava/lang/Object)Ljava/lang/String;:0,1
 java/lang/CharSequence.subSequence(II)Ljava/lang/CharSequence;:2
 
 
+java/util/Enumeration.nextElement()Ljava/lang/Object;:0
+
 java/util/StringTokenizer.<init>(Ljava/lang/String;)V:0#1,2
 java/util/StringTokenizer.<init>(Ljava/lang/String;Ljava/lang/String;)V:1#2,3
 java/util/StringTokenizer.<init>(Ljava/lang/String;Ljava/lang/String;B)V:2#3,4
@@ -196,8 +206,14 @@ java/lang/BigDecimal.toPlainString()Ljava/lang/String;:SAFE
 java/lang/BigDecimal.toString()Ljava/lang/String;:SAFE
 
 
+java/lang/Iterable.iterator()Ljava/util/Iterator;:0
+java/util/Iterator.next()Ljava/lang/Object;:0
+
+
 java/util/Collection.add(Ljava/lang/Object;)Z:0,1#1
 java/util/Collection.addAll(Ljava/util/Collection;)Z:0,1#1
+java/util/Collection.contains(Ljava/util/Object;)Z:UNKNOWN
+java/util/Collection.containsAll(Ljava/util/Collection;)Z:UNKNOWN
 java/util/Collection.clear()V:SAFE#0
 java/util/Collection.remove(Ljava/lang/Object;)Z:1
 java/util/Collection.removeAll(Ljava/util/Collection;)Z:1
@@ -210,6 +226,10 @@ java/util/Collection.toArray([Ljava/lang/Object;)[Ljava/lang/Object;:1
 java/util/List.add(ILjava/lang/Object;)V:0,2#2
 java/util/List.addAll(ILjava/util/Collection;)Z:0,2#2
 java/util/List.get(I)Ljava/lang/Object;:1
+java/util/List.indexOf(Ljava/lang/Object;)I:UNKNOWN
+java/util/List.lastIndexOf(Ljava/lang/Object;)I:UNKNOWN
+java/util/List.listIterator()Ljava/util/ListIterator;:0
+java/util/List.listIterator(I)Ljava/util/ListIterator;:1
 java/util/List.remove()Ljava/lang/Object;:0
 java/util/List.remove(I)Ljava/lang/Object;:1
 java/util/List.replaceAll(Ljava/util/function/UnaryOperator;)V:1#1
@@ -222,40 +242,132 @@ java/util/List.toArray([Ljava/lang/Object;)[Ljava/lang/Object;:1
 java/util/List.forEach(Ljava/util/function/Consumer;)V:1
 
 
+- ListIterator is problematic, because it can modify the list and the taint is not propagated to it
+java/util/ListIterator.add(Ljava/lang/Object;)V:0,1#1
+java/util/ListIterator.previous()Ljava/lang/Object;:0
+java/util/ListIterator.set(Ljava/lang/Object;)V:0,1#1
+
+
 java/util/ArrayList.<init>()V:SAFE
 java/util/ArrayList.<init>(I)V:SAFE
 java/util/ArrayList.<init>(Ljava/util/Collection;)V:0#1,2
-java/util/ArrayList.ensureCapacity(I)V:1
-java/util/ArrayList.trimToSize()V:0
+
+java/util/concurrent/CopyOnWriteArrayList.<init>()V:SAFE
+java/util/concurrent/CopyOnWriteArrayList.<init>(Ljava/util/Collection;)V:0#1,2
+java/util/concurrent/CopyOnWriteArrayList.<init>([Ljava/lang/Object;)V:0#1,2
+
+
+java/util/Queue.element()Ljava/lang/Object;:0
+java/util/Queue.offer(Ljava/lang/Object;)Z:0,1#1
+java/util/Queue.peek()Ljava/lang/Object;:0
+java/util/Queue.poll()Ljava/lang/Object;:0
+java/util/Queue.remove()Ljava/lang/Object;:0
+
+
+java/util/Deque.addFirst(Ljava/lang/Object;)V:0,1#1
+java/util/Deque.addLast(Ljava/lang/Object;)V:0,1#1
+java/util/Deque.descendingIterator()Ljava/util/Iterator;:0
+java/util/Deque.getFirst()Ljava/lang/Object;:0
+java/util/Deque.getLast()Ljava/lang/Object;:0
+java/util/Deque.offerFirst(Ljava/lang/Object;)Z:0,1#1
+java/util/Deque.offerLast(Ljava/lang/Object;)Z:0,1#1
+java/util/Deque.peekFirst()Ljava/lang/Object;:0
+java/util/Deque.peekLast()Ljava/lang/Object;:0
+java/util/Deque.pollFirst()Ljava/lang/Object;:0
+java/util/Deque.pollLast()Ljava/lang/Object;:0
+java/util/Deque.pop()Ljava/lang/Object;:0
+java/util/Deque.push(Ljava/lang/Object;)V:0,1#1
+java/util/Deque.removeFirst()Ljava/lang/Object;:0
+java/util/Deque.removeFirstOccurrence(Ljava/lang/Object;)Z:1
+java/util/Deque.removeLast()Ljava/lang/Object;:0
+java/util/Deque.removeLastOccurrence(Ljava/lang/Object;)Z:1
+
+
+java/util/ArrayDeque.<init>()V:SAFE
+java/util/ArrayDeque.<init>(Ljava/util/Collection;)V:0#1,2
+java/util/ArrayDeque.<init>(I)V:SAFE
+
+java/util/concurrent/ConcurrentLinkedDeque.<init>()V:SAFE
+java/util/concurrent/ConcurrentLinkedDeque.<init>(Ljava/util/Collection;)V:0#1,2
 
 
 java/util/LinkedList.<init>()V:SAFE
 java/util/LinkedList.<init>(Ljava/util/Collection;)V:0#1,2
-java/util/LinkedList.addFirst(Ljava/lang/Object;)V:0,1#1
-java/util/LinkedList.addLast(Ljava/lang/Object;)V:0,1#1
-java/util/LinkedList.element()Ljava/lang/Object;:0
 java/util/LinkedList.get(I)Ljava/lang/Object;:1
-java/util/LinkedList.getFirst()Ljava/lang/Object;:0
-java/util/LinkedList.getLast()Ljava/lang/Object;:0
-java/util/LinkedList.offer(Ljava/lang/Object;)Z:0,1#1
-java/util/LinkedList.offerFirst(Ljava/lang/Object;)Z:0,1#1
-java/util/LinkedList.offerLast(Ljava/lang/Object;)Z:0,1#1
-java/util/LinkedList.peek()Ljava/lang/Object;:0
-java/util/LinkedList.peekFirst()Ljava/lang/Object;:0
-java/util/LinkedList.peekLast()Ljava/lang/Object;:0
-java/util/LinkedList.poll()Ljava/lang/Object;:0
-java/util/LinkedList.pollFirst()Ljava/lang/Object;:0
-java/util/LinkedList.pollLast()Ljava/lang/Object;:0
-java/util/LinkedList.pop()Ljava/lang/Object;:0
-java/util/LinkedList.push(Ljava/lang/Object;)V:0,1#1
-java/util/LinkedList.removeFirstOccurrence(Ljava/lang/Object;)Z:1
-java/util/LinkedList.removeFirst()Ljava/lang/Object;:0
-java/util/LinkedList.removeLastOccurrence(Ljava/lang/Object;)Z:1
-java/util/LinkedList.removeLast()Ljava/lang/Object;:0
 java/util/LinkedList.set(ILjava/lang/Object;)Ljava/lang/Object;:0,2#2
 
 
+java/util/Vector.<init>()V:SAFE
+java/util/Vector.<init>(Ljava/util/Collection;)V:0#1,2
+java/util/Vector.<init>(I)V:SAFE
+java/util/Vector.<init>(II)V:SAFE
+java/util/Vector.add(ILjava/lang/Object;)V:0,2#2
+java/util/Vector.addAll(ILjava/util/Collection;)Z:0,2#2
+java/util/Vector.addElement(Ljava/lang/Object;)V:0,1#1
+java/util/Vector.copyInto([Ljava/lang/Object;)V:1#0
+java/util/Vector.elementAt(I)Ljava/lang/Object;:1
+java/util/Vector.elements()Ljava/util/Enumeration;:0
+java/util/Vector.firstElement()Ljava/lang/Object;:0
+java/util/Vector.insertElementAt(Ljava/lang/Object;I)V:1,2#2
+java/util/Vector.setElementAt(Ljava/lang/Object;I)V:1,2#2
+java/util/Vector.sort(Ljava/util/Comparator;)V:UNKNOWN
+
+
+java/util/Stack.<init>()V:SAFE
+java/util/Stack.peek()Ljava/lang/Object;:0
+java/util/Stack.pop()Ljava/lang/Object;:0
+java/util/Stack.push(Ljava/lang/Object;)Ljava/lang/Object;:0,1#1
+java/util/Stack.search(Ljava/lang/Object;)I:UNKNOWN
+
+
 java/util/Arrays.asList([Ljava/lang/Object;)Ljava/util/List;:0
+
+
+java/util/HashSet.<init>()V:SAFE
+java/util/HashSet.<init>(Ljava/util/Collection;)V:0#1,2
+java/util/HashSet.<init>(I)V:SAFE
+java/util/HashSet.<init>(IF)V:SAFE
+
+java/util/LinkedHashSet.<init>()V:SAFE
+java/util/LinkedHashSet.<init>(Ljava/util/Collection;)V:0#1,2
+java/util/LinkedHashSet.<init>(I)V:SAFE
+java/util/LinkedHashSet.<init>(IF)V:SAFE
+
+
+java/util/SortedSet.first()Ljava/lang/Object;:0
+java/util/SortedSet.headSet(Ljava/lang/Object;)Ljava/util/SortedSet;:0,1
+java/util/SortedSet.last()Ljava/lang/Object;:0
+java/util/SortedSet.tailSet(Ljava/lang/Object;)Ljava/util/SortedSet;:0,1
+java/util/SortedSet.subSet(Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/SortedSet;:0,1,2
+
+
+java/util/NavigableSet.ceiling(Ljava/lang/Object;)Ljava/lang/Object;:0,1
+java/util/NavigableSet.descendingIterator()Ljava/util/Iterator;:0
+java/util/NavigableSet.descendingSet()Ljava/util/NavigableSet;:0
+java/util/NavigableSet.floor(Ljava/lang/Object;)Ljava/lang/Object;:0,1
+java/util/NavigableSet.headSet(Ljava/lang/Object;Z)Ljava/util/NavigableSet;:1,2
+java/util/NavigableSet.higher(Ljava/lang/Object;)Ljava/lang/Object;:0,1
+java/util/NavigableSet.lower(Ljava/lang/Object;)Ljava/lang/Object;:0,1
+java/util/NavigableSet.pollFirst()Ljava/lang/Object;:0
+java/util/NavigableSet.pollLast()Ljava/lang/Object;:0
+java/util/NavigableSet.subSet(Ljava/lang/Object;ZLjava/lang/Object;Z)Ljava/util/NavigableSet;:1,3,4
+java/util/NavigableSet.tailSet(Ljava/lang/Object;Z)Ljava/util/NavigableSet;:1,2
+
+
+java/util/TreeSet.<init>()V:SAFE
+java/util/TreeSet.<init>(Ljava/util/Collection;)V:0#1,2
+java/util/TreeSet.<init>(Ljava/util/Comparator;)V:SAFE
+java/util/TreeSet.<init>(Ljava/util/SortedSet;)V:0#1,2
+
+
+java/util/concurrent/ConcurrentSkipListSet.<init>()V:SAFE
+java/util/concurrent/ConcurrentSkipListSet.<init>(Ljava/util/Collection;)V:0#1,2
+java/util/concurrent/ConcurrentSkipListSet.<init>(Ljava/util/Comparator;)V:SAFE
+java/util/concurrent/ConcurrentSkipListSet.<init>(Ljava/util/SortedSet;)V:0#1,2
+
+java/util/concurrent/CopyOnWriteArraySet.<init>()V:SAFE
+java/util/concurrent/CopyOnWriteArraySet.<init>(Ljava/util/Collection;)V:0#1,2
+
 
 
 - The following methods receive arguments but will not alter the objects received. (It avoids tainting the parameters that are not immutable.)

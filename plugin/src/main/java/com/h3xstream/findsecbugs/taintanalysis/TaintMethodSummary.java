@@ -33,15 +33,12 @@ public class TaintMethodSummary {
     private Taint outputTaint = null;
     private final Set<Integer> mutableStackIndices = new HashSet<Integer>();
     public static final TaintMethodSummary DEFAULT_TOSTRING_SUMMARY;
-    public static final TaintMethodSummary DEFAULT_EQUALS_SUMMARY;
     public static final TaintMethodSummary SAFE_SUMMARY;
 
     static {
         DEFAULT_TOSTRING_SUMMARY = new TaintMethodSummary();
         DEFAULT_TOSTRING_SUMMARY.outputTaint = new Taint(Taint.State.UNKNOWN);
         DEFAULT_TOSTRING_SUMMARY.outputTaint.addParameter(0);
-        DEFAULT_EQUALS_SUMMARY = new TaintMethodSummary();
-        DEFAULT_EQUALS_SUMMARY.outputTaint = new Taint(Taint.State.UNKNOWN);
         SAFE_SUMMARY = new TaintMethodSummary();
         SAFE_SUMMARY.outputTaint = new Taint(Taint.State.SAFE);
     }

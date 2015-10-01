@@ -307,9 +307,6 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         if (TOSTRING_METHOD.equals(methodNameWithSig)) {
             return TaintMethodSummary.DEFAULT_TOSTRING_SUMMARY;
         }
-        if (EQUALS_METHOD.equals(methodNameWithSig)) {
-            return TaintMethodSummary.DEFAULT_EQUALS_SUMMARY;
-        }
         if (Constants.CONSTRUCTOR_NAME.equals(methodName)
                 && !SAFE_OBJECT_TYPES.contains("L" + className + ";")) {
             try {

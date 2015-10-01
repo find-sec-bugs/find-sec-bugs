@@ -114,7 +114,7 @@ public class Taint {
         return state;
     }
 
-    public void setState(State state) {
+    void setState(State state) {
         Objects.requireNonNull(state, "state is null");
         if (state == State.INVALID) {
             throw new IllegalArgumentException("state not allowed to be set");
@@ -134,14 +134,14 @@ public class Taint {
         return variableIndex != INVALID_INDEX;
     }
 
-    public void setVariableIndex(int index) {
+    void setVariableIndex(int index) {
         if (index < 0) {
             throw new IllegalArgumentException("negative index");
         }
         variableIndex = index;
     }
 
-    public void invalidateVariableIndex() {
+    void invalidateVariableIndex() {
         variableIndex = INVALID_INDEX;
     }
 
@@ -174,7 +174,7 @@ public class Taint {
         return state.isUnknown;
     }
 
-    public void addParameter(int parameterIndex) {
+    void addParameter(int parameterIndex) {
         if (parameterIndex < 0) {
             throw new IllegalArgumentException("index cannot be negative");
         }
@@ -192,12 +192,20 @@ public class Taint {
     public State getNonParametricState() {
         return nonParametricState;
     }
+    
+    void setNonParametricState(State state) {
+        Objects.requireNonNull(state, "state is null");
+        if (state == State.INVALID) {
+            throw new IllegalArgumentException("state not allowed to be set");
+        }
+        nonParametricState = state;
+    }
 
     public ObjectType getRealInstanceClass() {
         return realInstanceClass;
     }
 
-    public void setRealInstanceClass(ObjectType objectType) {
+    void setRealInstanceClass(ObjectType objectType) {
         // can be null
         realInstanceClass = objectType;
     }

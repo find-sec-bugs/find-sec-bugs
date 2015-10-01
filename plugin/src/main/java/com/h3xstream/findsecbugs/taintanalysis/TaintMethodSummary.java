@@ -188,10 +188,15 @@ public class TaintMethodSummary {
             int count = tuple.length;
             Taint taint = new Taint(Taint.State.UNKNOWN);
             for (int i = 0; i < count; i++) {
-                try {
-                    taint.addParameter(Integer.parseInt(tuple[i].trim()));
-                } catch (NumberFormatException ex) {
-                    throw new IOException("Cannot parse parameter offset " + i, ex);
+                String indexOrState = tuple[i].trim();
+                if (isTaintStateValue(indexOrState)) {
+                    taint.setNonParametricState(Taint.State.valueOf(indexOrState));
+                } else {
+                    try {
+                        taint.addParameter(Integer.parseInt(indexOrState));
+                    } catch (NumberFormatException ex) {
+                        throw new IOException("Cannot parse parameter offset " + i, ex);
+                    }
                 }
             }
             summary.setOuputTaint(taint);

@@ -4,9 +4,6 @@ java/lang/System.getenv(Ljava/lang/String;)Ljava/lang/String;:TAINTED
 java/lang/System.getProperty(Ljava/lang/String;)Ljava/lang/String;:TAINTED
 java/lang/System.getProperty(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:TAINTED
 
-java/util/Properties.getProperty(Ljava/lang/String;)Ljava/lang/String;:TAINTED
-java/util/Properties.getProperty(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:TAINTED
-
 javax/servlet/http/ServletRequest.getParameter(Ljava/lang/String;)Ljava/lang/String;:TAINTED
 javax/servlet/http/ServletRequest.getRemoteHost()Ljava/lang/String;:TAINTED
 
@@ -206,7 +203,10 @@ java/lang/BigDecimal.toPlainString()Ljava/lang/String;:SAFE
 java/lang/BigDecimal.toString()Ljava/lang/String;:SAFE
 
 
+- Objects from Java 8 function package are UNKNOWN by default, some could be made SAFE or TAINTED in the future
+java/langIterable.forEach(Ljava/util/function/Consumer;)V:0,1#1
 java/lang/Iterable.iterator()Ljava/util/Iterator;:0
+
 java/util/Iterator.next()Ljava/lang/Object;:0
 
 
@@ -228,8 +228,8 @@ java/util/List.addAll(ILjava/util/Collection;)Z:0,2#2
 java/util/List.get(I)Ljava/lang/Object;:1
 java/util/List.indexOf(Ljava/lang/Object;)I:UNKNOWN
 java/util/List.lastIndexOf(Ljava/lang/Object;)I:UNKNOWN
-java/util/List.listIterator()Ljava/util/ListIterator;:0
-java/util/List.listIterator(I)Ljava/util/ListIterator;:1
+java/util/List.listIterator()Ljava/util/ListIterator;:0,UNKNOWN#0
+java/util/List.listIterator(I)Ljava/util/ListIterator;:1,UNKNOWN#1
 java/util/List.remove()Ljava/lang/Object;:0
 java/util/List.remove(I)Ljava/lang/Object;:1
 java/util/List.replaceAll(Ljava/util/function/UnaryOperator;)V:1#1
@@ -239,10 +239,9 @@ java/util/List.sort(Ljava/util/Comparator;)V:1
 java/util/List.subList(II)Ljava/util/List;:2#2
 java/util/List.toArray()[Ljava/lang/Object;:0
 java/util/List.toArray([Ljava/lang/Object;)[Ljava/lang/Object;:1
-java/util/List.forEach(Ljava/util/function/Consumer;)V:1
 
 
-- ListIterator is problematic, because it can modify the list and the taint is not propagated to it
+- ListIterator is never SAFE, because it can modify the list and the taint is not propagated to it
 java/util/ListIterator.add(Ljava/lang/Object;)V:0,1#1
 java/util/ListIterator.previous()Ljava/lang/Object;:0
 java/util/ListIterator.set(Ljava/lang/Object;)V:0,1#1
@@ -322,6 +321,8 @@ java/util/Stack.search(Ljava/lang/Object;)I:UNKNOWN
 
 java/util/Arrays.asList([Ljava/lang/Object;)Ljava/util/List;:0
 
+
+- Set interface adds no new methods
 
 java/util/HashSet.<init>()V:SAFE
 java/util/HashSet.<init>(Ljava/util/Collection;)V:0#1,2

@@ -48,6 +48,7 @@ import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.LDC2_W;
 import org.apache.bcel.generic.LoadInstruction;
 import org.apache.bcel.generic.NEW;
+import org.apache.bcel.generic.ObjectType;
 import org.apache.bcel.generic.StoreInstruction;
 
 /**
@@ -58,7 +59,6 @@ import org.apache.bcel.generic.StoreInstruction;
 public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Taint, TaintFrame> {
 
     private static final String TOSTRING_METHOD = "toString()Ljava/lang/String;";
-    private static final String EQUALS_METHOD = "equals(Ljava/lang/Object;)Z";
     private static final Set<String> SAFE_OBJECT_TYPES;
     private static final Set<String> IMMUTABLE_OBJECT_TYPES;
     private final MethodDescriptor methodDescriptor;
@@ -268,6 +268,8 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     private void visitInvoke(InvokeInstruction obj) {
         assert obj != null;
         TaintMethodSummary methodSummary = getMethodSummary(obj);
+        ObjectType realInstanceClass = (methodSummary == null) ?
+                null : methodSummary.getOutputTaint().getRealInstanceClass();
         Taint taint = getMethodTaint(methodSummary);
         assert taint != null;
         if (taint.isUnknown()) {
@@ -276,7 +278,8 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         taintMutableArguments(methodSummary, obj);
         transferTaintToMutables(methodSummary, taint); // adds variable index to taint too
         Taint taintCopy = new Taint(taint);
-        taintCopy.setRealInstanceClass(null); // return type is not the instance type always
+        // return type is not the instance type always
+        taintCopy.setRealInstanceClass(realInstanceClass);
         modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taintCopy);
     }
 
@@ -483,10 +486,19 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     public TaintMethodSummary getAnalyzedMethodSummary() {
         assert analyzedMethodSummary != null;
-        if (SAFE_OBJECT_TYPES.contains(getReturnType(methodDescriptor.getSignature()))
-                && (analyzedMethodSummary.getOutputTaint() == null
-                || analyzedMethodSummary.getOutputTaint().getState() != Taint.State.NULL)) {
+        String returnType = getReturnType(methodDescriptor.getSignature());
+        Taint outputTaint = analyzedMethodSummary.getOutputTaint();
+        if (SAFE_OBJECT_TYPES.contains(returnType)
+                && (outputTaint == null || outputTaint.getState() != Taint.State.NULL)) {
             return TaintMethodSummary.SAFE_SUMMARY;
+        }
+        if (outputTaint != null) {
+            String realInstanceClassName = outputTaint.getRealInstanceClassName();
+            if (returnType.equals("L" + realInstanceClassName + ";")) {
+                // storing it in method summary is useless
+                outputTaint.setRealInstanceClass(null);
+                analyzedMethodSummary.setOuputTaint(outputTaint);
+            }
         }
         return analyzedMethodSummary;
     }

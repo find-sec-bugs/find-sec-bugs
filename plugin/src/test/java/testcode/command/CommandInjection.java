@@ -247,7 +247,7 @@ public abstract class CommandInjection {
     }
     
     public void callInterface(InterfaceWithSink obj1) throws IOException {
-        InterfaceWithSink obj2 = new MoreMethods();
+        InterfaceWithSink obj2 = getNewMoreMethods();
         if (obj2.hashCode() % 2 == 0) {
             System.out.println(obj2.toString());
         } // just to confuse the analysis a bit
@@ -256,8 +256,7 @@ public abstract class CommandInjection {
         obj1.sink2(System.getenv("")); // should not be reported
     }
     
-    // TODO this should be supported too
-    /*public InterfaceWithSink getNewMoreMethods() {
+    public InterfaceWithSink getNewMoreMethods() {
         return new MoreMethods();
-    }*/
+    }
 }

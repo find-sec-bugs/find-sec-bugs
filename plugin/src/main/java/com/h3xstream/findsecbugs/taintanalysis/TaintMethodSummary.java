@@ -113,9 +113,9 @@ public class TaintMethodSummary {
         if (outputTaint.hasParameters()) {
             return true;
         }
-        /*if (outputTaint.getRealInstanceClass() != null) {
+        if (outputTaint.getRealInstanceClass() != null) {
             return true;
-        }*/
+        }
         return false;
     }
 
@@ -138,6 +138,10 @@ public class TaintMethodSummary {
         if (hasMutableStackIndeces()) {
             sb.append("#");
             appendJoined(sb, mutableStackIndices);
+        }
+        String realInstanceClassName = outputTaint.getRealInstanceClassName();
+        if (realInstanceClassName != null) {
+            sb.append(" (").append(realInstanceClassName).append(")");
         }
         return sb.toString();
     }

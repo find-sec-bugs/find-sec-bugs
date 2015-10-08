@@ -58,7 +58,6 @@ import org.apache.bcel.generic.StoreInstruction;
  */
 public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Taint, TaintFrame> {
 
-    private static final String TOSTRING_METHOD = "toString()Ljava/lang/String;";
     private static final Set<String> SAFE_OBJECT_TYPES;
     private static final Set<String> IMMUTABLE_OBJECT_TYPES;
     private final MethodDescriptor methodDescriptor;
@@ -306,9 +305,6 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             }
         } catch (ClassNotFoundException ex) {
             AnalysisContext.reportMissingClass(ex);
-        }
-        if (TOSTRING_METHOD.equals(methodNameWithSig)) {
-            return TaintMethodSummary.DEFAULT_TOSTRING_SUMMARY;
         }
         if (Constants.CONSTRUCTOR_NAME.equals(methodName)
                 && !SAFE_OBJECT_TYPES.contains("L" + className + ";")) {

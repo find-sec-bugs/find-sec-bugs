@@ -46,6 +46,9 @@ java/sql/ResultSet.getString(Ljava/lang/String;)Ljava/lang/String;:TAINTED
 java/lang/Object.clone()Ljava/lang/Object;:0
 java/lang/Object.equals(Ljava/lang/Object;)Z:UNKNOWN
 
+- Not true, but allows analysis of methods calling toString on Object instances
+java/lang/Object.toString()Ljava/lang/String;:0
+
 
 java/lang/Appendable.append(Ljava/lang/CharSequence;)Ljava/lang/Appendable;:0,1#1
 java/lang/Appendable.append(Ljava/lang/CharSequence;II)Ljava/lang/Appendable;:2,3#3

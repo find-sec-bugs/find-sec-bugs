@@ -33,13 +33,9 @@ public class TaintMethodSummary {
     private Taint outputTaint = null;
     private final Set<Integer> mutableStackIndices = new HashSet<Integer>();
     private final boolean isConfigured;
-    public static final TaintMethodSummary DEFAULT_TOSTRING_SUMMARY;
     public static final TaintMethodSummary SAFE_SUMMARY;
 
     static {
-        DEFAULT_TOSTRING_SUMMARY = new TaintMethodSummary(false);
-        DEFAULT_TOSTRING_SUMMARY.outputTaint = new Taint(Taint.State.UNKNOWN);
-        DEFAULT_TOSTRING_SUMMARY.outputTaint.addParameter(0);
         SAFE_SUMMARY = new TaintMethodSummary(false);
         SAFE_SUMMARY.outputTaint = new Taint(Taint.State.SAFE);
     }
@@ -96,13 +92,14 @@ public class TaintMethodSummary {
     }
 
     /*public static TaintMethodSummary getUnknownMethodSummary(Collection<Integer> indices) {
-        TaintMethodSummary summary = new TaintMethodSummary();
+        TaintMethodSummary summary = new TaintMethodSummary(false);
         summary.outputTaint = new Taint(Taint.State.UNKNOWN);
         summary.mutableStackIndices.addAll(indices);
         return summary;
      }*/
+    
     public boolean isInformative() {
-        if (this == DEFAULT_TOSTRING_SUMMARY || this == SAFE_SUMMARY) {
+        if (this == SAFE_SUMMARY) {
             // these are loaded automatically, do not need to store them
             return false;
         }

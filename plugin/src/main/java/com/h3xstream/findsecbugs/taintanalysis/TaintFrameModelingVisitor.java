@@ -478,22 +478,28 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         handleNormalInstruction(obj);
     }
 
-    public TaintMethodSummary getAnalyzedMethodSummary() {
+    public void finishAnalysis() {
         assert analyzedMethodSummary != null;
-        String returnType = getReturnType(methodDescriptor.getSignature());
         Taint outputTaint = analyzedMethodSummary.getOutputTaint();
-        if (SAFE_OBJECT_TYPES.contains(returnType)
-                && (outputTaint == null || outputTaint.getState() != Taint.State.NULL)) {
-            return TaintMethodSummary.SAFE_SUMMARY;
+        if (outputTaint == null) {
+            // void methods
+            return;
         }
-        if (outputTaint != null) {
-            String realInstanceClassName = outputTaint.getRealInstanceClassName();
-            if (returnType.equals("L" + realInstanceClassName + ";")) {
-                // storing it in method summary is useless
-                outputTaint.setRealInstanceClass(null);
-                analyzedMethodSummary.setOuputTaint(outputTaint);
-            }
+        String returnType = getReturnType(methodDescriptor.getSignature());
+        if (SAFE_OBJECT_TYPES.contains(returnType) && outputTaint.getState() != Taint.State.NULL) {
+            // we do not have to store summaries with safe output
+            return;
         }
-        return analyzedMethodSummary;
+        String realInstanceClassName = outputTaint.getRealInstanceClassName();
+        if (returnType.equals("L" + realInstanceClassName + ";")) {
+            // storing it in method summary is useless
+            outputTaint.setRealInstanceClass(null);
+            analyzedMethodSummary.setOuputTaint(outputTaint);
+        }
+        if (analyzedMethodSummary.isInformative()) {
+            String fullMethodName = methodDescriptor.getSlashedClassName()
+                    + "." + methodDescriptor.getName() + methodDescriptor.getSignature();
+            methodSummaries.put(fullMethodName, analyzedMethodSummary);
+        }
     }
 }

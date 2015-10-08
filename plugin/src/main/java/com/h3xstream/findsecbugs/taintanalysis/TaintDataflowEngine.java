@@ -17,14 +17,21 @@
  */
 package com.h3xstream.findsecbugs.taintanalysis;
 
+import edu.umd.cs.findbugs.SystemProperties;
 import edu.umd.cs.findbugs.ba.CFG;
 import edu.umd.cs.findbugs.ba.DepthFirstSearch;
 import edu.umd.cs.findbugs.classfile.CheckedAnalysisException;
 import edu.umd.cs.findbugs.classfile.IAnalysisCache;
 import edu.umd.cs.findbugs.classfile.IMethodAnalysisEngine;
 import edu.umd.cs.findbugs.classfile.MethodDescriptor;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import org.apache.bcel.generic.MethodGen;
 
 /**
@@ -37,6 +44,22 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
 
     private static final String METHODS_SUMMARIES_PATH = "taint-config/methods-summaries.txt";
     private final TaintMethodSummaryMap methodSummaries = new TaintMethodSummaryMap();
+    private static final boolean DEBUG_OUTPUT_SUMMARIES = SystemProperties.
+            getBoolean("findsecbugs.taint.outputsummaries");
+    private static Writer writer = null;
+    
+    static {
+        if (DEBUG_OUTPUT_SUMMARIES) {
+            try {
+                writer = new BufferedWriter(new OutputStreamWriter(
+                        new FileOutputStream("derived-summaries.txt"), "utf-8"));
+            } catch (UnsupportedEncodingException ex) {
+                assert false : ex.getMessage();
+            } catch (FileNotFoundException ex) {
+                System.err.println(ex.getMessage());
+            }
+        }
+    }
 
     public TaintDataflowEngine() {
         InputStream stream = null;
@@ -65,14 +88,22 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
         TaintAnalysis analysis = new TaintAnalysis(methodGen, dfs, descriptor, methodSummaries);
         TaintDataflow flow = new TaintDataflow(cfg, analysis);
         flow.execute();
-        TaintMethodSummary taintMethodSummary = analysis.getAnalyzedMethodSummary();
-        if (taintMethodSummary.isInformative()) {
-            methodSummaries.put(getSlashedMethodName(methodGen), taintMethodSummary);
+        analysis.finishAnalysis();
+        if (DEBUG_OUTPUT_SUMMARIES && writer != null) {
+            TaintMethodSummary derivedSummary = methodSummaries.get(getSlashedMethodName(methodGen));
+            if (derivedSummary != null) {
+                try {
+                    writer.append(getSlashedMethodName(methodGen) + ":" + derivedSummary + "\n");
+                    writer.flush();
+                } catch (IOException ex) {
+                    System.out.println("cannot write: " + ex.getMessage());
+                }
+            }
         }
         return flow;
     }
 
-    private String getSlashedMethodName(MethodGen methodGen) {
+    private static String getSlashedMethodName(MethodGen methodGen) {
         String methodNameWithSignature = methodGen.getName() + methodGen.getSignature();
         String slashedClassName = methodGen.getClassName().replace('.', '/');
         return slashedClassName + "." + methodNameWithSignature;

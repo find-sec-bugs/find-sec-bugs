@@ -32,18 +32,20 @@ public class TaintMethodSummary {
 
     private Taint outputTaint = null;
     private final Set<Integer> mutableStackIndices = new HashSet<Integer>();
+    private final boolean isConfigured;
     public static final TaintMethodSummary DEFAULT_TOSTRING_SUMMARY;
     public static final TaintMethodSummary SAFE_SUMMARY;
 
     static {
-        DEFAULT_TOSTRING_SUMMARY = new TaintMethodSummary();
+        DEFAULT_TOSTRING_SUMMARY = new TaintMethodSummary(false);
         DEFAULT_TOSTRING_SUMMARY.outputTaint = new Taint(Taint.State.UNKNOWN);
         DEFAULT_TOSTRING_SUMMARY.outputTaint.addParameter(0);
-        SAFE_SUMMARY = new TaintMethodSummary();
+        SAFE_SUMMARY = new TaintMethodSummary(false);
         SAFE_SUMMARY.outputTaint = new Taint(Taint.State.SAFE);
     }
 
-    public TaintMethodSummary() {
+    public TaintMethodSummary(boolean isConfigured) {
+        this.isConfigured = isConfigured;
     }
 
     public Collection<Integer> getMutableStackIndeces() {
@@ -86,7 +88,7 @@ public class TaintMethodSummary {
         if (stackSize < 1) {
             throw new IllegalArgumentException("stack size less than 1");
         }
-        TaintMethodSummary summary = new TaintMethodSummary();
+        TaintMethodSummary summary = new TaintMethodSummary(false);
         summary.outputTaint = new Taint(Taint.State.UNKNOWN);
         summary.mutableStackIndices.add(stackSize - 1);
         summary.mutableStackIndices.add(stackSize);
@@ -119,6 +121,10 @@ public class TaintMethodSummary {
         return false;
     }
 
+    public boolean isConfigured() {
+        return isConfigured;
+    }
+    
     @Override
     public String toString() {
         if (outputTaint == null) {
@@ -169,7 +175,7 @@ public class TaintMethodSummary {
         }
         str = str.trim();
         String[] tuple = str.split("#");
-        TaintMethodSummary summary = new TaintMethodSummary();
+        TaintMethodSummary summary = new TaintMethodSummary(true);
         if (tuple.length == 2) {
             str = tuple[0];
             try {

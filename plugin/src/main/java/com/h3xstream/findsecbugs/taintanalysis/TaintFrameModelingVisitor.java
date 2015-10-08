@@ -100,7 +100,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         }
         this.methodDescriptor = method;
         this.methodSummaries = methodSummaries;
-        this.analyzedMethodSummary = new TaintMethodSummary();
+        this.analyzedMethodSummary = new TaintMethodSummary(false);
     }
 
     private static Collection<Integer> getMutableStackIndices(String signature) {
@@ -383,9 +383,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     }
 
     private void taintMutableArguments(TaintMethodSummary methodSummary, InvokeInstruction obj) {
-        if (methodSummary != null
-                && methodSummary != TaintMethodSummary.SAFE_SUMMARY
-                && !Constants.CONSTRUCTOR_NAME.equals(obj.getMethodName(cpg))) {
+        if (methodSummary != null && methodSummary.isConfigured()) {
             return;
         }
         Collection<Integer> mutableStackIndices = getMutableStackIndices(obj.getSignature(cpg));

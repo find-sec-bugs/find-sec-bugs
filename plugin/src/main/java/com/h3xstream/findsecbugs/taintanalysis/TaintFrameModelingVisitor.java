@@ -290,21 +290,14 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         }
         String className = getInstanceClassName(obj);
         String methodName = obj.getMethodName(cpg);
-        String methodNameWithSig = methodName.concat(signature);
-        String fullMethodName = className + "." + methodNameWithSig;
-        TaintMethodSummary summary = methodSummaries.get(fullMethodName);
+        String methodId = "." + methodName + signature;
+        TaintMethodSummary summary = methodSummaries.get(className.concat(methodId));
         if (summary != null) {
             return summary;
         }
-        try {
-            JavaClass javaClass = Repository.lookupClass(className);
-            assert javaClass != null;
-            summary = getSuperMethodSummary(javaClass, ".".concat(methodNameWithSig));
-            if (summary != null) {
-                return summary;
-            }
-        } catch (ClassNotFoundException ex) {
-            AnalysisContext.reportMissingClass(ex);
+        summary = getSuperMethodSummary(className, methodId);
+        if (summary != null) {
+            return summary;
         }
         if (Constants.CONSTRUCTOR_NAME.equals(methodName)
                 && !SAFE_OBJECT_TYPES.contains("L" + className + ";")) {
@@ -336,17 +329,25 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         return ClassName.toSlashedClassName(dottedClassName);
     }
     
-    private TaintMethodSummary getSuperMethodSummary(JavaClass javaClass, String method)
-            throws ClassNotFoundException {
-        for (JavaClass superClass : javaClass.getSuperClasses()) {
-            String fullMethodName = superClass.getClassName().replace('.', '/').concat(method);
-            TaintMethodSummary summary = methodSummaries.get(fullMethodName);
+    private TaintMethodSummary getSuperMethodSummary(String className, String methodId) {
+        try {
+            JavaClass javaClass = Repository.lookupClass(className);
+            assert javaClass != null;
+            TaintMethodSummary summary = getSuperMethodSummary(javaClass.getSuperClasses(), methodId);
             if (summary != null) {
                 return summary;
             }
+            return getSuperMethodSummary(javaClass.getAllInterfaces(), methodId);
+        } catch (ClassNotFoundException ex) {
+            AnalysisContext.reportMissingClass(ex);
+            return null;
         }
-        for (JavaClass interfaceClass : javaClass.getAllInterfaces()) {
-            String fullMethodName = interfaceClass.getClassName().replace('.', '/').concat(method);
+    }
+    
+    private TaintMethodSummary getSuperMethodSummary(JavaClass[] javaClasses, String method) {
+        assert javaClasses != null;
+        for (JavaClass classOrInterface : javaClasses) {
+            String fullMethodName = classOrInterface.getClassName().replace('.', '/').concat(method);
             TaintMethodSummary summary = methodSummaries.get(fullMethodName);
             if (summary != null) {
                 return summary;

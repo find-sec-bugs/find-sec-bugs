@@ -32,21 +32,16 @@ public class TaintMethodSummary {
 
     private Taint outputTaint = null;
     private final Set<Integer> mutableStackIndices = new HashSet<Integer>();
-    public static final TaintMethodSummary DEFAULT_TOSTRING_SUMMARY;
-    public static final TaintMethodSummary DEFAULT_EQUALS_SUMMARY;
+    private final boolean isConfigured;
     public static final TaintMethodSummary SAFE_SUMMARY;
 
     static {
-        DEFAULT_TOSTRING_SUMMARY = new TaintMethodSummary();
-        DEFAULT_TOSTRING_SUMMARY.outputTaint = new Taint(Taint.State.UNKNOWN);
-        DEFAULT_TOSTRING_SUMMARY.outputTaint.addParameter(0);
-        DEFAULT_EQUALS_SUMMARY = new TaintMethodSummary();
-        DEFAULT_EQUALS_SUMMARY.outputTaint = new Taint(Taint.State.UNKNOWN);
-        SAFE_SUMMARY = new TaintMethodSummary();
+        SAFE_SUMMARY = new TaintMethodSummary(false);
         SAFE_SUMMARY.outputTaint = new Taint(Taint.State.SAFE);
     }
 
-    public TaintMethodSummary() {
+    public TaintMethodSummary(boolean isConfigured) {
+        this.isConfigured = isConfigured;
     }
 
     public Collection<Integer> getMutableStackIndeces() {
@@ -86,10 +81,10 @@ public class TaintMethodSummary {
     }
 
     public static TaintMethodSummary getDefaultConstructorSummary(int stackSize) {
-        if (stackSize < 0) {
-            throw new IllegalArgumentException("negative index");
+        if (stackSize < 1) {
+            throw new IllegalArgumentException("stack size less than 1");
         }
-        TaintMethodSummary summary = new TaintMethodSummary();
+        TaintMethodSummary summary = new TaintMethodSummary(false);
         summary.outputTaint = new Taint(Taint.State.UNKNOWN);
         summary.mutableStackIndices.add(stackSize - 1);
         summary.mutableStackIndices.add(stackSize);
@@ -97,13 +92,14 @@ public class TaintMethodSummary {
     }
 
     /*public static TaintMethodSummary getUnknownMethodSummary(Collection<Integer> indices) {
-        TaintMethodSummary summary = new TaintMethodSummary();
+        TaintMethodSummary summary = new TaintMethodSummary(false);
         summary.outputTaint = new Taint(Taint.State.UNKNOWN);
         summary.mutableStackIndices.addAll(indices);
         return summary;
      }*/
+    
     public boolean isInformative() {
-        if (this == DEFAULT_TOSTRING_SUMMARY || this == SAFE_SUMMARY) {
+        if (this == SAFE_SUMMARY) {
             // these are loaded automatically, do not need to store them
             return false;
         }
@@ -113,9 +109,19 @@ public class TaintMethodSummary {
         if (!outputTaint.isUnknown()) {
             return true;
         }
-        return outputTaint.hasParameters();
+        if (outputTaint.hasParameters()) {
+            return true;
+        }
+        if (outputTaint.getRealInstanceClass() != null) {
+            return true;
+        }
+        return false;
     }
 
+    public boolean isConfigured() {
+        return isConfigured;
+    }
+    
     @Override
     public String toString() {
         if (outputTaint == null) {
@@ -135,6 +141,10 @@ public class TaintMethodSummary {
         if (hasMutableStackIndeces()) {
             sb.append("#");
             appendJoined(sb, mutableStackIndices);
+        }
+        String realInstanceClassName = outputTaint.getRealInstanceClassName();
+        if (realInstanceClassName != null) {
+            sb.append(" (").append(realInstanceClassName).append(")");
         }
         return sb.toString();
     }
@@ -162,7 +172,7 @@ public class TaintMethodSummary {
         }
         str = str.trim();
         String[] tuple = str.split("#");
-        TaintMethodSummary summary = new TaintMethodSummary();
+        TaintMethodSummary summary = new TaintMethodSummary(true);
         if (tuple.length == 2) {
             str = tuple[0];
             try {
@@ -185,10 +195,15 @@ public class TaintMethodSummary {
             int count = tuple.length;
             Taint taint = new Taint(Taint.State.UNKNOWN);
             for (int i = 0; i < count; i++) {
-                try {
-                    taint.addParameter(Integer.parseInt(tuple[i].trim()));
-                } catch (NumberFormatException ex) {
-                    throw new IOException("Cannot parse parameter offset " + i, ex);
+                String indexOrState = tuple[i].trim();
+                if (isTaintStateValue(indexOrState)) {
+                    taint.setNonParametricState(Taint.State.valueOf(indexOrState));
+                } else {
+                    try {
+                        taint.addParameter(Integer.parseInt(indexOrState));
+                    } catch (NumberFormatException ex) {
+                        throw new IOException("Cannot parse parameter offset " + i, ex);
+                    }
                 }
             }
             summary.setOuputTaint(taint);

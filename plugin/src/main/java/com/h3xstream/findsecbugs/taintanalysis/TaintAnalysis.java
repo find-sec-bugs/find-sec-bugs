@@ -39,7 +39,6 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
 
     private final MethodGen methodGen;
     private final TaintFrameModelingVisitor visitor;
-    private TaintMethodSummary analyzedMethodSummary;
     private final int parameterStackSize;
     
     public TaintAnalysis(MethodGen methodGen, DepthFirstSearch dfs,
@@ -63,7 +62,6 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
             throws DataflowAnalysisException {
         visitor.setFrameAndLocation(fact, new Location(handle, block));
         visitor.analyzeInstruction(handle.getInstruction());
-        analyzedMethodSummary = visitor.getAnalyzedMethodSummary();
     }
 
     @Override
@@ -105,8 +103,11 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
         mergeInto(fact, result);
     }
     
-    public TaintMethodSummary getAnalyzedMethodSummary() {
-        return analyzedMethodSummary;
+    /**
+     * This method must be called after executing the data flow
+     */
+    public void finishAnalysis() {
+        visitor.finishAnalysis();
     }
     
     private static int getParameterStackSize(String signature, boolean isStatic) {

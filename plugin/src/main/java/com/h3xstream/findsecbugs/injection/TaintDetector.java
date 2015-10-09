@@ -27,6 +27,7 @@ import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Detector;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.SourceLineAnnotation;
+import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.ba.CFGBuilderException;
 import edu.umd.cs.findbugs.ba.ClassContext;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
@@ -46,6 +47,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.apache.bcel.Repository;
+import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.Instruction;
@@ -114,7 +117,7 @@ public abstract class TaintDetector implements Detector {
             }
             SourceLineAnnotation sourceLine = SourceLineAnnotation
                     .fromVisitedInstruction(classContext, method, handle);
-            checkTaintSink(getFullMethodName(cpg, invoke), fact, sourceLine, currentMethod);
+            checkTaintSink(cpg, invoke, fact, sourceLine, currentMethod);
             InjectionPoint injectionPoint = getInjectionPoint(invoke, cpg, handle, selectedSources);
             for (int offset : injectionPoint.getInjectableArguments()) {
                 Taint parameterTaint = fact.getStackValue(offset);
@@ -123,7 +126,6 @@ public abstract class TaintDetector implements Detector {
                     continue;
                 }
                 BugInstance bugInstance = new BugInstance(this, injectionPoint.getBugType(), priority);
-
                 bugInstance.addClassAndMethod(classContext.getJavaClass(), method);
                 bugInstance.addSourceLine(sourceLine);
                 if (injectionPoint.getInjectableMethod() != null) {
@@ -143,33 +145,84 @@ public abstract class TaintDetector implements Detector {
         }
     }
 
-    private void checkTaintSink(String calledMethod, TaintFrame fact,
+    private void checkTaintSink(ConstantPoolGen cpg, InvokeInstruction invoke, TaintFrame fact,
             SourceLineAnnotation sourceLine, String currentMethod) throws DataflowAnalysisException {
-        if (methodsWithSinks.containsKey(calledMethod)) {
-            Set<TaintSink> sinks = methodsWithSinks.get(calledMethod);
-            for (TaintSink sink : sinks) {
-                Taint sinkTaint = sink.getTaint();
-                Set<Integer> taintParameters = sinkTaint.getParameters();
-                Taint finalTaint = Taint.valueOf(sinkTaint.getNonParametricState());
-                for (Integer offset : taintParameters) {
-                    Taint parameterTaint = fact.getStackValue(offset);
-                    finalTaint = Taint.merge(finalTaint, parameterTaint);
-                }
-                if (finalTaint == null) {
-                    continue;
-                }
+        for (TaintSink sink : getSinks(cpg, invoke, fact)) {
+            Taint sinkTaint = sink.getTaint();
+            Set<Integer> taintParameters = sinkTaint.getParameters();
+            Taint finalTaint = Taint.valueOf(sinkTaint.getNonParametricState());
+            for (Integer offset : taintParameters) {
+                Taint parameterTaint = fact.getStackValue(offset);
+                finalTaint = Taint.merge(finalTaint, parameterTaint);
+            }
+            if (finalTaint == null) {
+                continue;
+            }
+            if (finalTaint.isTainted() || finalTaint.hasParameters()) {
+                BugInstance bugInstance = sink.getBugInstance();
+                bugInstance.addSourceLine(sourceLine);
+                addSourceLines(finalTaint.getLocations(), bugInstance);
                 if (finalTaint.isTainted()) {
-                    BugInstance bugInstance = sink.getBugInstance();
                     bugInstance.setPriority(Priorities.HIGH_PRIORITY);
-                    bugInstance.addSourceLine(sourceLine);
-                } else if (finalTaint.hasParameters()) {
+                } else {
                     assert finalTaint.isUnknown();
-                    BugInstance bugInstance = sink.getBugInstance();
-                    bugInstance.addSourceLine(sourceLine);
                     delayBugToReport(currentMethod, finalTaint, bugInstance);
                 }
             }
         }
+    }
+
+    private Set<TaintSink> getSinks(ConstantPoolGen cpg, InvokeInstruction invoke, TaintFrame frame) {
+        String className = getInstanceClassName(cpg, invoke, frame);
+        String methodName = "." + invoke.getMethodName(cpg) + invoke.getSignature(cpg);
+        Set<TaintSink> sinks = methodsWithSinks.get(className.concat(methodName));
+        if (sinks != null) {
+            return sinks;
+        }
+        try {
+            JavaClass javaClass = Repository.lookupClass(className);
+            assert javaClass != null;
+            return getSuperSinks(javaClass, methodName);
+        } catch (ClassNotFoundException ex) {
+            AnalysisContext.reportMissingClass(ex);
+        }
+        return Collections.emptySet();
+    }
+    
+    private Set<TaintSink> getSuperSinks(JavaClass javaClass, String method) throws ClassNotFoundException {
+        for (JavaClass superClass : javaClass.getSuperClasses()) {
+            String fullMethodName = superClass.getClassName().replace('.', '/').concat(method);
+            Set<TaintSink> sinks = methodsWithSinks.get(fullMethodName);
+            if (sinks != null) {
+                return sinks;
+            }
+        }
+        for (JavaClass interfaceClass : javaClass.getAllInterfaces()) {
+            String fullMethodName = interfaceClass.getClassName().replace('.', '/').concat(method);
+            Set<TaintSink> sinks = methodsWithSinks.get(fullMethodName);
+            if (sinks != null) {
+                return sinks;
+            }
+        }
+        return Collections.emptySet();
+    }
+
+    private static String getInstanceClassName(ConstantPoolGen cpg, InvokeInstruction invoke, TaintFrame frame) {
+        try {
+            int instanceIndex = frame.getNumArgumentsIncludingObjectInstance(invoke, cpg) - 1;
+            if (instanceIndex != -1) {
+                assert instanceIndex < frame.getStackDepth();
+                Taint instanceTaint = frame.getStackValue(instanceIndex);
+                String className = instanceTaint.getRealInstanceClassName();
+                if (className != null) {
+                    return className;
+                }
+            }
+        } catch (DataflowAnalysisException ex) {
+            assert false : ex.getMessage();
+        }
+        String dottedClassName = invoke.getReferenceType(cpg).toString();
+        return ClassName.toSlashedClassName(dottedClassName);
     }
 
     private static InjectionPoint getInjectionPoint(InvokeInstruction invoke, ConstantPoolGen cpg,
@@ -199,7 +252,9 @@ public abstract class TaintDetector implements Detector {
     private void delayBugToReport(String method, Taint taint, BugInstance bug) {
         TaintSink taintSink = new TaintSink(taint, bug);
         Set<TaintSink> sinkSet = methodsWithSinks.get(method);
-        if(sinkSet == null) sinkSet = new HashSet<TaintSink>();
+        if (sinkSet == null) {
+            sinkSet = new HashSet<TaintSink>();
+        }
         sinkSet.add(taintSink);
         methodsWithSinks.put(method, sinkSet);
     }
@@ -246,13 +301,6 @@ public abstract class TaintDetector implements Detector {
     private void logException(ClassContext classContext, Method method, Exception ex) {
         bugReporter.logError("Exception while analyzing "
                 + classContext.getFullyQualifiedMethodName(method), ex);
-    }
-
-    private static String getFullMethodName(ConstantPoolGen cpg, InvokeInstruction invoke) {
-        String dottedClassName = invoke.getReferenceType(cpg).toString();
-        StringBuilder builder = new StringBuilder(ClassName.toSlashedClassName(dottedClassName));
-        builder.append(".").append(invoke.getMethodName(cpg)).append(invoke.getSignature(cpg));
-        return builder.toString();
     }
 
     private static String getFullMethodName(MethodGen methodGen) {

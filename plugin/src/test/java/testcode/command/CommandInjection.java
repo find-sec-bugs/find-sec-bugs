@@ -6,15 +6,16 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 public abstract class CommandInjection {
 
     public static void main(String[] args) throws IOException {
         String input = args.length > 0 ? args[0] : ";cat /etc/passwd";
         List<String> cmd = Arrays.asList("ls", "-l", input);
-
         //Runtime exec()
         Runtime r = Runtime.getRuntime();
         r.exec("ls -l " + input);
@@ -23,7 +24,6 @@ public abstract class CommandInjection {
         r.exec(cmd.toArray(new String[cmd.size()]));
         r.exec(cmd.toArray(new String[cmd.size()]), null);
         r.exec(cmd.toArray(new String[cmd.size()]), null, null);
-
         //ProcessBuilder
         new ProcessBuilder()
                 .command("ls", "-l", input)
@@ -154,6 +154,18 @@ public abstract class CommandInjection {
         Runtime.getRuntime().exec(sb.toString());
     }
 
+    public void testListIterator() throws IOException {
+        Runtime.getRuntime().exec(transferListIteratorIndirect("safe"));
+        Runtime.getRuntime().exec(transferListIteratorIndirect(taintSourceDouble()));
+        Runtime.getRuntime().exec(transferThroughListIterator("safe"));
+        Runtime.getRuntime().exec(transferThroughListIterator(taintSourceDouble()));
+    }
+    
+    public void unknownSubmethod(String unknown) throws IOException {
+        Runtime.getRuntime().exec(new MoreMethods().safeParentparametricChild(unknown));
+        Runtime.getRuntime().exec(new SubClass().safeParentparametricChild(unknown));
+    }
+    
     private String transferThroughArray(String in) {
         String[] strings = new String[3];
         strings[0] = "safe1";
@@ -178,12 +190,27 @@ public abstract class CommandInjection {
                 + list.remove(index) + list.removeFirst() + list.removeLast()
                 + list.set(index, "safe") + list.toString();
     }
+    
+    private String transferThroughListIterator(String str) {
+        List<String> list = new LinkedList<String>();
+        ListIterator<String> listIterator = list.listIterator();
+        listIterator.add(str);
+        return listIterator.next();
+    }
+    
+    private String transferListIteratorIndirect(String str) {
+        List<String> list = new LinkedList<String>();
+        // not able to transfer this, set as UNKNOWN even if str is SAFE
+        ListIterator<String> listIterator = list.listIterator();
+        listIterator.add(str);
+        return list.get(0);
+    }
 
     public String parametricUnknownSource(String str) {
         return str + new Object().toString() + "xx";
     }
 
-    public String taintSource(String param) throws Exception {
+    public String taintSource(String param) throws IOException {
         File file = new File("C:\\data.txt");
         FileInputStream streamFileInput;
         InputStreamReader readerInputStream;
@@ -194,7 +221,7 @@ public abstract class CommandInjection {
         return param + readerBuffered.readLine();
     }
 
-    public String taintSourceDouble() throws Exception {
+    public String taintSourceDouble() throws IOException {
         return taintSource("safe, but result will be tainted") + safeSource(1);
     }
 
@@ -209,10 +236,32 @@ public abstract class CommandInjection {
     public String combine(String x, String y) {
         StringBuilder sb = new StringBuilder("safe");
         sb.append((Object) x);
-        return sb.toString() + y.concat("aaa");
+        HashSet<String> set = new HashSet<String>();
+        set.add("ooo");
+        set.add(sb.append("x").append("y").toString().toLowerCase());
+        for (String str : set) {
+            if (str.equals(y.toLowerCase())) {
+                return str;
+            }
+        }
+        return new StringBuilder(y).toString().trim() + "a".concat("aaa");
     }
 
     public void call() throws IOException {
         MoreMethods.sink(System.getenv(""));
+    }
+    
+    public void callInterface(InterfaceWithSink obj1) throws IOException {
+        InterfaceWithSink obj2 = getNewMoreMethods();
+        if (obj2.hashCode() % 2 == 0) {
+            System.out.println(obj2.toString());
+        } // just to confuse the analysis a bit
+        unknown(new StringBuilder().append(obj2));
+        obj2.sink2(System.getenv(""));
+        obj1.sink2(System.getenv("")); // should not be reported
+    }
+    
+    public InterfaceWithSink getNewMoreMethods() {
+        return new MoreMethods();
     }
 }

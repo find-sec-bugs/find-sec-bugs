@@ -18,6 +18,7 @@
 package com.h3xstream.findsecbugs.taintanalysis;
 
 import edu.umd.cs.findbugs.ba.AbstractFrameModelingVisitor;
+import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
 import edu.umd.cs.findbugs.ba.InvalidBytecodeException;
 import edu.umd.cs.findbugs.ba.generic.GenericSignatureParser;
@@ -29,6 +30,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import org.apache.bcel.Constants;
+import org.apache.bcel.Repository;
+import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.AALOAD;
 import org.apache.bcel.generic.AASTORE;
 import org.apache.bcel.generic.ACONST_NULL;
@@ -36,7 +39,6 @@ import org.apache.bcel.generic.ANEWARRAY;
 import org.apache.bcel.generic.ARETURN;
 import org.apache.bcel.generic.CHECKCAST;
 import org.apache.bcel.generic.ConstantPoolGen;
-import org.apache.bcel.generic.FieldOrMethod;
 import org.apache.bcel.generic.INVOKEINTERFACE;
 import org.apache.bcel.generic.INVOKESPECIAL;
 import org.apache.bcel.generic.INVOKESTATIC;
@@ -46,6 +48,7 @@ import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.LDC2_W;
 import org.apache.bcel.generic.LoadInstruction;
 import org.apache.bcel.generic.NEW;
+import org.apache.bcel.generic.ObjectType;
 import org.apache.bcel.generic.StoreInstruction;
 
 /**
@@ -55,8 +58,6 @@ import org.apache.bcel.generic.StoreInstruction;
  */
 public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Taint, TaintFrame> {
 
-    private static final String TOSTRING_METHOD = "toString()Ljava/lang/String;";
-    private static final String EQUALS_METHOD = "equals(Ljava/lang/Object;)Z";
     private static final Set<String> SAFE_OBJECT_TYPES;
     private static final Set<String> IMMUTABLE_OBJECT_TYPES;
     private final MethodDescriptor methodDescriptor;
@@ -98,7 +99,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         }
         this.methodDescriptor = method;
         this.methodSummaries = methodSummaries;
-        this.analyzedMethodSummary = new TaintMethodSummary();
+        this.analyzedMethodSummary = new TaintMethodSummary(false);
     }
 
     private static Collection<Integer> getMutableStackIndices(String signature) {
@@ -152,7 +153,9 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     @Override
     public void visitNEW(NEW obj) {
-        pushSafe();
+        Taint taint = new Taint(Taint.State.SAFE);
+        taint.setRealInstanceClass(obj.getLoadClassType(cpg));
+        getFrame().pushValue(taint);
     }
 
     @Override
@@ -264,6 +267,8 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     private void visitInvoke(InvokeInstruction obj) {
         assert obj != null;
         TaintMethodSummary methodSummary = getMethodSummary(obj);
+        ObjectType realInstanceClass = (methodSummary == null) ?
+                null : methodSummary.getOutputTaint().getRealInstanceClass();
         Taint taint = getMethodTaint(methodSummary);
         assert taint != null;
         if (taint.isUnknown()) {
@@ -271,7 +276,10 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         }
         taintMutableArguments(methodSummary, obj);
         transferTaintToMutables(methodSummary, taint); // adds variable index to taint too
-        modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), new Taint(taint));
+        Taint taintCopy = new Taint(taint);
+        // return type is not the instance type always
+        taintCopy.setRealInstanceClass(realInstanceClass);
+        modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taintCopy);
     }
 
     private TaintMethodSummary getMethodSummary(InvokeInstruction obj) {
@@ -280,19 +288,16 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         if (SAFE_OBJECT_TYPES.contains(returnType)) {
             return TaintMethodSummary.SAFE_SUMMARY;
         }
-        String className = getSlashedClassName(obj);
+        String className = getInstanceClassName(obj);
         String methodName = obj.getMethodName(cpg);
-        String methodNameWithSig = methodName + signature;
-        String fullMethodName = className + "." + methodNameWithSig;
-        TaintMethodSummary methodSummary = methodSummaries.get(fullMethodName);
-        if (methodSummary != null) {
-            return methodSummary;
+        String methodId = "." + methodName + signature;
+        TaintMethodSummary summary = methodSummaries.get(className.concat(methodId));
+        if (summary != null) {
+            return summary;
         }
-        if (TOSTRING_METHOD.equals(methodNameWithSig)) {
-            return TaintMethodSummary.DEFAULT_TOSTRING_SUMMARY;
-        }
-        if (EQUALS_METHOD.equals(methodNameWithSig)) {
-            return TaintMethodSummary.DEFAULT_EQUALS_SUMMARY;
+        summary = getSuperMethodSummary(className, methodId);
+        if (summary != null) {
+            return summary;
         }
         if (Constants.CONSTRUCTOR_NAME.equals(methodName)
                 && !SAFE_OBJECT_TYPES.contains("L" + className + ";")) {
@@ -303,18 +308,57 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                 throw new InvalidBytecodeException(ex.getMessage(), ex);
             }
         }
-        return methodSummary;
+        return null;
     }
-
+    
+    private String getInstanceClassName(InvokeInstruction invoke) {
+        try {
+            int instanceIndex = getFrame().getNumArgumentsIncludingObjectInstance(invoke, cpg) - 1;
+            if (instanceIndex != -1) {
+                assert instanceIndex < getFrame().getStackDepth();
+                Taint instanceTaint = getFrame().getStackValue(instanceIndex);
+                String className = instanceTaint.getRealInstanceClassName();
+                if (className != null) {
+                    return className;
+                }
+            }
+        } catch (DataflowAnalysisException ex) {
+            assert false : ex.getMessage();
+        }
+        String dottedClassName = invoke.getReferenceType(cpg).toString();
+        return ClassName.toSlashedClassName(dottedClassName);
+    }
+    
+    private TaintMethodSummary getSuperMethodSummary(String className, String methodId) {
+        try {
+            JavaClass javaClass = Repository.lookupClass(className);
+            assert javaClass != null;
+            TaintMethodSummary summary = getSuperMethodSummary(javaClass.getSuperClasses(), methodId);
+            if (summary != null) {
+                return summary;
+            }
+            return getSuperMethodSummary(javaClass.getAllInterfaces(), methodId);
+        } catch (ClassNotFoundException ex) {
+            AnalysisContext.reportMissingClass(ex);
+            return null;
+        }
+    }
+    
+    private TaintMethodSummary getSuperMethodSummary(JavaClass[] javaClasses, String method) {
+        assert javaClasses != null;
+        for (JavaClass classOrInterface : javaClasses) {
+            String fullMethodName = classOrInterface.getClassName().replace('.', '/').concat(method);
+            TaintMethodSummary summary = methodSummaries.get(fullMethodName);
+            if (summary != null) {
+                return summary;
+            }
+        }
+        return null;
+    }
+    
     private static String getReturnType(String signature) {
         assert signature != null && signature.contains(")");
         return signature.substring(signature.indexOf(')') + 1);
-    }
-
-    private String getSlashedClassName(FieldOrMethod obj) {
-        assert obj != null;
-        String className = obj.getReferenceType(cpg).toString();
-        return ClassName.toSlashedClassName(className);
     }
 
     private Taint getMethodTaint(TaintMethodSummary methodSummary) {
@@ -336,9 +380,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     }
 
     private void taintMutableArguments(TaintMethodSummary methodSummary, InvokeInstruction obj) {
-        if (methodSummary != null
-                && methodSummary != TaintMethodSummary.SAFE_SUMMARY
-                && !Constants.CONSTRUCTOR_NAME.equals(obj.getMethodName(cpg))) {
+        if (methodSummary != null && methodSummary.isConfigured()) {
             return;
         }
         Collection<Integer> mutableStackIndices = getMutableStackIndices(obj.getSignature(cpg));
@@ -351,6 +393,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                     // set back the index removed during merging
                     taint.setVariableIndex(stackValue.getVariableIndex());
                 }
+                taint.setRealInstanceClass(stackValue.getRealInstanceClass());
                 taint.addLocation(getTaintLocation(), false);
                 getFrame().setValue(getFrame().getStackLocation(index), taint);
                 setLocalVariableTaint(taint, taint);
@@ -392,7 +435,10 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                 }
                 Taint stackValue = getFrame().getStackValue(mutableStackIndex);
                 setLocalVariableTaint(taint, stackValue);
-                getFrame().setValue(getFrame().getStackLocation(mutableStackIndex), new Taint(taint));
+                Taint taintCopy = new Taint(taint);
+                // do not set instance to return values, can be different type
+                taintCopy.setRealInstanceClass(stackValue.getRealInstanceClass());
+                getFrame().setValue(getFrame().getStackLocation(mutableStackIndex), taintCopy);
             }
         } catch (DataflowAnalysisException ex) {
             assert false : ex.getMessage(); // stack depth is checked
@@ -433,13 +479,36 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         handleNormalInstruction(obj);
     }
 
-    public TaintMethodSummary getAnalyzedMethodSummary() {
+    /**
+     * This method must be called from outside at the end of the method analysis
+     */
+    public void finishAnalysis() {
         assert analyzedMethodSummary != null;
-        if (SAFE_OBJECT_TYPES.contains(getReturnType(methodDescriptor.getSignature()))
-                && (analyzedMethodSummary.getOutputTaint() == null
-                || analyzedMethodSummary.getOutputTaint().getState() != Taint.State.NULL)) {
-            return TaintMethodSummary.SAFE_SUMMARY;
+        Taint outputTaint = analyzedMethodSummary.getOutputTaint();
+        if (outputTaint == null) {
+            // void methods
+            return;
         }
-        return analyzedMethodSummary;
+        String returnType = getReturnType(methodDescriptor.getSignature());
+        if (SAFE_OBJECT_TYPES.contains(returnType) && outputTaint.getState() != Taint.State.NULL) {
+            // we do not have to store summaries with safe output
+            return;
+        }
+        String realInstanceClassName = outputTaint.getRealInstanceClassName();
+        if (returnType.equals("L" + realInstanceClassName + ";")) {
+            // storing it in method summary is useless
+            outputTaint.setRealInstanceClass(null);
+            analyzedMethodSummary.setOuputTaint(outputTaint);
+        }
+        String className = methodDescriptor.getSlashedClassName();
+        String methodId = "." + methodDescriptor.getName() + methodDescriptor.getSignature();
+        if (analyzedMethodSummary.isInformative()
+                || getSuperMethodSummary(className, methodId) != null) {
+            String fullMethodName = className.concat(methodId);
+            if (!methodSummaries.containsKey(fullMethodName)) {
+                // prefer configured summaries to derived
+                methodSummaries.put(fullMethodName, analyzedMethodSummary);
+            }
+        }
     }
 }

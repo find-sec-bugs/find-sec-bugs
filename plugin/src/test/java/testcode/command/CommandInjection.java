@@ -161,6 +161,11 @@ public abstract class CommandInjection {
         Runtime.getRuntime().exec(transferThroughListIterator(taintSourceDouble()));
     }
     
+    public void unknownSubmethod(String unknown) throws IOException {
+        Runtime.getRuntime().exec(new MoreMethods().safeParentparametricChild(unknown));
+        Runtime.getRuntime().exec(new SubClass().safeParentparametricChild(unknown));
+    }
+    
     private String transferThroughArray(String in) {
         String[] strings = new String[3];
         strings[0] = "safe1";

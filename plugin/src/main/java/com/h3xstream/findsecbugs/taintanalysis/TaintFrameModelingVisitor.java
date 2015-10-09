@@ -497,10 +497,11 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             outputTaint.setRealInstanceClass(null);
             analyzedMethodSummary.setOuputTaint(outputTaint);
         }
-        if (analyzedMethodSummary.isInformative()) {
-            String fullMethodName = methodDescriptor.getSlashedClassName()
-                    + "." + methodDescriptor.getName() + methodDescriptor.getSignature();
-            methodSummaries.put(fullMethodName, analyzedMethodSummary);
+        String className = methodDescriptor.getSlashedClassName();
+        String methodId = "." + methodDescriptor.getName() + methodDescriptor.getSignature();
+        if (analyzedMethodSummary.isInformative()
+                || getSuperMethodSummary(className, methodId) != null) {
+            methodSummaries.put(className.concat(methodId), analyzedMethodSummary);
         }
     }
 }

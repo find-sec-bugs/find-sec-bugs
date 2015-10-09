@@ -28,4 +28,8 @@ public class MoreMethods implements InterfaceWithSink {
     public static String tainted2() {
         return System.getenv("var2");
     }
+    
+    public String safeParentparametricChild(String param) {
+        return "safe parent";
+    }
 }

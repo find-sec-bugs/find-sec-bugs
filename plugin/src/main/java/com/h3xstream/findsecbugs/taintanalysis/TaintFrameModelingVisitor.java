@@ -479,6 +479,9 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         handleNormalInstruction(obj);
     }
 
+    /**
+     * This method must be called from outside at the end of the method analysis
+     */
     public void finishAnalysis() {
         assert analyzedMethodSummary != null;
         Taint outputTaint = analyzedMethodSummary.getOutputTaint();
@@ -501,7 +504,11 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         String methodId = "." + methodDescriptor.getName() + methodDescriptor.getSignature();
         if (analyzedMethodSummary.isInformative()
                 || getSuperMethodSummary(className, methodId) != null) {
-            methodSummaries.put(className.concat(methodId), analyzedMethodSummary);
+            String fullMethodName = className.concat(methodId);
+            if (!methodSummaries.containsKey(fullMethodName)) {
+                // prefer configured summaries to derived
+                methodSummaries.put(fullMethodName, analyzedMethodSummary);
+            }
         }
     }
 }

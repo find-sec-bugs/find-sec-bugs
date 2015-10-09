@@ -103,6 +103,9 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
         mergeInto(fact, result);
     }
     
+    /**
+     * This method must be called after executing the data flow
+     */
     public void finishAnalysis() {
         visitor.finishAnalysis();
     }

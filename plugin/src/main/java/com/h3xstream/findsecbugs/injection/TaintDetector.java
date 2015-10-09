@@ -158,15 +158,16 @@ public abstract class TaintDetector implements Detector {
             if (finalTaint == null) {
                 continue;
             }
-            if (finalTaint.isTainted()) {
-                BugInstance bugInstance = sink.getBugInstance();
-                bugInstance.setPriority(Priorities.HIGH_PRIORITY);
-                bugInstance.addSourceLine(sourceLine);
-            } else if (finalTaint.hasParameters()) {
-                assert finalTaint.isUnknown();
+            if (finalTaint.isTainted() || finalTaint.hasParameters()) {
                 BugInstance bugInstance = sink.getBugInstance();
                 bugInstance.addSourceLine(sourceLine);
-                delayBugToReport(currentMethod, finalTaint, bugInstance);
+                addSourceLines(finalTaint.getLocations(), bugInstance);
+                if (finalTaint.isTainted()) {
+                    bugInstance.setPriority(Priorities.HIGH_PRIORITY);
+                } else {
+                    assert finalTaint.isUnknown();
+                    delayBugToReport(currentMethod, finalTaint, bugInstance);
+                }
             }
         }
     }

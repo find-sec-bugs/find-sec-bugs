@@ -38,6 +38,7 @@ import edu.umd.cs.findbugs.classfile.Global;
 import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 import edu.umd.cs.findbugs.util.ClassName;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -72,23 +73,13 @@ public abstract class TaintDetector implements Detector {
 
     @Override
     public void visitClassContext(ClassContext classContext) {
-        ConstantPoolGen cpg = classContext.getConstantPoolGen();
-        List<InjectionSource> selectedSources = new ArrayList<InjectionSource>();
-        for (InjectionSource source : getInjectionSource()) {
-            if (source.isCandidate(cpg)) {
-                selectedSources.add(source);
-            }
-        }
-        if (selectedSources.isEmpty()) {
-            //return; // analysis still must be requested
-        }
         for (Method method : classContext.getMethodsInCallOrder()) {
             MethodGen methodGen = classContext.getMethodGen(method);
             if (methodGen == null) {
                 continue;
             }
             try {
-                analyzeMethod(classContext, method, selectedSources);
+                analyzeMethod(classContext, method, Arrays.asList(getInjectionSource()));
             } catch (CheckedAnalysisException e) {
                 logException(classContext, method, e);
             } catch (RuntimeException e) {

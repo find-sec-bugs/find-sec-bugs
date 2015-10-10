@@ -17,21 +17,18 @@
  */
 package com.h3xstream.findsecbugs.injection.sql;
 
-import com.h3xstream.findsecbugs.common.ByteCode;
 import com.h3xstream.findsecbugs.injection.InjectionPoint;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
-import org.apache.bcel.generic.*;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.INVOKEINTERFACE;
+import org.apache.bcel.generic.INVOKESPECIAL;
+import org.apache.bcel.generic.INVOKEVIRTUAL;
+import org.apache.bcel.generic.InstructionHandle;
+import org.apache.bcel.generic.InvokeInstruction;
 
 public class SpringJdbcInjectionSource implements InjectionSource {
 
     protected static final String SQL_INJECTION_TYPE = "SQL_INJECTION_SPRING_JDBC";
-
-    @Override
-    public boolean isCandidate(ConstantPoolGen cpg) {
-        return true;
-    }
-
-
 
     @Override
     public InjectionPoint getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {

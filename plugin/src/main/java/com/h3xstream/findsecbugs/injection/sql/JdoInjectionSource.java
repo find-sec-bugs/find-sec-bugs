@@ -17,12 +17,8 @@
  */
 package com.h3xstream.findsecbugs.injection.sql;
 
-import com.h3xstream.findsecbugs.common.ByteCode;
 import com.h3xstream.findsecbugs.injection.InjectionPoint;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
-
-import org.apache.bcel.classfile.Constant;
-import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.INVOKEINTERFACE;
 import org.apache.bcel.generic.InstructionHandle;
@@ -34,23 +30,6 @@ import org.apache.bcel.generic.InvokeInstruction;
 public class JdoInjectionSource implements InjectionSource {
 
     protected static final String SQL_INJECTION_TYPE = "SQL_INJECTION_JDO";
-
-    @Override
-    public boolean isCandidate(ConstantPoolGen cpg) {
-        for (int i = 0; i < cpg.getSize(); i++) {
-            Constant cnt = cpg.getConstant(i);
-            if (cnt instanceof ConstantUtf8) {
-                String utf8String = ((ConstantUtf8) cnt).getBytes();
-                //System.out.println("cnt= "+utf8String);
-                if (utf8String.equals("Ljavax/jdo/PersistenceManager;")) {
-                    return true;
-                } else if (utf8String.equals("Ljavax/jdo/Query;")) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
     @Override
     public InjectionPoint getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {

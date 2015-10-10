@@ -17,11 +17,8 @@
  */
 package com.h3xstream.findsecbugs.injection.ldap;
 
-import com.h3xstream.findsecbugs.common.ByteCode;
 import com.h3xstream.findsecbugs.injection.InjectionPoint;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
-import org.apache.bcel.classfile.Constant;
-import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.INVOKEINTERFACE;
 import org.apache.bcel.generic.INVOKEVIRTUAL;
@@ -31,35 +28,6 @@ import org.apache.bcel.generic.InvokeInstruction;
 public class JndiLdapInjectionSource implements InjectionSource {
 
     private static final String LDAP_INJECTION_TYPE = "LDAP_INJECTION";
-
-    @Override
-    public boolean isCandidate(ConstantPoolGen cpg) {
-        for (int i = 0; i < cpg.getSize(); i++) {
-            Constant cnt = cpg.getConstant(i);
-            if (cnt instanceof ConstantUtf8) {
-                String utf8String = ((ConstantUtf8) cnt).getBytes();
-                if (utf8String.equals("javax/naming/directory/InitialDirContext")) {
-                    return true;
-                }
-                if (utf8String.equals("javax/naming/directory/DirContext")) {
-                    return true;
-                }
-                if (utf8String.equals("javax/naming/ldap/InitialLdapContext")) {
-                    return true;
-                }
-                if (utf8String.equals("javax/naming/ldap/LdapContext")) {
-                    return true;
-                }
-                if (utf8String.equals("com/sun/jndi/ldap/LdapCtx")) {
-                    return true;
-                }
-                if (utf8String.equals("javax/naming/event/EventDirContext")) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
     @Override
     public InjectionPoint getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {

@@ -17,16 +17,13 @@
  */
 package com.h3xstream.findsecbugs.injection.command;
 
-import com.h3xstream.findsecbugs.common.ByteCode;
 import com.h3xstream.findsecbugs.injection.InjectionPoint;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.bcel.classfile.Constant;
-import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.generic.ConstantPoolGen;
-import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.INVOKESPECIAL;
+import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InvokeInstruction;
 
@@ -43,22 +40,6 @@ public class CommandInjectionSource implements InjectionSource {
         injectableArgumentsMap.put("([Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/Process;", new int[]{0, 1});
         injectableArgumentsMap.put("(Ljava/lang/String;[Ljava/lang/String;Ljava/io/File;)Ljava/lang/Process;", new int[]{1, 2});
         injectableArgumentsMap.put("([Ljava/lang/String;[Ljava/lang/String;Ljava/io/File;)Ljava/lang/Process;", new int[]{1, 2});
-    }
-
-    @Override
-    public boolean isCandidate(ConstantPoolGen cpg) {
-        for (int i = 0; i < cpg.getSize(); i++) {
-            Constant cnt = cpg.getConstant(i);
-            if (cnt instanceof ConstantUtf8) {
-                String utf8String = ((ConstantUtf8) cnt).getBytes();
-                if (utf8String.startsWith("java/lang/Runtime")) {
-                    return true;
-                } else if (utf8String.startsWith("java/lang/ProcessBuilder")) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     @Override

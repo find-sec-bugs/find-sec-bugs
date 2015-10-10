@@ -17,12 +17,12 @@
  */
 package com.h3xstream.findsecbugs.injection.sql;
 
-import com.h3xstream.findsecbugs.common.ByteCode;
 import com.h3xstream.findsecbugs.injection.InjectionPoint;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
-import org.apache.bcel.classfile.Constant;
-import org.apache.bcel.classfile.ConstantUtf8;
-import org.apache.bcel.generic.*;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.INVOKEINTERFACE;
+import org.apache.bcel.generic.InstructionHandle;
+import org.apache.bcel.generic.InvokeInstruction;
 
 /**
  *
@@ -30,11 +30,6 @@ import org.apache.bcel.generic.*;
 public class JdbcInjectionSource implements InjectionSource {
 
     protected static final String SQL_INJECTION_TYPE = "SQL_INJECTION_JDBC";
-
-    @Override
-    public boolean isCandidate(ConstantPoolGen cpg) {
-        return true;
-    }
 
     @Override
     public InjectionPoint getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {

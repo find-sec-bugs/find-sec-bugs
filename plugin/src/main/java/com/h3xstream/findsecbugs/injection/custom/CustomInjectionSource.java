@@ -19,7 +19,7 @@ package com.h3xstream.findsecbugs.injection.custom;
 
 import com.h3xstream.findsecbugs.injection.InjectionPoint;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
-import com.h3xstream.findsecbugs.injection.TaintDetector;
+import com.h3xstream.findsecbugs.injection.LegacyInjectionDetector;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,11 +53,11 @@ public class CustomInjectionSource implements InjectionSource {
     private static final String SYSTEM_PROPERTY = "findsecbugs.injection.sources";
     private static final String CUSTOM_INJECTION_TYPE = "CUSTOM_INJECTION";
 
-    static String toResourceBaseName(Class<? extends TaintDetector> that) {
+    static String toResourceBaseName(Class<? extends LegacyInjectionDetector> that) {
         return that.getPackage().getName().replaceAll("\\.", "/");
     }
 
-    public static InjectionSource getInstance(Class<? extends TaintDetector> that) {
+    public static InjectionSource getInstance(Class<? extends LegacyInjectionDetector> that) {
         return getInstance(toResourceBaseName(that));
     }
 

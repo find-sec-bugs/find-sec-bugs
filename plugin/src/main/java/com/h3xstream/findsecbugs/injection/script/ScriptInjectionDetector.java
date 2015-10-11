@@ -18,10 +18,10 @@
 package com.h3xstream.findsecbugs.injection.script;
 
 import com.h3xstream.findsecbugs.injection.InjectionSource;
-import com.h3xstream.findsecbugs.injection.TaintDetector;
+import com.h3xstream.findsecbugs.injection.LegacyInjectionDetector;
 import edu.umd.cs.findbugs.BugReporter;
 
-public class ScriptInjectionDetector extends TaintDetector {
+public class ScriptInjectionDetector extends LegacyInjectionDetector {
 
     public ScriptInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);

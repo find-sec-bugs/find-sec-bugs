@@ -18,10 +18,10 @@
 package com.h3xstream.findsecbugs.injection.sql;
 
 import com.h3xstream.findsecbugs.injection.InjectionSource;
-import com.h3xstream.findsecbugs.injection.TaintDetector;
+import com.h3xstream.findsecbugs.injection.LegacyInjectionDetector;
 import edu.umd.cs.findbugs.BugReporter;
 
-public class SqlInjectionDetector extends TaintDetector {
+public class SqlInjectionDetector extends LegacyInjectionDetector {
 
     public SqlInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);

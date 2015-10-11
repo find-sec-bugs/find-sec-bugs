@@ -18,10 +18,10 @@
 package com.h3xstream.findsecbugs.injection.redirect;
 
 import com.h3xstream.findsecbugs.injection.InjectionSource;
-import com.h3xstream.findsecbugs.injection.TaintDetector;
+import com.h3xstream.findsecbugs.injection.LegacyInjectionDetector;
 import edu.umd.cs.findbugs.BugReporter;
 
-public class UnvalidatedRedirectDetector extends TaintDetector {
+public class UnvalidatedRedirectDetector extends LegacyInjectionDetector {
 
     public UnvalidatedRedirectDetector(BugReporter bugReporter) {
         super(bugReporter);

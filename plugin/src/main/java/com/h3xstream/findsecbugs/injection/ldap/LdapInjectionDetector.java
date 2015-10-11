@@ -18,10 +18,10 @@
 package com.h3xstream.findsecbugs.injection.ldap;
 
 import com.h3xstream.findsecbugs.injection.InjectionSource;
-import com.h3xstream.findsecbugs.injection.TaintDetector;
+import com.h3xstream.findsecbugs.injection.LegacyInjectionDetector;
 import edu.umd.cs.findbugs.BugReporter;
 
-public class LdapInjectionDetector extends TaintDetector {
+public class LdapInjectionDetector extends LegacyInjectionDetector {
 
     public LdapInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);

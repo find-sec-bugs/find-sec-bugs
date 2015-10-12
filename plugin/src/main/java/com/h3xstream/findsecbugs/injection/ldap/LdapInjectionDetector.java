@@ -17,18 +17,13 @@
  */
 package com.h3xstream.findsecbugs.injection.ldap;
 
-import com.h3xstream.findsecbugs.injection.InjectionSource;
-import com.h3xstream.findsecbugs.injection.LegacyInjectionDetector;
+import com.h3xstream.findsecbugs.injection.ConfiguredBasicInjectionDetector;
 import edu.umd.cs.findbugs.BugReporter;
 
-public class LdapInjectionDetector extends LegacyInjectionDetector {
+public class LdapInjectionDetector extends ConfiguredBasicInjectionDetector {
 
     public LdapInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
-    }
-
-    @Override
-    public InjectionSource[] getInjectionSource() {
-        return new InjectionSource[]{new JndiLdapInjectionSource(), new UnboundIdLdapInjectionSource()};
+        loadConfiguredSinks("ldap.txt", "LDAP_INJECTION");
     }
 }

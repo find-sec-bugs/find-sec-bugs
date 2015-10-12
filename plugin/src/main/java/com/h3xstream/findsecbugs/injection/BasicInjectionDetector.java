@@ -18,7 +18,6 @@
 package com.h3xstream.findsecbugs.injection;
 
 import edu.umd.cs.findbugs.BugReporter;
-import edu.umd.cs.findbugs.ba.SignatureConverter;
 import edu.umd.cs.findbugs.util.ClassName;
 import java.util.HashMap;
 import java.util.Map;

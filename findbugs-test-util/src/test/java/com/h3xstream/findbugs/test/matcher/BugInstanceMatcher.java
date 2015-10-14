@@ -20,8 +20,13 @@ package com.h3xstream.findbugs.test.matcher;
 import edu.umd.cs.findbugs.*;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
+    private static final Logger log = LoggerFactory.getLogger(BugInstanceMatcherBuilder.class);
 
     private String bugType;
     private String className;
@@ -30,6 +35,7 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
     private Integer lineNumber;
     private Integer lineNumberApprox;
     private String priority;
+    private List<Integer> multipleChoicesLine;
 
     /**
      * All the parameters are optional. Only the non-null parameters are used.
@@ -40,7 +46,7 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
      * @param fieldName  Field name
      * @param lineNumber Line number
      */
-    public BugInstanceMatcher(String bugType, String className, String methodName, String fieldName, Integer lineNumber, Integer lineNumberApprox, String priority) {
+    public BugInstanceMatcher(String bugType, String className, String methodName, String fieldName, Integer lineNumber, Integer lineNumberApprox, String priority, List<Integer> multipleChoicesLine) {
         this.bugType = bugType;
         this.className = className;
         this.methodName = methodName;
@@ -48,6 +54,7 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
         this.lineNumber = lineNumber;
         this.lineNumberApprox = lineNumberApprox;
         this.priority = priority;
+        this.multipleChoicesLine = multipleChoicesLine;
     }
 
     @Override
@@ -89,6 +96,20 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
                 SourceLineAnnotation srcAnn = extractBugAnnotation(bugInstance, SourceLineAnnotation.class);
                 if (srcAnn == null) return false;
                 criteriaMatches &= srcAnn.getStartLine()-1 <= lineNumberApprox && lineNumberApprox <= srcAnn.getEndLine()+1;
+            }
+            if (multipleChoicesLine != null) {
+                SourceLineAnnotation srcAnn = extractBugAnnotation(bugInstance, SourceLineAnnotation.class);
+                if (srcAnn == null) return false;
+                boolean found = false;
+                for(Integer potentialMatch : multipleChoicesLine) {
+                    if(srcAnn.getStartLine()-1 <= potentialMatch && potentialMatch <= srcAnn.getEndLine()+1) {
+                        found = true;
+                    }
+                }
+                if(!found) {
+                    log.info("The bug was between lines "+srcAnn.getStartLine()+" and "+srcAnn.getEndLine());
+                }
+                criteriaMatches &= found;
             }
             return criteriaMatches;
         } else {

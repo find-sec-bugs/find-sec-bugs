@@ -46,6 +46,7 @@
                         <include>**/**.java</include>
                     </includes>
                     <excludes>
+                        <exclude>**/SMAPSourceDebugExtension.java</exclude>
                         <exclude>**/testcode/**/**.java</exclude>
                         <exclude>**/package-info.java</exclude>
                         <!-- Package that contains stub api -->

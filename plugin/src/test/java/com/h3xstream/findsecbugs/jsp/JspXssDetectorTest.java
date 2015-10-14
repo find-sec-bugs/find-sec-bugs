@@ -50,7 +50,8 @@ public class JspXssDetectorTest extends BaseDetectorTest {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("XSS_JSP_PRINT")
-                            .inMethod("_jspService").atLineApprox(line)
+                            .inJspFile("xss_1_direct_use.jsp")
+                            .atJspLine(10)
                             .build()
             );
         }
@@ -74,7 +75,8 @@ public class JspXssDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("XSS_JSP_PRINT")
-                        .inMethod("_jspService").atLineApprox(53)
+                        .inJspFile("xss_2_transfer_local.jsp")
+                        .atJspLine(10)
                         .build()
         );
 
@@ -125,7 +127,8 @@ public class JspXssDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("XSS_JSP_PRINT")
-                        .inMethod("_jspService").atLineApprox(56)
+                        .inJspFile("xss_5_multiple_transfer_local.jsp")
+                        .atJspLine(13)
                         .build()
         );
 
@@ -146,7 +149,8 @@ public class JspXssDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("XSS_JSP_PRINT")
-                        .inMethod("_jspService").atLineApprox(50)
+                        .inJspFile("xss_6_get_parameter.jsp")
+                        .atJspLine(7)
                         .build()
         );
 

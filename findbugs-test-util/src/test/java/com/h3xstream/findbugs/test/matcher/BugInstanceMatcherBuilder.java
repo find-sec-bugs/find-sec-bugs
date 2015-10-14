@@ -17,14 +17,26 @@
  */
 package com.h3xstream.findbugs.test.matcher;
 
+import com.h3xstream.findbugs.test.jsp.SMAPSourceDebugExtension;
+import com.h3xstream.findbugs.test.service.ClassFileLocator;
 import edu.umd.cs.findbugs.BugInstance;
-import org.hamcrest.Matcher;
+import org.apache.commons.io.IOUtils;
 import org.mockito.Matchers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * DSL to build BugInstanceMatcher
  */
 public class BugInstanceMatcherBuilder {
+
+    private static final Logger log = LoggerFactory.getLogger(BugInstanceMatcherBuilder.class);
 
     private String bugType;
     private String className;
@@ -33,6 +45,8 @@ public class BugInstanceMatcherBuilder {
     private Integer lineNumber;
     private Integer lineNumberApprox;
     private String priority;
+    private String jspFile;
+    private Integer jspLine;
 
     public BugInstanceMatcherBuilder bugType(String bugType) {
         this.bugType = bugType;
@@ -59,6 +73,12 @@ public class BugInstanceMatcherBuilder {
         return this;
     }
 
+    /**
+     * @deprecated Use atJspLine for JSP line mapping
+     * @param lineNumberApprox
+     * @return
+     */
+    @Deprecated
     public BugInstanceMatcherBuilder atLineApprox(int lineNumberApprox) {
         this.lineNumberApprox = lineNumberApprox;
         return this;
@@ -69,15 +89,49 @@ public class BugInstanceMatcherBuilder {
         return this;
     }
 
+    public BugInstanceMatcherBuilder inJspFile(String jspFile) {
+        this.jspFile = jspFile;
+        return this;
+    }
+
+    public BugInstanceMatcherBuilder atJspLine(Integer jspLine) {
+        this.jspLine = jspLine;
+        return this;
+    }
+
     /**
      * @return Mockito Matcher
      */
     public BugInstance build() {
-//        if(fieldName != null && lineNumber != null) {
-//            throw new RuntimeException("The field position is not kept after compilation. " +
-//                    "The lineNumber can be set when a fieldName is defined.");
-//        }
-        return Matchers.argThat(new BugInstanceMatcher(bugType, className, methodName, fieldName, lineNumber, lineNumberApprox, priority));
+
+        //JSP line to Java source conversion
+        List<Integer> multipleChoicesLine = null;
+        if(jspLine != null) {
+            if(jspFile != null) {
+                ClassFileLocator locator = new ClassFileLocator();
+                File smapFile = new File(locator.getJspFilePath(jspFile) + ".smap");
+                if(!smapFile.exists()) {
+                    throw new RuntimeException("SMAP File are missing. ("+smapFile+")");
+                }
+                try {
+                    //Convert
+                    SMAPSourceDebugExtension smapDebug = new SMAPSourceDebugExtension(IOUtils.toString(new FileInputStream(smapFile), "UTF-8"));
+                    multipleChoicesLine = smapDebug.getOriginalLine(jspLine);
+                    log.info("The JSP line "+jspLine+" was mapped to "+ Arrays.toString(multipleChoicesLine.toArray()));
+                    if(multipleChoicesLine.isEmpty()) {
+                        throw new RuntimeException("Unable to find the mapping for the JSP line "+jspLine);
+                    }
+                }
+                catch (IOException e) {
+                    throw new RuntimeException("Unable to open the smap file.",e);
+                }
+            }
+            else {
+                throw new RuntimeException("JSP file not set.");
+            }
+        }
+
+        return Matchers.argThat(new BugInstanceMatcher(bugType, className, methodName, fieldName, lineNumber, lineNumberApprox, priority,multipleChoicesLine));
     }
 
 }

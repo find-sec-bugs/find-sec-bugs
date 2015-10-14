@@ -14,7 +14,6 @@
 	<description>Root project file that aggregate the different modules of Find Security Bugs.</description>
 
     <properties>
-        <licence.plugin.version>1.10.b1</licence.plugin.version>
         <!-- The groovy dependency need to be kept in sync with GMaven dependency -->
         <groovy.version>1.7.0</groovy.version>
         <!-- Encoding configuration -->
@@ -36,9 +35,9 @@
 
             <!-- Update automatically the header of the source code to the LGPL header. -->
             <plugin>
-                <groupId>com.mycila.maven-license-plugin</groupId>
-                <artifactId>maven-license-plugin</artifactId>
-                <version>${licence.plugin.version}</version>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>2.11</version>
                 <configuration>
                     <header>file:///${session.executionRootDirectory}/LGPL-3.0-header.txt</header>
                     <aggregate>true</aggregate>

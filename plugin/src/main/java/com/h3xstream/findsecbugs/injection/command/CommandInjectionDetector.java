@@ -31,5 +31,6 @@ public class CommandInjectionDetector extends ConfiguredBasicInjectionDetector {
     public CommandInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
         loadConfiguredSinks("command.txt", "COMMAND_INJECTION");
+        loadConfiguredSinks("command-scala.txt", "COMMAND_INJECTION");
     }
 }

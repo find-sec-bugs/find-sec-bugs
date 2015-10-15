@@ -17,18 +17,14 @@
  */
 package com.h3xstream.findsecbugs.injection.script;
 
-import com.h3xstream.findsecbugs.injection.InjectionSource;
-import com.h3xstream.findsecbugs.injection.LegacyInjectionDetector;
+import com.h3xstream.findsecbugs.injection.ConfiguredBasicInjectionDetector;
 import edu.umd.cs.findbugs.BugReporter;
 
-public class ScriptInjectionDetector extends LegacyInjectionDetector {
+public class ScriptInjectionDetector extends ConfiguredBasicInjectionDetector {
 
     public ScriptInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
-    }
-
-    @Override
-    public InjectionSource[] getInjectionSource() {
-        return new InjectionSource[] {new ScriptEngineSource(),new SpelSource()};
+        loadConfiguredSinks("spel.txt", "SPEL_INJECTION");
+        loadConfiguredSinks("script-engine.txt", "SCRIPT_ENGINE_INJECTION");
     }
 }

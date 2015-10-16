@@ -1982,6 +1982,20 @@ keyGen.initialize(2048);
     </BugPattern>
     <BugCode abbrev="SECUR">Unvalidated Redirect</BugCode>
 
+    <!-- JSP Include -->
+    <Detector class="com.h3xstream.findsecbugs.jsp.JspIncludeDetector">
+        <Details>Identify JSP include take dynamic input that could be controlled by a remote user.</Details>
+    </Detector>
+    <BugPattern type="JSP_INCLUDE">
+        <ShortDescription>Potential unintended JSP inclusion</ShortDescription>
+        <LongDescription>Potential unintended JSP inclusion could lead to arbitrary code execution</LongDescription>
+        <Details>
+            <![CDATA[
+TODO
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECJSPINC">Potential unintended JSP inclusion</BugCode>
 
     <!-- XSS in JSP -->
     <Detector class="com.h3xstream.findsecbugs.jsp.JspXssDetector">

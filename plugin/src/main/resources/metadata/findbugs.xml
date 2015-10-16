@@ -57,6 +57,7 @@
     <Detector class="com.h3xstream.findsecbugs.crypto.InsufficientKeySizeRsaDetector" reports="RSA_KEY_SIZE"/>
     <Detector class="com.h3xstream.findsecbugs.injection.redirect.UnvalidatedRedirectDetector" reports="UNVALIDATED_REDIRECT" />
     <Detector class="com.h3xstream.findsecbugs.jsp.JspXssDetector" reports="XSS_JSP_PRINT,XSS_SERVLET" />
+    <Detector class="com.h3xstream.findsecbugs.jsp.JspIncludeDetector" reports="JSP_INCLUDE" />
     <Detector class="com.h3xstream.findsecbugs.XmlDecoderDetector" reports="XML_DECODER"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.StaticIvDetector" reports="STATIC_IV"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.CipherWithNoIntegrityDetector" reports="ECB_MODE,PADDING_ORACLE,CIPHER_INTEGRITY"/>
@@ -121,6 +122,7 @@
     <BugPattern type="BLOWFISH_KEY_SIZE" abbrev="SECBKS" category="SECURITY" cweid="326"/>
     <BugPattern type="UNVALIDATED_REDIRECT" abbrev="SECUR" category="SECURITY" cweid="601"/>
     <BugPattern type="XSS_JSP_PRINT" abbrev="SECXSS1" category="SECURITY" cweid="79"/>
+    <BugPattern type="JSP_INCLUDE" abbrev="SECJSPINC" category="SECURITY" cweid="94"/>
     <BugPattern type="XSS_SERVLET" abbrev="SECXSS2" category="SECURITY" cweid="79"/>
     <BugPattern type="XML_DECODER" abbrev="XMLDEC" category="SECURITY"/>
     <BugPattern type="STATIC_IV" abbrev="STAIV" category="SECURITY" cweid="329"/>

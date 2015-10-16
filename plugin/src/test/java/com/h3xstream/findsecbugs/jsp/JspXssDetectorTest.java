@@ -38,7 +38,7 @@ public class JspXssDetectorTest extends BaseDetectorTest {
     public void detectXssDirectUse() throws Exception {
         //Locate test code
         String[] files = {
-                getJspFilePath("xss_1_direct_use.jsp")
+                getJspFilePath("xss/xss_1_direct_use.jsp")
         };
 
         //Run the analysis
@@ -46,12 +46,12 @@ public class JspXssDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         //Assertions
-        for (Integer line : Arrays.asList(53, 59)) { //Generated classes lines doesn't match original JSP
+        for (Integer line : Arrays.asList(10, 15)) { //Generated classes lines doesn't match original JSP
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("XSS_JSP_PRINT")
-                            .inJspFile("xss_1_direct_use.jsp")
-                            .atJspLine(10)
+                            .inJspFile("xss/xss_1_direct_use.jsp")
+                            .atJspLine(line)
                             .build()
             );
         }
@@ -63,7 +63,7 @@ public class JspXssDetectorTest extends BaseDetectorTest {
     public void detectXssTransferLocal() throws Exception {
         //Locate test code
         String[] files = {
-                getJspFilePath("xss_2_transfer_local.jsp")
+                getJspFilePath("xss/xss_2_transfer_local.jsp")
         };
 
         //Run the analysis
@@ -75,7 +75,7 @@ public class JspXssDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("XSS_JSP_PRINT")
-                        .inJspFile("xss_2_transfer_local.jsp")
+                        .inJspFile("xss/xss_2_transfer_local.jsp")
                         .atJspLine(10)
                         .build()
         );
@@ -87,7 +87,7 @@ public class JspXssDetectorTest extends BaseDetectorTest {
     public void detectXssFalsePositiveSafeInput() throws Exception {
         //Locate test code
         String[] files = {
-                getJspFilePath("xss_3_false_positive_static_function.jsp")
+                getJspFilePath("xss/xss_3_false_positive_static_function.jsp")
         };
 
         //Run the analysis
@@ -102,7 +102,7 @@ public class JspXssDetectorTest extends BaseDetectorTest {
     public void detectXssFalsePositiveOverwriteLocal() throws Exception {
         //Locate test code
         String[] files = {
-                getJspFilePath("xss_4_false_positive_overwrite_local.jsp")
+                getJspFilePath("xss/xss_4_false_positive_overwrite_local.jsp")
         };
 
         //Run the analysis
@@ -117,7 +117,7 @@ public class JspXssDetectorTest extends BaseDetectorTest {
     public void detectXssMultipleTransfertLocal() throws Exception {
         //Locate test code
         String[] files = {
-                getJspFilePath("xss_5_multiple_transfer_local.jsp")
+                getJspFilePath("xss/xss_5_multiple_transfer_local.jsp")
         };
 
         //Run the analysis
@@ -127,7 +127,7 @@ public class JspXssDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("XSS_JSP_PRINT")
-                        .inJspFile("xss_5_multiple_transfer_local.jsp")
+                        .inJspFile("xss/xss_5_multiple_transfer_local.jsp")
                         .atJspLine(13)
                         .build()
         );
@@ -139,7 +139,7 @@ public class JspXssDetectorTest extends BaseDetectorTest {
     public void detectXssGetParameter() throws Exception {
         //Locate test code
         String[] files = {
-                getJspFilePath("xss_6_get_parameter.jsp")
+                getJspFilePath("xss/xss_6_get_parameter.jsp")
         };
 
         //Run the analysis
@@ -149,7 +149,7 @@ public class JspXssDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("XSS_JSP_PRINT")
-                        .inJspFile("xss_6_get_parameter.jsp")
+                        .inJspFile("xss/xss_6_get_parameter.jsp")
                         .atJspLine(7)
                         .build()
         );

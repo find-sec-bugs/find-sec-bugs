@@ -75,7 +75,7 @@ public class BugInstanceMatcherBuilder {
 
     /**
      * @deprecated Use atJspLine for JSP line mapping
-     * @param lineNumberApprox
+     * @param lineNumberApprox Line to verify accepting an offset of 1
      * @return
      */
     @Deprecated
@@ -108,30 +108,38 @@ public class BugInstanceMatcherBuilder {
         List<Integer> multipleChoicesLine = null;
         if(jspLine != null) {
             if(jspFile != null) {
-                ClassFileLocator locator = new ClassFileLocator();
-                File smapFile = new File(locator.getJspFilePath(jspFile) + ".smap");
-                if(!smapFile.exists()) {
-                    throw new RuntimeException("SMAP File are missing. ("+smapFile+")");
-                }
-                try {
-                    //Convert
-                    SMAPSourceDebugExtension smapDebug = new SMAPSourceDebugExtension(IOUtils.toString(new FileInputStream(smapFile), "UTF-8"));
-                    multipleChoicesLine = smapDebug.getOriginalLine(jspLine);
-                    log.info("The JSP line "+jspLine+" was mapped to "+ Arrays.toString(multipleChoicesLine.toArray()));
-                    if(multipleChoicesLine.isEmpty()) {
-                        throw new RuntimeException("Unable to find the mapping for the JSP line "+jspLine);
-                    }
-                }
-                catch (IOException e) {
-                    throw new RuntimeException("Unable to open the smap file.",e);
-                }
+                //Map JSP lines to Java base on the smap file if available
+                multipleChoicesLine = mapJspToJavaLine(jspFile,jspLine);
             }
             else {
                 throw new RuntimeException("JSP file not set.");
             }
         }
 
-        return Matchers.argThat(new BugInstanceMatcher(bugType, className, methodName, fieldName, lineNumber, lineNumberApprox, priority,multipleChoicesLine));
+        return Matchers.argThat(new BugInstanceMatcher(bugType, className, methodName, fieldName, lineNumber, lineNumberApprox, priority, jspFile, multipleChoicesLine));
+    }
+
+    private static List<Integer>  mapJspToJavaLine(String jspFile, Integer jspLine) {
+        List<Integer> outJavaLines = null;
+
+        ClassFileLocator locator = new ClassFileLocator();
+        File smapFile = new File(locator.getJspFilePath(jspFile) + ".smap");
+        if(!smapFile.exists()) {
+            throw new RuntimeException("SMAP File are missing. ("+smapFile+")");
+        }
+        try {
+            //Convert
+            SMAPSourceDebugExtension smapDebug = new SMAPSourceDebugExtension(IOUtils.toString(new FileInputStream(smapFile), "UTF-8"));
+            outJavaLines = smapDebug.getOriginalLine(jspLine);
+            log.info("The JSP line "+jspLine+" was mapped to "+ Arrays.toString(outJavaLines.toArray()));
+            if(outJavaLines.isEmpty()) {
+                throw new RuntimeException("Unable to find the mapping for the JSP line "+jspLine);
+            }
+        }
+        catch (IOException e) {
+            throw new RuntimeException("Unable to open the smap file.",e);
+        }
+        return outJavaLines;
     }
 
 }

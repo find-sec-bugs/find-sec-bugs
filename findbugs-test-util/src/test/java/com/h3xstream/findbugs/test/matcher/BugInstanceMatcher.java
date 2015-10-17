@@ -35,6 +35,7 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
     private Integer lineNumber;
     private Integer lineNumberApprox;
     private String priority;
+    private String jspFile;
     private List<Integer> multipleChoicesLine;
 
     /**
@@ -45,8 +46,12 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
      * @param methodName Method name
      * @param fieldName  Field name
      * @param lineNumber Line number
+     * @param lineNumberApprox Approximate line for test samples that are unstable (Historically the JSP samples)
+     * @param priority   Priority
+     * @param jspFile JSP file name
+     * @param multipleChoicesLine At least of the line (JSP samples specific)
      */
-    public BugInstanceMatcher(String bugType, String className, String methodName, String fieldName, Integer lineNumber, Integer lineNumberApprox, String priority, List<Integer> multipleChoicesLine) {
+    public BugInstanceMatcher(String bugType, String className, String methodName, String fieldName, Integer lineNumber, Integer lineNumberApprox, String priority, String jspFile, List<Integer> multipleChoicesLine) {
         this.bugType = bugType;
         this.className = className;
         this.methodName = methodName;
@@ -54,6 +59,7 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
         this.lineNumber = lineNumber;
         this.lineNumberApprox = lineNumberApprox;
         this.priority = priority;
+        this.jspFile = jspFile;
         this.multipleChoicesLine = multipleChoicesLine;
     }
 
@@ -96,6 +102,12 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
                 SourceLineAnnotation srcAnn = extractBugAnnotation(bugInstance, SourceLineAnnotation.class);
                 if (srcAnn == null) return false;
                 criteriaMatches &= srcAnn.getStartLine()-1 <= lineNumberApprox && lineNumberApprox <= srcAnn.getEndLine()+1;
+            }
+            if(jspFile != null) {
+                ClassAnnotation classAnn = extractBugAnnotation(bugInstance, ClassAnnotation.class);
+                String fullName = classAnn.getClassName().replaceAll("\\.","/").replaceAll("_005f","_").replaceAll("_jsp", ".jsp");
+                //String simpleName = fullName.substring(fullName.lastIndexOf("/") + 1);
+                criteriaMatches &= fullName.endsWith(jspFile);
             }
             if (multipleChoicesLine != null) {
                 SourceLineAnnotation srcAnn = extractBugAnnotation(bugInstance, SourceLineAnnotation.class);

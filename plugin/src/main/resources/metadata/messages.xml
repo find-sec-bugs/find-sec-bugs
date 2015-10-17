@@ -1987,15 +1987,47 @@ keyGen.initialize(2048);
         <Details>Identify JSP include take dynamic input that could be controlled by a remote user.</Details>
     </Detector>
     <BugPattern type="JSP_INCLUDE">
-        <ShortDescription>Potential unintended JSP inclusion</ShortDescription>
-        <LongDescription>Potential unintended JSP inclusion could lead to arbitrary code execution</LongDescription>
+        <ShortDescription>Dynamic JSP inclusion</ShortDescription>
+        <LongDescription>Dynamic JSP inclusion could lead to arbitrary code execution</LongDescription>
         <Details>
             <![CDATA[
 TODO
             ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECJSPINC">Potential unintended JSP inclusion</BugCode>
+    <BugCode abbrev="SECJSPINC">Dynamic JSP inclusion</BugCode>
+
+
+    <!-- Spring eval -->
+    <Detector class="com.h3xstream.findsecbugs.jsp.JspSpringEvalDetector">
+        <Details>Identify unintended use of dynamic variable in spring expression.</Details>
+    </Detector>
+    <BugPattern type="JSP_SPRING_EVAL">
+        <ShortDescription>Dynamic variable in spring expression</ShortDescription>
+        <LongDescription>Potential unintended use of dynamic variable in spring expression could lead to arbitrary code execution</LongDescription>
+        <Details>
+            <![CDATA[
+TODO
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECJSPSPRING">Dynamic variable in spring expression</BugCode>
+
+
+    <!-- JSTL OUT -->
+    <Detector class="com.h3xstream.findsecbugs.jsp.JstlOutDetector">
+        <Details>Detect output where the escaping of special XML characters is disable.</Details>
+    </Detector>
+    <BugPattern type="JSP_JSTL_OUT">
+        <ShortDescription>Escaping of special XML characters is disable</ShortDescription>
+        <LongDescription>Disabling the escaping of special XML characters can lead to XSS vulnerabilities</LongDescription>
+        <Details>
+            <![CDATA[
+TODO
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECJSPJSTL">Escaping of special XML characters is disable</BugCode>
 
     <!-- XSS in JSP -->
     <Detector class="com.h3xstream.findsecbugs.jsp.JspXssDetector">

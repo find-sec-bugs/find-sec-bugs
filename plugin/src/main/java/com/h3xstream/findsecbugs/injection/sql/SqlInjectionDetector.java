@@ -17,24 +17,18 @@
  */
 package com.h3xstream.findsecbugs.injection.sql;
 
-import com.h3xstream.findsecbugs.injection.InjectionSource;
-import com.h3xstream.findsecbugs.injection.TaintDetector;
+import com.h3xstream.findsecbugs.injection.ConfiguredBasicInjectionDetector;
 import edu.umd.cs.findbugs.BugReporter;
 
-public class SqlInjectionDetector extends TaintDetector {
+public class SqlInjectionDetector extends ConfiguredBasicInjectionDetector {
 
     public SqlInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
-    }
-
-    @Override
-    public InjectionSource[] getInjectionSource() {
-        return new InjectionSource[] {
-            new HibernateInjectionSource(),
-            new JdoInjectionSource(),
-            new JpaInjectionSource(),
-            new JdbcInjectionSource(),
-            new SpringJdbcInjectionSource()
-        };
+        loadConfiguredSinks("sql-hibernate.txt", "SQL_INJECTION_HIBERNATE");
+        loadConfiguredSinks("sql-jdo.txt", "SQL_INJECTION_JDO");
+        loadConfiguredSinks("sql-jpa.txt", "SQL_INJECTION_JPA");
+        loadConfiguredSinks("sql-jdbc.txt", "SQL_INJECTION_JDBC");
+        loadConfiguredSinks("sql-spring.txt", "SQL_INJECTION_SPRING_JDBC");
+        //TODO : Add org.springframework.jdbc.core.simple.SimpleJdbcTemplate (Spring < 3.2.1)
     }
 }

@@ -77,7 +77,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         SAFE_OBJECT_TYPES.add("Ljava/lang/Short;");
         SAFE_OBJECT_TYPES.add("Ljava/math/BigDecimal;");
         // these data types are not modified, when passed as a parameter to an unknown method
-        IMMUTABLE_OBJECT_TYPES = new HashSet<String>(SAFE_OBJECT_TYPES.size() + 7);
+        IMMUTABLE_OBJECT_TYPES = new HashSet<String>(SAFE_OBJECT_TYPES.size() + 9);
         IMMUTABLE_OBJECT_TYPES.addAll(SAFE_OBJECT_TYPES);
         IMMUTABLE_OBJECT_TYPES.add("Ljava/lang/String;");
         IMMUTABLE_OBJECT_TYPES.add("Ljava/math/BigInteger;");
@@ -86,6 +86,8 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         IMMUTABLE_OBJECT_TYPES.add("Ljava/net/Inet4Address;");
         IMMUTABLE_OBJECT_TYPES.add("Ljava/net/Inet6Address;");
         IMMUTABLE_OBJECT_TYPES.add("Ljava/net/InetSocketAddress;");
+        IMMUTABLE_OBJECT_TYPES.add("Ljava/net/URI;");
+        IMMUTABLE_OBJECT_TYPES.add("Ljava/net/URL;");
     }
 
     public TaintFrameModelingVisitor(ConstantPoolGen cpg, MethodDescriptor method,

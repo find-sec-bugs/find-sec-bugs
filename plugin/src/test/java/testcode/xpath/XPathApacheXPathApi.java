@@ -28,7 +28,7 @@ public class XPathApacheXPathApi {
         XmlUtils.printNode(node);
 
         //Static string (safe)
-        Node node2 = XPathAPI.selectSingleNode(doc, "//groups/group[@id='guess']/writeAccess/text()");
+        Node node2 = XPathAPI.selectSingleNode(doc, "//groups/group[@id='guess']/writeAccess/text()".toLowerCase());
         XmlUtils.printNode(node2);
     }
 }

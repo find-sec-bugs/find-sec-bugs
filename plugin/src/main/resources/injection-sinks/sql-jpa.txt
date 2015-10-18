@@ -1,0 +1,9 @@
+- API reference:
+- http://www.oracle.com/technetwork/articles/javaee/jpa-137156.html
+- http://docs.oracle.com/javaee/6/api/javax/persistence/package-summary.html
+
+javax/persistence/EntityManager.createQuery(Ljava/lang/String;)Ljavax/persistence/Query;:0
+javax/persistence/EntityManager.createQuery(Ljava/lang/String;Ljava/lang/Class;)Ljavax/persistence/TypedQuery;:1
+javax/persistence/EntityManager.createNativeQuery(Ljava/lang/String;)Ljavax/persistence/Query;:0
+javax/persistence/EntityManager.createNativeQuery(Ljava/lang/String;Ljava/lang/String;)Ljavax/persistence/Query;:1
+javax/persistence/EntityManager.createNativeQuery(Ljava/lang/String;Ljava/lang/Class;)Ljavax/persistence/Query;:1

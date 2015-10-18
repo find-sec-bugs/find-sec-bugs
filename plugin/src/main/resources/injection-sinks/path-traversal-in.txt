@@ -1,0 +1,8 @@
+java/io/File.<init>(Ljava/lang/String;)V:0
+java/io/File.<init>(Ljava/lang/String;Ljava/lang/String;)V:0,1
+java/io/File.<init>(Ljava/io/File;Ljava/lang/String;)V:0
+java/io/File.<init>(Ljava/net/URI;)V:0
+java/io/RandomAccessFile.<init>(Ljava/lang/String;Ljava/lang/String;)V:1
+
+java/io/FileReader.<init>(Ljava/lang/String;)V:0
+java/io/FileInputStream.<init>(Ljava/lang/String;)V:0

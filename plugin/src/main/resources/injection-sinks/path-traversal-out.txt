@@ -1,0 +1,4 @@
+java/io/FileWriter.<init>(Ljava/lang/String;)V:0
+java/io/FileWriter.<init>(Ljava/lang/String;Z)V:1
+java/io/FileOutputStream.<init>(Ljava/lang/String;)V:0
+java/io/FileOutputStream.<init>(Ljava/lang/String;Z)V:0

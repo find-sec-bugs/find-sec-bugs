@@ -15,15 +15,28 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.injection.ldap;
+package com.h3xstream.findsecbugs.xpath;
 
 import com.h3xstream.findsecbugs.injection.ConfiguredBasicInjectionDetector;
 import edu.umd.cs.findbugs.BugReporter;
 
-public class LdapInjectionDetector extends ConfiguredBasicInjectionDetector {
+/**
+ * Detector for XPath injection
+ * 
+ * @author David Formanek (Y Soft Corporation, a.s.)
+ */
+public class XPathInjectionDetector extends ConfiguredBasicInjectionDetector {
 
-    public LdapInjectionDetector(BugReporter bugReporter) {
+    public XPathInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
-        loadConfiguredSinks("ldap.txt", "LDAP_INJECTION");
+        loadConfiguredSinks("xpath-javax.txt", "XPATH_INJECTION");
+        loadConfiguredSinks("xpath-apache.txt", "XPATH_INJECTION");
+        // TODO add net.sf.saxon.xpath.XPathEvaluator
+        // TODO add org.apache.commons.jxpath
+        // TODO add org.jdom.xpath.XPath
+        // TODO add org.jaxen.XPath
+        // TODO add edu.UCL.utils.XPathAPI
+        // TODO add org.xmldb.api.modules
     }
+
 }

@@ -33,8 +33,7 @@
     <Detector class="com.h3xstream.findsecbugs.file.FileUploadFilenameDetector" reports="FILE_UPLOAD_FILENAME"/>
     <Detector class="com.h3xstream.findsecbugs.ReDosDetector" reports="REDOS"/>
     <Detector class="com.h3xstream.findsecbugs.xxe.SaxParserXxeDetector" reports="XXE_SAXPARSER,XXE_XMLREADER,XXE_DOCUMENT"/>
-    <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionJavaxDetector" reports="XPATH_INJECTION"/>
-    <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionApacheXPathApiDetector" reports="XPATH_INJECTION"/>
+    <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionDetector" reports="XPATH_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.endpoint.Struts1EndpointDetector" reports="STRUTS1_ENDPOINT"/>
     <Detector class="com.h3xstream.findsecbugs.endpoint.Struts2EndpointDetector" reports="STRUTS2_ENDPOINT"/>
     <Detector class="com.h3xstream.findsecbugs.endpoint.SpringMvcEndpointDetector" reports="SPRING_ENDPOINT"/>

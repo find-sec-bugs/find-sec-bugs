@@ -1,0 +1,6 @@
+org/hibernate/criterion/Restrictions.sqlRestriction(Ljava/lang/String;)Lorg/hibernate/criterion/Criterion;:0
+org/hibernate/criterion/Restrictions.sqlRestriction(Ljava/lang/String;Ljava/lang/Object;Lorg/hibernate/type/Type;)Lorg/hibernate/criterion/Criterion;:2
+org/hibernate/criterion/Restrictions.sqlRestriction(Ljava/lang/String;[Ljava/lang/Object;[Lorg/hibernate/type/Type;)Lorg/hibernate/criterion/Criterion;:2
+
+org/hibernate/Session.createQuery(Ljava/lang/String;)Lorg/hibernate/Query;:0
+org/hibernate/Session.createSQLQuery(Ljava/lang/String;)Lorg/hibernate/SQLQuery;:0

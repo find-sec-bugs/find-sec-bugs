@@ -971,14 +971,10 @@ Document doc = db.parse(input);</pre>
     <BugCode abbrev="SECXXEDOC">XXE Vulnerability using DocumentBuilder</BugCode>
 
     <!-- XPath Injection for Javax -->
-    <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionJavaxDetector">
-        <Details>Find XPath query that use tainted input (javax.xml api)</Details>
+    <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionDetector">
+        <Details>Find XPath queries using tainted inputs</Details>
     </Detector>
-
-    <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionApacheXPathApiDetector">
-        <Details>Find XPath query that use tainted input (org.apache.xpath api)</Details>
-    </Detector>
-
+    
     <BugPattern type="XPATH_INJECTION">
         <ShortDescription>Potential XPath Injection</ShortDescription>
         <LongDescription>The use of {3} is vulnerable to XPath injection</LongDescription>

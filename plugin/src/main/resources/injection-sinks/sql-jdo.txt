@@ -1,0 +1,10 @@
+- API reference: http://db.apache.org/jdo/index.html
+
+javax/jdo/PersistenceManager.newQuery(Ljava/lang/String;)Ljavax/jdo/Query;:0
+javax/jdo/PersistenceManager.newQuery(Ljava/lang/String;Ljava/lang/Object;)Ljavax/jdo/Query;:0
+javax/jdo/PersistenceManager.newQuery(Ljava/lang/Class;Ljava/util/Collection;Ljava/lang/String;)Ljavax/jdo/Query;:0
+javax/jdo/PersistenceManager.newQuery(Ljava/lang/Class;Ljava/lang/String;)Ljavax/jdo/Query;:0
+javax/jdo/PersistenceManager.newQuery(Ljavax/jdo/Extent;Ljava/lang/String;)Ljavax/jdo/Query;:0
+
+javax/jdo/Query.setFilter(Ljava/lang/String;)V:0
+javax/jdo/Query.setGrouping(Ljava/lang/String;)V:0

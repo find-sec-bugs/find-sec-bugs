@@ -17,6 +17,9 @@
  */
 package com.h3xstream.findsecbugs.injection.custom;
 
+import com.h3xstream.findsecbugs.injection.InjectionPoint;
+import com.h3xstream.findsecbugs.injection.InjectionSource;
+import com.h3xstream.findsecbugs.injection.LegacyInjectionDetector;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,20 +27,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.h3xstream.findsecbugs.injection.InjectionPoint;
-import com.h3xstream.findsecbugs.injection.InjectionSource;
-import com.h3xstream.findsecbugs.injection.TaintDetector;
 import org.apache.bcel.Constants;
-import org.apache.bcel.classfile.Constant;
-import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InvokeInstruction;
@@ -58,11 +53,11 @@ public class CustomInjectionSource implements InjectionSource {
     private static final String SYSTEM_PROPERTY = "findsecbugs.injection.sources";
     private static final String CUSTOM_INJECTION_TYPE = "CUSTOM_INJECTION";
 
-    static String toResourceBaseName(Class<? extends TaintDetector> that) {
+    static String toResourceBaseName(Class<? extends LegacyInjectionDetector> that) {
         return that.getPackage().getName().replaceAll("\\.", "/");
     }
 
-    public static InjectionSource getInstance(Class<? extends TaintDetector> that) {
+    public static InjectionSource getInstance(Class<? extends LegacyInjectionDetector> that) {
         return getInstance(toResourceBaseName(that));
     }
 
@@ -149,15 +144,6 @@ public class CustomInjectionSource implements InjectionSource {
         return map;
     }
 
-    private static Set<String> toCandidates(Map<InvokeIdentifier, InjectionPoint> injectableParametersMap) {
-        Set<String> candidates = new HashSet<String>(injectableParametersMap.keySet().size());
-        for (InvokeIdentifier identifier : injectableParametersMap.keySet()) {
-            candidates.add(identifier.className);
-        }
-        return candidates;
-    }
-
-    private final Set<String> candidates;
     private final Map<InvokeIdentifier, InjectionPoint> injectableParametersMap;
 
     public CustomInjectionSource(Properties properties) {
@@ -165,22 +151,7 @@ public class CustomInjectionSource implements InjectionSource {
     }
 
     public CustomInjectionSource(Map<InvokeIdentifier, InjectionPoint> injectableParametersMap) {
-        this.candidates = toCandidates(injectableParametersMap);
         this.injectableParametersMap = injectableParametersMap;
-    }
-
-    @Override
-    public boolean isCandidate(ConstantPoolGen cpg) {
-        for (int i = 0; i < cpg.getSize(); i++) {
-            Constant cnt = cpg.getConstant(i);
-            if (cnt instanceof ConstantUtf8) {
-                String utf8String = ((ConstantUtf8) cnt).getBytes();
-                if (candidates.contains(utf8String)) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     @Override

@@ -24,6 +24,7 @@ import org.testng.annotations.Test;
 import java.util.Arrays;
 
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class PathTraversalDetectorTest extends BaseDetectorTest {
@@ -39,7 +40,7 @@ public class PathTraversalDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        for (Integer line : Arrays.asList(10, 11, 13, 15, 17)) {
+        for (Integer line : Arrays.asList(17, 18, 19, 20, 22, 23)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("PATH_TRAVERSAL_IN")
@@ -48,7 +49,7 @@ public class PathTraversalDetectorTest extends BaseDetectorTest {
             );
         }
 
-        for (Integer line : Arrays.asList(20, 21, 23, 24)) {
+        for (Integer line : Arrays.asList(25, 26, 27, 28)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("PATH_TRAVERSAL_OUT")
@@ -56,5 +57,8 @@ public class PathTraversalDetectorTest extends BaseDetectorTest {
                             .build()
             );
         }
+        
+        verify(reporter, times(6)).doReportBug(bugDefinition().bugType("PATH_TRAVERSAL_IN").build());
+        verify(reporter, times(4)).doReportBug(bugDefinition().bugType("PATH_TRAVERSAL_OUT").build());
     }
 }

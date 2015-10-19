@@ -258,6 +258,13 @@ java/net/URL.toString()Ljava/lang/String;:0
 java/net/URL.toURI()Ljava/net/URI;:0
 
 
+java/net/URLEncoder.encode(Ljava/lang/String;)Ljava/lang/String;:0
+java/net/URLEncoder.encode(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:1
+
+java/net/URLDecoder.decode(Ljava/lang/String;)Ljava/lang/String;:0
+java/net/URLDecoder.decode(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:1
+
+
 - Objects from Java 8 function package are UNKNOWN by default, some could be made SAFE or TAINTED in the future
 java/langIterable.forEach(Ljava/util/function/Consumer;)V:0,1#1
 java/lang/Iterable.iterator()Ljava/util/Iterator;:0

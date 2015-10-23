@@ -25,14 +25,14 @@ import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 import org.apache.bcel.Constants;
 
 /**
- * Identify the use MD2 and MD5 hashing function and recommend the
- * use of SHA functions.
+ * Identifies the use of MD2, MD5 and SHA1 hash function and recommends the
+ * use of modern functions.
  */
 public class WeakMessageDigestDetector extends OpcodeStackDetector {
 
     private static final String WEAK_MESSAGE_DIGEST_TYPE = "WEAK_MESSAGE_DIGEST";
 
-    private BugReporter bugReporter;
+    private final BugReporter bugReporter;
 
     public WeakMessageDigestDetector(BugReporter bugReporter) {
         this.bugReporter = bugReporter;
@@ -40,19 +40,22 @@ public class WeakMessageDigestDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
-        //printOpCode(seen);
-        if (seen == Constants.INVOKESTATIC && getClassConstantOperand().equals("java/security/MessageDigest") &&
-                getNameConstantOperand().equals("getInstance")) {
-
-            OpcodeStack.Item item;
-            if(getSigConstantOperand().equals("(Ljava/lang/String;)Ljava/security/MessageDigest;")) {
-                //Extract the value being push..
+        if (seen != Constants.INVOKESTATIC) {
+            return;
+        }
+        String className = getClassConstantOperand();
+        String methodName = getNameConstantOperand();
+        if (className.equals("java/security/MessageDigest") && methodName.equals("getInstance")) {
+            final OpcodeStack.Item item;
+            String methodSig = getSigConstantOperand();
+            if (methodSig.equals("(Ljava/lang/String;)Ljava/security/MessageDigest;")) {
+                //Extract the value being pushed..
                 item = stack.getStackItem(0);
             }
-            else if(getSigConstantOperand().equals("(Ljava/lang/String;Ljava/lang/String;)Ljava/security/MessageDigest;")) {
+            else if (methodSig.equals("(Ljava/lang/String;Ljava/lang/String;)Ljava/security/MessageDigest;")) {
                 item = stack.getStackItem(1);
             }
-            else if(getSigConstantOperand().equals("(Ljava/lang/String;Ljava/security/Provider;)Ljava/security/MessageDigest;")) {
+            else if (methodSig.equals("(Ljava/lang/String;Ljava/security/Provider;)Ljava/security/MessageDigest;")) {
                 item = stack.getStackItem(1);
             }
             else {
@@ -60,49 +63,46 @@ public class WeakMessageDigestDetector extends OpcodeStackDetector {
             }
             String algorithm = (String) item.getConstant(); //Null if the value passed isn't constant
             analyzeHashingFunction(algorithm);
-        }
-
-        if (seen == Constants.INVOKESTATIC && //
-                getClassConstantOperand().equals("org/apache/commons/codec/digest/DigestUtils")) {
-            if(getNameConstantOperand().equals("getMd2Digest") || //
-                    getNameConstantOperand().equals("md2Hex")) {
+        } else if (className.equals("org/apache/commons/codec/digest/DigestUtils")) {
+            if (methodName.equals("getMd2Digest")
+                    || methodName.equals("md2")
+                    || methodName.equals("md2Hex")) {
                 analyzeHashingFunction("md2");
             }
-
-            if(getNameConstantOperand().equals("getMd5Digest") || //
-                    getNameConstantOperand().equals("md5Hex")) {
+            if(methodName.equals("getMd5Digest")
+                    || methodName.equals("md5")
+                    || methodName.equals("md5Hex")) {
                 analyzeHashingFunction("md5");
             }
-
-            if(getNameConstantOperand().equals("getSha1Digest") || //
-                    getNameConstantOperand().equals("getShaDigest") ||
-                    getNameConstantOperand().equals("sha1Hex")) {
+            if(methodName.equals("getSha1Digest")
+                    || methodName.equals("getShaDigest")
+                    || methodName.equals("sha1")
+                    || methodName.equals("sha")
+                    || methodName.equals("sha1Hex")
+                    || methodName.equals("shaHex")) {
                 analyzeHashingFunction("sha1");
             }
-
-            if(getNameConstantOperand().equals("getDigest")) {
-                //Extract the value being push..
+            if(methodName.equals("getDigest")) {
+                //Extract the value being pushed..
                 OpcodeStack.Item top = stack.getStackItem(0);
                 String algorithm = (String) top.getConstant(); //Null if the value passed isn't constant
-
                 analyzeHashingFunction(algorithm);
             }
         }
     }
 
     private void analyzeHashingFunction(String algorithm) {
-        if(algorithm == null) return;
-
+        if (algorithm == null) {
+            return;
+        }
         algorithm = algorithm.toUpperCase();
-
         if ("MD2".equals(algorithm) || "MD4".equals(algorithm) || "MD5".equals(algorithm)) {
-            bugReporter.reportBug(new BugInstance(this, WEAK_MESSAGE_DIGEST_TYPE, Priorities.NORMAL_PRIORITY) //
+            bugReporter.reportBug(new BugInstance(this, WEAK_MESSAGE_DIGEST_TYPE, Priorities.HIGH_PRIORITY) //
                     .addClass(this).addMethod(this).addSourceLine(this) //
                     .addString(algorithm));
         }
-
         if ("SHA1".equals(algorithm)) { //Lower priority for SHA-1
-            bugReporter.reportBug(new BugInstance(this, WEAK_MESSAGE_DIGEST_TYPE, Priorities.LOW_PRIORITY) //
+            bugReporter.reportBug(new BugInstance(this, WEAK_MESSAGE_DIGEST_TYPE, Priorities.NORMAL_PRIORITY) //
                     .addClass(this).addMethod(this).addSourceLine(this) //
                     .addString(algorithm));
         }

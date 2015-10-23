@@ -69,7 +69,7 @@ public class WeakMessageDigestDetectorTest extends BaseDetectorTest {
 
         //Message Digest
         int l = 37;
-        for(int line : Arrays.asList(l++,l++,l++,l++, l+=2,l++,l++, l+=2,l++,l++)) {
+        for(int line : Arrays.asList(l++,l++,l++,l++, l+=2,l++,l++, l+=2,l++,l++,l++,l++,l++)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("WEAK_MESSAGE_DIGEST")
@@ -78,7 +78,7 @@ public class WeakMessageDigestDetectorTest extends BaseDetectorTest {
             );
         }
 
-        verify(reporter,times(10)).doReportBug(
+        verify(reporter,times(15)).doReportBug(
                 bugDefinition()
                         .bugType("WEAK_MESSAGE_DIGEST")
                         .inClass("WeakMessageDigest").inMethod("apacheApiVariations")

@@ -4,6 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Provider;
+import java.security.Signature;
 
 public class WeakMessageDigestAdditionalSig {
 
@@ -21,6 +22,12 @@ public class WeakMessageDigestAdditionalSig {
         MessageDigest.getInstance("MD2", new DummyProvider());
         MessageDigest.getInstance("sha-384","SUN"); //OK!
         MessageDigest.getInstance("SHA-512", "SUN"); //OK!
+        
+        Signature.getInstance("MD5withRSA");
+        Signature.getInstance("SHA1withRSA", new DummyProvider());
+        Signature.getInstance("MD2withDSA", "X");
+        Signature.getInstance("SHA256withRSA"); //OK
+        Signature.getInstance("uncommon name", ""); //OK
     }
 
     static class DummyProvider extends Provider {

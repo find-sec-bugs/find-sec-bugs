@@ -51,47 +51,59 @@ public class WeakMessageDigestDetector extends OpcodeStackDetector {
             if (methodSig.equals("(Ljava/lang/String;)Ljava/security/MessageDigest;")) {
                 //Extract the value being pushed..
                 item = stack.getStackItem(0);
-            }
-            else if (methodSig.equals("(Ljava/lang/String;Ljava/lang/String;)Ljava/security/MessageDigest;")) {
+            } else if (methodSig.equals("(Ljava/lang/String;Ljava/lang/String;)Ljava/security/MessageDigest;")) {
                 item = stack.getStackItem(1);
-            }
-            else if (methodSig.equals("(Ljava/lang/String;Ljava/security/Provider;)Ljava/security/MessageDigest;")) {
+            } else if (methodSig.equals("(Ljava/lang/String;Ljava/security/Provider;)Ljava/security/MessageDigest;")) {
                 item = stack.getStackItem(1);
-            }
-            else {
+            } else {
                 return;
             }
             String algorithm = (String) item.getConstant(); //Null if the value passed isn't constant
-            analyzeHashingFunction(algorithm);
+            checkHashFunction(algorithm);
         } else if (className.equals("org/apache/commons/codec/digest/DigestUtils")) {
             if (methodName.equals("getMd2Digest")
                     || methodName.equals("md2")
                     || methodName.equals("md2Hex")) {
-                analyzeHashingFunction("md2");
-            }
-            if(methodName.equals("getMd5Digest")
+                checkHashFunction("md2");
+            } else if(methodName.equals("getMd5Digest")
                     || methodName.equals("md5")
                     || methodName.equals("md5Hex")) {
-                analyzeHashingFunction("md5");
-            }
-            if(methodName.equals("getSha1Digest")
+                checkHashFunction("md5");
+            } else if(methodName.equals("getSha1Digest")
                     || methodName.equals("getShaDigest")
                     || methodName.equals("sha1")
                     || methodName.equals("sha")
                     || methodName.equals("sha1Hex")
                     || methodName.equals("shaHex")) {
-                analyzeHashingFunction("sha1");
-            }
-            if(methodName.equals("getDigest")) {
+                checkHashFunction("sha1");
+            } else if(methodName.equals("getDigest")) {
                 //Extract the value being pushed..
                 OpcodeStack.Item top = stack.getStackItem(0);
                 String algorithm = (String) top.getConstant(); //Null if the value passed isn't constant
-                analyzeHashingFunction(algorithm);
+                checkHashFunction(algorithm);
+            }
+        } else if (className.equals("java/security/Signature") && methodName.equals("getInstance")) {
+            final OpcodeStack.Item item;
+            String methodSig = getSigConstantOperand();
+            if (methodSig.equals("(Ljava/lang/String;)Ljava/security/Signature;")) {
+                item = stack.getStackItem(0);
+            } else if (methodSig.equals("(Ljava/lang/String;Ljava/security/Provider;)Ljava/security/Signature;")) {
+                item = stack.getStackItem(1);
+            } else if (methodSig.equals("(Ljava/lang/String;Ljava/lang/String;)Ljava/security/Signature;")) {
+                item = stack.getStackItem(1);
+            } else {
+                return;
+            }
+            String algorithm = (String) item.getConstant();
+            if (algorithm != null) {
+                int index = algorithm.indexOf("with");
+                algorithm = algorithm.substring(0, index > 0 ? index : 0);
+                checkHashFunction(algorithm);
             }
         }
     }
 
-    private void analyzeHashingFunction(String algorithm) {
+    private void checkHashFunction(String algorithm) {
         if (algorithm == null) {
             return;
         }
@@ -100,8 +112,7 @@ public class WeakMessageDigestDetector extends OpcodeStackDetector {
             bugReporter.reportBug(new BugInstance(this, WEAK_MESSAGE_DIGEST_TYPE, Priorities.HIGH_PRIORITY) //
                     .addClass(this).addMethod(this).addSourceLine(this) //
                     .addString(algorithm));
-        }
-        if ("SHA1".equals(algorithm)) { //Lower priority for SHA-1
+        } else if ("SHA1".equals(algorithm)) { //Lower priority for SHA-1
             bugReporter.reportBug(new BugInstance(this, WEAK_MESSAGE_DIGEST_TYPE, Priorities.NORMAL_PRIORITY) //
                     .addClass(this).addMethod(this).addSourceLine(this) //
                     .addString(algorithm));

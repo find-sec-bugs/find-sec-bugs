@@ -1,0 +1,7 @@
+javax/servlet/http/Cookie.<init>(Ljava/lang/String;Ljava/lang/String;)V:0,1
+javax/servlet/http/Cookie.setValue(Ljava/lang/String;)V:0
+
+javax/servlet/http/HttpServletResponse.addHeader(Ljava/lang/String;Ljava/lang/String;)V:0,1
+javax/servlet/http/HttpServletResponse.setHeader(Ljava/lang/String;Ljava/lang/String;)V:0,1
+javax/servlet/http/HttpServletResponseWrapper.addHeader(Ljava/lang/String;Ljava/lang/String;)V:0,1
+javax/servlet/http/HttpServletResponseWrapper.setHeader(Ljava/lang/String;Ljava/lang/String;)V:0,1

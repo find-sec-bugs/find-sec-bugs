@@ -40,14 +40,19 @@ public class RedirectionSource implements InjectionSource {
 
             if (className.equals("javax.servlet.http.HttpServletResponse")) {
                 if (methodName.equals("sendRedirect")) {
-                    return new InjectionPoint(new int[]{0},UNVALIDATED_REDIRECT_TYPE);
+                    InjectionPoint ip = new InjectionPoint(new int[]{0}, UNVALIDATED_REDIRECT_TYPE);
+                    ip.setInjectableMethod("HttpServletResponse.sendRedirect(...)");
+                    return ip;
+                    
                 } else if (methodName.equals("addHeader")) {
 
                     LDC ldc = ByteCode.getPrevInstruction(insHandle, LDC.class);
                     if (ldc != null) {
                         Object value = ldc.getValue(cpg);
                         if ("Location".equals(value)) {
-                            return new InjectionPoint(new int[]{0},UNVALIDATED_REDIRECT_TYPE);
+                            InjectionPoint ip = new InjectionPoint(new int[]{0},UNVALIDATED_REDIRECT_TYPE);
+                            ip.setInjectableMethod("HttpServletResponse.addHeader(\"Location\", ...)");
+                            return ip;
                         }
                     }
 

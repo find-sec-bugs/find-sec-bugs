@@ -69,7 +69,7 @@ public class WeakMessageDigestDetectorTest extends BaseDetectorTest {
 
         //Message Digest
         int l = 37;
-        for(int line : Arrays.asList(l++,l++,l++,l++, l+=2,l++,l++, l+=2,l++,l++)) {
+        for(int line : Arrays.asList(l++,l++,l++,l++, l+=2,l++,l++, l+=2,l++,l++,l++,l++,l++)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("WEAK_MESSAGE_DIGEST")
@@ -78,7 +78,7 @@ public class WeakMessageDigestDetectorTest extends BaseDetectorTest {
             );
         }
 
-        verify(reporter,times(10)).doReportBug(
+        verify(reporter,times(15)).doReportBug(
                 bugDefinition()
                         .bugType("WEAK_MESSAGE_DIGEST")
                         .inClass("WeakMessageDigest").inMethod("apacheApiVariations")
@@ -98,7 +98,7 @@ public class WeakMessageDigestDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         //Message Digest
-        for(int line : Arrays.asList(11,12,13,14,15,16,17,18,19,20,21)) {
+        for(int line : Arrays.asList(12,13,14,15,16,17,18,19,20,21, 22, 26, 27, 28)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("WEAK_MESSAGE_DIGEST")
@@ -107,7 +107,7 @@ public class WeakMessageDigestDetectorTest extends BaseDetectorTest {
             );
         }
 
-        verify(reporter,times(11)).doReportBug(
+        verify(reporter,times(14)).doReportBug(
                 bugDefinition()
                         .bugType("WEAK_MESSAGE_DIGEST")
                         .inClass("WeakMessageDigestAdditionalSig").inMethod("weakDigestMoreSig")

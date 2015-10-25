@@ -46,6 +46,11 @@ public class WeakMessageDigest {
         System.out.println(DigestUtils.md2Hex("123".getBytes()));
         System.out.println(DigestUtils.md5Hex("123".getBytes()));
         System.out.println(DigestUtils.sha1Hex("123".getBytes()));
+        DigestUtils.md2("123".getBytes());
+        DigestUtils.md5("123".getBytes());
+        DigestUtils.sha1("123".getBytes());
+        DigestUtils.sha("123".getBytes());
+        DigestUtils.shaHex("123".getBytes());
 
         printHex(DigestUtils.getDigest("sha256").digest("123".getBytes())); //OK!
         printHex(DigestUtils.getDigest(getDigest()).digest("123".getBytes())); //Unknown

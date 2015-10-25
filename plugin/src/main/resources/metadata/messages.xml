@@ -16,8 +16,8 @@
     </Detector>
 
     <BugPattern type="PREDICTABLE_RANDOM">
-        <ShortDescription>Predictable Pseudo Random Number Generator</ShortDescription>
-        <LongDescription>Use of {3} is predictable.</LongDescription>
+        <ShortDescription>Predictable pseudorandom number generator</ShortDescription>
+        <LongDescription>The use of {3} is predictable</LongDescription>
         <Details>
             <![CDATA[
 <p>The use of a predictable random value can lead to vulnerabilities when used in certain security critical contexts. For example, when the value is used as:</p>
@@ -69,8 +69,8 @@ String generateSecretToken() {
     </Detector>
 
     <BugPattern type="SERVLET_PARAMETER">
-        <ShortDescription>Untrusted Servlet Parameter</ShortDescription>
-        <LongDescription>The method {3} returns a String value that is controlled by the client.</LongDescription>
+        <ShortDescription>Untrusted servlet parameter</ShortDescription>
+        <LongDescription>The method {3} returns a String value that is controlled by the client</LongDescription>
         <Details>
             <![CDATA[
 <p>The Servlet can read GET and POST parameters from various methods. The value obtained should be considered unsafe.
@@ -95,8 +95,8 @@ You may need to validate or sanitize those values before passing them to sensiti
 
 
     <BugPattern type="SERVLET_CONTENT_TYPE">
-        <ShortDescription>Untrusted Content-Type Header</ShortDescription>
-        <LongDescription>The HTTP header Content-Type can be controlled by the client.</LongDescription>
+        <ShortDescription>Untrusted Content-Type header</ShortDescription>
+        <LongDescription>The HTTP header Content-Type can be controlled by the client</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -114,8 +114,8 @@ The HTTP header Content-Type can be controlled by the client. As such, its value
 
 
     <BugPattern type="SERVLET_SERVER_NAME">
-        <ShortDescription>Untrusted Hostname Header</ShortDescription>
-        <LongDescription>The hostname received can often be controlled by the client.</LongDescription>
+        <ShortDescription>Untrusted Hostname header</ShortDescription>
+        <LongDescription>The hostname received can often be controlled by the client</LongDescription>
         <Details>
             <![CDATA[
 <p>The hostname header can be controlled by the client. As such, its value should not be used in any security critical decisions. 
@@ -142,8 +142,8 @@ decisions you make with respect to a request.
 
 
     <BugPattern type="SERVLET_SESSION_ID">
-        <ShortDescription>Untrusted Session Cookie Value</ShortDescription>
-        <LongDescription>Direct access to Session ID should be avoided.</LongDescription>
+        <ShortDescription>Untrusted session cookie value</ShortDescription>
+        <LongDescription>Direct access to Session ID should be avoided</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -178,8 +178,8 @@ valid active session IDs, allowing an insider to hijack any sessions whose IDs h
 
 
     <BugPattern type="SERVLET_QUERY_STRING">
-        <ShortDescription>Untrusted Query String</ShortDescription>
-        <LongDescription>The query string can be any value.</LongDescription>
+        <ShortDescription>Untrusted query string</ShortDescription>
+        <LongDescription>The query string can be any value</LongDescription>
         <Details>
             <![CDATA[
 <p>The query string is the concatenation of the GET parameter names and values. Parameters other than those intended can
@@ -201,8 +201,8 @@ You may need to validate or sanitize anything pulled from the query string befor
 
 
     <BugPattern type="SERVLET_HEADER">
-        <ShortDescription>HTTP Headers Untrusted</ShortDescription>
-        <LongDescription>Request header can easily be altered by the client.</LongDescription>
+        <ShortDescription>HTTP headers untrusted</ShortDescription>
+        <LongDescription>Request header can easily be altered by the client</LongDescription>
         <Details>
             <![CDATA[
 <p>Request headers can easily be altered by the requesting user. In general, no assumption should be made that 
@@ -220,8 +220,8 @@ not trust this value in any security decisions you make with respect to a reques
 
 
     <BugPattern type="SERVLET_HEADER_REFERER">
-        <ShortDescription>Untrusted Referer Header</ShortDescription>
-        <LongDescription>The header "Referer" can easily be spoofed by the client.</LongDescription>
+        <ShortDescription>Untrusted Referer header</ShortDescription>
+        <LongDescription>The header "Referer" can easily be spoofed by the client</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -250,8 +250,8 @@ Recommendations:
 
 
     <BugPattern type="SERVLET_HEADER_USER_AGENT">
-        <ShortDescription>Untrusted User-Agent Header</ShortDescription>
-        <LongDescription>The header "User-Agent" can easily be spoofed by the client.</LongDescription>
+        <ShortDescription>Untrusted User-Agent header</ShortDescription>
+        <LongDescription>The header "User-Agent" can easily be spoofed by the client</LongDescription>
         <Details>
             <![CDATA[
 <p>The header "User-Agent" can easily be spoofed by the client. Adopting different behaviors based on the User-Agent (for
@@ -273,8 +273,8 @@ crawler UA) is not recommended.</p>
     </Detector>
 
     <BugPattern type="COOKIE_USAGE">
-        <ShortDescription>Potentially Sensitive Data in Cookie</ShortDescription>
-        <LongDescription>Sensitive data may be stored by the application in a cookie.</LongDescription>
+        <ShortDescription>Potentially sensitive data in a cookie</ShortDescription>
+        <LongDescription>Sensitive data may be stored by the application in a cookie</LongDescription>
         <Details>
             <![CDATA[
 <p>The information stored in a custom cookie should not be sensitive or related to the session. In most cases, sensitive data should only be stored in session
@@ -297,8 +297,8 @@ and referenced by the user's session cookie. See HttpSession (HttpServletRequest
     </Detector>
 
     <BugPattern type="PATH_TRAVERSAL_IN">
-        <ShortDescription>Potential Path Traversal (File Read)</ShortDescription>
-        <LongDescription>Method {3} reads a file whose location is specified by user input.</LongDescription>
+        <ShortDescription>Potential Path Traversal (file read)</ShortDescription>
+        <LongDescription>{3} reads a file whose location might be specified by user input</LongDescription>
         <Details>
             <![CDATA[
 <p>A file is opened to read its content. The filename comes from an <b>input</b> parameter. 
@@ -316,12 +316,12 @@ by the user. If that is the case, the reported instance is a false positive.</p>
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECPTI">Potential Path Traversal (File Read)</BugCode>
+    <BugCode abbrev="SECPTI">Potential Path Traversal (file read)</BugCode>
 
 
     <BugPattern type="PATH_TRAVERSAL_OUT">
-        <ShortDescription>Potential Path Traversal (File Write)</ShortDescription>
-        <LongDescription>Method {3} writes to a file whose location is specified by user input.</LongDescription>
+        <ShortDescription>Potential Path Traversal (file write)</ShortDescription>
+        <LongDescription>{3} writes to a file whose location might be specified by user input</LongDescription>
         <Details>
             <![CDATA[
 <p>A file is opened to write to its contents. The filename comes from an <b>input</b> parameter. 
@@ -349,7 +349,7 @@ by the user. If that is the case, the reported instance is a false positive.</p>
 
     <BugPattern type="COMMAND_INJECTION">
         <ShortDescription>Potential Command Injection</ShortDescription>
-        <LongDescription>{3} is used to executed system commands.</LongDescription>
+        <LongDescription>This usage of {3} can be vulnerable to Command Injection</LongDescription>
         <Details>
             <![CDATA[
 <p>The highlighted API is used to execute a system command. If unfiltered input is passed to this API, it can lead to arbitrary command execution.</p>
@@ -372,8 +372,8 @@ by the user. If that is the case, the reported instance is a false positive.</p>
     </Detector>
 
     <BugPattern type="WEAK_FILENAMEUTILS">
-        <ShortDescription>FilenameUtils Not Filtering Null Bytes</ShortDescription>
-        <LongDescription>FilenameUtils.{3} doesn't filter NULL bytes.</LongDescription>
+        <ShortDescription>FilenameUtils not filtering null bytes</ShortDescription>
+        <LongDescription>FilenameUtils.{3} doesn't filter null bytes</LongDescription>
         <Details>
             <![CDATA[
 <p>Some FilenameUtils' methods don't filter NULL bytes (<code>0x00</code>).</p>
@@ -407,8 +407,8 @@ that looks at the end of the filename (e.g., endswith ".log") to make sure its a
     </Detector>
 
     <BugPattern type="WEAK_TRUST_MANAGER">
-        <ShortDescription>TrustManager Implementation Empty</ShortDescription>
-        <LongDescription>The implementation of TrustManager is vulnerable to a MITM attack.</LongDescription>
+        <ShortDescription>TrustManager implementation empty</ShortDescription>
+        <LongDescription>This implementation of TrustManager is vulnerable to a MITM attack</LongDescription>
         <Details>
             <![CDATA[
 <p>Empty TrustManager implementations are often used to connect easily to a host that is not signed by a root
@@ -440,7 +440,7 @@ Detailed information for a proper implementation is at:
     </Detector>
 
     <BugPattern type="JAXWS_ENDPOINT">
-        <ShortDescription>Found JAX-WS SOAP Endpoint</ShortDescription>
+        <ShortDescription>Found JAX-WS SOAP endpoint</ShortDescription>
         <LongDescription>{0}.{1} is a SOAP Web Service endpoint</LongDescription>
         <Details>
             <![CDATA[
@@ -472,7 +472,7 @@ Detailed information for a proper implementation is at:
     </Detector>
 
     <BugPattern type="JAXRS_ENDPOINT">
-        <ShortDescription>Found JAX-RS REST Endpoint</ShortDescription>
+        <ShortDescription>Found JAX-RS REST endpoint</ShortDescription>
         <LongDescription>{0}.{1} is a REST Web Service endpoint</LongDescription>
         <Details>
             <![CDATA[
@@ -509,8 +509,8 @@ Detailed information for a proper implementation is at:
     </Detector>
 
     <BugPattern type="TAPESTRY_ENDPOINT">
-        <ShortDescription>Found Tapestry Page</ShortDescription>
-        <LongDescription>{0} is a Tapestry Page</LongDescription>
+        <ShortDescription>Found Tapestry page</ShortDescription>
+        <LongDescription>{0} is a Tapestry page</LongDescription>
         <Details>
             <![CDATA[
 <p>A Tapestry endpoint was discovered at application startup. Tapestry apps are structured with a backing Java class and a corresponding 
@@ -552,7 +552,7 @@ mapped in this way are properly validated before they are used.</p>
     </Detector>
 
     <BugPattern type="WICKET_ENDPOINT">
-        <ShortDescription>Found Wicket Page</ShortDescription>
+        <ShortDescription>Found Wicket WebPage</ShortDescription>
         <LongDescription>{0} is a Wicket WebPage</LongDescription>
         <Details>
             <![CDATA[
@@ -578,8 +578,8 @@ mapped in this way are properly validated before they are used.</p>
     </Detector>
 
     <BugPattern type="WEAK_MESSAGE_DIGEST">
-        <ShortDescription>MessageDigest Is Weak</ShortDescription>
-        <LongDescription>{3} is not a recommended MessageDigest/Hashing Algorithm</LongDescription>
+        <ShortDescription>Message digest is weak</ShortDescription>
+        <LongDescription>{3} is not a recommended cryptographic hash function</LongDescription>
         <Details>
             <![CDATA[
 <p>The algorithm used is not a recommended MessageDigest.</p>
@@ -604,8 +604,8 @@ mapped in this way are properly validated before they are used.</p>
     </Detector>
 
     <BugPattern type="CUSTOM_MESSAGE_DIGEST">
-        <ShortDescription>MessageDigest Is Custom</ShortDescription>
-        <LongDescription>{0} is a custom MessageDigest</LongDescription>
+        <ShortDescription>Message digest is custom</ShortDescription>
+        <LongDescription>{0} is a custom cryptographic hash function implementation</LongDescription>
         <Details>
             <![CDATA[
 <p>Implementing a custom MessageDigest is error-prone.</p>
@@ -647,7 +647,7 @@ sha256Digest.update(password.getBytes());</pre>
     </Detector>
 
     <BugPattern type="FILE_UPLOAD_FILENAME">
-        <ShortDescription>Tainted Filename Read</ShortDescription>
+        <ShortDescription>Tainted filename read</ShortDescription>
         <LongDescription>The filename read can be tampered with by the client</LongDescription>
         <Details>
             <![CDATA[
@@ -719,8 +719,8 @@ regex meant, this new regex can be evaluated quickly, and is not subject to ReDO
     </Detector>
 
     <BugPattern type="XXE_SAXPARSER">
-        <ShortDescription>XML Parsing Vulnerable to XXE (SAXParser)</ShortDescription>
-        <LongDescription>The usage of {3} is vulnerable to XML External Entity attacks</LongDescription>
+        <ShortDescription>XML parsing vulnerable to XXE (SAXParser)</ShortDescription>
+        <LongDescription>The use of {3} is vulnerable to XML External Entity attacks</LongDescription>
         <Details>
             <![CDATA[
 <!--XXE_GENERIC_START-->
@@ -803,8 +803,8 @@ parser.parse(inputStream, customHandler);</pre>
     <BugCode abbrev="SECXXESAX">XXE Vulnerability using SAXParser</BugCode>
 
     <BugPattern type="XXE_XMLREADER">
-        <ShortDescription>XML Parsing Vulnerable to XXE (XMLReader)</ShortDescription>
-        <LongDescription>The usage of {3} is vulnerable to XML External Entity attacks</LongDescription>
+        <ShortDescription>XML parsing vulnerable to XXE (XMLReader)</ShortDescription>
+        <LongDescription>The use of {3} is vulnerable to XML External Entity attacks</LongDescription>
         <Details>
             <![CDATA[
 <!--XXE_GENERIC_START-->
@@ -887,8 +887,8 @@ reader.parse(new InputSource(inputStream));</pre>
     <BugCode abbrev="SECXXEREAD">XXE Vulnerability using XMLReader</BugCode>
 
     <BugPattern type="XXE_DOCUMENT">
-        <ShortDescription>XML Parsing Vulnerable to XXE (DocumentBuilder)</ShortDescription>
-        <LongDescription>The usage of {3} is vulnerable to XML External Entity attacks</LongDescription>
+        <ShortDescription>XML parsing vulnerable to XXE (DocumentBuilder)</ShortDescription>
+        <LongDescription>The use of {3} is vulnerable to XML External Entity attacks</LongDescription>
         <Details>
             <![CDATA[
 <!--XXE_GENERIC_START-->
@@ -977,7 +977,7 @@ Document doc = db.parse(input);</pre>
     
     <BugPattern type="XPATH_INJECTION">
         <ShortDescription>Potential XPath Injection</ShortDescription>
-        <LongDescription>The use of {3} is vulnerable to XPath injection</LongDescription>
+        <LongDescription>This use of {3} can be vulnerable to XPath Injection</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -1001,12 +1001,12 @@ could be exposed. This could allow an attacker to access unauthorized data or ma
 
     <!-- Struts1 -->
     <Detector class="com.h3xstream.findsecbugs.endpoint.Struts1EndpointDetector">
-        <Details>Identify Struts 1 endpoint (also called Action)</Details>
+        <Details>Identifies Struts 1 endpoint (also called Action)</Details>
     </Detector>
 
     <BugPattern type="STRUTS1_ENDPOINT">
-        <ShortDescription>Found Struts 1 Action</ShortDescription>
-        <LongDescription>{0} is a Struts 1 Endpoint</LongDescription>
+        <ShortDescription>Found Struts 1 endpoint</ShortDescription>
+        <LongDescription>{0} is a Struts 1 endpoint (Action)</LongDescription>
         <Details>
             <![CDATA[
 <p>This class is a Struts 1 Action.</p>
@@ -1019,11 +1019,11 @@ The use of these parameters should be reviewed to make sure they are used safely
 
     <!-- Struts2 -->
     <Detector class="com.h3xstream.findsecbugs.endpoint.Struts2EndpointDetector">
-        <Details>Identify Struts 2 Endpoint</Details>
+        <Details>Identifies Struts 2 Endpoint</Details>
     </Detector>
     <BugPattern type="STRUTS2_ENDPOINT">
-        <ShortDescription>Found Struts 2 Endpoint</ShortDescription>
-        <LongDescription>{0} is a Struts 2 Endpoint</LongDescription>
+        <ShortDescription>Found Struts 2 endpoint</ShortDescription>
+        <LongDescription>{0} is a Struts 2 endpoint</LongDescription>
         <Details>
             <![CDATA[
 <p>In Struts 2, the endpoints are Plain Old Java Objects (POJOs) which means no Interface/Class needs to be implemented/extended.</p>
@@ -1039,11 +1039,11 @@ such a setter. The use of these parameters should be reviewed to make sure they 
 
     <!-- Spring Controller -->
     <Detector class="com.h3xstream.findsecbugs.endpoint.SpringMvcEndpointDetector">
-        <Details>Identify Spring Endpoint (also called Controller)</Details>
+        <Details>Identifies Spring Endpoint (also called Controller)</Details>
     </Detector>
     <BugPattern type="SPRING_ENDPOINT">
-        <ShortDescription>Found Spring Endpoint</ShortDescription>
-        <LongDescription>{0} is a Spring Controller</LongDescription>
+        <ShortDescription>Found Spring endpoint</ShortDescription>
+        <LongDescription>{0} is a Spring endpoint (Controller)</LongDescription>
         <Details>
             <![CDATA[
 <p>This class is a Spring Controller. All methods annotated with <code>RequestMapping</code> are reachable remotely.
@@ -1060,8 +1060,8 @@ This class should be analyzed to make sure that remotely exposed methods are saf
     </Detector>
 
     <BugPattern type="CUSTOM_INJECTION">
-        <ShortDescription>Potential Injection</ShortDescription>
-        <LongDescription>The use of the method {3} is potentially vulnerable to injection.</LongDescription>
+        <ShortDescription>Potential injection (custom)</ShortDescription>
+        <LongDescription>This use of {3} can be vulnerable to injection</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -1110,7 +1110,7 @@ The method identified is susceptible to injection. The input should be validated
     <!-- HQL Injection -->
     <BugPattern type="SQL_INJECTION_HIBERNATE">
         <ShortDescription>Potential SQL/HQL Injection (Hibernate)</ShortDescription>
-        <LongDescription>The query is potentially vulnerable SQL/HQL injection</LongDescription>
+        <LongDescription>This use of {3} can be vulnerable to SQL/HQL injection</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -1164,7 +1164,7 @@ q.execute();</pre>
     <!-- JDOQL Injection -->
     <BugPattern type="SQL_INJECTION_JDO">
         <ShortDescription>Potential SQL/JDOQL Injection (JDO)</ShortDescription>
-        <LongDescription>The query is potentially vulnerable to SQL/JDOQL injection</LongDescription>
+        <LongDescription>This use of {3} can be vulnerable to SQL/JDOQL injection</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -1208,7 +1208,7 @@ q.execute(input);</pre>
     <!-- JPQL Injection -->
     <BugPattern type="SQL_INJECTION_JPA">
         <ShortDescription>Potential SQL/JPQL Injection (JPA)</ShortDescription>
-        <LongDescription>The query is potentially vulnerable SQL/JPQL injection</LongDescription>
+        <LongDescription>This use of {3} can be vulnerable to SQL/JPQL injection</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -1256,7 +1256,7 @@ UserEntity res = q.getSingleResult();</pre>
     <!-- SPRING JDBC Injection -->
     <BugPattern type="SQL_INJECTION_SPRING_JDBC">
         <ShortDescription>Potential JDBC Injection (Spring JDBC)</ShortDescription>
-        <LongDescription>The query is potentially vulnerable SQL injection</LongDescription>
+        <LongDescription>This use of {3} can be vulnerable to SQL injection</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -1295,7 +1295,7 @@ int count = jdbc.queryForObject("select count(*) from Users where name = ?", Int
     <!-- JDBC Injection -->
     <BugPattern type="SQL_INJECTION_JDBC">
         <ShortDescription>Potential JDBC Injection</ShortDescription>
-        <LongDescription>The query is potentially vulnerable SQL injection</LongDescription>
+        <LongDescription>This use of {3} can be vulnerable to SQL injection</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -1340,7 +1340,7 @@ updateSales.setString(2, coffeeName);</pre>
 
     <BugPattern type="LDAP_INJECTION">
         <ShortDescription>Potential LDAP Injection</ShortDescription>
-        <LongDescription>The query could be vulnerable to LDAP injection</LongDescription>
+        <LongDescription>This use of {3} can be vulnerable to LDAP injection</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -1373,7 +1373,7 @@ Therefore, the primary defense against LDAP injection is strong input validation
 
     <BugPattern type="SCRIPT_ENGINE_INJECTION">
         <ShortDescription>Potential code injection when using Script Engine</ShortDescription>
-        <LongDescription>This code evaluation could be vulnerable to code injection</LongDescription>
+        <LongDescription>This use of {3} can be vulnerable to code injection</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -1436,7 +1436,7 @@ public void runCustomTrigger(String script) {
 
     <BugPattern type="SPEL_INJECTION">
         <ShortDescription>Potential code injection when using Spring Expression</ShortDescription>
-        <LongDescription>This code evaluation could be vulnerable to code injection</LongDescription>
+        <LongDescription>This use of {3} could be vulnerable to code injection</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -1473,13 +1473,51 @@ public void parseExpressionInterface(Person personObj,String property) {
     <BugCode abbrev="SPELI">Spring Expression Language Injection</BugCode>
 
 
+    <!-- HTTP Response Splitting -->
+    <Detector class="com.h3xstream.findsecbugs.HttpResponseSplittingDetector">
+        <Details>Searches for HTTP Response splitting weakness</Details>
+    </Detector>
+
+    <BugPattern type="HTTP_RESPONSE_SPLITTING">
+        <ShortDescription>Potential HTTP Response Splitting</ShortDescription>
+        <LongDescription>This use of {3} might be used to include CRLF characters into HTTP headers</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    When an HTTP request contains unexpected CR and LF characters, the server may respond with an output stream
+    that is interpreted as two different HTTP responses (instead of one).
+    An attacker can control the second response and mount attacks such as cross-site scripting and cache poisoning attacks.
+    According to OWASP, the issue has been fixed in virtually all modern Java EE application servers, but it is still better to validate the input.
+    If you are concerned about this risk, you should test on the platform of concern to see
+    if the underlying platform allows for CR or LF characters to be injected into headers.
+</p>
+<p><b>Code at risk:</b></p>
+<p>
+<pre>String author = request.getParameter(AUTHOR_PARAMETER);
+// ...
+Cookie cookie = new Cookie("author", author);
+response.addCookie(cookie);</pre>
+</p>
+<br/>
+<p>
+    <b>References</b><br/>
+    <a href="https://www.owasp.org/index.php/HTTP_Response_Splitting">OWASP: HTTP Response Splitting</a><br/>
+    <a href="http://cwe.mitre.org/data/definitions/113.html">CWE-113: Improper Neutralization of CRLF Sequences in HTTP Headers ('HTTP Response Splitting')</a><br/>
+</p>
+
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECHRS">HTTP Response Splitting</BugCode>
+
+
     <!-- Bad Hexa -->
     <Detector class="com.h3xstream.findsecbugs.crypto.BadHexadecimalConversionDetector">
         <Details>Identify Bad hexadecimal concatenation</Details>
     </Detector>
     <BugPattern type="BAD_HEXA_CONVERSION">
         <ShortDescription>Bad hexadecimal concatenation</ShortDescription>
-        <LongDescription>Leading zero are omit in the concatenation increasing collision potential.</LongDescription>
+        <LongDescription>Leading zeros are omitted in the concatenation increasing collision potential</LongDescription>
         <Details>
             <![CDATA[
 <p>When converting a byte array containing a hash signature to a human readable string, a conversion mistake can be made if 
@@ -1522,7 +1560,7 @@ stringBuilder.append( String.format( "%02X", b ) );</pre>
         <Details>Hazelcast Symmetric Encryption Unsafe</Details>
     </Detector>
     <BugPattern type="HAZELCAST_SYMMETRIC_ENCRYPTION">
-        <ShortDescription>Hazelcast Symmetric Encryption</ShortDescription>
+        <ShortDescription>Hazelcast symmetric encryption</ShortDescription>
         <LongDescription>The network communication for Hazelcast are configured to use a symmetric cipher</LongDescription>
         <Details>
             <![CDATA[
@@ -1546,7 +1584,7 @@ stringBuilder.append( String.format( "%02X", b ) );</pre>
         <Details>Identify the use of NullCipher</Details>
     </Detector>
     <BugPattern type="NULL_CIPHER">
-        <ShortDescription>NullCipher Unsafe</ShortDescription>
+        <ShortDescription>NullCipher is insecure</ShortDescription>
         <LongDescription>The use of a NullCipher is typically not desirable</LongDescription>
         <Details>
             <![CDATA[
@@ -1622,8 +1660,8 @@ to do this correctly.
         <Details>DES / DESede should be replace by AES</Details>
     </Detector>
     <BugPattern type="DES_USAGE">
-        <ShortDescription>DES / DESede Unsafe</ShortDescription>
-        <LongDescription>DES / DESede should be replaced with AES</LongDescription>
+        <ShortDescription>DES/DESede is insecure</ShortDescription>
+        <LongDescription>DES/DESede should be replaced with AES</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -1659,7 +1697,7 @@ byte[] cipherText = c.doFinal(plainText);</pre>
         <Details>RSA cipher without proper padding</Details>
     </Detector>
     <BugPattern type="RSA_NO_PADDING">
-        <ShortDescription>RSA NoPadding Unsafe</ShortDescription>
+        <ShortDescription>RSA with no padding is insecure</ShortDescription>
         <LongDescription>Use of RSA cipher without proper padding</LongDescription>
         <Details>
             <![CDATA[
@@ -1764,7 +1802,7 @@ return aesCipher.doFinal(secretData);</pre>
         <Details>Identify Struts Form with no input validation</Details>
     </Detector>
     <BugPattern type="STRUTS_FORM_VALIDATION">
-        <ShortDescription>Struts Form Without Input Validation</ShortDescription>
+        <ShortDescription>Struts Form without input validation</ShortDescription>
         <LongDescription>Struts Form with no input validation</LongDescription>
         <Details>
             <![CDATA[
@@ -1804,7 +1842,7 @@ public class RegistrationForm extends ValidatorForm {
         <Details>Identify XSSRequestWrapper (weak XSS protection)</Details>
     </Detector>
     <BugPattern type="XSS_REQUEST_WRAPPER">
-        <ShortDescription>XSSRequestWrapper is Weak XSS Protection</ShortDescription>
+        <ShortDescription>XSSRequestWrapper is a weak XSS protection</ShortDescription>
         <LongDescription>XSSRequestWrapper is a weak XSS protection mechanism</LongDescription>
         <Details>
             <![CDATA[
@@ -1852,8 +1890,8 @@ the XSS protection rules defined in the OWASP XSS Prevention Cheat Sheet.
         <Details>Identify Blowfish usage with weak key size</Details>
     </Detector>
     <BugPattern type="BLOWFISH_KEY_SIZE">
-        <ShortDescription>Blowfish Usage with Weak Key Size</ShortDescription>
-        <LongDescription>Blowfish usage with weak key size</LongDescription>
+        <ShortDescription>Blowfish usage with short key</ShortDescription>
+        <LongDescription>Blowfish usage with a short encryption key</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -1890,8 +1928,8 @@ keyGen.init(128);</pre>
         <Details>Identify RSA usage with weak key size</Details>
     </Detector>
     <BugPattern type="RSA_KEY_SIZE">
-        <ShortDescription>RSA Usage with Weak Key Size</ShortDescription>
-        <LongDescription>RSA usage with weak key size</LongDescription>
+        <ShortDescription>RSA usage with short key</ShortDescription>
+        <LongDescription>RSA usage with a short key</LongDescription>
         <Details>
             <![CDATA[
 <p>"RSA Laboratories currently recommends key sizes of 1024 bits for corporate use and 2048 bits for extremely valuable keys 
@@ -1930,7 +1968,7 @@ keyGen.initialize(2048);
     </Detector>
     <BugPattern type="UNVALIDATED_REDIRECT">
         <ShortDescription>Unvalidated Redirect</ShortDescription>
-        <LongDescription>Unvalidated Redirect</LongDescription>
+        <LongDescription>This use of {3} can be vulnerable to sending unvalidated redirects</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -2000,7 +2038,7 @@ TODO
     </Detector>
     <BugPattern type="JSP_SPRING_EVAL">
         <ShortDescription>Dynamic variable in spring expression</ShortDescription>
-        <LongDescription>Potential unintended use of dynamic variable in spring expression could lead to arbitrary code execution</LongDescription>
+        <LongDescription>Dynamic variable in spring expression could lead to arbitrary code execution</LongDescription>
         <Details>
             <![CDATA[
 TODO
@@ -2015,7 +2053,7 @@ TODO
         <Details>Detect output where the escaping of special XML characters is disable.</Details>
     </Detector>
     <BugPattern type="JSP_JSTL_OUT">
-        <ShortDescription>Escaping of special XML characters is disable</ShortDescription>
+        <ShortDescription>Escaping of special XML characters is disabled</ShortDescription>
         <LongDescription>Disabling the escaping of special XML characters can lead to XSS vulnerabilities</LongDescription>
         <Details>
             <![CDATA[
@@ -2237,8 +2275,8 @@ public void encrypt(String message) throws Exception {
 
     <!-- ECB Mode -->
     <BugPattern type="ECB_MODE">
-        <ShortDescription>ECB Mode Unsafe</ShortDescription>
-        <LongDescription>The cipher chosen uses ECB mode, which provides poor confidentiality for encrypted data.</LongDescription>
+        <ShortDescription>ECB mode is insecure</ShortDescription>
+        <LongDescription>The cipher uses ECB mode, which provides poor confidentiality for encrypted data</LongDescription>
         <Details>
             <![CDATA[
 <p>An authentication cipher mode which provides better confidentiality of the encrypted data should be used instead of Electronic Codebook (ECB) mode, 
@@ -2276,7 +2314,7 @@ byte[] cipherText = c.doFinal(plainText);</pre>
 
     <!-- Padding oracle -->
     <BugPattern type="PADDING_ORACLE">
-        <ShortDescription>Cipher is Susceptible to Padding Oracle</ShortDescription>
+        <ShortDescription>Cipher is susceptible to Padding Oracle</ShortDescription>
         <LongDescription>The cipher is susceptible to padding oracle attacks</LongDescription>
         <Details>
 <![CDATA[
@@ -2314,8 +2352,8 @@ byte[] cipherText = c.doFinal(plainText);</pre>
 
     <!-- Integrity missing -->
     <BugPattern type="CIPHER_INTEGRITY">
-        <ShortDescription>Cipher With No Integrity</ShortDescription>
-        <LongDescription>The cipher used does not provide an data integrity</LongDescription>
+        <ShortDescription>Cipher with no integrity</ShortDescription>
+        <LongDescription>The cipher does not provide data integrity</LongDescription>
         <Details>
 <![CDATA[
 <p>
@@ -2370,7 +2408,7 @@ In the example solution above, the GCM mode introduces an HMAC into the resultin
         <Details>Identity usage of ESAPI Encryptor.</Details>
     </Detector>
     <BugPattern type="ESAPI_ENCRYPTOR">
-        <ShortDescription>Usage of ESAPI Encryptor</ShortDescription>
+        <ShortDescription>Use of ESAPI Encryptor</ShortDescription>
         <LongDescription>The ESAPI encryptor API is used to encrypt data</LongDescription>
         <Details>
 <![CDATA[
@@ -2457,8 +2495,8 @@ Encryptor.cipher_modes.additional_allowed=</pre>
         <Details>Identity file access on external storage.</Details>
     </Detector>
     <BugPattern type="ANDROID_EXTERNAL_FILE_ACCESS">
-        <ShortDescription>External File Access (Android)</ShortDescription>
-        <LongDescription>Files could be saved to external storage.</LongDescription>
+        <ShortDescription>External file access (Android)</ShortDescription>
+        <LongDescription>Files could be saved to external storage</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -2505,7 +2543,7 @@ fos.write(string.getBytes());
     </Detector>
     <BugPattern type="ANDROID_BROADCAST">
         <ShortDescription>Broadcast (Android)</ShortDescription>
-        <LongDescription>Broadcast intents could be received by a malicious application.</LongDescription>
+        <LongDescription>Broadcast intents could be received by a malicious application</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -2585,8 +2623,8 @@ sendBroadcast(v1);
         <Details>Identity file written with the creation mode MODE_WORLD_READABLE.</Details>
     </Detector>
     <BugPattern type="ANDROID_WORLD_WRITABLE">
-        <ShortDescription>World Writable File (Android)</ShortDescription>
-        <LongDescription>The content that is written can be viewed by any application.</LongDescription>
+        <ShortDescription>World writable file (Android)</ShortDescription>
+        <LongDescription>The content that is written can be viewed by any application</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -2634,8 +2672,8 @@ create on external storage. See references below for implementation guidelines.
         <Details>Identity usage of Geolocation API.</Details>
     </Detector>
     <BugPattern type="ANDROID_GEOLOCATION">
-        <ShortDescription>WebView with Geolocation Activated (Android)</ShortDescription>
-        <LongDescription>WebView with Geolocation Activated</LongDescription>
+        <ShortDescription>WebView with geolocation activated (Android)</ShortDescription>
+        <LongDescription>WebView with activated geolocation</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -2685,8 +2723,8 @@ webView.setWebChromeClient(new WebChromeClient() {
         <Details>Identity WebView with JavaScript Enabled.</Details>
     </Detector>
     <BugPattern type="ANDROID_WEB_VIEW_JAVASCRIPT">
-        <ShortDescription>WebView with JavaScript Enabled (Android)</ShortDescription>
-        <LongDescription>WebView with JavaScript Enabled</LongDescription>
+        <ShortDescription>WebView with JavaScript enabled (Android)</ShortDescription>
+        <LongDescription>WebView with JavaScript enabled</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -2727,15 +2765,15 @@ function updateDescription(newDescription) {
 
     <!-- Android:  -->
     <Detector class="com.h3xstream.findsecbugs.android.WebViewJavascriptInterfaceDetector">
-        <Details>Identity WebView with a Java bridge (Javascript Interface).</Details>
+        <Details>Identity WebView with a Java bridge (JavaScript Interface).</Details>
     </Detector>
     <BugPattern type="ANDROID_WEB_VIEW_JAVASCRIPT_INTERFACE">
-        <ShortDescription>WebView with Javascript Interface (Android)</ShortDescription>
-        <LongDescription>WebView with Javascript Interface (Android)</LongDescription>
+        <ShortDescription>WebView with JavaScript interface (Android)</ShortDescription>
+        <LongDescription>WebView with JavaScript interface</LongDescription>
         <Details>
             <![CDATA[
 <p>
-    The use Javascript Interface could expose the WebView to risky API. If an XSS is trigger in the WebView, the class
+    The use JavaScript Interface could expose the WebView to risky API. If an XSS is trigger in the WebView, the class
     could be call by the malicious JavaScript code.
 </p>
 
@@ -2781,7 +2819,7 @@ class FileWriteUtil {
 
     <BugPattern type="INSECURE_COOKIE">
         <ShortDescription>Cookie without the secure flag</ShortDescription>
-        <LongDescription>Cookie without the secure flag could be sent in cleartext if a HTTP URL is visited.</LongDescription>
+        <LongDescription>Cookie without the secure flag could be sent in clear text if a HTTP URL is visited</LongDescription>
         <Details>
             <![CDATA[
 <p>

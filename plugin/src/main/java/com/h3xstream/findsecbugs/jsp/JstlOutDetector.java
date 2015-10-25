@@ -27,18 +27,17 @@ import edu.umd.cs.findbugs.ba.CFGBuilderException;
 import edu.umd.cs.findbugs.ba.ClassContext;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
 import edu.umd.cs.findbugs.ba.Location;
+import java.util.Iterator;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.Instruction;
 
-import java.util.Iterator;
-
 public class JstlOutDetector implements Detector {
     private static final String JSP_JSTL_OUT = "JSP_JSTL_OUT";
 
-    private BugReporter bugReporter;
+    private final BugReporter bugReporter;
 
     public JstlOutDetector(BugReporter bugReporter) {
         this.bugReporter = bugReporter;
@@ -47,9 +46,7 @@ public class JstlOutDetector implements Detector {
     @Override
     public void visitClassContext(ClassContext classContext) {
         JavaClass javaClass = classContext.getJavaClass();
-
         for (Method m : javaClass.getMethods()) {
-
             try {
                 analyzeMethod(m, classContext);
             } catch (CFGBuilderException e) {
@@ -71,7 +68,7 @@ public class JstlOutDetector implements Detector {
             Location location = i.next();
 
             Instruction inst = location.getHandle().getInstruction();
-            ByteCode.printOpCode(inst, cpg);
+            //ByteCode.printOpCode(inst, cpg);
 
 //        JspSpringEvalDetector: [0047]  aload   4
 //        JspSpringEvalDetector: [0049]  iconst_1

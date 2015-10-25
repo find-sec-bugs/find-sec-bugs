@@ -42,7 +42,14 @@ import org.apache.bcel.generic.MethodGen;
  */
 public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow> {
 
-    private static final String METHODS_SUMMARIES_PATH = "taint-config/methods-summaries.txt";
+    private static final String METHODS_SUMMARIES_PATH = "taint-config/";
+    private static final String[] METHODS_SUMMARIES_FILENAMES = {
+        "java-lang.txt",
+        "java-ee.txt",
+        "collections.txt",
+        "java-net.txt",
+        "other.txt"
+    };
     private final TaintMethodSummaryMap methodSummaries = new TaintMethodSummaryMap();
     private static final boolean DEBUG_OUTPUT_SUMMARIES = SystemProperties.
             getBoolean("findsecbugs.taint.outputsummaries");
@@ -62,12 +69,19 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
     }
 
     public TaintDataflowEngine() {
+        for (String path : METHODS_SUMMARIES_FILENAMES) {
+            loadMethodSummaries(METHODS_SUMMARIES_PATH.concat(path));
+        }
+    }
+    
+    private void loadMethodSummaries(String path) {
+        assert path != null && !path.isEmpty();
         InputStream stream = null;
         try {
-            stream = getClass().getClassLoader().getResourceAsStream(METHODS_SUMMARIES_PATH);
+            stream = getClass().getClassLoader().getResourceAsStream(path);
             methodSummaries.load(stream);
         } catch (IOException ex) {
-            throw new RuntimeException("cannot load resources", ex);
+            throw new RuntimeException("cannot load summaries from " + path, ex);
         } finally {
             if (stream != null) {
                 try {

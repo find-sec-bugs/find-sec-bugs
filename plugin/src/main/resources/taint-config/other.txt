@@ -25,12 +25,12 @@ javax/jdo/PersistenceManager.newQuery(Ljava/lang/String;Ljava/lang/Object;)Ljava
 java/util/logging/Logger.entering(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;)V:UNKNOWN
 java/util/logging/Logger.entering(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V:UNKNOWN
 java/util/logging/Logger.exiting(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;)V:UNKNOWN
-java/util/logging/Logger.log(Ljava.util.logging.Level;Ljava/lang/String;Ljava/lang/Object;)V:UNKNOWN
-java/util/logging/Logger.log(Ljava.util.logging.Level;Ljava/lang/String;[Ljava/lang/Object;)V:UNKNOWN
-java/util/logging/Logger.logp(Ljava.util.logging.Level;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;)V:UNKNOWN
-java/util/logging/Logger.logp(Ljava.util.logging.Level;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V:UNKNOWN
-java/util/logging/Logger.logrb(Ljava.util.logging.Level;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;)V:UNKNOWN
-java/util/logging/Logger.logrb(Ljava.util.logging.Level;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V:UNKNOWN
+java/util/logging/Logger.log(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Object;)V:UNKNOWN
+java/util/logging/Logger.log(Ljava/util/logging/Level;Ljava/lang/String;[Ljava/lang/Object;)V:UNKNOWN
+java/util/logging/Logger.logp(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;)V:UNKNOWN
+java/util/logging/Logger.logp(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V:UNKNOWN
+java/util/logging/Logger.logrb(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;)V:UNKNOWN
+java/util/logging/Logger.logrb(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V:UNKNOWN
 
 org/apache/commons/logging/Log.debug(Ljava/lang/Object;)V:UNKNOWN
 org/apache/commons/logging/Log.debug(Ljava/lang/Object;Ljava/lang/Throwable;)V:UNKNOWN

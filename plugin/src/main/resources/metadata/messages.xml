@@ -1504,7 +1504,8 @@ response.addCookie(cookie);</pre>
 <p>
     <b>References</b><br/>
     <a href="https://www.owasp.org/index.php/HTTP_Response_Splitting">OWASP: HTTP Response Splitting</a><br/>
-    <a href="http://cwe.mitre.org/data/definitions/113.html">CWE-113: Improper Neutralization of CRLF Sequences in HTTP Headers ('HTTP Response Splitting')</a><br/>
+    <a href="http://cwe.mitre.org/data/definitions/113.html">CWE-113: Improper Neutralization of CRLF Sequences in HTTP Headers ('HTTP Response Splitting')</a>
+    <a href="http://cwe.mitre.org/data/definitions/93.html">CWE-93: Improper Neutralization of CRLF Sequences ('CRLF Injection')</a><br/>
 </p>
 
 ]]>
@@ -1512,6 +1513,48 @@ response.addCookie(cookie);</pre>
     </BugPattern>
     <BugCode abbrev="SECHRS">HTTP Response Splitting</BugCode>
 
+
+    <!-- CRLF injection in logs -->
+    <Detector class="com.h3xstream.findsecbugs.CrlfLogInjectionDetector">
+        <Details>Searches for CRLF injection in logs</Details>
+    </Detector>
+
+    <BugPattern type="CRLF_INJECTION_LOGS">
+        <ShortDescription>Potential CRLF Injection for logs</ShortDescription>
+        <LongDescription>This use of {3} might be used to include CRLF characters into log messages</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    When data from untusted source are put into a logger and not neutralized correctly,
+    an attacker could forge log entries or include malicious content.
+    Inserted false entries could be used to skew statistics, distract the administrator
+    or even to implicate another party in the commission of a malicious act.
+    If the log file is processed automatically, the attacker can render the file unusable
+    by corrupting the format of the file or injecting unexpected characters.
+    An attacker may also inject code or other commands into the log file and take advantage
+    of a vulnerability in the log processing utility (e.g. command injection or XSS).
+</p>
+<p><b>Code at risk:</b></p>
+<p>
+<pre>String val = request.getParameter("val");
+try {
+    number = Integer.parseInt(val);
+} catch (NumberFormatException) {
+    log.info("Failed to parse val = " + val);
+}</pre>
+</p>
+<br/>
+<p>
+    <b>References</b><br/>
+    <a href="http://cwe.mitre.org/data/definitions/117.html">CWE-117: Improper Output Neutralization for Logs</a><br/>
+    <a href="http://cwe.mitre.org/data/definitions/93.html">CWE-93: Improper Neutralization of CRLF Sequences ('CRLF Injection')</a><br/>
+</p>
+
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECCRLFLOG">CRLF Injection for logs</BugCode>
+    
 
     <!-- Bad Hexa -->
     <Detector class="com.h3xstream.findsecbugs.crypto.BadHexadecimalConversionDetector">

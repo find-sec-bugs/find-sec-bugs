@@ -1493,8 +1493,9 @@ public void parseExpressionInterface(Person personObj,String property) {
     This weakness is reported with lower priority than SQL injection etc.,
     if you are using a vulnerable platform, please check low-priority warnings too.
 </p>
-<p><b>Code at risk:</b></p>
+<br/>
 <p>
+<b>Code at risk:</b><br/>
 <pre>String author = request.getParameter(AUTHOR_PARAMETER);
 // ...
 Cookie cookie = new Cookie("author", author);
@@ -1534,8 +1535,9 @@ response.addCookie(cookie);</pre>
     An attacker may also inject code or other commands into the log file and take advantage
     of a vulnerability in the log processing utility (e.g. command injection or XSS).
 </p>
-<p><b>Code at risk:</b></p>
+<br/>
 <p>
+<b>Code at risk:</b><br/>
 <pre>String val = request.getParameter("val");
 try {
     number = Integer.parseInt(val);
@@ -1554,6 +1556,38 @@ try {
         </Details>
     </BugPattern>
     <BugCode abbrev="SECCRLFLOG">CRLF Injection for logs</BugCode>
+    
+    
+    <!-- External control of system or configuration setting -->
+    <Detector class="com.h3xstream.findsecbugs.ExternalConfigurationControlDetector">
+        <Details>Searches for external control of system or configuration setting</Details>
+    </Detector>
+
+    <BugPattern type="EXTERNAL_CONFIG_CONTROL">
+        <ShortDescription>Potential external control of configuration</ShortDescription>
+        <LongDescription>This use of {3} might be used to control configuration externally</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    Allowing external control of system settings can disrupt service or cause an application
+    to behave in unexpected, and potentially malicious ways. 
+    An attacker could cause an error by providing a nonexistent catalog name
+    or connect to an unauthorized portion of the database.
+</p>
+<br/>
+<p>
+<b>Code at risk:</b><br/>
+<pre>conn.setCatalog(request.getParameter("catalog"));</pre>
+</p>
+<br/>
+<p>
+    <b>References</b><br/>
+    <a href="http://cwe.mitre.org/data/definitions/15.html">CWE-15: External Control of System or Configuration Setting</a><br/>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECCONFCTRL">External control of configuration</BugCode>
     
 
     <!-- Bad Hexa -->

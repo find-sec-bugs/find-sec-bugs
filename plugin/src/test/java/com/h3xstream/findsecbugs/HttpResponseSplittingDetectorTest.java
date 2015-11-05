@@ -35,14 +35,22 @@ public class HttpResponseSplittingDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        for (Integer line : Arrays.asList(12, 13, 14, 15)) {
+        for (Integer line : Arrays.asList(12, 15)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("HTTP_RESPONSE_SPLITTING")
-                            .inClass("ResponseSplittingServlet").inMethod("doGet").atLine(line)
+                            .inClass("ResponseSplittingServlet").inMethod("doGet").withPriority("Low").atLine(line)
                             .build()
             );
         }
-        verify(reporter, times(4)).doReportBug(bugDefinition().bugType("HTTP_RESPONSE_SPLITTING").build());
+        for (Integer line : Arrays.asList(13, 14, 27)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("HTTP_RESPONSE_SPLITTING")
+                            .inClass("ResponseSplittingServlet").withPriority("Medium").atLine(line)
+                            .build()
+            );
+        }
+        verify(reporter, times(5)).doReportBug(bugDefinition().bugType("HTTP_RESPONSE_SPLITTING").build());
     }
 }

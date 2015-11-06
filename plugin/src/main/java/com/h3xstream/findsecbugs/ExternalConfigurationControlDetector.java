@@ -18,30 +18,18 @@
 package com.h3xstream.findsecbugs;
 
 import com.h3xstream.findsecbugs.injection.ConfiguredBasicInjectionDetector;
-import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import edu.umd.cs.findbugs.BugReporter;
-import edu.umd.cs.findbugs.Priorities;
 
 /**
- * Detects HTTP Response splitting weakness
+ * Detects External Control of System or Configuration Setting weakness
+ * using setCatalog method of java.sql.Connection
  * 
  * @author David Formanek (Y Soft Corporation, a.s.)
  */
-public class HttpResponseSplittingDetector extends ConfiguredBasicInjectionDetector {
+public class ExternalConfigurationControlDetector extends ConfiguredBasicInjectionDetector {
 
-    public HttpResponseSplittingDetector(BugReporter bugReporter) {
+    public ExternalConfigurationControlDetector(BugReporter bugReporter) {
         super(bugReporter);
-        loadConfiguredSinks("response-splitting.txt", "HTTP_RESPONSE_SPLITTING");
-    }
-    
-    @Override
-    protected int getPriority(Taint taint) {
-        if (taint.isTainted()) {
-            return Priorities.NORMAL_PRIORITY;
-        } else if (!taint.isSafe()) {
-            return Priorities.LOW_PRIORITY;
-        } else {
-            return Priorities.IGNORE_PRIORITY;
-        }
+        loadSink("java/sql/Connection.setCatalog(Ljava/lang/String;)V:0", "EXTERNAL_CONFIG_CONTROL");
     }
 }

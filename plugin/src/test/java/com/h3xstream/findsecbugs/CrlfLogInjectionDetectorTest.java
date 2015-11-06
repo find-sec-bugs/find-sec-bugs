@@ -19,38 +19,29 @@ package com.h3xstream.findsecbugs;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
-import java.util.Arrays;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import org.testng.annotations.Test;
 
-public class HttpResponseSplittingDetectorTest extends BaseDetectorTest {
-    
+public class CrlfLogInjectionDetectorTest extends BaseDetectorTest {
+
     @Test
     public void detectResponseSplitting() throws Exception {
         String[] files = {
-                getClassFilePath("testcode/ResponseSplittingServlet")
+            getClassFilePath("testcode/Logging")
         };
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        for (Integer line : Arrays.asList(12, 15)) {
+        for (int line = 20; line < 49; line++) {
             verify(reporter).doReportBug(
                     bugDefinition()
-                            .bugType("HTTP_RESPONSE_SPLITTING")
-                            .inClass("ResponseSplittingServlet").inMethod("doGet").withPriority("Low").atLine(line)
-                            .build()
+                    .bugType("CRLF_INJECTION_LOGS")
+                    .inClass("Logging").inMethod("javaUtilLogging").atLine(line)
+                    .build()
             );
         }
-        for (Integer line : Arrays.asList(13, 14, 27)) {
-            verify(reporter).doReportBug(
-                    bugDefinition()
-                            .bugType("HTTP_RESPONSE_SPLITTING")
-                            .inClass("ResponseSplittingServlet").withPriority("Medium").atLine(line)
-                            .build()
-            );
-        }
-        verify(reporter, times(5)).doReportBug(bugDefinition().bugType("HTTP_RESPONSE_SPLITTING").build());
+        verify(reporter, times(49 - 20)).doReportBug(bugDefinition().bugType("CRLF_INJECTION_LOGS").build());
     }
 }

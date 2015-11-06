@@ -65,6 +65,8 @@
     <Detector class="com.h3xstream.findsecbugs.crypto.EsapiEncryptorDetector" reports="ESAPI_ENCRYPTOR"/>
     <Detector class="com.h3xstream.findsecbugs.injection.script.ScriptInjectionDetector" reports="SCRIPT_ENGINE_INJECTION,SPEL_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.HttpResponseSplittingDetector" reports="HTTP_RESPONSE_SPLITTING"/>
+    <Detector class="com.h3xstream.findsecbugs.CrlfLogInjectionDetector" reports="CRLF_INJECTION_LOGS"/>
+    <Detector class="com.h3xstream.findsecbugs.ExternalConfigurationControlDetector" reports="EXTERNAL_CONFIG_CONTROL"/>
     <Detector class="com.h3xstream.findsecbugs.android.ExternalFileAccessDetector" reports="ANDROID_EXTERNAL_FILE_ACCESS"/>
     <Detector class="com.h3xstream.findsecbugs.android.BroadcastDetector" reports="ANDROID_BROADCAST"/>
     <Detector class="com.h3xstream.findsecbugs.android.WorldWritableDetector" reports="ANDROID_WORLD_WRITABLE"/>
@@ -137,6 +139,8 @@
     <BugPattern type="SCRIPT_ENGINE_INJECTION" abbrev="SCRIPTE" category="SECURITY" cweid="94"/>
     <BugPattern type="SPEL_INJECTION" abbrev="SPELI" category="SECURITY" cweid="94"/>
     <BugPattern type="HTTP_RESPONSE_SPLITTING" abbrev="SECHRS" category="SECURITY" cweid="113"/>
+    <BugPattern type="CRLF_INJECTION_LOGS" abbrev="SECCRLFLOG" category="SECURITY" cweid="117"/>
+    <BugPattern type="EXTERNAL_CONFIG_CONTROL" abbrev="SECCONFCTRL" category="SECURITY" cweid="15"/>
     <BugPattern type="ANDROID_EXTERNAL_FILE_ACCESS" abbrev="SECEFA" category="SECURITY"/>
     <BugPattern type="ANDROID_BROADCAST" abbrev="SECBROAD" category="SECURITY"/>
     <BugPattern type="ANDROID_WORLD_WRITABLE" abbrev="SECWW" category="SECURITY"/>

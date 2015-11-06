@@ -124,7 +124,7 @@ public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
                 bugInstance.addSourceLine(sourceLine);
                 addSourceLines(finalTaint.getLocations(), bugInstance);
                 if (finalTaint.isTainted()) {
-                    bugInstance.setPriority(Priorities.HIGH_PRIORITY);
+                    bugInstance.setPriority(getPriority(finalTaint));
                 } else {
                     assert finalTaint.isUnknown();
                     delayBugToReport(currentMethod, finalTaint, bugInstance);
@@ -170,13 +170,20 @@ public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
     
     private void reportBug(BugInstance bugInstance, Taint taint, String currentMethod) {
         addSourceLines(taint.getLocations(), bugInstance);
-        if (bugInstance.getPriority() == Priorities.NORMAL_PRIORITY && taint.hasParameters()) {
+        if (shouldBugBeDelayed(taint, bugInstance)) {
             delayBugToReport(currentMethod, taint, bugInstance);
         } else {
             bugReporter.reportBug(bugInstance);
         }
     }
 
+    private boolean shouldBugBeDelayed(Taint taint, BugInstance bugInstance) {
+        if (!taint.hasParameters()) {
+            return false;
+        }
+        return bugInstance.getPriority() == getPriority(new Taint(Taint.State.UNKNOWN));
+    }
+    
     private void delayBugToReport(String method, Taint taint, BugInstance bug) {
         TaintSink taintSink = new TaintSink(taint, bug);
         Set<TaintSink> sinkSet = methodsWithSinks.get(method);

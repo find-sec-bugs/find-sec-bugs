@@ -19,38 +19,27 @@ package com.h3xstream.findsecbugs;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
-import java.util.Arrays;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import org.testng.annotations.Test;
 
-public class HttpResponseSplittingDetectorTest extends BaseDetectorTest {
-    
+public class ExternalConfigurationControlDetectorTest extends BaseDetectorTest {
+
     @Test
-    public void detectResponseSplitting() throws Exception {
+    public void detectCatalog() throws Exception {
         String[] files = {
-                getClassFilePath("testcode/ResponseSplittingServlet")
+            getClassFilePath("testcode/DbCatalog")
         };
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        for (Integer line : Arrays.asList(12, 15)) {
-            verify(reporter).doReportBug(
-                    bugDefinition()
-                            .bugType("HTTP_RESPONSE_SPLITTING")
-                            .inClass("ResponseSplittingServlet").inMethod("doGet").withPriority("Low").atLine(line)
-                            .build()
-            );
-        }
-        for (Integer line : Arrays.asList(13, 14, 27)) {
-            verify(reporter).doReportBug(
-                    bugDefinition()
-                            .bugType("HTTP_RESPONSE_SPLITTING")
-                            .inClass("ResponseSplittingServlet").withPriority("Medium").atLine(line)
-                            .build()
-            );
-        }
-        verify(reporter, times(5)).doReportBug(bugDefinition().bugType("HTTP_RESPONSE_SPLITTING").build());
+        verify(reporter).doReportBug(
+                bugDefinition()
+                .bugType("EXTERNAL_CONFIG_CONTROL")
+                .inClass("DbCatalog").atLine(10)
+                .build()
+        );
+        verify(reporter, times(1)).doReportBug(bugDefinition().bugType("EXTERNAL_CONFIG_CONTROL").build());
     }
 }

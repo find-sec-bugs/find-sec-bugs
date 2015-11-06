@@ -38,6 +38,7 @@ import org.apache.bcel.generic.MethodGen;
 public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
 
     private final MethodGen methodGen;
+    private final MethodDescriptor methodDescriptor;
     private final TaintFrameModelingVisitor visitor;
     private final int parameterStackSize;
     
@@ -45,6 +46,7 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
             MethodDescriptor descriptor, TaintMethodSummaryMap methodSummaries) {
         super(dfs);
         this.methodGen = methodGen;
+        this.methodDescriptor = descriptor;
         this.visitor = new TaintFrameModelingVisitor(
                 methodGen.getConstantPool(), descriptor, methodSummaries);
         this.parameterStackSize = getParameterStackSize(
@@ -73,13 +75,21 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
     public void initEntryFact(TaintFrame fact) throws DataflowAnalysisException {
         fact.setValid();
         fact.clearStack();
+        boolean inMainMethod = isInMainMethod();
         int numSlots = fact.getNumSlots();
         int numLocals = fact.getNumLocals();
         for (int i = 0; i < numSlots; ++i) {
-            Taint value = new Taint(Taint.State.UNKNOWN);
+            final Taint value;
+            if (inMainMethod) {
+                value = new Taint(Taint.State.TAINTED);
+                // this would add line number for the first instruction in the main method
+                //value.addLocation(new TaintLocation(methodDescriptor, 0), true);
+            } else {
+                value = new Taint(Taint.State.UNKNOWN);
+            }
             if (i < numLocals) {
                 value.setVariableIndex(i);
-                if (i < parameterStackSize) {
+                if (i < parameterStackSize && !inMainMethod) {
                     int stackOffset = parameterStackSize - i - 1;
                     value.addParameter(stackOffset);
                 }
@@ -88,6 +98,13 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
         }
     }
 
+    private boolean isInMainMethod() {
+        return methodDescriptor.isStatic()
+                && "main".equals(methodDescriptor.getName())
+                && "([Ljava/lang/String;)V".equals(methodDescriptor.getSignature())
+                && methodGen.getMethod().isPublic();
+    }
+    
     @Override
     public void meetInto(TaintFrame fact, Edge edge, TaintFrame result)
             throws DataflowAnalysisException {

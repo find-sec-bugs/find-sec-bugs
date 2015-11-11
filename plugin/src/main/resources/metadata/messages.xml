@@ -2952,4 +2952,47 @@ cookie.setHttpOnly(true);
     </BugPattern>
     <BugCode abbrev="SECIC">Cookie without the secure flag</BugCode>
 
+    <Detector class="com.h3xstream.findsecbugs.ObjectDeserializationDetector">
+        <Details> Object deserialization detector</Details>
+    </Detector>
+
+    <BugPattern type="OBJECT_DESERIALIZATION">
+        <ShortDescription>Object deserialization is used in {0}.{1}</ShortDescription>
+        <LongDescription>Object deserialization is used in {0}.{1}</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    Object deserialization of untrusted data can lead to remote code execution, if there is a vulnerable class in classpath.
+</p>
+
+<p>
+<b>Code at risk:</b><br/>
+<pre>
+File file = new File("object.obj");
+ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
+in.readObject();
+in.close();
+</pre>
+</p>
+
+<p>
+<b>Solution:</b><br/>
+<pre>
+private final void readObject(ObjectInputStream in) throws java.io.IOException {
+throw new java.io.IOException("Cannot be deserialized"); }
+</pre>
+</p>
+<br/>
+<p>
+<b>Reference</b><br/>
+<a href="https://cwe.mitre.org/data/definitions/502.html">CWE-502: Deserialization of Untrusted Data</a><br/>
+<a href="https://www.owasp.org/index.php/Deserialization_of_untrusted_data">Deserialization of untrusted data</a><br/>
+<a href="http://www.oracle.com/technetwork/java/seccodeguide-139067.html#8">Serialization and Deserialization </a><br/>
+<a href="https://github.com/frohoff/ysoserial">A proof-of-concept tool for generating payloads that exploit unsafe Java object deserialization</a><br/>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECOBDES">Object deserialization is used</BugCode>
+
 </MessageCollection>

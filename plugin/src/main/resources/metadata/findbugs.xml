@@ -73,6 +73,8 @@
     <Detector class="com.h3xstream.findsecbugs.android.GeolocationDetector" reports="ANDROID_GEOLOCATION"/>
     <Detector class="com.h3xstream.findsecbugs.android.WebViewJavascriptEnabledDetector" reports="ANDROID_WEB_VIEW_JAVASCRIPT"/>
     <Detector class="com.h3xstream.findsecbugs.android.WebViewJavascriptInterfaceDetector" reports="ANDROID_WEB_VIEW_JAVASCRIPT_INTERFACE"/>
+    <Detector class="com.h3xstream.findsecbugs.ObjectDeserializationDetector" reports="OBJECT_DESERIALIZATION"/>
+
 
     <BugPattern type="PREDICTABLE_RANDOM" abbrev="SECPR" category="SECURITY" cweid="330"/>
     <BugPattern type="SERVLET_PARAMETER" abbrev="SECSP" category="SECURITY"/>
@@ -147,5 +149,7 @@
     <BugPattern type="ANDROID_GEOLOCATION" abbrev="SECGEO" category="SECURITY"/>
     <BugPattern type="ANDROID_WEB_VIEW_JAVASCRIPT" abbrev="SECWVJ" category="SECURITY"/>
     <BugPattern type="ANDROID_WEB_VIEW_JAVASCRIPT_INTERFACE" abbrev="SECWVJI" category="SECURITY"/>
+    <BugPattern type="OBJECT_DESERIALIZATION" abbrev="SECOBDES" category="SECURITY"/>
+
 
 </FindbugsPlugin>

@@ -44,7 +44,40 @@ public class ObjectDeserializationDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("OBJECT_DESERIALIZATION")
-                        .inClass("ObjectDeserialization").inMethod("main").atLine(13)
+                        .inClass("ObjectDeserialization").inMethod("deserializeObject").atLine(14)
+                        .build()
+        );
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("OBJECT_DESERIALIZATION")
+                        .inClass("ObjectDeserialization").inMethod("deserializeObject")
+                        .build()
+        );
+    }
+
+    @Test
+    public void detectObjectDeserializationClassLoaderObjectInputStream() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/ObjectDeserialization")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("OBJECT_DESERIALIZATION")
+                        .inClass("ObjectDeserialization").inMethod("deserializeObjectWithInheritance").atLine(24)
+                        .build()
+        );
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("OBJECT_DESERIALIZATION")
+                        .inClass("ObjectDeserialization").inMethod("deserializeObjectWithInheritance")
                         .build()
         );
     }

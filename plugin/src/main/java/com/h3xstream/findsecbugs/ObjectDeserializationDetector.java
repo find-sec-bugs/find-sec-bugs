@@ -38,12 +38,15 @@ public class ObjectDeserializationDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int code) {
-        if ((code == INVOKESTATIC || code == INVOKEVIRTUAL) && isObjectDeserializationCalled(getClassConstantOperand(), getNameConstantOperand())) {
-            bugReporter.reportBug(new BugInstance(this, "OBJECT_DESERIALIZATION", NORMAL_PRIORITY).addClassAndMethod(this).addSourceLine(this));
-        }
-    }
+        printOpCode(code);
+        if ((code == INVOKEVIRTUAL)) {
+            if("java/io/ObjectInputStream".equals(getClassConstantOperand()) || getClassConstantOperand().contains("InputStream")) {
 
-    private boolean isObjectDeserializationCalled(String classConstantOperand, String nameConstantOperand) {
-        return  (nameConstantOperand.equals("readObject") || nameConstantOperand.equals("readUnshared"));
+                String methodName = getNameConstantOperand();
+                if (methodName.equals("readObject")) {
+                    bugReporter.reportBug(new BugInstance(this, "OBJECT_DESERIALIZATION", NORMAL_PRIORITY).addClassAndMethod(this).addSourceLine(this));
+                }
+            }
+        }
     }
 }

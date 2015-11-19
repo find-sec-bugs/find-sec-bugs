@@ -48,7 +48,6 @@ import java.util.regex.*;
 public class SMAPSourceDebugExtension {
 
 
-    private final String generatedFileName, firstStratum;
     private final Map<Integer, FileInfo> fileinfo = new HashMap<Integer, FileInfo>();
     private final Map<Integer, List<Integer>> reverseLineMapping = new HashMap<Integer, List<Integer>>();
 
@@ -58,8 +57,6 @@ public class SMAPSourceDebugExtension {
         String[] lines = value.split("\n");
         if (!lines[0].equals("SMAP") || !lines[3].startsWith("*S ") || !lines[4].equals("*F"))
             throw new IllegalArgumentException(value);
-        generatedFileName = lines[1];
-        firstStratum = lines[3].substring(3);
         int idx = 5;
         while (!lines[idx].startsWith("*")) {
             String infoLine = lines[idx++], path = null;

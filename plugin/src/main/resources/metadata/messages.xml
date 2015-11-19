@@ -2104,23 +2104,63 @@ keyGen.initialize(2048);
         <LongDescription>Dynamic JSP inclusion could lead to arbitrary code execution</LongDescription>
         <Details>
             <![CDATA[
-TODO
+<p>The inclusion of JSP file allow the entry of dynamic value. It may allow an attacker to control the JSP page included.
+If this is the case, an attacker will try to include a file on disk that he controls. By including arbitrary files, the
+attacker gets the ability to execute any code.
+</p>
+<p>
+    <b>Vulnerable Code:</b>
+    <pre><jsp:include page="${param.secret_param}" /></pre>
+</p>
+<p>
+    <b>Solution:</b>
+    <pre><c:if test="${param.secret_param == 'page1'}">
+    <jsp:include page="page1.jsp" />
+</c:if></pre>
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="http://resources.infosecinstitute.com/file-inclusion-attacks/">InfosecInstitute: File Inclusion Attacks</a><br/>
+<a href="http://projects.webappsec.org/w/page/13246955/Remote%20File%20Inclusion">WASC-05: Remote File Inclusion</a><br/>
+</p>
             ]]>
         </Details>
     </BugPattern>
     <BugCode abbrev="SECJSPINC">Dynamic JSP inclusion</BugCode>
 
-
     <!-- Spring eval -->
     <Detector class="com.h3xstream.findsecbugs.jsp.JspSpringEvalDetector">
-        <Details>Identify unintended use of dynamic variable in spring expression.</Details>
+        <Details>Identify unintended use of dynamic variable in Spring expression.</Details>
     </Detector>
     <BugPattern type="JSP_SPRING_EVAL">
-        <ShortDescription>Dynamic variable in spring expression</ShortDescription>
-        <LongDescription>Dynamic variable in spring expression could lead to arbitrary code execution</LongDescription>
+        <ShortDescription>Dynamic variable in Spring expression</ShortDescription>
+        <LongDescription>Dynamic variable in Spring expression could lead to arbitrary code execution</LongDescription>
         <Details>
             <![CDATA[
-TODO
+<p></p>
+<p>
+    <b>Vulnerable Code:</b>
+    <pre><%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
+<spring:eval expression="${param.lang}" var="lang" /></pre>
+    <br>
+    <pre><%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
+<spring:eval expression="'${param.lang}'=='fr'" var="languageIsFrench" /></pre>
+</p>
+<p>
+    <b>Solution:</b>
+    <pre><c:set var="lang" value="${param.lang}"/></pre>
+    <br/>
+    <pre><c:set var="languageIsFrench" value="${param.lang == 'fr'}"/></pre>
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="http://resources.infosecinstitute.com/file-inclusion-attacks/">InfosecInstitute: File Inclusion Attacks</a><br/>
+<a href="http://projects.webappsec.org/w/page/13246955/Remote%20File%20Inclusion">WASC-05: Remote File Inclusion</a><br/>
+</p>
             ]]>
         </Details>
     </BugPattern>
@@ -2136,7 +2176,29 @@ TODO
         <LongDescription>Disabling the escaping of special XML characters can lead to XSS vulnerabilities</LongDescription>
         <Details>
             <![CDATA[
-TODO
+<p>A potential XSS was found. It could be used to execute unwanted JavaScript in a client's browser. (See references)
+</p>
+<p>
+    <b>Vulnerable Code:</b>
+    <pre><%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<c:out value="${param.test_param}" escapeXml="false"/></pre>
+</p>
+<p>
+    <b>Solution:</b>
+    <pre><%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<c:out value="${param.test_param}"/></pre>
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site Scripting</a><br/>
+<a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet">OWASP: XSS Prevention Cheat Sheet</a><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_%28XSS%29">OWASP: Top 10 2013-A3: Cross-Site Scripting (XSS)</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a><br/>
+<a href="http://docs.oracle.com/javaee/5/jstl/1.1/docs/tlddocs/c/out.html">JSTL Javadoc: Out tag</a><br/>
+</p>
             ]]>
         </Details>
     </BugPattern>
@@ -2151,10 +2213,6 @@ TODO
         <LongDescription>Potential XSS in JSP</LongDescription>
         <Details>
             <![CDATA[
-<p>NOTE: If you want this rule to work, you have to precompile your JSPs (which usually isn't done in most build environments)
-and then provide FindBugs the path information to the generated class files and the original JSPs themselves. If you are seeing
-findings for this rule, you know you have your environment set up properly. Also, this XSS in JSP rule looks for similar issues,
-but looks for them in a different way than the existing 'XSS: JSP reflected cross site scripting vulnerability' rule in FindBugs.</p>
 <p>A potential XSS was found. It could be used to execute unwanted JavaScript in a client's browser. (See references)
 </p>
 <p>
@@ -2962,33 +3020,45 @@ cookie.setHttpOnly(true);
         <Details>
             <![CDATA[
 <p>
-    Object deserialization of untrusted data can lead to remote code execution, if there is a vulnerable class in classpath.
+    Object deserialization of untrusted data can lead to remote code execution, if there is a class in classpath allow
+    the trigger of malicious operation.
+</p>
+<p>
+    Libraries developers tend to fix class that provided potential malicious trigger. Their are still classes that are
+    known to trigger Denial of Service<sup>[1]</sup>.
+</p>
+<p>
+    Deserialization is a sensible operation that has a great history of vulnerabilities. The web application might
+    become vulnerable has soon as a new vulnerability is found in the Java Virtual Machine<sup>[2] [3]</sup>.
 </p>
 
 <p>
 <b>Code at risk:</b><br/>
 <pre>
-File file = new File("object.obj");
-ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
-in.readObject();
-in.close();
+public UserData deserializeObject(InputStream receivedFile) throws IOException, ClassNotFoundException {
+
+    try (ObjectInputStream in = new ObjectInputStream(receivedFile)) {
+        return (UserData) in.readObject();
+    }
+}
 </pre>
 </p>
 
 <p>
 <b>Solution:</b><br/>
-<pre>
-private final void readObject(ObjectInputStream in) throws java.io.IOException {
-throw new java.io.IOException("Cannot be deserialized"); }
-</pre>
+<p>
+Avoid deserializing object provided by remote users.
 </p>
 <br/>
 <p>
-<b>Reference</b><br/>
+<b>References</b><br/>
 <a href="https://cwe.mitre.org/data/definitions/502.html">CWE-502: Deserialization of Untrusted Data</a><br/>
 <a href="https://www.owasp.org/index.php/Deserialization_of_untrusted_data">Deserialization of untrusted data</a><br/>
 <a href="http://www.oracle.com/technetwork/java/seccodeguide-139067.html#8">Serialization and Deserialization </a><br/>
 <a href="https://github.com/frohoff/ysoserial">A proof-of-concept tool for generating payloads that exploit unsafe Java object deserialization</a><br/>
+[1] <a href="https://gist.github.com/coekie/a27cc406fc9f3dc7a70d">Example of Denial of Service using the class java.util.HashSet</a><br/>
+[2] <a href="https://bugzilla.redhat.com/show_bug.cgi?id=CVE-2015-2590">OpenJDK: Deserialization issue in ObjectInputStream.readSerialData() (CVE-2015-2590)</a><br/>
+[3] <a href="https://www.rapid7.com/db/modules/exploit/multi/browser/java_calendar_deserialize">Rapid7: Sun Java Calendar Deserialization Privilege Escalation (CVE-2008-5353)</a>
 </p>
 ]]>
         </Details>

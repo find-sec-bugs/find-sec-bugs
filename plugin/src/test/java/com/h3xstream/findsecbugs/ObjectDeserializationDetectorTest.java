@@ -44,7 +44,7 @@ public class ObjectDeserializationDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("OBJECT_DESERIALIZATION")
-                        .inClass("ObjectDeserialization").inMethod("main").atLine(16)
+                        .inClass("ObjectDeserialization").inMethod("main").atLine(13)
                         .build()
         );
     }

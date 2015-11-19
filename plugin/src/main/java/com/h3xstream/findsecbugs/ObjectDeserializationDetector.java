@@ -44,12 +44,6 @@ public class ObjectDeserializationDetector extends OpcodeStackDetector {
     }
 
     private boolean isObjectDeserializationCalled(String classConstantOperand, String nameConstantOperand) {
-        try {
-            JavaClass javaClass = Repository.lookupClass(classConstantOperand);
-            return  InterfaceUtils.classImplements(javaClass, "java.io.ObjectInput") &&
-                    (nameConstantOperand.equals("readObject") || nameConstantOperand.equals("readUnshared"));
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
+        return  (nameConstantOperand.equals("readObject") || nameConstantOperand.equals("readUnshared"));
     }
 }

@@ -18,7 +18,9 @@
 package com.h3xstream.findsecbugs;
 
 import com.h3xstream.findsecbugs.injection.ConfiguredBasicInjectionDetector;
+import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import edu.umd.cs.findbugs.BugReporter;
+import edu.umd.cs.findbugs.Priorities;
 
 /**
  * Detects logging of tainted values - CRLF injection (or Improper Output Neutralization for Logs)
@@ -30,5 +32,16 @@ public class CrlfLogInjectionDetector extends ConfiguredBasicInjectionDetector {
     public CrlfLogInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
         loadConfiguredSinks("crlf-logs.txt", "CRLF_INJECTION_LOGS");
+    }
+
+    @Override
+    protected int getPriority(Taint taint) {
+        if (taint.isTainted()) {
+            return Priorities.NORMAL_PRIORITY;
+        } else if (!taint.isSafe()) {
+            return Priorities.LOW_PRIORITY;
+        } else {
+            return Priorities.IGNORE_PRIORITY;
+        }
     }
 }

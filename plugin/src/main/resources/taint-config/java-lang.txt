@@ -10,9 +10,9 @@ java/langIterable.forEach(Ljava/util/function/Consumer;)V:0,1#1
 java/lang/Iterable.iterator()Ljava/util/Iterator;:0
 
 
-java/lang/System.getenv(Ljava/lang/String;)Ljava/lang/String;:TAINTED
-java/lang/System.getProperty(Ljava/lang/String;)Ljava/lang/String;:TAINTED
-java/lang/System.getProperty(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:TAINTED
+java/lang/System.getenv(Ljava/lang/String;)Ljava/lang/String;:SAFE
+java/lang/System.getProperty(Ljava/lang/String;)Ljava/lang/String;:SAFE
+java/lang/System.getProperty(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:SAFE
 
 
 java/lang/Appendable.append(Ljava/lang/CharSequence;)Ljava/lang/Appendable;:0,1#1

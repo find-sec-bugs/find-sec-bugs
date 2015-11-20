@@ -12,7 +12,7 @@ def getTemplateReader(String path) {
 //Generated page will be place there
 String outDir = binding.variables.containsKey("project") ? project.build.outputDirectory : System.getProperty("java.io.tmpdir")
 
-outDir = "C:\\Code\\find-sec-bugs\\website\\src\\main\\resources\\www"
+outDir = "C:\\Code\\workspace-java\\find-sec-bugs\\website\\src\\main\\resources\\www"
 def outputFile(outDir,file) {
     return new File(outDir, file)
 }
@@ -36,7 +36,7 @@ def buildMapping(InputStream xmlStream) {
 
     rootXml.BugPattern.each { pattern ->
         bugsBinding['bugPatterns'].add(
-                ['title': pattern.ShortDescription.text(),
+                ['title': pattern.ShortDescription.text().replaceAll(" in \\{0\\}.\\{1\\}",""),
                  'description': pattern.Details.text(),
                  'type':pattern.attribute("type")])
         println pattern.ShortDescription.text()

@@ -33,7 +33,8 @@ majorBugs = [
         "XSS_REQUEST_WRAPPER",
         "UNVALIDATED_REDIRECT",
         "ANDROID_EXTERNAL_FILE_ACCESS",
-        "ANDROID_WORLD_WRITABLE"
+        "ANDROID_WORLD_WRITABLE",
+        "INSECURE_COOKIE"
 ]
 criticalBugs = [
         "COMMAND_INJECTION",
@@ -49,7 +50,9 @@ criticalBugs = [
         "XML_DECODER",
         "XSS_SERVLET",
         "SCRIPT_ENGINE_INJECTION",
-        "SPEL_INJECTION"
+        "SPEL_INJECTION",
+        "SQL_INJECTION_SPRING_JDBC",
+        "SQL_INJECTION_JDBC"
 ]
 
 def getSonarPriority(String type) {

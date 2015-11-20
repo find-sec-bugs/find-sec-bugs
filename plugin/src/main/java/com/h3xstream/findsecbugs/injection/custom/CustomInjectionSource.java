@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.injection.custom;
 
+import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import com.h3xstream.findsecbugs.injection.InjectionPoint;
 import com.h3xstream.findsecbugs.injection.InjectionSource;
 import com.h3xstream.findsecbugs.injection.LegacyInjectionDetector;
@@ -90,7 +91,7 @@ public class CustomInjectionSource implements InjectionSource {
         }
         String resourceName = resourceBaseName + "/" + INJECTION_SOURCE_RESOURCE_NAME;
         URL url = CustomInjectionSource.class.getClassLoader().getResource(resourceName);
-        if (url == null) {
+        if (url == null && FindSecBugsGlobalConfig.getInstance().isPrintCustomInjectionWarning()) {
             LOG.info("The optional configuration for additional injection sources (" + resourceName + ") was not found. " +
                     "This message can be ignored if no custom API are intended to be configured. " +
                     "For more info: http://h3xstream.github.io/find-sec-bugs/bugs.htm#CUSTOM_INJECTION");

@@ -89,6 +89,7 @@
         <module>findbugs-test-util</module>
         <module>website</module>
         <module>plugin-deps</module>
+        <module>cli</module>
     </modules>
 
 

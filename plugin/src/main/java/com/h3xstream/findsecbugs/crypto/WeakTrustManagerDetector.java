@@ -30,12 +30,14 @@ import org.apache.bcel.generic.*;
 import java.util.Iterator;
 
 /**
+ * <p>
  * The first reflex for developer that encounter web services that have unsigned certificate
  * is often to trust all certificates.
- * <p/>
+ * </p>
+ * <p>
  * To trust everything, the standard API for SSL communication requires the implementation of a child
  * interface of "javax.net.ssl.TrustManager" (marker interface). Commonly, X509TrustManager is being used.
- * <p/>
+ * </p>
  * <a href="http://stackoverflow.com/a/1201102/89769">Sample of code being used</a>
  *
  * @see javax.net.ssl.TrustManager

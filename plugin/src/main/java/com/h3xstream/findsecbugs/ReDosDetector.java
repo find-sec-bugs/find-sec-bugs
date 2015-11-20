@@ -31,12 +31,14 @@ import org.apache.bcel.Constants;
  * This detector does minimal effort to find potential REDOS.
  * <p>
  * It will identify pattern similar to : <code>(( )+)+</code>
+ * </p>
  * <p>
  * It will not identify pattern of equivalence (such as<code>(aa|a)</code>).
  * It is far more complex to identify.
- * <p>
+ * </p>
  * <p>
  * For more advanced Regex analysis: <a href="http://code.google.com/p/saferegex/">Safe Regex</a>
+ * </p>
  */
 public class ReDosDetector extends OpcodeStackDetector {
 

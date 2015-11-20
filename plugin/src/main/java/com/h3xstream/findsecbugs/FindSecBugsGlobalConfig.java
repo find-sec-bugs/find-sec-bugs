@@ -40,8 +40,11 @@ public class FindSecBugsGlobalConfig {
         return instance;
     }
 
-    /** Getter and setter */
+    /*** Getter and setter **/
 
+    /**
+     * @return If the message regarding missing custom injection signatures should be printed.
+     */
     public boolean isPrintCustomInjectionWarning() {
         return printCustomInjectionWarning;
     }

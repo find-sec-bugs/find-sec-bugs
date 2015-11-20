@@ -31,29 +31,30 @@ import org.apache.bcel.Constants;
  * <p>
  * The identification will be made base on the mode use.
  * </p>
+ *
+ * Bad modes:
+ * <ul>
+ *      <li>ECB</li>
+ *      <li>CBC</li>
+ *      <li>OFB</li>
+ *      <li>...</li>
+ * </ul>
+ *
+ * Safe modes:
+ * <ul>
+ *     <li>CCM</li>
+ *     <li>CWC</li>
+ *     <li>OCB</li>
+ *     <li>EAX</li>
+ *     <li>GCM</li>
+ *  </ul>
+ *
  * <p>
- *     Bad modes:
- *     <ul>
- *         <li>ECB</li>
- *         <li>CBC</li>
- *         <li>OFB</li>
- *         <li>...</li>
- *     </ul>
- * </p>
- * <p>
- *     Safe modes:
- *     <ul>
- *         <li>CCM</li>
- *         <li>CWC</li>
- *         <li>OCB</li>
- *         <li>EAX</li>
- *         <li>GCM</li>
- *     </ul>
- * </p>
  * Ref: <a href="http://en.wikipedia.org/wiki/Authenticated_encryption">Wikipedia: Authenticated encryption</a>
  * Ref for the list of potential ciphers:
  * http://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#impl
  * Note: Not all ECB mode are vulnerable. see RSA/ECB/*
+ * </p>
  */
 public class CipherWithNoIntegrityDetector extends OpcodeStackDetector {
 

@@ -36,8 +36,8 @@ import org.apache.bcel.Constants;
  *
  * <p>
  * In practice, it has limited risk see example in WeakFilenameUtils.
+ * </p>
  *
- * @see org.apache.commons.io.FilenameUtils
  */
 public class WeakFilenameUtilsMethodDetector extends OpcodeStackDetector {
 
@@ -60,7 +60,7 @@ public class WeakFilenameUtilsMethodDetector extends OpcodeStackDetector {
                         getNameConstantOperand().equals("getBaseName")
                 )) {
 
-            bugReporter.reportBug(new BugInstance(this, WEAK_FILENAMEUTILS_TYPE, Priorities.NORMAL_PRIORITY) //
+            bugReporter.reportBug(new BugInstance(this, WEAK_FILENAMEUTILS_TYPE, Priorities.LOW_PRIORITY) //
                     .addClass(this).addMethod(this).addSourceLine(this)
                     .addString(getNameConstantOperand()));
         }

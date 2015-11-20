@@ -28,17 +28,17 @@ import org.apache.bcel.Constants;
 /**
  * <b>Cipher identify</b>
  *
- * <p>
  * <ul>
- * <li>DES/CBC/NoPadding (56 bit)
- * <li>DES/CBC/PKCS5Padding (56 bit)
- * <li>DES/ECB/NoPadding (56 bit)
- * <li>DES/ECB/PKCS5Padding (56 bit)
- * <li>DESede/CBC/NoPadding (168 bit)
- * <li>DESede/CBC/PKCS5Padding (168 bit)
- * <li>DESede/ECB/NoPadding (168 bit)
- * <li>DESede/ECB/PKCS5Padding (168 bit)
+ * <li>DES/CBC/NoPadding (56 bit)</li>
+ * <li>DES/CBC/PKCS5Padding (56 bit)</li>
+ * <li>DES/ECB/NoPadding (56 bit)</li>
+ * <li>DES/ECB/PKCS5Padding (56 bit)</li>
+ * <li>DESede/CBC/NoPadding (168 bit)</li>
+ * <li>DESede/CBC/PKCS5Padding (168 bit)</li>
+ * <li>DESede/ECB/NoPadding (168 bit)</li>
+ * <li>DESede/ECB/PKCS5Padding (168 bit)</li>
  * </ul>
+ *
  * Ref: <a href="http://docs.oracle.com/javase/7/docs/api/javax/crypto/Cipher.html">Partial list of ciphers</a>
  */
 public class DesUsageDetector extends OpcodeStackDetector {

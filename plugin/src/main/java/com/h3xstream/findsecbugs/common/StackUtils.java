@@ -38,7 +38,7 @@ public class StackUtils {
     }
 
     /**
-     * @param stack
+     * @param stack Stack reference
      * @return If at least one parameters has a variable string.
      */
     public static boolean hasVariableString(OpcodeStack stack) {

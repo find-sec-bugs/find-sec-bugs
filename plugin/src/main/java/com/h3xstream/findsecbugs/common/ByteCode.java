@@ -72,6 +72,7 @@ public class ByteCode {
      * Get the constant value of the given instruction.
      * (The instruction must refer to the Constant Pool otherwise null is return)
      *
+     * @param <T> Type of the constant value
      * @param h Instruction Handle
      * @param cpg Constant Pool
      * @param clazz Type of the constant being read

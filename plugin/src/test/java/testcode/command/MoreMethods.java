@@ -1,11 +1,11 @@
 package testcode.command;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-
 public class MoreMethods implements InterfaceWithSink {
-    
+    public static HttpServletRequest req;
     public static String tainted() {
-        return System.getenv("var");
+        return req.getParameter("input");
     }
     
     public String safe() {
@@ -26,7 +26,7 @@ public class MoreMethods implements InterfaceWithSink {
     }
     
     public static String tainted2() {
-        return System.getenv("var2");
+        return req.getParameter("var2");
     }
     
     public String safeParentparametricChild(String param) {

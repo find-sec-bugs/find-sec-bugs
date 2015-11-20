@@ -37,7 +37,7 @@ public class ExternalConfigurationControlDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                 .bugType("EXTERNAL_CONFIG_CONTROL")
-                .inClass("DbCatalog").atLine(10)
+                .inClass("DbCatalog").atLine(11)
                 .build()
         );
         verify(reporter, times(1)).doReportBug(bugDefinition().bugType("EXTERNAL_CONFIG_CONTROL").build());

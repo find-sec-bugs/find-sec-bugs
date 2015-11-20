@@ -1,5 +1,6 @@
 package testcode.command;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,9 +11,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-
 public abstract class CommandInjection {
-
+    public static HttpServletRequest req; //Could be override at any time. (tainted)
     public static void main(String[] args) throws IOException {
         String input = args.length > 0 ? args[0] : ";cat /etc/passwd";
         List<String> cmd = Arrays.asList("ls", "-l", input);
@@ -82,7 +82,7 @@ public abstract class CommandInjection {
     }
 
     public void badWithTaintSink() throws Exception {
-        taintSink("safe", System.getenv("x"));
+        taintSink("safe", req.getHeader("x"));
     }
 
     private void taintSink(String param1, String param2) throws Exception {
@@ -90,7 +90,7 @@ public abstract class CommandInjection {
     }
 
     public void badWithDoubleTaintSink() throws Exception {
-        taintSinkTransfer(System.getenv("y"));
+        taintSinkTransfer(req.getParameter("y"));
     }
 
     public void taintSinkTransfer(String str) throws Exception {
@@ -112,7 +112,7 @@ public abstract class CommandInjection {
     }
 
     public void badTransfer() throws IOException {
-        String tainted = System.getenv("zzz");
+        String tainted = req.getParameter("zzz");
         Runtime.getRuntime().exec(combine("safe", tainted));
     }
 
@@ -248,7 +248,7 @@ public abstract class CommandInjection {
     }
 
     public void call() throws IOException {
-        MoreMethods.sink(System.getenv(""));
+        MoreMethods.sink(req.getHeader("test"));
     }
     
     public void callInterface(InterfaceWithSink obj1) throws IOException {
@@ -257,8 +257,8 @@ public abstract class CommandInjection {
             System.out.println(obj2.toString());
         } // just to confuse the analysis a bit
         unknown(new StringBuilder().append(obj2));
-        obj2.sink2(System.getenv(""));
-        obj1.sink2(System.getenv("")); // should not be reported
+        obj2.sink2(req.getHeader("test"));
+        obj1.sink2(req.getHeader("test")); // should not be reported
     }
     
     public InterfaceWithSink getNewMoreMethods() {

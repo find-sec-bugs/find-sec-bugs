@@ -1,15 +1,15 @@
 package testcode;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ResourceBundle;
 import java.util.function.Supplier;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 public class Logging {
-
+    public static HttpServletRequest req;
     public void javaUtilLogging() {
-        String tainted = System.getProperty("");
+        String tainted = req.getParameter("test");
         String safe = "safe";
         Logger logger = Logger.getLogger(Logging.class.getName());
         logger.setLevel(Level.ALL);

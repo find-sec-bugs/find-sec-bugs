@@ -1549,11 +1549,7 @@ keyGen.initialize(2048);
     <section>
         <a class="anchor" name="XSS_JSP_PRINT"></a><h2 class="page-header">JSP 内の潜在的な XSS  <a href="#XSS_JSP_PRINT" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
-        <p>注: このルールを動かしたい場合は、JSP をプリコンパイルして (大抵ほとんどのビルド環境で行われません)、
-生成されたクラスファイルと元の JSP へのパス情報を FindBugs に与える必要があります。
-このルールの調査結果を見ているのであれば、あなたは環境を正しくセットアップすることを理解しています。
-また、この JSP 内の XSS ルールは同様の問題を探しますが、FindBugs の既存ルール「XSS: 反射型クロスサイトスクリプティング脆弱性がある JSP」とは異なる方法でそれらを探します。</p>
-<p>潜在的な XSS が見つかりました。これは、クライアントのブラウザーで不要な JavaScript を実行するために使用される可能性があります。 (参考文献を参照してください)
+        <p>潜在的な XSS が見つかりました。これは、クライアントのブラウザーで不要な JavaScript を実行するために使用される可能性があります。 (参考文献を参照してください)
 </p>
 <p>
     <b>脆弱なコード:</b>
@@ -2181,7 +2177,7 @@ class FileWriteUtil {
 <footer id="footer" class="footer hidden-print">
     <div class="container text-center">
         <div>
-            Find Security Bugs 1.4.3
+            Find Security Bugs 1.4.4
             <span class="hide-xs">&middot;</span>
             Created by <a target="_blank" href="https://twitter.com/h3xstream">Philippe Arteau</a>
         </div>

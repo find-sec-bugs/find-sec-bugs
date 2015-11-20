@@ -84,7 +84,7 @@
 
     
     <section>
-        <a class="anchor" name="PREDICTABLE_RANDOM"></a><h2 class="page-header">Predictable Pseudo Random Number Generator  <a href="#PREDICTABLE_RANDOM" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="PREDICTABLE_RANDOM"></a><h2 class="page-header">Predictable pseudorandom number generator  <a href="#PREDICTABLE_RANDOM" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>The use of a predictable random value can lead to vulnerabilities when used in certain security critical contexts. For example, when the value is used as:</p>
 <ul>
@@ -125,7 +125,7 @@ String generateSecretToken() {
     </section>
     
     <section>
-        <a class="anchor" name="SERVLET_PARAMETER"></a><h2 class="page-header">Untrusted Servlet Parameter  <a href="#SERVLET_PARAMETER" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="SERVLET_PARAMETER"></a><h2 class="page-header">Untrusted servlet parameter  <a href="#SERVLET_PARAMETER" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>The Servlet can read GET and POST parameters from various methods. The value obtained should be considered unsafe.
 You may need to validate or sanitize those values before passing them to sensitive APIs such as:</p>
@@ -145,7 +145,7 @@ You may need to validate or sanitize those values before passing them to sensiti
     </section>
     
     <section>
-        <a class="anchor" name="SERVLET_CONTENT_TYPE"></a><h2 class="page-header">Untrusted Content-Type Header  <a href="#SERVLET_CONTENT_TYPE" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="SERVLET_CONTENT_TYPE"></a><h2 class="page-header">Untrusted Content-Type header  <a href="#SERVLET_CONTENT_TYPE" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>
 The HTTP header Content-Type can be controlled by the client. As such, its value should not be used in any security critical decisions.
@@ -158,7 +158,7 @@ The HTTP header Content-Type can be controlled by the client. As such, its value
     </section>
     
     <section>
-        <a class="anchor" name="SERVLET_SERVER_NAME"></a><h2 class="page-header">Untrusted Hostname Header  <a href="#SERVLET_SERVER_NAME" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="SERVLET_SERVER_NAME"></a><h2 class="page-header">Untrusted Hostname header  <a href="#SERVLET_SERVER_NAME" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>The hostname header can be controlled by the client. As such, its value should not be used in any security critical decisions. 
 Both <code>ServletRequest.getServerName()</code> and <code>HttpServletRequest.getHeader("Host")</code> have the same 
@@ -180,7 +180,7 @@ decisions you make with respect to a request.
     </section>
     
     <section>
-        <a class="anchor" name="SERVLET_SESSION_ID"></a><h2 class="page-header">Untrusted Session Cookie Value  <a href="#SERVLET_SESSION_ID" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="SERVLET_SESSION_ID"></a><h2 class="page-header">Untrusted session cookie value  <a href="#SERVLET_SESSION_ID" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>
 The method <a href="http://docs.oracle.com/javaee/6/api/javax/servlet/http/HttpServletRequest.html#getRequestedSessionId()"><code>HttpServletRequest.getRequestedSessionId()</code></a>
@@ -210,7 +210,7 @@ valid active session IDs, allowing an insider to hijack any sessions whose IDs h
     </section>
     
     <section>
-        <a class="anchor" name="SERVLET_QUERY_STRING"></a><h2 class="page-header">Untrusted Query String  <a href="#SERVLET_QUERY_STRING" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="SERVLET_QUERY_STRING"></a><h2 class="page-header">Untrusted query string  <a href="#SERVLET_QUERY_STRING" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>The query string is the concatenation of the GET parameter names and values. Parameters other than those intended can
 be passed in.</p>
@@ -227,7 +227,7 @@ You may need to validate or sanitize anything pulled from the query string befor
     </section>
     
     <section>
-        <a class="anchor" name="SERVLET_HEADER"></a><h2 class="page-header">HTTP Headers Untrusted  <a href="#SERVLET_HEADER" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="SERVLET_HEADER"></a><h2 class="page-header">HTTP headers untrusted  <a href="#SERVLET_HEADER" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>Request headers can easily be altered by the requesting user. In general, no assumption should be made that 
 the request came from a regular browser without modification by an attacker. As such, it is recommended that you 
@@ -240,7 +240,7 @@ not trust this value in any security decisions you make with respect to a reques
     </section>
     
     <section>
-        <a class="anchor" name="SERVLET_HEADER_REFERER"></a><h2 class="page-header">Untrusted Referer Header  <a href="#SERVLET_HEADER_REFERER" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="SERVLET_HEADER_REFERER"></a><h2 class="page-header">Untrusted Referer header  <a href="#SERVLET_HEADER_REFERER" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>
 Behavior:
@@ -264,7 +264,7 @@ Recommendations:
     </section>
     
     <section>
-        <a class="anchor" name="SERVLET_HEADER_USER_AGENT"></a><h2 class="page-header">Untrusted User-Agent Header  <a href="#SERVLET_HEADER_USER_AGENT" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="SERVLET_HEADER_USER_AGENT"></a><h2 class="page-header">Untrusted User-Agent header  <a href="#SERVLET_HEADER_USER_AGENT" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>The header "User-Agent" can easily be spoofed by the client. Adopting different behaviors based on the User-Agent (for
 crawler UA) is not recommended.</p>
@@ -276,7 +276,7 @@ crawler UA) is not recommended.</p>
     </section>
     
     <section>
-        <a class="anchor" name="COOKIE_USAGE"></a><h2 class="page-header">Potentially Sensitive Data in Cookie  <a href="#COOKIE_USAGE" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="COOKIE_USAGE"></a><h2 class="page-header">Potentially sensitive data in a cookie  <a href="#COOKIE_USAGE" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>The information stored in a custom cookie should not be sensitive or related to the session. In most cases, sensitive data should only be stored in session
 and referenced by the user's session cookie. See HttpSession (HttpServletRequest.getSession())</p>
@@ -289,7 +289,7 @@ and referenced by the user's session cookie. See HttpSession (HttpServletRequest
     </section>
     
     <section>
-        <a class="anchor" name="PATH_TRAVERSAL_IN"></a><h2 class="page-header">Potential Path Traversal (File Read)  <a href="#PATH_TRAVERSAL_IN" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="PATH_TRAVERSAL_IN"></a><h2 class="page-header">Potential Path Traversal (file read)  <a href="#PATH_TRAVERSAL_IN" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>A file is opened to read its content. The filename comes from an <b>input</b> parameter. 
 If an unfiltered parameter is passed to this file API, files from an arbitrary filesystem location could be read.</p>
@@ -306,7 +306,7 @@ by the user. If that is the case, the reported instance is a false positive.</p>
     </section>
     
     <section>
-        <a class="anchor" name="PATH_TRAVERSAL_OUT"></a><h2 class="page-header">Potential Path Traversal (File Write)  <a href="#PATH_TRAVERSAL_OUT" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="PATH_TRAVERSAL_OUT"></a><h2 class="page-header">Potential Path Traversal (file write)  <a href="#PATH_TRAVERSAL_OUT" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>A file is opened to write to its contents. The filename comes from an <b>input</b> parameter. 
 If an unfiltered parameter is passed to this file API, files at an arbitrary filesystem location could be modified.</p>
@@ -336,7 +336,7 @@ by the user. If that is the case, the reported instance is a false positive.</p>
     </section>
     
     <section>
-        <a class="anchor" name="WEAK_FILENAMEUTILS"></a><h2 class="page-header">FilenameUtils Not Filtering Null Bytes  <a href="#WEAK_FILENAMEUTILS" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="WEAK_FILENAMEUTILS"></a><h2 class="page-header">FilenameUtils not filtering null bytes  <a href="#WEAK_FILENAMEUTILS" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>Some FilenameUtils' methods don't filter NULL bytes (<code>0x00</code>).</p>
 <p>If a null byte is injected into a filename, if this filename is passed to the underlying OS, the file retrieved will be the
@@ -360,7 +360,7 @@ that looks at the end of the filename (e.g., endswith ".log") to make sure its a
     </section>
     
     <section>
-        <a class="anchor" name="WEAK_TRUST_MANAGER"></a><h2 class="page-header">TrustManager Implementation Empty  <a href="#WEAK_TRUST_MANAGER" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="WEAK_TRUST_MANAGER"></a><h2 class="page-header">TrustManager implementation empty  <a href="#WEAK_TRUST_MANAGER" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>Empty TrustManager implementations are often used to connect easily to a host that is not signed by a root
 <a href="http://en.wikipedia.org/wiki/Certificate_authority">certificate authority</a>. As a consequence, this is vulnerable to
@@ -382,7 +382,7 @@ Detailed information for a proper implementation is at:
     </section>
     
     <section>
-        <a class="anchor" name="JAXWS_ENDPOINT"></a><h2 class="page-header">Found JAX-WS SOAP Endpoint  <a href="#JAXWS_ENDPOINT" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="JAXWS_ENDPOINT"></a><h2 class="page-header">Found JAX-WS SOAP endpoint  <a href="#JAXWS_ENDPOINT" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>This method is part of a SOAP Web Service (JSR224).</p>
 <p>
@@ -403,7 +403,7 @@ Detailed information for a proper implementation is at:
     </section>
     
     <section>
-        <a class="anchor" name="JAXRS_ENDPOINT"></a><h2 class="page-header">Found JAX-RS REST Endpoint  <a href="#JAXRS_ENDPOINT" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="JAXRS_ENDPOINT"></a><h2 class="page-header">Found JAX-RS REST endpoint  <a href="#JAXRS_ENDPOINT" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>This method is part of a REST Web Service (JSR311).</p>
 <p>
@@ -429,7 +429,7 @@ Detailed information for a proper implementation is at:
     </section>
     
     <section>
-        <a class="anchor" name="TAPESTRY_ENDPOINT"></a><h2 class="page-header">Found Tapestry Page  <a href="#TAPESTRY_ENDPOINT" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="TAPESTRY_ENDPOINT"></a><h2 class="page-header">Found Tapestry page  <a href="#TAPESTRY_ENDPOINT" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>A Tapestry endpoint was discovered at application startup. Tapestry apps are structured with a backing Java class and a corresponding 
 Tapestry Markup Language page (a .tml file) for each page. When a request is received, the GET/POST parameters are mapped to specific 
@@ -462,7 +462,7 @@ mapped in this way are properly validated before they are used.</p>
     </section>
     
     <section>
-        <a class="anchor" name="WICKET_ENDPOINT"></a><h2 class="page-header">Found Wicket Page  <a href="#WICKET_ENDPOINT" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="WICKET_ENDPOINT"></a><h2 class="page-header">Found Wicket WebPage  <a href="#WICKET_ENDPOINT" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>This class represents a Wicket WebPage. Input is automatically read from a PageParameters instance passed to the constructor. 
 The current page is mapped to the view [/package/WebPageName].html.</p>
@@ -477,7 +477,7 @@ mapped in this way are properly validated before they are used.</p>
     </section>
     
     <section>
-        <a class="anchor" name="WEAK_MESSAGE_DIGEST"></a><h2 class="page-header">MessageDigest Is Weak  <a href="#WEAK_MESSAGE_DIGEST" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="WEAK_MESSAGE_DIGEST"></a><h2 class="page-header">Message digest is weak  <a href="#WEAK_MESSAGE_DIGEST" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>The algorithm used is not a recommended MessageDigest.</p>
 <p><a href="http://csrc.nist.gov/groups/ST/toolkit/secure_hashing.html">NIST</a> recommends the use of SHA-1, SHA-224*, SHA-256, SHA-384, SHA-512, SHA-512/224, or SHA-512/256.</p>
@@ -492,7 +492,7 @@ mapped in this way are properly validated before they are used.</p>
     </section>
     
     <section>
-        <a class="anchor" name="CUSTOM_MESSAGE_DIGEST"></a><h2 class="page-header">MessageDigest Is Custom  <a href="#CUSTOM_MESSAGE_DIGEST" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="CUSTOM_MESSAGE_DIGEST"></a><h2 class="page-header">Message digest is custom  <a href="#CUSTOM_MESSAGE_DIGEST" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>Implementing a custom MessageDigest is error-prone.</p>
 <p><a href="http://csrc.nist.gov/groups/ST/toolkit/secure_hashing.html">NIST</a> recommends the use of SHA-1, SHA-224*, SHA-256, SHA-384, SHA-512, SHA-512/224, or SHA-512/256.</p>
@@ -524,7 +524,7 @@ sha256Digest.update(password.getBytes());</pre>
     </section>
     
     <section>
-        <a class="anchor" name="FILE_UPLOAD_FILENAME"></a><h2 class="page-header">Tainted Filename Read  <a href="#FILE_UPLOAD_FILENAME" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="FILE_UPLOAD_FILENAME"></a><h2 class="page-header">Tainted filename read  <a href="#FILE_UPLOAD_FILENAME" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>The filename provided by the FileUpload API can be tampered with by the client to reference unauthorized files.</p>
 <p>For example:</p>
@@ -574,7 +574,7 @@ regex meant, this new regex can be evaluated quickly, and is not subject to ReDO
     </section>
     
     <section>
-        <a class="anchor" name="XXE_SAXPARSER"></a><h2 class="page-header">XML Parsing Vulnerable to XXE (SAXParser)  <a href="#XXE_SAXPARSER" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="XXE_SAXPARSER"></a><h2 class="page-header">XML parsing vulnerable to XXE (SAXParser)  <a href="#XXE_SAXPARSER" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <!--XXE_GENERIC_START-->
 <h3>Attack</h3>
@@ -653,7 +653,7 @@ parser.parse(inputStream, customHandler);</pre>
     </section>
     
     <section>
-        <a class="anchor" name="XXE_XMLREADER"></a><h2 class="page-header">XML Parsing Vulnerable to XXE (XMLReader)  <a href="#XXE_XMLREADER" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="XXE_XMLREADER"></a><h2 class="page-header">XML parsing vulnerable to XXE (XMLReader)  <a href="#XXE_XMLREADER" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <!--XXE_GENERIC_START-->
 <h3>Attack</h3>
@@ -732,7 +732,7 @@ reader.parse(new InputSource(inputStream));</pre>
     </section>
     
     <section>
-        <a class="anchor" name="XXE_DOCUMENT"></a><h2 class="page-header">XML Parsing Vulnerable to XXE (DocumentBuilder)  <a href="#XXE_DOCUMENT" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="XXE_DOCUMENT"></a><h2 class="page-header">XML parsing vulnerable to XXE (DocumentBuilder)  <a href="#XXE_DOCUMENT" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <!--XXE_GENERIC_START-->
 <h3>Attack</h3>
@@ -830,7 +830,7 @@ could be exposed. This could allow an attacker to access unauthorized data or ma
     </section>
     
     <section>
-        <a class="anchor" name="STRUTS1_ENDPOINT"></a><h2 class="page-header">Found Struts 1 Action  <a href="#STRUTS1_ENDPOINT" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="STRUTS1_ENDPOINT"></a><h2 class="page-header">Found Struts 1 endpoint  <a href="#STRUTS1_ENDPOINT" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>This class is a Struts 1 Action.</p>
 <p>Once a request is routed to this controller, a Form object will automatically be instantiated that contains the HTTP parameters. 
@@ -838,7 +838,7 @@ The use of these parameters should be reviewed to make sure they are used safely
     </section>
     
     <section>
-        <a class="anchor" name="STRUTS2_ENDPOINT"></a><h2 class="page-header">Found Struts 2 Endpoint  <a href="#STRUTS2_ENDPOINT" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="STRUTS2_ENDPOINT"></a><h2 class="page-header">Found Struts 2 endpoint  <a href="#STRUTS2_ENDPOINT" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>In Struts 2, the endpoints are Plain Old Java Objects (POJOs) which means no Interface/Class needs to be implemented/extended.</p>
 <p>When a request is routed to its controller (like the selected class), the supplied HTTP parameters are automatically mapped to setters for
@@ -848,14 +848,14 @@ such a setter. The use of these parameters should be reviewed to make sure they 
     </section>
     
     <section>
-        <a class="anchor" name="SPRING_ENDPOINT"></a><h2 class="page-header">Found Spring Endpoint  <a href="#SPRING_ENDPOINT" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="SPRING_ENDPOINT"></a><h2 class="page-header">Found Spring endpoint  <a href="#SPRING_ENDPOINT" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>This class is a Spring Controller. All methods annotated with <code>RequestMapping</code> are reachable remotely.
 This class should be analyzed to make sure that remotely exposed methods are safe to expose to potential attackers.</p>
     </section>
     
     <section>
-        <a class="anchor" name="CUSTOM_INJECTION"></a><h2 class="page-header">Potential Injection  <a href="#CUSTOM_INJECTION" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="CUSTOM_INJECTION"></a><h2 class="page-header">Potential injection (custom)  <a href="#CUSTOM_INJECTION" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>
 The method identified is susceptible to injection. The input should be validated and properly escaped.
@@ -1193,6 +1193,88 @@ public void parseExpressionInterface(Person personObj,String property) {
     </section>
     
     <section>
+        <a class="anchor" name="HTTP_RESPONSE_SPLITTING"></a><h2 class="page-header">Potential HTTP Response Splitting  <a href="#HTTP_RESPONSE_SPLITTING" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+
+        <p>
+    When an HTTP request contains unexpected CR and LF characters, the server may respond with an output stream
+    that is interpreted as two different HTTP responses (instead of one).
+    An attacker can control the second response and mount attacks such as cross-site scripting and cache poisoning attacks.
+    According to OWASP, the issue has been fixed in virtually all modern Java EE application servers, but it is still better to validate the input.
+    If you are concerned about this risk, you should test on the platform of concern to see
+    if the underlying platform allows for CR or LF characters to be injected into headers.
+    This weakness is reported with lower priority than SQL injection etc.,
+    if you are using a vulnerable platform, please check low-priority warnings too.
+</p>
+<br/>
+<p>
+<b>Code at risk:</b><br/>
+<pre>String author = request.getParameter(AUTHOR_PARAMETER);
+// ...
+Cookie cookie = new Cookie("author", author);
+response.addCookie(cookie);</pre>
+</p>
+<br/>
+<p>
+    <b>References</b><br/>
+    <a href="https://www.owasp.org/index.php/HTTP_Response_Splitting">OWASP: HTTP Response Splitting</a><br/>
+    <a href="http://cwe.mitre.org/data/definitions/113.html">CWE-113: Improper Neutralization of CRLF Sequences in HTTP Headers ('HTTP Response Splitting')</a>
+    <a href="http://cwe.mitre.org/data/definitions/93.html">CWE-93: Improper Neutralization of CRLF Sequences ('CRLF Injection')</a><br/>
+</p>
+    </section>
+    
+    <section>
+        <a class="anchor" name="CRLF_INJECTION_LOGS"></a><h2 class="page-header">Potential CRLF Injection for logs  <a href="#CRLF_INJECTION_LOGS" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+
+        <p>
+    When data from untusted source are put into a logger and not neutralized correctly,
+    an attacker could forge log entries or include malicious content.
+    Inserted false entries could be used to skew statistics, distract the administrator
+    or even to implicate another party in the commission of a malicious act.
+    If the log file is processed automatically, the attacker can render the file unusable
+    by corrupting the format of the file or injecting unexpected characters.
+    An attacker may also inject code or other commands into the log file and take advantage
+    of a vulnerability in the log processing utility (e.g. command injection or XSS).
+</p>
+<br/>
+<p>
+<b>Code at risk:</b><br/>
+<pre>String val = request.getParameter("val");
+try {
+    number = Integer.parseInt(val);
+} catch (NumberFormatException) {
+    log.info("Failed to parse val = " + val);
+}</pre>
+</p>
+<br/>
+<p>
+    <b>References</b><br/>
+    <a href="http://cwe.mitre.org/data/definitions/117.html">CWE-117: Improper Output Neutralization for Logs</a><br/>
+    <a href="http://cwe.mitre.org/data/definitions/93.html">CWE-93: Improper Neutralization of CRLF Sequences ('CRLF Injection')</a><br/>
+</p>
+    </section>
+    
+    <section>
+        <a class="anchor" name="EXTERNAL_CONFIG_CONTROL"></a><h2 class="page-header">Potential external control of configuration  <a href="#EXTERNAL_CONFIG_CONTROL" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+
+        <p>
+    Allowing external control of system settings can disrupt service or cause an application
+    to behave in unexpected, and potentially malicious ways. 
+    An attacker could cause an error by providing a nonexistent catalog name
+    or connect to an unauthorized portion of the database.
+</p>
+<br/>
+<p>
+<b>Code at risk:</b><br/>
+<pre>conn.setCatalog(request.getParameter("catalog"));</pre>
+</p>
+<br/>
+<p>
+    <b>References</b><br/>
+    <a href="http://cwe.mitre.org/data/definitions/15.html">CWE-15: External Control of System or Configuration Setting</a><br/>
+</p>
+    </section>
+    
+    <section>
         <a class="anchor" name="BAD_HEXA_CONVERSION"></a><h2 class="page-header">Bad hexadecimal concatenation  <a href="#BAD_HEXA_CONVERSION" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>When converting a byte array containing a hash signature to a human readable string, a conversion mistake can be made if 
@@ -1227,7 +1309,7 @@ stringBuilder.append( String.format( "%02X", b ) );</pre>
     </section>
     
     <section>
-        <a class="anchor" name="HAZELCAST_SYMMETRIC_ENCRYPTION"></a><h2 class="page-header">Hazelcast Symmetric Encryption  <a href="#HAZELCAST_SYMMETRIC_ENCRYPTION" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="HAZELCAST_SYMMETRIC_ENCRYPTION"></a><h2 class="page-header">Hazelcast symmetric encryption  <a href="#HAZELCAST_SYMMETRIC_ENCRYPTION" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>The network communications for Hazelcast is configured to use a symmetric cipher (probably DES or blowfish).</p>
 <p>Those ciphers alone do not provide integrity or secure authentication. The use of asymmetric encryption is preferred.</p>
@@ -1241,7 +1323,7 @@ stringBuilder.append( String.format( "%02X", b ) );</pre>
     </section>
     
     <section>
-        <a class="anchor" name="NULL_CIPHER"></a><h2 class="page-header">NullCipher Unsafe  <a href="#NULL_CIPHER" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="NULL_CIPHER"></a><h2 class="page-header">NullCipher is insecure  <a href="#NULL_CIPHER" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>
 The NullCipher is rarely used intentionally in production applications. It implements the Cipher interface by returning ciphertext 
@@ -1297,7 +1379,7 @@ to do this correctly.
     </section>
     
     <section>
-        <a class="anchor" name="DES_USAGE"></a><h2 class="page-header">DES / DESede Unsafe  <a href="#DES_USAGE" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="DES_USAGE"></a><h2 class="page-header">DES/DESede is insecure  <a href="#DES_USAGE" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>
 DES and DESede (3DES) are not considered strong ciphers for modern applications. Currently, NIST recommends the 
@@ -1324,7 +1406,7 @@ byte[] cipherText = c.doFinal(plainText);</pre>
     </section>
     
     <section>
-        <a class="anchor" name="RSA_NO_PADDING"></a><h2 class="page-header">RSA NoPadding Unsafe  <a href="#RSA_NO_PADDING" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="RSA_NO_PADDING"></a><h2 class="page-header">RSA with no padding is insecure  <a href="#RSA_NO_PADDING" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>
 The software uses the RSA algorithm but does not incorporate Optimal Asymmetric Encryption Padding (OAEP), which might weaken the encryption.
@@ -1394,7 +1476,7 @@ return aesCipher.doFinal(secretData);</pre>
     </section>
     
     <section>
-        <a class="anchor" name="STRUTS_FORM_VALIDATION"></a><h2 class="page-header">Struts Form Without Input Validation  <a href="#STRUTS_FORM_VALIDATION" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="STRUTS_FORM_VALIDATION"></a><h2 class="page-header">Struts Form without input validation  <a href="#STRUTS_FORM_VALIDATION" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>
 Form inputs should have minimal input validation. Preventive validation helps provide defense in depth against a variety of risks.
@@ -1424,7 +1506,7 @@ public class RegistrationForm extends ValidatorForm {
     </section>
     
     <section>
-        <a class="anchor" name="XSS_REQUEST_WRAPPER"></a><h2 class="page-header">XSSRequestWrapper is Weak XSS Protection  <a href="#XSS_REQUEST_WRAPPER" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="XSS_REQUEST_WRAPPER"></a><h2 class="page-header">XSSRequestWrapper is a weak XSS protection  <a href="#XSS_REQUEST_WRAPPER" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>
 An implementation of <code>HttpServletRequestWrapper</code> called <code>XSSRequestWrapper</code> was published through
@@ -1462,7 +1544,7 @@ the XSS protection rules defined in the OWASP XSS Prevention Cheat Sheet.
     </section>
     
     <section>
-        <a class="anchor" name="BLOWFISH_KEY_SIZE"></a><h2 class="page-header">Blowfish Usage with Weak Key Size  <a href="#BLOWFISH_KEY_SIZE" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="BLOWFISH_KEY_SIZE"></a><h2 class="page-header">Blowfish usage with short key  <a href="#BLOWFISH_KEY_SIZE" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>
 The Blowfish cipher supports keysizes from 32 bits to 448 bits. A small key size makes the ciphertext vulnerable to brute force attacks.
@@ -1490,7 +1572,7 @@ keyGen.init(128);</pre>
     </section>
     
     <section>
-        <a class="anchor" name="RSA_KEY_SIZE"></a><h2 class="page-header">RSA Usage with Weak Key Size  <a href="#RSA_KEY_SIZE" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="RSA_KEY_SIZE"></a><h2 class="page-header">RSA usage with short key  <a href="#RSA_KEY_SIZE" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>"RSA Laboratories currently recommends key sizes of 1024 bits for corporate use and 2048 bits for extremely valuable keys 
 like the root key pair used by a certifying authority". <sup>[1]</sup></p>
@@ -1565,13 +1647,90 @@ keyGen.initialize(2048);
     </section>
     
     <section>
+        <a class="anchor" name="JSP_INCLUDE"></a><h2 class="page-header">Dynamic JSP inclusion  <a href="#JSP_INCLUDE" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+
+        <p>The inclusion of JSP file allow the entry of dynamic value. It may allow an attacker to control the JSP page included.
+If this is the case, an attacker will try to include a file on disk that he controls. By including arbitrary files, the
+attacker gets the ability to execute any code.
+</p>
+<p>
+    <b>Vulnerable Code:</b>
+    <pre><jsp:include page="${param.secret_param}" /></pre>
+</p>
+<p>
+    <b>Solution:</b>
+    <pre><c:if test="${param.secret_param == 'page1'}">
+    <jsp:include page="page1.jsp" />
+</c:if></pre>
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="http://resources.infosecinstitute.com/file-inclusion-attacks/">InfosecInstitute: File Inclusion Attacks</a><br/>
+<a href="http://projects.webappsec.org/w/page/13246955/Remote%20File%20Inclusion">WASC-05: Remote File Inclusion</a><br/>
+</p>
+    </section>
+    
+    <section>
+        <a class="anchor" name="JSP_SPRING_EVAL"></a><h2 class="page-header">Dynamic variable in Spring expression  <a href="#JSP_SPRING_EVAL" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+
+        <p></p>
+<p>
+    <b>Vulnerable Code:</b>
+    <pre><%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
+<spring:eval expression="${param.lang}" var="lang" /></pre>
+    <br>
+    <pre><%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
+<spring:eval expression="'${param.lang}'=='fr'" var="languageIsFrench" /></pre>
+</p>
+<p>
+    <b>Solution:</b>
+    <pre><c:set var="lang" value="${param.lang}"/></pre>
+    <br/>
+    <pre><c:set var="languageIsFrench" value="${param.lang == 'fr'}"/></pre>
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="http://resources.infosecinstitute.com/file-inclusion-attacks/">InfosecInstitute: File Inclusion Attacks</a><br/>
+<a href="http://projects.webappsec.org/w/page/13246955/Remote%20File%20Inclusion">WASC-05: Remote File Inclusion</a><br/>
+</p>
+    </section>
+    
+    <section>
+        <a class="anchor" name="JSP_JSTL_OUT"></a><h2 class="page-header">Escaping of special XML characters is disabled  <a href="#JSP_JSTL_OUT" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+
+        <p>A potential XSS was found. It could be used to execute unwanted JavaScript in a client's browser. (See references)
+</p>
+<p>
+    <b>Vulnerable Code:</b>
+    <pre><%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<c:out value="${param.test_param}" escapeXml="false"/></pre>
+</p>
+<p>
+    <b>Solution:</b>
+    <pre><%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<c:out value="${param.test_param}"/></pre>
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site Scripting</a><br/>
+<a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet">OWASP: XSS Prevention Cheat Sheet</a><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_%28XSS%29">OWASP: Top 10 2013-A3: Cross-Site Scripting (XSS)</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a><br/>
+<a href="http://docs.oracle.com/javaee/5/jstl/1.1/docs/tlddocs/c/out.html">JSTL Javadoc: Out tag</a><br/>
+</p>
+    </section>
+    
+    <section>
         <a class="anchor" name="XSS_JSP_PRINT"></a><h2 class="page-header">Potential XSS in JSP  <a href="#XSS_JSP_PRINT" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
-        <p>NOTE: If you want this rule to work, you have to precompile your JSPs (which usually isn't done in most build environments)
-and then provide FindBugs the path information to the generated class files and the original JSPs themselves. If you are seeing
-findings for this rule, you know you have your environment set up properly. Also, this XSS in JSP rule looks for similar issues,
-but looks for them in a different way than the existing 'XSS: JSP reflected cross site scripting vulnerability' rule in FindBugs.</p>
-<p>A potential XSS was found. It could be used to execute unwanted JavaScript in a client's browser. (See references)
+        <p>A potential XSS was found. It could be used to execute unwanted JavaScript in a client's browser. (See references)
 </p>
 <p>
     <b>Vulnerable Code:</b>
@@ -1733,7 +1892,7 @@ public void encrypt(String message) throws Exception {
     </section>
     
     <section>
-        <a class="anchor" name="ECB_MODE"></a><h2 class="page-header">ECB Mode Unsafe  <a href="#ECB_MODE" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="ECB_MODE"></a><h2 class="page-header">ECB mode is insecure  <a href="#ECB_MODE" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>An authentication cipher mode which provides better confidentiality of the encrypted data should be used instead of Electronic Codebook (ECB) mode, 
 which does not provide good confidentiality. Specifically, ECB mode produces the same output for the same input each time. So, 
@@ -1765,7 +1924,7 @@ byte[] cipherText = c.doFinal(plainText);</pre>
     </section>
     
     <section>
-        <a class="anchor" name="PADDING_ORACLE"></a><h2 class="page-header">Cipher is Susceptible to Padding Oracle  <a href="#PADDING_ORACLE" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="PADDING_ORACLE"></a><h2 class="page-header">Cipher is susceptible to Padding Oracle  <a href="#PADDING_ORACLE" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>
     This specific mode of CBC with PKCS5Padding is susceptible to padding oracle attacks. An adversary could potentially decrypt the
@@ -1796,7 +1955,7 @@ byte[] cipherText = c.doFinal(plainText);</pre>
     </section>
     
     <section>
-        <a class="anchor" name="CIPHER_INTEGRITY"></a><h2 class="page-header">Cipher With No Integrity  <a href="#CIPHER_INTEGRITY" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="CIPHER_INTEGRITY"></a><h2 class="page-header">Cipher with no integrity  <a href="#CIPHER_INTEGRITY" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>
     The ciphertext produced is susceptible to alteration by an adversary. This mean that the cipher provides no way to detect that the 
@@ -1842,7 +2001,7 @@ In the example solution above, the GCM mode introduces an HMAC into the resultin
     </section>
     
     <section>
-        <a class="anchor" name="ESAPI_ENCRYPTOR"></a><h2 class="page-header">Usage of ESAPI Encryptor  <a href="#ESAPI_ENCRYPTOR" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="ESAPI_ENCRYPTOR"></a><h2 class="page-header">Use of ESAPI Encryptor  <a href="#ESAPI_ENCRYPTOR" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>
     The ESAPI has a small history of vulnerabilities within the cryptography component. Here is a quick validation list to
@@ -1919,7 +2078,7 @@ Encryptor.cipher_modes.additional_allowed=</pre>
     </section>
     
     <section>
-        <a class="anchor" name="ANDROID_EXTERNAL_FILE_ACCESS"></a><h2 class="page-header">External File Access (Android)  <a href="#ANDROID_EXTERNAL_FILE_ACCESS" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="ANDROID_EXTERNAL_FILE_ACCESS"></a><h2 class="page-header">External file access (Android)  <a href="#ANDROID_EXTERNAL_FILE_ACCESS" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>
     The application write data to external storage (potentially SD card). There are multiple security implication to this
@@ -2026,7 +2185,7 @@ sendBroadcast(v1);
     </section>
     
     <section>
-        <a class="anchor" name="ANDROID_WORLD_WRITABLE"></a><h2 class="page-header">World Writable File (Android)  <a href="#ANDROID_WORLD_WRITABLE" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="ANDROID_WORLD_WRITABLE"></a><h2 class="page-header">World writable file (Android)  <a href="#ANDROID_WORLD_WRITABLE" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>
     The file written in this context is using the creation mode <code>MODE_WORLD_READABLE</code>. It might not be the
@@ -2065,7 +2224,7 @@ create on external storage. See references below for implementation guidelines.
     </section>
     
     <section>
-        <a class="anchor" name="ANDROID_GEOLOCATION"></a><h2 class="page-header">WebView with Geolocation Activated (Android)  <a href="#ANDROID_GEOLOCATION" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="ANDROID_GEOLOCATION"></a><h2 class="page-header">WebView with geolocation activated (Android)  <a href="#ANDROID_GEOLOCATION" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>
     It is suggest to ask the user for a confirmation about obtaining its geolocation.
@@ -2106,7 +2265,7 @@ webView.setWebChromeClient(new WebChromeClient() {
     </section>
     
     <section>
-        <a class="anchor" name="ANDROID_WEB_VIEW_JAVASCRIPT"></a><h2 class="page-header">WebView with JavaScript Enabled (Android)  <a href="#ANDROID_WEB_VIEW_JAVASCRIPT" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="ANDROID_WEB_VIEW_JAVASCRIPT"></a><h2 class="page-header">WebView with JavaScript enabled (Android)  <a href="#ANDROID_WEB_VIEW_JAVASCRIPT" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>
     Enabling JavaScript for the WebView means that it is now susceptible to XSS. The page render should be inspected
@@ -2141,10 +2300,10 @@ function updateDescription(newDescription) {
     </section>
     
     <section>
-        <a class="anchor" name="ANDROID_WEB_VIEW_JAVASCRIPT_INTERFACE"></a><h2 class="page-header">WebView with Javascript Interface (Android)  <a href="#ANDROID_WEB_VIEW_JAVASCRIPT_INTERFACE" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="ANDROID_WEB_VIEW_JAVASCRIPT_INTERFACE"></a><h2 class="page-header">WebView with JavaScript interface (Android)  <a href="#ANDROID_WEB_VIEW_JAVASCRIPT_INTERFACE" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
 
         <p>
-    The use Javascript Interface could expose the WebView to risky API. If an XSS is trigger in the WebView, the class
+    The use JavaScript Interface could expose the WebView to risky API. If an XSS is trigger in the WebView, the class
     could be call by the malicious JavaScript code.
 </p>
 
@@ -2231,6 +2390,52 @@ cookie.setHttpOnly(true);
 </p>
     </section>
     
+    <section>
+        <a class="anchor" name="OBJECT_DESERIALIZATION"></a><h2 class="page-header">Object deserialization is used  <a href="#OBJECT_DESERIALIZATION" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+
+        <p>
+    Object deserialization of untrusted data can lead to remote code execution, if there is a class in classpath allow
+    the trigger of malicious operation.
+</p>
+<p>
+    Libraries developers tend to fix class that provided potential malicious trigger. Their are still classes that are
+    known to trigger Denial of Service<sup>[1]</sup>.
+</p>
+<p>
+    Deserialization is a sensible operation that has a great history of vulnerabilities. The web application might
+    become vulnerable has soon as a new vulnerability is found in the Java Virtual Machine<sup>[2] [3]</sup>.
+</p>
+
+<p>
+<b>Code at risk:</b><br/>
+<pre>
+public UserData deserializeObject(InputStream receivedFile) throws IOException, ClassNotFoundException {
+
+    try (ObjectInputStream in = new ObjectInputStream(receivedFile)) {
+        return (UserData) in.readObject();
+    }
+}
+</pre>
+</p>
+
+<p>
+<b>Solution:</b><br/>
+<p>
+Avoid deserializing object provided by remote users.
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://cwe.mitre.org/data/definitions/502.html">CWE-502: Deserialization of Untrusted Data</a><br/>
+<a href="https://www.owasp.org/index.php/Deserialization_of_untrusted_data">Deserialization of untrusted data</a><br/>
+<a href="http://www.oracle.com/technetwork/java/seccodeguide-139067.html#8">Serialization and Deserialization </a><br/>
+<a href="https://github.com/frohoff/ysoserial">A proof-of-concept tool for generating payloads that exploit unsafe Java object deserialization</a><br/>
+[1] <a href="https://gist.github.com/coekie/a27cc406fc9f3dc7a70d">Example of Denial of Service using the class java.util.HashSet</a><br/>
+[2] <a href="https://bugzilla.redhat.com/show_bug.cgi?id=CVE-2015-2590">OpenJDK: Deserialization issue in ObjectInputStream.readSerialData() (CVE-2015-2590)</a><br/>
+[3] <a href="https://www.rapid7.com/db/modules/exploit/multi/browser/java_calendar_deserialize">Rapid7: Sun Java Calendar Deserialization Privilege Escalation (CVE-2008-5353)</a>
+</p>
+    </section>
+    
         </div>
 
         <div class="col-md-1" id="rightCol">
@@ -2252,7 +2457,7 @@ cookie.setHttpOnly(true);
 <footer id="footer" class="footer hidden-print">
     <div class="container text-center">
         <div>
-            Find Security Bugs 1.4.3
+            Find Security Bugs 1.4.4
             <span class="hide-xs">&middot;</span>
             Created by <a target="_blank" href="https://twitter.com/h3xstream">Philippe Arteau</a>
         </div>

@@ -112,7 +112,7 @@ public class JspXssDetector implements Detector {
                     if(locationAfterLoadIns instanceof InvokeInstruction) {
                         InvokeInstruction invoke = (InvokeInstruction) locationAfterLoadIns;
 
-                        if ("javax.servlet.jsp.JspWriter".equals(invoke.getClassName(cpg)) &&
+                        if (("javax.servlet.jsp.JspWriter".equals(invoke.getClassName(cpg)) || "com.caucho.jsp.JspPrintWriter".equals(invoke.getClassName(cpg))) &&
                                 "print".equals(invoke.getMethodName(cpg))) {
 
                             JavaClass clz = classContext.getJavaClass();
@@ -121,14 +121,15 @@ public class JspXssDetector implements Detector {
                                     .addMethod(clz,m)
                                     .addSourceLine(classContext,m,locationAfterLoad));
                         }
-                        else if("java.io.PrintWriter".equals(invoke.getClassName(cpg)) &&
+                        //Deprecated by XssServletDetector
+                        /*else if("java.io.PrintWriter".equals(invoke.getClassName(cpg)) &&
                                 "write".equals(invoke.getMethodName(cpg))) {
                             JavaClass clz = classContext.getJavaClass();
                             bugReporter.reportBug(new BugInstance(this, XSS_SERVLET, Priorities.HIGH_PRIORITY) //
                                     .addClass(clz)
-                                    .addMethod(clz,m)
-                                    .addSourceLine(classContext,m,locationAfterLoad));
-                        }
+                                    .addMethod(clz, m)
+                                    .addSourceLine(classContext, m, locationAfterLoad));
+                        }*/
                     }
                     //Skipping checkCast
                     else if(locationAfterLoadIns instanceof CHECKCAST) {

@@ -27,7 +27,7 @@ public class FindSecBugsGlobalConfig {
     private static FindSecBugsGlobalConfig instance = null;
 
     private boolean printCustomInjectionWarning = true;
-    private String findSecBugsVersion = "1.4.4";
+    private String findSecBugsVersion = "1.4.5";
 
     /** Singleton code */
 

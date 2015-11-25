@@ -56,6 +56,7 @@
     <Detector class="com.h3xstream.findsecbugs.crypto.InsufficientKeySizeRsaDetector" reports="RSA_KEY_SIZE"/>
     <Detector class="com.h3xstream.findsecbugs.injection.redirect.UnvalidatedRedirectDetector" reports="UNVALIDATED_REDIRECT" />
     <Detector class="com.h3xstream.findsecbugs.jsp.JspXssDetector" reports="XSS_JSP_PRINT,XSS_SERVLET" />
+    <Detector class="com.h3xstream.findsecbugs.xss.XssServletDetector" reports="XSS_SERVLET" />
     <Detector class="com.h3xstream.findsecbugs.jsp.JspIncludeDetector" reports="JSP_INCLUDE" />
     <Detector class="com.h3xstream.findsecbugs.jsp.JspSpringEvalDetector" reports="JSP_SPRING_EVAL" />
     <Detector class="com.h3xstream.findsecbugs.jsp.JstlOutDetector" reports="JSP_JSTL_OUT" />

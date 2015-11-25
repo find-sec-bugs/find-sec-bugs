@@ -47,7 +47,7 @@ public class JspIncludeDetector extends OpcodeStackDetector {
         //  JspIncludeDetector: [0051]  invokevirtual   org/apache/taglibs/standard/tag/rt/core/ImportTag.setUrl (Ljava/lang/String;)V
 
 
-        if (seen == Constants.INVOKESTATIC && getClassConstantOperand().equals("org/apache/jasper/runtime/JspRuntimeLibrary")
+        if (seen == Constants.INVOKESTATIC && ("org/apache/jasper/runtime/JspRuntimeLibrary".equals(getClassConstantOperand()) || "org/apache/sling/scripting/jsp/jasper/runtime/JspRuntimeLibrary".equals(getClassConstantOperand()))
                 && getNameConstantOperand().equals("include") && getSigConstantOperand().equals("(Ljavax/servlet/ServletRequest;Ljavax/servlet/ServletResponse;Ljava/lang/String;Ljavax/servlet/jsp/JspWriter;Z)V")) {
 
             bugReporter.reportBug(new BugInstance(this, JSP_INCLUDE_TYPE, Priorities.HIGH_PRIORITY) //

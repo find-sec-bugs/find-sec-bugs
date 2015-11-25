@@ -49,9 +49,24 @@ public abstract class AbstractTaintDetector implements Detector {
     protected AbstractTaintDetector(BugReporter bugReporter) {
         this.bugReporter = bugReporter;
     }
-    
+
+    /**
+     * Allow any concrete implementation of taint detector to skip the analysis of certain files.
+     * The purpose can be for optimisation or to trigger bug in specific context.
+     *
+     * The default implementation returns true to all classes visited.
+     *
+     * @param classContext Information about the class that is about to be analyzed
+     * @return If the given class should be analyze.
+     */
+    public boolean shouldAnalyzeClass(ClassContext classContext) {
+        return true;
+    }
+
     @Override
     public void visitClassContext(ClassContext classContext) {
+        if(!shouldAnalyzeClass(classContext)) return;
+
         for (Method method : classContext.getMethodsInCallOrder()) {
             if (classContext.getMethodGen(method) == null) {
                 continue;

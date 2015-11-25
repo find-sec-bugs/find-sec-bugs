@@ -28,11 +28,14 @@ import edu.umd.cs.findbugs.ba.ClassContext;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
 import edu.umd.cs.findbugs.ba.Location;
 import java.util.Iterator;
+
+import edu.umd.cs.findbugs.ba.bcp.Invoke;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InvokeInstruction;
 
 public class JstlOutDetector implements Detector {
     private static final String JSP_JSTL_OUT = "JSP_JSTL_OUT";
@@ -74,9 +77,15 @@ public class JstlOutDetector implements Detector {
 //        JspSpringEvalDetector: [0049]  iconst_1
 //        JspSpringEvalDetector: [0050]  invokevirtual   org/apache/taglibs/standard/tag/rt/core/OutTag.setEscapeXml (Z)V
 
-            if (inst instanceof INVOKEVIRTUAL) {
-                INVOKEVIRTUAL invoke = (INVOKEVIRTUAL) inst;
-                if ("org.apache.taglibs.standard.tag.rt.core.OutTag".equals(invoke.getClassName(cpg)) &&
+            if (inst instanceof InvokeInstruction) {
+                InvokeInstruction invoke = (InvokeInstruction) inst;
+                if (("org.apache.taglibs.standard.tag.rt.core.OutTag".equals(invoke.getClassName(cpg)) ||
+                     "org.apache.taglibs.standard.tag.el.core.OutTag".equals(invoke.getClassName(cpg)) ||
+                     "com.caucho.jstl.el.CoreOutTag".equals(invoke.getClassName(cpg)) ||
+                     "com.caucho.jstl.rt.OutTag".equals(invoke.getClassName(cpg)) ||
+                     "org.apache.taglibs.standard.tag.compat.core.OutTag".equals(invoke.getClassName(cpg)) ||
+                     "org.appfuse.webapp.taglib.OutTag".equals(invoke.getClassName(cpg))
+                      ) &&
                         "setEscapeXml".equals(invoke.getMethodName(cpg)) &&
                         "(Z)V".equals(invoke.getSignature(cpg))) {
                     Integer value = ByteCode.getConstantInt(location.getHandle().getPrev());

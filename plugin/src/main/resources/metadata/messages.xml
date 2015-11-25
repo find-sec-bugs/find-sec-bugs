@@ -2110,13 +2110,13 @@ attacker gets the ability to execute any code.
 </p>
 <p>
     <b>Vulnerable Code:</b>
-    <pre><jsp:include page="${param.secret_param}" /></pre>
+    <pre>&lt;jsp:include page="${param.secret_param}" /&gt;</pre>
 </p>
 <p>
     <b>Solution:</b>
-    <pre><c:if test="${param.secret_param == 'page1'}">
-    <jsp:include page="page1.jsp" />
-</c:if></pre>
+    <pre>&lt;c:if test="${param.secret_param == 'page1'}"&gt;
+    &lt;jsp:include page="page1.jsp" /&gt;
+&lt;/c:if&gt;</pre>
 </p>
 <br/>
 <p>
@@ -2141,19 +2141,19 @@ attacker gets the ability to execute any code.
 <p></p>
 <p>
     <b>Vulnerable Code:</b>
-    <pre><%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+    <pre>&lt;%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %&gt;
 
-<spring:eval expression="${param.lang}" var="lang" /></pre>
+&lt;spring:eval expression="${param.lang}" var="lang" /&gt;</pre>
     <br>
-    <pre><%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+    <pre>&lt;%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %&gt;
 
-<spring:eval expression="'${param.lang}'=='fr'" var="languageIsFrench" /></pre>
+&lt;spring:eval expression="'${param.lang}'=='fr'" var="languageIsFrench" /&gt;</pre>
 </p>
 <p>
     <b>Solution:</b>
-    <pre><c:set var="lang" value="${param.lang}"/></pre>
+    <pre>&lt;c:set var="lang" value="${param.lang}"/&gt;</pre>
     <br/>
-    <pre><c:set var="languageIsFrench" value="${param.lang == 'fr'}"/></pre>
+    <pre>&lt;c:set var="languageIsFrench" value="${param.lang == 'fr'}"/&gt;</pre>
 </p>
 <br/>
 <p>
@@ -2180,15 +2180,15 @@ attacker gets the ability to execute any code.
 </p>
 <p>
     <b>Vulnerable Code:</b>
-    <pre><%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    <pre>&lt;%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %&gt;
 
-<c:out value="${param.test_param}" escapeXml="false"/></pre>
+&lt;c:out value="${param.test_param}" escapeXml="false"/&gt;</pre>
 </p>
 <p>
     <b>Solution:</b>
-    <pre><%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    <pre>&lt;%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %&gt;
 
-<c:out value="${param.test_param}"/></pre>
+&lt;c:out value="${param.test_param}"/&gt;</pre>
 </p>
 <br/>
 <p>
@@ -2206,7 +2206,7 @@ attacker gets the ability to execute any code.
 
     <!-- XSS in JSP -->
     <Detector class="com.h3xstream.findsecbugs.jsp.JspXssDetector">
-        <Details>Identify tainted inputs in JSP views.</Details>
+        <Details>Identify potential Cross-Site Scripting in JSP</Details>
     </Detector>
     <BugPattern type="XSS_JSP_PRINT">
         <ShortDescription>Potential XSS in JSP</ShortDescription>
@@ -2221,16 +2221,16 @@ attacker gets the ability to execute any code.
 String taintedInput = (String) request.getAttribute("input");
 %>
 [...]
-<%= taintedInput %></pre>
+&lt;%= taintedInput %&gt;</pre>
 </p>
 <p>
     <b>Solution:</b>
     <pre>
-<%
+&lt;%
 String taintedInput = (String) request.getAttribute("input");
-%>
+%&gt;
 [...]
-<%= Encode.forHtml(taintedInput) %>
+&lt;%= Encode.forHtml(taintedInput) %&gt;
     </pre>
 </p>
 <p>
@@ -2252,7 +2252,9 @@ which explains these defenses in significant detail.
     </BugPattern>
     <BugCode abbrev="SECXSS1">Potential XSS in JSP</BugCode>
 
-
+    <Detector class="com.h3xstream.findsecbugs.xss.XssServletDetector">
+        <Details>Identify potential Cross-Site Scripting in HttpServlet.</Details>
+    </Detector>
     <!-- XSS in Servlet -->
     <BugPattern type="XSS_SERVLET">
         <ShortDescription>Potential XSS in Servlet</ShortDescription>
@@ -3015,8 +3017,8 @@ cookie.setHttpOnly(true);
     </Detector>
 
     <BugPattern type="OBJECT_DESERIALIZATION">
-        <ShortDescription>Object deserialization is used in {0}.{1}</ShortDescription>
-        <LongDescription>Object deserialization is used in {0}.{1}</LongDescription>
+        <ShortDescription>Object deserialization is used in {1}</ShortDescription>
+        <LongDescription>Object deserialization is used in {1}</LongDescription>
         <Details>
             <![CDATA[
 <p>

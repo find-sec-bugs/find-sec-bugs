@@ -1,14 +1,13 @@
-package testcode.servlet;
+package testcode.xss.servlets;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.owasp.esapi.ESAPI;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
-import static org.owasp.esapi.ESAPI.*;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.owasp.esapi.ESAPI;
 
 public class XssServlet1 extends HttpServlet {
 

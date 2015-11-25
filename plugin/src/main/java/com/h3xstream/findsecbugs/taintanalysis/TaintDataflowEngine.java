@@ -48,7 +48,8 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
         "java-ee.txt",
         "collections.txt",
         "java-net.txt",
-        "other.txt"
+        "other.txt",
+        "safe-encoders.txt"
     };
     private final TaintMethodSummaryMap methodSummaries = new TaintMethodSummaryMap();
     private static final boolean DEBUG_OUTPUT_SUMMARIES = SystemProperties.

@@ -157,25 +157,5 @@ public class JspXssDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
     }
 
-    @Test
-    public void detectXssCustomServlet() throws Exception {
-        //Locate test code
-        String[] files = {
-                getClassFilePath("testcode/servlet/XssServlet1")
-        };
-
-        //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
-        analyze(files, reporter);
-
-        verify(reporter).doReportBug(
-                bugDefinition()
-                        .bugType("XSS_SERVLET")
-                        .inClass("XssServlet1").inMethod("doGet").atLine(18)
-                        .build()
-        );
-
-        verify(reporter).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
-    }
 }
 

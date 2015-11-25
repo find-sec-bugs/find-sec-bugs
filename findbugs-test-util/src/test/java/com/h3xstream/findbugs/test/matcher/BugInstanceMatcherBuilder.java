@@ -84,6 +84,11 @@ public class BugInstanceMatcherBuilder {
         return this;
     }
 
+    /**
+     * Define the priority of the detector
+     * @param priority Priority can be "High", "Medium" or "Low"
+     * @return
+     */
     public BugInstanceMatcherBuilder withPriority(String priority) {
         this.priority = priority;
         return this;

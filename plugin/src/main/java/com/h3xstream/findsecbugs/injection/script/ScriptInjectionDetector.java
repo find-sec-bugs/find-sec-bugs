@@ -26,5 +26,6 @@ public class ScriptInjectionDetector extends ConfiguredBasicInjectionDetector {
         super(bugReporter);
         loadConfiguredSinks("spel.txt", "SPEL_INJECTION");
         loadConfiguredSinks("script-engine.txt", "SCRIPT_ENGINE_INJECTION");
+        loadConfiguredSinks("el.txt", "EL_INJECTION");
     }
 }

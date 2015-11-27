@@ -794,6 +794,7 @@ parser.parse(inputStream, customHandler);</pre>
 <a href="http://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a><br/>
 <a href="http://www.ws-attacks.org/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a><br/>
 <a href="http://www.ws-attacks.org/index.php/XML_Entity_Reference_Attack">WS-Attacks.org: XML Entity Reference Attack</a><br/>
+<a href="http://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying Xml eXternal Entity vulnerability (XXE)</a><br/>
 <!--XXE_GENERIC_END-->
 <a href="http://xerces.apache.org/xerces-j/features.html">Xerces complete features list</a>
 </p>
@@ -878,6 +879,7 @@ reader.parse(new InputSource(inputStream));</pre>
 <a href="http://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a><br/>
 <a href="http://www.ws-attacks.org/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a><br/>
 <a href="http://www.ws-attacks.org/index.php/XML_Entity_Reference_Attack">WS-Attacks.org: XML Entity Reference Attack</a><br/>
+<a href="http://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying Xml eXternal Entity vulnerability (XXE)</a><br/>
 <!--XXE_GENERIC_END-->
 <a href="http://xerces.apache.org/xerces-j/features.html">Xerces complete features list</a>
 </p>
@@ -962,6 +964,7 @@ Document doc = db.parse(input);</pre>
 <a href="http://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a><br/>
 <a href="http://www.ws-attacks.org/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a><br/>
 <a href="http://www.ws-attacks.org/index.php/XML_Entity_Reference_Attack">WS-Attacks.org: XML Entity Reference Attack</a><br/>
+<a href="http://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying Xml eXternal Entity vulnerability (XXE)</a><br/>
 <!--XXE_GENERIC_END-->
 <a href="http://xerces.apache.org/xerces2-j/features.html">Xerces2 complete features list</a>
 </p>
@@ -1430,10 +1433,6 @@ public void runCustomTrigger(String script) {
     <BugCode abbrev="SCRIPTE">Script Engine Injection</BugCode>
 
     <!-- SPEL Code injection -->
-    <Detector class="com.h3xstream.findsecbugs.injection.script.SpelInjectionDetector">
-        <Details>Identify usage of Spring Expression Language with potentially malicious input.</Details>
-    </Detector>
-
     <BugPattern type="SPEL_INJECTION">
         <ShortDescription>Potential code injection when using Spring Expression</ShortDescription>
         <LongDescription>This use of {3} could be vulnerable to code injection</LongDescription>
@@ -1460,8 +1459,8 @@ public void parseExpressionInterface(Person personObj,String property) {
 <br/>
 <p>
     <b>References</b><br/>
-    <a href="http://cwe.mitre.org/data/definitions/95.html">CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')</a><br/>
     <a href="http://cwe.mitre.org/data/definitions/94.html">CWE-94: Improper Control of Generation of Code ('Code Injection')</a><br/>
+    <a href="http://cwe.mitre.org/data/definitions/95.html">CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')</a><br/>
     <a href="http://docs.spring.io/spring-framework/docs/3.2.x/spring-framework-reference/html/expressions.html">Spring Expression Language (SpEL) - Official Documentation</a><br/>
     <a href="https://www.mindedsecurity.com/fileshare/ExpressionLanguageInjection.pdf">Minded Security: Expression Language Injection</a><br/>
     <a href="http://blog.h3xstream.com/2014/11/remote-code-execution-by-design.html">Remote Code Execution .. by design</a>: Example of malicious payload. The samples given could be used to test sandboxing rules.<br/>
@@ -1472,6 +1471,40 @@ public void parseExpressionInterface(Person personObj,String property) {
     </BugPattern>
     <BugCode abbrev="SPELI">Spring Expression Language Injection</BugCode>
 
+    <!-- EL Code injection -->
+    <BugPattern type="EL_INJECTION">
+        <ShortDescription>Potential code injection when using Expression Language (EL)</ShortDescription>
+        <LongDescription>This use of {3} could be vulnerable to code injection</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    A expression is built with a dynamic value. The source of the value(s) should be verified to avoid
+    that unfiltered values fall into this risky code evaluation.
+</p>
+<p><b>Code at risk:</b></p>
+<p>
+<pre>public void unsafeEL(String expression) {
+    FacesContext context = FacesContext.getCurrentInstance();
+    ExpressionFactory expressionFactory = context.getApplication().getExpressionFactory();
+    ELContext elContext = context.getELContext();
+    ValueExpression vex = expressionFactory.createValueExpression(elContext, expression, String.class);
+    return (String) vex.getValue(elContext);
+}</pre>
+</p>
+<br/>
+<p>
+    <b>References</b><br/>
+    <a href="http://cwe.mitre.org/data/definitions/94.html">CWE-94: Improper Control of Generation of Code ('Code Injection')</a><br/>
+    <a href="http://cwe.mitre.org/data/definitions/95.html">CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')</a><br/>
+    <a href="http://blog.mindedsecurity.com/2015/11/reliable-os-shell-with-el-expression.html">Minded Security: Abusing EL for executing OS commands</a><br/>
+    <a href="https://www.mindedsecurity.com/fileshare/ExpressionLanguageInjection.pdf">Minded Security: Expression Language Injection</a><br/>
+    <a href="http://danamodio.com/appsec/research/spring-remote-code-with-expression-language-injection/">Dan Amodio's blog: Remote Code with Expression Language Injection</a><br/>
+    <a href="http://blog.h3xstream.com/2014/11/remote-code-execution-by-design.html">Remote Code Execution .. by design</a>: Example of malicious payload. The samples given could be used to test sandboxing rules.<br/>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECEL">Expression Language (EL) Injection</BugCode>
 
     <!-- HTTP Response Splitting -->
     <Detector class="com.h3xstream.findsecbugs.HttpResponseSplittingDetector">

@@ -1483,7 +1483,7 @@ public void parseExpressionInterface(Person personObj,String property) {
 </p>
 <p><b>Code at risk:</b></p>
 <p>
-<pre>public void unsafeEL(String expression) {
+<pre>public void evaluateExpression(String expression) {
     FacesContext context = FacesContext.getCurrentInstance();
     ExpressionFactory expressionFactory = context.getApplication().getExpressionFactory();
     ELContext elContext = context.getELContext();
@@ -1505,6 +1505,33 @@ public void parseExpressionInterface(Person personObj,String property) {
         </Details>
     </BugPattern>
     <BugCode abbrev="SECEL">Expression Language (EL) Injection</BugCode>
+
+    <!-- Seam Log injection -->
+    <BugPattern type="SEAM_LOG_INJECTION">
+        <ShortDescription>Potential code injection in a logging api that support EL</ShortDescription>
+        <LongDescription>Potential code injection in a logging api that support EL</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    Seam Logging API support an expression language to introduce bean property to log messages. The expression language can
+    also be the source to unwanted code execution.
+</p>
+<p>
+    In this context, an expression is built with a dynamic value. The source of the value(s) should be verified to avoid
+    that unfiltered values fall into this risky code evaluation.
+</p>
+<br/>
+<p>
+    <b>References</b><br/>
+    <a href="http://cwe.mitre.org/data/definitions/94.html">CWE-94: Improper Control of Generation of Code ('Code Injection')</a><br/>
+    <a href="http://cwe.mitre.org/data/definitions/95.html">CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')</a><br/>
+    <a href="https://issues.jboss.org/browse/JBSEAM-5130">JBSEAM-5130: Issue documenting the risk</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSEAM">Expression Language (EL) Injection</BugCode>
+
 
     <!-- HTTP Response Splitting -->
     <Detector class="com.h3xstream.findsecbugs.HttpResponseSplittingDetector">

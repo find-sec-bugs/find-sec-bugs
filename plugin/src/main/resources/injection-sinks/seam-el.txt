@@ -1,0 +1,12 @@
+org/jboss/seam/log/Log.debug(Ljava/lang/Object;[Ljava/lang/Object;)V:1
+org/jboss/seam/log/Log.debug(Ljava/lang/Object;Ljava/lang/Throwable;[Ljava/lang/Object;)V:2
+org/jboss/seam/log/Log.error(Ljava/lang/Object;[Ljava/lang/Object;)V:1
+org/jboss/seam/log/Log.error(Ljava/lang/Object;Ljava/lang/Throwable;[Ljava/lang/Object;)V:2
+org/jboss/seam/log/Log.fatal(Ljava/lang/Object;[Ljava/lang/Object;)V:1
+org/jboss/seam/log/Log.fatal(Ljava/lang/Object;Ljava/lang/Throwable;[Ljava/lang/Object;)V:2
+org/jboss/seam/log/Log.info(Ljava/lang/Object;[Ljava/lang/Object;)V:1
+org/jboss/seam/log/Log.info(Ljava/lang/Object;Ljava/lang/Throwable;[Ljava/lang/Object;)V:2
+org/jboss/seam/log/Log.trace(Ljava/lang/Object;[Ljava/lang/Object;)V:1
+org/jboss/seam/log/Log.trace(Ljava/lang/Object;Ljava/lang/Throwable;[Ljava/lang/Object;)V:2
+org/jboss/seam/log/Log.warn(Ljava/lang/Object;[Ljava/lang/Object;)V:1
+org/jboss/seam/log/Log.warn(Ljava/lang/Object;Ljava/lang/Throwable;[Ljava/lang/Object;)V:2

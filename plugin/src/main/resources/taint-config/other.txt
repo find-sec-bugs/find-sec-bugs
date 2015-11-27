@@ -170,3 +170,16 @@ org/pmw/tinylog/Logger.trace(Ljava/lang/Throwable;Ljava/lang/String;[Ljava/lang/
 org/pmw/tinylog/Logger.warn(Ljava/lang/Object;)V:UNKNOWN
 org/pmw/tinylog/Logger.warn(Ljava/lang/String;[Ljava/lang/Object;)V:UNKNOWN
 org/pmw/tinylog/Logger.warn(Ljava/lang/Throwable;Ljava/lang/String;[Ljava/lang/Object;)V:UNKNOWN
+
+org/jboss/seam/log/Log.debug(Ljava/lang/Object;[Ljava/lang/Object;)V:UNKNOWN
+org/jboss/seam/log/Log.debug(Ljava/lang/Object;Ljava/lang/Throwable;[Ljava/lang/Object;)V:UNKNOWN
+org/jboss/seam/log/Log.error(Ljava/lang/Object;[Ljava/lang/Object;)V:UNKNOWN
+org/jboss/seam/log/Log.error(Ljava/lang/Object;Ljava/lang/Throwable;[Ljava/lang/Object;)V:UNKNOWN
+org/jboss/seam/log/Log.fatal(Ljava/lang/Object;[Ljava/lang/Object;)V:UNKNOWN
+org/jboss/seam/log/Log.fatal(Ljava/lang/Object;Ljava/lang/Throwable;[Ljava/lang/Object;)V:UNKNOWN
+org/jboss/seam/log/Log.info(Ljava/lang/Object;[Ljava/lang/Object;)V:UNKNOWN
+org/jboss/seam/log/Log.info(Ljava/lang/Object;Ljava/lang/Throwable;[Ljava/lang/Object;)V:UNKNOWN
+org/jboss/seam/log/Log.trace(Ljava/lang/Object;[Ljava/lang/Object;)V:UNKNOWN
+org/jboss/seam/log/Log.trace(Ljava/lang/Object;Ljava/lang/Throwable;[Ljava/lang/Object;)V:UNKNOWN
+org/jboss/seam/log/Log.warn(Ljava/lang/Object;[Ljava/lang/Object;)V:UNKNOWN
+org/jboss/seam/log/Log.warn(Ljava/lang/Object;Ljava/lang/Throwable;[Ljava/lang/Object;)V:UNKNOWN

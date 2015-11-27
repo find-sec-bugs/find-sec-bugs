@@ -1239,14 +1239,14 @@ public void parseExpressionInterface(Person personObj,String property) {
 <p><b>Code at risk:</b></p>
 <p>
 <pre>public void logUser(User user) {
-    log.("Current logged in user : " + user.getUsername());
+    log.info("Current logged in user : " + user.getUsername());
     //...
 }</pre>
 </p>
 <p><b>Solution:</b></p>
 <p>
 <pre>public void logUser(User user) {
-    log.("Current logged in user : #0", user.getUsername());
+    log.info("Current logged in user : #0", user.getUsername());
     //...
 }</pre>
 </p>

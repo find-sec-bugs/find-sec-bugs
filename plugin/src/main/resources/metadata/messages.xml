@@ -1494,9 +1494,10 @@ public void parseExpressionInterface(Person personObj,String property) {
 <br/>
 <p>
     <b>References</b><br/>
+    <a href="http://blog.mindedsecurity.com/2015/11/reliable-os-shell-with-el-expression.html">Minded Security: Abusing EL for executing OS commands</a><br/>
+    <a href="https://docs.oracle.com/javaee/6/tutorial/doc/gjddd.html">The Java EE 6 Tutorial: Expression Language</a><br/>
     <a href="http://cwe.mitre.org/data/definitions/94.html">CWE-94: Improper Control of Generation of Code ('Code Injection')</a><br/>
     <a href="http://cwe.mitre.org/data/definitions/95.html">CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')</a><br/>
-    <a href="http://blog.mindedsecurity.com/2015/11/reliable-os-shell-with-el-expression.html">Minded Security: Abusing EL for executing OS commands</a><br/>
     <a href="https://www.mindedsecurity.com/fileshare/ExpressionLanguageInjection.pdf">Minded Security: Expression Language Injection</a><br/>
     <a href="http://danamodio.com/appsec/research/spring-remote-code-with-expression-language-injection/">Dan Amodio's blog: Remote Code with Expression Language Injection</a><br/>
     <a href="http://blog.h3xstream.com/2014/11/remote-code-execution-by-design.html">Remote Code Execution .. by design</a>: Example of malicious payload. The samples given could be used to test sandboxing rules.<br/>
@@ -1520,12 +1521,27 @@ public void parseExpressionInterface(Person personObj,String property) {
     In this context, an expression is built with a dynamic value. The source of the value(s) should be verified to avoid
     that unfiltered values fall into this risky code evaluation.
 </p>
+<p><b>Code at risk:</b></p>
+<p>
+<pre>public void test(User user) {
+    log.("Current logged in user : " + user.getUsername());
+}</pre>
+</p>
+<p><b>Solution:</b></p>
+<p>
+<pre>public void test(User user) {
+    log.("Current logged in user : #0", user.getUsername());
+}</pre>
+</p>
 <br/>
 <p>
     <b>References</b><br/>
+    <a href="https://issues.jboss.org/browse/JBSEAM-5130">JBSEAM-5130: Issue documenting the risk</a><br/>
+    <a href="https://docs.jboss.org/seam/2.3.1.Final/reference/html_single/#d0e4185">JBoss Seam: Logging (Official documentation)</a><br/>
+    <a href="https://docs.oracle.com/javaee/6/tutorial/doc/gjddd.html">The Java EE 6 Tutorial: Expression Language</a><br/>
     <a href="http://cwe.mitre.org/data/definitions/94.html">CWE-94: Improper Control of Generation of Code ('Code Injection')</a><br/>
     <a href="http://cwe.mitre.org/data/definitions/95.html">CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')</a><br/>
-    <a href="https://issues.jboss.org/browse/JBSEAM-5130">JBSEAM-5130: Issue documenting the risk</a>
+
 </p>
 ]]>
         </Details>

@@ -1,0 +1,4 @@
+org/springframework/web/bind/annotation/PathVariable
+org/springframework/web/bind/annotation/RequestParam
+org/springframework/web/bind/annotation/RequestBody
+org/springframework/web/bind/annotation/RequestHeader

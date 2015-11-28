@@ -58,6 +58,7 @@
                         <exclude>**/org/bouncycastle/**/**.java</exclude>
                         <exclude>**/org/hibernate/**/**.java</exclude>
                         <exclude>**/org/owasp/**/**.java</exclude>
+                        <exclude>**/org/jboss/**/**.java</exclude>
                         <exclude>**/org/springframework/**/**.java</exclude>
                         <exclude>**/com/unboundid/ldap/**/**.java</exclude>
                         <exclude>**/scala/util/**/**.java</exclude>

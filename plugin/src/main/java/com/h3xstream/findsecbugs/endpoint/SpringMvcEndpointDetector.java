@@ -41,13 +41,14 @@ public class SpringMvcEndpointDetector implements Detector {
     @Override
     public void visitClassContext(ClassContext classContext) {
         JavaClass javaClass = classContext.getJavaClass();
-        for (Method m : javaClass.getMethods()) {
+        method : for (Method m : javaClass.getMethods()) {
 
             for (AnnotationEntry ae : m.getAnnotationEntries()) {
 
                 if (ae.getAnnotationType().equals("Lorg/springframework/web/bind/annotation/RequestMapping;")) {
                     bugReporter.reportBug(new BugInstance(this, SPRING_ENDPOINT_TYPE, Priorities.LOW_PRIORITY) //
                             .addClassAndMethod(javaClass, m));
+                    continue method;
                 }
             }
         }

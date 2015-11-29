@@ -572,30 +572,148 @@ mapped in this way are properly validated before they are used.</p>
     <BugCode abbrev="SECWE">Wicket Page</BugCode>
 
 
-    <!-- Weak Message Digest -->
+    <!-- Weak Message Digest MD5 and  -->
     <Detector class="com.h3xstream.findsecbugs.crypto.WeakMessageDigestDetector">
-        <Details>Identify the use of weak MessageDigests that could replace recommended standards.</Details>
+        <Details>Identify the use of weak cryptographic hash function that could be replace.</Details>
     </Detector>
 
-    <BugPattern type="WEAK_MESSAGE_DIGEST">
-        <ShortDescription>Message digest is weak</ShortDescription>
+    <BugPattern type="WEAK_MESSAGE_DIGEST_MD5">
+        <ShortDescription>MD2, MD4 and MD5 are weak hash functions</ShortDescription>
         <LongDescription>{3} is not a recommended cryptographic hash function</LongDescription>
         <Details>
             <![CDATA[
-<p>The algorithm used is not a recommended MessageDigest.</p>
-<p><a href="http://csrc.nist.gov/groups/ST/toolkit/secure_hashing.html">NIST</a> recommends the use of SHA-1, SHA-224*, SHA-256, SHA-384, SHA-512, SHA-512/224, or SHA-512/256.</p>
-<p><small>* SHA-224 algorithm is not provided by <a href="http://docs.oracle.com/javase/6/docs/technotes/guides/security/SunProviders.html#SUNProvider"> SUN provider.</a></small></p>
-<p>Upgrade your implementation to use one of the approved algorithms. Use an algorithm that is sufficiently strong for your specific security needs.</p>
+<p>The algorithms MD2, MD4 and MD5 are not a recommended MessageDigest.</p>
+
+<p>
+    "The security of the MD5 hash function is severely compromised. A collision attack exists that can find collisions
+    within seconds on a computer with a 2.6 GHz Pentium 4 processor (complexity of 2<sup>24.1</sup>).[1] Further, there is also a
+    chosen-prefix collision attack that can produce a collision for two inputs with specified prefixes within hours, using
+    off-the-shelf computing hardware (complexity 2<sup>39</sup>).[2]"<br/>
+    - <a href="https://en.wikipedia.org/wiki/MD5#Security">Wikipedia: MD5 - Security</a>
+</p>
+
+<p>
+    "<b>SHA-224, SHA-256, SHA-384, SHA-512, SHA-512/224, and SHA-512/256</b>:<br/>
+    The use of these hash functions is acceptable for all hash function applications."<br/>
+    - <a href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar1.pdf">NIST: Transitions: Recommendation for Transitioning the Use of Cryptographic Algorithms and Key Lengths p.15</a>
+</p>
+<p>
+    "The main idea of a PBKDF is to slow dictionary or brute force attacks on the passwords by increasing the time
+    needed to test each password. An attacker with a list of likely passwords can evaluate the PBKDF using the known
+    iteration counter and the salt. Since an attacker has to spend a significant amount of computing time for each try,
+    it becomes harder to apply the dictionary or brute force attacks."<br/>
+- <a href="http://csrc.nist.gov/publications/nistpubs/800-132/nist-sp800-132.pdf">NIST: Transitions: Recommendation for Transitioning the Use of Cryptographic Algorithms and Key Lengths p.15</a>
+
+</p>
+<br/>
+<p>
+    <b>Vulnerable Code:</b><br/>
+    <pre>MessageDigest md5Digest = MessageDigest.getInstance("MD5");
+    md5Digest.update(password.getBytes());
+    byte[] hashValue = md5Digest.digest();</pre>
+    <br/>
+    <pre>byte[] hashValue = DigestUtils.getMd5Digest().digest(password.getBytes());</pre>
+</p>
+<br/>
+<p>
+    <b>Solution (Using bouncy castle):</b><br/>
+    <pre>public static byte[] getEncryptedPassword(String password, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    PKCS5S2ParametersGenerator gen = new PKCS5S2ParametersGenerator(new SHA256Digest());
+    gen.init(password.getBytes("UTF-8"), salt.getBytes(), 4096);
+    return ((KeyParameter) gen.generateDerivedParameters(256)).getKey();
+}</pre>
+    <br/>
+    <b>Solution (Java 8 and later):</b><br/>
+    <pre>public static byte[] getEncryptedPassword(String password, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 4096, 256 * 8);
+    SecretKeyFactory f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+    return f.generateSecret(spec).getEncoded();
+}</pre>
+</p>
 <br/>
 <p>
 <b>References</b><br/>
-<a href="http://csrc.nist.gov/groups/ST/toolkit/secure_hashing.html">NIST Approved Hashing Algorithms</a><br/>
+[1] <a href="http://www.win.tue.nl/hashclash/On%20Collisions%20for%20MD5%20-%20M.M.J.%20Stevens.pdf">On Collisions for MD5</a>: Master Thesis by M.M.J. Stevens<br/>
+[2] <a href="">Chosen-prefix collisions for MD5 and applications</a>: Paper written by Marc Stevens<br/>
+<a href="https://en.wikipedia.org/wiki/MD5">Wikipedia: MD5</a><br/>
+<a href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar1.pdf">NIST: Transitions: Recommendation for Transitioning the Use of Cryptographic Algorithms and Key Lengths</a><br/>
+<a href="http://csrc.nist.gov/publications/nistpubs/800-132/nist-sp800-132.pdf">NIST: Recommendation for Password-Based Key Derivation</a><br/>
+<a href="http://stackoverflow.com/questions/22580853/reliable-implementation-of-pbkdf2-hmac-sha256-for-java">Stackoverflow: Reliable implementation of PBKDF2-HMAC-SHA256 for Java</a><br/>
 <a href="http://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky Cryptographic Algorithm</a>
 </p>
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECWMD">MessageDigest Is Weak</BugCode>
+    <BugCode abbrev="SECWMD5">MD2, MD4 and MD5 are Weak</BugCode>
+
+
+    <BugPattern type="WEAK_MESSAGE_DIGEST_SHA1">
+        <ShortDescription>SHA-1 is a weak hash function</ShortDescription>
+        <LongDescription>{3} is not a recommended cryptographic hash function</LongDescription>
+        <Details>
+            <![CDATA[
+<p>The algorithms SHA-1 is not a recommended algorithm for hash password, for signature verification and other
+uses.</p>
+
+<p>
+    "<b>SHA-1 for digital signature generation:</b><br/>
+    SHA-1 may only be used for digital signature generation where specifically allowed by NIST protocol-specific guidance.
+    For all other applications, <u>SHA-1 shall not be used for digital signature generation</u>.<br/>
+    <b>SHA-1 for digital signature verification:</b><br/>
+    For digital signature verification, <u>SHA-1 is allowed for legacy-use</u>.<br/>
+    [...]
+    <b>SHA-224, SHA-256, SHA-384, SHA-512, SHA-512/224, and SHA-512/256</b>:<br/>
+    The use of these hash functions is acceptable for all hash function applications."<br/>
+    - <a href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar1.pdf">NIST: Transitions: Recommendation for Transitioning the Use of Cryptographic Algorithms and Key Lengths p.15</a>
+</p>
+<p>
+    "The main idea of a PBKDF is to slow dictionary or brute force attacks on the passwords by increasing the time
+    needed to test each password. An attacker with a list of likely passwords can evaluate the PBKDF using the known
+    iteration counter and the salt. Since an attacker has to spend a significant amount of computing time for each try,
+    it becomes harder to apply the dictionary or brute force attacks."<br/>
+- <a href="http://csrc.nist.gov/publications/nistpubs/800-132/nist-sp800-132.pdf">NIST: Transitions: Recommendation for Transitioning the Use of Cryptographic Algorithms and Key Lengths p.15</a>
+
+</p>
+<br/>
+<p>
+    <b>Vulnerable Code:</b><br/>
+    <pre>MessageDigest sha1Digest = MessageDigest.getInstance("SHA1");
+    sha1Digest.update(password.getBytes());
+    byte[] hashValue = sha1Digest.digest();</pre>
+    <br/>
+    <pre>byte[] hashValue = DigestUtils.getSha1Digest().digest(password.getBytes());</pre>
+</p>
+<br/>
+<p>
+    <b>Solution (Using bouncy castle):</b><br/>
+    <pre>public static byte[] getEncryptedPassword(String password, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    PKCS5S2ParametersGenerator gen = new PKCS5S2ParametersGenerator(new SHA256Digest());
+    gen.init(password.getBytes("UTF-8"), salt.getBytes(), 4096);
+    return ((KeyParameter) gen.generateDerivedParameters(256)).getKey();
+}</pre>
+    <br/>
+    <b>Solution (Java 8 and later):</b><br/>
+    <pre>public static byte[] getEncryptedPassword(String password, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 4096, 256 * 8);
+    SecretKeyFactory f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+    return f.generateSecret(spec).getEncoded();
+}</pre>
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://community.qualys.com/blogs/securitylabs/2014/09/09/sha1-deprecation-what-you-need-to-know">Qualys blog: SHA1 Deprecation: What You Need to Know</a><br/>
+<a href="https://googleonlinesecurity.blogspot.ca/2014/09/gradually-sunsetting-sha-1.html">Google Online Security Blog: Gradually sunsetting SHA-1</a><br/>
+<a href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar1.pdf">NIST: Transitions: Recommendation for Transitioning the Use of Cryptographic Algorithms and Key Lengths</a><br/>
+<a href="http://csrc.nist.gov/publications/nistpubs/800-132/nist-sp800-132.pdf">NIST: Recommendation for Password-Based Key Derivation</a><br/>
+<a href="http://stackoverflow.com/questions/22580853/reliable-implementation-of-pbkdf2-hmac-sha256-for-java">Stackoverflow: Reliable implementation of PBKDF2-HMAC-SHA256 for Java</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky Cryptographic Algorithm</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECWSHA1">SHA-1 is Weak</BugCode>
+
 
 
     <!-- Custom Message Digest -->
@@ -3188,7 +3306,7 @@ public void loginEvent(HttpServletRequest req, String userSubmitted) {
 <p>
 <b>Solution:</b><br/>
 <p>
-The solution would translate in adding validation prior setting a new session attribute. When possible, prefer data from
+The solution would be to add validation prior setting a new session attribute. When possible, prefer data from
 safe location rather than using direct user input.
 </p>
 <br/>

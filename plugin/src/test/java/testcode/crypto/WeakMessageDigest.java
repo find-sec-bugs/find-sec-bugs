@@ -21,6 +21,10 @@ public class WeakMessageDigest {
         sha1Digest.update("123".getBytes());
         printHex(sha1Digest.digest());
 
+        MessageDigest sha1Digest2 = MessageDigest.getInstance("SHA-1");
+        sha1Digest2.update("123".getBytes());
+        printHex(sha1Digest2.digest());
+
         MessageDigest sha256Digest = MessageDigest.getInstance("SHA256"); //OK!
         sha256Digest.update("123".getBytes());
         printHex(sha256Digest.digest());
@@ -34,22 +38,22 @@ public class WeakMessageDigest {
 
     public static void apacheApiVariations() {
 
-        printHex(DigestUtils.getMd5Digest().digest("123".getBytes()));
         printHex(DigestUtils.getMd2Digest().digest("123".getBytes()));
-        printHex(DigestUtils.getSha1Digest().digest("123".getBytes()));
-        printHex(DigestUtils.getShaDigest().digest("123".getBytes()));
-
+        printHex(DigestUtils.getMd5Digest().digest("123".getBytes()));
         printHex(DigestUtils.getDigest("md2").digest("123".getBytes()));
         printHex(DigestUtils.getDigest("md5").digest("123".getBytes()));
-        printHex(DigestUtils.getDigest("sha1").digest("123".getBytes()));
-
-        System.out.println(DigestUtils.md2Hex("123".getBytes()));
-        System.out.println(DigestUtils.md5Hex("123".getBytes()));
-        System.out.println(DigestUtils.sha1Hex("123".getBytes()));
         DigestUtils.md2("123".getBytes());
         DigestUtils.md5("123".getBytes());
+        System.out.println(DigestUtils.md2Hex("123".getBytes()));
+        System.out.println(DigestUtils.md5Hex("123".getBytes()));
+
+        printHex(DigestUtils.getSha1Digest().digest("123".getBytes()));
+        printHex(DigestUtils.getShaDigest().digest("123".getBytes()));
+        printHex(DigestUtils.getDigest("sha1").digest("123".getBytes()));
+        printHex(DigestUtils.getDigest("sha-1").digest("123".getBytes()));
         DigestUtils.sha1("123".getBytes());
         DigestUtils.sha("123".getBytes());
+        DigestUtils.sha1Hex("123".getBytes());
         DigestUtils.shaHex("123".getBytes());
 
         printHex(DigestUtils.getDigest("sha256").digest("123".getBytes())); //OK!

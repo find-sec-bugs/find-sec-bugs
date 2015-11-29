@@ -30,7 +30,8 @@ import org.apache.bcel.Constants;
  */
 public class WeakMessageDigestDetector extends OpcodeStackDetector {
 
-    private static final String WEAK_MESSAGE_DIGEST_TYPE = "WEAK_MESSAGE_DIGEST";
+    private static final String WEAK_MESSAGE_DIGEST_MD5_TYPE = "WEAK_MESSAGE_DIGEST_MD5";
+    private static final String WEAK_MESSAGE_DIGEST_SHA1_TYPE = "WEAK_MESSAGE_DIGEST_SHA1";
 
     private final BugReporter bugReporter;
 
@@ -109,11 +110,11 @@ public class WeakMessageDigestDetector extends OpcodeStackDetector {
         }
         algorithm = algorithm.toUpperCase();
         if ("MD2".equals(algorithm) || "MD4".equals(algorithm) || "MD5".equals(algorithm)) {
-            bugReporter.reportBug(new BugInstance(this, WEAK_MESSAGE_DIGEST_TYPE, Priorities.HIGH_PRIORITY) //
+            bugReporter.reportBug(new BugInstance(this, WEAK_MESSAGE_DIGEST_MD5_TYPE, Priorities.HIGH_PRIORITY) //
                     .addClass(this).addMethod(this).addSourceLine(this) //
                     .addString(algorithm));
-        } else if ("SHA1".equals(algorithm)) { //Lower priority for SHA-1
-            bugReporter.reportBug(new BugInstance(this, WEAK_MESSAGE_DIGEST_TYPE, Priorities.NORMAL_PRIORITY) //
+        } else if ("SHA1".equals(algorithm) || "SHA-1".equals(algorithm)) { //Lower priority for SHA-1
+            bugReporter.reportBug(new BugInstance(this, WEAK_MESSAGE_DIGEST_SHA1_TYPE, Priorities.NORMAL_PRIORITY) //
                     .addClass(this).addMethod(this).addSourceLine(this) //
                     .addString(algorithm));
         }

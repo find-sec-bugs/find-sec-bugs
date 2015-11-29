@@ -36,7 +36,7 @@ def buildMapping(InputStream xmlStream) {
 
     rootXml.BugPattern.each { pattern ->
         bugsBinding['bugPatterns'].add(
-                ['title': pattern.ShortDescription.text().replaceAll(" in \\{0\\}.\\{1\\}",""),
+                ['title': pattern.ShortDescription.text().replaceAll(" in \\{1\\}",""),
                  'description': pattern.Details.text(),
                  'type':pattern.attribute("type")])
         println pattern.ShortDescription.text()

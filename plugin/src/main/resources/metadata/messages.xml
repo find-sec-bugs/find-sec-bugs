@@ -3090,8 +3090,10 @@ cookie.setHttpOnly(true);
     </BugPattern>
     <BugCode abbrev="SECIC">Cookie without the secure flag</BugCode>
 
+
+    <!-- Deserialization vulnerability -->
     <Detector class="com.h3xstream.findsecbugs.ObjectDeserializationDetector">
-        <Details> Object deserialization detector</Details>
+        <Details>Object deserialization detector</Details>
     </Detector>
 
     <BugPattern type="OBJECT_DESERIALIZATION">
@@ -3144,5 +3146,61 @@ Avoid deserializing object provided by remote users.
         </Details>
     </BugPattern>
     <BugCode abbrev="SECOBDES">Object deserialization is used</BugCode>
+
+    <!-- Trust Boundary Violation -->
+    <Detector class="com.h3xstream.findsecbugs.TrustBoundaryViolationDetector">
+        <Details>Detect potential unwanted access to session attribute (Trust Boundary Violation).</Details>
+    </Detector>
+
+    <BugPattern type="TRUST_BOUNDARY_VIOLATION">
+        <ShortDescription>Trust Boundary Violation</ShortDescription>
+        <LongDescription>The application mixes trusted and untrusted data in session attributes.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    "A trust boundary can be thought of as line drawn through a program. On one side of the line, data is untrusted.
+    On the other side of the line, data is assumed to be trustworthy. The purpose of validation logic is to allow data
+    to safely cross the trust boundary - to move from untrusted to trusted. A trust boundary violation occurs when a
+    program blurs the line between what is trusted and what is untrusted. By combining trusted and untrusted data in the
+    same data structure, it becomes easier for programmers to mistakenly trust unvalidated data." <sup>[1]</sup>
+</p>
+
+<p>
+<b>Code at risk:</b><br/>
+<pre>
+public void doSomething(HttpServletRequest req, String activateProperty) {
+    //..
+
+    req.getSession().setAttribute(activateProperty,"true");
+
+}
+</pre>
+<br/>
+<pre>
+public void loginEvent(HttpServletRequest req, String userSubmitted) {
+    //..
+
+    req.getSession().setAttribute("user",userSubmitted);
+}
+</pre>
+</p>
+
+<p>
+<b>Solution:</b><br/>
+<p>
+The solution would translate in adding validation prior setting a new session attribute. When possible, prefer data from
+safe location rather than using direct user input.
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+[1] <a href="https://cwe.mitre.org/data/definitions/501.html">CWE-501: Trust Boundary Violation</a><br/>
+<a href="https://www.owasp.org/index.php/Trust_Boundary_Violation">OWASP : Trust Boundary Violation</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECTBV">Trust Boundary Violation</BugCode>
+
 
 </MessageCollection>

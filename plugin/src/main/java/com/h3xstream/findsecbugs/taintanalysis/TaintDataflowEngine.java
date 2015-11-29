@@ -48,9 +48,13 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
         "java-ee.txt",
         "collections.txt",
         "java-net.txt",
-        "other.txt",
-        "safe-encoders.txt"
+        "other.txt"
     };
+    private static final String SAFE_ENCODERS_PATH = "safe-encoders/";
+    private static final String[] SAFE_ENCODERS_FILENAMES = {
+        "xss-encoders.txt"
+    };
+
     private final TaintMethodSummaryMap methodSummaries = new TaintMethodSummaryMap();
     private static final boolean DEBUG_OUTPUT_SUMMARIES = SystemProperties.
             getBoolean("findsecbugs.taint.outputsummaries");
@@ -72,6 +76,9 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
     public TaintDataflowEngine() {
         for (String path : METHODS_SUMMARIES_FILENAMES) {
             loadMethodSummaries(METHODS_SUMMARIES_PATH.concat(path));
+        }
+        for (String path : SAFE_ENCODERS_FILENAMES) {
+            loadMethodSummaries(SAFE_ENCODERS_PATH.concat(path));
         }
     }
     

@@ -27,7 +27,16 @@ import java.util.TreeSet;
 
 /**
  * Map of taint summaries for all known methods
- * 
+ * <br/>
+ * This class extends HashMap:
+ * <ul>
+ *  <li>The key is the method signature (ie :
+ org/hibernate/Session.createQuery(Ljava/lang/String;)Lorg/hibernate/Query;)</li>
+ *  <li>The value is the behavior of the method
+ *  ("0" for param index 0 is tainted,
+ *  "UNKNOWN" if the method does not become tainted base on the value,
+ *  "TAINTED" if the result must be consider unsafe)</li>
+ * </ul>
  * @author David Formanek (Y Soft Corporation, a.s.)
  */
 public class TaintMethodSummaryMap extends HashMap<String, TaintMethodSummary> {

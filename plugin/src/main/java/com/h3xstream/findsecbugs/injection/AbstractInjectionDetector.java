@@ -57,13 +57,16 @@ public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
     protected AbstractInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
     }
-    
+
+    /**
+     * Once the analysis is completed, all the collected sink are report as bug.
+     */
     @Override
     public void report() {
+        //The HashSet data structure was chosen to remove duplicate bug instances
         Set<BugInstance> bugs = new HashSet<BugInstance>();
         for (Set<TaintSink> sinkSet : methodsWithSinks.values()) {
             for (TaintSink sink : sinkSet) {
-                // set removes duplicit bug instances
                 bugs.add(sink.getBugInstance());
             }
         }
@@ -76,10 +79,10 @@ public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
     protected void analyzeLocation(ClassContext classContext, Method method, InstructionHandle handle,
             ConstantPoolGen cpg, InvokeInstruction invoke, TaintFrame fact, String currentMethod)
             throws DataflowAnalysisException {
-        SourceLineAnnotation sourceLine = SourceLineAnnotation
-                .fromVisitedInstruction(classContext, method, handle);
+        SourceLineAnnotation sourceLine = SourceLineAnnotation.fromVisitedInstruction(classContext, method, handle);
         checkTaintSink(cpg, invoke, fact, sourceLine, currentMethod);
         InjectionPoint injectionPoint = getInjectionPoint(invoke, cpg, handle);
+
         for (int offset : injectionPoint.getInjectableArguments()) {
             Taint parameterTaint = fact.getStackValue(offset);
             int priority = getPriority(parameterTaint);
@@ -95,7 +98,17 @@ public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
             reportBug(bugInstance, parameterTaint, currentMethod);
         }
     }
-    
+
+    /**
+     * The default implementation of <code>getPriority()</code> can be overridden if the severity and the confidence for risk
+     * is particular.
+     * <br/>
+     * By default, injection will be rated "High" if the complete link between source and sink is made.
+     * If it is not the case but concatenation with external source is made, "Medium" is used.
+     *
+     * @param taint Detail about the state of the value passed (Cumulative information leading to the variable passed).
+     * @return Priorities interface values from 1 to 5 (Enum-like interface)
+     */
     protected int getPriority(Taint taint) {
         if (taint.isTainted()) {
             return Priorities.HIGH_PRIORITY;

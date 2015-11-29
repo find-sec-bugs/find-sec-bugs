@@ -2,3 +2,4 @@ language: java
 install: mvn clean
 jdk:
   - oraclejdk8
+sudo: false

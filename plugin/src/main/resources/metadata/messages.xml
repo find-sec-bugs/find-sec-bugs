@@ -2918,7 +2918,7 @@ sendBroadcast(v1);
 
     &lt;receiver
         android:name="my.app.BroadcastReceiver"
-        android:permission="com.secure.PERMISSION"&gt; &lt;!-- Permission enforcement --&gt;
+        android:permission="my.app.PERMISSION"&gt; &lt;!-- Permission enforcement --&gt;
         &lt;intent-filter>
             &lt;action android:name="com.secure.action.UserConnected" /&gt;
         &lt;/intent-filter&gt;
@@ -2929,11 +2929,14 @@ sendBroadcast(v1);
 </pre>
 </p>
 <p>
-    <b>Configuration (receiver)<sup>[1] Source: StackOverflow</sup>:</b><br/>
+    <b>Configuration (sender)<sup>[1] Source: StackOverflow</sup>:</b><br/>
 <pre>
 &lt;manifest&gt;
     &lt;!-- We declare we own the permission to send broadcast to the above receiver --&gt;
     &lt;uses-permission android:name="my.app.PERMISSION" /&gt;
+
+    &lt;!-- With the following configuration, both the sender and the receiver apps need to be signed by the same developer certificate. --&gt;
+    &lt;permission android:name="my.app.PERMISSION" android:protectionLevel="signature" /&gt;
 &lt;/manifest&gt;
 </pre>
 </p>

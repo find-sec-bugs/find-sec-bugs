@@ -25,18 +25,18 @@ import edu.umd.cs.findbugs.ba.FrameDataflowAnalysis;
 import edu.umd.cs.findbugs.ba.Location;
 import edu.umd.cs.findbugs.ba.generic.GenericSignatureParser;
 import edu.umd.cs.findbugs.classfile.MethodDescriptor;
-
+import edu.umd.cs.findbugs.classfile.analysis.AnnotationValue;
+import edu.umd.cs.findbugs.classfile.analysis.MethodInfo;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import edu.umd.cs.findbugs.classfile.analysis.AnnotationValue;
-import edu.umd.cs.findbugs.classfile.analysis.MethodInfo;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.MethodGen;
 
@@ -56,7 +56,7 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
     private int parameterStackSize;
     private List<Integer> slotToParameter;
 
-    private static List<String> TAINTED_ANNOTATIONS = loadFileContent("taint-config/taint-param-annotations.txt");
+    private static final List<String> TAINTED_ANNOTATIONS = loadFileContent("taint-config/taint-param-annotations.txt");
     
     public TaintAnalysis(MethodGen methodGen, DepthFirstSearch dfs,
             MethodDescriptor descriptor, TaintMethodSummaryMap methodSummaries) {
@@ -64,7 +64,7 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
         this.methodGen = methodGen;
         this.methodDescriptor = (MethodInfo) descriptor;
         this.visitor = new TaintFrameModelingVisitor(methodGen.getConstantPool(), descriptor, methodSummaries);
-        computerParametersInfo(descriptor.getSignature(), descriptor.isStatic());
+        computeParametersInfo(descriptor.getSignature(), descriptor.isStatic());
     }
 
     @Override
@@ -98,30 +98,27 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
         int numSlots = fact.getNumSlots();
         int numLocals = fact.getNumLocals();
         for (int i = 0; i < numSlots; ++i) {
-            final Taint value;
-
-            boolean isTaintByAnnotation = i-1 < 0 ? false : isTaintedByAnnotation(i - 1);
-            if (inMainMethod || isTaintByAnnotation) {
-                value = new Taint(Taint.State.TAINTED);
-                // this would add line number for the first instruction in the main method
-                //value.addLocation(new TaintLocation(methodDescriptor, 0), true);
-            }
-            else {
-                value = new Taint(Taint.State.UNKNOWN);
-            }
+            Taint value = new Taint(Taint.State.UNKNOWN);
             if (i < numLocals) {
-                value.setVariableIndex(i);
-                if (i < parameterStackSize && !inMainMethod) {
-                    int stackOffset = parameterStackSize - i - 1;
-                    value.addParameter(stackOffset);
+                if (i < parameterStackSize) {
+                    if (inMainMethod || isTaintedByAnnotation(i - 1)) {
+                        value = new Taint(Taint.State.TAINTED);
+                        // this would add line number for the first instruction in the main method
+                        //value.addLocation(new TaintLocation(methodDescriptor, 0), true);
+                    } else {
+                        int stackOffset = parameterStackSize - i - 1;
+                        value.addParameter(stackOffset);
+                    }
                 }
+                value.setVariableIndex(i);
             }
             fact.setValue(i, value);
         }
     }
 
     /**
-     * @return If the method is the startup point of a console or gui application ("public void main(String[] args)")
+     * @return true if the method is the startup point of a console or gui application
+     * ("public static void main(String[] args)"), false otherwise
      */
     private boolean isInMainMethod() {
         return methodDescriptor.isStatic()
@@ -131,7 +128,7 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
     }
 
     /**
-     * Determine if the slut value is tainted based on added framework annotations.
+     * Determine if the slot value is tainted based on added framework annotations.
      * <hr/>
      * Example of mapping done:<br/>
      *
@@ -149,10 +146,10 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
      * @return
      */
     private boolean isTaintedByAnnotation(int slotNo) {
-        if(methodDescriptor.hasParameterAnnotations()) {
+        if (slotNo >= 0 && methodDescriptor.hasParameterAnnotations()) {
             int parameter = slotToParameter.get(slotNo);
             Collection<AnnotationValue> annotations = methodDescriptor.getParameterAnnotations(parameter);
-            for(AnnotationValue annotation : annotations) {
+            for (AnnotationValue annotation : annotations) {
                 if (TAINTED_ANNOTATIONS.contains(annotation.getAnnotationClass().getClassName())) {
                     return true;
                 }
@@ -223,16 +220,14 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
      * @param isStatic
      * @return
      */
-    private void computerParametersInfo(String signature, boolean isStatic) {
+    private void computeParametersInfo(String signature, boolean isStatic) {
         assert signature != null && !signature.isEmpty();
         // static methods does not have reference to this
         int stackSize = isStatic ? 0 : 1;
         GenericSignatureParser parser = new GenericSignatureParser(signature);
         Iterator<String> iterator = parser.parameterSignatureIterator();
-
         int paramIdx = 0;
         slotToParameter = new ArrayList<Integer>();
-
         while (iterator.hasNext()) {
             String parameter = iterator.next();
             if (parameter.equals("D") || parameter.equals("J")) {
@@ -255,13 +250,13 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
             BufferedReader stream = new BufferedReader(new InputStreamReader(in));
             String line;
             List<String> content = new ArrayList<String>();
-            while((line = stream.readLine()) != null) {
+            while ((line = stream.readLine()) != null) {
                 content.add(line.trim());
             }
+            stream.close();
             return content;
-        }
-        catch (Exception e) {
-            LOG.severe("Unable to load data from " + path);
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, "Unable to load data from {0}", path);
         }
         return new ArrayList<String>();
     }

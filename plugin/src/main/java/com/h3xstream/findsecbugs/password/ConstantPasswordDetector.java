@@ -162,7 +162,8 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
     private void markHardCodedItemsFromFlow() {
         for (int i = 0; i < stack.getStackDepth(); i++) {
             OpcodeStack.Item stackItem = stack.getStackItem(i);
-            if (stackItem.getConstant() != null || stackItem.isNull()) {
+            if ((stackItem.getConstant() != null || stackItem.isNull())
+                    && !stackItem.getSignature().startsWith("[")) {
                 setHardCodedItem(stackItem);
             }
             if (hasHardCodedFieldSource(stackItem)) {
@@ -286,8 +287,8 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
         for (Integer paramIndex : offsets) {
             OpcodeStack.Item stackItem = stack.getStackItem(paramIndex);
             bugInstance.addParameterAnnotation(paramIndex,
-                        "Hard coded parameter number (in reverse order) is")
-                .addFieldOrMethodValueSource(stackItem);
+                    "Hard coded parameter number (in reverse order) is")
+                    .addFieldOrMethodValueSource(stackItem);
             Object constant = stackItem.getConstant();
             if (constant != null) {
                 bugInstance.addString(constant.toString());

@@ -338,6 +338,42 @@ If an unfiltered parameter is passed to this file API, files from an arbitrary f
 <p>This rule identifies <b>potential</b> path traversal vulnerabilities. In many cases, the constructed file path cannot be controlled
 by the user. If that is the case, the reported instance is a false positive.</p>
 <br/>
+
+<p>
+    <b>Vulnerable Code:</b><br/>
+<pre>@GET
+@Path("/images_thumbs/{image}")
+@Produces("images/*")
+public Response getImageThumbnail(@javax.ws.rs.PathParam("image") String image) {
+    File file = new File("resources/images/", image); //Weak point
+
+    if (!file.exists()) {
+        return Response.status(Status.NOT_FOUND).build();
+    }
+
+    return Response.ok().entity(new FileInputStream(file)).build();
+}</pre>
+</p>
+<br/>
+
+<p>
+    <b>Solution:</b><br/>
+<pre>import org.apache.commons.io.FilenameUtils;
+
+@GET
+@Path("/images_thumbs/{image}")
+@Produces("images/*")
+public Response getImageThumbnail(@javax.ws.rs.PathParam("image") String image) {
+    File file = new File("resources/images/", FilenameUtils.getName(image)); //Fix
+
+    if (!file.exists()) {
+        return Response.status(Status.NOT_FOUND).build();
+    }
+
+    return Response.ok().entity(new FileInputStream(file)).build();
+}</pre>
+</p>
+<br/>
 <p>
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246952/Path%20Traversal">WASC: Path Traversal</a><br/>
@@ -430,6 +466,40 @@ A TrustManager allowing specific certificates (based on a truststore for example
 Detailed information for a proper implementation is at:
 <a href="http://stackoverflow.com/a/6378872/89769">[1]</a> 
 <a href="http://stackoverflow.com/a/5493452/89769">[2]</a>
+</p>
+<br/>
+<p>
+    <b>Vulnerable Code:</b><br/>
+<pre>class WeakTrustManager implements X509TrustManager {
+
+    @Override
+    public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+        //Trust any client connecting (no certificate validation)
+    }
+
+    @Override
+    public void checkServerTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+        //Trust any remote server (no certificate validation)
+    }
+
+    @Override
+    public X509Certificate[] getAcceptedIssuers() {
+        return null;
+    }
+}</pre>
+</p>
+<br/>
+<p>
+    <b>Solution (TrustMangager based on a keystore):</b><br/>
+<pre>KeyStore ks = //Load keystore containing the certificates trusted
+
+SSLContext sc = SSLContext.getInstance("TLS");
+
+TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+tmf.init(ks);
+
+sc.init(kmf.getKeyManagers(), tmf.getTrustManagers(),null);
+</pre>
 </p>
 <br/>
 <p>
@@ -1982,8 +2052,14 @@ keyGen.init(128);</pre>
 
         
             
-<blockquote>"RSA Laboratories currently recommends key sizes of 1024 bits for corporate use and 2048 bits for extremely valuable keys
-like the root key pair used by a certifying authority". <sup>[1]</sup></blockquote>
+<p>
+    NIST recommend the use of <u>2048 bits and higher</u> keys for the RSA algorithm.
+</p>
+<blockquote>
+    "Digital Signature Verification | RSA: 1024 &le; len(n) &lt; 2048 | Legacy-use"<br/>
+    "Digital Signature Verification | RSA: len(n) &ge; 2048 | Acceptable"<br/>
+    - <a href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar1.pdf">NIST: Recommendation for Transitioning the Use of Cryptographic Algorithms and Key Lengths p.7</a>
+</blockquote>
 
 <p><b>Vulnerable Code:</b><br/>
 <pre>
@@ -2002,7 +2078,9 @@ keyGen.initialize(2048);
 <br/>
 <p>
 <b>References</b><br/>
-[1] <a href="http://www.emc.com/emc-plus/rsa-labs/standards-initiatives/how-large-a-key-should-be-used.htm">RSA Laboratories: 3.1.5 How large a key should be used in the RSA cryptosystem?</a><br/>
+<a href="http://csrc.nist.gov/groups/ST/toolkit/key_management.html">NIST: Latest publication on key management</a><br/>
+<a href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar1.pdf">NIST: Recommendation for Transitioning the Use of Cryptographic Algorithms and Key Lengths p.7</a><br/>
+<a href="http://www.emc.com/emc-plus/rsa-labs/standards-initiatives/how-large-a-key-should-be-used.htm">RSA Laboratories: 3.1.5 How large a key should be used in the RSA cryptosystem?</a><br/>
 <a href="http://en.wikipedia.org/wiki/Key_size#Asymmetric%5Falgorithm%5Fkey%5Flengths">Wikipedia: Asymmetric algorithm key lengths</a><br/>
 <a href="http://cwe.mitre.org/data/definitions/326.html">CWE-326: Inadequate Encryption Strength</a><br/>
 <a href="http://www.keylength.com/en/compare/">Keylength.com (BlueKrypt): Aggregate key length recommendations.</a>
@@ -2762,7 +2840,7 @@ Enabling is JavaScript is not a bad practice. It just means that the backend cod
 The XSS can also be introduce client-side with DOM XSS.
 <pre>
 function updateDescription(newDescription) {
-    $("#userDescription").html("<p>"+newDescription+"</p>");
+    $("#userDescription").html("&lt;p&gt;"+newDescription+"&lt;/p&gt;");
 }
 </pre>
 </p>

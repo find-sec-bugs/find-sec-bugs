@@ -195,6 +195,8 @@ public class ConstantPasswords {
         new SecretKeySpec(key.getBytes(), "AES"); // should not report
         byte[] bytes = {0, 0, 7};
         new PBEKeySpec(getPassword(), bytes, 1); // different parameter hard coded
+        byte newArray[] = new byte[1024]; // not considered hard coded
+        new X509EncodedKeySpec(newArray);
     }
     
     private static char[] getPassword() {

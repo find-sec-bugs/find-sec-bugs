@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Home - Find Security Bugs</title>
+
+    <link rel="shortcut icon" href="images/favicon.png">
+    <link href="http://fonts.googleapis.com/css?family=Squada+One" rel="stylesheet" type="text/css"/>
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/font-awesome.css" rel="stylesheet">
+    <link href="css/fsb-custom-theme.css" rel="stylesheet">
+    <link href="css/agency.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Find Security Bugs</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class='active'><a href="/find-sec-bugs/">Home</a></li>
+                <li class="dropdown ">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">How To <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="dropdown-header">Use the plugin with..</li>
+                        <li><a href="tutorials.htm#Maven">Maven</a></li>
+                        <li><a href="tutorials.htm#Eclipse">Eclipse</a></li>
+                        <li><a href="tutorials.htm#NetBeans">NetBeans</a></li>
+                        <li><a href="tutorials.htm#IntelliJ">IntelliJ</a></li>
+                        <li><a href="tutorials.htm#Jenkins">Jenkins</a></li>
+                        <li><a href="tutorials.htm#Sonar">Sonar</a></li>
+                        <li class="divider"></li>
+                        <li class="dropdown-header">Knowledge base</li>
+                        <li><a href="security.htm">Getting started in security</a></li>
+                    </ul>
+                </li>
+                <li ><a href="bugs.htm">Bug Patterns</a></li>
+                <li ><a href="download.htm">Download</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li ><a href="license.htm">License</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+
+<br/><br/>
+
+
+<div class="container">
+    <div class="jumbotron jumbotron-ad hidden-print">
+        <div class="row">
+            <div class="col-md-8 col-sm-8 text-center">
+
+                <h1><i class="fa fa-bug"></i>&nbsp; Find Security Bugs</h1>
+
+                <p>The FindBugs plugin for security audits of Java web applications.</p>
+
+                <div class="actions">
+                    <a class="btn btn-default btn-lg" href="download.htm">
+                        <i class="fa fa-download"></i>&nbsp;&nbsp;
+                        Download version 1.4.4
+                    </a>
+                </div>
+                (Last updated: 20th November 2015)
+            </div>
+            <div class="col-md-4 col-sm-4">
+
+                <div class="social-links">
+                    <ul style="list-style-type: none;">
+                        <li>
+                            Spread the word:<br/>
+                            <a class='twitter-share-button' data-url='http://h3xstream.github.io/find-sec-bugs/'
+                               data-via='h3xstream' href='https://twitter.com/share'>Tweet</a><br/>
+
+                            <div class="g-plusone"></div><br/>
+                            <div class='fb-like' data-font='lucida grande'
+                                 data-href='http://h3xstream.github.io/find-sec-bugs/'
+                                 data-layout='button_count' data-send='false' data-show-faces='false' data-width='100'
+                                 style='line-height:1.0;display:inline'></div>
+
+                        </li>
+                        <li><br/><br/></li>
+                        <li>
+                            Follow the project:<br/>
+                            <iframe class="github-btn"
+                                    src="http://ghbtns.com/github-btn.html?user=h3xstream&repo=find-sec-bugs&type=watch&count=true"
+                                    allowtransparency="true" frameborder="0" scrolling="0" width="100px"
+                                    height="20px"></iframe>
+                            <br/>
+                            <iframe class="github-btn"
+                                    src="http://ghbtns.com/github-btn.html?user=h3xstream&repo=find-sec-bugs&type=fork&count=true"
+                                    allowtransparency="true" frameborder="0" scrolling="0" width="102px"
+                                    height="20px"></iframe>
+
+                        </li>
+                    </ul>
+                </div>
+            </div> <!-- cols -->
+        </div> <!-- row -->
+    </div> <!-- jumbotron -->
+</div> <!-- container -->
+
+
+<section id="features" class="feature-list">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Features</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-sm-6">
+                <h4><i class="fa fa-crosshairs"></i> 78 bug patterns</h4>
+                It can detect <a href="bugs.htm">78 different vulnerability types</a> with over 200 unique signatures.
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <h4><i class="fa fa-code"></i> Support your frameworks and libraries</h4>
+                Cover popular frameworks including Spring-MVC, Struts, Tapestry and many more.
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <h4><i class="fa fa-plug"></i> Integrate with your IDE</h4>
+                Plugins are available for <a target="_blank" href="http://findbugs.sourceforge.net/manual/eclipse.html">Eclipse</a>,
+                <a target="_blank" href="https://plugins.jetbrains.com/plugin/3847?pr=idea">IntelliJ</a>,
+                <a href="https://plugins.jetbrains.com/plugin/3847?pr=idea">Android Studio</a> and
+                <a target="_blank" href="https://netbeans.org/kb/docs/java/code-inspect.html#fb">NetBeans</a>.
+                Command line integration is available with <a href="http://findbugs.sourceforge.net/manual/anttask.html">Ant</a>
+                and <a href="http://gleclaire.github.io/findbugs-maven-plugin/">Maven</a>.
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <h4><i class="fa fa-cogs"></i> Continuous integration</h4>
+                Can be used with systems such as <a target="_blank" href="https://wiki.jenkins-ci.org/display/JENKINS/FindBugs+Plugin">Jenkins</a> and
+                <a target="_blank" href="http://docs.sonarqube.org/display/SONAR/Findbugs+Plugin">SonarQube</a>.
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <h4><i class="fa fa-check"></i> OWASP TOP 10 and CWE coverage</h4>
+                Extensive references are given for each bug patterns with references to OWASP Top 10 and CWE.
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <h4><i class="fa fa-github"></i> Open for contributions</h4>
+                The project is open-source and is <a target="_blank" href="https://github.com/h3xstream/find-sec-bugs/graphs/contributors">open for contributions</a>.
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="portfolio" class="bg-light-gray">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Screenshots</h2>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-4 col-sm-6 portfolio-item">
+                <a href="#screenshot0" class="portfolio-link" data-toggle="modal">
+                    <div class="portfolio-hover">
+                        <div class="portfolio-hover-content">
+                            <i class="fa fa-search-plus fa-3x"></i>
+                        </div>
+                    </div>
+                    <img src="images/screens/eclipse.png" class="img-responsive" alt="">
+                </a>
+                <div class="portfolio-caption">
+                    <h4>Eclipse</h4>
+                    <p class="text-muted"></p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 col-sm-6 portfolio-item">
+                <a href="#screenshot1" class="portfolio-link" data-toggle="modal">
+                    <div class="portfolio-hover">
+                        <div class="portfolio-hover-content">
+                            <i class="fa fa-search-plus fa-3x"></i>
+                        </div>
+                    </div>
+                    <img src="images/screens/intellij.png" class="img-responsive" alt="">
+                </a>
+                <div class="portfolio-caption">
+                    <h4>IntelliJ / Android Studio</h4>
+                    <p class="text-muted"></p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 col-sm-6 portfolio-item">
+                <a href="#screenshot2" class="portfolio-link" data-toggle="modal">
+                    <div class="portfolio-hover">
+                        <div class="portfolio-hover-content">
+                            <i class="fa fa-search-plus fa-3x"></i>
+                        </div>
+                    </div>
+                    <img src="images/screens/sonar.png" class="img-responsive" alt="">
+                </a>
+                <div class="portfolio-caption">
+                    <h4>Sonar Qube</h4>
+                    <p class="text-muted"></p>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+
+
+<div class="portfolio-modal modal fade" id="screenshot0" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 col-lg-offset-1">
+                    <div class="modal-body">
+                        <h2>Eclipse</h2>
+                        <p class="item-intro text-muted"><a href="http://marketplace.eclipse.org/content/findbugs-eclipse-plugin">Eclipse plugin</a> with FindSecurityBugs detectors.</p>
+                        <img class="img-responsive" src="images/screens/eclipse.png" alt="">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="portfolio-modal modal fade" id="screenshot1" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 col-lg-offset-1">
+                    <div class="modal-body">
+                        <h2>IntelliJ / Android Studio</h2>
+                        <p class="item-intro text-muted"><a href="https://plugins.jetbrains.com/plugin/3847?pr=idea">IntelliJ plugin</a> with FindSecurityBugs detectors.</p>
+                        <img class="img-responsive" src="images/screens/intellij.png" alt="">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="portfolio-modal modal fade" id="screenshot2" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 col-lg-offset-1">
+                    <div class="modal-body">
+                        <h2>Sonar Qube</h2>
+                        <p class="item-intro text-muted"><a href="http://docs.sonarqube.org/display/SONAR/Findbugs+Plugin">Sonar Qube</a> with FindBugs plugin (version 3.2+).</p>
+                        <img class="img-responsive" src="images/screens/sonar.png" alt="">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Google Plus -->
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+
+<!-- Facebook -->
+<div id="fb-root"></div>
+<script>(function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<!-- Twitter -->
+<script>!function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (!d.getElementById(id)) {
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }
+}(document, "script", "twitter-wjs");</script>
+
+
+<br/><br/>
+
+<footer id="footer" class="footer hidden-print">
+    <div class="container text-center">
+        <div>
+            Find Security Bugs 1.4.4
+            <span class="hide-xs">&middot;</span>
+            Created by <a target="_blank" href="https://twitter.com/h3xstream">Philippe Arteau</a>
+        </div>
+        <div>
+            Licensed under <a href="license.htm">LGPL</a>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
+<script src="js/fsb-custom.js"></script>
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-34839255-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function () {
+        var ga = document.createElement('script');
+        ga.type = 'text/javascript';
+        ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(ga, s);
+    })();
+</script>
+</body>
+</html>

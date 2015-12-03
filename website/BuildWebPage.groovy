@@ -1,18 +1,23 @@
 import groovy.text.SimpleTemplateEngine
 
+System.setProperty("file.encoding", "UTF-8");
+
+String metaDataDir = "../plugin/src/main/resources/metadata"
+
 //Contains the bug descriptions
-InputStream messagesStreamEn = getClass().getResourceAsStream("/metadata/messages.xml")
-InputStream messagesStreamJa = getClass().getResourceAsStream("/metadata/messages_ja.xml")
+InputStream messagesStreamEn = new FileInputStream(new File(metaDataDir,"messages.xml"))
+InputStream messagesStreamJa = new FileInputStream(new File(metaDataDir,"messages_ja.xml"))
 
 //Html Template of the documentation page
 def getTemplateReader(String path) {
-    return new InputStreamReader(getClass().getResourceAsStream(path))
+     return new InputStreamReader(
+            new FileInputStream(new File("templates",path)), "UTF-8");
 }
 
 //Generated page will be place there
 String outDir = binding.variables.containsKey("project") ? project.build.outputDirectory : System.getProperty("java.io.tmpdir")
 
-outDir = "C:\\Code\\workspace-java\\find-sec-bugs\\website\\src\\main\\resources\\www"
+outDir = "out_web/"
 def outputFile(outDir,file) {
     return new File(outDir, file)
 }
@@ -26,7 +31,7 @@ bugsBindingJa = buildMapping(messagesStreamJa)
 bugsBindingJa['lang'] = 'ja'
 
 def buildMapping(InputStream xmlStream) {
-    rootXml = new XmlParser().parse(xmlStream)
+    rootXml = new XmlParser().parse(new InputStreamReader(xmlStream,"UTF-8"))
     println "Mapping the descriptions to the templates"
     def bugsBinding = [:]
     bugsBinding['bugPatterns'] = []
@@ -52,10 +57,10 @@ def buildMapping(InputStream xmlStream) {
 
 //Version and download links
 
-downloadUrl = "http://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/1.4.1/findsecbugs-plugin-1.4.1.jar"
+downloadUrl = "http://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/1.4.4/findsecbugs-plugin-1.4.4.jar"
 mavenCentralSearch = "http://search.maven.org/#search|gav|1|g:%22com.h3xstream.findsecbugs%22 AND a:%22findsecbugs-plugin%22"
-latestVersion = "1.4.1"
-latestUpdateDate = "30th May 2015"
+latestVersion = "1.4.4"
+latestUpdateDate = "20th November 2015"
 
 //Screenshots
 

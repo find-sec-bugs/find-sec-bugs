@@ -1,0 +1,38 @@
+<FindBugsFilter><!-- This file is auto-generated. -->
+  <Match>
+    <Bug pattern='JSP_INCLUDE' />
+  </Match>
+  <Match>
+    <Bug pattern='JSP_SPRING_EVAL' />
+  </Match>
+  <Match>
+    <Bug pattern='JSP_JSTL_OUT' />
+  </Match>
+  <Match>
+    <Bug pattern='XSS_JSP_PRINT' />
+  </Match>
+  <Match>
+    <Bug pattern='XSS_REQUEST_PARAMETER_TO_SEND_ERROR' />
+  </Match>
+  <Match>
+    <Bug pattern='XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER' />
+  </Match>
+  <Match>
+    <Bug pattern='HRS_REQUEST_PARAMETER_TO_HTTP_HEADER' />
+  </Match>
+  <Match>
+    <Bug pattern='HRS_REQUEST_PARAMETER_TO_COOKIE' />
+  </Match>
+  <Match>
+    <Bug pattern='DMI_CONSTANT_DB_PASSWORD' />
+  </Match>
+  <Match>
+    <Bug pattern='DMI_EMPTY_DB_PASSWORD' />
+  </Match>
+  <Match>
+    <Bug pattern='SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE' />
+  </Match>
+  <Match>
+    <Bug pattern='SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING' />
+  </Match>
+</FindBugsFilter>

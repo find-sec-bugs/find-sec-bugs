@@ -17,9 +17,11 @@
  */
 package com.h3xstream.findbugs.test.service;
 
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.fail;
 
 public class ClassFileLocator {
 
@@ -56,7 +58,13 @@ public class ClassFileLocator {
     }
 
     private String getFilenameFromUrl(URL url) {
-        String filename = url.toString();
+        String filename;
+		try {
+			filename = url.toURI().getPath();
+		} catch (final URISyntaxException e) {
+			fail("Failed to get file path = " + url, e);
+			return null;
+		}
 
         final String prefix = "file:";
         if (filename.startsWith(prefix)) {

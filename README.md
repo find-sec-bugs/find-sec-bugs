@@ -19,15 +19,15 @@ Website : http://h3xstream.github.io/find-sec-bugs/
 
 ### Eclipse
 
-![Eclipse](http://h3xstream.github.io/find-sec-bugs/images/screens/eclipse.png)
+![Eclipse](http://find-sec-bugs.github.io/images/screens/eclipse.png)
 
 ### IntelliJ / Android Studio
 
-![IntelliJ](http://h3xstream.github.io/find-sec-bugs/images/screens/intellij.png)
+![IntelliJ](http://find-sec-bugs.github.io/images/screens/intellij.png)
 
 ### Sonar Qube
 
-![SonarQube](http://h3xstream.github.io/find-sec-bugs/images/screens/sonar.png)
+![SonarQube](http://find-sec-bugs.github.io/images/screens/sonar.png)
 
 ## License
 

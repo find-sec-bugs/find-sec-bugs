@@ -17,16 +17,15 @@
  */
 package com.h3xstream.findsecbugs.xss;
 
-import com.h3xstream.findsecbugs.common.InterfaceUtils;
 import com.h3xstream.findsecbugs.injection.ConfiguredBasicInjectionDetector;
 import edu.umd.cs.findbugs.BugReporter;
+import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.ba.ClassContext;
-import org.apache.bcel.Repository;
-import org.apache.bcel.classfile.JavaClass;
+import edu.umd.cs.findbugs.ba.Hierarchy;
 
 public class XssServletDetector extends ConfiguredBasicInjectionDetector {
 
-    private static final String XSS_JSP_PRINT_TYPE = "XSS_JSP_PRINT";
+    //private static final String XSS_JSP_PRINT_TYPE = "XSS_JSP_PRINT";
     private static final String XSS_SERVLET_TYPE = "XSS_SERVLET";
 
     public XssServletDetector(BugReporter bugReporter) {
@@ -35,9 +34,14 @@ public class XssServletDetector extends ConfiguredBasicInjectionDetector {
         loadConfiguredSinks("xss-servlet.txt", XSS_SERVLET_TYPE);
     }
 
+    @Override
     public boolean shouldAnalyzeClass(ClassContext classContext) {
-        JavaClass javaClass = classContext.getJavaClass();
-        //TODO: Do recursive check on inheritance
-        return InterfaceUtils.classExtends(javaClass, "javax.servlet.http.HttpServlet");
+        try {
+            String className = classContext.getClassDescriptor().getDottedClassName();
+            return Hierarchy.isSubtype(className, "javax.servlet.http.HttpServlet");
+        } catch (ClassNotFoundException ex) {
+            AnalysisContext.reportMissingClass(ex);
+            return false;
+        }
     }
 }

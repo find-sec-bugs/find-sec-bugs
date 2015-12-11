@@ -2,3 +2,13 @@ org/springframework/web/bind/annotation/PathVariable
 org/springframework/web/bind/annotation/RequestParam
 org/springframework/web/bind/annotation/RequestBody
 org/springframework/web/bind/annotation/RequestHeader
+org/springframework/web/bind/annotation/MatrixVariable
+org/springframework/web/bind/annotation/RequestPart
+org/springframework/ws/server/endpoint/annotation/RequestPayload
+org/springframework/ws/server/endpoint/annotation/XPathParam
+javax/ws/rs/PathParam
+javax/ws/rs/HeaderParam
+javax/ws/rs/MatrixParam
+javax/ws/rs/CookieParam
+javax/ws/rs/FormParam
+javax/ws/rs/QueryParam

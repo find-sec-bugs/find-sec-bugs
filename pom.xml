@@ -14,8 +14,6 @@
 	<description>Root project file that aggregate the different modules of Find Security Bugs.</description>
 
     <properties>
-        <!-- The groovy dependency need to be kept in sync with GMaven dependency -->
-        <groovy.version>1.7.0</groovy.version>
         <!-- Encoding configuration -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -89,7 +87,6 @@
         <module>plugin</module>
         <module>findbugs-test-util</module>
         <module>plugin-deps</module>
-        <module>cli</module>
     </modules>
 
 
@@ -171,12 +168,6 @@
                 <scope>test</scope>
             </dependency>
 
-            <!-- Groovy (use for the website) -->
-            <dependency>
-                <groupId>org.codehaus.groovy</groupId>
-                <artifactId>groovy-all</artifactId>
-                <version>${groovy.version}</version>
-            </dependency>
 
         </dependencies>
 

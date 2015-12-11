@@ -85,7 +85,7 @@ println "Writing the template to ${outDir}/index.htm"
 
 outputFile(outDir,"index.htm").withWriter {
     w ->
-        w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Home','section':'home'])
+        w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Home','section':'home','pageRedirect':''])
         w << engine.createTemplate(getTemplateReader("/home.htm")).make(['latestVersion':latestVersion,
                                                                          'latestUpdateDate':latestUpdateDate,
                                                                          'nbPatterns':bugsBindingEn['nbPatterns'],
@@ -97,7 +97,7 @@ outputFile(outDir,"index.htm").withWriter {
 outputFile(outDir,"download.htm").withWriter {
     w ->
         w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(
-                ['title':'Download','section':'download'])
+                ['title':'Download','section':'download','pageRedirect':'download.htm'])
         w << engine.createTemplate(getTemplateReader("/download.htm")).make(
                 ['downloadUrl':downloadUrl,'latestVersion':latestVersion,'mavenCentralSearch':mavenCentralSearch])
         w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make(['latestVersion':latestVersion])
@@ -105,28 +105,28 @@ outputFile(outDir,"download.htm").withWriter {
 
 outputFile(outDir,"tutorials.htm").withWriter {
     w ->
-        w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Tutorials','section':'tutorials'])
+        w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Tutorials','section':'tutorials','pageRedirect':'tutorials.htm'])
         w << engine.createTemplate(getTemplateReader("/tutorials.htm")).make()
         w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make(['latestVersion':latestVersion])
 }
 
 outputFile(outDir,"security.htm").withWriter {
     w ->
-        w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Getting Started in Security','section':'tutorials'])
+        w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Getting Started in Security','section':'tutorials','pageRedirect':'security.htm'])
         w << engine.createTemplate(getTemplateReader("/security.htm")).make()
         w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make(['latestVersion':latestVersion])
 }
 
 outputFile(outDir,"bugs.htm").withWriter {
     w ->
-        w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Bug Patterns','section':'bugs'])
+        w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Bug Patterns','section':'bugs','pageRedirect':'bugs.htm'])
         w << engine.createTemplate(getTemplateReader("/bugs.htm")).make(bugsBindingEn)
         w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make(['latestVersion':latestVersion])
 }
 
 outputFile(outDir,"bugs_ja.htm").withWriter {
     w ->
-        w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Bug Patterns','section':'bugs'])
+        w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'Bug Patterns','section':'bugs','pageRedirect':'bugs_ja.htm'])
         w << engine.createTemplate(getTemplateReader("/bugs.htm")).make(bugsBindingJa)
         w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make(['latestVersion':latestVersion])
 }
@@ -134,7 +134,7 @@ outputFile(outDir,"bugs_ja.htm").withWriter {
 
 outputFile(outDir,"license.htm").withWriter {
     w ->
-        w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'License','section':'license'])
+        w << engine.createTemplate(getTemplateReader("/common_header.htm")).make(['title':'License','section':'license','pageRedirect':'license.htm'])
         w << engine.createTemplate(getTemplateReader("/license.htm")).make()
         w << engine.createTemplate(getTemplateReader("/common_footer.htm")).make(['latestVersion':latestVersion])
 }

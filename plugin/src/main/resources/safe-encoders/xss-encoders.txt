@@ -1,4 +1,6 @@
 -Safe encoder for XSS
+
+--ESAPI
 org/owasp/esapi/Encoder.encodeForCSS(Ljava/lang/String;)Ljava/lang/String;:SAFE
 org/owasp/esapi/Encoder.encodeForHTML(Ljava/lang/String;)Ljava/lang/String;:SAFE
 org/owasp/esapi/Encoder.encodeForHTMLAttribute(Ljava/lang/String;)Ljava/lang/String;:SAFE
@@ -8,9 +10,13 @@ org/owasp/esapi/Encoder.encodeForVBScript(Ljava/lang/String;)Ljava/lang/String;:
 org/owasp/esapi/Encoder.encodeForXML(Ljava/lang/String;)Ljava/lang/String;:SAFE
 org/owasp/esapi/Encoder.encodeForXMLAttribute(Ljava/lang/String;)Ljava/lang/String;:SAFE
 
--TODO https://commons.apache.org/proper/commons-lang/javadocs/api-2.6/org/apache/commons/lang/StringEscapeUtils.html
+--Apache Commons Lang 2
 org/apache/commons/lang/StringEscapeUtils.escapeHtml(Ljava/lang/String;)Ljava/lang/String;:SAFE
+org/apache/commons/lang/StringEscapeUtils.escapeJavaScript(Ljava/lang/String;)Ljava/lang/String;:SAFE
+org/apache/commons/lang/StringEscapeUtils.escapeXml(Ljava/lang/String;)Ljava/lang/String;:SAFE
 
+
+--Apache Commons Lang 3
 org/apache/commons/lang3/StringEscapeUtils.escapeEcmaScript(Ljava/lang/String;)Ljava/lang/String;:SAFE
 org/apache/commons/lang3/StringEscapeUtils.escapeHtml3(Ljava/lang/String;)Ljava/lang/String;:SAFE
 org/apache/commons/lang3/StringEscapeUtils.escapeHtml4(Ljava/lang/String;)Ljava/lang/String;:SAFE
@@ -20,6 +26,7 @@ org/apache/commons/lang3/StringEscapeUtils.escapeXml(Ljava/lang/String;)Ljava/la
 org/apache/commons/lang3/StringEscapeUtils.escapeXml10(Ljava/lang/String;)Ljava/lang/String;:SAFE
 org/apache/commons/lang3/StringEscapeUtils.escapeXml11(Ljava/lang/String;)Ljava/lang/String;:SAFE
 
+--Spring Framework
 org/springframework/web/util/HtmlUtils.htmlEscape(Ljava/lang/String;)Ljava/lang/String;:SAFE
 org/springframework/web/util/HtmlUtils.htmlEscapeDecimal(Ljava/lang/String;)Ljava/lang/String;:SAFE
 org/springframework/web/util/HtmlUtils.htmlEscapeHex(Ljava/lang/String;)Ljava/lang/String;:SAFE

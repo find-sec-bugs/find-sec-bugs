@@ -3,7 +3,7 @@
                 pluginid="com.h3xstream.findsecbugs"
                 provider="Find Security Bugs"
                 defaultenabled="true"
-                website="https://github.com/h3xstream/find-sec-bugs">
+                website="https://find-sec-bugs.github.io">
 
     <!-- Registers engine for taint analysis dataflow -->
     <EngineRegistrar class="com.h3xstream.findsecbugs.taintanalysis.EngineRegistrar"/>

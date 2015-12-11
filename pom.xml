@@ -178,7 +178,7 @@
     Ref: https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide#SonatypeOSSMavenRepositoryUsageGuide-6.CentralSyncRequirement
     -->
 
-    <url>http://h3xstream.github.io/find-sec-bugs/</url>
+    <url>http://find-sec-bugs.github.io/</url>
 
     <licenses>
         <license>
@@ -190,9 +190,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:https://github.com/h3xstream/find-sec-bugs.git</connection>
-        <developerConnection>scm:git:git@github.com:h3xstream/find-sec-bugs.git</developerConnection>
-        <url>git@github.com:h3xstream/find-sec-bugs.git</url>
+        <connection>scm:git:https://github.com/find-sec-bugs/find-sec-bugs.git</connection>
+        <developerConnection>scm:git:git@github.com:find-sec-bugs/find-sec-bugs.git</developerConnection>
+        <url>git@github.com:find-sec-bugs/find-sec-bugs.git</url>
     </scm>
 
     <developers>

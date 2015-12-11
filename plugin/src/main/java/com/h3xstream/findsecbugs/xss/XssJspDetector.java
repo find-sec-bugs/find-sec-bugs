@@ -17,11 +17,11 @@
  */
 package com.h3xstream.findsecbugs.xss;
 
-import com.h3xstream.findsecbugs.common.InterfaceUtils;
 import com.h3xstream.findsecbugs.injection.ConfiguredBasicInjectionDetector;
 import edu.umd.cs.findbugs.BugReporter;
+import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.ba.ClassContext;
-import org.apache.bcel.classfile.JavaClass;
+import edu.umd.cs.findbugs.ba.Hierarchy;
 
 public class XssJspDetector extends ConfiguredBasicInjectionDetector {
 
@@ -32,9 +32,14 @@ public class XssJspDetector extends ConfiguredBasicInjectionDetector {
         loadConfiguredSinks("xss-jsp.txt", XSS_JSP_PRINT_TYPE);
     }
 
+    @Override
     public boolean shouldAnalyzeClass(ClassContext classContext) {
-        JavaClass javaClass = classContext.getJavaClass();
-        //TODO: Do recursive check on child class inheritance
-        return InterfaceUtils.classExtends(javaClass, "javax.servlet.http.HttpServlet");
+        try {
+            String className = classContext.getClassDescriptor().getDottedClassName();
+            return Hierarchy.isSubtype(className, "javax.servlet.http.HttpServlet");
+        } catch (ClassNotFoundException ex) {
+            AnalysisContext.reportMissingClass(ex);
+            return false;
+        }
     }
 }

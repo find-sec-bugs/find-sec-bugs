@@ -22,8 +22,8 @@
             <![CDATA[
 <p>The use of a predictable random value can lead to vulnerabilities when used in certain security critical contexts. For example, when the value is used as:</p>
 <ul>
-<li>a CSRF token</li>
-<li>a password reset token (sent by email)</li>
+<li>a CSRF token: a predictable token can lead to a CSRF attack as an attacker will know the value of the token</li>
+<li>a password reset token (sent by email): a predictable password token can lead to an account takeover, since an attacker will guess the URL of the change password form</li>
 <li>any other secret value</li>
 </ul>
 <p>
@@ -796,8 +796,18 @@ uses. <b>PBKDF2</b> should be use to hash password for example.</p>
         <Details>
             <![CDATA[
 <p>Implementing a custom MessageDigest is error-prone.</p>
-<p><a href="http://csrc.nist.gov/groups/ST/toolkit/secure_hashing.html">NIST</a> recommends the use of SHA-1, SHA-224*, SHA-256, SHA-384, SHA-512, SHA-512/224, or SHA-512/256.</p>
-<p><small>* SHA-224 algorithm is not provided by <a href="http://docs.oracle.com/javase/6/docs/technotes/guides/security/SunProviders.html#SUNProvider"> SUN provider.</a></small></p>
+<p><a href="http://csrc.nist.gov/groups/ST/toolkit/secure_hashing.html">NIST</a> recommends the use of SHA-224, SHA-256, SHA-384, SHA-512, SHA-512/224, or SHA-512/256.</p>
+<blockquote>
+    "<b>SHA-1 for digital signature generation:</b><br/>
+    SHA-1 may only be used for digital signature generation where specifically allowed by NIST protocol-specific guidance.
+    For all other applications, <u>SHA-1 shall not be used for digital signature generation</u>.<br/>
+    <b>SHA-1 for digital signature verification:</b><br/>
+    For digital signature verification, <u>SHA-1 is allowed for legacy-use</u>.<br/>
+    [...]<br/>
+    <b>SHA-224, SHA-256, SHA-384, SHA-512, SHA-512/224, and SHA-512/256</b>:<br/>
+    The use of these hash functions is acceptable for all hash function applications."<br/>
+    - <a href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar1.pdf">NIST: Transitions: Recommendation for Transitioning the Use of Cryptographic Algorithms and Key Lengths p.15</a>
+</blockquote>
 <p>
     <b>Vulnerable Code:</b><br/>
 <pre>MyProprietaryMessageDigest extends MessageDigest {
@@ -951,9 +961,13 @@ SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
 
 parser.parse(inputStream, customHandler);</pre>
 </p>
+<br/>
+The following snippets show 2 available solutions, you can set one or the two solutions. If you want to be more secure, it is highly recommended to implement the two following snippet code.
+<br/><br/>
 
 <p><b>Solution using "Secure processing" mode:</b></p>
 <p>
+This setting will protect you against Denial of Service attack.
 <pre>
 SAXParserFactory spf = SAXParserFactory.newInstance();
 spf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
@@ -964,6 +978,7 @@ parser.parse(inputStream, customHandler);</pre>
 
 <p><b>Solution disabling DTD:</b></p>
 <p>
+By disabling DTD, almost all XXE attacks will be prevented.
 <pre>
 SAXParserFactory spf = SAXParserFactory.newInstance();
 spf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
@@ -1036,9 +1051,14 @@ XMLReader reader = XMLReaderFactory.createXMLReader();
 reader.setContentHandler(customHandler);
 reader.parse(new InputSource(inputStream));</pre>
 </p>
+<br/>
+
+The following snippets show 2 available solutions, you can set one or the two solutions. If you want to be more secure, it is highly recommended to implement the two following snippet code.
+<br/><br/>
 
 <p><b>Solution using "Secure processing" mode:</b></p>
 <p>
+This setting will protect you against Denial of Service attack.
 <pre>
 XMLReader reader = XMLReaderFactory.createXMLReader();
 reader.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
@@ -1049,6 +1069,7 @@ reader.parse(new InputSource(inputStream));</pre>
 
 <p><b>Solution disabling DTD:</b></p>
 <p>
+By disabling DTD, almost all XXE attacks will be prevented.
 <pre>
 XMLReader reader = XMLReaderFactory.createXMLReader();
 reader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
@@ -1121,9 +1142,14 @@ DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
 Document doc = db.parse(input);</pre>
 </p>
+<br/>
+
+The following snippets show 2 available solutions, you can set one or the two solutions. If you want to be more secure, it is highly recommended to implement the two following snippet code.
+<br/><br/>
 
 <p><b>Solution using "Secure processing" mode:</b></p>
 <p>
+This setting will protect you against Denial of Service attack.
 <pre>
 DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
@@ -1134,6 +1160,7 @@ Document doc = db.parse(input);</pre>
 
 <p><b>Solution disabling DTD:</b></p>
 <p>
+By disabling DTD, almost all XXE attacks will be prevented.
 <pre>
 DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
@@ -1913,7 +1940,7 @@ In this situation, the use of toHexString() should be replaced with String.forma
 <p>
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246945/Insufficient%20Transport%20Layer%20Protection">WASC-04: Insufficient Transport Layer Protection</a><br/>
-<a href="http://www.hazelcast.com/documentation.jsp#Encryption">Hazelcast Documentation: Encryption (see second part)</a><br/>
+<a href="http://docs.hazelcast.org/docs/3.5/manual/html/encryption.html">Hazelcast Documentation: Encryption</a><br/>
 <a href="http://cwe.mitre.org/data/definitions/326.html">CWE-326: Inadequate Encryption Strength</a>
 </p>
 ]]>

@@ -703,7 +703,7 @@ mapped in this way are properly validated before they are used.</p>
 <p>
 <b>References</b><br/>
 [1] <a href="http://www.win.tue.nl/hashclash/On%20Collisions%20for%20MD5%20-%20M.M.J.%20Stevens.pdf">On Collisions for MD5</a>: Master Thesis by M.M.J. Stevens<br/>
-[2] <a href="">Chosen-prefix collisions for MD5 and applications</a>: Paper written by Marc Stevens<br/>
+[2] <a href="http://homepages.cwi.nl/~stevens/papers/stJOC%20-%20Chosen-Prefix%20Collisions%20for%20MD5%20and%20Applications.pdf">Chosen-prefix collisions for MD5 and applications</a>: Paper written by Marc Stevens<br/>
 <a href="https://en.wikipedia.org/wiki/MD5">Wikipedia: MD5</a><br/>
 <a href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar1.pdf">NIST: Transitions: Recommendation for Transitioning the Use of Cryptographic Algorithms and Key Lengths</a><br/>
 <a href="http://csrc.nist.gov/publications/nistpubs/800-132/nist-sp800-132.pdf">NIST: Recommendation for Password-Based Key Derivation</a><br/>
@@ -2225,7 +2225,7 @@ various blog sites. <sup><a href="http://java.dzone.com/articles/stronger-anti-c
 The filtering is weak for a few reasons:
 <ul>
 <li>It covers only parameters not headers and side-channel inputs</li>
-<li>The replace chain can be bypass easily (see example below)</li>
+<li>The replace chain can be bypassed easily (see example below)</li>
 <li>It's a black list of very specific bad patterns (rather than a white list of good/valid input)</li>
 </ul>
 </p>
@@ -2437,7 +2437,8 @@ attacker gets the ability to execute any code.
         <LongDescription>Dynamic variable in Spring expression could lead to arbitrary code execution</LongDescription>
         <Details>
             <![CDATA[
-<p></p>
+<p>A Spring expression is built with a dynamic value. The source of the value(s) should be verified to avoid that unfiltered values fall into this risky code evaluation.
+</p>
 <p>
     <b>Vulnerable Code:</b>
     <pre>&lt;%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %&gt;
@@ -2457,8 +2458,8 @@ attacker gets the ability to execute any code.
 <br/>
 <p>
 <b>References</b><br/>
-<a href="http://resources.infosecinstitute.com/file-inclusion-attacks/">InfosecInstitute: File Inclusion Attacks</a><br/>
-<a href="http://projects.webappsec.org/w/page/13246955/Remote%20File%20Inclusion">WASC-05: Remote File Inclusion</a><br/>
+    <a href="http://cwe.mitre.org/data/definitions/94.html">CWE-94: Improper Control of Generation of Code ('Code Injection')</a><br/>
+    <a href="http://cwe.mitre.org/data/definitions/95.html">CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')</a><br/>
 </p>
             ]]>
         </Details>

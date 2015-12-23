@@ -2805,7 +2805,12 @@ byte[] cipherText = c.doFinal(plainText);</pre>
     it is always recommended that you be able to verify the HMAC first, and only if the data is unmodified, do you then perform any cryptographic
     functions on the data.
 </p>
-<p>
+<p>The following modes are vulnerable because they don't provide a HMAC:<br/>
+    - CBC<br/>
+    - OFB<br/>
+    - CTR<br/>
+    - ECB<br/><br/>
+    The following snippets code are some examples of vulnerable code.<br/><br/>
     <b>Code at risk:</b><br/>
     <i>AES in CBC mode</i><br/>
 
@@ -2860,7 +2865,7 @@ In the example solution above, the GCM mode introduces an HMAC into the resultin
     This issue is corrected in ESAPI version 2.1.0. Versions <= 2.0.1 are vulnerable to a MAC bypass (CVE-2013-5679).<br/>
 </p>
 <p>
-    For Maven users, the plugin <a href="http://mojo.codehaus.org/versions-maven-plugin/">versions</a> can called using the 
+    For Maven users, the plugin <a href="http://mojo.codehaus.org/versions-maven-plugin/">versions</a> can be called using the
     following command. The effective version of ESAPI will be available in the output.<br/>
     <pre>$ mvn versions:display-dependency-updates</pre>
     <br/>Output:<br/>
@@ -3181,7 +3186,7 @@ webSettings.setJavaScriptEnabled(true);
 
 <p>
     <b>Code at risk:</b><br/>
-Enabling is JavaScript is not a bad practice. It just means that the backend code need to be audit for potential XSS.
+Enabling JavaScript is not a bad practice. It just means that the backend code need to be audited for potential XSS.
 The XSS can also be introduce client-side with DOM XSS.
 <pre>
 function updateDescription(newDescription) {
@@ -3215,8 +3220,8 @@ function updateDescription(newDescription) {
         <Details>
             <![CDATA[
 <p>
-    The use JavaScript Interface could expose the WebView to risky API. If an XSS is trigger in the WebView, the class
-    could be call by the malicious JavaScript code.
+    The use of JavaScript Interface could expose the WebView to risky API. If an XSS is triggered in the WebView, the class
+    could be called by the malicious JavaScript code.
 </p>
 
 <p>
@@ -3327,11 +3332,11 @@ cookie.setHttpOnly(true);
         <Details>
             <![CDATA[
 <p>
-    Object deserialization of untrusted data can lead to remote code execution, if there is a class in classpath allow
+    Object deserialization of untrusted data can lead to remote code execution, if there is a class in classpath that allows
     the trigger of malicious operation.
 </p>
 <p>
-    Libraries developers tend to fix class that provided potential malicious trigger. Their are still classes that are
+    Libraries developers tend to fix class that provided potential malicious trigger. There are still classes that are
     known to trigger Denial of Service<sup>[1]</sup>.
 </p>
 <p>

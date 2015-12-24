@@ -91,7 +91,7 @@ public class SaxParserXxeDetector extends OpcodeStackDetector {
             JavaClass javaClass = getThisClass();
 
             //(1rst solution for secure parsing proposed by the CERT) Sandbox in an action with limited privileges
-            if (InterfaceUtils.classImplements(javaClass, "java.security.PrivilegedExceptionAction")) {
+            if (InterfaceUtils.isSubtype(javaClass, "java.security.PrivilegedExceptionAction")) {
                 return; //Assuming the proper right are apply to the sandbox
             }
 

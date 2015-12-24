@@ -21,6 +21,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
@@ -28,6 +30,15 @@ import com.h3xstream.findbugs.test.EasyBugReporter;
 
 public class BadHexadecimalConversionDetectorTest extends BaseDetectorTest {
 
+    @BeforeClass
+    public void setUp() {
+        BadHexadecimalConversionDetector.DEBUG = true;
+    }
+
+    @AfterClass
+    public void tearDown() {
+        BadHexadecimalConversionDetector.DEBUG = false;
+    }
 
     @Test
     public void detectBadHexa() throws Exception {

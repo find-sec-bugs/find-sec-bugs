@@ -2505,7 +2505,7 @@ attacker gets the ability to execute any code.
     <BugCode abbrev="SECJSPJSTL">Escaping of special XML characters is disable</BugCode>
 
     <!-- XSS in JSP -->
-    <Detector class="com.h3xstream.findsecbugs.jsp.JspXssDetector">
+    <Detector class="com.h3xstream.findsecbugs.xss.XssJspDetector">
         <Details>Identify potential Cross-Site Scripting in JSP</Details>
     </Detector>
     <BugPattern type="XSS_JSP_PRINT">

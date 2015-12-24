@@ -32,7 +32,10 @@ import java.util.Iterator;
 
 public class BadHexadecimalConversionDetector implements Detector {
 
-    private static final boolean DEBUG = false;
+    /**
+     * For testing purpose
+     */
+    protected static boolean DEBUG = false;
     private static final String BAD_HEXA_CONVERSION_TYPE = "BAD_HEXA_CONVERSION";
     private BugReporter bugReporter;
 

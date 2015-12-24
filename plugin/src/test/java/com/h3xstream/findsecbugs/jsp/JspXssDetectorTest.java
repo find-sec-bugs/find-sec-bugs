@@ -23,9 +23,7 @@ import org.testng.annotations.Test;
 
 import java.util.Arrays;
 
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 /**
  * Before running theses tests cases, jsp files need to be compiled.
@@ -80,7 +78,7 @@ public class JspXssDetectorTest extends BaseDetectorTest {
                         .build()
         );
 
-        verify(reporter).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
+        verify(reporter,times(1)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
     }
 
     @Test
@@ -110,7 +108,7 @@ public class JspXssDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         //No alert should be trigger
-        verify(reporter, times(0)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
+        verify(reporter, never()).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
     }
 
     @Test
@@ -132,7 +130,7 @@ public class JspXssDetectorTest extends BaseDetectorTest {
                         .build()
         );
 
-        verify(reporter).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
+        verify(reporter,times(1)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
     }
 
     @Test
@@ -154,7 +152,7 @@ public class JspXssDetectorTest extends BaseDetectorTest {
                         .build()
         );
 
-        verify(reporter).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
+        verify(reporter,times(1)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
     }
 
 }

@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.xss;
 
+import com.h3xstream.findsecbugs.common.InterfaceUtils;
 import com.h3xstream.findsecbugs.injection.ConfiguredBasicInjectionDetector;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.ba.AnalysisContext;
@@ -27,6 +28,8 @@ public class XssJspDetector extends ConfiguredBasicInjectionDetector {
 
     private static final String XSS_JSP_PRINT_TYPE = "XSS_JSP_PRINT";
 
+    public static final String[] JSP_PARENT_CLASSES = {"org.apache.jasper.runtime.HttpJspBase","weblogic.servlet.jsp.JspBase"};
+
     public XssJspDetector(BugReporter bugReporter) {
         super(bugReporter);
         loadConfiguredSinks("xss-jsp.txt", XSS_JSP_PRINT_TYPE);
@@ -34,12 +37,7 @@ public class XssJspDetector extends ConfiguredBasicInjectionDetector {
 
     @Override
     public boolean shouldAnalyzeClass(ClassContext classContext) {
-        try {
-            String className = classContext.getClassDescriptor().getDottedClassName();
-            return Hierarchy.isSubtype(className, "javax.servlet.http.HttpServlet");
-        } catch (ClassNotFoundException ex) {
-            AnalysisContext.reportMissingClass(ex);
-            return false;
-        }
+        String className = classContext.getClassDescriptor().getDottedClassName();
+        return InterfaceUtils.isSubtype(className, JSP_PARENT_CLASSES);
     }
 }

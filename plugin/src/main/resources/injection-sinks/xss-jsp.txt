@@ -1,0 +1,18 @@
+- Inherits from java.io.Writer
+javax/servlet/jsp/JspWriter.write(Ljava/lang/String;)V:0
+javax/servlet/jsp/JspWriter.write(Ljava/lang/String;II)V:2
+javax/servlet/jsp/JspWriter.write([C)V:0
+javax/servlet/jsp/JspWriter.write([CII)V:2
+javax/servlet/jsp/JspWriter.append(Ljava/lang/CharSequence;)Ljava/io/PrintWriter;:0
+javax/servlet/jsp/JspWriter.append(Ljava/lang/CharSequence;II)Ljava/io/PrintWriter;:2
+javax/servlet/jsp/JspWriter.append(C)Ljava/io/PrintWriter;:0
+
+- Sinks from javax.servlet.jsp.JspWriter
+javax/servlet/jsp/JspWriter.print([C)V:0
+javax/servlet/jsp/JspWriter.print(Ljava/lang/String;)V:0
+javax/servlet/jsp/JspWriter.print(Ljava/lang/Object;)V:0
+javax/servlet/jsp/JspWriter.print(C)V:0
+javax/servlet/jsp/JspWriter.println([C)V:0
+javax/servlet/jsp/JspWriter.println(Ljava/lang/String;)V:0
+javax/servlet/jsp/JspWriter.println(Ljava/lang/Object;)V:0
+javax/servlet/jsp/JspWriter.println(C)V:0

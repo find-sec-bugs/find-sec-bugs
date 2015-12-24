@@ -50,7 +50,7 @@ public class GeolocationDetector implements Detector {
         JavaClass javaClass = classContext.getJavaClass();
 
         //The class extends WebChromeClient
-        boolean isWebChromeClient = InterfaceUtils.classExtends(javaClass, "android.webkit.WebChromeClient");
+        boolean isWebChromeClient = InterfaceUtils.isSubtype(javaClass, "android.webkit.WebChromeClient");
 
         //Not the target of this detector
         if (!isWebChromeClient) return;

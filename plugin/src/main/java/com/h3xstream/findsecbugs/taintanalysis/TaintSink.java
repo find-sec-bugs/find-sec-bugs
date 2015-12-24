@@ -30,12 +30,10 @@ public class TaintSink {
     private final BugInstance bugInstance;
 
     public TaintSink(Taint taint, BugInstance bugInstance) {
-        if (taint == null) {
-            throw new NullPointerException("taint is null");
-        }
-        if (bugInstance == null) {
-            throw new NullPointerException("bugInstance is null");
-        }
+        //Invalid arguments
+        if (taint == null) throw new NullPointerException("taint is null");
+        if (bugInstance == null) throw new NullPointerException("bugInstance is null");
+
         this.taint = taint;
         this.bugInstance = bugInstance;
     }
@@ -50,10 +48,8 @@ public class TaintSink {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof TaintSink)) {
+        //Invalid argument
+        if (obj == null || !(obj instanceof TaintSink)) {
             return false;
         }
         final TaintSink other = (TaintSink) obj;

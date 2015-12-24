@@ -40,8 +40,8 @@ public class StrutsValidatorFormDetector implements Detector {
     public void visitClassContext(ClassContext classContext) {
         JavaClass javaClass = classContext.getJavaClass();
 
-        boolean isActionForm = InterfaceUtils.classExtends(javaClass, "org.apache.struts.action.ActionForm");
-        boolean isValidatorForm = InterfaceUtils.classExtends(javaClass, "org.apache.struts.validator.ValidatorForm");
+        boolean isActionForm = InterfaceUtils.isSubtype(javaClass, "org.apache.struts.action.ActionForm");
+        boolean isValidatorForm = InterfaceUtils.isSubtype(javaClass, "org.apache.struts.validator.ValidatorForm");
 
         if (isActionForm && !isValidatorForm) {
             bugReporter.reportBug(new BugInstance(this, STRUTS_FORM_VALIDATION_TYPE, Priorities.NORMAL_PRIORITY) //

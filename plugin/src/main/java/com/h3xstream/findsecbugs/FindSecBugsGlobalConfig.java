@@ -17,6 +17,8 @@
  */
 package com.h3xstream.findsecbugs;
 
+import edu.umd.cs.findbugs.SystemProperties;
+
 /**
  * This class contains some flag that can be used to create global configuration.
  * This could be use to have alternative behavior if the command line client is used versus the usual FindBugs
@@ -28,6 +30,7 @@ public class FindSecBugsGlobalConfig {
 
     private boolean printCustomInjectionWarning = true;
     private String findSecBugsVersion = "1.4.5";
+    private boolean debugOutputSummaries = false;
 
     /** Singleton code */
 
@@ -36,6 +39,7 @@ public class FindSecBugsGlobalConfig {
     public static FindSecBugsGlobalConfig getInstance() {
         if(instance == null) {
             instance = new FindSecBugsGlobalConfig();
+            instance.debugOutputSummaries = SystemProperties.getBoolean("findsecbugs.taint.outputsummaries");
         }
         return instance;
     }
@@ -59,5 +63,13 @@ public class FindSecBugsGlobalConfig {
 
     public void setFindSecBugsVersion(String findSecBugsVersion) {
         this.findSecBugsVersion = findSecBugsVersion;
+    }
+
+    public boolean isDebugOutputSummaries() {
+        return debugOutputSummaries;
+    }
+
+    public void setDebugOutputSummaries(boolean debugOutputSummaries) {
+        this.debugOutputSummaries = debugOutputSummaries;
     }
 }

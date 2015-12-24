@@ -1978,7 +1978,7 @@ keyGen.initialize(2048);
 
 
     <!-- XSS in JSP -->
-    <Detector class="com.h3xstream.findsecbugs.jsp.JspXssDetector">
+    <Detector class="com.h3xstream.findsecbugs.xss.XssJspDetector">
         <Details>JSP ビュー内の汚染された入力を特定します。</Details>
     </Detector>
 

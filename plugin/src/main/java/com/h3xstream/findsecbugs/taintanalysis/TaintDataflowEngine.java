@@ -17,7 +17,7 @@
  */
 package com.h3xstream.findsecbugs.taintanalysis;
 
-import edu.umd.cs.findbugs.SystemProperties;
+import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import edu.umd.cs.findbugs.ba.CFG;
 import edu.umd.cs.findbugs.ba.DepthFirstSearch;
 import edu.umd.cs.findbugs.classfile.CheckedAnalysisException;
@@ -56,12 +56,11 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
     };
 
     private final TaintMethodSummaryMap methodSummaries = new TaintMethodSummaryMap();
-    private static final boolean DEBUG_OUTPUT_SUMMARIES = SystemProperties.
-            getBoolean("findsecbugs.taint.outputsummaries");
+
     private static Writer writer = null;
     
     static {
-        if (DEBUG_OUTPUT_SUMMARIES) {
+        if (FindSecBugsGlobalConfig.getInstance().isDebugOutputSummaries()) {
             try {
                 writer = new BufferedWriter(new OutputStreamWriter(
                         new FileOutputStream("derived-summaries.txt"), "utf-8"));
@@ -111,7 +110,7 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
         TaintDataflow flow = new TaintDataflow(cfg, analysis);
         flow.execute();
         analysis.finishAnalysis();
-        if (DEBUG_OUTPUT_SUMMARIES && writer != null) {
+        if (FindSecBugsGlobalConfig.getInstance().isDebugOutputSummaries() && writer != null) {
             TaintMethodSummary derivedSummary = methodSummaries.get(getSlashedMethodName(methodGen));
             if (derivedSummary != null) {
                 try {

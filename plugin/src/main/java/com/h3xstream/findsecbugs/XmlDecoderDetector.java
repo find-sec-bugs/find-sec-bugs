@@ -42,14 +42,7 @@ public class XmlDecoderDetector extends OpcodeStackDetector {
     @Override
     public void sawOpcode(int seen) {
 
-        //printOpCode(seen);
         if (seen == Constants.INVOKESPECIAL && XML_DECODER_CONSTRUCTOR.matches(this)) {
-            bugReporter.reportBug(new BugInstance(this, XML_DECODER, Priorities.HIGH_PRIORITY) //
-                    .addClass(this).addMethod(this).addSourceLine(this));
-        }
-        if (seen == Constants.INVOKESPECIAL &&
-                getClassConstantOperand().equals("java/beans/XMLDecoder") &&
-                getNameConstantOperand().equals("<init>")) {
             bugReporter.reportBug(new BugInstance(this, XML_DECODER, Priorities.HIGH_PRIORITY) //
                     .addClass(this).addMethod(this).addSourceLine(this));
         }

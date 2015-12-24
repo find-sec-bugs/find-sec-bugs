@@ -30,7 +30,7 @@ public class XmlDecoderDetectorTest extends BaseDetectorTest {
 
 
     @Test
-    public void detectWeakFilenameUtils() throws Exception {
+    public void detectXmlDecoder() throws Exception {
         //Locate test code
         String[] files = {
                 getClassFilePath("testcode/xmldecoder/XmlDecodeUtil")

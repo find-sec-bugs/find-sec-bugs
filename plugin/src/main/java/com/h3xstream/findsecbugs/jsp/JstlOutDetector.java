@@ -18,6 +18,8 @@
 package com.h3xstream.findsecbugs.jsp;
 
 import com.h3xstream.findsecbugs.common.ByteCode;
+import com.h3xstream.findsecbugs.common.JspUtils;
+import com.h3xstream.findsecbugs.common.matcher.InvokeMatcherBuilder;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Detector;
@@ -26,21 +28,34 @@ import edu.umd.cs.findbugs.ba.CFG;
 import edu.umd.cs.findbugs.ba.CFGBuilderException;
 import edu.umd.cs.findbugs.ba.ClassContext;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
+import edu.umd.cs.findbugs.ba.Hierarchy;
 import edu.umd.cs.findbugs.ba.Location;
 import java.util.Iterator;
+import java.util.LinkedList;
 
-import edu.umd.cs.findbugs.ba.bcp.Invoke;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ConstantPoolGen;
-import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InvokeInstruction;
 
+import static com.h3xstream.findsecbugs.common.matcher.InstructionDSL.invokeInstruction;
+
 public class JstlOutDetector implements Detector {
+    private static final boolean DEBUG = false;
     private static final String JSP_JSTL_OUT = "JSP_JSTL_OUT";
 
+    private static final InvokeMatcherBuilder OUT_TAG_ESCAPE_XML = invokeInstruction().atClass("org.apache.taglibs.standard.tag.rt.core.OutTag",
+            "org.apache.taglibs.standard.tag.el.core.OutTag",
+            "com.caucho.jstl.el.CoreOutTag",
+            "com.caucho.jstl.rt.OutTag",
+            "org.apache.taglibs.standard.tag.compat.core.OutTag",
+            "org.appfuse.webapp.taglib.OutTag")
+            .atMethod("setEscapeXml").withArgs("(Z)V","(Ljava/lang/String;)V");
+
     private final BugReporter bugReporter;
+
+
 
     public JstlOutDetector(BugReporter bugReporter) {
         this.bugReporter = bugReporter;
@@ -49,6 +64,13 @@ public class JstlOutDetector implements Detector {
     @Override
     public void visitClassContext(ClassContext classContext) {
         JavaClass javaClass = classContext.getJavaClass();
+
+        try {
+            if(!Hierarchy.isSubtype(javaClass.getClassName(), "javax.servlet.http.HttpServlet")) {
+                return;
+            }
+        } catch (ClassNotFoundException e) {
+        }
         for (Method m : javaClass.getMethods()) {
             try {
                 analyzeMethod(m, classContext);
@@ -62,10 +84,13 @@ public class JstlOutDetector implements Detector {
 
         //Conditions that needs to fill to identify the vulnerability
         boolean escapeXmlSetToFalse = false;
+        boolean escapeXmlValueUnknown = false;
         Location locationWeakness = null;
 
         ConstantPoolGen cpg = classContext.getConstantPoolGen();
         CFG cfg = classContext.getCFG(m);
+
+        LinkedList<Instruction> instructionVisited = new LinkedList<Instruction>();
 
         for (Iterator<Location> i = cfg.locationIterator(); i.hasNext(); ) {
             Location location = i.next();
@@ -73,25 +98,32 @@ public class JstlOutDetector implements Detector {
             Instruction inst = location.getHandle().getInstruction();
             //ByteCode.printOpCode(inst, cpg);
 
-//        JspSpringEvalDetector: [0047]  aload   4
-//        JspSpringEvalDetector: [0049]  iconst_1
-//        JspSpringEvalDetector: [0050]  invokevirtual   org/apache/taglibs/standard/tag/rt/core/OutTag.setEscapeXml (Z)V
+            instructionVisited.add(inst);
+
+//     JspSpringEvalDetector: [0047]  aload   4
+//     JspSpringEvalDetector: [0049]  iconst_1
+//     JspSpringEvalDetector: [0050]  invokevirtual   org/apache/taglibs/standard/tag/rt/core/OutTag.setEscapeXml (Z)V
 
             if (inst instanceof InvokeInstruction) {
                 InvokeInstruction invoke = (InvokeInstruction) inst;
-                if (("org.apache.taglibs.standard.tag.rt.core.OutTag".equals(invoke.getClassName(cpg)) ||
-                     "org.apache.taglibs.standard.tag.el.core.OutTag".equals(invoke.getClassName(cpg)) ||
-                     "com.caucho.jstl.el.CoreOutTag".equals(invoke.getClassName(cpg)) ||
-                     "com.caucho.jstl.rt.OutTag".equals(invoke.getClassName(cpg)) ||
-                     "org.apache.taglibs.standard.tag.compat.core.OutTag".equals(invoke.getClassName(cpg)) ||
-                     "org.appfuse.webapp.taglib.OutTag".equals(invoke.getClassName(cpg))
-                      ) &&
-                        "setEscapeXml".equals(invoke.getMethodName(cpg)) &&
-                        "(Z)V".equals(invoke.getSignature(cpg))) {
-                    Integer value = ByteCode.getConstantInt(location.getHandle().getPrev());
-                    if (value != null && value == 0) {
+
+                if(OUT_TAG_ESCAPE_XML.matches(invoke,cpg)) {
+                    Integer booleanValue = ByteCode.getConstantInt(location.getHandle().getPrev());
+                    if (booleanValue != null && booleanValue == 0) {
                         escapeXmlSetToFalse = true;
                         locationWeakness = location;
+                    } else {
+                        //Some JSP compiler convert boolean value at runtime (WebLogic)
+                        String stringValue = JspUtils.getContanstBooleanAsString(instructionVisited, cpg);
+                        if (stringValue != null && stringValue.equals("false")) {
+                            escapeXmlSetToFalse = true;
+                            locationWeakness = location;
+                        }
+
+                        if(booleanValue == null && stringValue == null) {
+                            escapeXmlValueUnknown = true;
+                            locationWeakness = location;
+                        }
                     }
                 }
             }
@@ -104,8 +136,15 @@ public class JstlOutDetector implements Detector {
                     .addClass(clz)
                     .addMethod(clz, m)
                     .addSourceLine(classContext, m, locationWeakness));
+        } else if (escapeXmlValueUnknown) {
+            JavaClass clz = classContext.getJavaClass();
+            bugReporter.reportBug(new BugInstance(this, JSP_JSTL_OUT, Priorities.LOW_PRIORITY) //
+                    .addClass(clz)
+                    .addMethod(clz, m)
+                    .addSourceLine(classContext, m, locationWeakness));
         }
     }
+
 
     @Override
     public void report() {

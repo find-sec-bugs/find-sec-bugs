@@ -18,6 +18,7 @@
 package com.h3xstream.findsecbugs;
 
 import com.h3xstream.findsecbugs.common.StackUtils;
+import com.h3xstream.findsecbugs.common.matcher.InvokeMatcherBuilder;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.OpcodeStack;
@@ -26,6 +27,8 @@ import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 import edu.umd.cs.findbugs.classfile.FieldDescriptor;
 import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 import org.apache.bcel.Constants;
+
+import static com.h3xstream.findsecbugs.common.matcher.InstructionDSL.invokeInstruction;
 
 /**
  * This detector does minimal effort to find potential REDOS.
@@ -52,6 +55,11 @@ public class ReDosDetector extends OpcodeStackDetector {
 
     private static final char[] PLUS_CHAR = {'+', '*', '?'};
 
+    private static InvokeMatcherBuilder PATTERN_COMPILE = invokeInstruction().atClass("java/util/regex/Pattern")
+            .atMethod("compile").withArgs("(Ljava/lang/String;)Ljava/util/regex/Pattern;");
+    private static InvokeMatcherBuilder STRING_MATCHES = invokeInstruction().atClass("java/lang/String")
+            .atMethod("matches").withArgs("(Ljava/lang/String;)Z");
+
     private BugReporter bugReporter;
 
     public ReDosDetector(BugReporter bugReporter) {
@@ -61,17 +69,13 @@ public class ReDosDetector extends OpcodeStackDetector {
     @Override
     public void sawOpcode(int seen) {
         //printOpCode(seen);
-        if (seen == Constants.INVOKESTATIC && getClassConstantOperand().equals("java/util/regex/Pattern")
-                && getNameConstantOperand().equals("compile")
-                && getSigConstantOperand().equals("(Ljava/lang/String;)Ljava/util/regex/Pattern;")) {
+        if (seen == Constants.INVOKESTATIC && PATTERN_COMPILE.matches(this)) {
             OpcodeStack.Item item = stack.getStackItem(0);
             if (!StackUtils.isVariableString(item)) {
                 String value = (String) item.getConstant();
                 analyseRegexString(value);
             }
-        } else if (seen == Constants.INVOKEVIRTUAL && getClassConstantOperand().equals("java/lang/String")
-                && getNameConstantOperand().equals("matches")
-                && getSigConstantOperand().equals("(Ljava/lang/String;)Z")) {
+        } else if (seen == Constants.INVOKEVIRTUAL && STRING_MATCHES.matches(this)) {
             OpcodeStack.Item item = stack.getStackItem(0);
             if (!StackUtils.isVariableString(item)) {
                 String value = (String) item.getConstant();

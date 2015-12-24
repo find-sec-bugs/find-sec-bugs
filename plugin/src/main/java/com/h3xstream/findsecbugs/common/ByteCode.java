@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.common;
 
+import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 import org.apache.bcel.generic.*;
 
 public class ByteCode {
@@ -138,4 +139,5 @@ public class ByteCode {
         }
         return null;
     }
+
 }

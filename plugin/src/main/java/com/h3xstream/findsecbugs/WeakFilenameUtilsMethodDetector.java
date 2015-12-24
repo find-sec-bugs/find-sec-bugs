@@ -17,11 +17,14 @@
  */
 package com.h3xstream.findsecbugs;
 
+import com.h3xstream.findsecbugs.common.matcher.InvokeMatcherBuilder;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 import org.apache.bcel.Constants;
+
+import static com.h3xstream.findsecbugs.common.matcher.InstructionDSL.invokeInstruction;
 
 /**
  * Few methods from <i>org.apache.commons.io.FilenameUtils</i> have a common weakness
@@ -45,6 +48,9 @@ public class WeakFilenameUtilsMethodDetector extends OpcodeStackDetector {
 
     private BugReporter bugReporter;
 
+    private static InvokeMatcherBuilder FILENAMEUTILS_NULL_METHOD = invokeInstruction().atClass("org/apache/commons/io/FilenameUtils")
+            .atMethod("normalize","getExtension","isExtension","getName","getBaseName");
+
     public WeakFilenameUtilsMethodDetector(BugReporter bugReporter) {
         this.bugReporter = bugReporter;
     }
@@ -52,13 +58,7 @@ public class WeakFilenameUtilsMethodDetector extends OpcodeStackDetector {
     @Override
     public void sawOpcode(int seen) {
 
-        if (seen == Constants.INVOKESTATIC && getClassConstantOperand().equals("org/apache/commons/io/FilenameUtils") &&
-                (getNameConstantOperand().equals("normalize") ||
-                        getNameConstantOperand().equals("getExtension") ||
-                        getNameConstantOperand().equals("isExtension") ||
-                        getNameConstantOperand().equals("getName") ||
-                        getNameConstantOperand().equals("getBaseName")
-                )) {
+        if (seen == Constants.INVOKESTATIC && FILENAMEUTILS_NULL_METHOD.matches(this)) {
 
             bugReporter.reportBug(new BugInstance(this, WEAK_FILENAMEUTILS_TYPE, Priorities.LOW_PRIORITY) //
                     .addClass(this).addMethod(this).addSourceLine(this)

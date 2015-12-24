@@ -15,26 +15,16 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.common;
+package com.h3xstream.findsecbugs.common.matcher;
 
-import edu.umd.cs.findbugs.OpcodeStack;
+import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.InvokeInstruction;
 
-public class StackUtils {
+public class InstructionDSL {
 
-    public static boolean isConstantString(OpcodeStack.Item item) {
-        return item.getConstant() != null && item.getConstant() instanceof String;
-    }
-
-    /**
-     * @param item Stack item (parameter passed to the current function)
-     * @return If the given string reference is not a constant
-     */
-    public static boolean isVariableString(OpcodeStack.Item item) {
-        return !isConstantString(item);
-    }
-
-    public static boolean isConstantInteger(OpcodeStack.Item item) {
-        return item.getConstant() != null && item.getConstant() instanceof Integer;
+    public static InvokeMatcherBuilder invokeInstruction() {
+        return new InvokeMatcherBuilder();
     }
 
 }

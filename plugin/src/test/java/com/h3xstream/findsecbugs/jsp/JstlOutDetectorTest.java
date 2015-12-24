@@ -75,6 +75,33 @@ public class JstlOutDetectorTest extends BaseDetectorTest {
                         .bugType("JSP_JSTL_OUT")
                         .inJspFile("jstl/jstl_escape_3.jsp")
                         .atJspLine(3)
+                        .withPriority("Medium")
+                        .build()
+        );
+
+        //Only one
+        verify(reporter).doReportBug(bugDefinition().bugType("JSP_JSTL_OUT").build());
+    }
+
+    @Test
+    public void jspEscape4_unknown() throws Exception {
+        //Locate test code
+        String[] files = {
+                getJspFilePath("jstl/jstl_escape_4.jsp")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+
+        //Assertions
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("JSP_JSTL_OUT")
+                        .inJspFile("jstl/jstl_escape_4.jsp")
+                        .atJspLine(3)
+                        .withPriority("Low")
                         .build()
         );
 

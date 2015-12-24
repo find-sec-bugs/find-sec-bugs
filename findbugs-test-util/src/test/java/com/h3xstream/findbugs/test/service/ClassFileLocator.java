@@ -32,6 +32,10 @@ public class ClassFileLocator {
     public String getClassFilePath(String path) {
         ClassLoader cl = getClass().getClassLoader();
         URL url = cl.getResource(path + ".class");
+        if(url != null) {
+            return getFilenameFromUrl(url);
+        }
+        url = cl.getResource(path);
         assertNotNull(url, "No class found for the path = " + path);
         return getFilenameFromUrl(url);
     }

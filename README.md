@@ -25,7 +25,7 @@ Website : http://find-sec-bugs.github.io/
 
 ![IntelliJ](http://find-sec-bugs.github.io/images/screens/intellij.png)
 
-### Sonar Qube
+### SonarQube
 
 ![SonarQube](http://find-sec-bugs.github.io/images/screens/sonar.png)
 

@@ -35,7 +35,7 @@ public class JstlOutDetectorWeblogicTest extends BaseDetectorTest {
     public void jspEscape_weblogic() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("bytecode_samples/sample_weblogic12.jar")
+                getClassFilePath("bytecode_samples/jsp_jstl_out_weblogic12.jar")
         };
 
         //Run the analysis

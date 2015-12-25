@@ -442,9 +442,14 @@ that looks at the end of the filename (e.g., endswith ".log") to make sure its a
         <Details>Identify weak TrustManager implementation</Details>
     </Detector>
 
+    <!-- SSL Disabler -->
+    <Detector class="com.h3xstream.findsecbugs.crypto.SslDisablerDetector">
+        <Details>Identify the utility classes usage of "SSL Disabler"</Details>
+    </Detector>
+
     <BugPattern type="WEAK_TRUST_MANAGER">
-        <ShortDescription>TrustManager implementation empty</ShortDescription>
-        <LongDescription>This implementation of TrustManager is vulnerable to a MITM attack</LongDescription>
+        <ShortDescription>TrustManager that accept any certificates</ShortDescription>
+        <LongDescription>TrustManager that accept any certificates makes communication vulnerable to a MITM attack</LongDescription>
         <Details>
             <![CDATA[
 <p>Empty TrustManager implementations are often used to connect easily to a host that is not signed by a root
@@ -461,7 +466,7 @@ Detailed information for a proper implementation is at:
 <br/>
 <p>
     <b>Vulnerable Code:</b><br/>
-<pre>class WeakTrustManager implements X509TrustManager {
+<pre>class TrustAllManager implements X509TrustManager {
 
     @Override
     public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
@@ -502,6 +507,57 @@ sc.init(kmf.getKeyManagers(), tmf.getTrustManagers(),null);
         </Details>
     </BugPattern>
     <BugCode abbrev="SECWTM">Weak TrustManager Implementation</BugCode>
+
+    <BugPattern type="WEAK_HOSTNAME_VERIFIER">
+        <ShortDescription>HostnameVerifier that accept any signed certificates</ShortDescription>
+        <LongDescription>HostnameVerifier that accept any signed certificates makes communication vulnerable to a MITM attack</LongDescription>
+        <Details>
+            <![CDATA[
+<p>HostnameVerifier that accept any host are often use because of certificate reuse on many hosts.
+As a consequence, this is vulnerable to
+<a href="http://en.wikipedia.org/wiki/Man-in-the-middle_attack">Man-in-the-middle attacks</a>
+since the client will trust any certificate.
+</p>
+<p>
+A TrustManager allowing specific certificates (based on a truststore for example) should be built.
+Wildcard certificates should be created for reused on multiples subdomains.
+Detailed information for a proper implementation is at:
+<a href="http://stackoverflow.com/a/6378872/89769">[1]</a>
+<a href="http://stackoverflow.com/a/5493452/89769">[2]</a>
+</p>
+<br/>
+<p>
+    <b>Vulnerable Code:</b><br/>
+<pre>public class AllHosts implements HostnameVerifier {
+    public boolean verify(final String hostname, final SSLSession session) {
+        return true;
+    }
+}</pre>
+</p>
+<br/>
+<p>
+    <b>Solution (TrustMangager based on a keystore):</b><br/>
+<pre>KeyStore ks = //Load keystore containing the certificates trusted
+
+SSLContext sc = SSLContext.getInstance("TLS");
+
+TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+tmf.init(ks);
+
+sc.init(kmf.getKeyManagers(), tmf.getTrustManagers(),null);
+</pre>
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246945/Insufficient%20Transport%20Layer%20Protection">WASC-04: Insufficient Transport Layer Protection</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/295.html">CWE-295: Improper Certificate Validation</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECWHV">Weak TrustManager Implementation</BugCode>
+
 
 
     <!-- JAXWS -->

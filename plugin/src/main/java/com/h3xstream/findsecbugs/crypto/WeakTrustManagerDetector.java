@@ -47,6 +47,7 @@ public class WeakTrustManagerDetector implements Detector {
 
     private static final boolean DEBUG = false;
     private static final String WEAK_TRUST_MANAGER_TYPE = "WEAK_TRUST_MANAGER";
+    private static final String WEAK_HOSTNAME_VERIFIER_TYPE = "WEAK_HOSTNAME_VERIFIER";
     private BugReporter bugReporter;
 
     public WeakTrustManagerDetector(BugReporter bugReporter) {
@@ -59,9 +60,10 @@ public class WeakTrustManagerDetector implements Detector {
 
         //The class extends X509TrustManager
         boolean isTrustManager = InterfaceUtils.isSubtype(javaClass, "javax.net.ssl.X509TrustManager");
+        boolean isHostnameVerifier = InterfaceUtils.isSubtype(javaClass, "javax.net.ssl.HostnameVerifier");
 
         //Not the target of this detector
-        if (!isTrustManager) return;
+        if (!isTrustManager && !isHostnameVerifier) return;
 
         Method[] methodList = javaClass.getMethods();
 
@@ -70,35 +72,51 @@ public class WeakTrustManagerDetector implements Detector {
 
             if (DEBUG) System.out.println(">>> Method: " + m.getName());
 
-            //The presence of checkClientTrusted is not enforce for the moment
-            if (!m.getName().equals("checkServerTrusted") &&
-                    !m.getName().equals("getAcceptedIssuers")) {
-                continue;
-            }
+            if (isTrustManager &&
+                    (m.getName().equals("checkClientTrusted") ||
+                    m.getName().equals("checkServerTrusted") ||
+                    m.getName().equals("getAcceptedIssuers"))) {
 
-            //Currently the detection is pretty weak.
-            //It will catch Dummy implementation that have empty method implementation
-            boolean invokeInst = false;
-            boolean loadField = false;
 
-            for (Iterator itIns = methodGen.getInstructionList().iterator();itIns.hasNext();) {
-                Instruction inst = ((InstructionHandle) itIns.next()).getInstruction();
-                if (DEBUG)
-                    System.out.println(inst.toString(true));
-
-                if (inst instanceof InvokeInstruction) {
-                    invokeInst = true;
+                if(isEmptyImplementation(methodGen)) {
+                    bugReporter.reportBug(new BugInstance(this, WEAK_TRUST_MANAGER_TYPE, Priorities.NORMAL_PRIORITY) //
+                            .addClassAndMethod(javaClass, m));
                 }
-                if (inst instanceof GETFIELD) {
-                    loadField = true;
+            }
+            else if (isHostnameVerifier && m.getName().equals("verify")) {
+
+                if(isEmptyImplementation(methodGen)) {
+                    bugReporter.reportBug(new BugInstance(this, WEAK_HOSTNAME_VERIFIER_TYPE, Priorities.NORMAL_PRIORITY) //
+                            .addClassAndMethod(javaClass, m));
                 }
             }
 
-            if (!invokeInst && !loadField) {
-                bugReporter.reportBug(new BugInstance(this, WEAK_TRUST_MANAGER_TYPE, Priorities.NORMAL_PRIORITY) //
-                        .addClassAndMethod(javaClass, m));
+        }
+    }
+
+    /**
+     * Currently the detection is pretty weak.
+     * It will catch Dummy implementation that have empty method implementation
+     *
+     * @return If the implementation is "empty" (direct return or dummy code)
+     */
+    private boolean isEmptyImplementation(MethodGen methodGen){
+        boolean invokeInst = false;
+        boolean loadField = false;
+
+        for (Iterator itIns = methodGen.getInstructionList().iterator();itIns.hasNext();) {
+            Instruction inst = ((InstructionHandle) itIns.next()).getInstruction();
+            if (DEBUG)
+                System.out.println(inst.toString(true));
+
+            if (inst instanceof InvokeInstruction) {
+                invokeInst = true;
+            }
+            if (inst instanceof GETFIELD) {
+                loadField = true;
             }
         }
+        return !invokeInst && !loadField;
     }
 
     @Override

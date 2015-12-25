@@ -50,31 +50,32 @@ public class WeakTrustManagerDetectorTest extends BaseDetectorTest {
 
         //Anonymous class
 
-        verify(reporter, atLeastOnce()).doReportBug(
-                bugDefinition()
-                        .bugType("WEAK_TRUST_MANAGER")
-                        .inClass("WeakTrustManager$1").inMethod("getAcceptedIssuers")
-                        .build()
-        );
-        verify(reporter).doReportBug(
-                bugDefinition()
-                        .bugType("WEAK_TRUST_MANAGER")
-                        .inClass("WeakTrustManager$1").inMethod("checkServerTrusted")
-                        .build()
+        String[] methods = {"checkClientTrusted", "checkServerTrusted", "getAcceptedIssuers"};
+
+        for(String method : methods) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("WEAK_TRUST_MANAGER")
+                            .inClass("WeakTrustManager$1").inMethod(method)
+                            .build()
+            );
+        }
+
+        verify(reporter,times(3)).doReportBug(
+                bugDefinition().bugType("WEAK_TRUST_MANAGER").inClass("WeakTrustManager$1").build()
         );
 
         //Inner class
-        verify(reporter).doReportBug(
-                bugDefinition()
-                        .bugType("WEAK_TRUST_MANAGER")
-                        .inClass("WeakTrustManager$TrustManagerInnerClass").inMethod("checkServerTrusted")
-                        .build()
-        );
-        verify(reporter).doReportBug(
-                bugDefinition()
-                        .bugType("WEAK_TRUST_MANAGER")
-                        .inClass("WeakTrustManager$TrustManagerInnerClass").inMethod("getAcceptedIssuers")
-                        .build()
+        for(String method : methods) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("WEAK_TRUST_MANAGER")
+                            .inClass("WeakTrustManager$TrustManagerInnerClass").inMethod(method)
+                            .build()
+            );
+        }
+        verify(reporter,times(3)).doReportBug(
+                bugDefinition().bugType("WEAK_TRUST_MANAGER").inClass("WeakTrustManager$TrustManagerInnerClass").build()
         );
 
         //The KeyStoresTrustManager impl. should not trigger any report
@@ -93,4 +94,65 @@ public class WeakTrustManagerDetectorTest extends BaseDetectorTest {
                         .build()
         );
     }
+
+    @Test
+    public void detectWeakTrustManagerSslDisabler() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/crypto/ssldisabler/TrustAllManager")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+        //Assertions
+
+        //Anonymous class
+
+        String[] methods = {"checkClientTrusted", "checkServerTrusted", "getAcceptedIssuers"};
+
+        for(String method : methods) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("WEAK_TRUST_MANAGER")
+                            .inClass("TrustAllManager").inMethod(method)
+                            .build()
+            );
+        }
+
+        verify(reporter,times(3)).doReportBug(
+                bugDefinition().bugType("WEAK_TRUST_MANAGER").inClass("TrustAllManager").build()
+        );
+    }
+
+
+    @Test
+    public void detectWeakHostnameVerifier() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/crypto/ssldisabler/AllHosts")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+        //Assertions
+
+        //Anonymous class
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("WEAK_HOSTNAME_VERIFIER")
+                        .inClass("AllHosts").inMethod("verify")
+                        .build()
+        );
+
+        verify(reporter,times(1)).doReportBug(
+                bugDefinition().bugType("WEAK_HOSTNAME_VERIFIER").inClass("AllHosts").build()
+        );
+    }
+
+
 }

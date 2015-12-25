@@ -30,10 +30,9 @@ public class XmlDecoderDetector extends OpcodeStackDetector {
 
 
     private static final String XML_DECODER = "XML_DECODER";
+    private static InvokeMatcherBuilder XML_DECODER_CONSTRUCTOR = invokeInstruction().atClass("java/beans/XMLDecoder").atMethod("<init>");
 
     private BugReporter bugReporter;
-
-    private static InvokeMatcherBuilder XML_DECODER_CONSTRUCTOR = invokeInstruction().atClass("java/beans/XMLDecoder").atMethod("<init>");
 
     public XmlDecoderDetector(BugReporter bugReporter) {
         this.bugReporter = bugReporter;

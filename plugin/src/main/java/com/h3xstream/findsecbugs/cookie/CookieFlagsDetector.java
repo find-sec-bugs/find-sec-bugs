@@ -40,15 +40,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-public class InsecureCookieDetector implements Detector {
+public class CookieFlagsDetector implements Detector {
 
     private static final String INSECURE_COOKIE_TYPE = "INSECURE_COOKIE";
+    private static final String HTTPONLY_COOKIE_TYPE = "HTTPONLY_COOKIE";
 
     private BugReporter bugReporter;
 
     private static final int TRUE_INT_VALUE = 1;
 
-    public InsecureCookieDetector(BugReporter bugReporter) {
+    public CookieFlagsDetector(BugReporter bugReporter) {
         this.bugReporter = bugReporter;
     }
 
@@ -121,6 +122,16 @@ public class InsecureCookieDetector implements Detector {
 
             for(Location loc : cookieLocations) {
                 bugReporter.reportBug(new BugInstance(this, INSECURE_COOKIE_TYPE, Priorities.NORMAL_PRIORITY) //
+                        .addClass(clz)
+                        .addMethod(clz, m)
+                        .addSourceLine(classContext, m, loc));
+            }
+        }
+        if(newCookieCreated && !httpOnlyCookieIsSet) {
+            JavaClass clz = classContext.getJavaClass();
+
+            for(Location loc : cookieLocations) {
+                bugReporter.reportBug(new BugInstance(this, HTTPONLY_COOKIE_TYPE, Priorities.NORMAL_PRIORITY) //
                         .addClass(clz)
                         .addMethod(clz, m)
                         .addSourceLine(classContext, m, loc));

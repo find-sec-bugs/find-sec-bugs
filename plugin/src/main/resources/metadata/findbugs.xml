@@ -19,7 +19,7 @@
     <Detector class="com.h3xstream.findsecbugs.endpoint.ServletEndpointDetector"
               reports="SERVLET_PARAMETER,SERVLET_CONTENT_TYPE,SERVLET_SERVER_NAME,SERVLET_SESSION_ID,SERVLET_QUERY_STRING,SERVLET_HEADER,SERVLET_HEADER_REFERER,SERVLET_HEADER_USER_AGENT"/>
     <Detector class="com.h3xstream.findsecbugs.cookie.CookieReadDetector" reports="COOKIE_USAGE"/>
-    <Detector class="com.h3xstream.findsecbugs.cookie.InsecureCookieDetector" reports="INSECURE_COOKIE"/>
+    <Detector class="com.h3xstream.findsecbugs.cookie.CookieFlagsDetector" reports="INSECURE_COOKIE,HTTPONLY_COOKIE"/>
     <Detector class="com.h3xstream.findsecbugs.file.PathTraversalDetector" reports="PATH_TRAVERSAL_IN,PATH_TRAVERSAL_OUT"/>
     <Detector class="com.h3xstream.findsecbugs.injection.command.CommandInjectionDetector" reports="COMMAND_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.WeakFilenameUtilsMethodDetector" reports="WEAK_FILENAMEUTILS"/>
@@ -89,6 +89,7 @@
     <BugPattern type="SERVLET_HEADER_USER_AGENT" abbrev="SECSHUA" category="SECURITY"/>
     <BugPattern type="COOKIE_USAGE" abbrev="SECCU" category="SECURITY"/>
     <BugPattern type="INSECURE_COOKIE" abbrev="SECIC" category="SECURITY" cweid="614"/>
+    <BugPattern type="HTTPONLY_COOKIE" abbrev="SECHOC" category="SECURITY"/>
     <BugPattern type="PATH_TRAVERSAL_IN" abbrev="SECPTI" category="SECURITY" cweid="22"/>
     <BugPattern type="PATH_TRAVERSAL_OUT" abbrev="SECPTO" category="SECURITY" cweid="22"/>
     <BugPattern type="COMMAND_INJECTION" abbrev="SECCI" category="SECURITY" cweid="78"/>

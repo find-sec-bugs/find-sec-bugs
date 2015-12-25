@@ -27,10 +27,10 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-public class InsecureCookieDetectorTest extends BaseDetectorTest {
+public class CookieFlagsDetectorTest extends BaseDetectorTest {
 
     @Test
-    public void detectInsecureCookieBasic() throws Exception {
+    public void detectSecureFlagCookieBasic() throws Exception {
         //Locate test code
         String[] files = {
                 getClassFilePath("testcode/cookie/InsecureCookieSamples")
@@ -51,7 +51,7 @@ public class InsecureCookieDetectorTest extends BaseDetectorTest {
     }
 
     @Test
-    public void avoidBasicFalsePositive() throws Exception {
+    public void avoidSecureFlagBasicFalsePositive() throws Exception {
         //Locate test code
         String[] files = {
                 getClassFilePath("testcode/cookie/InsecureCookieSamples")
@@ -66,6 +66,48 @@ public class InsecureCookieDetectorTest extends BaseDetectorTest {
                     bugDefinition()
                             .bugType("INSECURE_COOKIE")
                             .inClass("InsecureCookieSamples").inMethod(method)
+                            .build()
+            );
+        }
+    }
+
+    @Test
+    public void detectHttpOnlyCookieBasic() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/cookie/HttpOnlyCookieSamples")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+        for (String method : Arrays.asList("unsafeCookie1", "unsafeCookie2", "unsafeCookie4", "unsafeCookie5")) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("HTTPONLY_COOKIE")
+                            .inClass("HttpOnlyCookieSamples").inMethod(method)
+                            .build()
+            );
+        }
+    }
+
+    @Test
+    public void avoidHttpOnlyBasicFalsePositive() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/cookie/HttpOnlyCookieSamples")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+        for (String method : Arrays.asList("safeCookie1", "safeCookie2")) {
+            verify(reporter,never()).doReportBug(
+                    bugDefinition()
+                            .bugType("HTTPONLY_COOKIE")
+                            .inClass("HttpOnlyCookieSamples").inMethod(method)
                             .build()
             );
         }

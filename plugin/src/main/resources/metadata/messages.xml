@@ -3260,7 +3260,7 @@ class FileWriteUtil {
     <BugCode abbrev="SECWVJI">WebView with a Java bridge (Javascript Interface) (Android)</BugCode>
 
     <!-- Cookie usage -->
-    <Detector class="com.h3xstream.findsecbugs.cookie.InsecureCookieDetector">
+    <Detector class="com.h3xstream.findsecbugs.cookie.CookieFlagsDetector">
         <Details>Identity cookie where the secure flag is not set</Details>
     </Detector>
 
@@ -3287,7 +3287,7 @@ response.addCookie(cookie);
 <b>Solution (Specific configuration):</b><br/>
 <pre>
 Cookie cookie = new Cookie("userName",userName);
-cookie.setSecure(true);
+cookie.setSecure(true); // Secure flag
 cookie.setHttpOnly(true);
 </pre>
 </p>
@@ -3320,6 +3320,61 @@ cookie.setHttpOnly(true);
     </BugPattern>
     <BugCode abbrev="SECIC">Cookie without the secure flag</BugCode>
 
+
+    <BugPattern type="HTTPONLY_COOKIE">
+        <ShortDescription>Cookie without the HttpOnly flag</ShortDescription>
+        <LongDescription>Cookie without the HttpOnly flag could be red by a malicious script in the browser</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+A new cookie is created without the <code>HttpOnly</code> flag set.
+The <code>HttpOnly</code> flag is a directive to the browser to make sure that the cookie can not be red by
+malicious script. When a user is the target of a "Cross-Site Scripting", the attacker would benefit greatly from getting
+the session id for example.
+</p>
+
+<p>
+<b>Code at risk:</b><br/>
+<pre>
+Cookie cookie = new Cookie("email",userName);
+response.addCookie(cookie);
+</pre>
+</p>
+
+<p>
+<b>Solution (Specific configuration):</b><br/>
+<pre>
+Cookie cookie = new Cookie("email",userName);
+cookie.setSecure(true);
+cookie.setHttpOnly(true); //HttpOnly flag
+</pre>
+</p>
+
+<p>
+<b>Solution (Servlet 3.0 configuration):</b><br/>
+<pre>
+&lt;web-app xmlns="http://java.sun.com/xml/ns/javaee" version="3.0"&gt;
+[...]
+&lt;session-config&gt;
+ &lt;cookie-config&gt;
+  &lt;http-only&gt;true&lt;/http-only&gt;
+  &lt;secure&gt;true&lt;/secure&gt;
+ &lt;/cookie-config&gt;
+&lt;/session-config&gt;
+&lt;/web-app&gt;
+</pre>
+</p>
+<br/>
+<p>
+<b>Reference</b><br/>
+<a href="http://blog.codinghorror.com/protecting-your-cookies-httponly/">Coding Horror blog: Protecting Your Cookies: HttpOnly</a><br/>
+<a href="https://www.owasp.org/index.php/HttpOnly">OWASP: HttpOnly</a><br/>
+<a href="https://www.rapid7.com/db/vulnerabilities/http-cookie-http-only-flag">Rapid7: Missing HttpOnly Flag From Cookie</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECHOC">Cookie without the HttpOnly flag</BugCode>
 
     <!-- Deserialization vulnerability -->
     <Detector class="com.h3xstream.findsecbugs.ObjectDeserializationDetector">

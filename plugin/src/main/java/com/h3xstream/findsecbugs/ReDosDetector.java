@@ -55,9 +55,9 @@ public class ReDosDetector extends OpcodeStackDetector {
 
     private static final char[] PLUS_CHAR = {'+', '*', '?'};
 
-    private static InvokeMatcherBuilder PATTERN_COMPILE = invokeInstruction().atClass("java/util/regex/Pattern")
+    private static final InvokeMatcherBuilder PATTERN_COMPILE = invokeInstruction().atClass("java/util/regex/Pattern")
             .atMethod("compile").withArgs("(Ljava/lang/String;)Ljava/util/regex/Pattern;");
-    private static InvokeMatcherBuilder STRING_MATCHES = invokeInstruction().atClass("java/lang/String")
+    private static final InvokeMatcherBuilder STRING_MATCHES = invokeInstruction().atClass("java/lang/String")
             .atMethod("matches").withArgs("(Ljava/lang/String;)Z");
 
     private BugReporter bugReporter;

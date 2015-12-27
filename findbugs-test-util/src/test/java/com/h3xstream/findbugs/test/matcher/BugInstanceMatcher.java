@@ -24,9 +24,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
+
     private static final Logger log = LoggerFactory.getLogger(BugInstanceMatcherBuilder.class);
+
+    private static final Pattern ANON_FUNCTION_SCALA_PATTERN = Pattern.compile("\\$\\$anonfun\\$([^\\$]+)\\$");
 
     private String bugType;
     private String className;
@@ -80,13 +85,26 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
                 if (classAnn == null) return false;
 
                 String fullName = classAnn.getClassName();
-                String simpleName = fullName.substring(fullName.lastIndexOf(".") + 1);
+                int startDot = fullName.lastIndexOf(".") + 1;
+                int endDollar = fullName.indexOf('$');
+                String simpleName = fullName.substring(startDot != -1 ? startDot : 0,endDollar != -1? endDollar : fullName.length());
+
                 criteriaMatches &= fullName.equals(className) || simpleName.equals(className);
             }
             if (methodName != null) {
                 MethodAnnotation methodAnn = extractBugAnnotation(bugInstance, MethodAnnotation.class);
+                ClassAnnotation classAnn = extractBugAnnotation(bugInstance, ClassAnnotation.class);
+                String fullClassName = classAnn.getClassName();
                 if (methodAnn == null) return false;
-                criteriaMatches &= methodAnn.getMethodName().equals(methodName);
+                if(methodAnn.getMethodName().startsWith("apply") && fullClassName != null && fullClassName.contains("$$anonfun$")) { //Scala function
+                    Matcher m = ANON_FUNCTION_SCALA_PATTERN.matcher(fullClassName);
+                    if(m.find()) {
+                        criteriaMatches &= methodAnn.getMethodName().equals(methodName) || methodName.equals(m.group(1));
+                    }
+                }
+                else {
+                    criteriaMatches &= methodAnn.getMethodName().equals(methodName);
+                }
             }
             if (fieldName != null) {
                 FieldAnnotation fieldAnn = extractBugAnnotation(bugInstance, FieldAnnotation.class);

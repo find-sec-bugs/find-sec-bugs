@@ -22,6 +22,7 @@ import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -48,7 +49,7 @@ public class ObjectDeserializationDetectorTest extends BaseDetectorTest {
                         .build()
         );
 
-        verify(reporter).doReportBug(
+        verify(reporter, times(1)).doReportBug(
                 bugDefinition()
                         .bugType("OBJECT_DESERIALIZATION")
                         .inClass("ObjectDeserialization").inMethod("deserializeObject")

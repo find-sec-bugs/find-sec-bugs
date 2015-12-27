@@ -52,8 +52,8 @@ public class SslDisablerDetector extends OpcodeStackDetector {
 
         if(seen == GETSTATIC) {
             XField field = this.getXFieldOperand();
-
-            //It is expected that developpers either build the project or copy-paste the code in a random package..
+            if(field == null) return;
+            //It is expected that developers either build the project or copy-paste the code in a random package..
 
             //Scala code:
             //1. HttpsURLConnection.setDefaultHostnameVerifier(SecurityBypasser.AllHosts);

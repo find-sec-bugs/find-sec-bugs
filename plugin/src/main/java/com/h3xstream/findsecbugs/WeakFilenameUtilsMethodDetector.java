@@ -48,7 +48,7 @@ public class WeakFilenameUtilsMethodDetector extends OpcodeStackDetector {
 
     private BugReporter bugReporter;
 
-    private static InvokeMatcherBuilder FILENAMEUTILS_NULL_METHOD = invokeInstruction().atClass("org/apache/commons/io/FilenameUtils")
+    private static final InvokeMatcherBuilder FILENAMEUTILS_NULL_METHOD = invokeInstruction().atClass("org/apache/commons/io/FilenameUtils")
             .atMethod("normalize","getExtension","isExtension","getName","getBaseName");
 
     public WeakFilenameUtilsMethodDetector(BugReporter bugReporter) {

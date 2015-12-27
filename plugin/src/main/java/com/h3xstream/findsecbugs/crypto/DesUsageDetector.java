@@ -74,13 +74,13 @@ public class DesUsageDetector extends OpcodeStackDetector {
                 if (StackUtils.isConstantString(item)) {
                     String cipherValue = ((String) item.getConstant()).toLowerCase();
 
-                    if (cipherValue.equals("des") || cipherValue.startsWith("des/") || cipherValue.startsWith("desede/")) {
+                    if (cipherValue.equals("des") || cipherValue.startsWith("des/")) { // || cipherValue.startsWith("desede/"
                         bugReporter.reportBug(new BugInstance(this, DES_USAGE_TYPE, Priorities.NORMAL_PRIORITY) //
                                 .addClass(this).addMethod(this).addSourceLine(this));
                     }
                 }
             }
-            if(getClassConstantOperand().equals("javax/crypto/KeyGenerator") && getNameConstantOperand().equals("getInstance")) {
+            /*if(getClassConstantOperand().equals("javax/crypto/KeyGenerator") && getNameConstantOperand().equals("getInstance")) {
                 OpcodeStack.Item item;
                 if (getSigConstantOperand().equals("(Ljava/lang/String;)Ljavax/crypto/KeyGenerator;")) {
                     item = stack.getStackItem(0); //The first argument is last
@@ -100,7 +100,7 @@ public class DesUsageDetector extends OpcodeStackDetector {
                                 .addClass(this).addMethod(this).addSourceLine(this));
                     }
                 }
-            }
+            }*/
         }
     }
 }

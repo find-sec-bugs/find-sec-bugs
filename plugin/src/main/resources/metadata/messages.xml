@@ -61,6 +61,63 @@ String generateSecretToken() {
     </BugPattern>
     <BugCode abbrev="SECPR">Predictable Pseudo Random Generator</BugCode>
 
+    <BugPattern type="PREDICTABLE_RANDOM_SCALA">
+        <ShortDescription>Predictable pseudorandom number generator (Scala)</ShortDescription>
+        <LongDescription>The use of {3} is predictable</LongDescription>
+        <Details>
+            <![CDATA[
+<p>The use of a predictable random value can lead to vulnerabilities when used in certain security critical contexts. For example, when the value is used as:</p>
+<ul>
+<li>a CSRF token: a predictable token can lead to a CSRF attack as an attacker will know the value of the token</li>
+<li>a password reset token (sent by email): a predictable password token can lead to an account takeover, since an attacker will guess the URL of the change password form</li>
+<li>any other secret value</li>
+</ul>
+<p>
+A quick fix could be to replace the use of <b>java.util.Random</b> with something stronger, such as <b>java.security.SecureRandom</b>.
+</p>
+<p>
+<b>Vulnerable Code:</b><br/>
+<pre>import scala.util.Random
+
+def generateSecretToken() {
+    val result = Seq.fill(16)(Random.nextInt)
+    return result.map("%02x" format _).mkString
+}</pre>
+</p>
+<p>
+    <b>Solution:</b>
+<pre>import java.security.SecureRandom
+
+def generateSecretToken() {
+    val rand = new SecureRandom()
+    val value = Array.ofDim[Byte](16)
+    rand.nextBytes(value)
+    return value.map("%02x" format _).mkString
+}</pre>
+</p>
+<!--<p>
+<b>Solution:</b>
+<pre>import java.security.SecureRandom
+import scala.util.Random._
+
+def generateSecretToken() {
+    val secRandom = javaRandomToRandom(new SecureRandom())
+    val result = Seq.fill(16)(secRandom.nextInt)
+    return result.map("%02x" format _).mkString
+}</pre>
+</p>-->
+<br/>
+<p>
+<b>References</b><br/>
+<a href="http://jazzy.id.au/default/2010/09/20/cracking_random_number_generators_part_1.html">Cracking Random Number Generators - Part 1 (http://jazzy.id.au)</a><br/>
+<a href="https://www.securecoding.cert.org/confluence/display/java/MSC02-J.+Generate+strong+random+numbers">CERT: MSC02-J. Generate strong random numbers</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/330.html">CWE-330: Use of Insufficiently Random Values</a><br/>
+<a href="http://blog.h3xstream.com/2014/12/predicting-struts-csrf-token-cve-2014.html">Predicting Struts CSRF Token (Example of real-life vulnerability and exploitation)</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECPRS">Predictable Pseudo Random Generator (Scala)</BugCode>
 
     <!-- Servlet parameter -->
     <Detector class="com.h3xstream.findsecbugs.endpoint.ServletEndpointDetector">
@@ -769,7 +826,7 @@ mapped in this way are properly validated before they are used.</p>
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECWMD5">MD2, MD4 and MD5 are weak hash functions</BugCode>
+    <BugCode abbrev="SECMD5">MD2, MD4 and MD5 are weak hash functions</BugCode>
 
 
     <BugPattern type="WEAK_MESSAGE_DIGEST_SHA1">
@@ -837,7 +894,7 @@ uses. <b>PBKDF2</b> should be use to hash password for example.</p>
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECWSHA1">SHA-1 is a weak hash function</BugCode>
+    <BugCode abbrev="SECSHA1">SHA-1 is a weak hash function</BugCode>
 
 
 

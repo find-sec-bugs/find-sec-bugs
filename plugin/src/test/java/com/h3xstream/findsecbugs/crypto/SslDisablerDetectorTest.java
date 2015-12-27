@@ -31,7 +31,7 @@ public class SslDisablerDetectorTest extends BaseDetectorTest {
     public void detectSslDisabler() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("bytecode_samples/ssl_disabler_scala.jar")
+                getClassFilePath("bytecode_samples/scala_ssl_disabler.jar")
         };
 
         //Run the analysis

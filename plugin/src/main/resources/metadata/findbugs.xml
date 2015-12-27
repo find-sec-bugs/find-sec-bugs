@@ -55,6 +55,7 @@
     <Detector class="com.h3xstream.findsecbugs.crypto.InsufficientKeySizeBlowfishDetector" reports="BLOWFISH_KEY_SIZE"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.InsufficientKeySizeRsaDetector" reports="RSA_KEY_SIZE"/>
     <Detector class="com.h3xstream.findsecbugs.injection.redirect.UnvalidatedRedirectDetector" reports="UNVALIDATED_REDIRECT" />
+    <Detector class="com.h3xstream.findsecbugs.play.PlayUnvalidatedRedirectDetector" reports="PLAY_UNVALIDATED_REDIRECT" />
     <Detector class="com.h3xstream.findsecbugs.xss.XssJspDetector" reports="XSS_JSP_PRINT,XSS_SERVLET" />
     <Detector class="com.h3xstream.findsecbugs.xss.XssServletDetector" reports="XSS_SERVLET" />
     <Detector class="com.h3xstream.findsecbugs.jsp.JspIncludeDetector" reports="JSP_INCLUDE" />
@@ -134,6 +135,7 @@
     <BugPattern type="RSA_KEY_SIZE" abbrev="SECRKS" category="SECURITY" cweid="326"/>
     <BugPattern type="BLOWFISH_KEY_SIZE" abbrev="SECBKS" category="SECURITY" cweid="326"/>
     <BugPattern type="UNVALIDATED_REDIRECT" abbrev="SECUR" category="SECURITY" cweid="601"/>
+    <BugPattern type="PLAY_UNVALIDATED_REDIRECT" abbrev="SECPUR" category="SECURITY" cweid="601"/>
     <BugPattern type="XSS_JSP_PRINT" abbrev="SECXSS1" category="SECURITY" cweid="79"/>
     <BugPattern type="JSP_INCLUDE" abbrev="SECJSPINC" category="SECURITY" cweid="98"/>
     <BugPattern type="JSP_SPRING_EVAL" abbrev="SECJSPSPRING" category="SECURITY" cweid="917"/>

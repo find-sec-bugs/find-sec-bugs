@@ -15,23 +15,22 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs;
-
-import static org.mockito.Mockito.*;
+package com.h3xstream.findsecbugs.play;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
-public class PredictableRandomDetectorTest extends BaseDetectorTest {
+public class PlayUnvalidatedRedirectDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectUsePredictableRandom() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/InsecureRandom")
+                getClassFilePath("bytecode_samples/scala_play_openredirect.jar")
         };
 
         //Run the analysis
@@ -39,43 +38,37 @@ public class PredictableRandomDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         //Assertions
-
-        //1rst variation new Random()
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("PREDICTABLE_RANDOM")
-                        .inClass("InsecureRandom").inMethod("newRandomObj").atLine(9)
+                        .bugType("PLAY_UNVALIDATED_REDIRECT")
+                        .inClass("RedirectController").inMethod("redirect1").atLine(8)
                         .build()
         );
-        //2nd variation Math.random()
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("PREDICTABLE_RANDOM")
-                        .inClass("InsecureRandom").inMethod("mathRandom").atLine(16)
+                        .bugType("PLAY_UNVALIDATED_REDIRECT")
+                        .inClass("RedirectController").inMethod("redirect2").atLine(12)
                         .build()
         );
-
-        //Scala random number generator (mirror of java.util.Random)
-        for(Integer line : Arrays.asList(30,31)) {
-            verify(reporter).doReportBug(
-                    bugDefinition()
-                            .bugType("PREDICTABLE_RANDOM_SCALA")
-                            .inClass("InsecureRandom").inMethod("scalaRandom").atLine(line)
-                            .build()
-            );
-        }
-
-
-        verify(reporter, times(2)).doReportBug( //2 java api
+        verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("PREDICTABLE_RANDOM")
+                        .bugType("PLAY_UNVALIDATED_REDIRECT")
+                        .inClass("RedirectController").inMethod("seeOther1").atLine(17)
                         .build()
         );
-        verify(reporter, times(2)).doReportBug( //2 scala variations
+        verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("PREDICTABLE_RANDOM_SCALA")
+                        .bugType("PLAY_UNVALIDATED_REDIRECT")
+                        .inClass("RedirectController").inMethod("movedPermanently1").atLine(21)
+                        .build()
+        );
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("PLAY_UNVALIDATED_REDIRECT")
+                        .inClass("RedirectController").inMethod("temporaryRedirect1").atLine(25)
                         .build()
         );
     }
+
 
 }

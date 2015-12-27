@@ -87,22 +87,23 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
                 String fullName = classAnn.getClassName();
                 int startDot = fullName.lastIndexOf(".") + 1;
                 int endDollar = fullName.indexOf('$');
-                String simpleName = fullName.substring(startDot != -1 ? startDot : 0,endDollar != -1? endDollar : fullName.length());
-
-                criteriaMatches &= fullName.equals(className) || simpleName.equals(className);
+                String simpleName = fullName.substring(startDot != -1 ? startDot : 0, endDollar != -1 ? endDollar : fullName.length());
+                String simpleNameInner = fullName.substring(startDot != -1 ? startDot : 0, fullName.length());
+                criteriaMatches &= fullName.equals(className) || simpleName.equals(className) || simpleNameInner.equals(className);
             }
             if (methodName != null) {
                 MethodAnnotation methodAnn = extractBugAnnotation(bugInstance, MethodAnnotation.class);
                 ClassAnnotation classAnn = extractBugAnnotation(bugInstance, ClassAnnotation.class);
                 String fullClassName = classAnn.getClassName();
                 if (methodAnn == null) return false;
-                if(methodAnn.getMethodName().startsWith("apply") && fullClassName != null && fullClassName.contains("$$anonfun$")) { //Scala function
+
+                if(methodAnn.getMethodName().startsWith("apply") && fullClassName != null) {
                     Matcher m = ANON_FUNCTION_SCALA_PATTERN.matcher(fullClassName);
-                    if(m.find()) {
+                    if(m.find()) { //Scala function enclose in
                         criteriaMatches &= methodAnn.getMethodName().equals(methodName) || methodName.equals(m.group(1));
                     }
                 }
-                else {
+                else { //
                     criteriaMatches &= methodAnn.getMethodName().equals(methodName);
                 }
             }

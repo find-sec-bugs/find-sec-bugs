@@ -96,6 +96,7 @@ public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
                 bugInstance.addString(injectionPoint.getInjectableMethod());
             }
             reportBug(bugInstance, parameterTaint, currentMethod);
+            return;
         }
     }
 

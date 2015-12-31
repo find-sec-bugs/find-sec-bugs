@@ -19,6 +19,7 @@ package com.h3xstream.findsecbugs.file;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
+import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
@@ -31,6 +32,8 @@ public class PathTraversalDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectPathTraversal() throws Exception {
+        FindSecBugsGlobalConfig.getInstance().setDebugPrintInvocationVisited(true);
+
         //Locate test code
         String[] files = {
                 getClassFilePath("testcode/PathTraversal")

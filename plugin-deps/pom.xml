@@ -12,6 +12,7 @@
     <groupId>com.h3xstream.findsecbugs</groupId>
     <artifactId>findsecbugs-plugin-deps</artifactId>
 
+    <name>Find Security Bugs plugin dependencies</name>
     <description>
         This module create facades for all the APIs (classes, interfaces and annotations)
         that are use in the test code. The objective is to avoid the needed to download

@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.taintanalysis;
 
+import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.util.ClassName;
 import java.util.Collections;
@@ -82,6 +83,7 @@ public class Taint {
     private final Set<Integer> parameters;
     private State nonParametricState;
     private ObjectType realInstanceClass;
+    private String debugInfo = null;
 
     public Taint(State state) {
         Objects.requireNonNull(state, "state is null");
@@ -95,6 +97,10 @@ public class Taint {
         this.parameters = new HashSet<Integer>();
         nonParametricState = State.INVALID;
         this.realInstanceClass = null;
+
+        if(FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
+            this.debugInfo = "?";
+        }
     }
 
     public Taint(Taint taint) {
@@ -107,6 +113,10 @@ public class Taint {
         this.parameters = new HashSet<Integer>(taint.getParameters());
         this.nonParametricState = taint.nonParametricState;
         this.realInstanceClass = taint.realInstanceClass;
+
+        if(FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
+            this.debugInfo = taint.debugInfo;
+        }
     }
 
     public State getState() {
@@ -274,6 +284,10 @@ public class Taint {
                 AnalysisContext.reportMissingClass(ex);
             }
         }
+
+        if(FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
+            result.setDebugInfo("[" + a.getDebugInfo() + "]+[" + b.getDebugInfo() + "]");
+        }
         return result;
     }
 
@@ -304,6 +318,15 @@ public class Taint {
                 parameters, nonParametricState, realInstanceClass);
     }
 
+    public String getDebugInfo() {
+        return debugInfo;
+    }
+
+    public Taint setDebugInfo(String debugInfo) {
+        this.debugInfo = debugInfo;
+        return this;
+    }
+
     @Override
     public String toString() {
         assert state != null;
@@ -317,6 +340,9 @@ public class Taint {
         assert nonParametricState != null;
         if (nonParametricState != State.INVALID) {
             sb.append('(').append(nonParametricState.name().substring(0, 1)).append(')');
+        }
+        if (debugInfo != null) {
+            sb.append(" {").append(debugInfo).append('}');
         }
         return sb.toString();
     }

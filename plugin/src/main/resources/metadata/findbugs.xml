@@ -21,7 +21,7 @@
     <Detector class="com.h3xstream.findsecbugs.cookie.CookieReadDetector" reports="COOKIE_USAGE"/>
     <Detector class="com.h3xstream.findsecbugs.cookie.CookieFlagsDetector" reports="INSECURE_COOKIE,HTTPONLY_COOKIE"/>
     <Detector class="com.h3xstream.findsecbugs.file.PathTraversalDetector" reports="PATH_TRAVERSAL_IN,PATH_TRAVERSAL_OUT"/>
-    <Detector class="com.h3xstream.findsecbugs.injection.command.CommandInjectionDetector" reports="COMMAND_INJECTION"/>
+    <Detector class="com.h3xstream.findsecbugs.injection.command.CommandInjectionDetector" reports="COMMAND_INJECTION,SCALA_COMMAND_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.WeakFilenameUtilsMethodDetector" reports="WEAK_FILENAMEUTILS"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.WeakTrustManagerDetector" reports="WEAK_TRUST_MANAGER,WEAK_HOSTNAME_VERIFIER"/>
     <Detector class="com.h3xstream.findsecbugs.endpoint.JaxWsEndpointDetector" reports="JAXWS_ENDPOINT"/>
@@ -55,7 +55,6 @@
     <Detector class="com.h3xstream.findsecbugs.crypto.InsufficientKeySizeBlowfishDetector" reports="BLOWFISH_KEY_SIZE"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.InsufficientKeySizeRsaDetector" reports="RSA_KEY_SIZE"/>
     <Detector class="com.h3xstream.findsecbugs.injection.redirect.UnvalidatedRedirectDetector" reports="UNVALIDATED_REDIRECT" />
-    <Detector class="com.h3xstream.findsecbugs.play.PlayUnvalidatedRedirectDetector" reports="PLAY_UNVALIDATED_REDIRECT" />
     <Detector class="com.h3xstream.findsecbugs.xss.XssJspDetector" reports="XSS_JSP_PRINT,XSS_SERVLET" />
     <Detector class="com.h3xstream.findsecbugs.xss.XssServletDetector" reports="XSS_SERVLET" />
     <Detector class="com.h3xstream.findsecbugs.jsp.JspIncludeDetector" reports="JSP_INCLUDE" />
@@ -77,7 +76,8 @@
     <Detector class="com.h3xstream.findsecbugs.android.WebViewJavascriptInterfaceDetector" reports="ANDROID_WEB_VIEW_JAVASCRIPT_INTERFACE"/>
     <Detector class="com.h3xstream.findsecbugs.ObjectDeserializationDetector" reports="OBJECT_DESERIALIZATION"/>
     <Detector class="com.h3xstream.findsecbugs.TrustBoundaryViolationDetector" reports="TRUST_BOUNDARY_VIOLATION"/>
-    <Detector class="com.h3xstream.findsecbugs.crypto.SslDisablerDetector" reports="WEAK_TRUST_MANAGER"/>
+    <Detector class="com.h3xstream.findsecbugs.scala.PlayUnvalidatedRedirectDetector" reports="PLAY_UNVALIDATED_REDIRECT" />
+    <Detector class="com.h3xstream.findsecbugs.scala.SslDisablerDetector" reports="WEAK_TRUST_MANAGER,WEAK_HOSTNAME_VERIFIER"/>
 
 
     <BugPattern type="PREDICTABLE_RANDOM" abbrev="SECPR" category="SECURITY" cweid="330"/>
@@ -96,6 +96,7 @@
     <BugPattern type="PATH_TRAVERSAL_IN" abbrev="SECPTI" category="SECURITY" cweid="22"/>
     <BugPattern type="PATH_TRAVERSAL_OUT" abbrev="SECPTO" category="SECURITY" cweid="22"/>
     <BugPattern type="COMMAND_INJECTION" abbrev="SECCI" category="SECURITY" cweid="78"/>
+    <BugPattern type="SCALA_COMMAND_INJECTION" abbrev="SECSCI" category="SECURITY" cweid="78"/>
     <BugPattern type="WEAK_FILENAMEUTILS" abbrev="SECWF" category="SECURITY"/>
     <BugPattern type="WEAK_TRUST_MANAGER" abbrev="SECWTM" category="SECURITY" cweid="295"/>
     <BugPattern type="WEAK_HOSTNAME_VERIFIER" abbrev="SECWHV" category="SECURITY" cweid="295"/>

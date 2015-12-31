@@ -38,35 +38,44 @@ public class ByteCode {
 
         if (ins instanceof InvokeInstruction) {
             InvokeInstruction invokeIns = (InvokeInstruction) ins;
-            System.out.println(ins.getClass().getSimpleName() + " " + invokeIns.getClassName(cpg).replaceAll("\\.", "/") + "." + invokeIns.getMethodName(cpg) + invokeIns.getSignature(cpg));
+            System.out.println(formatName(ins) + " " + invokeIns.getClassName(cpg).replaceAll("\\.", "/") + "." + invokeIns.getMethodName(cpg) + invokeIns.getSignature(cpg));
         } else if (ins instanceof LDC) {
             LDC i = (LDC) ins;
-            System.out.println(ins.getClass().getSimpleName() + " \""+i.getValue(cpg).toString()+"\"");
+            System.out.println(formatName(ins) + " \""+i.getValue(cpg).toString()+"\"");
         } else if (ins instanceof NEW) {
             NEW i = (NEW) ins;
             ObjectType type = i.getLoadClassType(cpg);
-            System.out.println(ins.getClass().getSimpleName() + " " + type.toString());
+            System.out.println(formatName(ins) + " " + type.toString());
         } else if (ins instanceof LoadInstruction) {
             LoadInstruction i = (LoadInstruction) ins;
-            System.out.println(ins.getClass().getSimpleName() +" "+i.getIndex() + " => [stack]");
+            System.out.println(formatName(ins) +" "+i.getIndex() + " => [stack]");
         } else if (ins instanceof StoreInstruction) {
             StoreInstruction i = (StoreInstruction) ins;
-            System.out.println(ins.getClass().getSimpleName() +" (?prev?) => "+i.getIndex() + "");
+            System.out.println(formatName(ins) +" (?prev?) => "+i.getIndex() + "");
         } else if (ins instanceof FieldInstruction) {
             FieldInstruction i = (FieldInstruction) ins;
-            System.out.println(ins.getClass().getSimpleName() +" "+i.getFieldName(cpg) + "");
+            System.out.println(formatName(ins) +" "+i.getFieldName(cpg) + "");
         }  else if (ins instanceof IfInstruction) {
             IfInstruction i = (IfInstruction) ins;
-            System.out.println(ins.getClass().getSimpleName() +" target => "+i.getTarget().toString()+ "");
+            System.out.println(formatName(ins) +" target => "+i.getTarget().toString()+ "");
         } else if (ins instanceof ICONST) {
             ICONST i = (ICONST) ins;
-            System.out.println(ins.getClass().getSimpleName() +" "+i.getValue()+" ("+i.getType(cpg)+")");
+            System.out.println(formatName(ins) +" "+i.getValue()+" ("+i.getType(cpg)+")");
         } else if (ins instanceof GOTO) {
             GOTO i = (GOTO) ins;
-            System.out.println(ins.getClass().getSimpleName() +" target => "+i.getTarget().toString());
+            System.out.println(formatName(ins) +" target => "+i.getTarget().toString());
         } else {
-            System.out.println(ins.getClass().getSimpleName());
+            System.out.println(formatName(ins));
         }
+    }
+
+    /**
+     * Align the instruction to make the output more readable.
+     * @param ins Instruction to print
+     * @return Output the name with 15 pad characters (always 15 chars output)
+     */
+    private static String formatName(Instruction ins) {
+        return String.format("%-15s",ins.getName());
     }
 
     /**

@@ -31,6 +31,11 @@ public class FindSecBugsGlobalConfig {
     private boolean printCustomInjectionWarning = true;
     private String findSecBugsVersion = "1.4.5";
     private boolean debugOutputSummaries = false;
+    private boolean debugPrintInstructionVisited = false;
+
+
+    private boolean debugPrintInvocationVisited = false;
+    private boolean debugTaintState = false;
 
     /** Singleton code */
 
@@ -39,7 +44,7 @@ public class FindSecBugsGlobalConfig {
     public static FindSecBugsGlobalConfig getInstance() {
         if(instance == null) {
             instance = new FindSecBugsGlobalConfig();
-            instance.debugOutputSummaries = SystemProperties.getBoolean("findsecbugs.taint.outputsummaries");
+            instance.debugOutputSummaries = SystemProperties.getBoolean("findsecbugs.taint.outputsummaries",false);
         }
         return instance;
     }
@@ -71,5 +76,29 @@ public class FindSecBugsGlobalConfig {
 
     public void setDebugOutputSummaries(boolean debugOutputSummaries) {
         this.debugOutputSummaries = debugOutputSummaries;
+    }
+
+    public boolean isDebugPrintInstructionVisited() {
+        return debugPrintInstructionVisited;
+    }
+
+    public void setDebugPrintInstructionVisited(boolean debugPrintInstructionVisited) {
+        this.debugPrintInstructionVisited = debugPrintInstructionVisited;
+    }
+
+    public boolean isDebugPrintInvocationVisited() {
+        return debugPrintInvocationVisited;
+    }
+
+    public void setDebugPrintInvocationVisited(boolean debugPrintInvocationVisited) {
+        this.debugPrintInvocationVisited = debugPrintInvocationVisited;
+    }
+
+    public boolean isDebugTaintState() {
+        return debugTaintState;
+    }
+
+    public void setDebugTaintState(boolean debugTaintState) {
+        this.debugTaintState = debugTaintState;
     }
 }

@@ -367,9 +367,9 @@ by the user. If that is the case, the reported instance is a false positive.</p>
 <p>
     <b>Vulnerable Code:</b><br/>
 <pre>@GET
-@Path("/images_thumbs/{image}")
+@Path("/images/{image}")
 @Produces("images/*")
-public Response getImageThumbnail(@javax.ws.rs.PathParam("image") String image) {
+public Response getImage(@javax.ws.rs.PathParam("image") String image) {
     File file = new File("resources/images/", image); //Weak point
 
     if (!file.exists()) {
@@ -386,9 +386,9 @@ public Response getImageThumbnail(@javax.ws.rs.PathParam("image") String image) 
 <pre>import org.apache.commons.io.FilenameUtils;
 
 @GET
-@Path("/images_thumbs/{image}")
+@Path("/images/{image}")
 @Produces("images/*")
-public Response getImageThumbnail(@javax.ws.rs.PathParam("image") String image) {
+public Response getImage(@javax.ws.rs.PathParam("image") String image) {
     File file = new File("resources/images/", FilenameUtils.getName(image)); //Fix
 
     if (!file.exists()) {
@@ -448,6 +448,13 @@ by the user. If that is the case, the reported instance is a false positive.</p>
 <p>The highlighted API is used to execute a system command. If unfiltered input is passed to this API, it can lead to arbitrary command execution.</p>
 <br/>
 <p>
+    <b>Vulnerable Code:</b><br/>
+<pre>import java.lang.Runtime;
+
+Runtime r = Runtime.getRuntime();
+r.exec("/bin/sh -c some_tool" + input);</pre>
+</p>
+<p>
 <b>References</b><br/>
 <a href="https://www.owasp.org/index.php/Command_Injection">OWASP: Command Injection</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
@@ -458,6 +465,31 @@ by the user. If that is the case, the reported instance is a false positive.</p>
     </BugPattern>
     <BugCode abbrev="SECCI">Command Injection</BugCode>
 
+
+    <BugPattern type="SCALA_COMMAND_INJECTION">
+        <ShortDescription>Potential Command Injection (Scala)</ShortDescription>
+        <LongDescription>The command execution could be vulnerable to injection</LongDescription>
+        <Details>
+            <![CDATA[
+<p>The highlighted API is used to execute a system command. If unfiltered input is passed to this API, it can lead to arbitrary command execution.</p>
+<br/>
+<p>
+    <b>Vulnerable Code:</b><br/>
+<pre>def executeCommand(value:String) = Action {
+    val result = "".!
+    Ok("Result:\n"+result)
+}</pre>
+</p>
+<p>
+<b>References</b><br/>
+<a href="https://www.owasp.org/index.php/Command_Injection">OWASP: Command Injection</a><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/78.html">CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSCI">Command Injection (Scala)</BugCode>
 
     <!-- Weak FilenameUtils method -->
     <Detector class="com.h3xstream.findsecbugs.WeakFilenameUtilsMethodDetector">
@@ -500,7 +532,7 @@ that looks at the end of the filename (e.g., endswith ".log") to make sure its a
     </Detector>
 
     <!-- SSL Disabler -->
-    <Detector class="com.h3xstream.findsecbugs.crypto.SslDisablerDetector">
+    <Detector class="com.h3xstream.findsecbugs.scala.SslDisablerDetector">
         <Details>Identify the utility classes usage of "SSL Disabler"</Details>
     </Detector>
 
@@ -2457,7 +2489,7 @@ keyGen.initialize(2048);
     <Detector class="com.h3xstream.findsecbugs.injection.redirect.UnvalidatedRedirectDetector">
         <Details>Identify unvalidated redirects with J2EE API</Details>
     </Detector>
-    <Detector class="com.h3xstream.findsecbugs.play.PlayUnvalidatedRedirectDetector">
+    <Detector class="com.h3xstream.findsecbugs.scala.PlayUnvalidatedRedirectDetector">
         <Details>Identify unvalidated redirects with Play Framework (Scala)</Details>
     </Detector>
 

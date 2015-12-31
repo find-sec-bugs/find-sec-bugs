@@ -1,10 +1,12 @@
 scala/sys/process/Process$.apply(Ljava/lang/String;)Lscala/sys/process/ProcessBuilder;:0
 scala/sys/process/Process$.apply(Lscala/collection/Seq;)Lscala/sys/process/ProcessBuilder;:0
 scala/sys/process/Process$.apply(Ljava/lang/String;Lscala/collection/Seq;)Lscala/sys/process/ProcessBuilder;:0,1
-scala/sys/process/Process$.apply(Ljava/lang/String;Ljava/io/File;Lscala/collection/Seq;)Lscala/sys/process/ProcessBuilder;:0,1,2
-scala/sys/process/Process$.apply(Lscala/collection/Seq;Ljava/io/File;Lscala/collection/Seq;)Lscala/sys/process/ProcessBuilder;:0,1,2
-scala/sys/process/Process$.apply(Ljava/lang/String;Lscala/Option;Lscala/collection/Seq;)Lscala/sys/process/ProcessBuilder;:0,1,2
-scala/sys/process/Process$.apply(Lscala/collection/Seq;Lscala/Option;Lscala/collection/Seq;)Lscala/sys/process/ProcessBuilder;:0,1,2
-scala/sys/process/Process$.apply(Ljava/net/URL;)Lscala/sys/process/ProcessBuilder$.URLBuilder;:0
-scala/sys/process/Process$.apply(Ljava/lang/String;Lscala/Function0;)Lscala/sys/process/ProcessBuilder;:0,1
+scala/sys/process/Process$.apply(Ljava/lang/String;Ljava/io/File;Lscala/collection/Seq;)Lscala/sys/process/ProcessBuilder;:0,2
+scala/sys/process/Process$.apply(Lscala/collection/Seq;Ljava/io/File;Lscala/collection/Seq;)Lscala/sys/process/ProcessBuilder;:0,2
+scala/sys/process/Process$.apply(Ljava/lang/String;Lscala/Option;Lscala/collection/Seq;)Lscala/sys/process/ProcessBuilder;:0,2
+scala/sys/process/Process$.apply(Lscala/collection/Seq;Lscala/Option;Lscala/collection/Seq;)Lscala/sys/process/ProcessBuilder;:0,2
+scala/sys/process/Process$.apply(Ljava/lang/String;Lscala/Function0;)Lscala/sys/process/ProcessBuilder;:1
 scala/sys/process/Process$.apply(Lscala/collection/Seq;Lscala/Function1;)Lscala/collection/Seq;:0,1
+
+-stringToProcess is call when the bang operator (!) is apply to a string
+scala/sys/process/package$.stringToProcess(Ljava/lang/String;)Lscala/sys/process/ProcessBuilder;:0

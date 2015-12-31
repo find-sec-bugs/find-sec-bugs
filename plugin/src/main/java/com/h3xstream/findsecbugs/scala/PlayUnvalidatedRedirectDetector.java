@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.play;
+package com.h3xstream.findsecbugs.scala;
 
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
@@ -41,7 +41,6 @@ public class PlayUnvalidatedRedirectDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
-        //printOpCode(seen);
 
         try {
             if(seen == INVOKEVIRTUAL && REDIRECT_METHODS.contains(getNameConstantOperand())) {

@@ -203,7 +203,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     @Override
     public void visitGETFIELD(GETFIELD obj) {
-        try {
+        /*try {
             getFrame().popValue();
             Taint t = new Taint(Taint.State.UNKNOWN);
             if(FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
@@ -212,7 +212,8 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             getFrame().pushValue(t);
         } catch (DataflowAnalysisException ex) {
             throw new InvalidBytecodeException(ex.toString(), ex);
-        }
+        }*/
+        super.visitGETFIELD(obj);
     }
 
     @Override

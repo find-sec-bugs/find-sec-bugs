@@ -113,8 +113,6 @@ public class ScalaCommandInjectionDetectorTest extends BaseDetectorTest {
                             .build()
             );
         }
-//FIXME : Some false positive need to be solved
-
         verify(reporter, times(lineVariousMethod.size())).doReportBug(
                 bugDefinition()
                         .bugType("SCALA_COMMAND_INJECTION")
@@ -122,5 +120,17 @@ public class ScalaCommandInjectionDetectorTest extends BaseDetectorTest {
                         .build()
         );
 
+        //PATH injection is typically consider a command injection because it could lead to unwanted command execution
+        //Currently it is catch as
+        // Process(Seq("ls"),new File(value),("extra","1234")).run()
+        List<Integer> linePathTraversal = Arrays.asList(59, 65);
+        for(int line : linePathTraversal) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("PATH_TRAVERSAL_IN")
+                            .inClass("CommandController").inMethod("various").atLine(line)
+                            .build()
+            );
+        }
     }
 }

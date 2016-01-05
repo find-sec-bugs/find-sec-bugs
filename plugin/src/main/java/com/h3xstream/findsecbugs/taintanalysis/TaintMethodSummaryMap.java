@@ -27,7 +27,7 @@ import java.util.TreeSet;
 
 /**
  * Map of taint summaries for all known methods
- * <br/>
+ *
  * This class extends HashMap:
  * <ul>
  *  <li>The key is the method signature (ie :
@@ -37,6 +37,7 @@ import java.util.TreeSet;
  *  "UNKNOWN" if the method does not become tainted base on the value,
  *  "TAINTED" if the result must be consider unsafe)</li>
  * </ul>
+ *
  * @author David Formanek (Y Soft Corporation, a.s.)
  */
 public class TaintMethodSummaryMap extends HashMap<String, TaintMethodSummary> {

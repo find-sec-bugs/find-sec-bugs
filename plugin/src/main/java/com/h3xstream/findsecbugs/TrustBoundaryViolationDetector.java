@@ -35,10 +35,11 @@ public class TrustBoundaryViolationDetector extends ConfiguredBasicInjectionDete
 
     /**=
      * All or nothing :
+     * <ul>
      * <li>If the taint to sink path is found, it is mark as high</li>
-     * <li>If the source is not confirm, it is mark as low. This is will be the most probable case.</li>
-     *
-     * @param taint
+     * <li>If the source is not confirm, it is mark as low. This is will be the most common case.</li>
+     * </ul>
+     * @param taint Taint state
      * @return High or low confidence
      */
     @Override

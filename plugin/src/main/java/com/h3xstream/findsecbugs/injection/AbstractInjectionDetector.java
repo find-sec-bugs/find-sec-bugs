@@ -103,7 +103,7 @@ public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
     /**
      * The default implementation of <code>getPriority()</code> can be overridden if the severity and the confidence for risk
      * is particular.
-     * <br/>
+     *
      * By default, injection will be rated "High" if the complete link between source and sink is made.
      * If it is not the case but concatenation with external source is made, "Medium" is used.
      *

@@ -87,11 +87,10 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
 
     /**
      * Initialize the initial state of a TaintFrame.
-     * @param fact
-     * @throws DataflowAnalysisException
+     * @param fact Initial frame
      */
     @Override
-    public void initEntryFact(TaintFrame fact) throws DataflowAnalysisException {
+    public void initEntryFact(TaintFrame fact) {
         fact.setValid();
         fact.clearStack();
         boolean inMainMethod = isInMainMethod();

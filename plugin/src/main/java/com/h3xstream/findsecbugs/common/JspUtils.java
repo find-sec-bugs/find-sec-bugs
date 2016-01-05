@@ -35,8 +35,8 @@ public class JspUtils {
     /**
      *
      * @param precedingInstructions Instructions preceding the call.
-     * @param cpg
-     * @return
+     * @param cpg Constant Pool Gen (need to get constant value such as strings and class names)
+     * @return The string value found or null
      */
     public static String getContanstBooleanAsString(LinkedList<Instruction> precedingInstructions, ConstantPoolGen cpg) {
         //Heuristic to find static

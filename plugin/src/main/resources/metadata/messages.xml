@@ -548,7 +548,7 @@ since the client will trust any certificate.
 </p>
 <p>
 A TrustManager allowing specific certificates (based on a truststore for example) should be built.
-Detailed information for a proper implementation is at:
+Detailed information for a proper implementation is available at:
 <a href="http://stackoverflow.com/a/6378872/89769">[1]</a> 
 <a href="http://stackoverflow.com/a/5493452/89769">[2]</a>
 </p>
@@ -602,7 +602,7 @@ sc.init(kmf.getKeyManagers(), tmf.getTrustManagers(),null);
         <LongDescription>HostnameVerifier that accept any signed certificates makes communication vulnerable to a MITM attack</LongDescription>
         <Details>
             <![CDATA[
-<p>HostnameVerifier that accept any host are often use because of certificate reuse on many hosts.
+<p>A <code>HostnameVerifier</code> that accept any host are often use because of certificate reuse on many hosts.
 As a consequence, this is vulnerable to
 <a href="http://en.wikipedia.org/wiki/Man-in-the-middle_attack">Man-in-the-middle attacks</a>
 since the client will trust any certificate.
@@ -610,7 +610,7 @@ since the client will trust any certificate.
 <p>
 A TrustManager allowing specific certificates (based on a truststore for example) should be built.
 Wildcard certificates should be created for reused on multiples subdomains.
-Detailed information for a proper implementation is at:
+Detailed information for a proper implementation is available at:
 <a href="http://stackoverflow.com/a/6378872/89769">[1]</a>
 <a href="http://stackoverflow.com/a/5493452/89769">[2]</a>
 </p>

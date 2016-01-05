@@ -94,7 +94,7 @@ public class ScalaCommandInjectionDetectorTest extends BaseDetectorTest {
 
 
         List<Integer> lineVariousMethod = Arrays.asList(51, /**/ 53, 54, 55, /**/ 58, 60, 61, /**/ 64, 66, 67,
-            /**/ 70, 71, 72, /**/ 75);
+            /**/ 70, 71, 72, /**/ 75, /**/ 79, 80);
         for(int line : lineVariousMethod) {
             verify(reporter).doReportBug(
                     bugDefinition()
@@ -121,8 +121,10 @@ public class ScalaCommandInjectionDetectorTest extends BaseDetectorTest {
         );
 
         //PATH injection is typically consider a command injection because it could lead to unwanted command execution
-        //Currently it is catch as
+        //Currently it is catch as Path traversal
+        //
         // Process(Seq("ls"),new File(value),("extra","1234")).run()
+
         List<Integer> linePathTraversal = Arrays.asList(59, 65);
         for(int line : linePathTraversal) {
             verify(reporter).doReportBug(

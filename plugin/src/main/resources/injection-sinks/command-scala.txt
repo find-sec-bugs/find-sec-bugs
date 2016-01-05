@@ -10,3 +10,4 @@ scala/sys/process/Process$.apply(Lscala/collection/Seq;Lscala/Function1;)Lscala/
 
 -stringToProcess is call when the bang operator (!) is apply to a string
 scala/sys/process/package$.stringToProcess(Ljava/lang/String;)Lscala/sys/process/ProcessBuilder;:0
+scala/sys/process/package$.stringSeqToProcess(Lscala/collection/Seq;)Lscala/sys/process/ProcessBuilder;:0

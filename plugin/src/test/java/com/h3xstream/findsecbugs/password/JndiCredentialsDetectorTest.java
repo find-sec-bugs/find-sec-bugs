@@ -19,6 +19,7 @@ package com.h3xstream.findsecbugs.password;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
+import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
@@ -31,6 +32,7 @@ public class JndiCredentialsDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectHardCodeCredentials() throws Exception {
+        //FindSecBugsGlobalConfig.getInstance().setDebugPrintInstructionVisited(true);//setDebugPrintInvocationVisited(true);
         //Locate test code
         String[] files = {
                 getClassFilePath("testcode/password/JndiProperties")
@@ -41,7 +43,7 @@ public class JndiCredentialsDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         //Assertions
-        for (Integer line : Arrays.asList(10, 15)) {
+        for (Integer line : Arrays.asList(14, 19,30)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("HARD_CODE_PASSWORD")
@@ -51,7 +53,7 @@ public class JndiCredentialsDetectorTest extends BaseDetectorTest {
         }
 
         //More than two occurrence == false positive
-        verify(reporter, times(2)).doReportBug(
+        verify(reporter, times(3)).doReportBug(
                 bugDefinition().bugType("HARD_CODE_PASSWORD").build());
     }
 }

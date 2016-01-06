@@ -139,11 +139,11 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     @Override
     public void analyzeInstruction(Instruction ins) throws DataflowAnalysisException {
         //Print the bytecode instruction if it is globally configured
-        if(FindSecBugsGlobalConfig.getInstance().isDebugPrintInvocationVisited() && ins instanceof InvokeInstruction) {
-            ByteCode.printOpCode(ins,cpg);
-        }
-        else if(FindSecBugsGlobalConfig.getInstance().isDebugPrintInstructionVisited()) {
-            ByteCode.printOpCode(ins,cpg);
+        if (FindSecBugsGlobalConfig.getInstance().isDebugPrintInvocationVisited()
+                && ins instanceof InvokeInstruction) {
+            ByteCode.printOpCode(ins, cpg);
+        } else if (FindSecBugsGlobalConfig.getInstance().isDebugPrintInstructionVisited()) {
+            ByteCode.printOpCode(ins, cpg);
         }
         super.analyzeInstruction(ins);
     }
@@ -155,15 +155,14 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     @Override
     public void visitLDC(LDC ldc) {
-        if(FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
+        if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             Object value = ldc.getValue(cpg);
-            if(value instanceof String)
-                 pushSafeDebug("\"" + value + "\"");
-            else
-                 pushSafeDebug("LDC " + ldc.getType(cpg).getSignature());
-
-        }
-        else {
+            if (value instanceof String) {
+                pushSafeDebug("\"" + value + "\"");
+            } else {
+                pushSafeDebug("LDC " + ldc.getType(cpg).getSignature());
+            }
+        } else {
             pushSafe();
         }
     }
@@ -171,11 +170,10 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     @Override
     public void visitLDC2_W(LDC2_W obj) {
         // double and long type takes two slots in BCEL
-        if(FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
+        if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             pushSafeDebug("partial long/double");
             pushSafeDebug("partial long/double");
-        }
-        else {
+        } else {
             pushSafe();
             pushSafe();
         }
@@ -183,10 +181,9 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     @Override
     public void visitACONST_NULL(ACONST_NULL obj) {
-        if(FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
+        if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             getFrame().pushValue(new Taint(Taint.State.NULL).setDebugInfo("NULL"));
-        }
-        else {
+        } else {
             getFrame().pushValue(new Taint(Taint.State.NULL));
         }
     }
@@ -195,7 +192,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     @Override
      public void visitICONST(ICONST obj) {
         Taint t = new Taint(Taint.State.SAFE);
-        if(FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
+        if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             t.setDebugInfo("" + obj.getValue().intValue());
         }
         getFrame().pushValue(t);
@@ -203,17 +200,11 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     @Override
     public void visitGETFIELD(GETFIELD obj) {
-        /*try {
-            getFrame().popValue();
-            Taint t = new Taint(Taint.State.UNKNOWN);
-            if(FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
-                t.setDebugInfo("." + obj.getFieldName(cpg));
-            }
-            getFrame().pushValue(t);
-        } catch (DataflowAnalysisException ex) {
-            throw new InvalidBytecodeException(ex.toString(), ex);
-        }*/
-        super.visitGETFIELD(obj);
+        Taint taint = new Taint(Taint.State.UNKNOWN);
+        if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
+            taint.setDebugInfo("." + obj.getFieldName(cpg));
+        }
+        modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taint);
     }
 
     @Override
@@ -221,7 +212,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         Taint taint = new Taint(Taint.State.SAFE);
         ObjectType type = obj.getLoadClassType(cpg);
         taint.setRealInstanceClass(type);
-        if(FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
+        if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             taint.setDebugInfo("new " + type.getClassName() + "()");
         }
         getFrame().pushValue(taint);
@@ -284,10 +275,9 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     public void visitANEWARRAY(ANEWARRAY obj) {
         try {
             getFrame().popValue();
-            if(FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
+            if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
                 pushSafeDebug("new " + obj.getLoadClassType(cpg).getClassName() + "[]");
-            }
-            else {
+            } else {
                 pushSafe();
             }
         } catch (DataflowAnalysisException ex) {
@@ -517,7 +507,8 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             for (Integer mutableStackIndex : methodSummary.getMutableStackIndeces()) {
                 assert mutableStackIndex >= 0;
                 if (mutableStackIndex >= stackDepth) {
-                    if (!Constants.CONSTRUCTOR_NAME.equals(methodDescriptor.getName()) && !Constants.STATIC_INITIALIZER_NAME.equals(methodDescriptor.getName())) {
+                    if (!Constants.CONSTRUCTOR_NAME.equals(methodDescriptor.getName())
+                            && !Constants.STATIC_INITIALIZER_NAME.equals(methodDescriptor.getName())) {
                         assert false : "Out of bounds mutables in " + methodDescriptor;
                     }
                     continue; // ignore if assertions disabled or if in constructor
@@ -568,7 +559,6 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         return new TaintLocation(methodDescriptor, getLocation().getHandle().getPosition());
     }
 
-
     /**
      * This method must be called from outside at the end of the method analysis
      */
@@ -607,24 +597,21 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
      * Print the state of the stack with information about the values in place.
      */
     private void printStackState() {
-
         try {
             System.out.println("============================");
             System.out.println("[[ Stack ]]");
             int stackDepth = getFrame().getStackDepth();
             for (int i = 0; i < stackDepth; i++) {
                 Taint taintValue = getFrame().getStackValue(i);
-                System.out.println(String.format("%s. %s {%s}", i, taintValue.getState().toString(), taintValue.getDebugInfo()));
+                System.out.println(String.format("%s. %s {%s}",
+                        i, taintValue.getState().toString(), taintValue.getDebugInfo()));
             }
-            if(stackDepth == 0) {
+            if (stackDepth == 0) {
                 System.out.println("Empty");
             }
             System.out.println("============================");
-
-        }
-        catch (DataflowAnalysisException e) {
+        } catch (DataflowAnalysisException e) {
             System.out.println("Oups "+e.getMessage());
         }
-
     }
 }

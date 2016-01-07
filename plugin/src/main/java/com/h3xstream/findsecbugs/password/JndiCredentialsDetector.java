@@ -17,7 +17,10 @@
  */
 package com.h3xstream.findsecbugs.password;
 
+import com.h3xstream.findsecbugs.common.InterfaceUtils;
 import com.h3xstream.findsecbugs.common.StackUtils;
+import static com.h3xstream.findsecbugs.common.matcher.InstructionDSL.invokeInstruction;
+import com.h3xstream.findsecbugs.common.matcher.InvokeMatcherBuilder;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.OpcodeStack;
@@ -29,7 +32,10 @@ public class JndiCredentialsDetector extends OpcodeStackDetector {
 
     private static final String HARD_CODE_PASSWORD_TYPE = "HARD_CODE_PASSWORD";
 
-    private BugReporter bugReporter;
+    private final BugReporter bugReporter;
+
+    private static final InvokeMatcherBuilder HASHTABLE_PUT_METHOD = invokeInstruction().atMethod("put")
+            .withArgs("(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
 
     public JndiCredentialsDetector(BugReporter bugReporter) {
         this.bugReporter = bugReporter;
@@ -37,14 +43,16 @@ public class JndiCredentialsDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
-
-        if (seen == Constants.INVOKEVIRTUAL && getClassConstantOperand().equals("java/util/Properties") &&
-                getNameConstantOperand().equals("put") && getSigConstantOperand().equals("(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;")) {
-            OpcodeStack.Item item1 = stack.getStackItem(1);
-            OpcodeStack.Item item0 = stack.getStackItem(0); //The last argument (on the top of the stack)
-            if ("java.naming.security.credentials".equals((String) item1.getConstant()) && StackUtils.isConstantString(item0)) {
-                bugReporter.reportBug(new BugInstance(this, HARD_CODE_PASSWORD_TYPE, Priorities.NORMAL_PRIORITY) //
-                        .addClass(this).addMethod(this).addSourceLine(this)); //
+        if ((seen == Constants.INVOKEVIRTUAL && HASHTABLE_PUT_METHOD.matches(this) )) {
+            if (InterfaceUtils.isSubtype(getClassConstantOperand(), "java.util.Hashtable")) {
+                OpcodeStack.Item item1 = stack.getStackItem(1);
+                OpcodeStack.Item item0 = stack.getStackItem(0); //The last argument (on the top of the stack)
+                if (StackUtils.isConstantString(item1)
+                        && "java.naming.security.credentials".equals((String) item1.getConstant())
+                        && StackUtils.isConstantString(item0)) {
+                    bugReporter.reportBug(new BugInstance(this, HARD_CODE_PASSWORD_TYPE, Priorities.NORMAL_PRIORITY) //
+                            .addClass(this).addMethod(this).addSourceLine(this)); //
+                }
             }
         }
     }

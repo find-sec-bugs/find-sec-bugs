@@ -42,38 +42,21 @@ import java.util.TreeSet;
  */
 public class TaintMethodSummaryMap extends HashMap<String, TaintMethodSummary> {
     private static final long serialVersionUID = 1L;
-    
-    public void load(InputStream input) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
-        for (;;) {
-                String line = reader.readLine();
-                if (line == null) {
-                    break;
-                }
-                line = line.trim();
-                if (line.isEmpty()) {
-                    continue;
-                }
-                putFromLine(line);
-            }
-    }
-    
+
     public void dump(PrintStream output) {
         TreeSet<String> keys = new TreeSet<String>(keySet());
         for (String key : keys) {
             output.println(key + ":" + get(key));
         }
     }
-    
-    private void putFromLine(String line) throws IOException {
-        if (line.startsWith("-")) {
-            // for comments or removing summary temporarily
-            return;
-        }
-        String[] tuple = line.split("\\:");
-        if (tuple.length != 2) {
-            throw new IOException("Line format is not 'method name:summary info'");
-        }
-        put(tuple[0].trim(), TaintMethodSummary.load(tuple[1]));
+
+    public void load(InputStream input) throws IOException {
+        new TaintMethodSummaryMapLoader().load(input, new TaintMethodSummaryMapLoader.TaintMethodSummaryReceiver() {
+            @Override
+            public void receiveTaintMethodSummary(String fullMethod, TaintMethodSummary taintMethodSummary) {
+                put(fullMethod, taintMethodSummary);
+            }
+        });
+
     }
 }

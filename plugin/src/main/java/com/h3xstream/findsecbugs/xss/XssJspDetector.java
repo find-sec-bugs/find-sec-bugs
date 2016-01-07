@@ -18,13 +18,13 @@
 package com.h3xstream.findsecbugs.xss;
 
 import com.h3xstream.findsecbugs.common.InterfaceUtils;
-import com.h3xstream.findsecbugs.injection.ConfiguredBasicInjectionDetector;
+import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.ba.ClassContext;
 import edu.umd.cs.findbugs.ba.Hierarchy;
 
-public class XssJspDetector extends ConfiguredBasicInjectionDetector {
+public class XssJspDetector extends BasicInjectionDetector {
 
     private static final String XSS_JSP_PRINT_TYPE = "XSS_JSP_PRINT";
 

@@ -1,5 +1,5 @@
-javax/servlet/http/ServletRequest.getParameter(Ljava/lang/String;)Ljava/lang/String;:TAINTED
-javax/servlet/http/ServletRequest.getRemoteHost()Ljava/lang/String;:TAINTED
+javax/servlet/ServletRequest.getParameter(Ljava/lang/String;)Ljava/lang/String;:TAINTED
+javax/servlet/ServletRequest.getRemoteHost()Ljava/lang/String;:TAINTED
 
 - better keep those, J2EE interfaces can be unavailable to analysis
 javax/servlet/http/HttpServletRequest.getParameter(Ljava/lang/String;)Ljava/lang/String;:TAINTED

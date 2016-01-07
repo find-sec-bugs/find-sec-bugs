@@ -17,7 +17,7 @@
  */
 package com.h3xstream.findsecbugs.injection.command;
 
-import com.h3xstream.findsecbugs.injection.ConfiguredBasicInjectionDetector;
+import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
 import edu.umd.cs.findbugs.BugReporter;
 
 /**
@@ -26,7 +26,7 @@ import edu.umd.cs.findbugs.BugReporter;
  * @see java.lang.ProcessBuilder
  * @see java.lang.Runtime
  */
-public class CommandInjectionDetector extends ConfiguredBasicInjectionDetector {
+public class CommandInjectionDetector extends BasicInjectionDetector {
 
     public CommandInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);

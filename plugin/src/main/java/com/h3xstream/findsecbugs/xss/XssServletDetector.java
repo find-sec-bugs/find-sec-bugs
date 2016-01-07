@@ -18,20 +18,19 @@
 package com.h3xstream.findsecbugs.xss;
 
 import com.h3xstream.findsecbugs.common.InterfaceUtils;
-import com.h3xstream.findsecbugs.injection.ConfiguredBasicInjectionDetector;
+import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.ba.ClassContext;
 import edu.umd.cs.findbugs.ba.Hierarchy;
 
-public class XssServletDetector extends ConfiguredBasicInjectionDetector {
+public class XssServletDetector extends BasicInjectionDetector {
 
     //private static final String XSS_JSP_PRINT_TYPE = "XSS_JSP_PRINT";
     private static final String XSS_SERVLET_TYPE = "XSS_SERVLET";
 
     public XssServletDetector(BugReporter bugReporter) {
         super(bugReporter);
-        //loadConfiguredSinks("xss-jsp.txt", XSS_JSP_PRINT_TYPE);
         loadConfiguredSinks("xss-servlet.txt", XSS_SERVLET_TYPE);
     }
 

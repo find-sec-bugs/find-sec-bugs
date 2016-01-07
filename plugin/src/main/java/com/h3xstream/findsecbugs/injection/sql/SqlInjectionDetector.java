@@ -17,10 +17,10 @@
  */
 package com.h3xstream.findsecbugs.injection.sql;
 
-import com.h3xstream.findsecbugs.injection.ConfiguredBasicInjectionDetector;
+import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
 import edu.umd.cs.findbugs.BugReporter;
 
-public class SqlInjectionDetector extends ConfiguredBasicInjectionDetector {
+public class SqlInjectionDetector extends BasicInjectionDetector {
 
     public SqlInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);

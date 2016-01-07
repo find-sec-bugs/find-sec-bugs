@@ -21,7 +21,7 @@ import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.util.ClassName;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.bcel.Constants;
+
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InvokeInstruction;
@@ -35,7 +35,8 @@ import org.apache.bcel.generic.InvokeInstruction;
 public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
 
     private final Map<String, InjectionPoint> injectionMap = new HashMap<String, InjectionPoint>();
-    
+    private static final SinksLoader SINKS_LOADER = new SinksLoader();
+
     public BasicInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
     }
@@ -50,19 +51,27 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
         }
         return injectionPoint;
     }
-    
-    protected void addSink(String fullMethodName, int[] injectableParameters, String bugType) {
-        assert fullMethodName != null && !fullMethodName.isEmpty();
-        assert injectableParameters != null && injectableParameters.length != 0;
+
+    protected void loadConfiguredSinks(String filename, String bugType) {
+        SINKS_LOADER.loadConfiguredSinks(filename, bugType, new SinksLoader.InjectionPointReceiver() {
+            @Override
+            public void receiveInjectionPoint(String fullMethodName, InjectionPoint injectionPoint) {
+                addParsedInjectionPoint(fullMethodName, injectionPoint);
+            }
+        });
+    }
+
+    protected void loadSink(String line, String bugType) {
+        SINKS_LOADER.loadSink(line, bugType, new SinksLoader.InjectionPointReceiver() {
+            @Override
+            public void receiveInjectionPoint(String fullMethodName, InjectionPoint injectionPoint) {
+                addParsedInjectionPoint(fullMethodName, injectionPoint);
+            }
+        });
+    }
+
+    public void addParsedInjectionPoint(String fullMethodName, InjectionPoint injectionPoint) {
         assert !injectionMap.containsKey(fullMethodName);
-        InjectionPoint injectionPoint = new InjectionPoint(injectableParameters, bugType);
-        String classAndMethodName = fullMethodName.substring(0, fullMethodName.indexOf('('));
-        int slashIndex = classAndMethodName.lastIndexOf('/');
-        String shortName = classAndMethodName.substring(slashIndex + 1);
-        if (shortName.endsWith(Constants.CONSTRUCTOR_NAME)) {
-            shortName = shortName.substring(0, shortName.indexOf('.'));
-        }
-        injectionPoint.setInjectableMethod(shortName.concat("(...)"));
         injectionMap.put(fullMethodName, injectionPoint);
     }
     

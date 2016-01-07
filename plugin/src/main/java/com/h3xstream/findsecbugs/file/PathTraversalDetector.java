@@ -17,10 +17,10 @@
  */
 package com.h3xstream.findsecbugs.file;
 
-import com.h3xstream.findsecbugs.injection.ConfiguredBasicInjectionDetector;
+import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
 import edu.umd.cs.findbugs.BugReporter;
 
-public class PathTraversalDetector extends ConfiguredBasicInjectionDetector {
+public class PathTraversalDetector extends BasicInjectionDetector {
 
     private static final String PATH_TRAVERSAL_IN_TYPE = "PATH_TRAVERSAL_IN";
     private static final String PATH_TRAVERSAL_OUT_TYPE = "PATH_TRAVERSAL_OUT";

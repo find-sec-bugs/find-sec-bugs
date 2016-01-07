@@ -17,7 +17,7 @@
  */
 package com.h3xstream.findsecbugs;
 
-import com.h3xstream.findsecbugs.injection.ConfiguredBasicInjectionDetector;
+import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
 import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
@@ -27,7 +27,7 @@ import edu.umd.cs.findbugs.Priorities;
  * 
  * @author David Formanek (Y Soft Corporation, a.s.)
  */
-public class HttpResponseSplittingDetector extends ConfiguredBasicInjectionDetector {
+public class HttpResponseSplittingDetector extends BasicInjectionDetector {
 
     public HttpResponseSplittingDetector(BugReporter bugReporter) {
         super(bugReporter);

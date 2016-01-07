@@ -17,7 +17,7 @@
  */
 package com.h3xstream.findsecbugs;
 
-import com.h3xstream.findsecbugs.injection.ConfiguredBasicInjectionDetector;
+import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
 import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
@@ -26,7 +26,7 @@ import edu.umd.cs.findbugs.Priorities;
  * Trust Boundary Violation is fancy name to describe tainted value passed directly to session attribute.
  * This could be an expected behavior that allow an attacker to change the session state.
  */
-public class TrustBoundaryViolationDetector extends ConfiguredBasicInjectionDetector {
+public class TrustBoundaryViolationDetector extends BasicInjectionDetector {
 
     public TrustBoundaryViolationDetector(BugReporter bugReporter) {
         super(bugReporter);

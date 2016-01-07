@@ -17,10 +17,10 @@
  */
 package com.h3xstream.findsecbugs.injection.ldap;
 
-import com.h3xstream.findsecbugs.injection.ConfiguredBasicInjectionDetector;
+import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
 import edu.umd.cs.findbugs.BugReporter;
 
-public class LdapInjectionDetector extends ConfiguredBasicInjectionDetector {
+public class LdapInjectionDetector extends BasicInjectionDetector {
 
     public LdapInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);

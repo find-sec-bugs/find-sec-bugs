@@ -17,10 +17,10 @@
  */
 package com.h3xstream.findsecbugs.injection.script;
 
-import com.h3xstream.findsecbugs.injection.ConfiguredBasicInjectionDetector;
+import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
 import edu.umd.cs.findbugs.BugReporter;
 
-public class ScriptInjectionDetector extends ConfiguredBasicInjectionDetector {
+public class ScriptInjectionDetector extends BasicInjectionDetector {
 
     public ScriptInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);

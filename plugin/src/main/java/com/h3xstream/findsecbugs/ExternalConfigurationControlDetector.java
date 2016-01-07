@@ -17,7 +17,7 @@
  */
 package com.h3xstream.findsecbugs;
 
-import com.h3xstream.findsecbugs.injection.ConfiguredBasicInjectionDetector;
+import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
 import edu.umd.cs.findbugs.BugReporter;
 
 /**
@@ -26,7 +26,7 @@ import edu.umd.cs.findbugs.BugReporter;
  * 
  * @author David Formanek (Y Soft Corporation, a.s.)
  */
-public class ExternalConfigurationControlDetector extends ConfiguredBasicInjectionDetector {
+public class ExternalConfigurationControlDetector extends BasicInjectionDetector {
 
     public ExternalConfigurationControlDetector(BugReporter bugReporter) {
         super(bugReporter);

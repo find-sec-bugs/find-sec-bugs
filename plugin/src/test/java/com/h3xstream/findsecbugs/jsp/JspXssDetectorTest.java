@@ -53,8 +53,19 @@ public class JspXssDetectorTest extends BaseDetectorTest {
                             .build()
             );
         }
+        
+        for (Integer line : Arrays.asList(12, 17)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("XSS_JSP_PRINT")
+                            .inJspFile("xss/xss_1_direct_use.jsp")
+                            .atJspLine(line)
+                            .withPriority("Low")
+                            .build()
+            );
+        }
 
-        verify(reporter, times(2)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
+        verify(reporter, times(4)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
     }
 
     @Test
@@ -77,8 +88,17 @@ public class JspXssDetectorTest extends BaseDetectorTest {
                         .atJspLine(10)
                         .build()
         );
+        
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("XSS_JSP_PRINT")
+                        .inJspFile("xss/xss_2_transfer_local.jsp")
+                        .atJspLine(14)
+                        .withPriority("Low")
+                        .build()
+        );
 
-        verify(reporter,times(1)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
+        verify(reporter, times(2)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
     }
 
     @Test
@@ -93,7 +113,7 @@ public class JspXssDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         //No alert should be trigger
-        verify(reporter, times(0)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
+        verify(reporter, never()).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
     }
 
     @Test
@@ -129,8 +149,17 @@ public class JspXssDetectorTest extends BaseDetectorTest {
                         .atJspLine(13)
                         .build()
         );
+        
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("XSS_JSP_PRINT")
+                        .inJspFile("xss/xss_5_multiple_transfer_local.jsp")
+                        .atJspLine(17)
+                        .withPriority("Low")
+                        .build()
+        );
 
-        verify(reporter,times(1)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
+        verify(reporter, times(2)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
     }
 
     @Test
@@ -152,7 +181,7 @@ public class JspXssDetectorTest extends BaseDetectorTest {
                         .build()
         );
 
-        verify(reporter,times(1)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
+        verify(reporter, times(1)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
     }
 
 }

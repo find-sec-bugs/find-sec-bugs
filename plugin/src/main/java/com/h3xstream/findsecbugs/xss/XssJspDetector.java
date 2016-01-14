@@ -19,22 +19,38 @@ package com.h3xstream.findsecbugs.xss;
 
 import com.h3xstream.findsecbugs.common.InterfaceUtils;
 import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
+import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import edu.umd.cs.findbugs.BugReporter;
-import edu.umd.cs.findbugs.ba.AnalysisContext;
+import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.ba.ClassContext;
-import edu.umd.cs.findbugs.ba.Hierarchy;
 
 public class XssJspDetector extends BasicInjectionDetector {
 
     private static final String XSS_JSP_PRINT_TYPE = "XSS_JSP_PRINT";
 
-    public static final String[] JSP_PARENT_CLASSES = {"org.apache.jasper.runtime.HttpJspBase","weblogic.servlet.jsp.JspBase"};
+    public static final String[] JSP_PARENT_CLASSES = {
+        "org.apache.jasper.runtime.HttpJspBase",
+        "weblogic.servlet.jsp.JspBase"
+    };
 
     public XssJspDetector(BugReporter bugReporter) {
         super(bugReporter);
         loadConfiguredSinks("xss-jsp.txt", XSS_JSP_PRINT_TYPE);
     }
 
+    @Override
+    protected int getPriority(Taint taint) {
+        if (!taint.isSafe() && taint.hasTag(Taint.Tag.XSS_SAFE)) {
+            return Priorities.LOW_PRIORITY;
+        } else if (taint.isTainted()) {
+            return Priorities.HIGH_PRIORITY;
+        } else if (!taint.isSafe()) {
+            return Priorities.NORMAL_PRIORITY;
+        } else {
+            return Priorities.IGNORE_PRIORITY;
+        }
+    }
+    
     @Override
     public boolean shouldAnalyzeClass(ClassContext classContext) {
         String className = classContext.getClassDescriptor().getDottedClassName();

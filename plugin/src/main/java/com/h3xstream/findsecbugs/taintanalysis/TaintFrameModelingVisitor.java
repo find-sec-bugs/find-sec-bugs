@@ -347,7 +347,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                 null : methodSummary.getOutputTaint().getRealInstanceClass();
         Taint taint = getMethodTaint(methodSummary);
         assert taint != null;
-        if(FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
+        if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             taint.setDebugInfo(obj.getMethodName(cpg) + "()");
         }
         if (taint.isUnknown()) {
@@ -450,10 +450,21 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         if (taint.isUnknown() && taint.hasParameters()) {
             Taint merge = mergeTransferParameters(taint.getParameters());
             assert merge != null;
-            return Taint.merge(Taint.valueOf(taint.getNonParametricState()), merge);
+            taint = Taint.merge(Taint.valueOf(taint.getNonParametricState()), merge);
         }
         if (taint.isTainted()) {
             taint.addLocation(getTaintLocation(), true);
+        }
+        // don't add tags to safe values
+        if (!taint.isSafe() && methodSummary.hasAddingTags()) {
+            for (Taint.Tag tag : methodSummary.getAddingTags()) {
+                taint.addTag(tag);
+            }
+        }
+        if (methodSummary.hasRemovingTags()) {
+            for (Taint.Tag tag : methodSummary.getRemovingTags()) {
+                taint.removeTag(tag);
+            }
         }
         return taint;
     }

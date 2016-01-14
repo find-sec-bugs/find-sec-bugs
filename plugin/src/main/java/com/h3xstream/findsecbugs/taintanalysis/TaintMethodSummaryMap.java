@@ -17,10 +17,8 @@
  */
 package com.h3xstream.findsecbugs.taintanalysis;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.TreeSet;
@@ -57,6 +55,5 @@ public class TaintMethodSummaryMap extends HashMap<String, TaintMethodSummary> {
                 put(fullMethod, taintMethodSummary);
             }
         });
-
     }
 }

@@ -56,7 +56,9 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
     private int parameterStackSize;
     private List<Integer> slotToParameter;
 
-    private static final List<String> TAINTED_ANNOTATIONS = loadFileContent("taint-config/taint-param-annotations.txt");
+    private static final List<String> TAINTED_ANNOTATIONS = loadFileContent(
+            "taint-config/taint-param-annotations.txt"
+    );
     
     public TaintAnalysis(MethodGen methodGen, DepthFirstSearch dfs,
             MethodDescriptor descriptor, TaintMethodSummaryMap methodSummaries) {
@@ -259,5 +261,4 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
         }
         return new ArrayList<String>();
     }
-
 }

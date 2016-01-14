@@ -20,6 +20,7 @@ package com.h3xstream.findsecbugs.taintanalysis;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,6 +33,8 @@ public class TaintMethodSummary {
 
     private Taint outputTaint = null;
     private final Set<Integer> mutableStackIndices = new HashSet<Integer>();
+    private final EnumSet<Taint.Tag> addingTags;
+    private final EnumSet<Taint.Tag> removingTags;
     private final boolean isConfigured;
     public static final TaintMethodSummary SAFE_SUMMARY;
 
@@ -41,6 +44,8 @@ public class TaintMethodSummary {
     }
 
     public TaintMethodSummary(boolean isConfigured) {
+        addingTags = EnumSet.noneOf(Taint.Tag.class);
+        removingTags = EnumSet.noneOf(Taint.Tag.class);
         this.isConfigured = isConfigured;
     }
 
@@ -80,6 +85,22 @@ public class TaintMethodSummary {
         this.outputTaint = taintCopy;
     }
 
+    public EnumSet<Taint.Tag> getAddingTags() {
+        return EnumSet.copyOf(addingTags);
+    }
+
+    public boolean hasAddingTags() {
+        return !addingTags.isEmpty();
+    }
+    
+    public EnumSet<Taint.Tag> getRemovingTags() {
+        return EnumSet.copyOf(removingTags);
+    }
+    
+    public boolean hasRemovingTags() {
+        return !removingTags.isEmpty();
+    }
+
     public static TaintMethodSummary getDefaultConstructorSummary(int stackSize) {
         if (stackSize < 1) {
             throw new IllegalArgumentException("stack size less than 1");
@@ -91,13 +112,6 @@ public class TaintMethodSummary {
         return summary;
     }
 
-    /*public static TaintMethodSummary getUnknownMethodSummary(Collection<Integer> indices) {
-        TaintMethodSummary summary = new TaintMethodSummary(false);
-        summary.outputTaint = new Taint(Taint.State.UNKNOWN);
-        summary.mutableStackIndices.addAll(indices);
-        return summary;
-     }*/
-    
     public boolean isInformative() {
         if (this == SAFE_SUMMARY) {
             // these are loaded automatically, do not need to store them
@@ -115,7 +129,11 @@ public class TaintMethodSummary {
         if (outputTaint.getRealInstanceClass() != null) {
             return true;
         }
-        return false;
+        if (!addingTags.isEmpty() || !removingTags.isEmpty()) {
+            // currently never true for derived summaries
+            return true;
+        }
+        return outputTaint.hasTags();
     }
 
     public boolean isConfigured() {
@@ -137,6 +155,20 @@ public class TaintMethodSummary {
             }
         } else {
             sb.append(outputTaint.getState().name());
+        }
+        if (outputTaint.hasTags()) {
+            sb.append('|');
+            boolean isFirst = true;
+            for (Taint.Tag tag : Taint.Tag.values()) {
+                if (outputTaint.hasTag(tag)) {
+                    if (isFirst) {
+                        isFirst = false;
+                    } else {
+                        sb.append(',');
+                    }
+                    sb.append(tag.name());
+                }
+            }
         }
         if (hasMutableStackIndeces()) {
             sb.append("#");
@@ -171,8 +203,26 @@ public class TaintMethodSummary {
             throw new NullPointerException("string is null");
         }
         str = str.trim();
-        String[] tuple = str.split("#");
+        if (str.isEmpty()) {
+            throw new IOException("No taint method summary specified");
+        }
         TaintMethodSummary summary = new TaintMethodSummary(true);
+        str = loadMutableStackIndeces(str, summary);
+        String[] tuple = str.split("\\|");
+        if (tuple.length == 2) {
+            str = tuple[0];
+        } else if (tuple.length != 1) {
+            throw new IOException("Bad format: only one '|' expected");
+        }
+        loadStatesAndParameters(str, summary);
+        if (tuple.length == 2) {
+            loadTags(tuple[1], summary);
+        }
+        return summary;
+    }
+
+    private static String loadMutableStackIndeces(String str, TaintMethodSummary summary) throws IOException {
+        String[] tuple = str.split("#");
         if (tuple.length == 2) {
             str = tuple[0];
             try {
@@ -186,12 +236,16 @@ public class TaintMethodSummary {
         } else if (tuple.length != 1) {
             throw new IOException("Bad format: only one '#' expected");
         }
+        return str;
+    }
+    
+    private static void loadStatesAndParameters(String str, TaintMethodSummary summary) throws IOException {
         if (str.isEmpty()) {
             throw new IOException("No taint information set");
         } else if (isTaintStateValue(str)) {
             summary.setOuputTaint(Taint.valueOf(str));
         } else {
-            tuple = str.split(",");
+            String[] tuple = str.split(",");
             int count = tuple.length;
             Taint taint = new Taint(Taint.State.UNKNOWN);
             for (int i = 0; i < count; i++) {
@@ -208,9 +262,48 @@ public class TaintMethodSummary {
             }
             summary.setOuputTaint(taint);
         }
-        return summary;
     }
 
+    private static void loadTags(String tagInfo, TaintMethodSummary summary) throws IOException {
+        if (tagInfo.isEmpty()) {
+            throw new IOException("No taint tags specified");
+        }
+        for (String tagName : tagInfo.split(",")) {
+            char sign = tagName.charAt(0);
+            tagName = tagName.substring(1);
+            if (!isTaintTagValue(tagName)) {
+                throw new IOException("Bad format: unknown taint tag " + tagName);
+            }
+            Taint.Tag tag = Taint.Tag.valueOf(tagName);
+            if (summary.addingTags.contains(tag) || summary.removingTags.contains(tag)) {
+                throw new IOException("Bad format: tag " + tag + " already present");
+            }
+            switch (sign) {
+                case '+':
+                    summary.addingTags.add(tag);
+                    // for summaries without parameters
+                    summary.outputTaint.addTag(tag);
+                    break;
+                case '-':
+                    summary.removingTags.add(tag);
+                    // tags are never present in output taint for configured summaries (if not added)
+                    break;
+                default:
+                    throw new IOException("Bad format: taint tag sign must be + or - but is " + sign);
+            }
+        }
+    }
+    
+    private static boolean isTaintTagValue(String value) {
+        assert value != null && !value.isEmpty();
+        for (Taint.Tag tag : Taint.Tag.values()) {
+            if (tag.name().equals(value)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     private static boolean isTaintStateValue(String value) {
         assert value != null && !value.isEmpty();
         Taint.State[] states = Taint.State.values();

@@ -21,6 +21,7 @@ import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.util.ClassName;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -75,6 +76,10 @@ public class Taint {
         }
     }
 
+    public enum Tag {
+        XSS_SAFE
+    }
+    
     private State state;
     private static final int INVALID_INDEX = -1;
     private int variableIndex;
@@ -83,6 +88,7 @@ public class Taint {
     private final Set<Integer> parameters;
     private State nonParametricState;
     private ObjectType realInstanceClass;
+    private EnumSet<Tag> tags;
     private String debugInfo = null;
 
     public Taint(State state) {
@@ -95,10 +101,10 @@ public class Taint {
         this.unknownLocations = new HashSet<TaintLocation>();
         this.taintLocations = new HashSet<TaintLocation>();
         this.parameters = new HashSet<Integer>();
-        nonParametricState = State.INVALID;
+        this.nonParametricState = State.INVALID;
         this.realInstanceClass = null;
-
-        if(FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
+        this.tags = EnumSet.noneOf(Tag.class);
+        if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             this.debugInfo = "?";
         }
     }
@@ -113,8 +119,8 @@ public class Taint {
         this.parameters = new HashSet<Integer>(taint.getParameters());
         this.nonParametricState = taint.nonParametricState;
         this.realInstanceClass = taint.realInstanceClass;
-
-        if(FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
+        this.tags = EnumSet.copyOf(taint.tags);
+        if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             this.debugInfo = taint.debugInfo;
         }
     }
@@ -227,6 +233,22 @@ public class Taint {
         return ClassName.toSlashedClassName(realInstanceClass.getClassName());
     }
 
+    public boolean addTag(Tag tag) {
+        return tags.add(tag);
+    }
+    
+    public boolean hasTag(Tag tag) {
+        return tags.contains(tag);
+    }
+    
+    public boolean hasTags() {
+        return !tags.isEmpty();
+    }
+    
+    public boolean removeTag(Tag tag) {
+        return tags.remove(tag);
+    }
+    
     public static Taint valueOf(String stateName) {
         // exceptions thrown from Enum.valueOf
         return valueOf(State.valueOf(stateName));
@@ -259,6 +281,16 @@ public class Taint {
         result.taintLocations.addAll(b.taintLocations);
         result.unknownLocations.addAll(a.unknownLocations);
         result.unknownLocations.addAll(b.unknownLocations);
+        mergeParameters(a, b, result);
+        mergeRealInstanceClass(a, b, result);
+        mergeTags(a, b, result);
+        if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
+            result.setDebugInfo("[" + a.getDebugInfo() + "]+[" + b.getDebugInfo() + "]");
+        }
+        return result;
+    }
+
+    private static void mergeParameters(Taint a, Taint b, Taint result) {
         result.parameters.addAll(a.parameters);
         result.parameters.addAll(b.parameters);
         if (a.hasParameters()) {
@@ -272,6 +304,9 @@ public class Taint {
                 result.nonParametricState = State.merge(a.state, b.nonParametricState);
             }
         }
+    }
+
+    private static void mergeRealInstanceClass(Taint a, Taint b, Taint result) {
         if (a.realInstanceClass != null && b.realInstanceClass != null) {
             try {
                 if (a.realInstanceClass.equals(b.realInstanceClass)
@@ -284,11 +319,17 @@ public class Taint {
                 AnalysisContext.reportMissingClass(ex);
             }
         }
-
-        if(FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
-            result.setDebugInfo("[" + a.getDebugInfo() + "]+[" + b.getDebugInfo() + "]");
+    }
+    
+    private static void mergeTags(Taint a, Taint b, Taint result) {
+        if (a.isSafe()) {
+            result.tags.addAll(b.tags);
+        } else if (b.isSafe()) {
+            result.tags.addAll(a.tags);
+        } else {
+            result.tags.addAll(a.tags);
+            result.tags.retainAll(b.tags);
         }
-        return result;
     }
 
     @Override
@@ -309,13 +350,14 @@ public class Taint {
                 && this.unknownLocations.equals(other.unknownLocations)
                 && this.parameters.equals(other.parameters)
                 && this.nonParametricState == other.nonParametricState
-                && Objects.equals(this.realInstanceClass, other.realInstanceClass);
+                && Objects.equals(this.realInstanceClass, other.realInstanceClass)
+                && this.tags.equals(other.tags);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(state, variableIndex, taintLocations, unknownLocations,
-                parameters, nonParametricState, realInstanceClass);
+                parameters, nonParametricState, realInstanceClass, tags);
     }
 
     public String getDebugInfo() {

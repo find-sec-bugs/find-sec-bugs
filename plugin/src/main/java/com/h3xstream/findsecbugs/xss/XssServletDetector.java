@@ -19,10 +19,10 @@ package com.h3xstream.findsecbugs.xss;
 
 import com.h3xstream.findsecbugs.common.InterfaceUtils;
 import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
+import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import edu.umd.cs.findbugs.BugReporter;
-import edu.umd.cs.findbugs.ba.AnalysisContext;
+import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.ba.ClassContext;
-import edu.umd.cs.findbugs.ba.Hierarchy;
 
 public class XssServletDetector extends BasicInjectionDetector {
 
@@ -35,9 +35,22 @@ public class XssServletDetector extends BasicInjectionDetector {
     }
 
     @Override
+    protected int getPriority(Taint taint) {
+        if (!taint.isSafe() && taint.hasTag(Taint.Tag.XSS_SAFE)) {
+            return Priorities.LOW_PRIORITY;
+        } else if (taint.isTainted()) {
+            return Priorities.HIGH_PRIORITY;
+        } else if (!taint.isSafe()) {
+            return Priorities.NORMAL_PRIORITY;
+        } else {
+            return Priorities.IGNORE_PRIORITY;
+        }
+    }
+    
+    @Override
     public boolean shouldAnalyzeClass(ClassContext classContext) {
-
         String className = classContext.getClassDescriptor().getDottedClassName();
-        return InterfaceUtils.isSubtype(className, "javax.servlet.http.HttpServlet")  && !InterfaceUtils.isSubtype(className, XssJspDetector.JSP_PARENT_CLASSES);
+        return InterfaceUtils.isSubtype(className, "javax.servlet.http.HttpServlet")
+                && !InterfaceUtils.isSubtype(className, XssJspDetector.JSP_PARENT_CLASSES);
     }
 }

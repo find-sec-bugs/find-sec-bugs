@@ -43,8 +43,21 @@ public class XssServletDetectorTest extends BaseDetectorTest {
                         .inClass("XssServlet1").inMethod("doGet").withPriority("High").atLine(17)
                         .build()
         );
+        
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("XSS_SERVLET")
+                        .inClass("XssServlet1").inMethod("doGet").withPriority("Low").atLine(19)
+                        .build()
+        );
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("XSS_SERVLET")
+                        .inClass("XssServlet1").inMethod("doGet").withPriority("Low").atLine(20)
+                        .build()
+        );
 
-        verify(reporter,times(1)).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
+        verify(reporter, times(3)).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
     }
 
     @Test
@@ -65,7 +78,7 @@ public class XssServletDetectorTest extends BaseDetectorTest {
                         .build()
         );
 
-        verify(reporter,times(1)).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
+        verify(reporter, times(1)).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
     }
 
     @Test
@@ -82,11 +95,30 @@ public class XssServletDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("XSS_SERVLET")
-                        .inClass("XssServlet3").inMethod("writeWithEncoders").withPriority("High")
+                        .inClass("XssServlet3").inMethod("writeWithEncoders").withPriority("High").atLine(24)
+                        .build()
+        );
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("XSS_SERVLET")
+                        .inClass("XssServlet3").inMethod("writeWithEncoders").withPriority("High").atLine(28)
                         .build()
         );
 
-        verify(reporter,times(1)).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("XSS_SERVLET")
+                        .inClass("XssServlet3").inMethod("writeWithEncoders").withPriority("Low").atLine(26)
+                        .build()
+        );
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("XSS_SERVLET")
+                        .inClass("XssServlet3").inMethod("writeWithEncoders").withPriority("Low").atLine(27)
+                        .build()
+        );
+        
+        verify(reporter, times(4)).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
     }
 
 
@@ -108,7 +140,7 @@ public class XssServletDetectorTest extends BaseDetectorTest {
                         .build()
         );
 
-        verify(reporter,times(1)).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
+        verify(reporter, times(1)).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
     }
 
     @Test
@@ -122,62 +154,62 @@ public class XssServletDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        verify(reporter,times(4)).doReportBug(
+        verify(reporter, times(4)).doReportBug(
                 bugDefinition()
                         .bugType("XSS_SERVLET")
                         .inClass("XssServlet5").inMethod("testWrite")
                         .build()
         );
 
-        verify(reporter,times(6)).doReportBug(
+        verify(reporter, times(6)).doReportBug(
                 bugDefinition()
                         .bugType("XSS_SERVLET")
                         .inClass("XssServlet5").inMethod("testFormatUnsafe")
                         .build()
         );
 
-        verify(reporter,never()).doReportBug(
+        verify(reporter, never()).doReportBug(
                 bugDefinition()
                         .bugType("XSS_SERVLET")
                         .inClass("XssServlet5").inMethod("testFormatSafe")
                         .build()
         );
 
-        verify(reporter,times(4 * 2)).doReportBug(
+        verify(reporter, times(4 * 2)).doReportBug(
                 bugDefinition()
                         .bugType("XSS_SERVLET")
                         .inClass("XssServlet5").inMethod("testPrintUnsafe")
                         .build()
         );
 
-        verify(reporter,never()).doReportBug(
+        verify(reporter, never()).doReportBug(
                 bugDefinition()
                         .bugType("XSS_SERVLET")
                         .inClass("XssServlet5").inMethod("testPrintSafe")
                         .build()
         );
 
-        verify(reporter,times(6)).doReportBug(
+        verify(reporter, times(6)).doReportBug(
                 bugDefinition()
                         .bugType("XSS_SERVLET")
                         .inClass("XssServlet5").inMethod("testPrintfUnsafe")
                         .build()
         );
 
-        verify(reporter,never()).doReportBug(
+        verify(reporter, never()).doReportBug(
                 bugDefinition()
                         .bugType("XSS_SERVLET")
                         .inClass("XssServlet5").inMethod("testPrintfSafe")
                         .build()
         );
 
-        verify(reporter,times(3)).doReportBug(
+        verify(reporter, times(3)).doReportBug(
                 bugDefinition()
                         .bugType("XSS_SERVLET")
                         .inClass("XssServlet5").inMethod("testAppend")
                         .build()
         );
 
-        verify(reporter,times(27)).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
+        verify(reporter, times(27)).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
     }
 }

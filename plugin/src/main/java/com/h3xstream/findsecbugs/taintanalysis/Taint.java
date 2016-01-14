@@ -281,6 +281,16 @@ public class Taint {
         result.taintLocations.addAll(b.taintLocations);
         result.unknownLocations.addAll(a.unknownLocations);
         result.unknownLocations.addAll(b.unknownLocations);
+        mergeParameters(a, b, result);
+        mergeRealInstanceClass(a, b, result);
+        mergeTags(a, b, result);
+        if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
+            result.setDebugInfo("[" + a.getDebugInfo() + "]+[" + b.getDebugInfo() + "]");
+        }
+        return result;
+    }
+
+    private static void mergeParameters(Taint a, Taint b, Taint result) {
         result.parameters.addAll(a.parameters);
         result.parameters.addAll(b.parameters);
         if (a.hasParameters()) {
@@ -294,6 +304,9 @@ public class Taint {
                 result.nonParametricState = State.merge(a.state, b.nonParametricState);
             }
         }
+    }
+
+    private static void mergeRealInstanceClass(Taint a, Taint b, Taint result) {
         if (a.realInstanceClass != null && b.realInstanceClass != null) {
             try {
                 if (a.realInstanceClass.equals(b.realInstanceClass)
@@ -306,6 +319,9 @@ public class Taint {
                 AnalysisContext.reportMissingClass(ex);
             }
         }
+    }
+    
+    private static void mergeTags(Taint a, Taint b, Taint result) {
         if (a.isSafe()) {
             result.tags.addAll(b.tags);
         } else if (b.isSafe()) {
@@ -314,10 +330,6 @@ public class Taint {
             result.tags.addAll(a.tags);
             result.tags.retainAll(b.tags);
         }
-        if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
-            result.setDebugInfo("[" + a.getDebugInfo() + "]+[" + b.getDebugInfo() + "]");
-        }
-        return result;
     }
 
     @Override

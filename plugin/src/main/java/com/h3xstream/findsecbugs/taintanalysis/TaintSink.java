@@ -30,10 +30,12 @@ public class TaintSink {
     private final BugInstance bugInstance;
 
     public TaintSink(Taint taint, BugInstance bugInstance) {
-        //Invalid arguments
-        if (taint == null) throw new NullPointerException("taint is null");
-        if (bugInstance == null) throw new NullPointerException("bugInstance is null");
-
+        if (taint == null) {
+            throw new NullPointerException("taint is null");
+        }
+        if (bugInstance == null) {
+            throw new NullPointerException("bugInstance is null");
+        }
         this.taint = taint;
         this.bugInstance = bugInstance;
     }

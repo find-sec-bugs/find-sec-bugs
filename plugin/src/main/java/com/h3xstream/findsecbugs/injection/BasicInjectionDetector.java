@@ -21,7 +21,6 @@ import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.util.ClassName;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InvokeInstruction;

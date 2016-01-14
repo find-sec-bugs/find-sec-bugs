@@ -48,7 +48,6 @@ public class TaintMethodSummaryMapLoader {
         if (tuple.length != 2) {
             throw new IOException("Line format is not 'method name:summary info'");
         }
-
         receiver.receiveTaintMethodSummary(tuple[0].trim(), TaintMethodSummary.load(tuple[1]));
     }
 

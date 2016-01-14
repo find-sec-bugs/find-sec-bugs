@@ -112,13 +112,6 @@ public class TaintMethodSummary {
         return summary;
     }
 
-    /*public static TaintMethodSummary getUnknownMethodSummary(Collection<Integer> indices) {
-        TaintMethodSummary summary = new TaintMethodSummary(false);
-        summary.outputTaint = new Taint(Taint.State.UNKNOWN);
-        summary.mutableStackIndices.addAll(indices);
-        return summary;
-     }*/
-    
     public boolean isInformative() {
         if (this == SAFE_SUMMARY) {
             // these are loaded automatically, do not need to store them
@@ -210,8 +203,26 @@ public class TaintMethodSummary {
             throw new NullPointerException("string is null");
         }
         str = str.trim();
-        String[] tuple = str.split("#");
+        if (str.isEmpty()) {
+            throw new IOException("No taint method summary specified");
+        }
         TaintMethodSummary summary = new TaintMethodSummary(true);
+        str = loadMutableStackIndeces(str, summary);
+        String[] tuple = str.split("\\|");
+        if (tuple.length == 2) {
+            str = tuple[0];
+        } else if (tuple.length != 1) {
+            throw new IOException("Bad format: only one '|' expected");
+        }
+        loadStatesAndParameters(str, summary);
+        if (tuple.length == 2) {
+            loadTags(tuple[1], summary);
+        }
+        return summary;
+    }
+
+    private static String loadMutableStackIndeces(String str, TaintMethodSummary summary) throws IOException {
+        String[] tuple = str.split("#");
         if (tuple.length == 2) {
             str = tuple[0];
             try {
@@ -225,22 +236,16 @@ public class TaintMethodSummary {
         } else if (tuple.length != 1) {
             throw new IOException("Bad format: only one '#' expected");
         }
-        
-        tuple = str.split("\\|");
-        String[] tagInfo = new String[]{};
-        if (tuple.length == 2) {
-            str = tuple[0];
-            tagInfo = tuple[1].split(",");
-        } else if (tuple.length != 1) {
-            throw new IOException("Bad format: only one '|' expected");
-        }
-        
+        return str;
+    }
+    
+    private static void loadStatesAndParameters(String str, TaintMethodSummary summary) throws IOException {
         if (str.isEmpty()) {
             throw new IOException("No taint information set");
         } else if (isTaintStateValue(str)) {
             summary.setOuputTaint(Taint.valueOf(str));
         } else {
-            tuple = str.split(",");
+            String[] tuple = str.split(",");
             int count = tuple.length;
             Taint taint = new Taint(Taint.State.UNKNOWN);
             for (int i = 0; i < count; i++) {
@@ -257,8 +262,13 @@ public class TaintMethodSummary {
             }
             summary.setOuputTaint(taint);
         }
-        
-        for (String tagName : tagInfo) {
+    }
+
+    private static void loadTags(String tagInfo, TaintMethodSummary summary) throws IOException {
+        if (tagInfo.isEmpty()) {
+            throw new IOException("No taint tags specified");
+        }
+        for (String tagName : tagInfo.split(",")) {
             char sign = tagName.charAt(0);
             tagName = tagName.substring(1);
             if (!isTaintTagValue(tagName)) {
@@ -282,9 +292,8 @@ public class TaintMethodSummary {
                     throw new IOException("Bad format: taint tag sign must be + or - but is " + sign);
             }
         }
-        return summary;
     }
-
+    
     private static boolean isTaintTagValue(String value) {
         assert value != null && !value.isEmpty();
         for (Taint.Tag tag : Taint.Tag.values()) {

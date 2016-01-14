@@ -98,6 +98,12 @@ public class XssServletDetectorTest extends BaseDetectorTest {
                         .inClass("XssServlet3").inMethod("writeWithEncoders").withPriority("High").atLine(24)
                         .build()
         );
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("XSS_SERVLET")
+                        .inClass("XssServlet3").inMethod("writeWithEncoders").withPriority("High").atLine(28)
+                        .build()
+        );
 
         verify(reporter).doReportBug(
                 bugDefinition()
@@ -112,7 +118,7 @@ public class XssServletDetectorTest extends BaseDetectorTest {
                         .build()
         );
         
-        verify(reporter, times(3)).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
+        verify(reporter, times(4)).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
     }
 
 

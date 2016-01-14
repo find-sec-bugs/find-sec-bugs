@@ -183,3 +183,15 @@ org/jboss/seam/log/Log.trace(Ljava/lang/Object;[Ljava/lang/Object;)V:UNKNOWN
 org/jboss/seam/log/Log.trace(Ljava/lang/Object;Ljava/lang/Throwable;[Ljava/lang/Object;)V:UNKNOWN
 org/jboss/seam/log/Log.warn(Ljava/lang/Object;[Ljava/lang/Object;)V:UNKNOWN
 org/jboss/seam/log/Log.warn(Ljava/lang/Object;Ljava/lang/Throwable;[Ljava/lang/Object;)V:UNKNOWN
+
+
+flexjson/JSONSerializer.deepSerialize(Ljava/lang/Object;)Ljava/lang/String;:0
+flexjson/JSONSerializer.deepSerialize(Ljava/lang/Object;Lflexjson/OutputHandler;)Ljava/lang/String;:1
+flexjson/JSONSerializer.deepSerialize(Ljava/lang/Object;Ljava/lang/StringBuffer;)Ljava/lang/String;:1
+flexjson/JSONSerializer.deepSerialize(Ljava/lang/Object;Ljava/lang/StringBuilder;)Ljava/lang/String;:1
+flexjson/JSONSerializer.serialize(Ljava/lang/Object;)Ljava/lang/String;:0
+flexjson/JSONSerializer.serialize(Ljava/lang/Object;Lflexjson/OutputHandler;)Ljava/lang/String;:1
+flexjson/JSONSerializer.serialize(Ljava/lang/Object;Lflexjson/SerializationType;Lflexjson/OutputHandler;)Ljava/lang/String;:2
+flexjson/JSONSerializer.serialize(Ljava/lang/Object;Ljava/lang/StringBuffer;)Ljava/lang/String;:1
+flexjson/JSONSerializer.serialize(Ljava/lang/Object;Ljava/lang/StringBuilder;)Ljava/lang/String;:1
+

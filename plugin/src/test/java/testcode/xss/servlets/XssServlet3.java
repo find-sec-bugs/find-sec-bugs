@@ -22,8 +22,9 @@ public class XssServlet3 extends HttpServlet {
 
     public void writeWithEncoders(PrintWriter pw, String input1) {
         pw.write(input1);
-
-        pw.write(ESAPI.encoder().encodeForHTML(input1));
+        String encoded = ESAPI.encoder().encodeForHTML(input1);
+        pw.write(encoded.toLowerCase() + SAFE_VALUE);
         pw.write(StringEscapeUtils.escapeHtml(input1));
+        pw.write(ESAPI.encoder().decodeForHTML(encoded) + SAFE_VALUE);
     }
 }

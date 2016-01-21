@@ -36,7 +36,7 @@ public class TapestryEndpointDetectorTest extends BaseDetectorTest {
     public void detectTapestryPageWithFrameworkReference() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/pages/sub/TapestryPage")
+                getClassFilePath("testcode/pages/TapestryPage")
         };
 
         //Run the analysis
@@ -67,7 +67,7 @@ public class TapestryEndpointDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        verify(reporter).doReportBug(
+        verify(reporter,never()).doReportBug(
                 bugDefinition()
                         .bugType("TAPESTRY_ENDPOINT")
                         .inClass("Index")

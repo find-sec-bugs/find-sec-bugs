@@ -51,12 +51,6 @@ public class TapestryEndpointDetector implements Detector {
             return;
         }
 
-        //The following some false positive
-        if (javaClass.getPackageName().endsWith(".pages")) {
-            bugReporter.reportBug(new BugInstance(this, TAPESTRY_ENDPOINT_TYPE, Priorities.LOW_PRIORITY) //
-                    .addClass(javaClass));
-        }
-
         //The package contains ".pages" and has some references to tapestry
         // then it must be an endpoint.
         //The constants pool contains all references that are reused in the bytecode

@@ -3631,6 +3631,33 @@ Avoid deserializing object provided by remote users.
     </BugPattern>
     <BugCode abbrev="SECOBDES">Object deserialization is used</BugCode>
 
+    <!-- Deserialization vulnerability -->
+    <Detector class="com.h3xstream.findsecbugs.serial.DeserializationGadgetDetector">
+        <Details>Detect weak classes that make application using serialization vulnerable.</Details>
+    </Detector>
+
+    <BugPattern type="DESERIALIZATION_GADGET">
+        <ShortDescription>This class could be used as deserialization gadget</ShortDescription>
+        <LongDescription>This class could make application using serialization vulnerable</LongDescription>
+        <Details>
+            <![CDATA[
+
+<p>
+<b>References</b><br/>
+<a href="https://cwe.mitre.org/data/definitions/502.html">CWE-502: Deserialization of Untrusted Data</a><br/>
+<a href="https://www.owasp.org/index.php/Deserialization_of_untrusted_data">Deserialization of untrusted data</a><br/>
+<a href="http://www.oracle.com/technetwork/java/seccodeguide-139067.html#8">Serialization and Deserialization </a><br/>
+<a href="https://github.com/frohoff/ysoserial">A proof-of-concept tool for generating payloads that exploit unsafe Java object deserialization</a><br/>
+[1] <a href="https://gist.github.com/coekie/a27cc406fc9f3dc7a70d">Example of Denial of Service using the class java.util.HashSet</a><br/>
+[2] <a href="https://bugzilla.redhat.com/show_bug.cgi?id=CVE-2015-2590">OpenJDK: Deserialization issue in ObjectInputStream.readSerialData() (CVE-2015-2590)</a><br/>
+[3] <a href="https://www.rapid7.com/db/modules/exploit/multi/browser/java_calendar_deserialize">Rapid7: Sun Java Calendar Deserialization Privilege Escalation (CVE-2008-5353)</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECDESGAD">Deserialization gadget</BugCode>
+
+
     <!-- Trust Boundary Violation -->
     <Detector class="com.h3xstream.findsecbugs.TrustBoundaryViolationDetector">
         <Details>Detect potential unwanted access to session attribute (Trust Boundary Violation).</Details>

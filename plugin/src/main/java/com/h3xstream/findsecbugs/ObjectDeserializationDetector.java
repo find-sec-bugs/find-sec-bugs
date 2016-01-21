@@ -21,8 +21,9 @@ import com.h3xstream.findsecbugs.common.InterfaceUtils;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Repository;
-import org.apache.bcel.classfile.JavaClass;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Detect Java object deserialization
@@ -32,6 +33,9 @@ import org.apache.bcel.classfile.JavaClass;
 public class ObjectDeserializationDetector extends OpcodeStackDetector {
     private final BugReporter bugReporter;
 
+    private static List<String> OBJECT_INPUTSTREAM_READ_METHODS = Arrays.asList("readObject", //
+            "readUnshared", "readArray");
+
     public ObjectDeserializationDetector(BugReporter bugReporter) {
         this.bugReporter = bugReporter;
     }
@@ -40,10 +44,10 @@ public class ObjectDeserializationDetector extends OpcodeStackDetector {
     public void sawOpcode(int code) {
         //printOpCode(code);
         if ((code == INVOKEVIRTUAL)) {
-            if("java/io/ObjectInputStream".equals(getClassConstantOperand()) || getClassConstantOperand().contains("InputStream")) {
+            if("java/io/ObjectInputStream".equals(getClassConstantOperand()) || getClassConstantOperand().contains("InputStream") || InterfaceUtils.isSubtype(getClassConstantOperand(),"java.io.ObjectInputStream")) {
 
                 String methodName = getNameConstantOperand();
-                if (methodName.equals("readObject")) {
+                if (OBJECT_INPUTSTREAM_READ_METHODS.contains(methodName)) {
                     bugReporter.reportBug(new BugInstance(this, "OBJECT_DESERIALIZATION", HIGH_PRIORITY).addClassAndMethod(this).addSourceLine(this));
                 }
             }

@@ -93,7 +93,7 @@ public class EasyBugReporter extends AbstractBugReporter {
 
     @Override
     public void reportMissingClass(String className) {
-        log.warn("Missing class " + className);
+        //log.warn("Missing class " + className);
     }
 
 }

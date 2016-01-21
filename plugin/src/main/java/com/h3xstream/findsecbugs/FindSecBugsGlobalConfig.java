@@ -29,7 +29,7 @@ public class FindSecBugsGlobalConfig {
     private static FindSecBugsGlobalConfig instance = null;
 
     private boolean printCustomInjectionWarning = true;
-    private String findSecBugsVersion = "1.4.5";
+    private String findSecBugsVersion = "1.4.6";
     private boolean debugOutputSummaries = false;
     private boolean debugPrintInstructionVisited = false;
 

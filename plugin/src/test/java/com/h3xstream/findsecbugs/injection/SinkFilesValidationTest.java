@@ -18,10 +18,13 @@
 
 package com.h3xstream.findsecbugs.injection;
 
+import org.testng.annotations.Test;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
 import static org.testng.Assert.assertNotNull;
 import org.testng.annotations.Test;
 

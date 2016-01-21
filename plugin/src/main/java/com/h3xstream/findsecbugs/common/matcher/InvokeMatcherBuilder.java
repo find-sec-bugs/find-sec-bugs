@@ -19,6 +19,7 @@ package com.h3xstream.findsecbugs.common.matcher;
 
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InvokeInstruction;
 
 import java.util.ArrayList;
@@ -66,18 +67,22 @@ public class InvokeMatcherBuilder {
     }
 
 
-    public boolean matches(InvokeInstruction invokeInstruction,ConstantPoolGen cpg) {
-        if (invokeInstruction != null) {
-            if (classesNames.size() != 0 && !classesNames.contains(invokeInstruction.getClassName(cpg))) {
-                return false;
+    public boolean matches(Instruction instruction, ConstantPoolGen cpg) {
+        if(instruction instanceof InvokeInstruction) {
+            InvokeInstruction invokeInstruction = (InvokeInstruction) instruction;
+            if (invokeInstruction != null) {
+                if (classesNames.size() != 0 && !classesNames.contains(invokeInstruction.getClassName(cpg))) {
+                    return false;
+                }
+                if (methodNames.size() != 0 && !methodNames.contains(invokeInstruction.getMethodName(cpg))) {
+                    return false;
+                }
+                if (argSignatures.size() != 0 && !argSignatures.contains(invokeInstruction.getSignature(cpg))) {
+                    return false;
+                }
             }
-            if (methodNames.size() != 0 && !methodNames.contains(invokeInstruction.getMethodName(cpg))) {
-                return false;
-            }
-            if (argSignatures.size() != 0 && !argSignatures.contains(invokeInstruction.getSignature(cpg))) {
-                return false;
-            }
+            return true;
         }
-        return true;
+        return false;
     }
 }

@@ -106,6 +106,10 @@ java/lang/String.<init>(Ljava/lang/StringBuffer;)V:0#1,2
 
 java/lang/String.concat(Ljava/lang/String;)Ljava/lang/String;:0,1
 java/lang/String.intern()Ljava/lang/String;:0
+java/lang/String.format(Ljava/util/Locale;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;:0
+java/lang/String.format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;:0
+java/lang/String.join(Ljava/lang/CharSequence;[Ljava/lang/CharSequence;)Ljava/lang/String;:0,1
+java/lang/String.join(Ljava/lang/CharSequence;Ljava/lang/Iterable;)Ljava/lang/String;:0,1
 java/lang/String.replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;:0,2
 java/lang/String.replaceAll(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:0,2
 java/lang/String.replaceFirst(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:0,2
@@ -125,7 +129,7 @@ java/lang/String.valueOf(D)Ljava/lang/String;:SAFE
 java/lang/String.valueOf(F)Ljava/lang/String;:SAFE
 java/lang/String.valueOf(I)Ljava/lang/String;:SAFE
 java/lang/String.valueOf(J)Ljava/lang/String;:SAFE
-java/lang/String.valueOf(Ljava/lang/Object)Ljava/lang/String;:0,1
+java/lang/String.valueOf(Ljava/lang/Object)Ljava/lang/String;:0
 
 
 java/lang/CharSequence.subSequence(II)Ljava/lang/CharSequence;:2

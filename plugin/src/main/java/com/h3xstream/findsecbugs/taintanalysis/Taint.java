@@ -77,7 +77,12 @@ public class Taint {
     }
 
     public enum Tag {
-        XSS_SAFE
+        XSS_SAFE,
+        SQL_INJECTION_SAFE,
+        COMMAND_INJECTION_SAFE,
+        LDAP_INJECTION_SAFE,
+        XPATH_INJECTION_SAFE,
+        CRLF_ENCODED
     }
     
     private State state;

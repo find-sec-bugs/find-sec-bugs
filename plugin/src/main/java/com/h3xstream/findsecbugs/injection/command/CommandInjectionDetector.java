@@ -18,7 +18,9 @@
 package com.h3xstream.findsecbugs.injection.command;
 
 import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
+import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import edu.umd.cs.findbugs.BugReporter;
+import edu.umd.cs.findbugs.Priorities;
 
 /**
  * Detect the usage of Runtime and ProcessBuilder to execute system command.
@@ -32,5 +34,14 @@ public class CommandInjectionDetector extends BasicInjectionDetector {
         super(bugReporter);
         loadConfiguredSinks("command.txt", "COMMAND_INJECTION");
         loadConfiguredSinks("command-scala.txt", "SCALA_COMMAND_INJECTION");
+    }
+    
+    @Override
+    protected int getPriority(Taint taint) {
+        if (!taint.isSafe() && taint.hasTag(Taint.Tag.COMMAND_INJECTION_SAFE)) {
+            return Priorities.IGNORE_PRIORITY;
+        } else {
+            return super.getPriority(taint);
+        }
     }
 }

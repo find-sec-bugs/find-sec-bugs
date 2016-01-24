@@ -4,6 +4,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.owasp.esapi.ESAPI;
 
 public abstract class ResponseSplittingServlet extends HttpServlet {
     
@@ -14,13 +15,15 @@ public abstract class ResponseSplittingServlet extends HttpServlet {
         resp.setHeader("header", req.getParameter("h1"));
         resp.addHeader("header", unknown());
         callCookieSink(req.getParameter("h2"));
+        String encoded = ESAPI.encoder().encodeForURL(req.getParameter("h3"));
+        resp.addHeader("header", ESAPI.encoder().encodeFromURL(encoded));
         
         // false positives
         String safe = "x".concat("y");
         Cookie safeCookie = new Cookie("name", safe);
         safeCookie.setValue(safe + "x");
         resp.setHeader("header", safe);
-        resp.addHeader("header", safe);
+        resp.addHeader("header", encoded.concat(safe));
     }
     
     private void cookieSink(String param) {

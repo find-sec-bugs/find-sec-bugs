@@ -18,12 +18,23 @@
 package com.h3xstream.findsecbugs.injection.ldap;
 
 import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
+import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import edu.umd.cs.findbugs.BugReporter;
+import edu.umd.cs.findbugs.Priorities;
 
 public class LdapInjectionDetector extends BasicInjectionDetector {
 
     public LdapInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
         loadConfiguredSinks("ldap.txt", "LDAP_INJECTION");
+    }
+    
+    @Override
+    protected int getPriority(Taint taint) {
+        if (!taint.isSafe() && taint.hasTag(Taint.Tag.LDAP_INJECTION_SAFE)) {
+            return Priorities.IGNORE_PRIORITY;
+        } else {
+            return super.getPriority(taint);
+        }
     }
 }

@@ -14,6 +14,8 @@ java/util/Collection.toArray([Ljava/lang/Object;)[Ljava/lang/Object;:1
 java/util/Iterator.next()Ljava/lang/Object;:0
 
 
+-- Lists, queues etc.
+
 java/util/List.add(ILjava/lang/Object;)V:0,2#2
 java/util/List.addAll(ILjava/util/Collection;)Z:0,2#2
 java/util/List.get(I)Ljava/lang/Object;:1
@@ -110,9 +112,13 @@ java/util/Stack.push(Ljava/lang/Object;)Ljava/lang/Object;:0,1#1
 java/util/Stack.search(Ljava/lang/Object;)I:UNKNOWN
 
 
+java/util/Enumeration.nextElement()Ljava/lang/Object;:0
+
+
 java/util/Arrays.asList([Ljava/lang/Object;)Ljava/util/List;:0
 
 
+-- Sets
 - Set interface adds no new methods
 
 java/util/HashSet.<init>()V:SAFE
@@ -160,6 +166,8 @@ java/util/concurrent/ConcurrentSkipListSet.<init>(Ljava/util/SortedSet;)V:0#1,2
 java/util/concurrent/CopyOnWriteArraySet.<init>()V:SAFE
 java/util/concurrent/CopyOnWriteArraySet.<init>(Ljava/util/Collection;)V:0#1,2
 
+
+-- Maps
 
 java/util/Map.clear()V:SAFE#0
 java/util/Map.compute(Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;:0,1,2#2
@@ -239,6 +247,8 @@ java/util/Properties.propertyNames()Ljava/util/Enumeration;:0
 java/util/Properties.setProperty(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;:0,1,2#2
 java/util/Properties.stringPropertyNames()Ljava/util/Set;:0
 
+
+-- Utility class Collections
 
 java/util/Collections.addAll(Ljava/util/Collection;[Ljava/lang/Object;)Z:0,1#1
 java/util/Collections.asLifoQueue(Ljava/util/Deque;)Ljava/util/Queue;:0

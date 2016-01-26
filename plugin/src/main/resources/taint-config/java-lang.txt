@@ -9,10 +9,14 @@ java/lang/Object.toString()Ljava/lang/String;:0
 java/lang/Iterable.forEach(Ljava/util/function/Consumer;)V:0,1#1
 java/lang/Iterable.iterator()Ljava/util/Iterator;:0
 
-
+- usually safe for web applications
+java/lang/System.clearProperty(Ljava/lang/String;)Ljava/lang/String;:SAFE
+java/lang/System.getenv()Ljava/util/Map;:SAFE
 java/lang/System.getenv(Ljava/lang/String;)Ljava/lang/String;:SAFE
 java/lang/System.getProperty(Ljava/lang/String;)Ljava/lang/String;:SAFE
 java/lang/System.getProperty(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:SAFE
+java/lang/System.lineSeparator()Ljava/lang/String;:SAFE
+java/lang/System.setProperty(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:SAFE
 
 
 java/lang/Appendable.append(Ljava/lang/CharSequence;)Ljava/lang/Appendable;:0,1#1
@@ -46,7 +50,6 @@ java/lang/StringBuilder.insert(ID)Ljava/lang/StringBuilder;:3
 java/lang/StringBuilder.insert(IF)Ljava/lang/StringBuilder;:2
 java/lang/StringBuilder.insert(II)Ljava/lang/StringBuilder;:2
 java/lang/StringBuilder.insert(IJ)Ljava/lang/StringBuilder;:3
-java/lang/StringBuilder.insert(ILjava/lang/Object;)Ljava/lang/StringBuffer;:0,2#2
 
 java/lang/StringBuilder.delete(II)Ljava/lang/StringBuilder;:2#2
 java/lang/StringBuilder.deleteCharAt(I)Ljava/lang/StringBuilder;:1#1
@@ -86,7 +89,6 @@ java/lang/StringBuffer.insert(ID)Ljava/lang/StringBuffer;:3
 java/lang/StringBuffer.insert(IF)Ljava/lang/StringBuffer;:2
 java/lang/StringBuffer.insert(II)Ljava/lang/StringBuffer;:2
 java/lang/StringBuffer.insert(IJ)Ljava/lang/StringBuffer;:3
-java/lang/StringBuffer.insert(ILjava/lang/Object;)Ljava/lang/StringBuffer;:0,2#2
 
 java/lang/StringBuffer.delete(II)Ljava/lang/StringBuffer;:2#2
 java/lang/StringBuffer.deleteCharAt(I)Ljava/lang/StringBuffer;:1#1
@@ -129,7 +131,7 @@ java/lang/String.valueOf(D)Ljava/lang/String;:SAFE
 java/lang/String.valueOf(F)Ljava/lang/String;:SAFE
 java/lang/String.valueOf(I)Ljava/lang/String;:SAFE
 java/lang/String.valueOf(J)Ljava/lang/String;:SAFE
-java/lang/String.valueOf(Ljava/lang/Object)Ljava/lang/String;:0
+java/lang/String.valueOf(Ljava/lang/Object;)Ljava/lang/String;:0
 
 
 java/lang/CharSequence.subSequence(II)Ljava/lang/CharSequence;:2
@@ -169,6 +171,11 @@ java/math/BigDecimal.toString()Ljava/lang/String;:SAFE
 java/lang/reflect/Type.getTypeName()Ljava/lang/String;:SAFE
 java/lang/Class.getCanonicalName()Ljava/lang/String;:SAFE
 java/lang/Class.getName()Ljava/lang/String;:SAFE
+java/lang/Class.getResource(Ljava/lang/String;)Ljava/net/URL;:SAFE
+java/lang/ClassLoader.getResource(Ljava/lang/String;)Ljava/net/URL;:SAFE
+java/lang/ClassLoader.getResources(Ljava/lang/String;)Ljava/util/Enumeration;:SAFE
+java/lang/ClassLoader.getSystemResource(Ljava/lang/String;)Ljava/net/URL;:SAFE
+java/lang/ClassLoader.getSystemResources(Ljava/lang/String;)Ljava/util/Enumeration;:SAFE
 java/lang/Class.getSimpleName()Ljava/lang/String;:SAFE
 java/lang/Class.toGenericString()Ljava/lang/String;:SAFE
 java/lang/Class.toString()Ljava/lang/String;:SAFE

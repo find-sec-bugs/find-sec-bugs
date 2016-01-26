@@ -7,7 +7,7 @@ java/net/URLDecoder.decode(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Strin
 org/owasp/esapi/Encoder.canonicalize(Ljava/lang/String;)Ljava/lang/String;:0
 org/owasp/esapi/Encoder.canonicalize(Ljava/lang/String;Z)Ljava/lang/String;:1
 org/owasp/esapi/Encoder.canonicalize(Ljava/lang/String;ZZ)Ljava/lang/String;:2
-org/owasp/esapi/Encoder.encodeForBase64([BZ):SAFE
+org/owasp/esapi/Encoder.encodeForBase64([BZ)Ljava/lang/String;:SAFE
 org/owasp/esapi/Encoder.encodeForCSS(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE
 org/owasp/esapi/Encoder.encodeForDN(Ljava/lang/String;)Ljava/lang/String;:0|+LDAP_INJECTION_SAFE
 org/owasp/esapi/Encoder.encodeForHTML(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE,+CRLF_ENCODED

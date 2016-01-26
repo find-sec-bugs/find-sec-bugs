@@ -22,6 +22,8 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Map of taint summaries for all known methods
@@ -39,7 +41,19 @@ import java.util.TreeSet;
  * @author David Formanek (Y Soft Corporation, a.s.)
  */
 public class TaintMethodSummaryMap extends HashMap<String, TaintMethodSummary> {
+    
     private static final long serialVersionUID = 1L;
+    private static final Pattern fullMethodPattern;
+    
+    static {
+        String classWithPackageRegex = "([a-z][a-z0-9]*\\/)*[A-Z][a-zA-Z0-9\\$]*";
+        String typeRegex = "(\\[)*((L" + classWithPackageRegex + ";)|B|C|D|F|I|J|S|Z)";
+        String returnRegex = "(V|(" + typeRegex + "))";
+        String methodRegex = "(([a-zA-Z][a-zA-Z0-9]*)|(<init>))";
+        String signatureRegex = "\\((" + typeRegex + ")*\\)" + returnRegex;
+        String fullMathodNameRegex = classWithPackageRegex + "\\." + methodRegex + signatureRegex;
+        fullMethodPattern = Pattern.compile(fullMathodNameRegex);
+    }
 
     public void dump(PrintStream output) {
         TreeSet<String> keys = new TreeSet<String>(keySet());
@@ -52,6 +66,12 @@ public class TaintMethodSummaryMap extends HashMap<String, TaintMethodSummary> {
         new TaintMethodSummaryMapLoader().load(input, new TaintMethodSummaryMapLoader.TaintMethodSummaryReceiver() {
             @Override
             public void receiveTaintMethodSummary(String fullMethod, TaintMethodSummary taintMethodSummary) {
+                if (!fullMethodPattern.matcher(fullMethod).matches()) {
+                    throw new IllegalArgumentException("Invalid full method name " + fullMethod + " configured");
+                }
+                if (containsKey(fullMethod)) {
+                    throw new IllegalStateException("Summary for " + fullMethod + " already loaded");
+                }
                 put(fullMethod, taintMethodSummary);
             }
         });

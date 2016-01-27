@@ -53,7 +53,9 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
     };
     private static final String SAFE_ENCODERS_PATH = "safe-encoders/";
     private static final String[] SAFE_ENCODERS_FILENAMES = {
-        "xss-encoders.txt"
+        "owasp.txt",
+        "apache-commons.txt",
+        "other.txt"
     };
 
     private final TaintMethodSummaryMap methodSummaries = new TaintMethodSummaryMap();

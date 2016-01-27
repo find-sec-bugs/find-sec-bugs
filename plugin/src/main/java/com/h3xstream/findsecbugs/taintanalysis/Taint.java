@@ -77,7 +77,12 @@ public class Taint {
     }
 
     public enum Tag {
-        XSS_SAFE
+        XSS_SAFE,
+        SQL_INJECTION_SAFE,
+        COMMAND_INJECTION_SAFE,
+        LDAP_INJECTION_SAFE,
+        XPATH_INJECTION_SAFE,
+        CRLF_ENCODED
     }
     
     private State state;
@@ -88,7 +93,8 @@ public class Taint {
     private final Set<Integer> parameters;
     private State nonParametricState;
     private ObjectType realInstanceClass;
-    private EnumSet<Tag> tags;
+    private final Set<Tag> tags;
+    private final Set<Tag> tagsToRemove;
     private String debugInfo = null;
 
     public Taint(State state) {
@@ -104,6 +110,7 @@ public class Taint {
         this.nonParametricState = State.INVALID;
         this.realInstanceClass = null;
         this.tags = EnumSet.noneOf(Tag.class);
+        this.tagsToRemove = EnumSet.noneOf(Tag.class);
         if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             this.debugInfo = "?";
         }
@@ -120,6 +127,7 @@ public class Taint {
         this.nonParametricState = taint.nonParametricState;
         this.realInstanceClass = taint.realInstanceClass;
         this.tags = EnumSet.copyOf(taint.tags);
+        this.tagsToRemove = EnumSet.copyOf(taint.tagsToRemove);
         if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             this.debugInfo = taint.debugInfo;
         }
@@ -233,7 +241,7 @@ public class Taint {
         return ClassName.toSlashedClassName(realInstanceClass.getClassName());
     }
 
-    public boolean addTag(Tag tag) {
+    boolean addTag(Tag tag) {
         return tags.add(tag);
     }
     
@@ -241,12 +249,25 @@ public class Taint {
         return tags.contains(tag);
     }
     
-    public boolean hasTags() {
+    boolean hasTags() {
         return !tags.isEmpty();
     }
     
-    public boolean removeTag(Tag tag) {
+    Set<Tag> getTags() {
+        return Collections.unmodifiableSet(tags);
+    }
+    
+    boolean removeTag(Tag tag) {
+        tagsToRemove.add(tag);
         return tags.remove(tag);
+    }
+    
+    boolean isRemovingTags() {
+        return !tagsToRemove.isEmpty();
+    }
+    
+    Set<Tag> getTagsToRemove() {
+        return Collections.unmodifiableSet(tagsToRemove);
     }
     
     public static Taint valueOf(String stateName) {
@@ -330,6 +351,8 @@ public class Taint {
             result.tags.addAll(a.tags);
             result.tags.retainAll(b.tags);
         }
+        result.tagsToRemove.addAll(a.tagsToRemove);
+        result.tagsToRemove.addAll(b.tagsToRemove);
     }
 
     @Override

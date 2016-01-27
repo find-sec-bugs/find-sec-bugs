@@ -1,13 +1,20 @@
 java/io/BufferedReader.readLine()Ljava/lang/String;:TAINTED
 
+java/io/Console.readLine()Ljava/lang/String;:TAINTED
+java/io/Console.readLine(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;:TAINTED
+
+java/io/DataInputStream.readLine()Ljava/lang/String;:TAINTED
+java/io/DataInputStream.readUTF()Ljava/lang/String;:TAINTED
+java/io/DataInputStream.readUTF(Ljava/io/DataInput;)Ljava/lang/String;:TAINTED
+
+java/io/LineNumberReader.readLine()Ljava/lang/String;:TAINTED
+
 
 java/sql/ResultSet.getNString(I)Ljava/lang/String;:TAINTED
 java/sql/ResultSet.getNString(Ljava/lang/String;)Ljava/lang/String;:TAINTED
 java/sql/ResultSet.getString(I)Ljava/lang/String;:TAINTED
 java/sql/ResultSet.getString(Ljava/lang/String;)Ljava/lang/String;:TAINTED
 
-
-java/util/Enumeration.nextElement()Ljava/lang/Object;:0
 
 java/util/StringTokenizer.<init>(Ljava/lang/String;)V:0#1,2
 java/util/StringTokenizer.<init>(Ljava/lang/String;Ljava/lang/String;)V:1#2,3
@@ -195,3 +202,6 @@ flexjson/JSONSerializer.serialize(Ljava/lang/Object;Lflexjson/SerializationType;
 flexjson/JSONSerializer.serialize(Ljava/lang/Object;Ljava/lang/StringBuffer;)Ljava/lang/String;:1
 flexjson/JSONSerializer.serialize(Ljava/lang/Object;Ljava/lang/StringBuilder;)Ljava/lang/String;:1
 
+
+java/awt/TextComponent.getSelectedText()Ljava/lang/String;:TAINTED
+java/awt/TextComponent.getText()Ljava/lang/String;:TAINTED

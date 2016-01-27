@@ -26,5 +26,15 @@ public class XssServlet3 extends HttpServlet {
         pw.write(encoded.toLowerCase() + SAFE_VALUE);
         pw.write(StringEscapeUtils.escapeHtml(input1));
         pw.write(ESAPI.encoder().decodeForHTML(encoded) + SAFE_VALUE);
+        pw.write(myEncode(input1));
+        pw.write(myDecode(encoded));
+    }
+    
+    public String myEncode(String str) {
+        return ESAPI.encoder().encodeForHTML(str + "safe") + "safe";
+    }
+    
+    public String myDecode(String str) {
+        return ESAPI.encoder().decodeForHTML(str + "safe") + "safe";
     }
 }

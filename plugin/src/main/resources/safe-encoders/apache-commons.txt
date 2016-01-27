@@ -1,0 +1,35 @@
+--Apache Commons Lang 2
+org/apache/commons/lang/StringEscapeUtils.escapeCsv(Ljava/lang/String;)Ljava/lang/String;:0
+org/apache/commons/lang/StringEscapeUtils.unescapeCsv(Ljava/lang/String;)Ljava/lang/String;:0
+org/apache/commons/lang/StringEscapeUtils.escapeHtml(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE
+org/apache/commons/lang/StringEscapeUtils.unescapeHtml(Ljava/lang/String;)Ljava/lang/String;:0|-XSS_SAFE
+org/apache/commons/lang/StringEscapeUtils.escapeJava(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE
+org/apache/commons/lang/StringEscapeUtils.unescapeJava(Ljava/lang/String;)Ljava/lang/String;:0|-XSS_SAFE
+org/apache/commons/lang/StringEscapeUtils.escapeJavaScript(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE
+org/apache/commons/lang/StringEscapeUtils.unescapeJavaScript(Ljava/lang/String;)Ljava/lang/String;:0|-XSS_SAFE
+org/apache/commons/lang/StringEscapeUtils.escapeSql(Ljava/lang/String;)Ljava/lang/String;:0|+SQL_INJECTION_SAFE
+org/apache/commons/lang/StringEscapeUtils.escapeXml(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE,+XPATH_INJECTION_SAFE
+org/apache/commons/lang/StringEscapeUtils.unescapeXml(Ljava/lang/String;)Ljava/lang/String;:0|-XSS_SAFE,-XPATH_INJECTION_SAFE
+
+--Apache Commons Lang 3
+org/apache/commons/lang3/StringEscapeUtils.escapeCsv(Ljava/lang/String;)Ljava/lang/String;:0
+org/apache/commons/lang3/StringEscapeUtils.unescapeCsv(Ljava/lang/String;)Ljava/lang/String;:0
+org/apache/commons/lang3/StringEscapeUtils.escapeEcmaScript(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE
+org/apache/commons/lang3/StringEscapeUtils.unescapeEcmaScript(Ljava/lang/String;)Ljava/lang/String;:0|-XSS_SAFE
+org/apache/commons/lang3/StringEscapeUtils.escapeHtml3(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE
+org/apache/commons/lang3/StringEscapeUtils.unescapeHtml3(Ljava/lang/String;)Ljava/lang/String;:0|-XSS_SAFE
+org/apache/commons/lang3/StringEscapeUtils.escapeHtml4(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE
+org/apache/commons/lang3/StringEscapeUtils.unescapeHtml4(Ljava/lang/String;)Ljava/lang/String;:0|-XSS_SAFE
+org/apache/commons/lang3/StringEscapeUtils.escapeJava(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE
+org/apache/commons/lang3/StringEscapeUtils.unescapeJava(Ljava/lang/String;)Ljava/lang/String;:0|-XSS_SAFE
+org/apache/commons/lang3/StringEscapeUtils.escapeJson(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE
+org/apache/commons/lang3/StringEscapeUtils.unescapeJson(Ljava/lang/String;)Ljava/lang/String;:0|-XSS_SAFE
+org/apache/commons/lang3/StringEscapeUtils.escapeXml(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE,+XPATH_INJECTION_SAFE
+org/apache/commons/lang3/StringEscapeUtils.unescapeXml(Ljava/lang/String;)Ljava/lang/String;:0|-XSS_SAFE,-XPATH_INJECTION_SAFE
+org/apache/commons/lang3/StringEscapeUtils.escapeXml10(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE,+XPATH_INJECTION_SAFE
+org/apache/commons/lang3/StringEscapeUtils.escapeXml11(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE,+XPATH_INJECTION_SAFE
+
+
+org/apache/commons/io/FilenameUtils.getName(Ljava/lang/String;)Ljava/lang/String;:SAFE
+org/apache/commons/io/FilenameUtils.getExtension(Ljava/lang/String;)Ljava/lang/String;:SAFE
+org/apache/commons/io/FilenameUtils.getBaseName(Ljava/lang/String;)Ljava/lang/String;:SAFE

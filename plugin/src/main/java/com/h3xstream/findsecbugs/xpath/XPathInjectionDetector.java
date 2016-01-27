@@ -18,7 +18,9 @@
 package com.h3xstream.findsecbugs.xpath;
 
 import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
+import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import edu.umd.cs.findbugs.BugReporter;
+import edu.umd.cs.findbugs.Priorities;
 
 /**
  * Detector for XPath injection
@@ -39,4 +41,12 @@ public class XPathInjectionDetector extends BasicInjectionDetector {
         // TODO add org.xmldb.api.modules
     }
 
+    @Override
+    protected int getPriority(Taint taint) {
+        if (!taint.isSafe() && taint.hasTag(Taint.Tag.XPATH_INJECTION_SAFE)) {
+            return Priorities.IGNORE_PRIORITY;
+        } else {
+            return super.getPriority(taint);
+        }
+    }
 }

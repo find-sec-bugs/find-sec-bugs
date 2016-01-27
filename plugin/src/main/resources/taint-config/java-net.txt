@@ -48,10 +48,3 @@ java/net/URL.sameFile(Ljava/net/URL;)Z:UNKNOWN
 java/net/URL.toExternalForm()Ljava/lang/String;:0
 java/net/URL.toString()Ljava/lang/String;:0
 java/net/URL.toURI()Ljava/net/URI;:0
-
-
-java/net/URLEncoder.encode(Ljava/lang/String;)Ljava/lang/String;:0
-java/net/URLEncoder.encode(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:1
-
-java/net/URLDecoder.decode(Ljava/lang/String;)Ljava/lang/String;:0
-java/net/URLDecoder.decode(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:1

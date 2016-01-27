@@ -38,12 +38,8 @@ public class XssServletDetector extends BasicInjectionDetector {
     protected int getPriority(Taint taint) {
         if (!taint.isSafe() && taint.hasTag(Taint.Tag.XSS_SAFE)) {
             return Priorities.LOW_PRIORITY;
-        } else if (taint.isTainted()) {
-            return Priorities.HIGH_PRIORITY;
-        } else if (!taint.isSafe()) {
-            return Priorities.NORMAL_PRIORITY;
         } else {
-            return Priorities.IGNORE_PRIORITY;
+            return super.getPriority(taint);
         }
     }
     

@@ -1,6 +1,5 @@
 package testcode.command;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,6 +10,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import javax.servlet.http.HttpServletRequest;
 public abstract class CommandInjection {
     public static HttpServletRequest req; //Could be override at any time. (tainted)
     public static void main(String[] args) throws IOException {
@@ -241,10 +241,10 @@ public abstract class CommandInjection {
         set.add(sb.append("x").append("y").toString().toLowerCase());
         for (String str : set) {
             if (str.equals(y.toLowerCase())) {
-                return str;
+                return str + String.join("-", set) + String.join("a", "b", "c");
             }
         }
-        return new StringBuilder(y).toString().trim() + "a".concat("aaa");
+        return new StringBuilder(String.format("%s", y)).toString().trim() + "a".concat("aaa");
     }
 
     public void call() throws IOException {

@@ -19,6 +19,7 @@ package com.h3xstream.findsecbugs.xss;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
+import java.util.Arrays;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
@@ -92,33 +93,23 @@ public class XssServletDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        verify(reporter).doReportBug(
+        for (Integer line : Arrays.asList(24, 28, 30)) {
+            verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("XSS_SERVLET")
-                        .inClass("XssServlet3").inMethod("writeWithEncoders").withPriority("High").atLine(24)
+                        .inClass("XssServlet3").inMethod("writeWithEncoders").withPriority("High").atLine(line)
                         .build()
-        );
-        verify(reporter).doReportBug(
+            );
+        }
+        for (Integer line : Arrays.asList(26, 27, 29)) {
+            verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("XSS_SERVLET")
-                        .inClass("XssServlet3").inMethod("writeWithEncoders").withPriority("High").atLine(28)
+                        .inClass("XssServlet3").inMethod("writeWithEncoders").withPriority("Low").atLine(line)
                         .build()
-        );
-
-        verify(reporter).doReportBug(
-                bugDefinition()
-                        .bugType("XSS_SERVLET")
-                        .inClass("XssServlet3").inMethod("writeWithEncoders").withPriority("Low").atLine(26)
-                        .build()
-        );
-        verify(reporter).doReportBug(
-                bugDefinition()
-                        .bugType("XSS_SERVLET")
-                        .inClass("XssServlet3").inMethod("writeWithEncoders").withPriority("Low").atLine(27)
-                        .build()
-        );
-        
-        verify(reporter, times(4)).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
+            );
+        }
+        verify(reporter, times(6)).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
     }
 
 

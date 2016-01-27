@@ -447,22 +447,24 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         Taint taint = methodSummary.getOutputTaint();
         assert taint != null;
         assert taint != methodSummary.getOutputTaint() : "defensive copy not made";
+        Taint taintCopy = new Taint(taint); 
         if (taint.isUnknown() && taint.hasParameters()) {
             Taint merge = mergeTransferParameters(taint.getParameters());
             assert merge != null;
+            // merge removes tags so we made a taint copy before
             taint = Taint.merge(Taint.valueOf(taint.getNonParametricState()), merge);
         }
         if (taint.isTainted()) {
             taint.addLocation(getTaintLocation(), true);
         }
         // don't add tags to safe values
-        if (!taint.isSafe() && methodSummary.hasAddingTags()) {
-            for (Taint.Tag tag : methodSummary.getAddingTags()) {
+        if (!taint.isSafe() && taintCopy.hasTags()) {
+            for (Taint.Tag tag : taintCopy.getTags()) {
                 taint.addTag(tag);
             }
         }
-        if (methodSummary.hasRemovingTags()) {
-            for (Taint.Tag tag : methodSummary.getRemovingTags()) {
+        if (taintCopy.isRemovingTags()) {
+            for (Taint.Tag tag : taintCopy.getTagsToRemove()) {
                 taint.removeTag(tag);
             }
         }

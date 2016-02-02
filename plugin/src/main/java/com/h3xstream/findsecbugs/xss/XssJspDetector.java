@@ -42,7 +42,11 @@ public class XssJspDetector extends BasicInjectionDetector {
     protected int getPriority(Taint taint) {
         if (!taint.isSafe() && taint.hasTag(Taint.Tag.XSS_SAFE)) {
             return Priorities.LOW_PRIORITY;
-        }  else {
+        } else if (!taint.isSafe()
+                && (taint.hasTag(Taint.Tag.QUOTE_ENCODED) || taint.hasTag(Taint.Tag.APOSTROPHE_ENCODED))
+                && taint.hasTag(Taint.Tag.LT_ENCODED)) {
+            return Priorities.LOW_PRIORITY;
+        } else {
             return super.getPriority(taint);
         }
     }

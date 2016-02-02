@@ -26,7 +26,6 @@ import edu.umd.cs.findbugs.ba.ClassContext;
 
 public class XssServletDetector extends BasicInjectionDetector {
 
-    //private static final String XSS_JSP_PRINT_TYPE = "XSS_JSP_PRINT";
     private static final String XSS_SERVLET_TYPE = "XSS_SERVLET";
 
     public XssServletDetector(BugReporter bugReporter) {
@@ -34,9 +33,13 @@ public class XssServletDetector extends BasicInjectionDetector {
         loadConfiguredSinks("xss-servlet.txt", XSS_SERVLET_TYPE);
     }
 
-    @Override
+     @Override
     protected int getPriority(Taint taint) {
         if (!taint.isSafe() && taint.hasTag(Taint.Tag.XSS_SAFE)) {
+            return Priorities.LOW_PRIORITY;
+        } else if (!taint.isSafe()
+                && (taint.hasTag(Taint.Tag.QUOTE_ENCODED) || taint.hasTag(Taint.Tag.APOSTROPHE_ENCODED))
+                && taint.hasTag(Taint.Tag.LT_ENCODED)) {
             return Priorities.LOW_PRIORITY;
         } else {
             return super.getPriority(taint);

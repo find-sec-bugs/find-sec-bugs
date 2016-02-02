@@ -31,7 +31,7 @@ import java.util.Set;
 public class TaintMethodSummary {
 
     private Taint outputTaint = null;
-    private final Set<Integer> mutableStackIndices = new HashSet<Integer>();
+    private final Set<Integer> mutableStackIndices;
     private final boolean isConfigured;
     public static final TaintMethodSummary SAFE_SUMMARY;
 
@@ -41,9 +41,16 @@ public class TaintMethodSummary {
     }
 
     public TaintMethodSummary(boolean isConfigured) {
+        outputTaint = null;
+        mutableStackIndices = new HashSet<Integer>();
         this.isConfigured = isConfigured;
     }
 
+    public TaintMethodSummary(TaintMethodSummary summary) {
+        this.mutableStackIndices = summary.mutableStackIndices;
+        this.isConfigured = summary.isConfigured;
+    }
+    
     public Collection<Integer> getMutableStackIndeces() {
         if (!hasMutableStackIndeces()) {
             throw new IllegalStateException("stack indeces not set");

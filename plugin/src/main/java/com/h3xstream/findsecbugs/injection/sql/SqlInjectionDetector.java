@@ -38,6 +38,8 @@ public class SqlInjectionDetector extends BasicInjectionDetector {
     protected int getPriority(Taint taint) {
         if (!taint.isSafe() && taint.hasTag(Taint.Tag.SQL_INJECTION_SAFE)) {
             return Priorities.IGNORE_PRIORITY;
+        } else if (!taint.isSafe() && taint.hasTag(Taint.Tag.APOSTROPHE_ENCODED)) {
+            return Priorities.LOW_PRIORITY;
         } else {
             return super.getPriority(taint);
         }

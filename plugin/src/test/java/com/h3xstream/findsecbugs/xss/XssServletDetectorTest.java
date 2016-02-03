@@ -101,7 +101,7 @@ public class XssServletDetectorTest extends BaseDetectorTest {
                         .build()
             );
         }
-        for (Integer line : Arrays.asList(26, 27, 29)) {
+        for (Integer line : Arrays.asList(26, 27, 29, 31)) {
             verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("XSS_SERVLET")
@@ -109,7 +109,7 @@ public class XssServletDetectorTest extends BaseDetectorTest {
                         .build()
             );
         }
-        verify(reporter, times(6)).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
+        verify(reporter, times(7)).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
     }
 
 

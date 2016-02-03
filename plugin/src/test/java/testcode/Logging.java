@@ -44,8 +44,8 @@ public class Logging {
         logger.logrb(Level.INFO, tainted, "safe", "bundle", safe, new String[]{safe});
         logger.logrb(Level.INFO, safe, safe, "bundle", tainted, new Exception());
         logger.severe(tainted + "safe" + safe);
-        logger.throwing("safe", tainted, new Exception());
-        logger.warning(tainted);
+        logger.throwing("safe", tainted.replace('\r', ' '), new Exception()); // still insecure (LF not replaced)
+        logger.warning(tainted.replaceAll("\n", "")); // still insecure (CR not replaced)
 
         // these should not be reported
         logger.fine(safe);
@@ -53,6 +53,11 @@ public class Logging {
         logger.logp(Level.INFO, safe, safe, safe, new String[]{safe});
         logger.logrb(Level.INFO, safe, safe, tainted + "bundle", safe); // bundle name can be tainted
         logger.throwing(safe, safe, new Exception());
+        logger.info(tainted.replace('\n', ' ').replace('\r', ' '));
+        String encoded = tainted.replace("\r", "").toUpperCase();
+        encoded = "safe" + encoded.toLowerCase();
+        logger.warning(encoded.replace("\n", " (new line)"));
+        logger.fine(tainted.replaceAll("[\r\n]+", ""));
     }
 
 }

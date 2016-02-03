@@ -82,7 +82,11 @@ public class Taint {
         COMMAND_INJECTION_SAFE,
         LDAP_INJECTION_SAFE,
         XPATH_INJECTION_SAFE,
-        CRLF_ENCODED
+        CR_ENCODED,
+        LF_ENCODED,
+        QUOTE_ENCODED,
+        APOSTROPHE_ENCODED,
+        LT_ENCODED
     }
     
     private State state;
@@ -95,6 +99,7 @@ public class Taint {
     private ObjectType realInstanceClass;
     private final Set<Tag> tags;
     private final Set<Tag> tagsToRemove;
+    private String constantValue;
     private String debugInfo = null;
 
     public Taint(State state) {
@@ -111,6 +116,7 @@ public class Taint {
         this.realInstanceClass = null;
         this.tags = EnumSet.noneOf(Tag.class);
         this.tagsToRemove = EnumSet.noneOf(Tag.class);
+        this.constantValue = null;
         if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             this.debugInfo = "?";
         }
@@ -128,6 +134,7 @@ public class Taint {
         this.realInstanceClass = taint.realInstanceClass;
         this.tags = EnumSet.copyOf(taint.tags);
         this.tagsToRemove = EnumSet.copyOf(taint.tagsToRemove);
+        this.constantValue = taint.constantValue;
         if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             this.debugInfo = taint.debugInfo;
         }
@@ -270,6 +277,14 @@ public class Taint {
         return Collections.unmodifiableSet(tagsToRemove);
     }
     
+    public String getConstantValue() {
+        return constantValue;
+    }
+    
+    void setConstantValue(String value) {
+        this.constantValue = value;
+    }
+    
     public static Taint valueOf(String stateName) {
         // exceptions thrown from Enum.valueOf
         return valueOf(State.valueOf(stateName));
@@ -305,6 +320,9 @@ public class Taint {
         mergeParameters(a, b, result);
         mergeRealInstanceClass(a, b, result);
         mergeTags(a, b, result);
+        if (a.constantValue != null && a.constantValue.equals(b.constantValue)) {
+            result.constantValue = a.constantValue;
+        }
         if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             result.setDebugInfo("[" + a.getDebugInfo() + "]+[" + b.getDebugInfo() + "]");
         }
@@ -374,13 +392,14 @@ public class Taint {
                 && this.parameters.equals(other.parameters)
                 && this.nonParametricState == other.nonParametricState
                 && Objects.equals(this.realInstanceClass, other.realInstanceClass)
-                && this.tags.equals(other.tags);
+                && this.tags.equals(other.tags)
+                && Objects.equals(this.constantValue, other.constantValue);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(state, variableIndex, taintLocations, unknownLocations,
-                parameters, nonParametricState, realInstanceClass, tags);
+                parameters, nonParametricState, realInstanceClass, tags, constantValue);
     }
 
     public String getDebugInfo() {

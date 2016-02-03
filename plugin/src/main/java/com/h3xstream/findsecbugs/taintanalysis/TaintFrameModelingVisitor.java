@@ -28,8 +28,10 @@ import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 import edu.umd.cs.findbugs.util.ClassName;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import org.apache.bcel.Constants;
 import org.apache.bcel.Repository;
@@ -39,6 +41,7 @@ import org.apache.bcel.generic.AASTORE;
 import org.apache.bcel.generic.ACONST_NULL;
 import org.apache.bcel.generic.ANEWARRAY;
 import org.apache.bcel.generic.ARETURN;
+import org.apache.bcel.generic.BIPUSH;
 import org.apache.bcel.generic.CHECKCAST;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.GETFIELD;
@@ -54,6 +57,7 @@ import org.apache.bcel.generic.LDC2_W;
 import org.apache.bcel.generic.LoadInstruction;
 import org.apache.bcel.generic.NEW;
 import org.apache.bcel.generic.ObjectType;
+import org.apache.bcel.generic.SIPUSH;
 import org.apache.bcel.generic.StoreInstruction;
 
 /**
@@ -65,6 +69,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     private static final Set<String> SAFE_OBJECT_TYPES;
     private static final Set<String> IMMUTABLE_OBJECT_TYPES;
+    private static final Map<String, Taint.Tag> REPLACE_TAGS;
     private final MethodDescriptor methodDescriptor;
     private final TaintMethodSummaryMap methodSummaries;
     private final TaintMethodSummary analyzedMethodSummary;
@@ -93,6 +98,13 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         IMMUTABLE_OBJECT_TYPES.add("Ljava/net/InetSocketAddress;");
         IMMUTABLE_OBJECT_TYPES.add("Ljava/net/URI;");
         IMMUTABLE_OBJECT_TYPES.add("Ljava/net/URL;");
+        
+        REPLACE_TAGS = new HashMap<String, Taint.Tag>();
+        REPLACE_TAGS.put("\r", Taint.Tag.CR_ENCODED);
+        REPLACE_TAGS.put("\n", Taint.Tag.LF_ENCODED);
+        REPLACE_TAGS.put("\"", Taint.Tag.QUOTE_ENCODED);
+        REPLACE_TAGS.put("'", Taint.Tag.APOSTROPHE_ENCODED);
+        REPLACE_TAGS.put("<", Taint.Tag.LT_ENCODED);
     }
 
     public TaintFrameModelingVisitor(ConstantPoolGen cpg, MethodDescriptor method,
@@ -155,16 +167,19 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     @Override
     public void visitLDC(LDC ldc) {
-        if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
-            Object value = ldc.getValue(cpg);
-            if (value instanceof String) {
-                pushSafeDebug("\"" + value + "\"");
-            } else {
-                pushSafeDebug("LDC " + ldc.getType(cpg).getSignature());
-            }
-        } else {
-            pushSafe();
+        Taint taint = new Taint(Taint.State.SAFE);
+        Object value = ldc.getValue(cpg);
+        if (value instanceof String) {
+            taint.setConstantValue((String) value);
         }
+        if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
+            if (value instanceof String) {
+                taint.setDebugInfo("\"" + value + "\"");
+            } else {
+                taint.setDebugInfo("LDC " + ldc.getType(cpg).getSignature());
+            }
+        }
+        getFrame().pushValue(taint);
     }
 
     @Override
@@ -180,6 +195,22 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     }
 
     @Override
+    public void visitBIPUSH(BIPUSH obj) {
+        Taint taint = new Taint(Taint.State.SAFE);
+        // assume each pushed byte is a char
+        taint.setConstantValue(String.valueOf((char) obj.getValue().byteValue()));
+        getFrame().pushValue(taint);
+    }
+    
+    @Override
+    public void visitSIPUSH(SIPUSH obj) {
+        Taint taint = new Taint(Taint.State.SAFE);
+        // assume each pushed short is a char (for non-ASCII characters)
+        taint.setConstantValue(String.valueOf((char) obj.getValue().shortValue()));
+        getFrame().pushValue(taint);
+    }
+    
+    @Override
     public void visitACONST_NULL(ACONST_NULL obj) {
         if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             getFrame().pushValue(new Taint(Taint.State.NULL).setDebugInfo("NULL"));
@@ -187,7 +218,6 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             getFrame().pushValue(new Taint(Taint.State.NULL));
         }
     }
-
 
     @Override
      public void visitICONST(ICONST obj) {
@@ -372,7 +402,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         String methodId = "." + methodName + signature;
         TaintMethodSummary summary = methodSummaries.get(className.concat(methodId));
         if (summary != null) {
-            return summary;
+            return getSummaryWithReplaceTags(summary, className, methodName);
         }
         summary = getSuperMethodSummary(className, methodId);
         if (summary != null) {
@@ -388,6 +418,38 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             }
         }
         return null;
+    }
+    
+    private TaintMethodSummary getSummaryWithReplaceTags(
+            TaintMethodSummary summary, String className, String methodName) {
+        if (!"java/lang/String".equals(className)) {
+            return summary;
+        }
+        boolean isRegex = "replaceAll".equals(methodName);
+        if (!isRegex && !"replace".equals(methodName)) {
+            // not a replace method
+            return summary;
+        }
+        try {
+            String toReplace = getFrame().getStackValue(1).getConstantValue();
+            if (toReplace == null) {
+                // we don't know the exact value
+                return summary;
+            }
+            Taint taint = summary.getOutputTaint();
+            for (Map.Entry<String, Taint.Tag> replaceTag : REPLACE_TAGS.entrySet()) {
+                String tagString = replaceTag.getKey();
+                if ((isRegex && toReplace.contains(tagString))
+                        || toReplace.equals(tagString)) {
+                    taint.addTag(replaceTag.getValue());
+                }
+            }
+            TaintMethodSummary summaryCopy = new TaintMethodSummary(summary);
+            summaryCopy.setOuputTaint(taint);
+            return summaryCopy;
+        } catch (DataflowAnalysisException ex) {
+            throw new InvalidBytecodeException(ex.getMessage(), ex);
+        }
     }
     
     private String getInstanceClassName(InvokeInstruction invoke) {

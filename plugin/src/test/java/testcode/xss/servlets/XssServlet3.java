@@ -28,6 +28,7 @@ public class XssServlet3 extends HttpServlet {
         pw.write(ESAPI.encoder().decodeForHTML(encoded) + SAFE_VALUE);
         pw.write(myEncode(input1));
         pw.write(myDecode(encoded));
+        pw.write(input1.replaceAll("[\"'<>&]", ""));
     }
     
     public String myEncode(String str) {

@@ -248,7 +248,7 @@ public class Taint {
         return ClassName.toSlashedClassName(realInstanceClass.getClassName());
     }
 
-    boolean addTag(Tag tag) {
+    public boolean addTag(Tag tag) {
         return tags.add(tag);
     }
     
@@ -256,24 +256,24 @@ public class Taint {
         return tags.contains(tag);
     }
     
-    boolean hasTags() {
+    public boolean hasTags() {
         return !tags.isEmpty();
     }
     
-    Set<Tag> getTags() {
+    public Set<Tag> getTags() {
         return Collections.unmodifiableSet(tags);
     }
     
-    boolean removeTag(Tag tag) {
+    public boolean removeTag(Tag tag) {
         tagsToRemove.add(tag);
         return tags.remove(tag);
     }
     
-    boolean isRemovingTags() {
+    public boolean isRemovingTags() {
         return !tagsToRemove.isEmpty();
     }
     
-    Set<Tag> getTagsToRemove() {
+    public Set<Tag> getTagsToRemove() {
         return Collections.unmodifiableSet(tagsToRemove);
     }
     
@@ -317,7 +317,9 @@ public class Taint {
         result.taintLocations.addAll(b.taintLocations);
         result.unknownLocations.addAll(a.unknownLocations);
         result.unknownLocations.addAll(b.unknownLocations);
-        mergeParameters(a, b, result);
+        if (!result.isTainted()) {
+           mergeParameters(a, b, result); 
+        }
         mergeRealInstanceClass(a, b, result);
         mergeTags(a, b, result);
         if (a.constantValue != null && a.constantValue.equals(b.constantValue)) {
@@ -326,6 +328,7 @@ public class Taint {
         if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             result.setDebugInfo("[" + a.getDebugInfo() + "]+[" + b.getDebugInfo() + "]");
         }
+        assert !result.hasParameters() || result.isUnknown();
         return result;
     }
 

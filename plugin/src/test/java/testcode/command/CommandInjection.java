@@ -166,6 +166,14 @@ public abstract class CommandInjection {
         Runtime.getRuntime().exec(new SubClass().safeParentparametricChild(unknown));
     }
     
+    public void sinkWithSafeInput(String str) throws IOException {
+        Runtime.getRuntime().exec(str);
+    }
+    
+    public void safeCall() throws IOException {
+        sinkWithSafeInput("safe");
+    }
+    
     private String transferThroughArray(String in) {
         String[] strings = new String[3];
         strings[0] = "safe1";

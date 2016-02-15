@@ -94,7 +94,7 @@ public class CustomInjectionSource implements InjectionSource {
         if (url == null && FindSecBugsGlobalConfig.getInstance().isPrintCustomInjectionWarning()) {
             LOG.info("The optional configuration for additional injection sources (" + resourceName + ") was not found. " +
                     "This message can be ignored if no custom API are intended to be configured. " +
-                    "For more info: http://h3xstream.github.io/find-sec-bugs/bugs.htm#CUSTOM_INJECTION");
+                    "For more info: http://find-sec-bugs.github.io/bugs.htm#CUSTOM_INJECTION");
         }
         return loadProperties(urls.toArray(new URL[urls.size()]), loadProperties(url, null));
     }

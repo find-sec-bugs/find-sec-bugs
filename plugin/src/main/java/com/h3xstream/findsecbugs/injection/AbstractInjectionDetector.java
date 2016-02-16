@@ -165,7 +165,7 @@ public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
                 sink.addLines(finalTaint.getLocations());
             }
         }
-    }
+            }
 
     private Set<MethodAndSink> getSinks(ConstantPoolGen cpg, InvokeInstruction invoke, TaintFrame frame) {
         String className = getInstanceClassName(cpg, invoke, frame);
@@ -177,6 +177,10 @@ public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
             return getMethodAndSinks(fullMethodName, sinks);
         }
         try {
+            if (className.endsWith("]")) {
+                // not a real class
+                return Collections.emptySet();
+            }
             JavaClass javaClass = Repository.lookupClass(className);
             assert javaClass != null;
             return getSuperSinks(javaClass, methodName);

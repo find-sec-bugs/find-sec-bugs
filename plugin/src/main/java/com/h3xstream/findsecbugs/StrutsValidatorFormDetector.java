@@ -42,15 +42,16 @@ public class StrutsValidatorFormDetector implements Detector {
 
         boolean isActionForm = InterfaceUtils.isSubtype(javaClass, "org.apache.struts.action.ActionForm");
         boolean isValidatorForm = InterfaceUtils.isSubtype(javaClass, "org.apache.struts.validator.ValidatorForm");
+        boolean isDynaValidatorForm = InterfaceUtils.isSubtype(javaClass, "org.apache.struts.validator.DynaValidatorForm");
 
-        if (isActionForm && !isValidatorForm) {
+        if (isActionForm && !(isValidatorForm || isDynaValidatorForm)) {
             bugReporter.reportBug(new BugInstance(this, STRUTS_FORM_VALIDATION_TYPE, Priorities.NORMAL_PRIORITY) //
                     .addClass(javaClass) //
                     .addString("ActionForm"));
             return;
         }
 
-        if (!isValidatorForm) return; //Not form implementation
+        if (!isValidatorForm && !isDynaValidatorForm) return; //Not form implementation
 
         final String expectedSig = "(Lorg/apache/struts/action/ActionMapping;Ljavax/servlet/http/HttpServletRequest;)Lorg/apache/struts/action/ActionErrors;";
         boolean validateMethodFound = false;

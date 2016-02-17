@@ -3713,5 +3713,18 @@ safe location rather than using direct user input.
     </BugPattern>
     <BugCode abbrev="SECTBV">Trust Boundary Violation</BugCode>
 
-
+    <!-- JSP XSLT -->
+    <Detector class="com.h3xstream.findsecbugs.jsp.XslTransformJspDetector">
+        <Details>Identify XSL transformation done in JSP.</Details>
+    </Detector>
+    <BugPattern type="JSP_XSLT">
+        <ShortDescription>A malicious XSLT could be provided</ShortDescription>
+        <LongDescription>A malicious XSLT could be provided to trigger remote code execution</LongDescription>
+        <Details>
+            <![CDATA[
+TODO
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECJSPXSLT">A malicious XSLT could be provided</BugCode>
 </MessageCollection>

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.xxe;
+package com.h3xstream.findsecbugs.xml;
 
 import com.h3xstream.findsecbugs.common.ByteCode;
 import com.h3xstream.findsecbugs.common.InterfaceUtils;
@@ -53,7 +53,7 @@ import java.util.Iterator;
  *   <li>https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing</li>
  * </ul>
  */
-public class SaxParserXxeDetector extends OpcodeStackDetector {
+public class XxeDetector extends OpcodeStackDetector {
     private static final String XXE_SAX_PARSER_TYPE = "XXE_SAXPARSER";
     private static final String XXE_XML_READER_TYPE = "XXE_XMLREADER";
     private static final String XXE_DOCUMENT_TYPE = "XXE_DOCUMENT";
@@ -66,7 +66,7 @@ public class SaxParserXxeDetector extends OpcodeStackDetector {
 
     private BugReporter bugReporter;
 
-    public SaxParserXxeDetector(BugReporter bugReporter) {
+    public XxeDetector(BugReporter bugReporter) {
         this.bugReporter = bugReporter;
     }
 

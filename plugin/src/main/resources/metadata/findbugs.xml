@@ -60,6 +60,7 @@
     <Detector class="com.h3xstream.findsecbugs.jsp.JspIncludeDetector" reports="JSP_INCLUDE" />
     <Detector class="com.h3xstream.findsecbugs.jsp.JspSpringEvalDetector" reports="JSP_SPRING_EVAL" />
     <Detector class="com.h3xstream.findsecbugs.jsp.JstlOutDetector" reports="JSP_JSTL_OUT" />
+    <Detector class="com.h3xstream.findsecbugs.jsp.XslTransformJspDetector" reports="JSP_XSLT" />
     <Detector class="com.h3xstream.findsecbugs.XmlDecoderDetector" reports="XML_DECODER"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.StaticIvDetector" reports="STATIC_IV"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.CipherWithNoIntegrityDetector" reports="ECB_MODE,PADDING_ORACLE,CIPHER_INTEGRITY"/>
@@ -142,6 +143,7 @@
     <BugPattern type="JSP_INCLUDE" abbrev="SECJSPINC" category="SECURITY" cweid="98"/>
     <BugPattern type="JSP_SPRING_EVAL" abbrev="SECJSPSPRING" category="SECURITY" cweid="917"/>
     <BugPattern type="JSP_JSTL_OUT" abbrev="SECJSPJSTL" category="SECURITY" cweid="79"/>
+    <BugPattern type="JSP_XSLT" abbrev="SECJSPXSLT" category="SECURITY" cweid="94"/>
     <BugPattern type="XSS_SERVLET" abbrev="SECXSS2" category="SECURITY" cweid="79"/>
     <BugPattern type="XML_DECODER" abbrev="XMLDEC" category="SECURITY"/>
     <BugPattern type="STATIC_IV" abbrev="STAIV" category="SECURITY" cweid="329"/>

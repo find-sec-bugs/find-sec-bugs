@@ -84,6 +84,11 @@ public class ByteCode {
      *
      * &lt;T&gt; is the Type of the constant value return
      *
+     *
+     * This utility method should be used only when the taint analysis is not needed.
+     * For example, to detect api where the value will typically be hardcoded.
+     * (Call such as setConfig("valueHardcoded"), setActivateStuff(true) )
+     *
      * @param h Instruction Handle
      * @param cpg Constant Pool
      * @param clazz Type of the constant being read
@@ -96,6 +101,15 @@ public class ByteCode {
             Object val = ldcInst.getValue(cpg);
             if (val.getClass().equals(clazz)) {
                 return clazz.cast(val);
+            }
+        }
+        else if(clazz.equals(String.class) && prevIns instanceof INVOKESPECIAL) {
+            //This additionnal call allow the support of hardcoded value passed to String constructor
+            //new String("HARDCODE")
+            INVOKESPECIAL invoke = (INVOKESPECIAL) prevIns;
+            if(invoke.getMethodName(cpg).equals("<init>") && invoke.getClassName(cpg).equals("java.lang.String") &&
+                    invoke.getSignature(cpg).equals("(Ljava/lang/String;)V")) {
+                return getConstantLDC(h.getPrev(), cpg, clazz);
             }
         }
 

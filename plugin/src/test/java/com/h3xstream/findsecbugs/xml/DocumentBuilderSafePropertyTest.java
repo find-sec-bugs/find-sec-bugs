@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.xxe;
+package com.h3xstream.findsecbugs.xml;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
@@ -26,50 +26,29 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-public class SaxParserXxeDetectorTest extends BaseDetectorTest {
+public class DocumentBuilderSafePropertyTest  extends BaseDetectorTest {
 
     @Test
-    public void detectXxe() throws Exception {
+    public void detectUnsafeNoSpecialSettings() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/xxe/SaxParserVulnerable")
+                getClassFilePath("testcode/xxe/DocumentBuilderSafeProperty")
         };
 
         //Run the analysis
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
+        //Assertions
+
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("XXE_SAXPARSER")
-                        .inClass("SaxParserVulnerable").inMethod("receiveXMLStream").atLine(22)
-                        .build()
-        );
-        Mockito.verify(reporter, Mockito.never()).doReportBug(
-                bugDefinition()
-                        .bugType("XXE_XMLREADER")
-                        .build()
-        );
-        Mockito.verify(reporter, Mockito.never()).doReportBug(
-                bugDefinition()
                         .bugType("XXE_DOCUMENT")
+                        .inClass("DocumentBuilderSafeProperty").inMethod("unsafeNoSpecialSettings").atLine(33)
                         .build()
         );
-    }
 
-    @Test
-    public void safeWithUseOfPrivilegeExceptionAction() throws Exception {
-        //Locate test code
-        String[] files = {
-                getClassFilePath("testcode/xxe/SaxParserSafePrivilegedExceptionAction"),
-                getClassFilePath("testcode/xxe/SaxParserSafePrivilegedExceptionAction$1")
-        };
-
-        //Run the analysis
-        EasyBugReporter reporter = Mockito.spy(new EasyBugReporter());
-        analyze(files, reporter);
-
-        //Assertions
+        //Should not trigger the other XXE patterns
         Mockito.verify(reporter, Mockito.never()).doReportBug(
                 bugDefinition()
                         .bugType("XXE_SAXPARSER")
@@ -80,62 +59,85 @@ public class SaxParserXxeDetectorTest extends BaseDetectorTest {
                         .bugType("XXE_XMLREADER")
                         .build()
         );
-        Mockito.verify(reporter, Mockito.never()).doReportBug(
-                bugDefinition()
-                        .bugType("XXE_DOCUMENT")
-                        .build()
-        );
     }
 
     @Test
-    public void safeWithUseOfEntityResolver() throws Exception {
+    public void avoidFalsePositiveOnSafeConfiguration() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/xxe/SaxParserSafeEntityResolver"),
-                getClassFilePath("testcode/xxe/SaxParserSafeEntityResolver$CustomResolver")
-        };
-
-        //Run the analysis
-        EasyBugReporter reporter = Mockito.spy(new EasyBugReporter());
-        analyze(files, reporter);
-
-        //Assertions
-        Mockito.verify(reporter, Mockito.never()).doReportBug(
-                bugDefinition()
-                        .bugType("XXE_SAXPARSER")
-                        .build()
-        );
-        Mockito.verify(reporter, Mockito.never()).doReportBug(
-                bugDefinition()
-                        .bugType("XXE_XMLREADER")
-                        .build()
-        );
-        Mockito.verify(reporter, Mockito.never()).doReportBug(
-                bugDefinition()
-                        .bugType("XXE_DOCUMENT")
-                        .build()
-        );
-    }
-
-
-
-    @Test
-    public void detectXxeFromDocumentBuilder() throws Exception {
-        //Locate test code
-        String[] files = {
-                getClassFilePath("testcode/xxe/DocumentBuilderVulnerable")
+                getClassFilePath("testcode/xxe/DocumentBuilderSafeProperty")
         };
 
         //Run the analysis
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
+        //Assertions
+
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_DOCUMENT")
+                        .inClass("DocumentBuilderSafeProperty").inMethod("safeSecureProcessing")
+                        .build()
+        );
+
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_DOCUMENT")
+                        .inClass("DocumentBuilderSafeProperty").inMethod("safeDtdDisable")
+                        .build()
+        );
+
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_DOCUMENT")
+                        .inClass("DocumentBuilderSafeProperty").inMethod("safeManualConfiguration")
+                        .build()
+        );
+
+    }
+
+    @Test
+    public void detectUnsafePartialConfiguration() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/xxe/DocumentBuilderSafeProperty")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+        //Assertions
+
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("XXE_DOCUMENT")
-                        .inClass("DocumentBuilderVulnerable").inMethod("receiveXMLStream").atLine(18)
+                        .inClass("DocumentBuilderSafeProperty").inMethod("unsafeManualConfig1").atLine(90)
                         .build()
         );
-    }
 
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_DOCUMENT")
+                        .inClass("DocumentBuilderSafeProperty").inMethod("unsafeManualConfig2").atLine(102)
+                        .build()
+        );
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_DOCUMENT")
+                        .inClass("DocumentBuilderSafeProperty").inMethod("unsafeManualConfig3").atLine(114)
+                        .build()
+        );
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_DOCUMENT")
+                        .inClass("DocumentBuilderSafeProperty").inMethod("unsafeManualConfig4").atLine(126)
+                        .build()
+        );
+
+
+    }
 }

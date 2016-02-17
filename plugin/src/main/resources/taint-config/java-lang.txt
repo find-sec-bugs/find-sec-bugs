@@ -176,3 +176,8 @@ java/lang/reflect/Field.toGenericString()Ljava/lang/String;:SAFE
 java/lang/reflect/Field.toString()Ljava/lang/String;:SAFE
 java/lang/Package.getName()Ljava/lang/String;:SAFE
 java/lang/Package.toString()Ljava/lang/String;:SAFE
+
+java/lang/Class.getResourceAsStream(Ljava/lang/String;)Ljava/io/InputStream;:0#1
+javax/xml/transform/stream/StreamSource.<init>(Ljava/io/InputStream;)V:0#2
+
+java/io/FileInputStream.<init>(Ljava/lang/String;)V:0#1,2

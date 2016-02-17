@@ -15,22 +15,24 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.xxe;
+package com.h3xstream.findsecbugs.xml;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
-public class SaxParserSafePropertyTest extends BaseDetectorTest {
+public class XmlReaderDetectorTest extends BaseDetectorTest {
 
     @Test
-    public void detectUnsafeNoSpecialSettings() throws Exception {
+    public void detectXxe() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/xxe/SaxParserSafeProperty")
+                getClassFilePath("testcode/xxe/XmlReaderVulnerable")
         };
 
         //Run the analysis
@@ -38,35 +40,29 @@ public class SaxParserSafePropertyTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         //Assertions
-
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("XXE_SAXPARSER")
-                        .inClass("SaxParserSafeProperty").inMethod("unsafeNoSpecialSettings").atLine(26)
-                        .build()
-        );
-
-
-        //Should not trigger the other XXE patterns
-        Mockito.verify(reporter, Mockito.never()).doReportBug(
-                bugDefinition()
                         .bugType("XXE_XMLREADER")
-                        .inClass("SaxParserSafeProperty")
+                        .inClass("XmlReaderVulnerable").inMethod("receiveXMLStream").atLine(22)
                         .build()
         );
-        Mockito.verify(reporter, Mockito.never()).doReportBug(
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_SAXPARSER")
+                        .build()
+        );
+        Mockito.verify(reporter, never()).doReportBug(
                 bugDefinition()
                         .bugType("XXE_DOCUMENT")
-                        .inClass("SaxParserSafeProperty")
                         .build()
         );
     }
 
     @Test
-    public void avoidFalsePositiveOnSafeCases() throws Exception {
+    public void avoidFalsePositive() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/xxe/SaxParserSafeProperty")
+                getClassFilePath("testcode/xxe/XmlReaderSafeProperty")
         };
 
         //Run the analysis
@@ -74,38 +70,20 @@ public class SaxParserSafePropertyTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         //Assertions
-
-        verify(reporter, never()).doReportBug(
-                bugDefinition()
-                        .bugType("XXE_SAXPARSER")
-                        .inClass("SaxParserSafeProperty").inMethod("safeIgnoredDtdDisable")
-                        .build()
-        );
-
-        verify(reporter, never()).doReportBug(
-                bugDefinition()
-                        .bugType("XXE_SAXPARSER")
-                        .inClass("SaxParserSafeProperty").inMethod("safeSecureProcessing")
-                        .build()
-        );
-
-        //Assertions
         verify(reporter,never()).doReportBug(
                 bugDefinition()
-                        .bugType("XXE_SAXPARSER")
-                        .inClass("SaxParserSafeProperty").inMethod("safeManualConfiguration")
+                        .bugType("XXE_XMLREADER")
                         .build()
         );
-
-
-
-        //Only one bug should be trigger
-        verify(reporter).doReportBug(
+        verify(reporter, never()).doReportBug(
                 bugDefinition()
                         .bugType("XXE_SAXPARSER")
-                        .inClass("SaxParserSafeProperty")
                         .build()
         );
-
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_DOCUMENT")
+                        .build()
+        );
     }
 }

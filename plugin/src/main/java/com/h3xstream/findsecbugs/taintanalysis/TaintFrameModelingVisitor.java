@@ -230,7 +230,13 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     @Override
     public void visitGETFIELD(GETFIELD obj) {
-        Taint taint = new Taint(Taint.State.UNKNOWN);
+        final Taint taint;
+        if (SAFE_OBJECT_TYPES.contains(obj.getSignature(cpg))) {
+            taint = new Taint(Taint.State.SAFE);
+        } else {
+            taint = new Taint(Taint.State.UNKNOWN);
+            taint.addLocation(getTaintLocation(), false);
+        }
         if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             taint.setDebugInfo("." + obj.getFieldName(cpg));
         }
@@ -472,6 +478,10 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     
     private TaintMethodSummary getSuperMethodSummary(String className, String methodId) {
         try {
+            if (className.endsWith("]")) {
+                // not a real class
+                return null;
+            }
             JavaClass javaClass = Repository.lookupClass(className);
             assert javaClass != null;
             TaintMethodSummary summary = getSuperMethodSummary(javaClass.getSuperClasses(), methodId);

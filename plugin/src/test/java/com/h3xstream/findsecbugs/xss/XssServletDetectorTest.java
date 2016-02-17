@@ -109,7 +109,19 @@ public class XssServletDetectorTest extends BaseDetectorTest {
                         .build()
             );
         }
-        verify(reporter, times(7)).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
+        verify(reporter).doReportBug(
+                bugDefinition()
+                    .bugType("XSS_SERVLET")
+                    .inClass("XssServlet3").inMethod("uncalledSink").withPriority("Medium")
+                    .build()
+        );
+        verify(reporter).doReportBug(
+                bugDefinition()
+                    .bugType("XSS_SERVLET")
+                    .inClass("XssServlet3").inMethod("sinkCalledOnlyWithEncoded").withPriority("Low")
+                    .build()
+        );
+        verify(reporter, times(3 + 4 + 2)).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
     }
 
 

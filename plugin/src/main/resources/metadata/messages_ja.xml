@@ -730,13 +730,13 @@ sha256Digest.update(password.getBytes());</pre>
 &lt;!DOCTYPE lolz [
  &lt;!ENTITY lol &quot;lol&quot;&gt;
  &lt;!ELEMENT lolz (#PCDATA)&gt;
- &lt;!ENTITY lol1 &quot;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&quot;&gt;
- &lt;!ENTITY lol2 &quot;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&quot;&gt;
- &lt;!ENTITY lol3 &quot;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&quot;&gt;
+ &lt;!ENTITY lol1 &quot;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&quot;&gt;
+ &lt;!ENTITY lol2 &quot;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&quot;&gt;
+ &lt;!ENTITY lol3 &quot;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&quot;&gt;
 [...]
- &lt;!ENTITY lol9 &quot;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&quot;&gt;
+ &lt;!ENTITY lol9 &quot;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&quot;&gt;
 ]&gt;
-&lt;lolz&gt;&lol9;&lt;/lolz&gt;</pre>
+&lt;lolz&gt;&amp;lol9;&lt;/lolz&gt;</pre>
 </p>
 
 <h3>解決策</h3>
@@ -813,13 +813,13 @@ parser.parse(inputStream, customHandler);</pre>
 &lt;!DOCTYPE lolz [
  &lt;!ENTITY lol &quot;lol&quot;&gt;
  &lt;!ELEMENT lolz (#PCDATA)&gt;
- &lt;!ENTITY lol1 &quot;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&quot;&gt;
- &lt;!ENTITY lol2 &quot;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&quot;&gt;
- &lt;!ENTITY lol3 &quot;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&quot;&gt;
+ &lt;!ENTITY lol1 &quot;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&quot;&gt;
+ &lt;!ENTITY lol2 &quot;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&quot;&gt;
+ &lt;!ENTITY lol3 &quot;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&quot;&gt;
 [...]
- &lt;!ENTITY lol9 &quot;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&quot;&gt;
+ &lt;!ENTITY lol9 &quot;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&quot;&gt;
 ]&gt;
-&lt;lolz&gt;&lol9;&lt;/lolz&gt;</pre>
+&lt;lolz&gt;&amp;lol9;&lt;/lolz&gt;</pre>
 </p>
 
 <h3>解決策</h3>
@@ -896,13 +896,13 @@ reader.parse(new InputSource(inputStream));</pre>
 &lt;!DOCTYPE lolz [
  &lt;!ENTITY lol &quot;lol&quot;&gt;
  &lt;!ELEMENT lolz (#PCDATA)&gt;
- &lt;!ENTITY lol1 &quot;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&quot;&gt;
- &lt;!ENTITY lol2 &quot;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&quot;&gt;
- &lt;!ENTITY lol3 &quot;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&quot;&gt;
+ &lt;!ENTITY lol1 &quot;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&quot;&gt;
+ &lt;!ENTITY lol2 &quot;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&quot;&gt;
+ &lt;!ENTITY lol3 &quot;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&quot;&gt;
 [...]
- &lt;!ENTITY lol9 &quot;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&quot;&gt;
+ &lt;!ENTITY lol9 &quot;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&quot;&gt;
 ]&gt;
-&lt;lolz&gt;&lol9;&lt;/lolz&gt;</pre>
+&lt;lolz&gt;&amp;lol9;&lt;/lolz&gt;</pre>
 </p>
 
 <h3>解決策</h3>

@@ -297,7 +297,7 @@ HttpSession (HttpServletRequest.getSession()) を参照してください。</p>
         <LongDescription>メソッド {3} はユーザーの入力によって指定された場所のファイルを読み込みます。</LongDescription>
         <Details>
             <![CDATA[
-<p>ファイルはその内容を読み込むために開かれていますが、ファイル名は<b>入力</b>パラメーターから生じています。 
+<p>ファイルはその内容を読み込むために開かれていますが、ファイル名は<b>入力</b>パラメーターから生じています。
 フィルターされていないパラメーターがこのファイル API に渡された場合、ファイルシステムの任意の場所からファイルを読み込めるかもしれません。</p>
 <p>このルールは<b>潜在的な</b>パストラバーサルの脆弱性を特定します。多くの場合、組み立てられるファイルパスがユーザーによって操作されるとはありません。その場合、報告された事例は誤検知です。</p>
 <br/>
@@ -319,7 +319,7 @@ HttpSession (HttpServletRequest.getSession()) を参照してください。</p>
         <LongDescription>メソッド {3} はユーザーの入力によって指定された場所のファイルに書き込みます。</LongDescription>
         <Details>
             <![CDATA[
-<p>ファイルはその内容を書き込むために開かれていますが、ファイル名は<b>入力</b>パラメーターから生じています。 
+<p>ファイルはその内容を書き込むために開かれていますが、ファイル名は<b>入力</b>パラメーターから生じています。
 フィルターされていないパラメーターがこのファイル API に渡された場合、ファイルシステムの任意の場所からファイルを変更できるかもしれません。</p>
 <p>このルールは<b>潜在的な</b>パストラバーサルの脆弱性を特定します。多くの場合、組み立てられるファイルパスがユーザーによって操作されるとはありません。その場合、報告された事例は誤検知です。</p>
 <br/>
@@ -1739,7 +1739,7 @@ props.put(Context.SECURITY_CREDENTIALS, "p@ssw0rd");</pre>
 SecretKeySpec spec = new SecretKeySpec(key, "AES");
 Cipher aes = Cipher.getInstance("AES");
 aes.init(Cipher.ENCRYPT_MODE, spec);
-return aesCipher.doFinal(secretData);</pre> 
+return aesCipher.doFinal(secretData);</pre>
 </p>
 <br/>
 <p>
@@ -1890,7 +1890,7 @@ keyGen.init(128);</pre>
         <LongDescription>弱い鍵長での RSA の使用</LongDescription>
         <Details>
             <![CDATA[
-<p><q>RSA 研究所は、現在、企業利用向けには 1024 ビット、認証局によって使用されるルート鍵ペアのような重要な鍵向けには 2048 ビットの鍵長を推奨しています。</q>
+<p><b>RSA 研究所は、現在、企業利用向けには 1024 ビット、認証局によって使用されるルート鍵ペアのような重要な鍵向けには 2048 ビットの鍵長を推奨しています。</b>
 <sup>[1]</sup></p>
 
 <p><b>脆弱なコード:</b><br/>

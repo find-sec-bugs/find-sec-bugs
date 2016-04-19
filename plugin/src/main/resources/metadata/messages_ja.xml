@@ -1211,7 +1211,7 @@ SQL クエリーに含まれる入力値は安全に渡される必要があり�
     <pre>
 EntityManager pm = getEM();
 
-TypedQuery<UserEntity> q = em.createQuery(
+TypedQuery&lt;UserEntity&gt; q = em.createQuery(
     String.format("select * from Users where name = %s", username),
     UserEntity.class);
 
@@ -1220,7 +1220,7 @@ UserEntity res = q.getSingleResult();</pre>
 <p>
     <b>解決策:</b><br/>
     <pre>
-TypedQuery<UserEntity> q = em.createQuery(
+TypedQuery&lt;UserEntity&gt; q = em.createQuery(
     "select * from Users where name = usernameParam",UserEntity.class)
     .setParameter("usernameParam", username);
 
@@ -1339,7 +1339,7 @@ SQL と同様に、LDAP クエリーに渡したすべての入力は安全に�
 </p>
 <p>
     <b>リスクのあるコード:</b><br/>
-    <pre>NamingEnumeration<SearchResult> answers = context.search("dc=People,dc=example,dc=com",
+    <pre>NamingEnumeration&lt;SearchResult&gt; answers = context.search("dc=People,dc=example,dc=com",
         "(uid=" + username + ")", ctrls);</pre>
 </p>
 <br/>

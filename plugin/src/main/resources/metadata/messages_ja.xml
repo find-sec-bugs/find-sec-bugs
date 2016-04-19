@@ -573,7 +573,7 @@ OS レベルであるので、たとえ Java 自体が Null バイトを気に�
             <![CDATA[
 <p>使用しているアルゴリズムは推奨されるメッセージダイジェストではありません。</p>
 <p><a href="http://csrc.nist.gov/groups/ST/toolkit/secure_hashing.html">NIST</a> は、SHA-1、 SHA-224*、 SHA-256、 SHA-384、 SHA-512、 SHA-512/224、 または SHA-512/256 の使用を推奨しています。</p>
-<p><small>* SHA-224 アルゴリズムは <a href="http://docs.oracle.com/javase/6/docs/technotes/guides/security/SunProviders.html#SUNProvider">SUN プロバイダー</a>では提供していません。</small></p>
+<p>* SHA-224 アルゴリズムは <a href="http://docs.oracle.com/javase/6/docs/technotes/guides/security/SunProviders.html#SUNProvider">SUN プロバイダー</a>では提供していません。</p>
 <p>承認されたアルゴリズムのいずれかを使用するように実装をアップグレードしてください。あなたのセキュリティ仕様要件に合った十分に強いアルゴリズムを使用してください。</p>
 <br/>
 <p>

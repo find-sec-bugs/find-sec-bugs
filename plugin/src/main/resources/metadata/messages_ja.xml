@@ -297,7 +297,7 @@ HttpSession (HttpServletRequest.getSession()) を参照してください。</p>
         <LongDescription>メソッド {3} はユーザーの入力によって指定された場所のファイルを読み込みます。</LongDescription>
         <Details>
             <![CDATA[
-<p>ファイルはその内容を読み込むために開かれていますが、ファイル名は<b>入力</b>パラメーターから生じています。 
+<p>ファイルはその内容を読み込むために開かれていますが、ファイル名は<b>入力</b>パラメーターから生じています。
 フィルターされていないパラメーターがこのファイル API に渡された場合、ファイルシステムの任意の場所からファイルを読み込めるかもしれません。</p>
 <p>このルールは<b>潜在的な</b>パストラバーサルの脆弱性を特定します。多くの場合、組み立てられるファイルパスがユーザーによって操作されるとはありません。その場合、報告された事例は誤検知です。</p>
 <br/>
@@ -319,7 +319,7 @@ HttpSession (HttpServletRequest.getSession()) を参照してください。</p>
         <LongDescription>メソッド {3} はユーザーの入力によって指定された場所のファイルに書き込みます。</LongDescription>
         <Details>
             <![CDATA[
-<p>ファイルはその内容を書き込むために開かれていますが、ファイル名は<b>入力</b>パラメーターから生じています。 
+<p>ファイルはその内容を書き込むために開かれていますが、ファイル名は<b>入力</b>パラメーターから生じています。
 フィルターされていないパラメーターがこのファイル API に渡された場合、ファイルシステムの任意の場所からファイルを変更できるかもしれません。</p>
 <p>このルールは<b>潜在的な</b>パストラバーサルの脆弱性を特定します。多くの場合、組み立てられるファイルパスがユーザーによって操作されるとはありません。その場合、報告された事例は誤検知です。</p>
 <br/>
@@ -573,7 +573,7 @@ OS レベルであるので、たとえ Java 自体が Null バイトを気に�
             <![CDATA[
 <p>使用しているアルゴリズムは推奨されるメッセージダイジェストではありません。</p>
 <p><a href="http://csrc.nist.gov/groups/ST/toolkit/secure_hashing.html">NIST</a> は、SHA-1、 SHA-224*、 SHA-256、 SHA-384、 SHA-512、 SHA-512/224、 または SHA-512/256 の使用を推奨しています。</p>
-<p><small>* SHA-224 アルゴリズムは <a href="http://docs.oracle.com/javase/6/docs/technotes/guides/security/SunProviders.html#SUNProvider">SUN プロバイダー</a>では提供していません。</small></p>
+<p>* SHA-224 アルゴリズムは <a href="http://docs.oracle.com/javase/6/docs/technotes/guides/security/SunProviders.html#SUNProvider">SUN プロバイダー</a>では提供していません。</p>
 <p>承認されたアルゴリズムのいずれかを使用するように実装をアップグレードしてください。あなたのセキュリティ仕様要件に合った十分に強いアルゴリズムを使用してください。</p>
 <br/>
 <p>
@@ -730,13 +730,13 @@ sha256Digest.update(password.getBytes());</pre>
 &lt;!DOCTYPE lolz [
  &lt;!ENTITY lol &quot;lol&quot;&gt;
  &lt;!ELEMENT lolz (#PCDATA)&gt;
- &lt;!ENTITY lol1 &quot;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&quot;&gt;
- &lt;!ENTITY lol2 &quot;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&quot;&gt;
- &lt;!ENTITY lol3 &quot;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&quot;&gt;
+ &lt;!ENTITY lol1 &quot;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&quot;&gt;
+ &lt;!ENTITY lol2 &quot;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&quot;&gt;
+ &lt;!ENTITY lol3 &quot;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&quot;&gt;
 [...]
- &lt;!ENTITY lol9 &quot;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&quot;&gt;
+ &lt;!ENTITY lol9 &quot;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&quot;&gt;
 ]&gt;
-&lt;lolz&gt;&lol9;&lt;/lolz&gt;</pre>
+&lt;lolz&gt;&amp;lol9;&lt;/lolz&gt;</pre>
 </p>
 
 <h3>解決策</h3>
@@ -813,13 +813,13 @@ parser.parse(inputStream, customHandler);</pre>
 &lt;!DOCTYPE lolz [
  &lt;!ENTITY lol &quot;lol&quot;&gt;
  &lt;!ELEMENT lolz (#PCDATA)&gt;
- &lt;!ENTITY lol1 &quot;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&quot;&gt;
- &lt;!ENTITY lol2 &quot;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&quot;&gt;
- &lt;!ENTITY lol3 &quot;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&quot;&gt;
+ &lt;!ENTITY lol1 &quot;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&quot;&gt;
+ &lt;!ENTITY lol2 &quot;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&quot;&gt;
+ &lt;!ENTITY lol3 &quot;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&quot;&gt;
 [...]
- &lt;!ENTITY lol9 &quot;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&quot;&gt;
+ &lt;!ENTITY lol9 &quot;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&quot;&gt;
 ]&gt;
-&lt;lolz&gt;&lol9;&lt;/lolz&gt;</pre>
+&lt;lolz&gt;&amp;lol9;&lt;/lolz&gt;</pre>
 </p>
 
 <h3>解決策</h3>
@@ -896,13 +896,13 @@ reader.parse(new InputSource(inputStream));</pre>
 &lt;!DOCTYPE lolz [
  &lt;!ENTITY lol &quot;lol&quot;&gt;
  &lt;!ELEMENT lolz (#PCDATA)&gt;
- &lt;!ENTITY lol1 &quot;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&quot;&gt;
- &lt;!ENTITY lol2 &quot;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&quot;&gt;
- &lt;!ENTITY lol3 &quot;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&quot;&gt;
+ &lt;!ENTITY lol1 &quot;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&quot;&gt;
+ &lt;!ENTITY lol2 &quot;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&quot;&gt;
+ &lt;!ENTITY lol3 &quot;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&quot;&gt;
 [...]
- &lt;!ENTITY lol9 &quot;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&quot;&gt;
+ &lt;!ENTITY lol9 &quot;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&quot;&gt;
 ]&gt;
-&lt;lolz&gt;&lol9;&lt;/lolz&gt;</pre>
+&lt;lolz&gt;&amp;lol9;&lt;/lolz&gt;</pre>
 </p>
 
 <h3>解決策</h3>
@@ -1211,7 +1211,7 @@ SQL クエリーに含まれる入力値は安全に渡される必要があり�
     <pre>
 EntityManager pm = getEM();
 
-TypedQuery<UserEntity> q = em.createQuery(
+TypedQuery&lt;UserEntity&gt; q = em.createQuery(
     String.format("select * from Users where name = %s", username),
     UserEntity.class);
 
@@ -1220,7 +1220,7 @@ UserEntity res = q.getSingleResult();</pre>
 <p>
     <b>解決策:</b><br/>
     <pre>
-TypedQuery<UserEntity> q = em.createQuery(
+TypedQuery&lt;UserEntity&gt; q = em.createQuery(
     "select * from Users where name = usernameParam",UserEntity.class)
     .setParameter("usernameParam", username);
 
@@ -1339,7 +1339,7 @@ SQL と同様に、LDAP クエリーに渡したすべての入力は安全に�
 </p>
 <p>
     <b>リスクのあるコード:</b><br/>
-    <pre>NamingEnumeration<SearchResult> answers = context.search("dc=People,dc=example,dc=com",
+    <pre>NamingEnumeration&lt;SearchResult&gt; answers = context.search("dc=People,dc=example,dc=com",
         "(uid=" + username + ")", ctrls);</pre>
 </p>
 <br/>
@@ -1739,7 +1739,7 @@ props.put(Context.SECURITY_CREDENTIALS, "p@ssw0rd");</pre>
 SecretKeySpec spec = new SecretKeySpec(key, "AES");
 Cipher aes = Cipher.getInstance("AES");
 aes.init(Cipher.ENCRYPT_MODE, spec);
-return aesCipher.doFinal(secretData);</pre> 
+return aesCipher.doFinal(secretData);</pre>
 </p>
 <br/>
 <p>
@@ -1890,7 +1890,7 @@ keyGen.init(128);</pre>
         <LongDescription>弱い鍵長での RSA の使用</LongDescription>
         <Details>
             <![CDATA[
-<p><q>RSA 研究所は、現在、企業利用向けには 1024 ビット、認証局によって使用されるルート鍵ペアのような重要な鍵向けには 2048 ビットの鍵長を推奨しています。</q>
+<p><b>RSA 研究所は、現在、企業利用向けには 1024 ビット、認証局によって使用されるルート鍵ペアのような重要な鍵向けには 2048 ビットの鍵長を推奨しています。</b>
 <sup>[1]</sup></p>
 
 <p><b>脆弱なコード:</b><br/>

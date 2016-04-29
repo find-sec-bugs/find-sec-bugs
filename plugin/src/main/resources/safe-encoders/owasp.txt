@@ -38,3 +38,6 @@ org/owasp/encoder/Encode.forXml(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAF
 org/owasp/encoder/Encode.forXmlAttribute(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE,+XPATH_INJECTION_SAFE
 org/owasp/encoder/Encode.forXmlComment(Ljava/lang/String;)Ljava/lang/String;:0
 org/owasp/encoder/Encode.forXmlContent(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE
+
+org/owasp/html/PolicyFactory.sanitize(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE
+org/owasp/html/PolicyFactory.sanitize(Ljava/lang/String;Lorg/owasp/html/HtmlChangeListener;Ljava/lang/Object;)Ljava/lang/String;:2|+XSS_SAFE

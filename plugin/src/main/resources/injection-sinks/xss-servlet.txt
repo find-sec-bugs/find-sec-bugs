@@ -17,3 +17,8 @@ java/io/PrintWriter.printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintW
 java/io/PrintWriter.append(Ljava/lang/CharSequence;)Ljava/io/PrintWriter;:0
 java/io/PrintWriter.append(Ljava/lang/CharSequence;II)Ljava/io/PrintWriter;:2
 java/io/PrintWriter.append(C)Ljava/io/PrintWriter;:0
+
+javax/servlet/http/HttpServletResponse.sendError(ILjava/lang/String;)V:0
+javax/servlet/http/HttpServletResponse.setStatus(ILjava/lang/String;)V:0
+javax/servlet/http/HttpServletResponseWrapper.sendError(ILjava/lang/String;)V:0
+javax/servlet/http/HttpServletResponseWrapper.setStatus(ILjava/lang/String;)V:0

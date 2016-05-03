@@ -18,13 +18,16 @@
 package com.h3xstream.findsecbugs.taintanalysis;
 
 import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
+import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.ba.CFG;
 import edu.umd.cs.findbugs.ba.DepthFirstSearch;
 import edu.umd.cs.findbugs.classfile.CheckedAnalysisException;
 import edu.umd.cs.findbugs.classfile.IAnalysisCache;
 import edu.umd.cs.findbugs.classfile.IMethodAnalysisEngine;
 import edu.umd.cs.findbugs.classfile.MethodDescriptor;
+import edu.umd.cs.findbugs.io.IO;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,6 +35,8 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.bcel.generic.MethodGen;
 
 /**
@@ -42,6 +47,8 @@ import org.apache.bcel.generic.MethodGen;
  */
 public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow> {
 
+    private static final FindSecBugsGlobalConfig CONFIG = FindSecBugsGlobalConfig.getInstance();
+    private static final Logger LOGGER = Logger.getLogger(TaintDataflowEngine.class.getName());
     private static final String METHODS_SUMMARIES_PATH = "taint-config/";
     private static final String[] METHODS_SUMMARIES_FILENAMES = {
         "java-lang.txt",
@@ -49,6 +56,7 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
         "collections.txt",
         "java-net.txt",
         "scala.txt",
+        "logging.txt",
         "other.txt",
     };
     private static final String SAFE_ENCODERS_PATH = "safe-encoders/";
@@ -57,49 +65,72 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
         "apache-commons.txt",
         "other.txt"
     };
-
     private final TaintMethodSummaryMap methodSummaries = new TaintMethodSummaryMap();
-
     private static Writer writer = null;
     
     static {
-        if (FindSecBugsGlobalConfig.getInstance().isDebugOutputSummaries()) {
+        if (CONFIG.isDebugOutputSummaries()) {
             try {
+                final String fileName = "derived-summaries.txt";
                 writer = new BufferedWriter(new OutputStreamWriter(
-                        new FileOutputStream("derived-summaries.txt"), "utf-8"));
+                        new FileOutputStream(fileName), "utf-8"));
+                // note: writer is not closed until the end
+                LOGGER.info("Derived method summaries will be output to " + fileName);
             } catch (UnsupportedEncodingException ex) {
                 assert false : ex.getMessage();
             } catch (FileNotFoundException ex) {
-                System.err.println(ex.getMessage());
+                AnalysisContext.logError("File for derived summaries cannot be created or opened", ex);
             }
         }
     }
 
     public TaintDataflowEngine() {
         for (String path : METHODS_SUMMARIES_FILENAMES) {
-            loadMethodSummaries(METHODS_SUMMARIES_PATH.concat(path));
+            loadMethodSummaries(METHODS_SUMMARIES_PATH.concat(path), true);
         }
         for (String path : SAFE_ENCODERS_FILENAMES) {
-            loadMethodSummaries(SAFE_ENCODERS_PATH.concat(path));
+            loadMethodSummaries(SAFE_ENCODERS_PATH.concat(path), true);
+        }
+        if (CONFIG.isTaintedSystemVariables()) {
+            loadMethodSummaries(METHODS_SUMMARIES_PATH.concat("tainted-system-variables.txt"), false);
+            LOGGER.info("System variables are considered to be tainted");
+        } else {
+            LOGGER.info("System variables are considered to be safe,"
+                    + " this behaviour can changed by setting "
+                    + "findsecbugs.taint.taintedsystemvariables=true");
+        }
+        String customConfigFile = CONFIG.getCustomConfigFile();
+        if (customConfigFile != null && !customConfigFile.isEmpty()) {
+            addCustomSummaries(customConfigFile);
+        }
+        if (!CONFIG.isTaintedMainArgument()) {
+            LOGGER.info("The argument of the main method is not considered tainted");
         }
     }
     
-    private void loadMethodSummaries(String path) {
+    private void loadMethodSummaries(String path, boolean checkRewrite) {
         assert path != null && !path.isEmpty();
         InputStream stream = null;
         try {
             stream = getClass().getClassLoader().getResourceAsStream(path);
-            methodSummaries.load(stream);
+            methodSummaries.load(stream, checkRewrite);
         } catch (IOException ex) {
-            throw new RuntimeException("cannot load summaries from " + path, ex);
+            assert false : ex.getMessage();
         } finally {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (IOException ex) {
-                    throw new RuntimeException("cannot close stream", ex);
-                }
-            }
+            IO.close(stream);
+        }
+    }
+    
+    private void addCustomSummaries(String path) {
+        InputStream stream = null;
+        try {
+            stream = new FileInputStream(path);
+            methodSummaries.load(stream, false);
+            LOGGER.log(Level.INFO, "Custom taint config loaded from {0}", path);
+        } catch (IOException ex) {
+            AnalysisContext.logError("cannot load custom taint config method summaries", ex);
+        } finally {
+            IO.close(stream);
         }
     }
     
@@ -113,14 +144,14 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
         TaintDataflow flow = new TaintDataflow(cfg, analysis);
         flow.execute();
         analysis.finishAnalysis();
-        if (FindSecBugsGlobalConfig.getInstance().isDebugOutputSummaries() && writer != null) {
+        if (CONFIG.isDebugOutputSummaries() && writer != null) {
             TaintMethodSummary derivedSummary = methodSummaries.get(getSlashedMethodName(methodGen));
             if (derivedSummary != null) {
                 try {
                     writer.append(getSlashedMethodName(methodGen) + ":" + derivedSummary + "\n");
                     writer.flush();
                 } catch (IOException ex) {
-                    System.out.println("cannot write: " + ex.getMessage());
+                    AnalysisContext.logError("cannot write derived summaries", ex);
                 }
             }
         }

@@ -165,7 +165,7 @@ public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
                 sink.addLines(finalTaint.getLocations());
             }
         }
-            }
+    }
 
     private Set<MethodAndSink> getSinks(ConstantPoolGen cpg, InvokeInstruction invoke, TaintFrame frame) {
         String className = getInstanceClassName(cpg, invoke, frame);

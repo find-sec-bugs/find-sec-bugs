@@ -23,10 +23,17 @@ import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.ba.ClassContext;
+import org.apache.bcel.generic.ConstantPoolGen;
 
 public class XssServletDetector extends BasicInjectionDetector {
 
     private static final String XSS_SERVLET_TYPE = "XSS_SERVLET";
+    private static final String[] REQUIRED_CLASSES = {
+        "Ljavax/servlet/http/ServletResponse;",
+        "Ljavax/servlet/http/ServletResponseWrapper;",
+        "Ljavax/servlet/http/HttpServletResponse;",
+        "Ljavax/servlet/http/HttpServletResponseWrapper;"
+    };
 
     public XssServletDetector(BugReporter bugReporter) {
         super(bugReporter);
@@ -48,8 +55,13 @@ public class XssServletDetector extends BasicInjectionDetector {
     
     @Override
     public boolean shouldAnalyzeClass(ClassContext classContext) {
-        String className = classContext.getClassDescriptor().getDottedClassName();
-        return InterfaceUtils.isSubtype(className, "javax.servlet.http.HttpServlet")
-                && !InterfaceUtils.isSubtype(className, XssJspDetector.JSP_PARENT_CLASSES);
+        ConstantPoolGen constantPoolGen = classContext.getConstantPoolGen();
+        for (String requiredClass : REQUIRED_CLASSES) {
+            if (constantPoolGen.lookupUtf8(requiredClass) != -1) {
+                String className = classContext.getClassDescriptor().getDottedClassName();
+                return !InterfaceUtils.isSubtype(className, XssJspDetector.JSP_PARENT_CLASSES);
+            }
+        }
+        return false;
     }
 }

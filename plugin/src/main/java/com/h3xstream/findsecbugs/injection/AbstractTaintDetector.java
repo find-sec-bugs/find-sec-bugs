@@ -62,11 +62,12 @@ public abstract class AbstractTaintDetector implements Detector {
     public boolean shouldAnalyzeClass(ClassContext classContext) {
         return true;
     }
-
+    
     @Override
     public void visitClassContext(ClassContext classContext) {
-        if(!shouldAnalyzeClass(classContext)) return;
-
+        if(!shouldAnalyzeClass(classContext)) {
+            return;
+        }
         for (Method method : classContext.getMethodsInCallOrder()) {
             if (classContext.getMethodGen(method) == null) {
                 continue;

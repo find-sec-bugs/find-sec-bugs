@@ -1,0 +1,7 @@
+-- Rewrites safe variables for "findsecbugs.taint.taintedsystemvariables=true"
+java/lang/System.clearProperty(Ljava/lang/String;)Ljava/lang/String;:TAINTED
+java/lang/System.getenv()Ljava/util/Map;:TAINTED
+java/lang/System.getenv(Ljava/lang/String;)Ljava/lang/String;:TAINTED
+java/lang/System.getProperty(Ljava/lang/String;)Ljava/lang/String;:TAINTED
+java/lang/System.getProperty(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:TAINTED
+java/lang/System.setProperty(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:TAINTED

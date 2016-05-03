@@ -1,36 +1,36 @@
 javax/servlet/ServletRequest.getAttributeNames()Ljava/util/Enumeration;:SAFE
 javax/servlet/ServletRequest.getCharacterEncoding()Ljava/lang/String;:SAFE
--javax/servlet/ServletRequest.getContentType()Ljava/lang/String;:?
-javax/servlet/ServletRequest.getLocalAddr()Ljava/lang/String;:SAFE
--javax/servlet/ServletRequest.getLocalName()Ljava/lang/String;:?
+javax/servlet/ServletRequest.getContentType()Ljava/lang/String;:TAINTED
+javax/servlet/ServletRequest.getLocalAddr()Ljava/lang/String;:TAINTED
+javax/servlet/ServletRequest.getLocalName()Ljava/lang/String;:TAINTED
 javax/servlet/ServletRequest.getParameter(Ljava/lang/String;)Ljava/lang/String;:TAINTED
 javax/servlet/ServletRequest.getParameterMap()Ljava/util/Map;:TAINTED
--javax/servlet/ServletRequest.getParameterNames()Ljava/util/Enumeration;:?
+javax/servlet/ServletRequest.getParameterNames()Ljava/util/Enumeration;:TAINTED
 javax/servlet/ServletRequest.getParameterValues(Ljava/lang/String;)[Ljava/lang/String;:TAINTED
 javax/servlet/ServletRequest.getProtocol()Ljava/lang/String;:SAFE
 javax/servlet/ServletRequest.getRealPath(Ljava/lang/String;)Ljava/lang/String;:0
 javax/servlet/ServletRequest.getRemoteAddr()Ljava/lang/String;:SAFE
 javax/servlet/ServletRequest.getRemoteHost()Ljava/lang/String;:TAINTED
 javax/servlet/ServletRequest.getScheme()Ljava/lang/String;:SAFE
-javax/servlet/ServletRequest.getServerName()Ljava/lang/String;:SAFE
+javax/servlet/ServletRequest.getServerName()Ljava/lang/String;:TAINTED
 
 - better keep those, J2EE interfaces can be unavailable to analysis
 javax/servlet/http/HttpServletRequest.getAttributeNames()Ljava/util/Enumeration;:SAFE
 javax/servlet/http/HttpServletRequest.changeSessionId()Ljava/lang/String;:SAFE
 javax/servlet/http/HttpServletRequest.getAuthType()Ljava/lang/String;:SAFE
 javax/servlet/http/HttpServletRequest.getCharacterEncoding()Ljava/lang/String;:SAFE
--javax/servlet/http/HttpServletRequest.getContentType()Ljava/lang/String;:?
--javax/servlet/http/HttpServletRequest.getContextPath()Ljava/lang/String;:?
+javax/servlet/http/HttpServletRequest.getContentType()Ljava/lang/String;:TAINTED
+javax/servlet/http/HttpServletRequest.getContextPath()Ljava/lang/String;:TAINTED
 javax/servlet/http/HttpServletRequest.getCookies()[Ljavax/servlet/http/Cookie;:TAINTED
 javax/servlet/http/HttpServletRequest.getHeader(Ljava/lang/String;)Ljava/lang/String;:TAINTED
 javax/servlet/http/HttpServletRequest.getHeaderNames()Ljava/util/Enumeration;:TAINTED
 javax/servlet/http/HttpServletRequest.getHeaders(Ljava/lang/String;)Ljava/util/Enumeration;:TAINTED
-javax/servlet/http/HttpServletRequest.getLocalAddr()Ljava/lang/String;:SAFE
--javax/servlet/http/HttpServletRequest.getLocalName()Ljava/lang/String;:?
+javax/servlet/http/HttpServletRequest.getLocalAddr()Ljava/lang/String;:TAINTED
+javax/servlet/http/HttpServletRequest.getLocalName()Ljava/lang/String;:TAINTED
 javax/servlet/http/HttpServletRequest.getMethod()Ljava/lang/String;:SAFE
 javax/servlet/http/HttpServletRequest.getParameter(Ljava/lang/String;)Ljava/lang/String;:TAINTED
 javax/servlet/http/HttpServletRequest.getParameterMap()Ljava/util/Map;:TAINTED
--javax/servlet/http/HttpServletRequest.getParameterNames()Ljava/util/Enumeration;:?
+javax/servlet/http/HttpServletRequest.getParameterNames()Ljava/util/Enumeration;:TAINTED
 javax/servlet/http/HttpServletRequest.getParameterValues(Ljava/lang/String;)[Ljava/lang/String;:TAINTED
 javax/servlet/http/HttpServletRequest.getProtocol()Ljava/lang/String;:SAFE
 javax/servlet/http/HttpServletRequest.getPathInfo()Ljava/lang/String;:TAINTED
@@ -43,25 +43,25 @@ javax/servlet/http/HttpServletRequest.getRemoteUser()Ljava/lang/String;:TAINTED
 javax/servlet/http/HttpServletRequest.getRequestURI()Ljava/lang/String;:TAINTED
 javax/servlet/http/HttpServletRequest.getRequestURL()Ljava/lang/StringBuffer;:TAINTED
 javax/servlet/http/HttpServletRequest.getScheme()Ljava/lang/String;:SAFE
-javax/servlet/http/HttpServletRequest.getServerName()Ljava/lang/String;:SAFE
+javax/servlet/http/HttpServletRequest.getServerName()Ljava/lang/String;:TAINTED
 javax/servlet/http/HttpServletRequest.getServletPath()Ljava/lang/String;:TAINTED
 
 javax/servlet/http/HttpServletRequestWrapper.getAttributeNames()Ljava/util/Enumeration;:SAFE
 javax/servlet/http/HttpServletRequestWrapper.changeSessionId()Ljava/lang/String;:SAFE
 javax/servlet/http/HttpServletRequestWrapper.getAuthType()Ljava/lang/String;:SAFE
 javax/servlet/http/HttpServletRequestWrapper.getCharacterEncoding()Ljava/lang/String;:SAFE
--javax/servlet/http/HttpServletRequestWrapper.getContentType()Ljava/lang/String;:?
--javax/servlet/http/HttpServletRequestWrapper.getContextPath()Ljava/lang/String;:?
+javax/servlet/http/HttpServletRequestWrapper.getContentType()Ljava/lang/String;:TAINTED
+javax/servlet/http/HttpServletRequestWrapper.getContextPath()Ljava/lang/String;:TAINTED
 javax/servlet/http/HttpServletRequestWrapper.getCookies()[Ljavax/servlet/http/Cookie;:TAINTED
 javax/servlet/http/HttpServletRequestWrapper.getHeader(Ljava/lang/String;)Ljava/lang/String;:TAINTED
 javax/servlet/http/HttpServletRequestWrapper.getHeaderNames()Ljava/util/Enumeration;:TAINTED
 javax/servlet/http/HttpServletRequestWrapper.getHeaders(Ljava/lang/String;)Ljava/util/Enumeration;:TAINTED
 javax/servlet/http/HttpServletRequestWrapper.getLocalAddr()Ljava/lang/String;:SAFE
--javax/servlet/http/HttpServletRequestWrapper.getLocalName()Ljava/lang/String;:?
+javax/servlet/http/HttpServletRequestWrapper.getLocalName()Ljava/lang/String;:TAINTED
 javax/servlet/http/HttpServletRequestWrapper.getMethod()Ljava/lang/String;:SAFE
 javax/servlet/http/HttpServletRequestWrapper.getParameter(Ljava/lang/String;)Ljava/lang/String;:TAINTED
 javax/servlet/http/HttpServletRequestWrapper.getParameterMap()Ljava/util/Map;:TAINTED
--javax/servlet/http/HttpServletRequestWrapper.getParameterNames()Ljava/util/Enumeration;:?
+javax/servlet/http/HttpServletRequestWrapper.getParameterNames()Ljava/util/Enumeration;:TAINTED
 javax/servlet/http/HttpServletRequestWrapper.getParameterValues(Ljava/lang/String;)[Ljava/lang/String;:TAINTED
 javax/servlet/http/HttpServletRequestWrapper.getProtocol()Ljava/lang/String;:SAFE
 javax/servlet/http/HttpServletRequestWrapper.getPathInfo()Ljava/lang/String;:TAINTED
@@ -74,24 +74,24 @@ javax/servlet/http/HttpServletRequestWrapper.getRemoteUser()Ljava/lang/String;:T
 javax/servlet/http/HttpServletRequestWrapper.getRequestURI()Ljava/lang/String;:TAINTED
 javax/servlet/http/HttpServletRequestWrapper.getRequestURL()Ljava/lang/StringBuffer;:TAINTED
 javax/servlet/http/HttpServletRequestWrapper.getScheme()Ljava/lang/String;:SAFE
-javax/servlet/http/HttpServletRequestWrapper.getServerName()Ljava/lang/String;:SAFE
+javax/servlet/http/HttpServletRequestWrapper.getServerName()Ljava/lang/String;:TAINTED
 javax/servlet/http/HttpServletRequestWrapper.getServletPath()Ljava/lang/String;:TAINTED
 
 javax/servlet/ServletRequestWrapper.getAttributeNames()Ljava/util/Enumeration;:SAFE
 javax/servlet/ServletRequestWrapper.getCharacterEncoding()Ljava/lang/String;:SAFE
--javax/servlet/ServletRequestWrapper.getContentType()Ljava/lang/String;:?
+javax/servlet/ServletRequestWrapper.getContentType()Ljava/lang/String;:TAINTED
 javax/servlet/ServletRequestWrapper.getLocalAddr()Ljava/lang/String;:SAFE
--javax/servlet/ServletRequestWrapper.getLocalName()Ljava/lang/String;:?
+javax/servlet/ServletRequestWrapper.getLocalName()Ljava/lang/String;:TAINTED
 javax/servlet/ServletRequestWrapper.getParameter(Ljava/lang/String;)Ljava/lang/String;:TAINTED
 javax/servlet/ServletRequestWrapper.getParameterMap()Ljava/util/Map;:TAINTED
--javax/servlet/ServletRequestWrapper.getParameterNames()Ljava/util/Enumeration;:?
+javax/servlet/ServletRequestWrapper.getParameterNames()Ljava/util/Enumeration;:TAINTED
 javax/servlet/ServletRequestWrapper.getParameterValues(Ljava/lang/String;)[Ljava/lang/String;:TAINTED
 javax/servlet/ServletRequestWrapper.getProtocol()Ljava/lang/String;:SAFE
 javax/servlet/ServletRequestWrapper.getRealPath(Ljava/lang/String;)Ljava/lang/String;:0
 javax/servlet/ServletRequestWrapper.getRemoteAddr()Ljava/lang/String;:SAFE
 javax/servlet/ServletRequestWrapper.getRemoteHost()Ljava/lang/String;:TAINTED
 javax/servlet/ServletRequestWrapper.getScheme()Ljava/lang/String;:SAFE
-javax/servlet/ServletRequestWrapper.getServerName()Ljava/lang/String;:SAFE
+javax/servlet/ServletRequestWrapper.getServerName()Ljava/lang/String;:TAINTED
 
 
 javax/servlet/http/Cookie.getComment()Ljava/lang/String;:TAINTED
@@ -103,7 +103,7 @@ javax/servlet/http/Cookie.getValue()Ljava/lang/String;:TAINTED
 
 -javax/servlet/ServletConfig.getInitParameter(Ljava/lang/String;)Ljava/lang/String;:?
 -javax/servlet/ServletConfig.getInitParameterNames()Ljava/util/Enumeration;:?
-javax/servlet/ServletConfig.getServletName()Ljava/lang/String;:SAFE
+-javax/servlet/ServletConfig.getServletName()Ljava/lang/String;:SAFE
 
 
 -javax/servlet/ServletContext.getContextPath()Ljava/lang/String;:?

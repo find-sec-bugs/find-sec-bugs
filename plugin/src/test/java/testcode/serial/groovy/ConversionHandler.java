@@ -15,24 +15,44 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package org.codehaus.groovy.runtime;
+package testcode.serial.groovy;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public abstract class ConversionHandler implements InvocationHandler, Serializable {
+    private Object delegate;
 
     public ConversionHandler(Object delegate) {
+        if (delegate == null) throw new IllegalArgumentException("delegate must not be null");
+        this.delegate = delegate;
     }
 
     public Object getDelegate() {
-        return null;
+        return this.delegate;
     }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        return null;
+        if (!checkMethod(method)) {
+             return invokeCustom(proxy, method, args);
+         }
+         try {
+             return method.invoke(this, args);
+         } catch (InvocationTargetException ite) {
+             throw ite.getTargetException();
+         }
     }
 
+    protected boolean checkMethod(Method method) {
+        return isCoreObjectMethod(method);
+    }
+
+    public abstract Object invokeCustom(Object proxy, Method method, Object[] args) throws Throwable;
+
+    public static boolean isCoreObjectMethod(Method method) {
+        return Object.class.equals(method.getDeclaringClass());
+    }
 }

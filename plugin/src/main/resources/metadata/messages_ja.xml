@@ -703,7 +703,7 @@ sha256Digest.update(password.getBytes());</pre>
 
 
     <!-- SAXParser XXE -->
-    <Detector class="com.h3xstream.findsecbugs.xxe.SaxParserXxeDetector">
+    <Detector class="com.h3xstream.findsecbugs.xml.XxeDetector">
         <Details>XXE に脆弱な XML パーサーの使用を特定します。</Details>
     </Detector>
 
@@ -2075,7 +2075,7 @@ XSS に対する最善の防御策は、上記の例のような状況に応じ�
 
 
     <!-- XML decoder -->
-    <Detector class="com.h3xstream.findsecbugs.XmlDecoderDetector">
+    <Detector class="com.h3xstream.findsecbugs.xml.XmlDecoderDetector">
         <Details>XMLDecoder (危険な XML シリアライザー) の使用を特定します。</Details>
     </Detector>
 

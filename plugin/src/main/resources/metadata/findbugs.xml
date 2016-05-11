@@ -32,7 +32,7 @@
     <Detector class="com.h3xstream.findsecbugs.crypto.CustomMessageDigestDetector" reports="CUSTOM_MESSAGE_DIGEST"/>
     <Detector class="com.h3xstream.findsecbugs.file.FileUploadFilenameDetector" reports="FILE_UPLOAD_FILENAME"/>
     <Detector class="com.h3xstream.findsecbugs.ReDosDetector" reports="REDOS"/>
-    <Detector class="com.h3xstream.findsecbugs.xxe.SaxParserXxeDetector" reports="XXE_SAXPARSER,XXE_XMLREADER,XXE_DOCUMENT"/>
+    <Detector class="com.h3xstream.findsecbugs.xml.XxeDetector" reports="XXE_SAXPARSER,XXE_XMLREADER,XXE_DOCUMENT"/>
     <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionDetector" reports="XPATH_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.endpoint.Struts1EndpointDetector" reports="STRUTS1_ENDPOINT"/>
     <Detector class="com.h3xstream.findsecbugs.endpoint.Struts2EndpointDetector" reports="STRUTS2_ENDPOINT"/>
@@ -61,7 +61,8 @@
     <Detector class="com.h3xstream.findsecbugs.jsp.JspSpringEvalDetector" reports="JSP_SPRING_EVAL" />
     <Detector class="com.h3xstream.findsecbugs.jsp.JstlOutDetector" reports="JSP_JSTL_OUT" />
     <Detector class="com.h3xstream.findsecbugs.jsp.XslTransformJspDetector" reports="JSP_XSLT" />
-    <Detector class="com.h3xstream.findsecbugs.XmlDecoderDetector" reports="XML_DECODER"/>
+    <Detector class="com.h3xstream.findsecbugs.xml.StdXmlTransformDetector" reports="MALICIOUS_XSLT" />
+    <Detector class="com.h3xstream.findsecbugs.xml.XmlDecoderDetector" reports="XML_DECODER"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.StaticIvDetector" reports="STATIC_IV"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.CipherWithNoIntegrityDetector" reports="ECB_MODE,PADDING_ORACLE,CIPHER_INTEGRITY"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.EsapiEncryptorDetector" reports="ESAPI_ENCRYPTOR"/>
@@ -75,7 +76,7 @@
     <Detector class="com.h3xstream.findsecbugs.android.GeolocationDetector" reports="ANDROID_GEOLOCATION"/>
     <Detector class="com.h3xstream.findsecbugs.android.WebViewJavascriptEnabledDetector" reports="ANDROID_WEB_VIEW_JAVASCRIPT"/>
     <Detector class="com.h3xstream.findsecbugs.android.WebViewJavascriptInterfaceDetector" reports="ANDROID_WEB_VIEW_JAVASCRIPT_INTERFACE"/>
-    <Detector class="com.h3xstream.findsecbugs.ObjectDeserializationDetector" reports="OBJECT_DESERIALIZATION"/>
+    <Detector class="com.h3xstream.findsecbugs.serial.ObjectDeserializationDetector" reports="OBJECT_DESERIALIZATION"/>
     <Detector class="com.h3xstream.findsecbugs.serial.DeserializationGadgetDetector" reports="DESERIALIZATION_GADGET"/>
     <Detector class="com.h3xstream.findsecbugs.TrustBoundaryViolationDetector" reports="TRUST_BOUNDARY_VIOLATION"/>
     <Detector class="com.h3xstream.findsecbugs.scala.PlayUnvalidatedRedirectDetector" reports="PLAY_UNVALIDATED_REDIRECT" />
@@ -144,6 +145,7 @@
     <BugPattern type="JSP_SPRING_EVAL" abbrev="SECJSPSPRING" category="SECURITY" cweid="917"/>
     <BugPattern type="JSP_JSTL_OUT" abbrev="SECJSPJSTL" category="SECURITY" cweid="79"/>
     <BugPattern type="JSP_XSLT" abbrev="SECJSPXSLT" category="SECURITY" cweid="94"/>
+    <BugPattern type="MALICIOUS_XSLT" abbrev="SECXSLT" category="SECURITY" cweid="94"/>
     <BugPattern type="XSS_SERVLET" abbrev="SECXSS2" category="SECURITY" cweid="79"/>
     <BugPattern type="XML_DECODER" abbrev="XMLDEC" category="SECURITY"/>
     <BugPattern type="STATIC_IV" abbrev="STAIV" category="SECURITY" cweid="329"/>
@@ -165,7 +167,7 @@
     <BugPattern type="ANDROID_WEB_VIEW_JAVASCRIPT" abbrev="SECWVJ" category="SECURITY" cweid="79"/>
     <BugPattern type="ANDROID_WEB_VIEW_JAVASCRIPT_INTERFACE" abbrev="SECWVJI" category="SECURITY" cweid="285"/>
     <BugPattern type="OBJECT_DESERIALIZATION" abbrev="SECOBDES" category="SECURITY" cweid="502"/>
-    <BugPattern type="DESERIALIZATION_GADGET" abbrev="SECDESGAD" category="EXPERIMENTAL" cweid="502"/>
+    <BugPattern type="DESERIALIZATION_GADGET" abbrev="SECDESGAD" category="SECURITY" cweid="502"  experimental="true"/>
     <BugPattern type="TRUST_BOUNDARY_VIOLATION" abbrev="SECTBV" category="SECURITY" cweid="501"/>
 
 

@@ -76,8 +76,7 @@ public class EasyBugReporter extends AbstractBugReporter {
         if (bugInstance.getPrimarySourceLineAnnotation() != null) {
             bugDetail.append("  line=" + bugInstance.getPrimarySourceLineAnnotation().getStartLine());
         }
-        bugDetail
-                .append("\n------------------------------------------------------");
+        bugDetail.append("\n------------------------------------------------------");
         log.info(bugDetail.toString());
         //bugCollection.add(bugInstance);
     }

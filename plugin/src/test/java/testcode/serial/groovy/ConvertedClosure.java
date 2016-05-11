@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 
 public class ConvertedClosure extends ConversionHandler implements Serializable {
+
     private String methodName;
     private static final long serialVersionUID = 1162833713450835227L;
 
@@ -20,6 +21,7 @@ public class ConvertedClosure extends ConversionHandler implements Serializable 
     }
 
     public Object invokeCustom(Object proxy, Method method, Object[] args) throws Throwable {
-        return this.methodName != null && !this.methodName.equals(method.getName())?null:((Closure)this.getDelegate()).call(args);
+        return this.methodName != null && !this.methodName.equals(method.getName()) ? null : ((Closure)this.getDelegate()).call(args);
     }
+
 }

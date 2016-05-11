@@ -17,21 +17,25 @@
  */
 package com.h3xstream.findsecbugs.serial;
 
-import com.h3xstream.findsecbugs.ObjectDeserializationDetector;
+import com.h3xstream.findsecbugs.common.ByteCode;
 import com.h3xstream.findsecbugs.common.InterfaceUtils;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Detector;
 import edu.umd.cs.findbugs.Priorities;
-import edu.umd.cs.findbugs.ba.CFGBuilderException;
-import edu.umd.cs.findbugs.ba.ClassContext;
+import edu.umd.cs.findbugs.ba.*;
+import org.apache.bcel.classfile.*;
 import org.apache.bcel.classfile.Constant;
-import org.apache.bcel.classfile.ConstantMethodHandle;
 import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InvokeInstruction;
+import org.apache.bcel.generic.ObjectType;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 public class DeserializationGadgetDetector implements Detector {
@@ -41,8 +45,11 @@ public class DeserializationGadgetDetector implements Detector {
             "java/lang/reflect/Method", //
             "java/lang/reflect/Constructor", //
             "org/springframework/beans/BeanUtils", //
-            "org/apache/commons/beanutils/BeanUtils",
-            "org/apache/commons/beanutils/PropertyUtils");
+            "org/apache/commons/beanutils/BeanUtils", //
+            "org/apache/commons/beanutils/PropertyUtils", //
+            "org/springframework/util/ReflectionUtils");
+
+    List<String> classesToIgnoreInReadObjectMethod = Arrays.asList("java/io/ObjectInputStream","java/lang/Object");
 
     private BugReporter bugReporter;
 
@@ -58,8 +65,11 @@ public class DeserializationGadgetDetector implements Detector {
         JavaClass javaClass = classContext.getJavaClass();
 
         boolean isSerializable = InterfaceUtils.isSubtype(javaClass, "java.io.Serializable");
+        boolean isInvocationHandler = InterfaceUtils.isSubtype(javaClass, "java.lang.reflect.InvocationHandler");
         boolean useDangerousApis = false;
-        boolean hasReadObjetMethod = false;
+        boolean customReadObjectMethod = false;
+        boolean customInvokeMethod = false;
+        boolean hasMethodField = false;
         if(!isSerializable) return; //Nothing to see, move on.
 
 
@@ -76,24 +86,74 @@ public class DeserializationGadgetDetector implements Detector {
 
         }
 
-        readObjet : for (Method m : javaClass.getMethods()) {
-            if(READ_DESERIALIZATION_METHODS.contains(m.getName())) {
-                hasReadObjetMethod = true;
-                break readObjet;
+        for (Method m : javaClass.getMethods()) {
+
+            if(!customReadObjectMethod && READ_DESERIALIZATION_METHODS.contains(m.getName())) {
+                try {
+                    customReadObjectMethod = hasCustomReadObject(m,classContext,classesToIgnoreInReadObjectMethod);
+                } catch (CFGBuilderException e) {
+                } catch (DataflowAnalysisException e) {
+                }
+            }
+            else if(!customInvokeMethod && "invoke".equals(m.getName())) {
+                try {
+                    customInvokeMethod = hasCustomReadObject(m,classContext,classesToIgnoreInReadObjectMethod);
+                } catch (CFGBuilderException e) {
+                } catch (DataflowAnalysisException e) {
+                }
             }
         }
 
-        if(isSerializable && useDangerousApis) {
-            int priority = hasReadObjetMethod ? Priorities.NORMAL_PRIORITY : Priorities.LOW_PRIORITY;
+
+        for(Field f : javaClass.getFields()) {
+            if((f.getName().toLowerCase().contains("method") && f.getType().equals(new ObjectType("java.lang.String"))) ||
+                    f.getType().equals(new ObjectType("java.reflect.Method"))) {
+                hasMethodField = true;
+            }
+        }
+
+        if((isSerializable && customReadObjectMethod) || (isInvocationHandler && customInvokeMethod)) {
+            int priority = useDangerousApis ? Priorities.NORMAL_PRIORITY : Priorities.LOW_PRIORITY;
 
             bugReporter.reportBug(new BugInstance(this, DESERIALIZATION_GADGET_TYPE, priority) //
                     .addClass(javaClass));
+        } else if (isSerializable && hasMethodField && useDangerousApis) {
+            bugReporter.reportBug(new BugInstance(this, DESERIALIZATION_GADGET_TYPE, Priorities.LOW_PRIORITY) //
+                    .addClass(javaClass));
         }
+    }
 
+
+    /**
+     * Check if the readObject is doing multiple external call beyond the basic readByte, readBoolean, etc..
+     * @param m
+     * @param classContext
+     * @return
+     * @throws CFGBuilderException
+     * @throws DataflowAnalysisException
+     */
+    private boolean hasCustomReadObject(Method m, ClassContext classContext,List<String> classesToIgnore) throws CFGBuilderException, DataflowAnalysisException {
+
+        ConstantPoolGen cpg = classContext.getConstantPoolGen();
+        CFG cfg = classContext.getCFG(m);
+        int count = 0;
+
+        for (Iterator<Location> i = cfg.locationIterator(); i.hasNext(); ) {
+            Location location = i.next();
+
+            Instruction inst = location.getHandle().getInstruction();
+            //ByteCode.printOpCode(inst,cpg);
+            if(inst instanceof InvokeInstruction) {
+                InvokeInstruction invoke = (InvokeInstruction) inst;
+                if(!READ_DESERIALIZATION_METHODS.contains(invoke.getMethodName(cpg)) && !classesToIgnore.contains(invoke.getClassName(cpg))) {
+                    count +=1;
+                }
+            }
+        }
+        return count > 3;
     }
 
     @Override
     public void report() {
-
     }
 }

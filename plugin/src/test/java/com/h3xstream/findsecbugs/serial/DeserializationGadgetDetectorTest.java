@@ -50,7 +50,8 @@ public class DeserializationGadgetDetectorTest extends BaseDetectorTest {
     public void detectGroovyGadget() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/serial/groovy/ConvertedClosure")
+                getClassFilePath("testcode/serial/groovy/ConvertedClosure"),
+                getClassFilePath("testcode/serial/groovy/ConversionHandler")
         };
 
         //Run the analysis
@@ -62,6 +63,11 @@ public class DeserializationGadgetDetectorTest extends BaseDetectorTest {
                 bugDefinition().bugType("DESERIALIZATION_GADGET") //
                         .inClass("ConvertedClosure") //
                         .withPriority("Low") //
+                        .build());
+        verify(reporter, times(1)).doReportBug(
+                bugDefinition().bugType("DESERIALIZATION_GADGET") //
+                        .inClass("ConversionHandler") //
+                        .withPriority("Medium") //
                         .build());
     }
 

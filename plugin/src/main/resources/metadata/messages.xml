@@ -5,8 +5,8 @@
     <Plugin>
         <ShortDescription>Find Security Bugs</ShortDescription>
         <Details>Find Security Bugs is a plugin that aims to help security audit.</Details>
-        <BugsUrl>http://h3xstream.github.io/find-sec-bugs/bugs.htm</BugsUrl>
-        <AllBugsUrl>http://h3xstream.github.io/find-sec-bugs/bugs.htm</AllBugsUrl>
+        <BugsUrl>http://find-sec-bugs.github.io/bugs.htm</BugsUrl>
+        <AllBugsUrl>http://find-sec-bugs.github.io/bugs.htm</AllBugsUrl>
     </Plugin>
 
     <!-- Predictable Pseudo Random Generator (PRG) -->
@@ -1056,7 +1056,7 @@ regex meant, this new regex can be evaluated quickly, and is not subject to ReDO
 
 
     <!-- SAXParser XXE -->
-    <Detector class="com.h3xstream.findsecbugs.xxe.SaxParserXxeDetector">
+    <Detector class="com.h3xstream.findsecbugs.xml.XxeDetector">
         <Details>Identify XML parser usage vulnerable to XXE</Details>
     </Detector>
 
@@ -2803,7 +2803,7 @@ which explains these defenses in significant detail.
 
 
     <!-- XML decoder -->
-    <Detector class="com.h3xstream.findsecbugs.XmlDecoderDetector">
+    <Detector class="com.h3xstream.findsecbugs.xml.XmlDecoderDetector">
         <Details>Identify use of XMLDecoder (a dangerous XML serializer).</Details>
     </Detector>
     <BugPattern type="XML_DECODER">
@@ -3190,7 +3190,7 @@ fos.write(string.getBytes());
         <Details>
             <![CDATA[
 <p>
-    Broadcast intents can be listen by any application with the appropriate permission. It is suggest to avoid transmitting
+    Broadcast intents can be listen by any application with the appropriate permission. It is suggested to avoid transmitting
     sensitive information when possible.
 </p>
 <p>
@@ -3323,7 +3323,7 @@ create on external storage. See references below for implementation guidelines.
         <Details>
             <![CDATA[
 <p>
-    It is suggest to ask the user for a confirmation about obtaining its geolocation.
+    It is suggested to ask the user for a confirmation about obtaining its geolocation.
 </p>
 <p>
     <b>Code at risk:</b><br/>
@@ -3337,7 +3337,7 @@ webView.setWebChromeClient(new WebChromeClient() {
 </pre>
 </p>
 <p>
-    <b>Suggest code:</b><br/>
+    <b>Suggested code:</b><br/>
 
     Limit the sampling of geolocation and ask the user for confirmation.
 <pre>
@@ -3576,7 +3576,7 @@ cookie.setHttpOnly(true); //HttpOnly flag
     <BugCode abbrev="SECHOC">Cookie without the HttpOnly flag</BugCode>
 
     <!-- Deserialization vulnerability -->
-    <Detector class="com.h3xstream.findsecbugs.ObjectDeserializationDetector">
+    <Detector class="com.h3xstream.findsecbugs.serial.ObjectDeserializationDetector">
         <Details>Object deserialization detector</Details>
     </Detector>
 
@@ -3611,7 +3611,7 @@ public UserData deserializeObject(InputStream receivedFile) throws IOException, 
 </p>
 
 <p>
-<b>Solution:</b><br/>
+<b>Solutions:</b><br/>
 <p>
 Avoid deserializing object provided by remote users.
 </p>
@@ -3621,7 +3621,7 @@ Avoid deserializing object provided by remote users.
 <a href="https://cwe.mitre.org/data/definitions/502.html">CWE-502: Deserialization of Untrusted Data</a><br/>
 <a href="https://www.owasp.org/index.php/Deserialization_of_untrusted_data">Deserialization of untrusted data</a><br/>
 <a href="http://www.oracle.com/technetwork/java/seccodeguide-139067.html#8">Serialization and Deserialization </a><br/>
-<a href="https://github.com/frohoff/ysoserial">A proof-of-concept tool for generating payloads that exploit unsafe Java object deserialization</a><br/>
+<a href="https://github.com/frohoff/ysoserial">A tool for generating payloads that exploit unsafe Java object deserialization</a><br/>
 [1] <a href="https://gist.github.com/coekie/a27cc406fc9f3dc7a70d">Example of Denial of Service using the class java.util.HashSet</a><br/>
 [2] <a href="https://bugzilla.redhat.com/show_bug.cgi?id=CVE-2015-2590">OpenJDK: Deserialization issue in ObjectInputStream.readSerialData() (CVE-2015-2590)</a><br/>
 [3] <a href="https://www.rapid7.com/db/modules/exploit/multi/browser/java_calendar_deserialize">Rapid7: Sun Java Calendar Deserialization Privilege Escalation (CVE-2008-5353)</a>
@@ -3641,13 +3641,21 @@ Avoid deserializing object provided by remote users.
         <LongDescription>This class could make application using serialization vulnerable</LongDescription>
         <Details>
             <![CDATA[
-
+<p>
+Deserialization gadget are class that could be use by an attacker to take advantage of a remote API using Native Serialization.
+This class is either adding custom behavior to deserialization with the readObject method (Serializable) or can be called
+ from a serialized object (InvocationHandler).
+</p>
+<p>
+This detector is intended to be use mostly by researcher. The real issue is using deserialization for remote operation.
+Removing gadget is an hardening practice to reduce the risk of being exploited.
+</p>
 <p>
 <b>References</b><br/>
 <a href="https://cwe.mitre.org/data/definitions/502.html">CWE-502: Deserialization of Untrusted Data</a><br/>
 <a href="https://www.owasp.org/index.php/Deserialization_of_untrusted_data">Deserialization of untrusted data</a><br/>
 <a href="http://www.oracle.com/technetwork/java/seccodeguide-139067.html#8">Serialization and Deserialization </a><br/>
-<a href="https://github.com/frohoff/ysoserial">A proof-of-concept tool for generating payloads that exploit unsafe Java object deserialization</a><br/>
+<a href="https://github.com/frohoff/ysoserial">A tool for generating payloads that exploit unsafe Java object deserialization</a><br/>
 [1] <a href="https://gist.github.com/coekie/a27cc406fc9f3dc7a70d">Example of Denial of Service using the class java.util.HashSet</a><br/>
 [2] <a href="https://bugzilla.redhat.com/show_bug.cgi?id=CVE-2015-2590">OpenJDK: Deserialization issue in ObjectInputStream.readSerialData() (CVE-2015-2590)</a><br/>
 [3] <a href="https://www.rapid7.com/db/modules/exploit/multi/browser/java_calendar_deserialize">Rapid7: Sun Java Calendar Deserialization Privilege Escalation (CVE-2008-5353)</a>
@@ -3722,9 +3730,84 @@ safe location rather than using direct user input.
         <LongDescription>A malicious XSLT could be provided to trigger remote code execution</LongDescription>
         <Details>
             <![CDATA[
-TODO
+<p>
+    "XSLT (Extensible Stylesheet Language Transformations) is a language for transforming XML documents into other XML documents".<sup>[1]</sup><br/>
+    It is possible to attach malicious behavior to those stylesheets. Therefore, if an attacker can control the content or the source of the
+    stylesheet, he might be able to trigger remote code execution.<sup>[2]</sup>
+</p>
+<p>
+<b>Code at risk:</b><br/>
+<pre>
+&#x3C;x:transform xml=&#x22;${xmlData}&#x22; xslt=&#x22;${xsltControlledByUser}&#x22; /&#x3E;
+</pre>
+</p>
+<p>
+<b>Solution:</b><br/>
+<p>
+The solution would be to make sure the stylesheet is loaded from a safe sources and make sure that vulnerabilities such as
+Path traversal <sup>[3][4]</sup> are not possible.
+</p>
+<p>
+<b>References</b><br/>
+[1] <a href="https://en.wikipedia.org/wiki/XSLT">Wikipedia: XSLT (Extensible Stylesheet Language Transformations)</a><br/>
+<a href="https://prezi.com/y_fuybfudgnd/offensive-xslt/">Offensive XSLT</a> by Nicolas Gregoire<br/>
+[2] <a href="http://www.agarri.fr/kom/archives/2012/07/02/from_xslt_code_execution_to_meterpreter_shells/index.html">From XSLT code execution to Meterpreter shells</a> by Nicolas Gregoire<br/>
+<a href="http://xhe.myxwiki.org/xwiki/bin/view/Main/">XSLT Hacking Encyclopedia</a> by Nicolas Gregoire<br/>
+<a href="http://www.acunetix.com/blog/articles/the-hidden-dangers-of-xsltprocessor-remote-xsl-injection/">Acunetix.com : The hidden dangers of XSLTProcessor - Remote XSL injection</a><br/>
+<a href="https://www.w3.org/TR/xslt">w3.org XSL Transformations (XSLT) Version 1.0</a> : w3c specification<br/>
+[3] <a href="http://projects.webappsec.org/w/page/13246952/Path%20Traversal">WASC: Path Traversal</a><br/>
+[4] <a href="https://www.owasp.org/index.php/Path_Traversal">OWASP: Path Traversal</a><br/>
+</p>
             ]]>
         </Details>
     </BugPattern>
     <BugCode abbrev="SECJSPXSLT">A malicious XSLT could be provided</BugCode>
+
+    <!-- XSLT -->
+    <Detector class="com.h3xstream.findsecbugs.xml.StdXmlTransformDetector">
+        <Details>Identify XSL transformation.</Details>
+    </Detector>
+    <BugPattern type="MALICIOUS_XSLT">
+        <ShortDescription>A malicious XSLT could be provided</ShortDescription>
+        <LongDescription>A malicious XSLT could be provided to trigger remote code execution</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    "XSLT (Extensible Stylesheet Language Transformations) is a language for transforming XML documents into other XML documents".<sup>[1]</sup><br/>
+    It is possible to attach malicious behavior to those stylesheets. Therefore, if an attacker can control the content or the source of the
+    stylesheet, he might be able to trigger remote code execution.<sup>[2]</sup>
+</p>
+<p>
+<b>Code at risk:</b><br/>
+<pre>
+Source xslt = new StreamSource(new FileInputStream(inputUserFile)); //Dangerous source to validate
+
+Transformer transformer = TransformerFactory.newInstance().newTransformer(xslt);
+
+Source text = new StreamSource(new FileInputStream("/data_2_process.xml"));
+transformer.transform(text, new StreamResult(...));
+</pre>
+</p>
+<p>
+<b>Solution:</b><br/>
+<p>
+The solution would be to make sure the stylesheet is loaded from a safe sources and make sure that vulnerabilities such as
+Path traversal <sup>[3][4]</sup> are not possible.
+</p>
+<p>
+<b>References</b><br/>
+[1] <a href="https://en.wikipedia.org/wiki/XSLT">Wikipedia: XSLT (Extensible Stylesheet Language Transformations)</a><br/>
+<a href="https://prezi.com/y_fuybfudgnd/offensive-xslt/">Offensive XSLT</a> by Nicolas Gregoire<br/>
+[2] <a href="http://www.agarri.fr/kom/archives/2012/07/02/from_xslt_code_execution_to_meterpreter_shells/index.html">From XSLT code execution to Meterpreter shells</a> by Nicolas Gregoire<br/>
+<a href="http://xhe.myxwiki.org/xwiki/bin/view/Main/">XSLT Hacking Encyclopedia</a> by Nicolas Gregoire<br/>
+<a href="http://www.acunetix.com/blog/articles/the-hidden-dangers-of-xsltprocessor-remote-xsl-injection/">Acunetix.com : The hidden dangers of XSLTProcessor - Remote XSL injection</a><br/>
+<a href="https://www.w3.org/TR/xslt">w3.org XSL Transformations (XSLT) Version 1.0</a> : w3c specification<br/>
+[3] <a href="http://projects.webappsec.org/w/page/13246952/Path%20Traversal">WASC: Path Traversal</a><br/>
+[4] <a href="https://www.owasp.org/index.php/Path_Traversal">OWASP: Path Traversal</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECXSLT">A malicious XSLT could be provided</BugCode>
+
 </MessageCollection>

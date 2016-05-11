@@ -15,12 +15,13 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs;
+package com.h3xstream.findsecbugs.serial;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.testng.annotations.Test;
 
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -35,7 +36,7 @@ public class ObjectDeserializationDetectorTest extends BaseDetectorTest {
     public void detectObjectDeserialization() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/ObjectDeserialization")
+                getClassFilePath("testcode/serial/ObjectDeserialization")
         };
 
         //Run the analysis
@@ -61,7 +62,7 @@ public class ObjectDeserializationDetectorTest extends BaseDetectorTest {
     public void detectObjectDeserializationClassLoaderObjectInputStream() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/ObjectDeserialization")
+                getClassFilePath("testcode/serial/ObjectDeserialization")
         };
 
         //Run the analysis
@@ -79,6 +80,24 @@ public class ObjectDeserializationDetectorTest extends BaseDetectorTest {
                 bugDefinition()
                         .bugType("OBJECT_DESERIALIZATION")
                         .inClass("ObjectDeserialization").inMethod("deserializeObjectWithInheritance")
+                        .build()
+        );
+    }
+
+    @Test
+    public void avoidReadObjectFalsePositive() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/serial/SerialisationFalsePositive")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new EasyBugReporter());
+        analyze(files, reporter);
+
+        verify(reporter,never()).doReportBug(
+                bugDefinition()
+                        .bugType("OBJECT_DESERIALIZATION")
                         .build()
         );
     }

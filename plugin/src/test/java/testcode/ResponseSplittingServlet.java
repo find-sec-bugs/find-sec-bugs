@@ -16,7 +16,7 @@ public abstract class ResponseSplittingServlet extends HttpServlet {
         resp.addHeader("header", unknown());
         callCookieSink(req.getParameter("h2"));
         String encoded = ESAPI.encoder().encodeForURL(req.getParameter("h3"));
-        resp.addHeader("header", ESAPI.encoder().encodeFromURL(encoded));
+        resp.addHeader("header", ESAPI.encoder().encodeForURL(encoded));
         
         // false positives
         String safe = "x".concat("y");

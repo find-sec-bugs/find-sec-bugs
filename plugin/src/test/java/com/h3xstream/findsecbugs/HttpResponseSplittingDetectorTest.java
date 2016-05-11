@@ -35,7 +35,7 @@ public class HttpResponseSplittingDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        for (Integer line : Arrays.asList(12, 15)) {
+        for (Integer line : Arrays.asList(13, 16)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("HTTP_RESPONSE_SPLITTING")
@@ -43,7 +43,7 @@ public class HttpResponseSplittingDetectorTest extends BaseDetectorTest {
                             .build()
             );
         }
-        for (Integer line : Arrays.asList(13, 14, 27)) {
+        for (Integer line : Arrays.asList(14, 15, 19, 30)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("HTTP_RESPONSE_SPLITTING")
@@ -51,6 +51,6 @@ public class HttpResponseSplittingDetectorTest extends BaseDetectorTest {
                             .build()
             );
         }
-        verify(reporter, times(5)).doReportBug(bugDefinition().bugType("HTTP_RESPONSE_SPLITTING").build());
+        verify(reporter, times(6)).doReportBug(bugDefinition().bugType("HTTP_RESPONSE_SPLITTING").build());
     }
 }

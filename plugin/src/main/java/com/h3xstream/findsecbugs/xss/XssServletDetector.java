@@ -23,34 +23,45 @@ import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.ba.ClassContext;
+import org.apache.bcel.generic.ConstantPoolGen;
 
 public class XssServletDetector extends BasicInjectionDetector {
 
-    //private static final String XSS_JSP_PRINT_TYPE = "XSS_JSP_PRINT";
     private static final String XSS_SERVLET_TYPE = "XSS_SERVLET";
+    private static final String[] REQUIRED_CLASSES = {
+        "Ljavax/servlet/http/ServletResponse;",
+        "Ljavax/servlet/http/ServletResponseWrapper;",
+        "Ljavax/servlet/http/HttpServletResponse;",
+        "Ljavax/servlet/http/HttpServletResponseWrapper;"
+    };
 
     public XssServletDetector(BugReporter bugReporter) {
         super(bugReporter);
         loadConfiguredSinks("xss-servlet.txt", XSS_SERVLET_TYPE);
     }
 
-    @Override
+     @Override
     protected int getPriority(Taint taint) {
         if (!taint.isSafe() && taint.hasTag(Taint.Tag.XSS_SAFE)) {
             return Priorities.LOW_PRIORITY;
-        } else if (taint.isTainted()) {
-            return Priorities.HIGH_PRIORITY;
-        } else if (!taint.isSafe()) {
-            return Priorities.NORMAL_PRIORITY;
+        } else if (!taint.isSafe()
+                && (taint.hasTag(Taint.Tag.QUOTE_ENCODED) || taint.hasTag(Taint.Tag.APOSTROPHE_ENCODED))
+                && taint.hasTag(Taint.Tag.LT_ENCODED)) {
+            return Priorities.LOW_PRIORITY;
         } else {
-            return Priorities.IGNORE_PRIORITY;
+            return super.getPriority(taint);
         }
     }
     
     @Override
     public boolean shouldAnalyzeClass(ClassContext classContext) {
-        String className = classContext.getClassDescriptor().getDottedClassName();
-        return InterfaceUtils.isSubtype(className, "javax.servlet.http.HttpServlet")
-                && !InterfaceUtils.isSubtype(className, XssJspDetector.JSP_PARENT_CLASSES);
+        ConstantPoolGen constantPoolGen = classContext.getConstantPoolGen();
+        for (String requiredClass : REQUIRED_CLASSES) {
+            if (constantPoolGen.lookupUtf8(requiredClass) != -1) {
+                String className = classContext.getClassDescriptor().getDottedClassName();
+                return !InterfaceUtils.isSubtype(className, XssJspDetector.JSP_PARENT_CLASSES);
+            }
+        }
+        return false;
     }
 }

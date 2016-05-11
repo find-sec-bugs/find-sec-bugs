@@ -26,30 +26,32 @@ import edu.umd.cs.findbugs.SystemProperties;
  */
 public class FindSecBugsGlobalConfig {
 
-    private static FindSecBugsGlobalConfig instance = null;
+    private static final FindSecBugsGlobalConfig instance = new FindSecBugsGlobalConfig();
 
-    private boolean printCustomInjectionWarning = true;
     private String findSecBugsVersion = "1.4.6";
-    private boolean debugOutputSummaries = false;
+    private boolean printCustomInjectionWarning = true;
     private boolean debugPrintInstructionVisited = false;
-
-
     private boolean debugPrintInvocationVisited = false;
     private boolean debugTaintState = false;
-
-    /** Singleton code */
+    
+    // set through SystemProperties
+    private boolean debugOutputSummaries;
+    private boolean taintedSystemVariables;
+    private String customConfigFile;
+    private boolean taintedMainArgument;
 
     protected FindSecBugsGlobalConfig() {
+        debugOutputSummaries = SystemProperties.getBoolean("findsecbugs.taint.outputsummaries", false);
+        taintedSystemVariables = SystemProperties.getBoolean("findsecbugs.taint.taintedsystemvariables", false);
+        customConfigFile = SystemProperties.getProperty("findsecbugs.taint.customconfigfile");
+        taintedMainArgument = SystemProperties.getBoolean("findsecbugs.taint.taintedmainargument", true);
     }
+    
     public static FindSecBugsGlobalConfig getInstance() {
-        if(instance == null) {
-            instance = new FindSecBugsGlobalConfig();
-            instance.debugOutputSummaries = SystemProperties.getBoolean("findsecbugs.taint.outputsummaries",false);
-        }
         return instance;
     }
 
-    /*** Getter and setter **/
+    /*** Getters and setters only **/
 
     /**
      * @return If the message regarding missing custom injection signatures should be printed.
@@ -100,5 +102,29 @@ public class FindSecBugsGlobalConfig {
 
     public void setDebugTaintState(boolean debugTaintState) {
         this.debugTaintState = debugTaintState;
+    }
+
+    public boolean isTaintedSystemVariables() {
+        return taintedSystemVariables;
+    }
+
+    public void setTaintedSystemVariables(boolean taintedSystemVariables) {
+        this.taintedSystemVariables = taintedSystemVariables;
+    }
+
+    public String getCustomConfigFile() {
+        return customConfigFile;
+    }
+
+    public void setCustomConfigFile(String customConfigFile) {
+        this.customConfigFile = customConfigFile;
+    }
+
+    public boolean isTaintedMainArgument() {
+        return taintedMainArgument;
+    }
+
+    public void setTaintedMainArgument(boolean taintedMainArguments) {
+        this.taintedMainArgument = taintedMainArguments;
     }
 }

@@ -32,30 +32,25 @@ public class RedirectionSource implements InjectionSource {
 
     @Override
     public InjectionPoint getInjectableParameters(InvokeInstruction ins, ConstantPoolGen cpg, InstructionHandle insHandle) {
-        //ByteCode.printOpCode(ins, cpg);
-
         if (ins instanceof INVOKEINTERFACE) {
             String methodName = ins.getMethodName(cpg);
-            String className = ins.getClassName(cpg);
-
-            if (className.equals("javax.servlet.http.HttpServletResponse")) {
+            String className = ins.getReferenceType(cpg).toString();
+            if (className.equals("javax.servlet.http.HttpServletResponse")
+                    || className.equals("javax.servlet.http.HttpServletResponseWrapper")) {
                 if (methodName.equals("sendRedirect")) {
                     InjectionPoint ip = new InjectionPoint(new int[]{0}, UNVALIDATED_REDIRECT_TYPE);
-                    ip.setInjectableMethod("HttpServletResponse.sendRedirect(...)");
+                    ip.setInjectableMethod(className.concat(".sendRedirect(...)"));
                     return ip;
-                    
-                } else if (methodName.equals("addHeader")) {
-
+                } else if (methodName.equals("addHeader") || methodName.equals("setHeader")) {
                     LDC ldc = ByteCode.getPrevInstruction(insHandle, LDC.class);
                     if (ldc != null) {
                         Object value = ldc.getValue(cpg);
                         if ("Location".equals(value)) {
-                            InjectionPoint ip = new InjectionPoint(new int[]{0},UNVALIDATED_REDIRECT_TYPE);
-                            ip.setInjectableMethod("HttpServletResponse.addHeader(\"Location\", ...)");
+                            InjectionPoint ip = new InjectionPoint(new int[]{0}, UNVALIDATED_REDIRECT_TYPE);
+                            ip.setInjectableMethod(className + "." + methodName + "(\"Location\", ...)");
                             return ip;
                         }
                     }
-
                 }
             }
         }

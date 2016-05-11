@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.taintanalysis;
 
+import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import edu.umd.cs.findbugs.ba.BasicBlock;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
 import edu.umd.cs.findbugs.ba.DepthFirstSearch;
@@ -27,6 +28,7 @@ import edu.umd.cs.findbugs.ba.generic.GenericSignatureParser;
 import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 import edu.umd.cs.findbugs.classfile.analysis.AnnotationValue;
 import edu.umd.cs.findbugs.classfile.analysis.MethodInfo;
+import edu.umd.cs.findbugs.io.IO;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,8 +37,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.MethodGen;
 
@@ -47,8 +47,6 @@ import org.apache.bcel.generic.MethodGen;
  * @author David Formanek
  */
 public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
-
-    private static final Logger LOG = Logger.getLogger(TaintAnalysis.class.getName());
 
     private final MethodGen methodGen;
     private final MethodInfo methodDescriptor;
@@ -102,10 +100,16 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
             Taint value = new Taint(Taint.State.UNKNOWN);
             if (i < numLocals) {
                 if (i < parameterStackSize) {
-                    if (inMainMethod || isTaintedByAnnotation(i - 1)) {
+                    if (isTaintedByAnnotation(i - 1)) {
                         value = new Taint(Taint.State.TAINTED);
-                        // this would add line number for the first instruction in the main method
+                        // this would add line number for the first instruction in the method
                         //value.addLocation(new TaintLocation(methodDescriptor, 0), true);
+                    } else if (inMainMethod) {
+                        if (FindSecBugsGlobalConfig.getInstance().isTaintedMainArgument()) {
+                            value = new Taint(Taint.State.TAINTED);
+                        } else {
+                            value = new Taint(Taint.State.SAFE);
+                        }
                     } else {
                         int stackOffset = parameterStackSize - i - 1;
                         value.addParameter(stackOffset);
@@ -246,18 +250,20 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
     }
 
     private static List<String> loadFileContent(String path) {
+        BufferedReader stream = null;
         try {
             InputStream in = TaintAnalysis.class.getClassLoader().getResourceAsStream(path);
-            BufferedReader stream = new BufferedReader(new InputStreamReader(in));
+            stream = new BufferedReader(new InputStreamReader(in, "utf-8"));
             String line;
             List<String> content = new ArrayList<String>();
             while ((line = stream.readLine()) != null) {
                 content.add(line.trim());
             }
-            stream.close();
             return content;
-        } catch (IOException e) {
-            LOG.log(Level.SEVERE, "Unable to load data from {0}", path);
+        } catch (IOException ex) {
+            assert false : ex.getMessage();
+        } finally {
+            IO.close(stream);
         }
         return new ArrayList<String>();
     }

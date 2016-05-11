@@ -77,7 +77,16 @@ public class Taint {
     }
 
     public enum Tag {
-        XSS_SAFE
+        XSS_SAFE,
+        SQL_INJECTION_SAFE,
+        COMMAND_INJECTION_SAFE,
+        LDAP_INJECTION_SAFE,
+        XPATH_INJECTION_SAFE,
+        CR_ENCODED,
+        LF_ENCODED,
+        QUOTE_ENCODED,
+        APOSTROPHE_ENCODED,
+        LT_ENCODED
     }
     
     private State state;
@@ -88,7 +97,9 @@ public class Taint {
     private final Set<Integer> parameters;
     private State nonParametricState;
     private ObjectType realInstanceClass;
-    private EnumSet<Tag> tags;
+    private final Set<Tag> tags;
+    private final Set<Tag> tagsToRemove;
+    private String constantValue;
     private String debugInfo = null;
 
     public Taint(State state) {
@@ -104,6 +115,8 @@ public class Taint {
         this.nonParametricState = State.INVALID;
         this.realInstanceClass = null;
         this.tags = EnumSet.noneOf(Tag.class);
+        this.tagsToRemove = EnumSet.noneOf(Tag.class);
+        this.constantValue = null;
         if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             this.debugInfo = "?";
         }
@@ -120,6 +133,8 @@ public class Taint {
         this.nonParametricState = taint.nonParametricState;
         this.realInstanceClass = taint.realInstanceClass;
         this.tags = EnumSet.copyOf(taint.tags);
+        this.tagsToRemove = EnumSet.copyOf(taint.tagsToRemove);
+        this.constantValue = taint.constantValue;
         if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             this.debugInfo = taint.debugInfo;
         }
@@ -245,8 +260,29 @@ public class Taint {
         return !tags.isEmpty();
     }
     
+    public Set<Tag> getTags() {
+        return Collections.unmodifiableSet(tags);
+    }
+    
     public boolean removeTag(Tag tag) {
+        tagsToRemove.add(tag);
         return tags.remove(tag);
+    }
+    
+    public boolean isRemovingTags() {
+        return !tagsToRemove.isEmpty();
+    }
+    
+    public Set<Tag> getTagsToRemove() {
+        return Collections.unmodifiableSet(tagsToRemove);
+    }
+    
+    public String getConstantValue() {
+        return constantValue;
+    }
+    
+    void setConstantValue(String value) {
+        this.constantValue = value;
     }
     
     public static Taint valueOf(String stateName) {
@@ -281,12 +317,18 @@ public class Taint {
         result.taintLocations.addAll(b.taintLocations);
         result.unknownLocations.addAll(a.unknownLocations);
         result.unknownLocations.addAll(b.unknownLocations);
-        mergeParameters(a, b, result);
+        if (!result.isTainted()) {
+           mergeParameters(a, b, result); 
+        }
         mergeRealInstanceClass(a, b, result);
         mergeTags(a, b, result);
+        if (a.constantValue != null && a.constantValue.equals(b.constantValue)) {
+            result.constantValue = a.constantValue;
+        }
         if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             result.setDebugInfo("[" + a.getDebugInfo() + "]+[" + b.getDebugInfo() + "]");
         }
+        assert !result.hasParameters() || result.isUnknown();
         return result;
     }
 
@@ -330,6 +372,8 @@ public class Taint {
             result.tags.addAll(a.tags);
             result.tags.retainAll(b.tags);
         }
+        result.tagsToRemove.addAll(a.tagsToRemove);
+        result.tagsToRemove.addAll(b.tagsToRemove);
     }
 
     @Override
@@ -351,13 +395,14 @@ public class Taint {
                 && this.parameters.equals(other.parameters)
                 && this.nonParametricState == other.nonParametricState
                 && Objects.equals(this.realInstanceClass, other.realInstanceClass)
-                && this.tags.equals(other.tags);
+                && this.tags.equals(other.tags)
+                && Objects.equals(this.constantValue, other.constantValue);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(state, variableIndex, taintLocations, unknownLocations,
-                parameters, nonParametricState, realInstanceClass, tags);
+                parameters, nonParametricState, realInstanceClass, tags, constantValue);
     }
 
     public String getDebugInfo() {

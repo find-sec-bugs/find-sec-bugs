@@ -19,6 +19,7 @@ package com.h3xstream.findsecbugs.xss;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
+import java.util.Arrays;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
@@ -92,33 +93,35 @@ public class XssServletDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        verify(reporter).doReportBug(
+        for (Integer line : Arrays.asList(24, 28, 30)) {
+            verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("XSS_SERVLET")
-                        .inClass("XssServlet3").inMethod("writeWithEncoders").withPriority("High").atLine(24)
+                        .inClass("XssServlet3").inMethod("writeWithEncoders").withPriority("High").atLine(line)
                         .build()
+            );
+        }
+        for (Integer line : Arrays.asList(26, 27, 29, 31)) {
+            verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("XSS_SERVLET")
+                        .inClass("XssServlet3").inMethod("writeWithEncoders").withPriority("Low").atLine(line)
+                        .build()
+            );
+        }
+        verify(reporter).doReportBug(
+                bugDefinition()
+                    .bugType("XSS_SERVLET")
+                    .inClass("XssServlet3").inMethod("uncalledSink").withPriority("Medium")
+                    .build()
         );
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("XSS_SERVLET")
-                        .inClass("XssServlet3").inMethod("writeWithEncoders").withPriority("High").atLine(28)
-                        .build()
+                    .bugType("XSS_SERVLET")
+                    .inClass("XssServlet3").inMethod("sinkCalledOnlyWithEncoded").withPriority("Low")
+                    .build()
         );
-
-        verify(reporter).doReportBug(
-                bugDefinition()
-                        .bugType("XSS_SERVLET")
-                        .inClass("XssServlet3").inMethod("writeWithEncoders").withPriority("Low").atLine(26)
-                        .build()
-        );
-        verify(reporter).doReportBug(
-                bugDefinition()
-                        .bugType("XSS_SERVLET")
-                        .inClass("XssServlet3").inMethod("writeWithEncoders").withPriority("Low").atLine(27)
-                        .build()
-        );
-        
-        verify(reporter, times(4)).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
+        verify(reporter, times(3 + 4 + 2)).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
     }
 
 

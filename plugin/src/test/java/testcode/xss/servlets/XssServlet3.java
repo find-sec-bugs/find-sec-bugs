@@ -16,7 +16,7 @@ public class XssServlet3 extends HttpServlet {
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String input1 = req.getParameter("input1");
-
+        sinkCalledOnlyWithEncoded(resp.getWriter(), ESAPI.encoder().encodeForHTML(input1));
         writeWithEncoders(resp.getWriter(), input1);
     }
 
@@ -26,5 +26,24 @@ public class XssServlet3 extends HttpServlet {
         pw.write(encoded.toLowerCase() + SAFE_VALUE);
         pw.write(StringEscapeUtils.escapeHtml(input1));
         pw.write(ESAPI.encoder().decodeForHTML(encoded) + SAFE_VALUE);
+        pw.write(myEncode(input1));
+        pw.write(myDecode(encoded));
+        pw.write(input1.replaceAll("[\"'<>&]", ""));
+    }
+    
+    public String myEncode(String str) {
+        return ESAPI.encoder().encodeForHTML(str + "safe") + "safe";
+    }
+    
+    public String myDecode(String str) {
+        return ESAPI.encoder().decodeForHTML(str + "safe") + "safe";
+    }
+    
+    public void uncalledSink(PrintWriter pw, String str) {
+        pw.write(str);
+    }
+    
+    public void sinkCalledOnlyWithEncoded(PrintWriter pw, String str) {
+        pw.write(str);
     }
 }

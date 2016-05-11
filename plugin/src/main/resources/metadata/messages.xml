@@ -2757,7 +2757,7 @@ which explains these defenses in significant detail.
     <!-- XSS in Servlet -->
     <BugPattern type="XSS_SERVLET">
         <ShortDescription>Potential XSS in Servlet</ShortDescription>
-        <LongDescription>Potential XSS in Servlet</LongDescription>
+        <LongDescription>This use of {3} could be vulnerable to XSS</LongDescription>
         <Details>
             <![CDATA[
 <p>

@@ -123,6 +123,14 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         REPLACE_TAGS.put("<", Taint.Tag.LT_ENCODED);
     }
 
+    /**
+     * Constructs the object and stores the parameters
+     * 
+     * @param cpg constant pool gen for super class
+     * @param method descriptor of analysed method
+     * @param methodSummaries current configured and derived taint summaries
+     * @throws NullPointerException if arguments method or methodSummaries is null
+     */
     public TaintFrameModelingVisitor(ConstantPoolGen cpg, MethodDescriptor method,
             TaintMethodSummaryMap methodSummaries) {
         super(cpg);
@@ -600,12 +608,12 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     private void transferTaintToMutables(TaintMethodSummary methodSummary, Taint taint) {
         assert taint != null;
-        if (methodSummary == null || !methodSummary.hasMutableStackIndeces()) {
+        if (methodSummary == null || !methodSummary.hasMutableStackIndices()) {
             return;
         }
         try {
             int stackDepth = getFrame().getStackDepth();
-            for (Integer mutableStackIndex : methodSummary.getMutableStackIndeces()) {
+            for (Integer mutableStackIndex : methodSummary.getMutableStackIndices()) {
                 assert mutableStackIndex >= 0;
                 if (mutableStackIndex >= stackDepth) {
                     if (!Constants.CONSTRUCTOR_NAME.equals(methodDescriptor.getName())

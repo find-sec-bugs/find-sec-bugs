@@ -43,7 +43,7 @@ import org.apache.bcel.generic.MethodGen;
  * Requests or creates needed objects and execute taint analysis,
  * extends taint method summaries with analyzed methods
  * 
- * @author David Formanek
+ * @author David Formanek (Y Soft Corporation, a.s.)
  */
 public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow> {
 
@@ -84,6 +84,9 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
         }
     }
 
+    /**
+     * Constructs the engine and loads all configured method summaries
+     */
     public TaintDataflowEngine() {
         for (String path : METHODS_SUMMARIES_FILENAMES) {
             loadMethodSummaries(METHODS_SUMMARIES_PATH.concat(path), true);

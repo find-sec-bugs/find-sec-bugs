@@ -21,9 +21,9 @@ import edu.umd.cs.findbugs.classfile.IAnalysisCache;
 import edu.umd.cs.findbugs.classfile.IAnalysisEngineRegistrar;
 
 /**
- * Registers taint analysis with analysis cache
+ * Registers taint analysis (dataflow engine) with analysis cache
  * 
- * @author David Formanek
+ * @author David Formanek (Y Soft Corporation, a.s.)
  */
 public class EngineRegistrar implements IAnalysisEngineRegistrar {
 

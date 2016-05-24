@@ -4,6 +4,8 @@ java/lang/Object.equals(Ljava/lang/Object;)Z:UNKNOWN
 - Not true, but allows analysis of methods calling toString on Object instances
 java/lang/Object.toString()Ljava/lang/String;:0
 
+java/lang/Enum.name()Ljava/lang/String;:SAFE
+java/lang/Enum.toString()Ljava/lang/String;:SAFE
 
 - Objects from Java 8 function package are UNKNOWN by default, some could be made SAFE or TAINTED in the future
 java/lang/Iterable.forEach(Ljava/util/function/Consumer;)V:0,1#1

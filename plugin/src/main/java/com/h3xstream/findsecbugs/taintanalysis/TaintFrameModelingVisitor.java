@@ -86,6 +86,22 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         SAFE_OBJECT_TYPES.add("Ljava/lang/Byte;");
         SAFE_OBJECT_TYPES.add("Ljava/lang/Short;");
         SAFE_OBJECT_TYPES.add("Ljava/math/BigDecimal;");
+        SAFE_OBJECT_TYPES.add("Ljava/util/Date;");
+        SAFE_OBJECT_TYPES.add("Ljava/sql/Time;");
+        SAFE_OBJECT_TYPES.add("Ljava/time/Duration;");
+        SAFE_OBJECT_TYPES.add("Ljava/time/Instant;");
+        SAFE_OBJECT_TYPES.add("Ljava/time/LocalDate;");
+        SAFE_OBJECT_TYPES.add("Ljava/time/LocalDateTime;");
+        SAFE_OBJECT_TYPES.add("Ljava/time/LocalTime;");
+        SAFE_OBJECT_TYPES.add("Ljava/time/MonthDay;");
+        SAFE_OBJECT_TYPES.add("Ljava/time/OffsetDateTime;");
+        SAFE_OBJECT_TYPES.add("Ljava/time/OffsetTime;");
+        SAFE_OBJECT_TYPES.add("Ljava/time/Period;");
+        SAFE_OBJECT_TYPES.add("Ljava/time/Year;");
+        SAFE_OBJECT_TYPES.add("Ljava/time/YearMonth;");
+        SAFE_OBJECT_TYPES.add("Ljava/time/ZonedDateTime;");
+        SAFE_OBJECT_TYPES.add("Ljava/time/ZonedId;");
+        SAFE_OBJECT_TYPES.add("Ljava/time/ZoneOffset;");
         // these data types are not modified, when passed as a parameter to an unknown method
         IMMUTABLE_OBJECT_TYPES = new HashSet<String>(SAFE_OBJECT_TYPES.size() + 9);
         IMMUTABLE_OBJECT_TYPES.addAll(SAFE_OBJECT_TYPES);

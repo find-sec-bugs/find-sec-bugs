@@ -19,6 +19,9 @@ package com.h3xstream.findsecbugs.injection;
 
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.util.ClassName;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.bcel.generic.ConstantPoolGen;
@@ -49,6 +52,15 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
             return InjectionPoint.NONE;
         }
         return injectionPoint;
+    }
+
+    protected void loadConfiguredSinks(InputStream stream, String bugType) throws IOException {
+        SINKS_LOADER.loadSinks(stream, bugType, new SinksLoader.InjectionPointReceiver() {
+            @Override
+            public void receiveInjectionPoint(String fullMethodName, InjectionPoint injectionPoint) {
+                addParsedInjectionPoint(fullMethodName, injectionPoint);
+            }
+        });
     }
 
     protected void loadConfiguredSinks(String filename, String bugType) {

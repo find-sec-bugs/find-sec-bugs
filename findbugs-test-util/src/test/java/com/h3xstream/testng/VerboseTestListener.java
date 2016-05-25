@@ -43,6 +43,12 @@ public class VerboseTestListener extends TestListenerAdapter {
 
     @Override
     public void onFinish(ITestContext ctx) {
+        System.gc();
+        Runtime rt = Runtime.getRuntime();
+        long inMb = 1024 * 1024;
+        log.info("Total memory : " + rt.totalMemory() / inMb);
+        log.info("Free memory  : " + rt.freeMemory() / inMb);
+        log.info("Memory usage : " + (rt.totalMemory() - rt.freeMemory()) / inMb);
         log.info("<<<<<<<<<<<<<<<<<<<< {} finished >>>>>>>>>>>>>>>>>>>>", ctx.getName());
     }
 }

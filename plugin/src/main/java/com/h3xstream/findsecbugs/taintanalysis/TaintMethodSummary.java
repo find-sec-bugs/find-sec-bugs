@@ -40,29 +40,56 @@ public class TaintMethodSummary {
         SAFE_SUMMARY.outputTaint = new Taint(Taint.State.SAFE);
     }
 
+    /**
+     * Constructs an emty summary
+     * 
+     * @param isConfigured true for configured summaries, false for derived
+     */
     public TaintMethodSummary(boolean isConfigured) {
         outputTaint = null;
         mutableStackIndices = new HashSet<Integer>();
         this.isConfigured = isConfigured;
     }
 
+    /**
+     * Creates a copy of the summary (output taint not copied)
+     * 
+     * @param summary original summary to copy
+     */
     public TaintMethodSummary(TaintMethodSummary summary) {
         this.mutableStackIndices = summary.mutableStackIndices;
         this.isConfigured = summary.isConfigured;
     }
     
-    public Collection<Integer> getMutableStackIndeces() {
-        if (!hasMutableStackIndeces()) {
-            throw new IllegalStateException("stack indeces not set");
+    /**
+     * Returns all stack indices modified by method if there are any
+     * 
+     * @return unmodifiable collection of indices
+     * @throws IllegalStateException if there are not indices set
+     */
+    public Collection<Integer> getMutableStackIndices() {
+        if (!hasMutableStackIndices()) {
+            throw new IllegalStateException("stack indices not set");
         }
         return Collections.unmodifiableCollection(mutableStackIndices);
     }
 
-    public boolean hasMutableStackIndeces() {
+    /**
+     * Checks if there are any indices modified by method
+     * 
+     * @return true if some index is set, false otherwise
+     */
+    public boolean hasMutableStackIndices() {
         assert mutableStackIndices != null;
         return !mutableStackIndices.isEmpty();
     }
 
+    /**
+     * Adds a stack index modified by method
+     * 
+     * @param mutableStackIndex index to add
+     * @throws IllegalArgumentException if index is negative
+     */
     public void addMutableStackIndex(int mutableStackIndex) {
         if (mutableStackIndex < 0) {
             throw new IllegalArgumentException("negative index");
@@ -70,6 +97,11 @@ public class TaintMethodSummary {
         mutableStackIndices.add(mutableStackIndex);
     }
 
+    /**
+     * Returns the output taint of the method describing the taint transfer
+     * 
+     * @return a copy of the output taint or null if not set
+     */
     public Taint getOutputTaint() {
         if (outputTaint == null) {
             return null;
@@ -77,6 +109,12 @@ public class TaintMethodSummary {
         return new Taint(outputTaint);
     }
 
+    /**
+     * Sets the output taint of the method describing the taint transfer,
+     * copy of the parameter is made and variable index is invalidated
+     * 
+     * @param taint output taint to set
+     */
     public void setOuputTaint(Taint taint) {
         if (taint == null) {
             this.outputTaint = null;
@@ -87,6 +125,14 @@ public class TaintMethodSummary {
         this.outputTaint = taintCopy;
     }
 
+    /**
+     * Constructs a default constructor summary
+     * (modifies 2 stack items with UNKNOWN taint state)
+     * 
+     * @param stackSize size of the parameter stack (including instance)
+     * @return new instance of default summary
+     * @throws IllegalArgumentException for stackSize &lt; 1
+     */
     public static TaintMethodSummary getDefaultConstructorSummary(int stackSize) {
         if (stackSize < 1) {
             throw new IllegalArgumentException("stack size less than 1");
@@ -98,6 +144,11 @@ public class TaintMethodSummary {
         return summary;
     }
 
+    /**
+     * Checks if the summary needs to be saved or has no information value
+     * 
+     * @return true if summary should be saved, false otherwise
+     */
     public boolean isInformative() {
         if (this == SAFE_SUMMARY) {
             // these are loaded automatically, do not need to store them
@@ -121,6 +172,11 @@ public class TaintMethodSummary {
         return false;
     }
 
+    /**
+     * Checks if the summary is configured or derived
+     * 
+     * @return true if configured, false if derived
+     */
     public boolean isConfigured() {
         return isConfigured;
     }
@@ -170,7 +226,7 @@ public class TaintMethodSummary {
                 sb.append(tag.name());
             }
         }
-        if (hasMutableStackIndeces()) {
+        if (hasMutableStackIndices()) {
             sb.append("#");
             appendJoined(sb, mutableStackIndices);
         }
@@ -197,6 +253,7 @@ public class TaintMethodSummary {
      * @param str (state or parameter indices to merge separated by comma)#mutable position
      * @return initialized object with taint method summary
      * @throws java.io.IOException for bad format of paramter
+     * @throws NullPointerException if argument is null
      */
     public static TaintMethodSummary load(String str) throws IOException {
         if (str == null) {

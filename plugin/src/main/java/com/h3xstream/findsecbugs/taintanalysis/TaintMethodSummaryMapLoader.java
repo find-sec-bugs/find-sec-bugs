@@ -22,8 +22,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+/**
+ * Helper class for loading configured taint method summaries
+ */
 public class TaintMethodSummaryMapLoader {
 
+    /**
+     * Loads the method summaries and do what is specified
+     * 
+     * @param input input stream with configured summaries
+     * @param receiver specifies the action for each summary when loaded
+     * @throws IOException if cannot read the stream or the format is bad
+     */
     public void load(InputStream input, TaintMethodSummaryReceiver receiver) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
         for (;;) {
@@ -51,6 +61,9 @@ public class TaintMethodSummaryMapLoader {
         receiver.receiveTaintMethodSummary(tuple[0].trim(), TaintMethodSummary.load(tuple[1]));
     }
 
+    /**
+     * Specifies what to do for each loaded method summary
+     */
     public interface TaintMethodSummaryReceiver {
         void receiveTaintMethodSummary(String fullMethodName, TaintMethodSummary taintMethodSummary);
     }

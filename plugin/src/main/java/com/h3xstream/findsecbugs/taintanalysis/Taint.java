@@ -53,6 +53,14 @@ public class Taint {
             this.isUnknown = isUnknown;
         }
 
+        /**
+         * Returns the "more dangerous" state (TAINTED &gt; UNKNOWN &gt; SAFE
+         * &gt; NULL &gt; INVALID) as a merge of two states
+         * 
+         * @param a first state to merge
+         * @param b second state to merge
+         * @return one of the values a, b
+         */
         public static State merge(State a, State b) {
             if (a == null || b == null) {
                 throw new NullPointerException(
@@ -102,6 +110,13 @@ public class Taint {
     private String constantValue;
     private String debugInfo = null;
 
+    /**
+     * Constructs a new empty instance of Taint with the specified state
+     * 
+     * @param state state of the fact
+     * @throws NullPointerException if argument is null
+     * @throws IllegalArgumentException if argument is INVALID
+     */
     public Taint(State state) {
         Objects.requireNonNull(state, "state is null");
         if (state == State.INVALID) {
@@ -122,6 +137,12 @@ public class Taint {
         }
     }
 
+    /**
+     * Creates a hard copy of the specified Taint instance
+     * 
+     * @param taint instance to copy
+     * @throws NullPointerException if argument is null
+     */
     public Taint(Taint taint) {
         Objects.requireNonNull(taint, "taint is null");
         assert taint.state != null;
@@ -140,6 +161,11 @@ public class Taint {
         }
     }
 
+    /**
+     * Returns the taint state of this fact
+     * 
+     * @return taint state
+     */
     public State getState() {
         assert state != null && state != State.INVALID;
         return state;
@@ -153,6 +179,13 @@ public class Taint {
         this.state = state;
     }
 
+    /**
+     * If known (check first), returns the index of the local variable,
+     * where the value matching this fact is stored
+     * 
+     * @return the index in the frame
+     * @throws IllegalStateException if index is uknown
+     */
     public int getVariableIndex() {
         if (variableIndex == INVALID_INDEX) {
             throw new IllegalStateException("index not set or has been invalidated");
@@ -161,6 +194,11 @@ public class Taint {
         return variableIndex;
     }
 
+    /**
+     * Checks if the index of the local variable matching this fact is known
+     * 
+     * @return true if index is known, false otherwise
+     */
     public boolean hasValidVariableIndex() {
         return variableIndex != INVALID_INDEX;
     }
@@ -176,6 +214,13 @@ public class Taint {
         variableIndex = INVALID_INDEX;
     }
 
+    /**
+     * Adds location for a taint source or path to remember for reporting
+     * 
+     * @param location location to remember
+     * @param isKnownTaintSource true for tainted value, false if just not safe
+     * @throws NullPointerException if location is null
+     */
     public void addLocation(TaintLocation location, boolean isKnownTaintSource) {
         Objects.requireNonNull(location, "location is null");
         if (isKnownTaintSource) {
@@ -185,6 +230,13 @@ public class Taint {
         }
     }
 
+    /**
+     * Returns locations with taint sources or nodes on path from those
+     * sources, if there are some locations confirmed to be tainted,
+     * only those are returned
+     * 
+     * @return unmodifiable set of locations
+     */
     public Set<TaintLocation> getLocations() {
         if (taintLocations.isEmpty()) {
             return Collections.unmodifiableSet(unknownLocations);
@@ -192,15 +244,29 @@ public class Taint {
         return Collections.unmodifiableSet(taintLocations);
     }
 
+    /**
+     * Checks whether values matching this fact are always trusted
+     * 
+     * @return true if the taint state is safe (or null), false otherwise
+     */
     public boolean isSafe() {
         return state.isSafe;
     }
 
+    /**
+     * Checks whether values matching this fact are probably untrusted
+     * 
+     * @return true for the state TAINTED, false otherwise
+     */
     public boolean isTainted() {
-        // in context of taint analysis, null value is safe too
         return state.isTainted;
     }
 
+    /**
+     * Checks whether values matching this fact can be untrusted but also safe
+     * 
+     * @return true for the state UNKNOWN, false otherwise
+     */
     public boolean isUnknown() {
         return state.isUnknown;
     }
@@ -212,14 +278,30 @@ public class Taint {
         parameters.add(parameterIndex);
     }
 
+    /**
+     * Checks if the taint state of this fact depends on the method arguments
+     * 
+     * @return true if there is an influence, false otherwise
+     */
     public boolean hasParameters() {
         return !parameters.isEmpty();
     }
 
+    /**
+     * Returns the method arguments influencing the taint state of this fact
+     * 
+     * @return unmodifiable set of parameter indices
+     */
     public Set<Integer> getParameters() {
         return Collections.unmodifiableSet(parameters);
     }
 
+    /**
+     * Gets the state influencing the state of this fact if dependant on method
+     * arguments, final state is given by merge of that state and arguments
+     * 
+     * @return 
+     */
     public State getNonParametricState() {
         return nonParametricState;
     }
@@ -232,6 +314,11 @@ public class Taint {
         nonParametricState = state;
     }
 
+    /**
+     * Finds out the real type of instance matching this fact if possible
+     * 
+     * @return type of the instance or null if uknown
+     */
     public ObjectType getRealInstanceClass() {
         return realInstanceClass;
     }
@@ -241,6 +328,11 @@ public class Taint {
         realInstanceClass = objectType;
     }
 
+    /**
+     * Finds out the real class name of instance matching this fact if possible
+     * 
+     * @return class name of the instance or null if uknown
+     */
     public String getRealInstanceClassName() {
         if (realInstanceClass == null) {
             return null;
@@ -248,35 +340,81 @@ public class Taint {
         return ClassName.toSlashedClassName(realInstanceClass.getClassName());
     }
 
+    /**
+     * Adds the specified taint tag to this fact or marks this tag to add
+     * if this fact acts like a derivation of taint transfer behaviour
+     * 
+     * @param tag tag to add
+     * @return true if this tag was not present before, false otherwise
+     */
     public boolean addTag(Tag tag) {
         return tags.add(tag);
     }
     
+    /**
+     * Checks whether the specified taint tag is present for this fact
+     * 
+     * @param tag tag to check
+     * @return true if it is present, false otherwise
+     */
     public boolean hasTag(Tag tag) {
         return tags.contains(tag);
     }
     
+    /**
+     * Checks if there are any taint tags for this fact
+     * 
+     * @return true if number of tags is &gt; 0, false otherwise
+     */
     public boolean hasTags() {
         return !tags.isEmpty();
     }
     
+    /**
+     * Returns all present taint tags for this fact
+     * 
+     * @return unmodifiable set of all present taint tags
+     */
     public Set<Tag> getTags() {
         return Collections.unmodifiableSet(tags);
     }
     
+    /**
+     * Removes the specified tag (if present) or marks this tag to remove
+     * if this fact acts like a derivation of taint transfer behaviour
+     * 
+     * @param tag tag to remove
+     * @return true if the tag was present, false otherwise
+     */
     public boolean removeTag(Tag tag) {
         tagsToRemove.add(tag);
         return tags.remove(tag);
     }
     
+    /**
+     * Checks if there are some tags to remove
+     * (if this fact acts like a taint derivation spec.)
+     * 
+     * @return true if there are some, false otherwise
+     */
     public boolean isRemovingTags() {
         return !tagsToRemove.isEmpty();
     }
     
+    /**
+     * Returns tags to remove (if this fact acts like a taint derivation spec.)
+     * 
+     * @return unmodifiable set of tags
+     */
     public Set<Tag> getTagsToRemove() {
         return Collections.unmodifiableSet(tagsToRemove);
     }
     
+    /**
+     * Returns the constant value of the string or char if known
+     * 
+     * @return constant value or null if unknown
+     */
     public String getConstantValue() {
         return constantValue;
     }
@@ -285,11 +423,25 @@ public class Taint {
         this.constantValue = value;
     }
     
+    /**
+     * Constructs a new instance of taint from the specified state name
+     * 
+     * @param stateName name of the state
+     * @return the constructed instance
+     * @throws IllegalArgumentException if the name does not match any state
+     */
     public static Taint valueOf(String stateName) {
         // exceptions thrown from Enum.valueOf
         return valueOf(State.valueOf(stateName));
     }
 
+    /**
+     * Constructs a new instance of taint from the specified state
+     * 
+     * @param state the specified state
+     * @return the constructed instance
+     * @throws NullPointerException if state is null
+     */
     public static Taint valueOf(State state) {
         Objects.requireNonNull(state, "state is null");
         if (state == State.INVALID) {
@@ -298,6 +450,13 @@ public class Taint {
         return new Taint(state);
     }
 
+    /**
+     * Returns the merge of the facts such that it can represent any of them
+     * 
+     * @param a first state to merge
+     * @param b second state to merge
+     * @return constructed merge of the specified facts
+     */
     public static Taint merge(Taint a, Taint b) {
         if (a == null) {
             if (b == null) {
@@ -405,10 +564,21 @@ public class Taint {
                 parameters, nonParametricState, realInstanceClass, tags, constantValue);
     }
 
+    /**
+     * Gets the info for debugging merged from all used facts
+     * 
+     * @return previousle set info
+     */
     public String getDebugInfo() {
         return debugInfo;
     }
 
+    /**
+     * Sets info for debugging purposes (consumes much memory)
+     * 
+     * @param debugInfo info to store
+     * @return the modified instance itself
+     */
     public Taint setDebugInfo(String debugInfo) {
         this.debugInfo = debugInfo;
         return this;

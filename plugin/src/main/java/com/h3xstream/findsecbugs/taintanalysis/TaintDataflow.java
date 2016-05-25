@@ -23,7 +23,7 @@ import edu.umd.cs.findbugs.ba.Dataflow;
 /**
  * Analysis object storing the result of taint analysis on a method
  * 
- * @author David Formanek
+ * @author David Formanek (Y Soft Corporation, a.s.)
  */
 public class TaintDataflow extends Dataflow<TaintFrame, TaintAnalysis> {
 

@@ -20,7 +20,7 @@ javax/servlet/http/HttpServletRequest.changeSessionId()Ljava/lang/String;:SAFE
 javax/servlet/http/HttpServletRequest.getAuthType()Ljava/lang/String;:SAFE
 javax/servlet/http/HttpServletRequest.getCharacterEncoding()Ljava/lang/String;:SAFE
 javax/servlet/http/HttpServletRequest.getContentType()Ljava/lang/String;:TAINTED
-javax/servlet/http/HttpServletRequest.getContextPath()Ljava/lang/String;:TAINTED
+javax/servlet/http/HttpServletRequest.getContextPath()Ljava/lang/String;:SAFE
 javax/servlet/http/HttpServletRequest.getCookies()[Ljavax/servlet/http/Cookie;:TAINTED
 javax/servlet/http/HttpServletRequest.getHeader(Ljava/lang/String;)Ljava/lang/String;:TAINTED
 javax/servlet/http/HttpServletRequest.getHeaderNames()Ljava/util/Enumeration;:TAINTED
@@ -51,7 +51,7 @@ javax/servlet/http/HttpServletRequestWrapper.changeSessionId()Ljava/lang/String;
 javax/servlet/http/HttpServletRequestWrapper.getAuthType()Ljava/lang/String;:SAFE
 javax/servlet/http/HttpServletRequestWrapper.getCharacterEncoding()Ljava/lang/String;:SAFE
 javax/servlet/http/HttpServletRequestWrapper.getContentType()Ljava/lang/String;:TAINTED
-javax/servlet/http/HttpServletRequestWrapper.getContextPath()Ljava/lang/String;:TAINTED
+javax/servlet/http/HttpServletRequestWrapper.getContextPath()Ljava/lang/String;:SAFE
 javax/servlet/http/HttpServletRequestWrapper.getCookies()[Ljavax/servlet/http/Cookie;:TAINTED
 javax/servlet/http/HttpServletRequestWrapper.getHeader(Ljava/lang/String;)Ljava/lang/String;:TAINTED
 javax/servlet/http/HttpServletRequestWrapper.getHeaderNames()Ljava/util/Enumeration;:TAINTED
@@ -106,6 +106,6 @@ javax/servlet/http/Cookie.getValue()Ljava/lang/String;:TAINTED
 -javax/servlet/ServletConfig.getServletName()Ljava/lang/String;:SAFE
 
 
--javax/servlet/ServletContext.getContextPath()Ljava/lang/String;:?
+javax/servlet/ServletContext.getContextPath()Ljava/lang/String;:SAFE
 -javax/servlet/ServletContext.getInitParameter(Ljava/lang/String;)Ljava/lang/String;:?
 -javax/servlet/ServletContext.getInitParameterNames()Ljava/util/Enumeration;:?

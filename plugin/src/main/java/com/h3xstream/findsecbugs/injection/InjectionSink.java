@@ -51,6 +51,18 @@ public class InjectionSink {
     private int sinkPriority = UNKNOWN_SINK_PRIORITY;
     private final List<SourceLineAnnotation> lines = new LinkedList<SourceLineAnnotation>();
 
+    /**
+     * Constructs the instance and stores immutable values for reporting
+     * 
+     * @param detector detctor for reporting
+     * @param bugType reported bug type
+     * @param originalPriority original priority (without sink confirmation)
+     * @param classContext class with the sink
+     * @param method method with the sink
+     * @param instructionHandle instruction with the sink
+     * @param sinkMethod called method (sink)
+     * @throws NullPointerException if any argument is null
+     */
     public InjectionSink(Detector detector, String bugType, int originalPriority,
             ClassContext classContext, Method method, InstructionHandle instructionHandle,
             String sinkMethod) {
@@ -68,6 +80,12 @@ public class InjectionSink {
         this.sinkMethod = (sinkMethod == null) ? "unknown" : sinkMethod;
     }
 
+    /**
+     * Updates the priority if it is higher (which means lower number)
+     * 
+     * @param priority potential new priority
+     * @return true if updated, false otherwise
+     */
     public boolean updateSinkPriority(int priority) {
         if (priority < sinkPriority) {
             sinkPriority = priority;
@@ -76,11 +94,21 @@ public class InjectionSink {
         return false;
     }
     
+    /**
+     * Adds a line with tainted source or path for reporting
+     * 
+     * @param line line to add
+     */
     public void addLine(SourceLineAnnotation line) {
         Objects.requireNonNull(line, "line");
         lines.add(line);
     }
     
+    /**
+     * Adds lines with tainted source or path for reporting
+     * 
+     * @param locations collection of locations used to extract lines
+     */
     public void addLines(Collection<TaintLocation> locations) {
         Objects.requireNonNull(detector, "locations");
         for (TaintLocation location : locations) {
@@ -89,6 +117,12 @@ public class InjectionSink {
         }
     }
     
+    /**
+     * Uses immutable values, updated priority and added lines for reporting
+     * 
+     * @param taintedInsideMethod true if not influenced by method arguments
+     * @return new bug instance filled with information
+     */
     public BugInstance generateBugInstance(boolean taintedInsideMethod) {
         BugInstance bug = new BugInstance(detector, bugType, originalPriority);
         bug.addClassAndMethod(classContext.getJavaClass(), method);

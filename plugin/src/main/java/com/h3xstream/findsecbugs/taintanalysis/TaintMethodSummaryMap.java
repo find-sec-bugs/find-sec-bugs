@@ -54,6 +54,11 @@ public class TaintMethodSummaryMap extends HashMap<String, TaintMethodSummary> {
         fullMethodPattern = Pattern.compile(fullMathodNameRegex);
     }
 
+    /**
+     * Dumps all the summaries for debugging
+     * 
+     * @param output stream where to output the summaries
+     */
     public void dump(PrintStream output) {
         TreeSet<String> keys = new TreeSet<String>(keySet());
         for (String key : keys) {
@@ -61,6 +66,15 @@ public class TaintMethodSummaryMap extends HashMap<String, TaintMethodSummary> {
         }
     }
 
+    /**
+     * Loads method summaries from stream checking the format
+     * 
+     * @param input input stream of configured summaries
+     * @param checkRewrite whether to check duplicit summaries
+     * @throws IOException if cannot read the stream or the format is bad
+     * @throws IllegalArgumentException for bad method format
+     * @throws IllegalStateException if there are duplicit configurations
+     */
     public void load(InputStream input, final boolean checkRewrite) throws IOException {
         new TaintMethodSummaryMapLoader().load(input, new TaintMethodSummaryMapLoader.TaintMethodSummaryReceiver() {
             @Override

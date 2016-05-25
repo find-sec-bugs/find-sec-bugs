@@ -23,7 +23,7 @@ import edu.umd.cs.findbugs.ba.Frame;
  * Representation of the dataflow value (fact) modeling taint state of local
  * variables and values on stack, consists of {@link Taint} values
  * 
- * @author David Formanek
+ * @author David Formanek (Y Soft Corporation, a.s.)
  */
 public class TaintFrame extends Frame<Taint> {
 

@@ -39,7 +39,7 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
     private final Map<String, InjectionPoint> injectionMap = new HashMap<String, InjectionPoint>();
     private static final SinksLoader SINKS_LOADER = new SinksLoader();
 
-    public BasicInjectionDetector(BugReporter bugReporter) {
+    protected BasicInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
     }
 
@@ -63,6 +63,12 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
         });
     }
 
+    /**
+     * Loads taint sinks from configuration
+     * 
+     * @param filename name of the configuration file
+     * @param bugType type of an injection bug
+     */
     protected void loadConfiguredSinks(String filename, String bugType) {
         SINKS_LOADER.loadConfiguredSinks(filename, bugType, new SinksLoader.InjectionPointReceiver() {
             @Override
@@ -72,6 +78,12 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
         });
     }
 
+    /**
+     * Loads a single taint sink (like a line of configuration)
+     * 
+     * @param line specification of the sink
+     * @param bugType type of an injection bug
+     */
     protected void loadSink(String line, String bugType) {
         SINKS_LOADER.loadSink(line, bugType, new SinksLoader.InjectionPointReceiver() {
             @Override
@@ -81,7 +93,7 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
         });
     }
 
-    public void addParsedInjectionPoint(String fullMethodName, InjectionPoint injectionPoint) {
+    protected void addParsedInjectionPoint(String fullMethodName, InjectionPoint injectionPoint) {
         assert !injectionMap.containsKey(fullMethodName);
         injectionMap.put(fullMethodName, injectionPoint);
     }

@@ -44,7 +44,7 @@ import org.apache.bcel.generic.MethodGen;
  * Implements taint dataflow operations, in particular meeting facts, transfer
  * function is delegated to {@link TaintFrameModelingVisitor}
  * 
- * @author David Formanek
+ * @author David Formanek (Y Soft Corporation, a.s.)
  */
 public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
 
@@ -58,6 +58,14 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
             "taint-config/taint-param-annotations.txt"
     );
     
+    /**
+     * Constructs analysis for the given method
+     * 
+     * @param methodGen method to analyze
+     * @param dfs DFS algorithm
+     * @param descriptor descriptor of the method to analyze
+     * @param methodSummaries configured and derived taint summaries
+     */
     public TaintAnalysis(MethodGen methodGen, DepthFirstSearch dfs,
             MethodDescriptor descriptor, TaintMethodSummaryMap methodSummaries) {
         super(dfs);
@@ -187,7 +195,7 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
 
     /**
      * Compute two values:
-     *  <li>The number of value require on the stack for a specific call.</li>
+     *  <li>The number of values required on the stack for a specific call.</li>
      *  <li>The parameter association with each slot.</li>
      *
      * <hr/>

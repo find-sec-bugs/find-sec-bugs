@@ -65,7 +65,9 @@ public class SinkFilesValidationTest {
         try {
             Class.forName(className);
         } catch (ClassNotFoundException e) {
-            System.err.println("[!] Class not found "+className); //FIXME: Replace with assert
+            if(!className.contains("log")) { //Temporary the logging API are not validate
+                System.err.println("[!] Class not found "+className); //FIXME: Replace with assert
+            }
         }
     }
 

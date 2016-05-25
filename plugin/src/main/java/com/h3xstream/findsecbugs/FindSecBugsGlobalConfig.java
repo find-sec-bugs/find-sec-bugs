@@ -29,7 +29,6 @@ public class FindSecBugsGlobalConfig {
     private static final FindSecBugsGlobalConfig instance = new FindSecBugsGlobalConfig();
 
     private String findSecBugsVersion = "1.4.6";
-    private boolean printCustomInjectionWarning = true;
     private boolean debugPrintInstructionVisited = false;
     private boolean debugPrintInvocationVisited = false;
     private boolean debugTaintState = false;
@@ -52,17 +51,6 @@ public class FindSecBugsGlobalConfig {
     }
 
     /*** Getters and setters only **/
-
-    /**
-     * @return If the message regarding missing custom injection signatures should be printed.
-     */
-    public boolean isPrintCustomInjectionWarning() {
-        return printCustomInjectionWarning;
-    }
-
-    public void setPrintCustomInjectionWarning(boolean printCustomInjectionWarning) {
-        this.printCustomInjectionWarning = printCustomInjectionWarning;
-    }
 
     public String getFindSecBugsVersion() {
         return findSecBugsVersion;

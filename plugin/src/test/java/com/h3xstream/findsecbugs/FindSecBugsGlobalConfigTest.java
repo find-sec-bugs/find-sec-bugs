@@ -29,12 +29,4 @@ public class FindSecBugsGlobalConfigTest {
         assertEquals(FindSecBugsGlobalConfig.getInstance().getFindSecBugsVersion(),"1.3.3.7");
     }
 
-    @Test
-    public void customInjectionWarning() {
-        FindSecBugsGlobalConfig.getInstance().setPrintCustomInjectionWarning(true);
-        assertEquals(FindSecBugsGlobalConfig.getInstance().isPrintCustomInjectionWarning(),true);
-
-        FindSecBugsGlobalConfig.getInstance().setPrintCustomInjectionWarning(false);
-        assertEquals(FindSecBugsGlobalConfig.getInstance().isPrintCustomInjectionWarning(),false);
-    }
 }

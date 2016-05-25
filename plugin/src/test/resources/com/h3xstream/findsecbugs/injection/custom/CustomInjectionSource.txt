@@ -1,0 +1,1 @@
+testcode/sqli/MySqlWrapper.executeQuery(Ljava/lang/String;)Ljava/sql/ResultSet;:0

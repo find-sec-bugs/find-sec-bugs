@@ -137,9 +137,9 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
                         found = true;
                     }
                 }
-                if(!found) {
-                    log.info("The bug was between lines "+srcAnn.getStartLine()+" and "+srcAnn.getEndLine());
-                }
+                //if(!found) {
+                    //log.info("The bug was between lines "+srcAnn.getStartLine()+" and "+srcAnn.getEndLine());
+                //}
                 criteriaMatches &= found;
             }
             return criteriaMatches;

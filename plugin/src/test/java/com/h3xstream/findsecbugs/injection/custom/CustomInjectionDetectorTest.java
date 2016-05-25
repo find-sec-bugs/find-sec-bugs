@@ -29,7 +29,7 @@ public class CustomInjectionDetectorTest extends BaseDetectorTest {
 
     @BeforeTest
     public void before() {
-        String path = this.getClass().getResource("CustomInjectionSource.properties").getPath();
+        String path = this.getClass().getResource("/com/h3xstream/findsecbugs/injection/custom/CustomInjectionSource.txt").getPath();
         System.setProperty("findsecbugs.injection.sources", path);
     }
 

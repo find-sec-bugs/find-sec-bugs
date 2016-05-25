@@ -24,7 +24,10 @@ import java.io.InputStreamReader;
 import org.apache.bcel.Constants;
 
 /**
+ * The sanity of the sinks file is crucial (a typo == missed API == missed vulnerability).
+ * The loader was extracted from the BasicInjectionDetector class in order to reuse the parsing logic.
  *
+ * @see SinkFilesValidationTest
  */
 public class SinksLoader {
 
@@ -52,7 +55,7 @@ public class SinksLoader {
         }
     }
 
-    private void loadSinks(InputStream input, String bugType, InjectionPointReceiver receiver) throws IOException {
+    protected void loadSinks(InputStream input, String bugType, InjectionPointReceiver receiver) throws IOException {
         assert input != null && bugType != null && !bugType.isEmpty();
         BufferedReader reader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
         for (;;) {

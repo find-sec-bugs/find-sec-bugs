@@ -17,18 +17,22 @@
  */
 package com.h3xstream.findbugs.test;
 
+import com.h3xstream.testng.VerboseTestListener;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import com.h3xstream.findbugs.test.matcher.BugInstanceMatcherBuilder;
 import com.h3xstream.findbugs.test.service.ClassFileLocator;
 import com.h3xstream.findbugs.test.service.FindBugsLauncher;
 import org.mockito.Matchers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.testng.annotations.AfterClass;
 
 /**
  * Aggregate useful utilities for unit tests on detector.
  */
 public class BaseDetectorTest {
-    private static final boolean DEBUG = true;
+    private static final Logger log = LoggerFactory.getLogger(BaseDetectorTest.class);
 
     private ClassFileLocator classFileLocator;
     private FindBugsLauncher findBugsLauncher;
@@ -64,5 +68,17 @@ public class BaseDetectorTest {
 
     public static BugInstance anyBugs() {
         return Matchers.<BugInstance>any();
+    }
+
+    @AfterClass
+    public void after() {
+        System.gc();
+        Runtime rt = Runtime.getRuntime();
+        long inMb = 1024 * 1024;
+        log.info("=== Memory info ===");
+        log.info("Total memory : " + rt.totalMemory() / inMb);
+        log.info("Free memory  : " + rt.freeMemory() / inMb);
+        log.info("Memory usage : " + (rt.totalMemory() - rt.freeMemory()) / inMb);
+        log.info("===================");
     }
 }

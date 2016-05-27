@@ -37,7 +37,7 @@ public class SpringPreparedStatementCreatorFactoryTest extends BaseDetectorTest 
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         for (Integer line : Arrays.asList(15, 16, 17)) {

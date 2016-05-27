@@ -35,7 +35,7 @@ public class WeakMessageDigestDetectorTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         //Message Digest
@@ -81,7 +81,7 @@ public class WeakMessageDigestDetectorTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         //Message Digest
@@ -125,7 +125,7 @@ public class WeakMessageDigestDetectorTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         //MD5 Assertions

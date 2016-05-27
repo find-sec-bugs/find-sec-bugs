@@ -17,7 +17,6 @@
  */
 package com.h3xstream.findbugs.test;
 
-import com.h3xstream.testng.VerboseTestListener;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import com.h3xstream.findbugs.test.matcher.BugInstanceMatcherBuilder;
@@ -28,11 +27,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
 
+import java.lang.management.ManagementFactory;
+
 /**
  * Aggregate useful utilities for unit tests on detector.
  */
 public class BaseDetectorTest {
     private static final Logger log = LoggerFactory.getLogger(BaseDetectorTest.class);
+    private static final boolean DEBUG = false;
 
     private ClassFileLocator classFileLocator;
     private FindBugsLauncher findBugsLauncher;
@@ -73,12 +75,22 @@ public class BaseDetectorTest {
     @AfterClass
     public void after() {
         System.gc();
-        Runtime rt = Runtime.getRuntime();
-        long inMb = 1024 * 1024;
-        log.info("=== Memory info ===");
-        log.info("Total memory : " + rt.totalMemory() / inMb);
-        log.info("Free memory  : " + rt.freeMemory() / inMb);
-        log.info("Memory usage : " + (rt.totalMemory() - rt.freeMemory()) / inMb);
-        log.info("===================");
+        if(DEBUG) {
+            Runtime rt = Runtime.getRuntime();
+            long inMb = 1024 * 1024;
+            log.info("=== Memory info (Process " + ManagementFactory.getRuntimeMXBean().getName() + ") ===");
+            log.info("Total memory : " + rt.totalMemory() / inMb);
+            log.info("Free memory  : " + rt.freeMemory() / inMb);
+            log.info("Memory usage : " + (rt.totalMemory() - rt.freeMemory()) / inMb);
+            log.info("===================");
+        }
+    }
+
+    public class SecurityReporter extends EasyBugReporter {
+
+        public SecurityReporter(){
+            getIncludeCategories().add("S");
+        }
+
     }
 }

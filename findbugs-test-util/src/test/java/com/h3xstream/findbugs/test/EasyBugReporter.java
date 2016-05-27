@@ -26,6 +26,9 @@ import edu.umd.cs.findbugs.classfile.ClassDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EasyBugReporter extends AbstractBugReporter {
 
     private BugCollection bugCollection = new SortedBugCollection();
@@ -35,8 +38,15 @@ public class EasyBugReporter extends AbstractBugReporter {
     private static final Logger log = LoggerFactory.getLogger(EasyBugReporter.class);
 
 
+    private List<String> includeCategories = new ArrayList<String>();
+
     public EasyBugReporter() {
         setPriorityThreshold(20);
+    }
+
+
+    public List<String> getIncludeCategories() {
+        return includeCategories;
     }
 
     @Override
@@ -56,6 +66,10 @@ public class EasyBugReporter extends AbstractBugReporter {
 
     @Override
     public void doReportBug(BugInstance bugInstance) {
+        if(includeCategories.size() > 0 && !includeCategories.contains(bugInstance.getCategoryAbbrev())) {
+            return;
+        }
+
         StringBuilder bugDetail = new StringBuilder();
         bugDetail
                 .append("\n------------------------------------------------------")

@@ -34,7 +34,7 @@ public class ConstantPasswordDetectorTest extends BaseDetectorTest {
                 getClassFilePath("testcode/oauth/SpringServerConfig")
         };
 
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         List<Integer> linesPasswords = Arrays.asList(

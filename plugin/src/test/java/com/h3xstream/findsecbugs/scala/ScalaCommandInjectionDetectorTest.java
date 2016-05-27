@@ -45,7 +45,7 @@ public class ScalaCommandInjectionDetectorTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         //Assertions

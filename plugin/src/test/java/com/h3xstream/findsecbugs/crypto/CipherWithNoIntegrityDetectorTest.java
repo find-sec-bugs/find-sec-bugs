@@ -43,7 +43,7 @@ public class CipherWithNoIntegrityDetectorTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         List<Integer> linesECB = Arrays.asList(9, 11);

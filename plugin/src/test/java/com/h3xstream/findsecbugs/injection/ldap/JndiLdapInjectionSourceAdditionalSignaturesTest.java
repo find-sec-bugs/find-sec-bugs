@@ -37,7 +37,7 @@ public class JndiLdapInjectionSourceAdditionalSignaturesTest extends BaseDetecto
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         for(Integer line : Arrays.asList(39, 40, 41, 42, /**/ 44, 45, 46, 47, /**/ 49, 50, 51, 52, /**/ 54, 55, 56, 57)) {
@@ -64,7 +64,7 @@ public class JndiLdapInjectionSourceAdditionalSignaturesTest extends BaseDetecto
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         for(Integer line : Arrays.asList(83, 84, 85, 86, /**/ 88, 89, 90, 91)) {
@@ -91,7 +91,7 @@ public class JndiLdapInjectionSourceAdditionalSignaturesTest extends BaseDetecto
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         verify(reporter).doReportBug(

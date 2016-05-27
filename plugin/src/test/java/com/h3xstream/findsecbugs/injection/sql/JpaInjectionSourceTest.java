@@ -35,7 +35,7 @@ public class JpaInjectionSourceTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         verify(reporter).doReportBug(
@@ -68,7 +68,7 @@ public class JpaInjectionSourceTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         //All 3 method signatures are detected

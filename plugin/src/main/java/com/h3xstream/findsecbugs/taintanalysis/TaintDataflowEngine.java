@@ -97,10 +97,6 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
         if (CONFIG.isTaintedSystemVariables()) {
             loadMethodSummaries(METHODS_SUMMARIES_PATH.concat("tainted-system-variables.txt"), false);
             LOGGER.info("System variables are considered to be tainted");
-        } else {
-            LOGGER.info("System variables are considered to be safe,"
-                    + " this behaviour can changed by setting "
-                    + "findsecbugs.taint.taintedsystemvariables=true");
         }
         String customConfigFile = CONFIG.getCustomConfigFile();
         if (customConfigFile != null && !customConfigFile.isEmpty()) {

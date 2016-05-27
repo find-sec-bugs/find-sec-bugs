@@ -32,7 +32,7 @@ public class HttpResponseSplittingDetectorTest extends BaseDetectorTest {
         String[] files = {
                 getClassFilePath("testcode/ResponseSplittingServlet")
         };
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         for (Integer line : Arrays.asList(13, 16)) {

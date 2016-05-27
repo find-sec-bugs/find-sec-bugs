@@ -18,7 +18,6 @@
 package com.h3xstream.findsecbugs;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
-import com.h3xstream.findbugs.test.EasyBugReporter;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -31,7 +30,7 @@ public class CrlfLogInjectionDetectorTest extends BaseDetectorTest {
         String[] files = {
             getClassFilePath("testcode/Logging")
         };
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        SecurityReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         for (int line = 20; line < 49; line++) {

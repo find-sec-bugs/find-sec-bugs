@@ -37,7 +37,7 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         for (String method : Arrays.asList("unsafeCookie1", "unsafeCookie2", "unsafeCookie4", "unsafeCookie5")) {
@@ -58,7 +58,7 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         for (String method : Arrays.asList("safeCookie1", "safeCookie2")) {
@@ -79,7 +79,7 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         for (String method : Arrays.asList("unsafeCookie1", "unsafeCookie2", "unsafeCookie4", "unsafeCookie5")) {
@@ -100,7 +100,7 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         for (String method : Arrays.asList("safeCookie1", "safeCookie2")) {

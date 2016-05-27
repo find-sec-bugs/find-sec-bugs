@@ -38,7 +38,7 @@ public class CommandInjectionDetectorTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         List<Integer> linesMedium = Arrays.asList(

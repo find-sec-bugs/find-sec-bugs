@@ -35,7 +35,7 @@ public class SeamLoggingDetectionTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         for(int line = 8 ; line <=31 ; line++) {

@@ -23,6 +23,8 @@ import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
 
+import java.lang.management.ManagementFactory;
+
 /**
  * This listener is useful to add more detail about test failure.
  * (Intended for Travis-CI)
@@ -49,6 +51,7 @@ public class VerboseTestListener extends TestListenerAdapter {
         log.info("Total memory : " + rt.totalMemory() / inMb);
         log.info("Free memory  : " + rt.freeMemory() / inMb);
         log.info("Memory usage : " + (rt.totalMemory() - rt.freeMemory()) / inMb);
+        log.info("Process      : " + ManagementFactory.getRuntimeMXBean().getName());
         log.info("<<<<<<<<<<<<<<<<<<<< {} finished >>>>>>>>>>>>>>>>>>>>", ctx.getName());
     }
 }

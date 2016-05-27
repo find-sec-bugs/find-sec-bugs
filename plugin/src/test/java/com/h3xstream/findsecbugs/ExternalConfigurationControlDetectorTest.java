@@ -31,7 +31,7 @@ public class ExternalConfigurationControlDetectorTest extends BaseDetectorTest {
         String[] files = {
             getClassFilePath("testcode/DbCatalog")
         };
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         verify(reporter).doReportBug(

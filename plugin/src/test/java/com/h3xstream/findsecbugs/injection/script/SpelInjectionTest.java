@@ -36,7 +36,7 @@ public class SpelInjectionTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         for(Integer line : Arrays.asList(31, 47, 63)) {

@@ -35,7 +35,7 @@ public class XxeDetectorTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         verify(reporter).doReportBug(
@@ -65,7 +65,7 @@ public class XxeDetectorTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = Mockito.spy(new EasyBugReporter());
+        EasyBugReporter reporter = Mockito.spy(new SecurityReporter());
         analyze(files, reporter);
 
         //Assertions
@@ -95,7 +95,7 @@ public class XxeDetectorTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = Mockito.spy(new EasyBugReporter());
+        EasyBugReporter reporter = Mockito.spy(new SecurityReporter());
         analyze(files, reporter);
 
         //Assertions
@@ -126,7 +126,7 @@ public class XxeDetectorTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         verify(reporter).doReportBug(

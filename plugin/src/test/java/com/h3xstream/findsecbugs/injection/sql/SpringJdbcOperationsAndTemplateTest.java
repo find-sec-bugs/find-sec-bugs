@@ -39,7 +39,7 @@ public class SpringJdbcOperationsAndTemplateTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         //Assertion on the 4 basic test
@@ -71,7 +71,7 @@ public class SpringJdbcOperationsAndTemplateTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         //Exact match of the number of vulnerability rise
@@ -100,7 +100,7 @@ public class SpringJdbcOperationsAndTemplateTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         //Exact match of the number of vulnerability rise
@@ -129,7 +129,7 @@ public class SpringJdbcOperationsAndTemplateTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         //Exact match of the number of vulnerability rise
@@ -158,7 +158,7 @@ public class SpringJdbcOperationsAndTemplateTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         //Exact match of the number of vulnerability rise
@@ -187,7 +187,7 @@ public class SpringJdbcOperationsAndTemplateTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         //Exact match of the number of vulnerability rise
@@ -216,7 +216,7 @@ public class SpringJdbcOperationsAndTemplateTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         //Exact match of the number of vulnerability rise
@@ -245,7 +245,7 @@ public class SpringJdbcOperationsAndTemplateTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         //Exact match of the number of vulnerability rise
@@ -274,7 +274,7 @@ public class SpringJdbcOperationsAndTemplateTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         //Exact match of the number of vulnerability rise
@@ -303,7 +303,7 @@ public class SpringJdbcOperationsAndTemplateTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = spy(new EasyBugReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         //Exact match of the number of vulnerability rise

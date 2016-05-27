@@ -78,10 +78,35 @@
                     </execution>
                 </executions>
             </plugin>
-
-
         </plugins>
+
     </build>
+
+    <profiles>
+        <profile>
+            <id>travisci</id> <!-- Profile that is specific for the cloud service Travis-CI (travis-ci.com) -->
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.19.1</version>
+                        <configuration>
+                            <forkCount>1</forkCount>
+                            <reuseForks>false</reuseForks>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+
+
 
 
     <modules>
@@ -121,7 +146,7 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-all</artifactId>
-                <version>1.9.0</version>
+                <version>1.10.19</version>
                 <scope>test</scope>
             </dependency>
 
@@ -165,7 +190,7 @@
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>0.9.29</version>
+                <version>1.1.7</version>
                 <scope>test</scope>
             </dependency>
 
@@ -173,6 +198,8 @@
         </dependencies>
 
     </dependencyManagement>
+
+
 
     <!--
     The following meta data are present to comply with Maven Central.

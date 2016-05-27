@@ -6,4 +6,4 @@ sudo: false
 env:
   - MAVEN_OPTS="-Xmx3000m"
 install: mvn clean -V
-script: mvn test -V
+script: mvn test -V -Ptravisci

@@ -28,6 +28,10 @@ import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
 
 import java.lang.management.ManagementFactory;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.Mockito.reset;
 
 /**
  * Aggregate useful utilities for unit tests on detector.
@@ -38,6 +42,8 @@ public class BaseDetectorTest {
 
     private ClassFileLocator classFileLocator;
     private FindBugsLauncher findBugsLauncher;
+
+    private List<Object> mocksToReset = new ArrayList<Object>();
 
     public BaseDetectorTest() {
         classFileLocator = new ClassFileLocator();
@@ -57,10 +63,12 @@ public class BaseDetectorTest {
     }
 
     public void analyze(String[] classFiles, BugReporter bugReporter) throws Exception {
+        mocksToReset.add(bugReporter);
         findBugsLauncher.analyze(classFiles, bugReporter);
     }
 
     public void analyze(String[] classFiles, String[] classPaths, BugReporter bugReporter) throws Exception {
+        mocksToReset.add(bugReporter);
         findBugsLauncher.analyze(classFiles, classPaths, bugReporter);
     }
 
@@ -83,6 +91,10 @@ public class BaseDetectorTest {
             log.info("Free memory  : " + rt.freeMemory() / inMb);
             log.info("Memory usage : " + (rt.totalMemory() - rt.freeMemory()) / inMb);
             log.info("===================");
+        }
+
+        for(Object mock : mocksToReset) {
+            reset(mock);
         }
     }
 

@@ -96,6 +96,7 @@ public class BaseDetectorTest {
         for(Object mock : mocksToReset) {
             reset(mock);
         }
+        mocksToReset.clear();
     }
 
     public class SecurityReporter extends EasyBugReporter {

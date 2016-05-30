@@ -38,12 +38,12 @@ import static org.mockito.Mockito.reset;
  */
 public class BaseDetectorTest {
     private static final Logger log = LoggerFactory.getLogger(BaseDetectorTest.class);
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     private ClassFileLocator classFileLocator;
     private FindBugsLauncher findBugsLauncher;
 
-    private List<Object> mocksToReset = new ArrayList<Object>();
+//    private List<Object> mocksToReset = new ArrayList<Object>();
 
     public BaseDetectorTest() {
         classFileLocator = new ClassFileLocator();
@@ -63,12 +63,12 @@ public class BaseDetectorTest {
     }
 
     public void analyze(String[] classFiles, BugReporter bugReporter) throws Exception {
-        mocksToReset.add(bugReporter);
+//        mocksToReset.add(bugReporter);
         findBugsLauncher.analyze(classFiles, bugReporter);
     }
 
     public void analyze(String[] classFiles, String[] classPaths, BugReporter bugReporter) throws Exception {
-        mocksToReset.add(bugReporter);
+//        mocksToReset.add(bugReporter);
         findBugsLauncher.analyze(classFiles, classPaths, bugReporter);
     }
 
@@ -93,10 +93,10 @@ public class BaseDetectorTest {
             log.info("===================");
         }
 
-        for(Object mock : mocksToReset) {
-            reset(mock);
-        }
-        mocksToReset.clear();
+//        for(Object mock : mocksToReset) {
+//            reset(mock);
+//        }
+//        mocksToReset.clear();
     }
 
     public class SecurityReporter extends EasyBugReporter {

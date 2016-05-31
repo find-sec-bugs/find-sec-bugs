@@ -17,10 +17,7 @@
  */
 package com.h3xstream.findsecbugs.injection.custom;
 
-import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
-import com.h3xstream.findsecbugs.injection.InjectionSource;
-import com.h3xstream.findsecbugs.injection.LegacyInjectionDetector;
 import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
@@ -49,7 +46,7 @@ public class CustomInjectionDetector extends BasicInjectionDetector {
         List<URL> urls = getSystemProperty();
 
         if (urls.size() > 0) {
-            LOG.info("Additional injection sources loaded from " + Arrays.toString(urls.toArray()) + "");
+            LOG.info("Loading additional injection sources from " + Arrays.toString(urls.toArray()) + "");
         }
 
         for(URL url : urls) {
@@ -57,10 +54,8 @@ public class CustomInjectionDetector extends BasicInjectionDetector {
                 InputStream in = url.openStream();
                 loadConfiguredSinks(in, "CUSTOM_INJECTION");
             } catch (IOException e) {
-
+                LOG.log(Level.SEVERE, "Unable to load injection sources from :" + url.toString(), e);
             }
-
-
         }
 
     }
@@ -74,7 +69,7 @@ public class CustomInjectionDetector extends BasicInjectionDetector {
         }
     }
 
-    List<URL> getSystemProperty() {
+    private List<URL> getSystemProperty() {
         String propertyValue = System.getProperty(SYSTEM_PROPERTY);
         String[] resourcePaths = propertyValue == null ? new String[0] : propertyValue.split(",");
         List<URL> urls = new ArrayList<URL>(resourcePaths.length);

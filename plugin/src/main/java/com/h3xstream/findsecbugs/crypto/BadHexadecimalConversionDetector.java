@@ -19,9 +19,6 @@ package com.h3xstream.findsecbugs.crypto;
 
 import com.h3xstream.findsecbugs.common.ByteCode;
 import edu.umd.cs.findbugs.Priorities;
-import edu.umd.cs.findbugs.ba.CFG;
-import edu.umd.cs.findbugs.ba.CFGBuilderException;
-import edu.umd.cs.findbugs.ba.Location;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.*;
@@ -69,17 +66,8 @@ public class BadHexadecimalConversionDetector implements Detector {
             if (methodGen == null || methodGen.getInstructionList() == null) {
                 continue; //No instruction .. nothing to do
             }
-
-            CFG cfg = null;
-            try {
-                cfg = classContext.getCFG(methodGen.getMethod());
-            } catch (CFGBuilderException e) {
-                throw new RuntimeException(e); //Should never happen
-            }
-            for (Iterator<Location> i = cfg.locationIterator(); i.hasNext();) {
-                Location location = i.next();
-                Instruction inst = location.getHandle().getInstruction();
-
+            for (Iterator itIns = methodGen.getInstructionList().iterator();itIns.hasNext();) {
+                Instruction inst = ((InstructionHandle) itIns.next()).getInstruction();
                 if (DEBUG) {
                     ByteCode.printOpCode(inst, cpg);
                 }

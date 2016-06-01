@@ -87,7 +87,7 @@ public abstract class AbstractTaintDetector implements Detector {
     }
     
     protected void analyzeMethod(ClassContext classContext, Method method)
-            throws DataflowAnalysisException, CheckedAnalysisException {
+            throws CheckedAnalysisException {
         TaintDataflow dataflow = getTaintDataFlow(classContext, method);
         ConstantPoolGen cpg = classContext.getConstantPoolGen();
         String currentMethod = getFullMethodName(classContext.getMethodGen(method));

@@ -708,6 +708,9 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     private void printStackState() {
         try {
             System.out.println("============================");
+            if(!FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
+                System.out.println(" /!\\ Warning : The taint debugging is not fully activated.");
+            }
             System.out.println("[[ Stack ]]");
             int stackDepth = getFrame().getStackDepth();
             for (int i = 0; i < stackDepth; i++) {

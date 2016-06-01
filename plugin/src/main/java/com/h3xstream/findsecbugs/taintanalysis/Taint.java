@@ -20,6 +20,8 @@ package com.h3xstream.findsecbugs.taintanalysis;
 import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.util.ClassName;
+
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -600,6 +602,9 @@ public class Taint {
         }
         if (debugInfo != null) {
             sb.append(" {").append(debugInfo).append('}');
+        }
+        if (tags.size() > 0) {
+            sb.append(" tags: ").append(Arrays.toString(tags.toArray()));
         }
         return sb.toString();
     }

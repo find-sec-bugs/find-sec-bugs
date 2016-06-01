@@ -51,7 +51,7 @@ public class ByteCode {
             System.out.println(formatName(ins) +" "+i.getIndex() + " => [stack]");
         } else if (ins instanceof StoreInstruction) {
             StoreInstruction i = (StoreInstruction) ins;
-            System.out.println(formatName(ins) +" (?prev?) => "+i.getIndex() + "");
+            System.out.println(formatName(ins) +" (objectref) => "+i.getIndex() + "");
         } else if (ins instanceof FieldInstruction) {
             FieldInstruction i = (FieldInstruction) ins;
             System.out.println(formatName(ins) +" "+i.getFieldName(cpg) + "");

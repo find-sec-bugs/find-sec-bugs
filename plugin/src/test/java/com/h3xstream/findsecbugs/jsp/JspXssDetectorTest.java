@@ -19,6 +19,9 @@ package com.h3xstream.findsecbugs.jsp;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
+import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
@@ -31,6 +34,16 @@ import static org.mockito.Mockito.*;
  * <pre>mvn clean test-compile</pre>
  */
 public class JspXssDetectorTest extends BaseDetectorTest {
+
+    @BeforeMethod
+    public void beforeTest() {
+        FindSecBugsGlobalConfig.getInstance().setReportPotentialXssWrongContext(true);
+    }
+
+    @AfterMethod
+    public void afterTest() {
+        FindSecBugsGlobalConfig.getInstance().setReportPotentialXssWrongContext(false);
+    }
 
     @Test
     public void detectXssDirectUse() throws Exception {

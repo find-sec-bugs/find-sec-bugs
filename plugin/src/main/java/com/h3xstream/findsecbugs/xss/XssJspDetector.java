@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.xss;
 
+import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import com.h3xstream.findsecbugs.common.InterfaceUtils;
 import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
 import com.h3xstream.findsecbugs.taintanalysis.Taint;
@@ -41,7 +42,12 @@ public class XssJspDetector extends BasicInjectionDetector {
     @Override
     protected int getPriority(Taint taint) {
         if (!taint.isSafe() && taint.hasTag(Taint.Tag.XSS_SAFE)) {
-            return Priorities.LOW_PRIORITY;
+            if(FindSecBugsGlobalConfig.getInstance().isReportPotentialXssWrongContext()) {
+                return Priorities.LOW_PRIORITY;
+            }
+            else {
+                return Priorities.IGNORE_PRIORITY;
+            }
         } else if (!taint.isSafe()
                 && (taint.hasTag(Taint.Tag.QUOTE_ENCODED) || taint.hasTag(Taint.Tag.APOSTROPHE_ENCODED))
                 && taint.hasTag(Taint.Tag.LT_ENCODED)) {

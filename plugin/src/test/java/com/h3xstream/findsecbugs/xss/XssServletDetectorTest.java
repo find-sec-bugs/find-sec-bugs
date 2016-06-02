@@ -20,12 +20,25 @@ package com.h3xstream.findsecbugs.xss;
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import java.util.Arrays;
+
+import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
 
 public class XssServletDetectorTest extends BaseDetectorTest {
 
+    @BeforeMethod
+    public void beforeTest() {
+        FindSecBugsGlobalConfig.getInstance().setReportPotentialXssWrongContext(true);
+    }
+
+    @AfterMethod
+    public void afterTest() {
+        FindSecBugsGlobalConfig.getInstance().setReportPotentialXssWrongContext(false);
+    }
 
     @Test
     public void detectXssServlet1() throws Exception {
@@ -214,5 +227,47 @@ public class XssServletDetectorTest extends BaseDetectorTest {
         );
 
         verify(reporter, times(27)).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
+    }
+
+    @Test
+    public void detectXssServlet6() throws Exception {
+
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/xss/servlets/XssServlet6")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter,times(1)).doReportBug(
+                bugDefinition().bugType("XSS_SERVLET")
+                    .inClass("XssServlet6")
+                    .inMethod("doPost")
+                    .withPriority("Low")
+                    .build());
+    }
+
+    @Test
+    public void detectXssServlet6_hideByDefault() throws Exception {
+        //This test make sure that the default configuration will hide value that are escaped.
+        FindSecBugsGlobalConfig.getInstance().setReportPotentialXssWrongContext(false);
+
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/xss/servlets/XssServlet6")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter,times(1)).doReportBug(
+                bugDefinition().bugType("XSS_SERVLET")
+                        .inClass("XssServlet6")
+                        .inMethod("doPost")
+                        .withPriority("Low")
+                        .build());
     }
 }

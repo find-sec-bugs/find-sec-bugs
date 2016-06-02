@@ -38,12 +38,14 @@ public class FindSecBugsGlobalConfig {
     private boolean taintedSystemVariables;
     private String customConfigFile;
     private boolean taintedMainArgument;
+    private boolean reportPotentialXssWrongContext;
 
     protected FindSecBugsGlobalConfig() {
         debugOutputSummaries = SystemProperties.getBoolean("findsecbugs.taint.outputsummaries", false);
         taintedSystemVariables = SystemProperties.getBoolean("findsecbugs.taint.taintedsystemvariables", false);
         customConfigFile = SystemProperties.getProperty("findsecbugs.taint.customconfigfile");
         taintedMainArgument = SystemProperties.getBoolean("findsecbugs.taint.taintedmainargument", true);
+        reportPotentialXssWrongContext = SystemProperties.getBoolean("findsecbugs.taint.reportpotentialxsswrongcontext",false);
     }
     
     public static FindSecBugsGlobalConfig getInstance() {
@@ -114,5 +116,13 @@ public class FindSecBugsGlobalConfig {
 
     public void setTaintedMainArgument(boolean taintedMainArguments) {
         this.taintedMainArgument = taintedMainArguments;
+    }
+
+    public boolean isReportPotentialXssWrongContext() {
+        return reportPotentialXssWrongContext;
+    }
+
+    public void setReportPotentialXssWrongContext(boolean reportPotentialXssWrongContext) {
+        this.reportPotentialXssWrongContext = reportPotentialXssWrongContext;
     }
 }

@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
 /**
- * Will that not all HttpServletRequestWrapper are identify
+ * Will make sure that not all HttpServletRequestWrapper are identify (numerous false positive)
  */
 public class FalsePositiveRequestWrapper extends HttpServletRequestWrapper {
 

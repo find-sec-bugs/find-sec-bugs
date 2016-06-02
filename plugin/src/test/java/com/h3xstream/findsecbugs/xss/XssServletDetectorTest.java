@@ -263,7 +263,7 @@ public class XssServletDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        verify(reporter,times(1)).doReportBug(
+        verify(reporter,never()).doReportBug(
                 bugDefinition().bugType("XSS_SERVLET")
                         .inClass("XssServlet6")
                         .inMethod("doPost")

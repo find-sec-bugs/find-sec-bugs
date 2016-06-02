@@ -1065,20 +1065,6 @@ XPath インジェクションのリスクは、SQL インジェクションに�
 </p>
 <br/>
 <p>
-    <b>追加のインジェクションソースの構成:</b><br/>
-    この検出器を使用するには手動での設定が必要です。<br/>
-    <br/>
-    形式に従って設定ファイルを作成します:
-    <pre>&lt;&lt;呼び出し命令&gt;&gt;|&lt;&lt;クラス名&gt;&gt;|&lt;&lt;メソッド&gt;&gt;|&lt;&lt;パラメーターシグネチャー&gt;&gt;=&lt;&lt;インジェクション可能なパラメーターのインデックス&gt;&gt;|&lt;&lt;検出器の説明の表示&gt;&gt;</pre>
-    例えば:
-    <pre>INVOKEVIRTUAL|testcode/sqli/MySqlWrapper|executeQuery|(Ljava/lang/String;)Ljava/sql/ResultSet;=0|CUSTOM_INJECTION
-[...]</pre>
-    <br/>
-    この問題はシステムプロパティが設定されてはじめて動作します。
-    <pre>-Dfindsecbugs.injection.sources=${basedir}/rules/InjectionSources.properties</pre>
-</p>
-<br/>
-<p>
 <b>参考文献</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-19: SQL Injection</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>

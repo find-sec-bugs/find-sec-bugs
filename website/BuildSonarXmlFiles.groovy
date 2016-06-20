@@ -43,6 +43,7 @@ informationnalPatterns = ["SERVLET_PARAMETER",
 
 cryptoBugs = [
         "WEAK_TRUST_MANAGER",
+        "WEAK_HOSTNAME_VERIFIER",
         //"WEAK_MESSAGE_DIGEST", //Deprecated
         "WEAK_MESSAGE_DIGEST_MD5",
         "WEAK_MESSAGE_DIGEST_SHA1",
@@ -60,6 +61,10 @@ cryptoBugs = [
         "CIPHER_INTEGRITY"
 ]
 
+majorBugsAuditOnly = [ //Mostly due to their high false-positive rate
+        "TRUST_BOUNDARY_VIOLATION"
+]
+
 majorBugs = [
         "PREDICTABLE_RANDOM",
         "PATH_TRAVERSAL_IN",
@@ -73,8 +78,9 @@ majorBugs = [
         "ANDROID_EXTERNAL_FILE_ACCESS",
         "ANDROID_WORLD_WRITABLE",
         "INSECURE_COOKIE",
+        "HTTPONLY_COOKIE",
         "TRUST_BOUNDARY_VIOLATION",
-        "XSS_SERVLET"
+        "XSS_SERVLET",
 ]
 
 criticalBugs = [ //RCE or powerful function
@@ -94,13 +100,14 @@ criticalBugs = [ //RCE or powerful function
         "SQL_INJECTION_JDBC",
         "EL_INJECTION",
         "SEAM_LOG_INJECTION",
-        "OBJECT_DESERIALIZATION"
+        "OBJECT_DESERIALIZATION",
+        "MALICIOUS_XSLT"
 ]
 
 majorJspBugs = ["XSS_REQUEST_PARAMETER_TO_JSP_WRITER",
-        "XSS_JSP_PRINT", "JSP_JSTL_OUT", "XSS_JSP_PRINT"]
+        "XSS_JSP_PRINT", "JSP_JSTL_OUT"]
 
-criticalJspBugs = ["JSP_INCLUDE","JSP_SPRING_EVAL"]
+criticalJspBugs = ["JSP_INCLUDE","JSP_SPRING_EVAL","JSP_XSLT"]
 
 exclusions = ['CUSTOM_INJECTION']
 
@@ -128,14 +135,14 @@ def writeRules(String rulesSetName,List<String> includedBugs) {
 
         messagesXml.BugPattern.each { pattern ->
 
-            if(pattern.attribute("type"))
+            if(includedBugs.contains(pattern.attribute("type")))
 
             rule(key: pattern.attribute("type"),
                     priority: getSonarPriority(pattern.attribute("type"))) {
 
                 name("Security - " + pattern.ShortDescription.text())
                 configKey(pattern.attribute("type"))
-                description(pattern.Details.text())
+                description(pattern.Details.text().trim())
 
                 //OWASP TOP 10 2013
                 if (pattern.Details.text().toLowerCase().contains('injection') || pattern.Details.text().contains('A1-Injection')) {
@@ -194,8 +201,8 @@ def writeRules(String rulesSetName,List<String> includedBugs) {
     }
 }
 
-writeRules("findbugs",findBugsPatterns + cryptoBugs + majorBugs + criticalBugs)
-writeRules("jsp",criticalJspBugs)
+writeRules("findsecbugs", informationnalPatterns + findBugsPatterns + cryptoBugs + majorBugs + criticalBugs)
+writeRules("jsp",majorJspBugs + criticalJspBugs)
 
 ////////////// Generate the profile files
 
@@ -205,37 +212,26 @@ def writeProfile(String profileName,List<String> includedBugs) {
     InputStream messagesStream = new FileInputStream(new File(metaDataDir,"messages.xml"))
     messagesXml = new XmlParser().parse(messagesStream)
 
-    File f = new File("out_sonar","profiles-"+profileName+".xml")
+    File f = new File("out_sonar","profile-"+profileName+".xml")
     printf("Building profile %s (%s)%n",profileName,f.getCanonicalPath())
+
+
 
     def xml = new MarkupBuilder(new PrintWriter(f))
     xml.FindBugsFilter {
         mkp.comment "This file is auto-generated."
 
-        messagesXml.BugPattern.each { pat ->
 
-            type = pat.attribute("type")
+        includedBugs.forEach { patternName ->
 
-            if(type in includedBugs)
-            {
-                Match {
-                    Bug(pattern: pat.attribute("type"))
-                }
-            }
-            else {
-                //println(type)
-            }
-        }
-
-
-        findBugsPatterns.each { patName ->
             Match {
-                Bug(pattern:patName)
+                Bug(pattern: patternName)
             }
         }
+
     }
 }
 
-writeProfile("findbugs-security-audit", informationnalPatterns + findBugsPatterns + cryptoBugs + majorBugs + criticalBugs)
-writeProfile("findbugs-security-minimal", findBugsPatterns + cryptoBugs + majorBugs + criticalBugs)
+writeProfile("findbugs-security-audit", informationnalPatterns + cryptoBugs + majorBugs + majorBugsAuditOnly + criticalBugs + findBugsPatterns)
+writeProfile("findbugs-security-minimal", cryptoBugs + majorBugs + criticalBugs + findBugsPatterns)
 writeProfile("findbugs-security-jsp", majorJspBugs + criticalJspBugs)

@@ -39,7 +39,7 @@ def buildMapping(InputStream xmlStream) {
                 ['title': pattern.ShortDescription.text().replaceAll(" in \\{1\\}",""),
                  'description': pattern.Details.text(),
                  'type':pattern.attribute("type")])
-        println pattern.ShortDescription.text()
+        //println pattern.ShortDescription.text()
         bugsBinding['nbPatterns']++
     }
 
@@ -52,10 +52,10 @@ def buildMapping(InputStream xmlStream) {
 
 //Version and download links
 
-downloadUrl = "http://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/1.4.4/findsecbugs-plugin-1.4.4.jar"
+downloadUrl = "http://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/1.4.6/findsecbugs-plugin-1.4.6.jar"
 mavenCentralSearch = "http://search.maven.org/#search|gav|1|g:%22com.h3xstream.findsecbugs%22 AND a:%22findsecbugs-plugin%22"
-latestVersion = "1.4.4"
-latestUpdateDate = "20th November 2015"
+latestVersion = "1.4.6"
+latestUpdateDate = "2nd June 2016"
 
 //Screenshots
 

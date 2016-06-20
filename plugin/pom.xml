@@ -90,7 +90,6 @@
                             <generatedClasses>${project.build.directory}/test-classes</generatedClasses>
                             <webAppSourceDirectory>${basedir}/src/test/webapp</webAppSourceDirectory>
                             <suppressSmap>false</suppressSmap>
-                            <dumpSmap>true</dumpSmap>
                             <useProvidedScope>true</useProvidedScope>
                         </configuration>
                     </execution>

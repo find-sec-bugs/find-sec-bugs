@@ -27,6 +27,7 @@ import edu.umd.cs.findbugs.classfile.IMethodAnalysisEngine;
 import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 import edu.umd.cs.findbugs.io.IO;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -104,7 +105,9 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
         }
         String customConfigFile = CONFIG.getCustomConfigFile();
         if (customConfigFile != null && !customConfigFile.isEmpty()) {
-            addCustomSummaries(customConfigFile);
+            for (String configFile : customConfigFile.split(File.pathSeparator)) {
+                addCustomSummaries(configFile);
+            }
         }
         if (!CONFIG.isTaintedMainArgument()) {
             LOGGER.info("The argument of the main method is not considered tainted");

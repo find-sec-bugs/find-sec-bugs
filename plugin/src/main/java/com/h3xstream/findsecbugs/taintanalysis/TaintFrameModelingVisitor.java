@@ -377,9 +377,28 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         }
     }
 
+
     @Override
     public void visitCHECKCAST(CHECKCAST obj) {
-        // keep the top of stack unchanged
+        // cast to a safe object type
+        ObjectType objectType = obj.getLoadClassType(cpg);
+        if (objectType == null) {
+            return;
+        }
+
+        String objectTypeSignature = objectType.getSignature();
+
+        if(!SAFE_OBJECT_TYPES.contains(objectTypeSignature)) {
+            return;
+        }
+
+        try {
+            getFrame().popValue();
+            pushSafe();
+        }
+        catch (DataflowAnalysisException ex) {
+            throw new InvalidBytecodeException("empty stack for checkcast", ex);
+        }
     }
 
     @Override

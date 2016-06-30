@@ -28,7 +28,7 @@ import org.apache.bcel.generic.InvokeInstruction;
  *
  * @author David Formanek (Y Soft Corporation, a.s.)
  */
-public abstract class LegacyInjectionDetector extends AbstractInjectionDetector {
+public abstract class LegacyInjectionDetector extends BasicInjectionDetector {
 
     protected LegacyInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
@@ -44,8 +44,8 @@ public abstract class LegacyInjectionDetector extends AbstractInjectionDetector 
                 break;
             }
         }
-        if (injectionPoint == null) {
-            injectionPoint = InjectionPoint.NONE;
+        if (injectionPoint == null || injectionPoint == InjectionPoint.NONE) {
+            injectionPoint = super.getInjectionPoint(invoke, cpg, handle);
         }
         return injectionPoint;
     }

@@ -62,7 +62,7 @@ public class CustomInjectionDetector extends BasicInjectionDetector {
 
     @Override
     protected int getPriority(Taint taint) {
-        if (!taint.isSafe() && taint.hasTag(Taint.Tag.LDAP_INJECTION_SAFE)) {
+        if (!taint.isSafe() && taint.hasTag(Taint.Tag.CUSTOM_INJECTION_SAFE)) {
             return Priorities.IGNORE_PRIORITY;
         } else {
             return super.getPriority(taint);

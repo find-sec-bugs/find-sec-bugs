@@ -105,6 +105,7 @@ public class Taint {
         CUSTOM_INJECTION_SAFE,
         URL_ENCODED,
         PATH_TRAVERSAL_SAFE,
+        REDIRECT_SAFE,
 
         CREDIT_CARD_VARIABLE,
         PASSWORD_VARIABLE,

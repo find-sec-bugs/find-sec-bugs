@@ -119,13 +119,26 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
         }
     }
 
+    /**
+     * Loads taint sinks configuration file from file system. If the file doesn't exist on file system, loads the file from classpath.
+     *
+     * @param fileName name of the configuration file
+     * @param bugType type of an injection bug
+     */
     protected void loadCustomSinks(String fileName, String bugType) {
         InputStream stream = null;
         try {
-            stream = new FileInputStream(fileName);
-            loadConfiguredSinks(stream, bugType);
-        } catch (IOException ex) {
-            AnalysisContext.logError("cannot load custom injection config method summaries", ex);
+            File file = new File(fileName);
+            if (file.exists()) {
+                stream = new FileInputStream(file);
+                loadConfiguredSinks(stream, bugType);
+            }
+            else {
+                stream = getClass().getClassLoader().getResourceAsStream(fileName);
+                loadConfiguredSinks(stream, bugType);
+            }
+        } catch (Exception ex) {
+            AnalysisContext.logError("cannot load custom injection config method summaries for " + fileName, ex);
         } finally {
             IO.close(stream);
         }

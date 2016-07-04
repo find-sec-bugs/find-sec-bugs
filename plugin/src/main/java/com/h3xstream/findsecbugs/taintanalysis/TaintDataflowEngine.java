@@ -130,11 +130,16 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
     private void addCustomSummaries(String path) {
         InputStream stream = null;
         try {
-            stream = new FileInputStream(path);
+            File file = new File(path);
+            if (file.exists()) {
+                stream = new FileInputStream(file);
+            } else {
+                stream = getClass().getClassLoader().getResourceAsStream(path);
+            }
             methodSummaries.load(stream, false);
             LOGGER.log(Level.INFO, "Custom taint config loaded from {0}", path);
         } catch (IOException ex) {
-            AnalysisContext.logError("cannot load custom taint config method summaries", ex);
+            AnalysisContext.logError("cannot load custom taint config method summaries from " + path, ex);
         } finally {
             IO.close(stream);
         }

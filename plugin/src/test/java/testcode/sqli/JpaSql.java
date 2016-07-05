@@ -3,11 +3,11 @@ package testcode.sqli;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-import com.google.inject.Inject;
+
 
 public class JpaSql {
 
-    @Inject
+
     EntityManager em;
 
     //The following query are subject to injection

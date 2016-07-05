@@ -7,7 +7,7 @@
     <artifactId>findsecbugs-root-pom</artifactId>
 
     <packaging>pom</packaging>
-    <version>1.4.7-SNAPSHOT</version>
+    <version>1.5.0-SNAPSHOT</version>
 
     <name>Find Security Bugs root</name>
 
@@ -159,7 +159,7 @@
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
-                <version>5.14.9</version>
+                <version>6.9.12</version>
                 <scope>test</scope>
             </dependency>
 

@@ -1,0 +1,10 @@
+- Sensitive data can be obtained if these get tainted
+
+- Java Lang
+java/lang/System.getenv(Ljava/lang/String;)Ljava/lang/String;:0|+SENSITIVE_DATA
+java/lang/System.getProperty(Ljava/lang/String;)Ljava/lang/String;:0|+SENSITIVE_DATA
+java/lang/System.getProperty(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:1|+SENSITIVE_DATA
+
+- Scala Play
+com/typesafe/config/Config.getString(Ljava/lang/String;)Ljava/lang/String;:0|+SENSITIVE_DATA
+play/api/Configuration.getString(Ljava/lang/String;Lscala/Option;)Lscala/Option;:1|+SENSITIVE_DATA

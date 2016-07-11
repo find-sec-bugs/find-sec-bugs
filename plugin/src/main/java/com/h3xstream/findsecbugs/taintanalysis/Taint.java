@@ -96,7 +96,8 @@ public class Taint {
         LF_ENCODED,
         QUOTE_ENCODED,
         APOSTROPHE_ENCODED,
-        LT_ENCODED
+        LT_ENCODED,
+        SENSITIVE_DATA
     }
     
     private State state;

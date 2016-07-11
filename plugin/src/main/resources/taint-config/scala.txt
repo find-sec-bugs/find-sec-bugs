@@ -1,7 +1,49 @@
+- Scala collections and and Scala-lang
 
 scala/Predef$.wrapRefArray([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;:0#0
+
 scala/collection/Seq$.apply(Lscala/collection/Seq;)Lscala/collection/GenTraversable;:0#0
+scala/collection/immutable/Vector$.apply(Lscala/collection/Seq;)Lscala/collection/GenTraversable;:0#0
+
+scala/StringContext.<init>(Lscala/collection/Seq;)V:0#1,2
+scala/StringContext.s(Lscala/collection/Seq;)Ljava/lang/String;:0,1
 
 scala/Tuple2.<init>(Ljava/lang/Object;Ljava/lang/Object;)V:0,1#3
 
+scala/collection/mutable/StringBuilder.<init>()V:SAFE
+scala/collection/mutable/StringBuilder.<init>(I)V:SAFE
+scala/collection/mutable/StringBuilder.<init>(Ljava/lang/String;)V:0#1,2
+
+scala/collection/mutable/StringBuilder.append(Ljava/lang/String;)Lscala/collection/mutable/StringBuilder;:0,1#1
+scala/collection/mutable/StringBuilder.append(Z)Lscala/collection/mutable/StringBuilder;:1
+scala/collection/mutable/StringBuilder.append(C)Lscala/collection/mutable/StringBuilder;:1
+scala/collection/mutable/StringBuilder.append(D)Lscala/collection/mutable/StringBuilder;:2
+scala/collection/mutable/StringBuilder.append(F)Lscala/collection/mutable/StringBuilder;:1
+scala/collection/mutable/StringBuilder.append(I)Lscala/collection/mutable/StringBuilder;:1
+scala/collection/mutable/StringBuilder.append(J)Lscala/collection/mutable/StringBuilder;:2
 scala/collection/mutable/StringBuilder.append(Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;:0,1#1
+scala/collection/mutable/StringBuilder.append(Lscala/collection/mutable/StringBuilder;)Lscala/collection/mutable/StringBuilder;:0,1#1
+
+scala/collection/mutable/StringBuilder.appendAll(Ljava/lang/String;)Lscala/collection/mutable/StringBuilder;:0,1#1
+
+scala/collection/mutable/StringBuilder.insert(ILjava/lang/String;)Lscala/collection/mutable/StringBuilder;:0,2#2
+scala/collection/mutable/StringBuilder.insert(ILjava/lang/Object;)Lscala/collection/mutable/StringBuilder;:0,2#2
+scala/collection/mutable/StringBuilder.insert(IZ)Ljava/lang/StringBuilder;:2
+scala/collection/mutable/StringBuilder.insert(IC)Ljava/lang/StringBuilder;:2
+scala/collection/mutable/StringBuilder.insert(ID)Ljava/lang/StringBuilder;:3
+scala/collection/mutable/StringBuilder.insert(IF)Ljava/lang/StringBuilder;:2
+scala/collection/mutable/StringBuilder.insert(II)Ljava/lang/StringBuilder;:2
+scala/collection/mutable/StringBuilder.insert(IJ)Ljava/lang/StringBuilder;:3
+
+scala/collection/mutable/StringBuilder.delete(II)Lscala/collection/mutable/StringBuilder;:2#2
+scala/collection/mutable/StringBuilder.deleteCharAt(I)Lscala/collection/mutable/StringBuilder;:1#1
+scala/collection/mutable/StringBuilder.ensureCapacity(I)V:1#1
+scala/collection/mutable/StringBuilder.setCharAt(IC)V:0,1#1
+scala/collection/mutable/StringBuilder.replace(IILjava/lang/String;)Lscala/collection/mutable/StringBuilder;:0,3#3
+scala/collection/mutable/StringBuilder.replaceAllLiterally(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:0,2
+scala/collection/mutable/StringBuilder.reverseContents()Lscala/collection/mutable/StringBuilder;:0#0
+scala/collection/mutable/StringBuilder.substring(I)Ljava/lang/String;:1
+scala/collection/mutable/StringBuilder.substring(II)Ljava/lang/String;:2
+scala/collection/mutable/StringBuilder.subSequence(II)Ljava/lang/CharSequence;:2
+
+scala/collection/mutable/StringBuilder.toString()Ljava/lang/String;:0

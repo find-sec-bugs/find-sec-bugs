@@ -94,6 +94,10 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
         for (String path : SAFE_ENCODERS_FILENAMES) {
             loadMethodSummaries(SAFE_ENCODERS_PATH.concat(path), true);
         }
+
+        // Override the sensitive data taints
+        loadMethodSummaries(METHODS_SUMMARIES_PATH.concat("taint-sensitive-data.txt"), false);
+
         if (CONFIG.isTaintedSystemVariables()) {
             loadMethodSummaries(METHODS_SUMMARIES_PATH.concat("tainted-system-variables.txt"), false);
             LOGGER.info("System variables are considered to be tainted");

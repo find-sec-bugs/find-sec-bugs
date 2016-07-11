@@ -170,7 +170,7 @@
     <BugPattern type="OBJECT_DESERIALIZATION" abbrev="SECOBDES" category="SECURITY" cweid="502"/>
     <BugPattern type="DESERIALIZATION_GADGET" abbrev="SECDESGAD" category="SECURITY" cweid="502"  experimental="true"/>
     <BugPattern type="TRUST_BOUNDARY_VIOLATION" abbrev="SECTBV" category="SECURITY" cweid="501"/>
-    <BugPattern type="SCALA_SENSITIVE_DATA_EXPOSURE" abbrev="SECSDATALEAK" category="SECURITY" cweid="200"/>
+    <BugPattern type="SCALA_SENSITIVE_DATA_EXPOSURE" abbrev="SECSDL" category="SECURITY" cweid="200"/>
 
 
 </FindbugsPlugin>

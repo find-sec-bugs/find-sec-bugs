@@ -3799,7 +3799,7 @@ Path traversal <sup>[3][4]</sup> are not possible.
     </BugPattern>
     <BugCode abbrev="SECXSLT">A malicious XSLT could be provided</BugCode>
 
-    <!-- XSLT -->
+    <!-- Scala sensitive data leak -->
     <Detector class="com.h3xstream.findsecbugs.scala.ScalaSensitiveDataExposureDetector">
         <Details>Identify potential information leakage in Scala Play</Details>
     </Detector>
@@ -3838,6 +3838,6 @@ Path traversal <sup>[3][4]</sup> are not possible.
             ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECSDATALEAK">Configuration or system information leakage</BugCode>
+    <BugCode abbrev="SECSDL">Configuration or system information leakage</BugCode>
 
 </MessageCollection>

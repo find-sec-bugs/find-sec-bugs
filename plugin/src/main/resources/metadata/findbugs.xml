@@ -81,6 +81,7 @@
     <Detector class="com.h3xstream.findsecbugs.TrustBoundaryViolationDetector" reports="TRUST_BOUNDARY_VIOLATION"/>
     <Detector class="com.h3xstream.findsecbugs.scala.PlayUnvalidatedRedirectDetector" reports="PLAY_UNVALIDATED_REDIRECT" />
     <Detector class="com.h3xstream.findsecbugs.scala.SslDisablerDetector" reports="WEAK_TRUST_MANAGER,WEAK_HOSTNAME_VERIFIER"/>
+    <Detector class="com.h3xstream.findsecbugs.scala.ScalaSensitiveDataExposureDetector" reports="SCALA_SENSITIVE_DATA_EXPOSURE"/>
 
 
     <BugPattern type="PREDICTABLE_RANDOM" abbrev="SECPR" category="SECURITY" cweid="330"/>
@@ -169,6 +170,7 @@
     <BugPattern type="OBJECT_DESERIALIZATION" abbrev="SECOBDES" category="SECURITY" cweid="502"/>
     <BugPattern type="DESERIALIZATION_GADGET" abbrev="SECDESGAD" category="SECURITY" cweid="502"  experimental="true"/>
     <BugPattern type="TRUST_BOUNDARY_VIOLATION" abbrev="SECTBV" category="SECURITY" cweid="501"/>
+    <BugPattern type="SCALA_SENSITIVE_DATA_EXPOSURE" abbrev="SECSDL" category="SECURITY" cweid="200"/>
 
 
 </FindbugsPlugin>

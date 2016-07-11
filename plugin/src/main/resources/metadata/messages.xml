@@ -3799,4 +3799,45 @@ Path traversal <sup>[3][4]</sup> are not possible.
     </BugPattern>
     <BugCode abbrev="SECXSLT">A malicious XSLT could be provided</BugCode>
 
+    <!-- Scala sensitive data leak -->
+    <Detector class="com.h3xstream.findsecbugs.scala.ScalaSensitiveDataExposureDetector">
+        <Details>Identify potential information leakage in Scala Play</Details>
+    </Detector>
+    <BugPattern type="SCALA_SENSITIVE_DATA_EXPOSURE">
+        <ShortDescription>Potential information leakage in Scala Play</ShortDescription>
+        <LongDescription>Configuration or system information leakage found in Scala Play</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    Applications can unintentionally leak information about their configuration, internal workings, or violate privacy through a
+    variety of application problems. <sup>[1]</sup> Pages that provide different responses based on the validity of the data can
+    lead to Information Leakage; specifically when data deemed confidential is being revealed as a result of the web application's
+    design. <sup>[2]</sup>
+</p>
+<p>
+    Examples of sensitive data includes (but is not limited to): API keys, passwords, product versions or environment configurations.
+</p>
+<p>
+<b>Code at risk:</b><br/>
+<pre>def doGet(value:String) = Action {
+  val configElement = configuration.underlying.getString(value)
+
+  Ok("Hello "+ configElement +" !")
+}</pre>
+</p>
+<p>
+    Application configuration elements should not be sent in the response content and users should not be allowed to control which
+    configuration elements will be used by the code.
+</p>
+<b>References</b><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2013-A6-Sensitive_Data_Exposure">OWASP: Top 10 2013-A6-Sensitive Data Exposure</a><br/>
+[1] <a href="https://www.owasp.org/index.php/Top_10_2007-Information_Leakage_and_Improper_Error_Handling">OWASP: Top 10 2007-Information Leakage and Improper Error Handling</a><br/>
+[2] <a href="http://projects.webappsec.org/w/page/13246936/Information%20Leakage">WASC-13: Information Leakage</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/200.html">CWE-200: Information Exposure</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSDL">Configuration or system information leakage</BugCode>
+
 </MessageCollection>

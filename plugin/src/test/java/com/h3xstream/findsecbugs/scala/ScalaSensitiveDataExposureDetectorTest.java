@@ -32,9 +32,9 @@ public class ScalaSensitiveDataExposureDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectSensitiveDataExposure() throws Exception {
-        FindSecBugsGlobalConfig.getInstance().setDebugPrintInstructionVisited(true);
+        //FindSecBugsGlobalConfig.getInstance().setDebugPrintInstructionVisited(true);
         //FindSecBugsGlobalConfig.getInstance().setDebugPrintInvocationVisited(false);
-        FindSecBugsGlobalConfig.getInstance().setDebugTaintState(true);
+        //FindSecBugsGlobalConfig.getInstance().setDebugTaintState(true);
 
         //Locate test code
         String[] files = {

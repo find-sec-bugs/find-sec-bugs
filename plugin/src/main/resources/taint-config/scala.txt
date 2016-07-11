@@ -1,14 +1,14 @@
 - Scala collections and and Scala-lang
 
-scala/Predef$.wrapRefArray([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;:0
+scala/Predef$.wrapRefArray([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;:0#0
+
+scala/collection/Seq$.apply(Lscala/collection/Seq;)Lscala/collection/GenTraversable;:0#0
+scala/collection/immutable/Vector$.apply(Lscala/collection/Seq;)Lscala/collection/GenTraversable;:0#0
 
 scala/StringContext.<init>(Lscala/collection/Seq;)V:0#1,2
 scala/StringContext.s(Lscala/collection/Seq;)Ljava/lang/String;:0,1
 
 scala/Tuple2.<init>(Ljava/lang/Object;Ljava/lang/Object;)V:0,1#3
-
-scala/collection/Seq$.apply(Lscala/collection/Seq;)Lscala/collection/GenTraversable;:0#0
-scala/collection/immutable/Vector$.apply(Lscala/collection/Seq;)Lscala/collection/GenTraversable;:0#0
 
 scala/collection/mutable/StringBuilder.<init>()V:SAFE
 scala/collection/mutable/StringBuilder.<init>(I)V:SAFE
@@ -47,6 +47,3 @@ scala/collection/mutable/StringBuilder.substring(II)Ljava/lang/String;:2
 scala/collection/mutable/StringBuilder.subSequence(II)Ljava/lang/CharSequence;:2
 
 scala/collection/mutable/StringBuilder.toString()Ljava/lang/String;:0
-
-- Scala Play framework MVC
-- play/api/mvc/Results$Status.apply(Ljava/lang/Object;Lplay/api/http/Writeable;)Lplay/api/mvc/Result;:1

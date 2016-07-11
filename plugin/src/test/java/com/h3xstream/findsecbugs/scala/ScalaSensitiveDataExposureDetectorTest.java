@@ -20,13 +20,17 @@ package com.h3xstream.findsecbugs.scala;
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
+import java.util.ArrayList;
+import java.util.List;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Map;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 public class ScalaSensitiveDataExposureDetectorTest extends BaseDetectorTest {
 
@@ -65,22 +69,20 @@ public class ScalaSensitiveDataExposureDetectorTest extends BaseDetectorTest {
 
 
         //Assertions for safe calls and false positives
-        Map<String, int[]> methodFalsePositiveLines = new HashMap<String, int[]>();
-        methodFalsePositiveLines.put("safePlayConfig", new int[]{63, 64, 65, 66, 67, /**/ 69, 70, 71, 72, 73});
-        methodFalsePositiveLines.put("safeEnvProperty", new int[]{81, 82, 83, 84, 85, /**/ 87, 88, 89, 90, 91});
-        methodFalsePositiveLines.put("safeUntainted", new int[]{105, 106, 107, 108, 109, /**/ 111, 112, 113, 114, 115});
-        methodFalsePositiveLines.put("safeNoSensitiveData", new int[]{119, 120, 121, 122, 123, /**/ 125, 126, 127, 128, 129});
+        List<String> methodFalsePositives = new ArrayList<String>();
+        methodFalsePositives.add("safePlayConfig");
+        methodFalsePositives.add("safeEnvProperty");
+        methodFalsePositives.add("safeUntainted");
+        methodFalsePositives.add("safeNoSensitiveData");
 
-        for (Entry<String, int[]> entry : methodFalsePositiveLines.entrySet()) {
-            // Lets check every line specified above
-            for (int line : entry.getValue()) {
-                verify(reporter,never()).doReportBug(
-                        bugDefinition()
-                        .bugType("SCALA_SENSITIVE_DATA_EXPOSURE")
-                        .inClass("SensitiveDataExposureController").inMethod(entry.getKey()).atLine(line)
-                        .build()
-                    );
-            }
+        for (String method : methodFalsePositives) {
+            // Lets check every method specified above
+            verify(reporter,never()).doReportBug(
+                    bugDefinition()
+                            .bugType("SCALA_SENSITIVE_DATA_EXPOSURE")
+                            .inClass("SensitiveDataExposureController").inMethod(method)
+                            .build()
+            );
         }
     }
 }

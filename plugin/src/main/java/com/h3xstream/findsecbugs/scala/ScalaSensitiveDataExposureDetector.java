@@ -17,23 +17,10 @@
  */
 package com.h3xstream.findsecbugs.scala;
 
-import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
-import com.h3xstream.findsecbugs.common.InterfaceUtils;
 import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
 import com.h3xstream.findsecbugs.taintanalysis.Taint;
-import com.h3xstream.findsecbugs.taintanalysis.TaintDataflow;
-import com.h3xstream.findsecbugs.taintanalysis.TaintFrame;
-import edu.umd.cs.findbugs.*;
-import edu.umd.cs.findbugs.ba.*;
-import edu.umd.cs.findbugs.bcel.BCELUtil;
-import edu.umd.cs.findbugs.classfile.CheckedAnalysisException;
-import edu.umd.cs.findbugs.classfile.Global;
-import edu.umd.cs.findbugs.classfile.MethodDescriptor;
-import org.apache.bcel.classfile.JavaClass;
-import org.apache.bcel.classfile.Method;
-import org.apache.bcel.generic.*;
-
-import java.util.*;
+import edu.umd.cs.findbugs.BugReporter;
+import edu.umd.cs.findbugs.Priorities;
 
 public class ScalaSensitiveDataExposureDetector extends BasicInjectionDetector {
 
@@ -52,6 +39,6 @@ public class ScalaSensitiveDataExposureDetector extends BasicInjectionDetector {
             return Priorities.IGNORE_PRIORITY;
         }
 
-         return super.getPriority(taint);
+        return super.getPriority(taint);
     }
 }

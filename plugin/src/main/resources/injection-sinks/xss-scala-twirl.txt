@@ -1,0 +1,4 @@
+- API reference:
+- https://www.playframework.com/documentation/2.5.x/ScalaTemplates
+
+play/twirl/api/Html$.apply(Ljava/lang/String;)Lplay/twirl/api/Html;:0

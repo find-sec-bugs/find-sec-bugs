@@ -28,7 +28,7 @@ public class ScalaSensitiveDataExposureDetector extends BasicInjectionDetector {
 
     public ScalaSensitiveDataExposureDetector(BugReporter bugReporter) {
         super(bugReporter);
-        loadConfiguredSinks("sensitive_data_exposure_scala.txt", SCALA_SENSITIVE_DATA_EXPOSURE_TYPE);
+        loadConfiguredSinks("sensitive-data-exposure-scala.txt", SCALA_SENSITIVE_DATA_EXPOSURE_TYPE);
     }
 
     @Override

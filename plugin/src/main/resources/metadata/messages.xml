@@ -476,7 +476,7 @@ r.exec("/bin/sh -c some_tool" + input);</pre>
 <p>
     <b>Vulnerable Code:</b><br/>
 <pre>def executeCommand(value:String) = Action {
-    val result = "".!
+    val result = value.!
     Ok("Result:\n"+result)
 }</pre>
 </p>

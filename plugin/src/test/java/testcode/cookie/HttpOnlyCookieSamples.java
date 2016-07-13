@@ -65,4 +65,17 @@ public class HttpOnlyCookieSamples {
         Cookie newCookie = new Cookie("test1","1234");
         cookieOther.setHttpOnly(false); //Unrelated
     }
+
+    void multipleCookies() {
+        // The line bellow should stay line 71 - It is used with the .atLine() annotation in the test
+        Cookie safeHttpOnlyCookie = new Cookie("cookie 1", "foo");
+        safeHttpOnlyCookie.setHttpOnly(true);
+
+        // The line bellow should stay line 75 - It is used with the .atLine() annotation in the test
+        Cookie unsafeHttpOnlyCookie = new Cookie("cookie 2", "bar");
+        unsafeHttpOnlyCookie.setHttpOnly(false);
+
+        // The line bellow should stay line 79 - It is used with the .atLine() annotation in the test
+        Cookie unsafeCookie = new Cookie("cookie 3", "foo");
+    }
 }

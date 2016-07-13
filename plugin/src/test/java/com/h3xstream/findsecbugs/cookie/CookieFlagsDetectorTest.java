@@ -48,6 +48,21 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
                             .build()
             );
         }
+
+        // Advanced checks when multiple cookies are set
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("INSECURE_COOKIE")
+                        .inClass("InsecureCookieSamples").inMethod("multipleCookies").atLine(72)
+                        .build()
+        );
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("INSECURE_COOKIE")
+                        .inClass("InsecureCookieSamples").inMethod("multipleCookies").atLine(76)
+                        .build()
+        );
     }
 
     @Test
@@ -69,6 +84,14 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
                             .build()
             );
         }
+
+        // Advanced checks when multiple cookies are set
+        verify(reporter,never()).doReportBug(
+                bugDefinition()
+                        .bugType("INSECURE_COOKIE")
+                        .inClass("InsecureCookieSamples").inMethod("multipleCookies").atLine(68)
+                        .build()
+        );
     }
 
     @Test
@@ -90,6 +113,21 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
                             .build()
             );
         }
+
+        // Advanced checks when multiple cookies are set
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("HTTPONLY_COOKIE")
+                        .inClass("HttpOnlyCookieSamples").inMethod("multipleCookies").atLine(75)
+                        .build()
+        );
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("HTTPONLY_COOKIE")
+                        .inClass("HttpOnlyCookieSamples").inMethod("multipleCookies").atLine(79)
+                        .build()
+        );
     }
 
     @Test
@@ -111,5 +149,13 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
                             .build()
             );
         }
+
+        // Advanced checks when multiple cookies are set
+        verify(reporter,never()).doReportBug(
+                bugDefinition()
+                        .bugType("HTTPONLY_COOKIE")
+                        .inClass("HttpOnlyCookieSamples").inMethod("multipleCookies").atLine(71)
+                        .build()
+        );
     }
 }

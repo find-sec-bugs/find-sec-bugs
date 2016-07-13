@@ -63,4 +63,16 @@ public class InsecureCookieSamples {
         cookieOther.setSecure(false); //Unrelated
     }
 
+    void multipleCookies() {
+        // The line bellow should stay line 68 - It is used with the .atLine() annotation in the test
+        Cookie safeSecureCookie = new Cookie("cookie 3", "foo");
+        safeSecureCookie.setSecure(true);
+
+        // The line bellow should stay line 72 - It is used with the .atLine() annotation in the test
+        Cookie unsafeSecureCookie = new Cookie("cookie 4", "bar");
+        unsafeSecureCookie.setSecure(false);
+
+        // The line bellow should stay line 76 - It is used with the .atLine() annotation in the test
+        Cookie unsafeCookie = new Cookie("cookie 3", "foo");
+    }
 }

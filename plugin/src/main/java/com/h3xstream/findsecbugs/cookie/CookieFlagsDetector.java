@@ -23,9 +23,7 @@ import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Detector;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.ba.CFG;
-import edu.umd.cs.findbugs.ba.CFGBuilderException;
 import edu.umd.cs.findbugs.ba.ClassContext;
-import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
 import edu.umd.cs.findbugs.ba.Location;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
@@ -34,11 +32,8 @@ import org.apache.bcel.generic.INVOKESPECIAL;
 import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.Instruction;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import org.apache.bcel.generic.InstructionHandle;
 
 public class CookieFlagsDetector implements Detector {
 
@@ -63,80 +58,99 @@ public class CookieFlagsDetector implements Detector {
 
             try {
                 analyzeMethod(m,classContext);
-            } catch (CFGBuilderException e) {
-            } catch (DataflowAnalysisException e) {
+            } catch (Exception e) {
             }
         }
     }
 
-
-    private void analyzeMethod(Method m, ClassContext classContext) throws CFGBuilderException, DataflowAnalysisException {
+    private void analyzeMethod(Method m, ClassContext classContext) throws Exception {
         //System.out.println("==="+m.getName()+"===");
+
         ConstantPoolGen cpg = classContext.getConstantPoolGen();
         CFG cfg = classContext.getCFG(m);
-
-        boolean newCookieCreated = false;
-        boolean secureCookieIsSet = false;
-        boolean httpOnlyCookieIsSet = false;
-
-        List<Location> cookieLocations = new ArrayList<Location>();
 
         for (Iterator<Location> i = cfg.locationIterator(); i.hasNext(); ) {
             Location loc = i.next();
             //ByteCode.printOpCode(loc.getHandle().getInstruction(), cpg);
-
 
             Instruction inst = loc.getHandle().getInstruction();
             if(inst instanceof INVOKESPECIAL) {
                 INVOKESPECIAL invoke = (INVOKESPECIAL) inst;
                 if ("javax.servlet.http.Cookie".equals(invoke.getClassName(cpg)) &&
                         "<init>".equals(invoke.getMethodName(cpg))){
-                    newCookieCreated = true;
-                    cookieLocations.add(loc);
+
+                    Location setSecureLocation = getSetSecureLocation(cpg, loc);
+                    if (setSecureLocation == null) {
+
+                        JavaClass javaClass = classContext.getJavaClass();
+
+                        bugReporter.reportBug(new BugInstance(this, INSECURE_COOKIE_TYPE, Priorities.NORMAL_PRIORITY) //
+                                .addClass(javaClass)
+                                .addMethod(javaClass, m)
+                                .addSourceLine(classContext, m, loc));
+                    }
+
+                    Location setHttpOnlyLocation = getSetHttpOnlyLocation(cpg, loc);
+                    if (setHttpOnlyLocation == null) {
+
+                        JavaClass javaClass = classContext.getJavaClass();
+
+                        bugReporter.reportBug(new BugInstance(this, HTTPONLY_COOKIE_TYPE, Priorities.NORMAL_PRIORITY) //
+                                .addClass(javaClass)
+                                .addMethod(javaClass, m)
+                                .addSourceLine(classContext, m, loc));
+                    }
                 }
             }
+        }
+    }
 
-            else if(inst instanceof INVOKEVIRTUAL) {
-                INVOKEVIRTUAL invoke = (INVOKEVIRTUAL) inst;
+    private Location getSetSecureLocation(ConstantPoolGen cpg, Location startLocation) {
+        Location location = startLocation;
+        InstructionHandle handle = location.getHandle();
+
+        while (handle.getNext() != null) {
+            handle = handle.getNext();
+            Instruction nextInst = handle.getInstruction();
+
+            if(nextInst instanceof INVOKEVIRTUAL) {
+                INVOKEVIRTUAL invoke = (INVOKEVIRTUAL) nextInst;
                 if ("javax.servlet.http.Cookie".equals(invoke.getClassName(cpg)) &&
-                        "setSecure".equals(invoke.getMethodName(cpg))){
-                    Integer val = ByteCode.getConstantInt(loc.getHandle().getPrev());
+                        "setSecure".equals(invoke.getMethodName(cpg))) {
+                    Integer val = ByteCode.getConstantInt(handle.getPrev());
                     //if(val != null) System.out.println("setSecure -> "+val.intValue());
-                    if(val != null && val == TRUE_INT_VALUE) {
-                            secureCookieIsSet = true;
+                    if (val != null && val == TRUE_INT_VALUE) {
+                        return new Location(handle, location.getBasicBlock());
                     }
                 }
+            }
+        }
+
+        return null;
+    }
+
+    private Location getSetHttpOnlyLocation(ConstantPoolGen cpg, Location startLocation) {
+        Location location = startLocation;
+        InstructionHandle handle = location.getHandle();
+
+        while (handle.getNext() != null) {
+            handle = handle.getNext();
+            Instruction nextInst = handle.getInstruction();
+
+            if(nextInst instanceof INVOKEVIRTUAL) {
+                INVOKEVIRTUAL invoke = (INVOKEVIRTUAL) nextInst;
                 if ("javax.servlet.http.Cookie".equals(invoke.getClassName(cpg)) &&
-                        "setHttpOnly".equals(invoke.getMethodName(cpg))){
-                    Integer val = ByteCode.getConstantInt(loc.getHandle().getPrev());
-                    if(val != null && val == TRUE_INT_VALUE) {
-                        httpOnlyCookieIsSet = true;
+                        "setHttpOnly".equals(invoke.getMethodName(cpg))) {
+                    Integer val = ByteCode.getConstantInt(handle.getPrev());
+                    //if(val != null) System.out.println("setSecure -> "+val.intValue());
+                    if (val != null && val == TRUE_INT_VALUE) {
+                        return new Location(handle, location.getBasicBlock());
                     }
                 }
             }
-
         }
 
-        if(newCookieCreated && !secureCookieIsSet) {
-            JavaClass clz = classContext.getJavaClass();
-
-            for(Location loc : cookieLocations) {
-                bugReporter.reportBug(new BugInstance(this, INSECURE_COOKIE_TYPE, Priorities.NORMAL_PRIORITY) //
-                        .addClass(clz)
-                        .addMethod(clz, m)
-                        .addSourceLine(classContext, m, loc));
-            }
-        }
-        if(newCookieCreated && !httpOnlyCookieIsSet) {
-            JavaClass clz = classContext.getJavaClass();
-
-            for(Location loc : cookieLocations) {
-                bugReporter.reportBug(new BugInstance(this, HTTPONLY_COOKIE_TYPE, Priorities.NORMAL_PRIORITY) //
-                        .addClass(clz)
-                        .addMethod(clz, m)
-                        .addSourceLine(classContext, m, loc));
-            }
-        }
+        return null;
     }
 
     @Override

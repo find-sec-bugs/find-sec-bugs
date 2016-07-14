@@ -19,6 +19,8 @@ package com.h3xstream.findsecbugs.cookie;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
+import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
+import java.util.List;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
@@ -50,19 +52,15 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
         }
 
         // Advanced checks when multiple cookies are set
-        verify(reporter).doReportBug(
-                bugDefinition()
-                        .bugType("INSECURE_COOKIE")
-                        .inClass("InsecureCookieSamples").inMethod("multipleCookies").atLine(72)
-                        .build()
-        );
-
-        verify(reporter).doReportBug(
-                bugDefinition()
-                        .bugType("INSECURE_COOKIE")
-                        .inClass("InsecureCookieSamples").inMethod("multipleCookies").atLine(76)
-                        .build()
-        );
+        List<Integer> lines = Arrays.asList(new Integer[] { 72, 76, 80 });
+        for (int line : lines) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("INSECURE_COOKIE")
+                            .inClass("InsecureCookieSamples").inMethod("multipleCookies").atLine(line)
+                            .build()
+            );
+        }
     }
 
     @Test
@@ -92,6 +90,12 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
                         .inClass("InsecureCookieSamples").inMethod("multipleCookies").atLine(68)
                         .build()
         );
+        verify(reporter,never()).doReportBug(
+                bugDefinition()
+                        .bugType("HTTPONLY_COOKIE")
+                        .inClass("HttpOnlyCookieSamples").inMethod("multipleCookies").atLine(79)
+                        .build()
+        );
     }
 
     @Test
@@ -115,19 +119,15 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
         }
 
         // Advanced checks when multiple cookies are set
-        verify(reporter).doReportBug(
-                bugDefinition()
-                        .bugType("HTTPONLY_COOKIE")
-                        .inClass("HttpOnlyCookieSamples").inMethod("multipleCookies").atLine(75)
-                        .build()
-        );
-
-        verify(reporter).doReportBug(
-                bugDefinition()
-                        .bugType("HTTPONLY_COOKIE")
-                        .inClass("HttpOnlyCookieSamples").inMethod("multipleCookies").atLine(79)
-                        .build()
-        );
+        List<Integer> lines = Arrays.asList(new Integer[] { 75, 79, 83 });
+        for (int line : lines) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("HTTPONLY_COOKIE")
+                            .inClass("HttpOnlyCookieSamples").inMethod("multipleCookies").atLine(line)
+                            .build()
+            );
+        }
     }
 
     @Test
@@ -155,6 +155,12 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
                 bugDefinition()
                         .bugType("HTTPONLY_COOKIE")
                         .inClass("HttpOnlyCookieSamples").inMethod("multipleCookies").atLine(71)
+                        .build()
+        );
+        verify(reporter,never()).doReportBug(
+                bugDefinition()
+                        .bugType("HTTPONLY_COOKIE")
+                        .inClass("HttpOnlyCookieSamples").inMethod("multipleCookies").atLine(82)
                         .build()
         );
     }

@@ -23,10 +23,13 @@ import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Detector;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.ba.CFG;
+import edu.umd.cs.findbugs.ba.CFGBuilderException;
 import edu.umd.cs.findbugs.ba.ClassContext;
 import edu.umd.cs.findbugs.ba.Location;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
+import org.apache.bcel.generic.ALOAD;
+import org.apache.bcel.generic.ASTORE;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.INVOKESPECIAL;
 import org.apache.bcel.generic.INVOKEVIRTUAL;
@@ -55,15 +58,14 @@ public class CookieFlagsDetector implements Detector {
         Method[] methodList = javaClass.getMethods();
 
         for (Method m : methodList) {
-
             try {
                 analyzeMethod(m,classContext);
-            } catch (Exception e) {
+            } catch (CFGBuilderException e) {
             }
         }
     }
 
-    private void analyzeMethod(Method m, ClassContext classContext) throws Exception {
+    private void analyzeMethod(Method m, ClassContext classContext) throws CFGBuilderException {
         //System.out.println("==="+m.getName()+"===");
 
         ConstantPoolGen cpg = classContext.getConstantPoolGen();
@@ -77,9 +79,13 @@ public class CookieFlagsDetector implements Detector {
             if(inst instanceof INVOKESPECIAL) {
                 INVOKESPECIAL invoke = (INVOKESPECIAL) inst;
                 if ("javax.servlet.http.Cookie".equals(invoke.getClassName(cpg)) &&
-                        "<init>".equals(invoke.getMethodName(cpg))){
+                        "<init>".equals(invoke.getMethodName(cpg))) {
 
-                    Location setSecureLocation = getSetSecureLocation(cpg, loc);
+
+                    Instruction stackPushInstruction = loc.getHandle().getNext().getInstruction();
+                    ASTORE storeInstruction = (ASTORE)stackPushInstruction;
+
+                    Location setSecureLocation = getSetSecureLocation(cpg, loc, storeInstruction.getIndex());
                     if (setSecureLocation == null) {
 
                         JavaClass javaClass = classContext.getJavaClass();
@@ -90,7 +96,7 @@ public class CookieFlagsDetector implements Detector {
                                 .addSourceLine(classContext, m, loc));
                     }
 
-                    Location setHttpOnlyLocation = getSetHttpOnlyLocation(cpg, loc);
+                    Location setHttpOnlyLocation = getSetHttpOnlyLocation(cpg, loc, storeInstruction.getIndex());
                     if (setHttpOnlyLocation == null) {
 
                         JavaClass javaClass = classContext.getJavaClass();
@@ -105,15 +111,24 @@ public class CookieFlagsDetector implements Detector {
         }
     }
 
-    private Location getSetSecureLocation(ConstantPoolGen cpg, Location startLocation) {
+    private Location getSetSecureLocation(ConstantPoolGen cpg, Location startLocation, int stackLocation) {
         Location location = startLocation;
         InstructionHandle handle = location.getHandle();
 
+        int loadedStackValue = 0;
+
+        // Loop until we find the setSecure call for this cookie
         while (handle.getNext() != null) {
             handle = handle.getNext();
             Instruction nextInst = handle.getInstruction();
 
-            if(nextInst instanceof INVOKEVIRTUAL) {
+            if (nextInst instanceof ALOAD) {
+                ALOAD loadInst = (ALOAD)nextInst;
+                loadedStackValue = loadInst.getIndex();
+            }
+
+            if (nextInst instanceof INVOKEVIRTUAL
+                    && loadedStackValue == stackLocation) {
                 INVOKEVIRTUAL invoke = (INVOKEVIRTUAL) nextInst;
                 if ("javax.servlet.http.Cookie".equals(invoke.getClassName(cpg)) &&
                         "setSecure".equals(invoke.getMethodName(cpg))) {
@@ -129,15 +144,24 @@ public class CookieFlagsDetector implements Detector {
         return null;
     }
 
-    private Location getSetHttpOnlyLocation(ConstantPoolGen cpg, Location startLocation) {
+    private Location getSetHttpOnlyLocation(ConstantPoolGen cpg, Location startLocation, int stackLocation) {
         Location location = startLocation;
         InstructionHandle handle = location.getHandle();
 
+        int loadedStackValue = 0;
+
+        // Loop until we find the setHttpOnly call for this cookie
         while (handle.getNext() != null) {
             handle = handle.getNext();
             Instruction nextInst = handle.getInstruction();
 
-            if(nextInst instanceof INVOKEVIRTUAL) {
+            if (nextInst instanceof ALOAD) {
+                ALOAD loadInst = (ALOAD)nextInst;
+                loadedStackValue = loadInst.getIndex();
+            }
+
+            if (nextInst instanceof INVOKEVIRTUAL
+                && loadedStackValue == stackLocation) {
                 INVOKEVIRTUAL invoke = (INVOKEVIRTUAL) nextInst;
                 if ("javax.servlet.http.Cookie".equals(invoke.getClassName(cpg)) &&
                         "setHttpOnly".equals(invoke.getMethodName(cpg))) {

@@ -63,4 +63,29 @@ public class InsecureCookieSamples {
         cookieOther.setSecure(false); //Unrelated
     }
 
+    // If you add unsafe calls in this method, you must change the CookieFlagsDetectorTest - It is validated with the
+    // times(X) annotation
+    void multipleCookies() {
+        Cookie safeSecureCookie = new Cookie("cookie 3", "foo");
+        safeSecureCookie.setSecure(true);
+
+        // The line bellow should stay line 72 - It is used with the .atLine() annotation in the test
+        Cookie unsafeSecureCookie = new Cookie("cookie 4", "bar");
+        unsafeSecureCookie.setSecure(false);
+
+        // The line bellow should stay line 76 - It is used with the .atLine() annotation in the test
+        Cookie unsafeCookie = new Cookie("cookie 3", "foo");
+
+        Cookie mixedCookiesSafe = new Cookie("cookie 4", "bar");
+        // The line bellow should stay line 76 - It is used with the .atLine() annotation in the test
+        Cookie mixedCookies = new Cookie("cookie 5", "bar");
+        mixedCookiesSafe.setSecure(true);
+
+        // The line bellow should stay line 84 - It is used with the .atLine() annotation in the test
+        Cookie unsafeCookie2 = new Cookie("c1", "foo");
+        unsafeCookie2.setSecure(false);
+
+        Cookie safeCookie2 = new Cookie("c2", "bar");
+        safeCookie2.setSecure(true);
+    }
 }

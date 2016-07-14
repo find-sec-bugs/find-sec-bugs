@@ -65,4 +65,30 @@ public class HttpOnlyCookieSamples {
         Cookie newCookie = new Cookie("test1","1234");
         cookieOther.setHttpOnly(false); //Unrelated
     }
+
+    // If you add unsafe calls in this method, you must change the CookieFlagsDetectorTest - It is validated with the
+    // times(X) annotation
+    void multipleCookies() {
+        Cookie safeHttpOnlyCookie = new Cookie("cookie 1", "foo");
+        safeHttpOnlyCookie.setHttpOnly(true);
+
+        // The line bellow should stay line 74 - It is used with the .atLine() annotation in the test
+        Cookie unsafeHttpOnlyCookie = new Cookie("cookie 2", "bar");
+        unsafeHttpOnlyCookie.setHttpOnly(false);
+
+        // The line bellow should stay line 78 - It is used with the .atLine() annotation in the test
+        Cookie unsafeCookie = new Cookie("cookie 3", "foo");
+
+        Cookie mixedCookiesSafe = new Cookie("cookie 4", "bar");
+        // The line bellow should stay line 82 - It is used with the .atLine() annotation in the test
+        Cookie mixedCookies = new Cookie("cookie 5", "bar");
+        mixedCookiesSafe.setHttpOnly(true);
+
+        // The line bellow should stay line 86 - It is used with the .atLine() annotation in the test
+        Cookie unsafeHttpOnlyCookie2 = new Cookie("c1", "foo");
+        unsafeHttpOnlyCookie2.setHttpOnly(false);
+
+        Cookie safeHttpOnlyCookie2 = new Cookie("c2", "bar");
+        safeHttpOnlyCookie2.setHttpOnly(true);
+    }
 }

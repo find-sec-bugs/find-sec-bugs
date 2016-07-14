@@ -82,5 +82,13 @@ public class HttpOnlyCookieSamples {
         Cookie mixedCookiesSafe = new Cookie("cookie 4", "bar");
         Cookie mixedCookies = new Cookie("cookie 5", "bar");
         mixedCookiesSafe.setHttpOnly(true);
+
+        // The line bellow should stay line 87 - It is used with the .atLine() annotation in the test
+        Cookie unsafeHttpOnlyCookie2 = new Cookie("c1", "foo");
+        unsafeHttpOnlyCookie2.setHttpOnly(false);
+
+        // The line bellow should stay line 91 - It is used with the .atLine() annotation in the test
+        Cookie safeHttpOnlyCookie2 = new Cookie("c2", "bar");
+        safeHttpOnlyCookie2.setHttpOnly(true);
     }
 }

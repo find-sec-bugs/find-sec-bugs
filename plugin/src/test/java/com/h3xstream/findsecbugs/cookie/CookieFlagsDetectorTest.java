@@ -52,7 +52,7 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
         }
 
         // Advanced checks when multiple cookies are set
-        List<Integer> lines = Arrays.asList(new Integer[] { 72, 76, 80 });
+        List<Integer> lines = Arrays.asList(new Integer[] { 72, 76, 80, 84 });
         for (int line : lines) {
             verify(reporter).doReportBug(
                     bugDefinition()
@@ -84,18 +84,15 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
         }
 
         // Advanced checks when multiple cookies are set
-        verify(reporter,never()).doReportBug(
-                bugDefinition()
-                        .bugType("INSECURE_COOKIE")
-                        .inClass("InsecureCookieSamples").inMethod("multipleCookies").atLine(68)
-                        .build()
-        );
-        verify(reporter,never()).doReportBug(
-                bugDefinition()
-                        .bugType("HTTPONLY_COOKIE")
-                        .inClass("HttpOnlyCookieSamples").inMethod("multipleCookies").atLine(79)
-                        .build()
-        );
+        List<Integer> lines = Arrays.asList(new Integer[] { 68, 79, 88 });
+        for (int line : lines) {
+            verify(reporter, never()).doReportBug(
+                    bugDefinition()
+                            .bugType("INSECURE_COOKIE")
+                            .inClass("InsecureCookieSamples").inMethod("multipleCookies").atLine(line)
+                            .build()
+            );
+        }
     }
 
     @Test
@@ -119,7 +116,7 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
         }
 
         // Advanced checks when multiple cookies are set
-        List<Integer> lines = Arrays.asList(new Integer[] { 75, 79, 83 });
+        List<Integer> lines = Arrays.asList(new Integer[] { 75, 79, 83, 87 });
         for (int line : lines) {
             verify(reporter).doReportBug(
                     bugDefinition()
@@ -151,17 +148,14 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
         }
 
         // Advanced checks when multiple cookies are set
-        verify(reporter,never()).doReportBug(
-                bugDefinition()
-                        .bugType("HTTPONLY_COOKIE")
-                        .inClass("HttpOnlyCookieSamples").inMethod("multipleCookies").atLine(71)
-                        .build()
-        );
-        verify(reporter,never()).doReportBug(
-                bugDefinition()
-                        .bugType("HTTPONLY_COOKIE")
-                        .inClass("HttpOnlyCookieSamples").inMethod("multipleCookies").atLine(82)
-                        .build()
-        );
+        List<Integer> lines = Arrays.asList(new Integer[] { 71, 82, 91 });
+        for (int line : lines) {
+            verify(reporter, never()).doReportBug(
+                    bugDefinition()
+                            .bugType("HTTPONLY_COOKIE")
+                            .inClass("HttpOnlyCookieSamples").inMethod("multipleCookies").atLine(line)
+                            .build()
+            );
+        }
     }
 }

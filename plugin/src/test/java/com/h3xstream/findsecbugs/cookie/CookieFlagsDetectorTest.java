@@ -28,6 +28,7 @@ import java.util.Arrays;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 public class CookieFlagsDetectorTest extends BaseDetectorTest {
 
@@ -52,7 +53,7 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
         }
 
         // Advanced checks when multiple cookies are set
-        List<Integer> lines = Arrays.asList(new Integer[] { 72, 76, 80, 84 });
+        List<Integer> lines = Arrays.asList(new Integer[] { 73, 77, 81, 85 });
         for (int line : lines) {
             verify(reporter).doReportBug(
                     bugDefinition()
@@ -84,15 +85,12 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
         }
 
         // Advanced checks when multiple cookies are set
-        List<Integer> lines = Arrays.asList(new Integer[] { 68, 79, 88 });
-        for (int line : lines) {
-            verify(reporter, never()).doReportBug(
-                    bugDefinition()
-                            .bugType("INSECURE_COOKIE")
-                            .inClass("InsecureCookieSamples").inMethod("multipleCookies").atLine(line)
-                            .build()
-            );
-        }
+        verify(reporter, times(4)).doReportBug(
+                bugDefinition()
+                        .bugType("INSECURE_COOKIE")
+                        .inClass("InsecureCookieSamples").inMethod("multipleCookies")
+                        .build()
+        );
     }
 
     @Test
@@ -116,7 +114,7 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
         }
 
         // Advanced checks when multiple cookies are set
-        List<Integer> lines = Arrays.asList(new Integer[] { 75, 79, 83, 87 });
+        List<Integer> lines = Arrays.asList(new Integer[] { 76, 80, 84, 88 });
         for (int line : lines) {
             verify(reporter).doReportBug(
                     bugDefinition()
@@ -148,14 +146,12 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
         }
 
         // Advanced checks when multiple cookies are set
-        List<Integer> lines = Arrays.asList(new Integer[] { 71, 82, 91 });
-        for (int line : lines) {
-            verify(reporter, never()).doReportBug(
-                    bugDefinition()
-                            .bugType("HTTPONLY_COOKIE")
-                            .inClass("HttpOnlyCookieSamples").inMethod("multipleCookies").atLine(line)
-                            .build()
-            );
-        }
+        // This method should not contain more than unsafe calls
+        verify(reporter, times(4)).doReportBug(
+                bugDefinition()
+                        .bugType("HTTPONLY_COOKIE")
+                        .inClass("HttpOnlyCookieSamples").inMethod("multipleCookies")
+                        .build()
+        );
     }
 }

@@ -476,7 +476,7 @@ r.exec("/bin/sh -c some_tool" + input);</pre>
 <p>
     <b>Vulnerable Code:</b><br/>
 <pre>def executeCommand(value:String) = Action {
-    val result = "".!
+    val result = value.!
     Ok("Result:\n"+result)
 }</pre>
 </p>
@@ -3839,5 +3839,91 @@ Path traversal <sup>[3][4]</sup> are not possible.
         </Details>
     </BugPattern>
     <BugCode abbrev="SECSDL">Configuration or system information leakage</BugCode>
+
+    <!-- XSS in Scala Play Twirl template engine -->
+    <Detector class="com.h3xstream.findsecbugs.scala.XssTwirlDetector">
+        <Details>Identify potential Cross-Site Scripting in Scala Twirl template engine.</Details>
+    </Detector>
+    <BugPattern type="SCALA_XSS_TWIRL">
+        <ShortDescription>Potential XSS in Scala Twirl template engine</ShortDescription>
+        <LongDescription>This use of {3} could be vulnerable to XSS</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+A potential XSS was found. It could be used to execute unwanted JavaScript in a client's browser. (See references)
+</p>
+<p>
+    <b>Vulnerable Code:</b>
+<pre>@(value: Html)
+
+@value</pre>
+</p>
+<p>
+    <b>Solution:</b>
+<pre>@(value: String)
+
+@value</pre>
+</p>
+<p>
+The best defense against XSS is context sensitive output encoding like the example above. There are typically 4 contexts to consider:
+HTML, JavaScript, CSS (styles), and URLs. Please follow the XSS protection rules defined in the OWASP XSS Prevention Cheat Sheet,
+which explains these defenses in significant detail.
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site Scripting</a><br/>
+<a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet">OWASP: XSS Prevention Cheat Sheet</a><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_%28XSS%29">OWASP: Top 10 2013-A3: Cross-Site Scripting (XSS)</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a><br/>
+<a href="https://code.google.com/p/owasp-java-encoder/">OWASP Java Encoder</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSXSST">Potential XSS in Scala Twirl</BugCode>
+
+    <!-- XSS in Scala Play controller response -->
+    <Detector class="com.h3xstream.findsecbugs.scala.XssMvcApiDetector">
+        <Details>Identify potential Cross-Site Scripting in Scala MVC API engine.</Details>
+    </Detector>
+    <BugPattern type="SCALA_XSS_MVC_API">
+        <ShortDescription>Potential XSS in Scala MVC API engine</ShortDescription>
+        <LongDescription>A MVC result with this content-type could be vulnerable to XSS</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+A potential XSS was found. It could be used to execute unwanted JavaScript in a client's browser. (See references)
+</p>
+<p>
+    <b>Vulnerable Code:</b>
+<pre>def doGet(value:String) = Action {
+    Ok("Hello "+value+" !").as("text/html")
+  }</pre>
+</p>
+<p>
+    <b>Solution:</b>
+<pre>def doGet(value:String) = Action {
+    Ok("Hello "+value+" !").as("text/html")
+  }</pre>
+</p>
+<p>
+The best defense against XSS is context sensitive output encoding like the example above. There are typically 4 contexts to consider:
+HTML, JavaScript, CSS (styles), and URLs. Please follow the XSS protection rules defined in the OWASP XSS Prevention Cheat Sheet,
+which explains these defenses in significant detail.
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site Scripting</a><br/>
+<a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet">OWASP: XSS Prevention Cheat Sheet</a><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_%28XSS%29">OWASP: Top 10 2013-A3: Cross-Site Scripting (XSS)</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a><br/>
+<a href="https://code.google.com/p/owasp-java-encoder/">OWASP Java Encoder</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSXSS">Potential XSS in Scala MVC API</BugCode>
 
 </MessageCollection>

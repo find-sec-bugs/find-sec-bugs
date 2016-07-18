@@ -48,7 +48,7 @@ public class XssMvcApiDetector extends BasicInjectionDetector {
             Taint parameterTaint = fact.getStackValue(0);
 
             if ( !parameterTaint.isSafe()
-                    || (parameterTaint.getConstantValue() != null && parameterTaint.getConstantValue().toLowerCase().equals(VULNERABLE_CONTENT_TYPE)) ) {
+                    || VULNERABLE_CONTENT_TYPE.equalsIgnoreCase(parameterTaint.getConstantValue())) {
                 return getPriority(mvcResultTaint);
             }
         }

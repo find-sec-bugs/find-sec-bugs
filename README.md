@@ -4,11 +4,18 @@ Find Security Bugs is the [FindBugs](http://findbugs.sourceforge.net/) plugin fo
 
 Website : http://find-sec-bugs.github.io/
 
+## Main developers
+
+ - [Philippe Arteau](https://github.com/h3xstream)
+ - [David Formánek](https://github.com/formanek)
+
 ## Notable contributions
 
  - [David Formánek](https://github.com/formanek) : 
-   - Major improvements and refactoring on the taint analysis for injections. 
+   - Major improvements and refactoring on the taint analysis for injections.
    - The creation of a detector for Hard coded passwords and cryptographic keys.
+ - [Maxime Nadeau](https://github.com/MaxNad)
+   - New detectors surrounding the Play Framework and improvements related to Scala.
  - [Naoki Kimura](https://github.com/naokikimura) : 
    - Detector for [injection in custom API](http://h3xstream.github.io/find-sec-bugs/bugs.htm#CUSTOM_INJECTION)
    - Translation of [messages in Japanese](http://h3xstream.github.io/find-sec-bugs/bugs_ja.htm)

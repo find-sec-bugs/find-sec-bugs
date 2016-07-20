@@ -29,6 +29,7 @@ public class XssMvcApiDetector extends BasicInjectionDetector {
 
     private static final String SCALA_XSS_MVC_API_TYPE = "SCALA_XSS_MVC_API";
 
+    // This variable is compared with a .toLowerCase() variable. Please keep this const lowercase.
     private final String VULNERABLE_CONTENT_TYPE = "text/html";
 
     public XssMvcApiDetector(BugReporter bugReporter) {
@@ -46,7 +47,8 @@ public class XssMvcApiDetector extends BasicInjectionDetector {
             // Get the value of the content-type parameter
             Taint parameterTaint = fact.getStackValue(0);
 
-            if (!parameterTaint.isSafe() || parameterTaint.getConstantValue().equals(VULNERABLE_CONTENT_TYPE)) {
+            if ( !parameterTaint.isSafe()
+                    || VULNERABLE_CONTENT_TYPE.equalsIgnoreCase(parameterTaint.getConstantValue())) {
                 return getPriority(mvcResultTaint);
             }
         }

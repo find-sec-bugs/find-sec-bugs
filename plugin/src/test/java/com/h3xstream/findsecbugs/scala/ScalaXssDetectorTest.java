@@ -54,16 +54,22 @@ public class ScalaXssDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("SCALA_XSS_MVC_API")
-                        .inClass("XssController").inMethod("vulnerable2").atLine(13)
+                        .inClass("XssController").inMethod("vulnerable2").atLine(14)
                         .build()
         );
 
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("SCALA_XSS_MVC_API")
+                        .inClass("XssController").inMethod("vulnerable3").atLine(18)
+                        .build()
+        );
 
         // Test the Twirl template engine checks
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("SCALA_XSS_TWIRL")
-                        .inClass("XssController").inMethod("vulnerable3").atLine(17)
+                        .inClass("XssController").inMethod("vulnerable4").atLine(22)
                         .build()
         );
 

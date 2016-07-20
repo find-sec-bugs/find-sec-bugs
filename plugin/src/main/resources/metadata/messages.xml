@@ -3898,13 +3898,13 @@ A potential XSS was found. It could be used to execute unwanted JavaScript in a 
 <p>
     <b>Vulnerable Code:</b>
 <pre>def doGet(value:String) = Action {
-    Ok("Hello "+value+" !").as("text/html")
+    Ok("Hello " + value + " !").as("text/html")
   }</pre>
 </p>
 <p>
     <b>Solution:</b>
 <pre>def doGet(value:String) = Action {
-    Ok("Hello "+value+" !").as("text/html")
+    Ok("Hello " + Encode.forHtml(value) + " !")
   }</pre>
 </p>
 <p>

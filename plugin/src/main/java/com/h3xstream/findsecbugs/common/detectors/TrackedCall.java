@@ -17,23 +17,34 @@
  */
 package com.h3xstream.findsecbugs.common.detectors;
 
-public class TrackedCall {
-    private String invokeInstruction;
-    public String getInvokeInstruction() { return invokeInstruction; }
-    public void setInvokeInstruction(String invokeInstruction) { this.invokeInstruction = invokeInstruction; }
-
+public class TrackedCall<T> {
     private String bugType;
     public String getBugType() { return bugType; }
     public void setBugType(String bugType) { this.bugType = bugType; }
 
-    private Integer checkedParamValue;
-    public Integer getCheckedParamValue() { return checkedParamValue; }
-    public void setCheckedParamValue(Integer checkedParamValue) { this.checkedParamValue = checkedParamValue; }
+    private String invokeInstruction;
+    public String getInvokeInstruction() { return invokeInstruction; }
+    public void setInvokeInstruction(String invokeInstruction) { this.invokeInstruction = invokeInstruction; }
 
-    public TrackedCall(String invokeInstruction, String bugType, Integer checkedParamValue) {
+    private int checkedParamStackIndex;
+    public int getCheckedParamStackIndex() { return checkedParamStackIndex; }
+    public void setCheckedParamStackIndex(int checkedParamValue) { this.checkedParamStackIndex = checkedParamStackIndex; }
+
+    private T checkedParamValue;
+    public T getCheckedParamValue() { return checkedParamValue; }
+    public void setCheckedParamValue(T checkedParamValue) { this.checkedParamValue = checkedParamValue; }
+
+    private boolean reportWhenMissing;
+    public boolean getReportWhenMissing() { return reportWhenMissing; }
+    public void setReportWhenMissing(boolean reportWhenMissing) { this.reportWhenMissing = reportWhenMissing; }
+
+    public TrackedCall(String invokeInstruction, int checkedParamStackIndex, T checkedParamValue,
+                       boolean reportWhenMissing, String bugType) {
         this.invokeInstruction = invokeInstruction;
-        this.bugType = bugType;
-
+        this.checkedParamStackIndex = checkedParamStackIndex;
         this.checkedParamValue = checkedParamValue;
+        this.reportWhenMissing = reportWhenMissing;
+
+        this.bugType = bugType;
     }
 }

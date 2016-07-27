@@ -4,13 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TrackedObject {
-    private String objectInitCall;
-    public String getObjectInitCall() { return objectInitCall; }
-    public void setObjectInitCall(String objectInitCall) { this.objectInitCall = objectInitCall; }
-
-    public final List<TrackedCall> trackedCalls = new ArrayList<TrackedCall>();
-
-    public TrackedObject(String objectInitCall) {
-        this.objectInitCall = objectInitCall;
-    }
+    private List<TrackedCall> trackedCalls = new ArrayList<TrackedCall>();
+    public List<TrackedCall> getTrackedCalls() { return trackedCalls; }
+    public void addTrackedCall(TrackedCall trackedCall) { this.trackedCalls.add(trackedCall); }
 }

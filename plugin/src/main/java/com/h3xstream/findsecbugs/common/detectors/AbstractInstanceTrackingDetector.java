@@ -17,7 +17,6 @@
  */
 package com.h3xstream.findsecbugs.common.detectors;
 
-import com.h3xstream.findsecbugs.common.ByteCode;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Detector;
@@ -26,34 +25,47 @@ import edu.umd.cs.findbugs.ba.CFGBuilderException;
 import edu.umd.cs.findbugs.ba.ClassContext;
 import edu.umd.cs.findbugs.ba.Location;
 import edu.umd.cs.findbugs.classfile.CheckedAnalysisException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ALOAD;
 import org.apache.bcel.generic.ASTORE;
+import org.apache.bcel.generic.BIPUSH;
 import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.ICONST;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InvokeInstruction;
+import org.apache.bcel.generic.LDC;
 
 /**
- * Detector designed for extension to track calls on certain objects
+ * Detector designed for extension to track a specific call or the lack of that specific call on an object.
  *
  * @author Maxime Nadeau
  */
 public abstract class AbstractInstanceTrackingDetector implements Detector {
 
     private BugReporter bugReporter;
-    private final List<TrackedObject> trackedObjects = new ArrayList<TrackedObject>();
+
+    private final Map<String, TrackedObject> trackedObjects = new HashMap<String, TrackedObject>();
 
     protected AbstractInstanceTrackingDetector(BugReporter bugReporter) { this.bugReporter = bugReporter; }
 
-    public void addTrackedCall(String objectInitInstruction, String trackedCallLocation, String bugType, Integer checkedParameterValue) {
-        TrackedObject trackedObject = new TrackedObject(objectInitInstruction);
-        trackedObject.trackedCalls.add(new TrackedCall(trackedCallLocation, bugType, checkedParameterValue));
-        trackedObjects.add(trackedObject);
+    public void addTrackedCall(String objectInitInstruction, String trackedCallInvoke, int checkedParamStackIndex,
+                               Object checkedParameterValue, boolean reportWhenMissing, String bugType) {
+
+        TrackedCall newCall = new TrackedCall(trackedCallInvoke, checkedParamStackIndex, checkedParameterValue, reportWhenMissing, bugType);
+
+        if (trackedObjects.containsKey(objectInitInstruction)) {
+            trackedObjects.get(objectInitInstruction).addTrackedCall(newCall);
+        } else {
+            TrackedObject newObject = new TrackedObject();
+            newObject.addTrackedCall(newCall);
+
+            trackedObjects.put(objectInitInstruction, newObject);
+        }
     }
 
     /**
@@ -103,10 +115,10 @@ public abstract class AbstractInstanceTrackingDetector implements Detector {
 
             InvokeInstruction invoke = (InvokeInstruction)instruction;
 
-            for (TrackedObject trackedObject : trackedObjects) {
+            for (String currentObject : trackedObjects.keySet()) {
 
                 String currentMethod = getFullMethodName(invoke, cpg);
-                if (trackedObject.getObjectInitCall().equalsIgnoreCase(currentMethod)) {
+                if (currentObject.equalsIgnoreCase(currentMethod)) {
 
                     // The following call should push the cookie onto the stack
                     Instruction objectStoreInstruction = handle.getNext().getInstruction();
@@ -115,10 +127,11 @@ public abstract class AbstractInstanceTrackingDetector implements Detector {
                         // We will use the position of the object on the stack to track it
                         ASTORE storeInstruction = (ASTORE)objectStoreInstruction;
 
-                        for (TrackedCall trackedInvokeInstruction : trackedObject.trackedCalls) {
-                            Location callLocation = getTrackedInstructionLocation(cpg, location, storeInstruction.getIndex(),
-                                    trackedInvokeInstruction.getInvokeInstruction(), trackedInvokeInstruction.getCheckedParamValue());
-                            if (callLocation == null) {
+                        for (TrackedCall trackedInvokeInstruction : trackedObjects.get(currentObject).getTrackedCalls()) {
+                            Location callLocation = getTrackedInstructionLocation(cpg, location, storeInstruction.getIndex(), trackedInvokeInstruction);
+
+                            if ( (trackedInvokeInstruction.getReportWhenMissing() && callLocation == null)
+                                    || (!trackedInvokeInstruction.getReportWhenMissing() && callLocation != null) ) {
 
                                 JavaClass javaClass = classContext.getJavaClass();
 
@@ -148,11 +161,11 @@ public abstract class AbstractInstanceTrackingDetector implements Detector {
      * @param cpg ConstantPoolGen
      * @param searchStartLocation The Location of the object initialization call.
      * @param objectStackLocation The index of the object on the stack.
-     * @param invokeInstruction The instruction we want to detect.
+     * @param trackedCall The instruction we want to detect.
      * @return The location of the tracked invoke instruction or null if the instruction was not found.
      */
-    private Location getTrackedInstructionLocation(ConstantPoolGen cpg, Location searchStartLocation,
-                                                     int objectStackLocation, String invokeInstruction, Integer checkedParameterValue) {
+    private Location getTrackedInstructionLocation(ConstantPoolGen cpg, Location searchStartLocation, int objectStackLocation,
+                                                   TrackedCall trackedCall) {
         InstructionHandle handle = searchStartLocation.getHandle();
 
         int loadedStackValue = 0;
@@ -173,11 +186,9 @@ public abstract class AbstractInstanceTrackingDetector implements Detector {
                 InvokeInstruction invoke = (InvokeInstruction) nextInst;
 
                 String methodNameWithSignature = getFullMethodName(invoke, cpg);
-                if (methodNameWithSignature.equals(invokeInstruction)) {
+                if (methodNameWithSignature.equals(trackedCall.getInvokeInstruction())) {
 
-                    Integer val = ByteCode.getConstantInt(handle.getPrev());
-
-                    if (val != null && val == checkedParameterValue) {
+                    if (checkParameterValue(cpg, handle, trackedCall.getCheckedParamStackIndex(), trackedCall.getCheckedParamValue())) {
                         return new Location(handle, searchStartLocation.getBasicBlock());
                     }
                 }
@@ -185,6 +196,30 @@ public abstract class AbstractInstanceTrackingDetector implements Detector {
         }
 
         return null;
+    }
+
+    protected boolean checkParameterValue(ConstantPoolGen cpg, InstructionHandle searchStartLocation,
+                                              int checkedParamIndex, Object checkedParameterValue) {
+
+        for (int index = 0; index <= checkedParamIndex; index++) {
+            searchStartLocation = searchStartLocation.getPrev();
+        }
+
+        Object constantValue = null;
+        Instruction parameterLoadInstruction = searchStartLocation.getInstruction();
+
+        if (parameterLoadInstruction instanceof ICONST) {
+            ICONST loadInst = (ICONST)parameterLoadInstruction;
+            constantValue = loadInst.getValue();
+        } else if (parameterLoadInstruction instanceof LDC) {
+            LDC loadInst = (LDC)parameterLoadInstruction;
+            constantValue = loadInst.getValue(cpg);
+        } else if (parameterLoadInstruction instanceof BIPUSH) {
+            BIPUSH loadInst = (BIPUSH)parameterLoadInstruction;
+            constantValue = loadInst.getValue();
+        }
+
+        return constantValue != null && constantValue.equals(checkedParameterValue);
     }
 
     protected static Iterator<Location> getLocationIterator(ClassContext classContext, Method method)

@@ -30,7 +30,7 @@ public class CookieFlagsDetector extends AbstractInstanceTrackingDetector {
     public CookieFlagsDetector(BugReporter bugReporter) {
         super(bugReporter);
 
-        addTrackedCall("javax/servlet/http/Cookie.<init>", "javax/servlet/http/Cookie.setSecure", INSECURE_COOKIE_TYPE, TRUE_INT_VALUE);
-        addTrackedCall("javax/servlet/http/Cookie.<init>", "javax/servlet/http/Cookie.setHttpOnly", HTTPONLY_COOKIE_TYPE, TRUE_INT_VALUE);
+        addTrackedCall("javax/servlet/http/Cookie.<init>", "javax/servlet/http/Cookie.setSecure", 0, TRUE_INT_VALUE, true, INSECURE_COOKIE_TYPE);
+        addTrackedCall("javax/servlet/http/Cookie.<init>", "javax/servlet/http/Cookie.setHttpOnly", 0, TRUE_INT_VALUE, true, HTTPONLY_COOKIE_TYPE);
     }
 }

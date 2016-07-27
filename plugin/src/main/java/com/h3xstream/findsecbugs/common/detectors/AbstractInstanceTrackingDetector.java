@@ -45,16 +45,14 @@ import org.apache.bcel.generic.InvokeInstruction;
  */
 public abstract class AbstractInstanceTrackingDetector implements Detector {
 
-    private static final int TRUE_INT_VALUE = 1;
-
     private BugReporter bugReporter;
     private final List<TrackedObject> trackedObjects = new ArrayList<TrackedObject>();
 
     protected AbstractInstanceTrackingDetector(BugReporter bugReporter) { this.bugReporter = bugReporter; }
 
-    public void addTrackedCall(String objectInitInstruction, String trackedCallLocation, String bugType) {
+    public void addTrackedCall(String objectInitInstruction, String trackedCallLocation, String bugType, Integer checkedParameterValue) {
         TrackedObject trackedObject = new TrackedObject(objectInitInstruction);
-        trackedObject.trackedCalls.add(new TrackedCall(trackedCallLocation, bugType));
+        trackedObject.trackedCalls.add(new TrackedCall(trackedCallLocation, bugType, checkedParameterValue));
         trackedObjects.add(trackedObject);
     }
 
@@ -118,7 +116,8 @@ public abstract class AbstractInstanceTrackingDetector implements Detector {
                         ASTORE storeInstruction = (ASTORE)objectStoreInstruction;
 
                         for (TrackedCall trackedInvokeInstruction : trackedObject.trackedCalls) {
-                            Location callLocation = getTrackedInstructionLocation(cpg, location, storeInstruction.getIndex(), trackedInvokeInstruction.getInvokeInstruction());
+                            Location callLocation = getTrackedInstructionLocation(cpg, location, storeInstruction.getIndex(),
+                                    trackedInvokeInstruction.getInvokeInstruction(), trackedInvokeInstruction.getCheckedParamValue());
                             if (callLocation == null) {
 
                                 JavaClass javaClass = classContext.getJavaClass();
@@ -153,7 +152,7 @@ public abstract class AbstractInstanceTrackingDetector implements Detector {
      * @return The location of the tracked invoke instruction or null if the instruction was not found.
      */
     private Location getTrackedInstructionLocation(ConstantPoolGen cpg, Location searchStartLocation,
-                                                     int objectStackLocation, String invokeInstruction) {
+                                                     int objectStackLocation, String invokeInstruction, Integer checkedParameterValue) {
         InstructionHandle handle = searchStartLocation.getHandle();
 
         int loadedStackValue = 0;
@@ -178,7 +177,7 @@ public abstract class AbstractInstanceTrackingDetector implements Detector {
 
                     Integer val = ByteCode.getConstantInt(handle.getPrev());
 
-                    if (val != null && val == TRUE_INT_VALUE) {
+                    if (val != null && val == checkedParameterValue) {
                         return new Location(handle, searchStartLocation.getBasicBlock());
                     }
                 }

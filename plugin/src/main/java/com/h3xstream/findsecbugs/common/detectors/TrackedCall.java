@@ -26,8 +26,14 @@ public class TrackedCall {
     public String getBugType() { return bugType; }
     public void setBugType(String bugType) { this.bugType = bugType; }
 
-    public TrackedCall(String invokeInstruction, String bugType) {
+    private Integer checkedParamValue;
+    public Integer getCheckedParamValue() { return checkedParamValue; }
+    public void setCheckedParamValue(Integer checkedParamValue) { this.checkedParamValue = checkedParamValue; }
+
+    public TrackedCall(String invokeInstruction, String bugType, Integer checkedParamValue) {
         this.invokeInstruction = invokeInstruction;
         this.bugType = bugType;
+
+        this.checkedParamValue = checkedParamValue;
     }
 }

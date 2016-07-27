@@ -22,13 +22,15 @@ import edu.umd.cs.findbugs.BugReporter;
 
 public class CookieFlagsDetector extends AbstractInstanceTrackingDetector {
 
+    private static final int TRUE_INT_VALUE = 1;
+
     private static final String INSECURE_COOKIE_TYPE = "INSECURE_COOKIE";
     private static final String HTTPONLY_COOKIE_TYPE = "HTTPONLY_COOKIE";
 
     public CookieFlagsDetector(BugReporter bugReporter) {
         super(bugReporter);
 
-        addTrackedCall("javax/servlet/http/Cookie.<init>", "javax/servlet/http/Cookie.setSecure", INSECURE_COOKIE_TYPE);
-        addTrackedCall("javax/servlet/http/Cookie.<init>", "javax/servlet/http/Cookie.setHttpOnly", HTTPONLY_COOKIE_TYPE);
+        addTrackedCall("javax/servlet/http/Cookie.<init>", "javax/servlet/http/Cookie.setSecure", INSECURE_COOKIE_TYPE, TRUE_INT_VALUE);
+        addTrackedCall("javax/servlet/http/Cookie.<init>", "javax/servlet/http/Cookie.setHttpOnly", HTTPONLY_COOKIE_TYPE, TRUE_INT_VALUE);
     }
 }

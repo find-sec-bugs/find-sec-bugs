@@ -41,13 +41,24 @@ public class FindSecBugsGlobalConfig {
     private boolean reportPotentialXssWrongContext;
 
     protected FindSecBugsGlobalConfig() {
-        debugOutputSummaries = SystemProperties.getBoolean("findsecbugs.taint.outputsummaries", false);
-        taintedSystemVariables = SystemProperties.getBoolean("findsecbugs.taint.taintedsystemvariables", false);
-        customConfigFile = SystemProperties.getProperty("findsecbugs.taint.customconfigfile");
-        taintedMainArgument = SystemProperties.getBoolean("findsecbugs.taint.taintedmainargument", true);
-        reportPotentialXssWrongContext = SystemProperties.getBoolean("findsecbugs.taint.reportpotentialxsswrongcontext",false);
+        debugOutputSummaries = Boolean.parseBoolean(loadFromSystem("findsecbugs.taint.outputsummaries", Boolean.FALSE.toString()));
+        taintedSystemVariables = Boolean.parseBoolean(loadFromSystem("findsecbugs.taint.taintedsystemvariables", Boolean.FALSE.toString()));
+        customConfigFile = loadFromSystem("findsecbugs.taint.customconfigfile", null);
+        taintedMainArgument = Boolean.parseBoolean(loadFromSystem("findsecbugs.taint.taintedmainargument", Boolean.TRUE.toString()));
+        reportPotentialXssWrongContext = Boolean.parseBoolean(loadFromSystem("findsecbugs.taint.reportpotentialxsswrongcontext", Boolean.FALSE.toString()));
     }
-    
+
+    public static String loadFromSystem(String key, String defaultValue) {
+        String value = System.getenv(key);
+        value = SystemProperties.getProperty(key, value);
+
+        if (value == null) {
+            return defaultValue;
+        }
+
+        return value;
+    }
+
     public static FindSecBugsGlobalConfig getInstance() {
         return instance;
     }

@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.injection;
 
+import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.SystemProperties;
 import edu.umd.cs.findbugs.ba.AnalysisContext;
@@ -100,7 +101,7 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
      * </ul>
      */
     protected void loadCustomConfigFiles() {
-        String customConfigFile = SystemProperties.getProperty("findsecbugs.injection.customconfigfile." + getClass().getSimpleName());
+        String customConfigFile = FindSecBugsGlobalConfig.loadFromSystem("findsecbugs.injection.customconfigfile." + getClass().getSimpleName(), null);
         if (customConfigFile != null && !customConfigFile.isEmpty()) {
             for (String configFile : customConfigFile.split(File.pathSeparator)) {
                 String[] injectionDefinition = configFile.split(Pattern.quote("|"));

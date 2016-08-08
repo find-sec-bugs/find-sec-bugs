@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.injection.custom;
 
+import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
 import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import edu.umd.cs.findbugs.BugReporter;
@@ -70,8 +71,8 @@ public class CustomInjectionDetector extends BasicInjectionDetector {
     }
 
     private List<URL> getSystemProperty() {
-        String propertyValue = System.getProperty(SYSTEM_PROPERTY);
-        String[] resourcePaths = propertyValue == null ? new String[0] : propertyValue.split(",");
+        String propertyValue = FindSecBugsGlobalConfig.loadFromSystem(SYSTEM_PROPERTY, "");
+        String[] resourcePaths = propertyValue.split(",");
         List<URL> urls = new ArrayList<URL>(resourcePaths.length);
         for (String resourcePath : resourcePaths) {
             File file = new File(resourcePath);

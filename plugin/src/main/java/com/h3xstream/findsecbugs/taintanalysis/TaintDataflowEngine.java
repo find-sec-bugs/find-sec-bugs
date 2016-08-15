@@ -59,6 +59,7 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
         "scala.txt",
         "logging.txt",
         "other.txt",
+        "portlet.txt"
     };
     private static final String SAFE_ENCODERS_PATH = "safe-encoders/";
     private static final String[] SAFE_ENCODERS_FILENAMES = {

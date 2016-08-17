@@ -29,8 +29,9 @@ import java.util.regex.Pattern;
  * @author Tomas Polesovsky (Liferay, Inc.)
  */
 public class TaintClassSummary {
+    public static final Taint.State DEFAULT_TAINT_STATE = Taint.State.NULL;
     private static final String IMMUTABLE = "#IMMUTABLE";
-    private Taint.State taintState = Taint.State.NULL;
+    private Taint.State taintState = DEFAULT_TAINT_STATE;
     private boolean immutable;
     private static final Pattern typePattern;
 
@@ -79,5 +80,13 @@ public class TaintClassSummary {
 
     public boolean isImmutable() {
         return immutable;
+    }
+
+    public Taint.State getTaintState(Taint.State defaultState) {
+        if (taintState.equals(DEFAULT_TAINT_STATE)) {
+            return defaultState;
+        }
+
+        return taintState;
     }
 }

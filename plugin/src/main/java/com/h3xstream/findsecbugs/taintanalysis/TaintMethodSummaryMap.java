@@ -17,13 +17,16 @@
  */
 package com.h3xstream.findsecbugs.taintanalysis;
 
+import edu.umd.cs.findbugs.ba.AnalysisContext;
+import org.apache.bcel.Repository;
+import org.apache.bcel.classfile.JavaClass;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
-import java.util.regex.Pattern;
 
 /**
  * Map of taint summaries for all known methods
@@ -91,5 +94,64 @@ public class TaintMethodSummaryMap extends HashMap<String, TaintMethodSummary> {
                 throw new IllegalArgumentException("Invalid full method name " + typeSignature + " configured");
             }
         });
+    }
+
+
+    public boolean isClassImmutable(String typeSignature) {
+        if (!isClassType(typeSignature)) {
+            return false;
+        }
+
+        TaintClassSummary summary = taintClassSummaryMap.get(typeSignature);
+        if (summary == null) {
+            return false;
+        }
+
+        return summary.isImmutable();
+    }
+
+    public boolean isClassTaintSafe(String typeSignature) {
+        if (!isClassType(typeSignature)) {
+            return false;
+        }
+
+        TaintClassSummary taintClassSummary = getClassSummary(typeSignature);
+        if (taintClassSummary == null) {
+            return false;
+        }
+
+        return taintClassSummary.getTaintState().equals(Taint.State.SAFE);
+    }
+
+    public Taint.State getClassTaintState(String typeSignature, Taint.State defaultState) {
+        if (!isClassType(typeSignature)) {
+            return defaultState;
+        }
+
+        TaintClassSummary taintClassSummary = getClassSummary(typeSignature);
+
+        if (taintClassSummary == null) {
+            return defaultState;
+        }
+
+        Taint.State classSummaryTaintState = taintClassSummary.getTaintState();
+
+        if (classSummaryTaintState.equals(TaintClassSummary.DEFAULT_TAINT_STATE)) {
+            return defaultState;
+        }
+
+        return classSummaryTaintState;
+    }
+
+    public TaintClassSummary getClassSummary(String typeSignature) {
+        if (!isClassType(typeSignature)) {
+            return null;
+        }
+
+        return taintClassSummaryMap.get(typeSignature);
+    }
+
+    private boolean isClassType(String typeSignature) {
+        return typeSignature != null && typeSignature.length() > 2 && typeSignature.charAt(0) == 'L';
     }
 }

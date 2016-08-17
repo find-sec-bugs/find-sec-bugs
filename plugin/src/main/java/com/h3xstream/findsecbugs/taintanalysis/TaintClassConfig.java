@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
  *
  * @author Tomas Polesovsky (Liferay, Inc.)
  */
-public class TaintClassConfig {
+public class TaintClassConfig implements TaintTypeConfig {
     public static final Taint.State DEFAULT_TAINT_STATE = Taint.State.NULL;
     private static final String IMMUTABLE = "#IMMUTABLE";
     private Taint.State taintState = DEFAULT_TAINT_STATE;
@@ -53,7 +53,8 @@ public class TaintClassConfig {
      * @throws java.io.IOException for bad format of parameter
      * @throws NullPointerException if argument is null
      */
-    public static TaintClassConfig load(String summary) throws IOException {
+    @Override
+    public TaintClassConfig load(String summary) throws IOException {
         if (summary == null) {
             throw new NullPointerException("Summary is null");
         }

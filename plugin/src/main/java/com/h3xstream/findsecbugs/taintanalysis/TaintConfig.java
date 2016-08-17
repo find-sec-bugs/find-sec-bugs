@@ -77,7 +77,7 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
                     if (checkRewrite && containsKey(typeSignature)) {
                         throw new IllegalStateException("Summary for " + typeSignature + " already loaded");
                     }
-                    TaintMethodConfig taintMethodSummary = TaintMethodConfig.load(summary);
+                    TaintMethodConfig taintMethodSummary = new TaintMethodConfig(true).load(summary);
                     put(typeSignature, taintMethodSummary);
                     return;
                 }
@@ -86,7 +86,7 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
                     if (checkRewrite && taintClassSummaryMap.containsKey(typeSignature)) {
                         throw new IllegalStateException("Summary for " + typeSignature + " already loaded");
                     }
-                    TaintClassConfig taintClassSummary = TaintClassConfig.load(summary);
+                    TaintClassConfig taintClassSummary = new TaintClassConfig().load(summary);
                     taintClassSummaryMap.put(typeSignature, taintClassSummary);
                     return;
                 }

@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
  *
  * @author David Formanek (Y Soft Corporation, a.s.)
  */
-public class TaintMethodConfig {
+public class TaintMethodConfig implements TaintTypeConfig {
 
     private Taint outputTaint = null;
     private final Set<Integer> mutableStackIndices;
@@ -264,42 +264,42 @@ public class TaintMethodConfig {
     /**
      * Loads method summary from String
      * 
-     * @param str (state or parameter indices to merge separated by comma)#mutable position
+     * @param summary (state or parameter indices to merge separated by comma)#mutable position
      * @return initialized object with taint method summary
-     * @throws java.io.IOException for bad format of paramter
+     * @throws java.io.IOException for bad format of parameter
      * @throws NullPointerException if argument is null
      */
-    public static TaintMethodConfig load(String str) throws IOException {
-        if (str == null) {
+    @Override
+    public TaintMethodConfig load(String summary) throws IOException {
+        if (summary == null) {
             throw new NullPointerException("string is null");
         }
-        str = str.trim();
-        if (str.isEmpty()) {
+        summary = summary.trim();
+        if (summary.isEmpty()) {
             throw new IOException("No taint method summary specified");
         }
-        TaintMethodConfig summary = new TaintMethodConfig(true);
-        str = loadMutableStackIndeces(str, summary);
-        String[] tuple = str.split("\\|");
+        summary = loadMutableStackIndeces(summary);
+        String[] tuple = summary.split("\\|");
         if (tuple.length == 2) {
-            str = tuple[0];
+            summary = tuple[0];
         } else if (tuple.length != 1) {
             throw new IOException("Bad format: only one '|' expected");
         }
-        loadStatesAndParameters(str, summary);
+        loadStatesAndParameters(summary);
         if (tuple.length == 2) {
-            loadTags(tuple[1], summary);
+            loadTags(tuple[1]);
         }
-        return summary;
+        return this;
     }
 
-    private static String loadMutableStackIndeces(String str, TaintMethodConfig summary) throws IOException {
+    private String loadMutableStackIndeces(String str) throws IOException {
         String[] tuple = str.split("#");
         if (tuple.length == 2) {
             str = tuple[0];
             try {
                 String[] indices = tuple[1].split(",");
                 for (String index : indices) {
-                    summary.addMutableStackIndex(Integer.parseInt(index.trim()));
+                    addMutableStackIndex(Integer.parseInt(index.trim()));
                 }
             } catch (NumberFormatException ex) {
                 throw new IOException("Cannot parse mutable stack offsets", ex);
@@ -310,11 +310,11 @@ public class TaintMethodConfig {
         return str;
     }
     
-    private static void loadStatesAndParameters(String str, TaintMethodConfig summary) throws IOException {
+    private void loadStatesAndParameters(String str) throws IOException {
         if (str.isEmpty()) {
             throw new IOException("No taint information set");
         } else if (isTaintStateValue(str)) {
-            summary.setOuputTaint(Taint.valueOf(str));
+            setOuputTaint(Taint.valueOf(str));
         } else {
             String[] tuple = str.split(",");
             int count = tuple.length;
@@ -331,11 +331,11 @@ public class TaintMethodConfig {
                     }
                 }
             }
-            summary.setOuputTaint(taint);
+            setOuputTaint(taint);
         }
     }
 
-    private static void loadTags(String tagInfo, TaintMethodConfig summary) throws IOException {
+    private void loadTags(String tagInfo) throws IOException {
         if (tagInfo.isEmpty()) {
             throw new IOException("No taint tags specified");
         }
@@ -346,15 +346,15 @@ public class TaintMethodConfig {
                 throw new IOException("Bad format: unknown taint tag " + tagName);
             }
             Taint.Tag tag = Taint.Tag.valueOf(tagName);
-            if (summary.outputTaint.hasTag(tag) || summary.outputTaint.getTagsToRemove().contains(tag)) {
+            if (outputTaint.hasTag(tag) || outputTaint.getTagsToRemove().contains(tag)) {
                 throw new IOException("Bad format: tag " + tag + " already present");
             }
             switch (sign) {
                 case '+':
-                    summary.outputTaint.addTag(tag);
+                    outputTaint.addTag(tag);
                     break;
                 case '-':
-                    summary.outputTaint.removeTag(tag);
+                    outputTaint.removeTag(tag);
                     break;
                 default:
                     throw new IOException("Bad format: taint tag sign must be + or - but is " + sign);
@@ -362,7 +362,7 @@ public class TaintMethodConfig {
         }
     }
     
-    private static boolean isTaintTagValue(String value) {
+    private boolean isTaintTagValue(String value) {
         assert value != null && !value.isEmpty();
         for (Taint.Tag tag : Taint.Tag.values()) {
             if (tag.name().equals(value)) {
@@ -372,7 +372,7 @@ public class TaintMethodConfig {
         return false;
     }
     
-    private static boolean isTaintStateValue(String value) {
+    private boolean isTaintStateValue(String value) {
         assert value != null && !value.isEmpty();
         Taint.State[] states = Taint.State.values();
         for (Taint.State state : states) {

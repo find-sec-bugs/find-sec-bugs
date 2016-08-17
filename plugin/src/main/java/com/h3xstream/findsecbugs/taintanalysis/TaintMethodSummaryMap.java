@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
@@ -42,17 +43,7 @@ import java.util.regex.Pattern;
 public class TaintMethodSummaryMap extends HashMap<String, TaintMethodSummary> {
     
     private static final long serialVersionUID = 1L;
-    private static final Pattern fullMethodPattern;
-    
-    static {
-        String classWithPackageRegex = "([a-z][a-z0-9]*\\/)*[A-Z][a-zA-Z0-9\\$]*";
-        String typeRegex = "(\\[)*((L" + classWithPackageRegex + ";)|B|C|D|F|I|J|S|Z)";
-        String returnRegex = "(V|(" + typeRegex + "))";
-        String methodRegex = "(([a-zA-Z][a-zA-Z0-9]*)|(<init>))";
-        String signatureRegex = "\\((" + typeRegex + ")*\\)" + returnRegex;
-        String fullMathodNameRegex = classWithPackageRegex + "\\." + methodRegex + signatureRegex;
-        fullMethodPattern = Pattern.compile(fullMathodNameRegex);
-    }
+    private final Map<String, TaintClassSummary> taintClassSummaryMap = new HashMap<String, TaintClassSummary>();
 
     /**
      * Dumps all the summaries for debugging
@@ -79,14 +70,25 @@ public class TaintMethodSummaryMap extends HashMap<String, TaintMethodSummary> {
         new TaintMethodSummaryMapLoader().load(input, new TaintMethodSummaryMapLoader.TaintMethodSummaryReceiver() {
             @Override
             public void receiveTaintMethodSummary(String typeSignature, String summary) throws IOException {
-                TaintMethodSummary taintMethodSummary = TaintMethodSummary.load(summary);
-                if (!fullMethodPattern.matcher(typeSignature).matches()) {
-                    throw new IllegalArgumentException("Invalid full method name " + typeSignature + " configured");
+                if (TaintMethodSummary.accepts(typeSignature)) {
+                    if (checkRewrite && containsKey(typeSignature)) {
+                        throw new IllegalStateException("Summary for " + typeSignature + " already loaded");
+                    }
+                    TaintMethodSummary taintMethodSummary = TaintMethodSummary.load(summary);
+                    put(typeSignature, taintMethodSummary);
+                    return;
                 }
-                if (checkRewrite && containsKey(typeSignature)) {
-                    throw new IllegalStateException("Summary for " + typeSignature + " already loaded");
+
+                if (TaintClassSummary.accepts(typeSignature)) {
+                    if (checkRewrite && taintClassSummaryMap.containsKey(typeSignature)) {
+                        throw new IllegalStateException("Summary for " + typeSignature + " already loaded");
+                    }
+                    TaintClassSummary taintClassSummary = TaintClassSummary.load(summary);
+                    taintClassSummaryMap.put(typeSignature, taintClassSummary);
+                    return;
                 }
-                put(typeSignature, taintMethodSummary);
+
+                throw new IllegalArgumentException("Invalid full method name " + typeSignature + " configured");
             }
         });
     }

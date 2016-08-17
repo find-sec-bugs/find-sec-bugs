@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * Summary of information about a method related to taint analysis
@@ -34,10 +35,19 @@ public class TaintMethodSummary {
     private final Set<Integer> mutableStackIndices;
     private final boolean isConfigured;
     public static final TaintMethodSummary SAFE_SUMMARY;
+    private static final Pattern fullMethodPattern;
 
     static {
         SAFE_SUMMARY = new TaintMethodSummary(false);
         SAFE_SUMMARY.outputTaint = new Taint(Taint.State.SAFE);
+
+        String classWithPackageRegex = "([a-z][a-z0-9]*\\/)*[A-Z][a-zA-Z0-9\\$]*";
+        String typeRegex = "(\\[)*((L" + classWithPackageRegex + ";)|B|C|D|F|I|J|S|Z)";
+        String returnRegex = "(V|(" + typeRegex + "))";
+        String methodRegex = "(([a-zA-Z][a-zA-Z0-9]*)|(<init>))";
+        String signatureRegex = "\\((" + typeRegex + ")*\\)" + returnRegex;
+        String fullMathodNameRegex = classWithPackageRegex + "\\." + methodRegex + signatureRegex;
+        fullMethodPattern = Pattern.compile(fullMathodNameRegex);
     }
 
     /**
@@ -245,6 +255,10 @@ public class TaintMethodSummary {
         for (int i = 1; i < count; i++) {
             sb.append(",").append(array[i]);
         }
+    }
+
+    public static boolean accepts(String typeSignature) {
+        return fullMethodPattern.matcher(typeSignature).matches();
     }
 
     /**

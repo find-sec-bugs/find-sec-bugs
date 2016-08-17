@@ -89,6 +89,9 @@ public class MethodSummaryValidationTest {
         if (className.startsWith("scala")) {
             return;
         }
+        if (className.startsWith("L") && className.endsWith(";")) {
+            className = className.substring(1, className.length() - 1);
+        }
         try {
             Class.forName(className);
         } catch (ClassNotFoundException e) {

@@ -72,11 +72,11 @@ public class MethodSummaryValidationTest {
     public void validateFile(InputStream inFile) throws IOException {
         loader.load(inFile, new TaintMethodSummaryMapLoader.TaintMethodSummaryReceiver() {
             @Override
-            public void receiveTaintMethodSummary(String fullMethodName, TaintMethodSummary taintMethodSummary) {
+            public void receiveTaintMethodSummary(String typeSignature, String summary) throws IOException {
                 if (DEBUG) {
-                    System.out.println("[?] fmn: " + fullMethodName);
+                    System.out.println("[?] fmn: " + typeSignature);
                 }
-                String[] methodParts = fullMethodName.split("\\.");
+                String[] methodParts = typeSignature.split("\\.");
 
                 //Test the validity of the class name
                 String className = methodParts[0].replace('/','.');

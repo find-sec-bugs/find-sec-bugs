@@ -78,14 +78,15 @@ public class TaintMethodSummaryMap extends HashMap<String, TaintMethodSummary> {
     public void load(InputStream input, final boolean checkRewrite) throws IOException {
         new TaintMethodSummaryMapLoader().load(input, new TaintMethodSummaryMapLoader.TaintMethodSummaryReceiver() {
             @Override
-            public void receiveTaintMethodSummary(String fullMethod, TaintMethodSummary taintMethodSummary) {
-                if (!fullMethodPattern.matcher(fullMethod).matches()) {
-                    throw new IllegalArgumentException("Invalid full method name " + fullMethod + " configured");
+            public void receiveTaintMethodSummary(String typeSignature, String summary) throws IOException {
+                TaintMethodSummary taintMethodSummary = TaintMethodSummary.load(summary);
+                if (!fullMethodPattern.matcher(typeSignature).matches()) {
+                    throw new IllegalArgumentException("Invalid full method name " + typeSignature + " configured");
                 }
-                if (checkRewrite && containsKey(fullMethod)) {
-                    throw new IllegalStateException("Summary for " + fullMethod + " already loaded");
+                if (checkRewrite && containsKey(typeSignature)) {
+                    throw new IllegalStateException("Summary for " + typeSignature + " already loaded");
                 }
-                put(fullMethod, taintMethodSummary);
+                put(typeSignature, taintMethodSummary);
             }
         });
     }

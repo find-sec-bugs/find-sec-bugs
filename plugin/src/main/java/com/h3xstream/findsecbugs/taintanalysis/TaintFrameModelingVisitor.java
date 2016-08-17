@@ -20,7 +20,6 @@ package com.h3xstream.findsecbugs.taintanalysis;
 import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import com.h3xstream.findsecbugs.common.ByteCode;
 import edu.umd.cs.findbugs.ba.AbstractFrameModelingVisitor;
-import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
 import edu.umd.cs.findbugs.ba.InvalidBytecodeException;
 import edu.umd.cs.findbugs.ba.generic.GenericSignatureParser;
@@ -32,8 +31,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.apache.bcel.Constants;
-import org.apache.bcel.Repository;
-import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.AALOAD;
 import org.apache.bcel.generic.AASTORE;
 import org.apache.bcel.generic.ACONST_NULL;
@@ -401,11 +398,9 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         String className = getInstanceClassName(obj);
         String methodName = obj.getMethodName(cpg);
         String methodId = "." + methodName + signature;
-        TaintMethodSummary summary = methodSummaries.get(className.concat(methodId));
+        TaintMethodSummary summary = methodSummaries.getMethodSummary(className, methodId);
         if (summary != null) {
             summary = getSummaryWithReplaceTags(summary, className, methodName);
-        } else {
-            summary = getSuperMethodSummary(className, methodId);
         }
         if (summary != null && summary.isConfigured()) {
             return summary;
@@ -427,7 +422,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         }
         return null;
     }
-    
+
     private TaintMethodSummary getSummaryWithReplaceTags(
             TaintMethodSummary summary, String className, String methodName) {
         if (!"java/lang/String".equals(className)) {
@@ -459,7 +454,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             throw new InvalidBytecodeException(ex.getMessage(), ex);
         }
     }
-    
+
     private String getInstanceClassName(InvokeInstruction invoke) {
         try {
             int instanceIndex = getFrame().getNumArgumentsIncludingObjectInstance(invoke, cpg) - 1;
@@ -477,38 +472,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         String dottedClassName = invoke.getReferenceType(cpg).toString();
         return ClassName.toSlashedClassName(dottedClassName);
     }
-    
-    private TaintMethodSummary getSuperMethodSummary(String className, String methodId) {
-        try {
-            if (className.endsWith("]")) {
-                // not a real class
-                return null;
-            }
-            JavaClass javaClass = Repository.lookupClass(className);
-            assert javaClass != null;
-            TaintMethodSummary summary = getSuperMethodSummary(javaClass.getSuperClasses(), methodId);
-            if (summary != null) {
-                return summary;
-            }
-            return getSuperMethodSummary(javaClass.getAllInterfaces(), methodId);
-        } catch (ClassNotFoundException ex) {
-            AnalysisContext.reportMissingClass(ex);
-            return null;
-        }
-    }
-    
-    private TaintMethodSummary getSuperMethodSummary(JavaClass[] javaClasses, String method) {
-        assert javaClasses != null;
-        for (JavaClass classOrInterface : javaClasses) {
-            String fullMethodName = classOrInterface.getClassName().replace('.', '/').concat(method);
-            TaintMethodSummary summary = methodSummaries.get(fullMethodName);
-            if (summary != null) {
-                return summary;
-            }
-        }
-        return null;
-    }
-    
+
     private static String getReturnType(String signature) {
         assert signature != null && signature.contains(")");
         return signature.substring(signature.indexOf(')') + 1);
@@ -670,7 +634,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         String className = methodDescriptor.getSlashedClassName();
         String methodId = "." + methodDescriptor.getName() + methodDescriptor.getSignature();
         if (analyzedMethodSummary.isInformative()
-                || getSuperMethodSummary(className, methodId) != null) {
+                || methodSummaries.getSuperMethodSummary(className, methodId) != null) {
             String fullMethodName = className.concat(methodId);
             if (!methodSummaries.containsKey(fullMethodName)) {
                 // prefer configured summaries to derived

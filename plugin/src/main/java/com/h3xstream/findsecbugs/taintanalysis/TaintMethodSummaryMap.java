@@ -154,4 +154,45 @@ public class TaintMethodSummaryMap extends HashMap<String, TaintMethodSummary> {
     private boolean isClassType(String typeSignature) {
         return typeSignature != null && typeSignature.length() > 2 && typeSignature.charAt(0) == 'L';
     }
+
+    public TaintMethodSummary getMethodSummary(String className, String methodId) {
+        TaintMethodSummary taintMethodSummary = get(className.concat(methodId));
+
+        if (taintMethodSummary == null) {
+            taintMethodSummary = getSuperMethodSummary(className, methodId);
+        }
+
+        return taintMethodSummary;
+    }
+
+    public TaintMethodSummary getSuperMethodSummary(String className, String methodId) {
+        try {
+            if (className.endsWith("]")) {
+                // not a real class
+                return null;
+            }
+            JavaClass javaClass = Repository.lookupClass(className);
+            assert javaClass != null;
+            TaintMethodSummary summary = getSuperMethodSummary(javaClass.getSuperClasses(), methodId);
+            if (summary != null) {
+                return summary;
+            }
+            return getSuperMethodSummary(javaClass.getAllInterfaces(), methodId);
+        } catch (ClassNotFoundException ex) {
+            AnalysisContext.reportMissingClass(ex);
+            return null;
+        }
+    }
+
+    private TaintMethodSummary getSuperMethodSummary(JavaClass[] javaClasses, String method) {
+        assert javaClasses != null;
+        for (JavaClass classOrInterface : javaClasses) {
+            String fullMethodName = classOrInterface.getClassName().replace('.', '/').concat(method);
+            TaintMethodSummary summary = get(fullMethodName);
+            if (summary != null) {
+                return summary;
+            }
+        }
+        return null;
+    }
 }

@@ -37,8 +37,8 @@ public class TaintMethodConfig implements TaintTypeConfig {
     private final Set<Integer> mutableStackIndices;
     private final boolean isConfigured;
     public static final TaintMethodConfig SAFE_SUMMARY;
-    private static final Pattern fullMethodPattern;
-    private static final Pattern summaryPattern;
+    protected static final Pattern fullMethodPattern;
+    protected static final Pattern summaryPattern;
 
     static {
         SAFE_SUMMARY = new TaintMethodConfig(false);
@@ -70,7 +70,7 @@ public class TaintMethodConfig implements TaintTypeConfig {
     }
 
     /**
-     * Constructs an emty summary
+     * Constructs an empty summary
      * 
      * @param isConfigured true for configured summaries, false for derived
      */

@@ -18,6 +18,9 @@
 package com.h3xstream.findsecbugs.taintanalysis;
 
 import edu.umd.cs.findbugs.ba.AnalysisContext;
+import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
+import edu.umd.cs.findbugs.ba.SignatureParser;
+import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 import org.apache.bcel.Repository;
 import org.apache.bcel.classfile.JavaClass;
 
@@ -47,6 +50,8 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
     
     private static final long serialVersionUID = 1L;
     private final Map<String, TaintClassConfig> taintClassSummaryMap = new HashMap<String, TaintClassConfig>();
+    private final Map<String, TaintMethodConfigWithArgumentsAndLocation> taintMethodConfigWithArgumentsAndLocationMap =
+            new HashMap<String, TaintMethodConfigWithArgumentsAndLocation>();
 
     /**
      * Dumps all the summaries for debugging
@@ -88,6 +93,19 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
                     }
                     TaintClassConfig taintClassSummary = new TaintClassConfig().load(summary);
                     taintClassSummaryMap.put(typeSignature, taintClassSummary);
+                    return;
+                }
+
+                if (TaintMethodConfigWithArgumentsAndLocation.accepts(typeSignature, summary)) {
+                    if (checkRewrite && taintMethodConfigWithArgumentsAndLocationMap.containsKey(typeSignature)) {
+                        throw new IllegalStateException("Summary for " + typeSignature + " already loaded");
+                    }
+
+                    TaintMethodConfigWithArgumentsAndLocation methodConfig =
+                            new TaintMethodConfigWithArgumentsAndLocation().load(summary);
+
+                    String key = typeSignature + '@' + methodConfig.getLocation();
+                    taintMethodConfigWithArgumentsAndLocationMap.put(key, methodConfig);
                     return;
                 }
 
@@ -155,8 +173,12 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
         return typeSignature != null && typeSignature.length() > 2 && typeSignature.charAt(0) == 'L';
     }
 
-    public TaintMethodConfig getMethodSummary(String className, String methodId) {
-        TaintMethodConfig taintMethodSummary = get(className.concat(methodId));
+    public TaintMethodConfig getMethodSummary(TaintFrame frame, MethodDescriptor methodDescriptor, String className, String methodId) {
+        TaintMethodConfig taintMethodSummary = getTaintMethodConfigWithArgumentsAndLocation(frame, methodDescriptor, className, methodId);
+
+        if (taintMethodSummary == null) {
+            taintMethodSummary = get(className.concat(methodId));
+        }
 
         if (taintMethodSummary == null) {
             taintMethodSummary = getSuperMethodSummary(className, methodId);
@@ -194,5 +216,42 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
             }
         }
         return null;
+    }
+
+    private TaintMethodConfig getTaintMethodConfigWithArgumentsAndLocation(TaintFrame frame, MethodDescriptor methodDescriptor, String className, String methodId) {
+        if (taintMethodConfigWithArgumentsAndLocationMap.isEmpty()) {
+            return null;
+        }
+
+        String signature = methodId.substring(methodId.indexOf("("), methodId.length());
+        int parameters = new SignatureParser(signature).getNumParameters();
+        StringBuffer sb = null;
+        if (parameters > 0 && frame.getStackDepth() >= parameters) {
+            sb = new StringBuffer(parameters);
+            for (int i = parameters - 1; i >= 0; i--) {
+                try {
+                    Taint taint = frame.getStackValue(i);
+                    String value = taint.getConstantValue();
+                    if (value != null) {
+                        sb.append('"' + value + '"');
+                    }
+                    else {
+                        sb.append(taint.getState().name());
+                    }
+                    if (i > 0) {
+                        sb.append(',');
+                    }
+                }
+                catch (DataflowAnalysisException e) {
+                    assert false : e.getMessage();
+                }
+            }
+        }
+
+        String arguments = sb != null ? sb.toString() : "";
+        String methodName = methodId.substring(1, methodId.indexOf('('));
+        String methodDefinition = className + "." + methodName + "(" + arguments + ")";
+        String key = methodDefinition + "@" + methodDescriptor.getSlashedClassName();
+        return taintMethodConfigWithArgumentsAndLocationMap.get(key);
     }
 }

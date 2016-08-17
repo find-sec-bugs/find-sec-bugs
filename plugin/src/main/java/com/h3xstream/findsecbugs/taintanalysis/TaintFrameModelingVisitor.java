@@ -406,7 +406,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         String className = getInstanceClassName(obj);
         String methodName = obj.getMethodName(cpg);
         String methodId = "." + methodName + signature;
-        TaintMethodConfig summary = taintConfig.getMethodSummary(className, methodId);
+        TaintMethodConfig summary = taintConfig.getMethodSummary(getFrame(), methodDescriptor, className, methodId);
         if (summary != null) {
             summary = getSummaryWithReplaceTags(summary, className, methodName);
         }

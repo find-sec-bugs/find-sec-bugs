@@ -373,23 +373,31 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
      */
     private void visitInvoke(InvokeInstruction obj) {
         assert obj != null;
-        TaintMethodConfig methodSummary = getMethodSummary(obj);
-        ObjectType realInstanceClass = (methodSummary == null) ?
-                null : methodSummary.getOutputTaint().getRealInstanceClass();
-        Taint taint = getMethodTaint(methodSummary);
-        assert taint != null;
-        if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
-            taint.setDebugInfo(obj.getMethodName(cpg) + "()");
+        try {
+            TaintMethodConfig methodSummary = getMethodSummary(obj);
+            ObjectType realInstanceClass = (methodSummary == null) ?
+                    null : methodSummary.getOutputTaint().getRealInstanceClass();
+            Taint taint = getMethodTaint(methodSummary);
+            assert taint != null;
+            if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
+                taint.setDebugInfo(obj.getMethodName(cpg) + "()");
+            }
+            if (taint.isUnknown()) {
+                taint.addLocation(getTaintLocation(), false);
+            }
+            taintMutableArguments(methodSummary, obj);
+            transferTaintToMutables(methodSummary, taint); // adds variable index to taint too
+            Taint taintCopy = new Taint(taint);
+            // return type is not the instance type always
+            taintCopy.setRealInstanceClass(realInstanceClass);
+            modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taintCopy);
+        } catch (Exception e) {
+            String className = ClassName.toSlashedClassName(obj.getReferenceType(cpg).toString());
+            String methodName = obj.getMethodName(cpg);
+            String signature = obj.getSignature(cpg);
+
+            throw new RuntimeException("Unable to call " + className + '.' + methodName + signature, e);
         }
-        if (taint.isUnknown()) {
-            taint.addLocation(getTaintLocation(), false);
-        }
-        taintMutableArguments(methodSummary, obj);
-        transferTaintToMutables(methodSummary, taint); // adds variable index to taint too
-        Taint taintCopy = new Taint(taint);
-        // return type is not the instance type always
-        taintCopy.setRealInstanceClass(realInstanceClass);
-        modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taintCopy);
     }
 
     private TaintMethodConfig getMethodSummary(InvokeInstruction obj) {

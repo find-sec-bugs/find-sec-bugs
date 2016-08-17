@@ -56,7 +56,7 @@ public class TaintConfigLoader {
         }
         String[] tuple = line.split("\\:");
         if (tuple.length != 2) {
-            throw new IOException("Line format is not 'method name:summary info'");
+            throw new IOException("Line format is not 'type signature:summary info': " + line);
         }
         receiver.receiveTaintConfigSummary(tuple[0].trim(), tuple[1]);
     }

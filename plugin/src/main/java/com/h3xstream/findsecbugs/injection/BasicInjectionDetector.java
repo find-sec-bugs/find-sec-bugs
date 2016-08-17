@@ -139,7 +139,7 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
                 loadConfiguredSinks(stream, bugType);
             }
         } catch (Exception ex) {
-            AnalysisContext.logError("cannot load custom injection config method summaries for " + fileName, ex);
+            throw new RuntimeException("Cannot load custom injection sinks from " + fileName, ex);
         } finally {
             IO.close(stream);
         }

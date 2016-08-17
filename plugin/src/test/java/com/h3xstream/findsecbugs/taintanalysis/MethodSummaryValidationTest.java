@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 public class MethodSummaryValidationTest {
     private static final boolean DEBUG = true;
 
-    TaintMethodSummaryMapLoader loader = new TaintMethodSummaryMapLoader();
+    TaintConfigLoader loader = new TaintConfigLoader();
 
     @Test
     public void validateMethodSummaries() throws IOException {
@@ -70,9 +70,9 @@ public class MethodSummaryValidationTest {
     }
 
     public void validateFile(InputStream inFile) throws IOException {
-        loader.load(inFile, new TaintMethodSummaryMapLoader.TaintMethodSummaryReceiver() {
+        loader.load(inFile, new TaintConfigLoader.TaintConfigReceiver() {
             @Override
-            public void receiveTaintMethodSummary(String typeSignature, String summary) throws IOException {
+            public void receiveTaintConfigSummary(String typeSignature, String summary) throws IOException {
                 if (DEBUG) {
                     System.out.println("[?] fmn: " + typeSignature);
                 }

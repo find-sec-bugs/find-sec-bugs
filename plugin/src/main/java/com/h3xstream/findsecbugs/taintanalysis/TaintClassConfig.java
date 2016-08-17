@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
  *
  * @author Tomas Polesovsky (Liferay, Inc.)
  */
-public class TaintClassSummary {
+public class TaintClassConfig {
     public static final Taint.State DEFAULT_TAINT_STATE = Taint.State.NULL;
     private static final String IMMUTABLE = "#IMMUTABLE";
     private Taint.State taintState = DEFAULT_TAINT_STATE;
@@ -53,7 +53,7 @@ public class TaintClassSummary {
      * @throws java.io.IOException for bad format of parameter
      * @throws NullPointerException if argument is null
      */
-    public static TaintClassSummary load(String summary) throws IOException {
+    public static TaintClassConfig load(String summary) throws IOException {
         if (summary == null) {
             throw new NullPointerException("Summary is null");
         }
@@ -61,7 +61,7 @@ public class TaintClassSummary {
         if (summary.isEmpty()) {
             throw new IOException("No taint class summary specified");
         }
-        TaintClassSummary taintClassSummary = new TaintClassSummary();
+        TaintClassConfig taintClassSummary = new TaintClassConfig();
         if (summary.endsWith(IMMUTABLE)) {
             taintClassSummary.immutable = true;
             summary = summary.substring(0, summary.length() - IMMUTABLE.length());

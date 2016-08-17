@@ -29,16 +29,16 @@ import java.util.regex.Pattern;
  *
  * @author David Formanek (Y Soft Corporation, a.s.)
  */
-public class TaintMethodSummary {
+public class TaintMethodConfig {
 
     private Taint outputTaint = null;
     private final Set<Integer> mutableStackIndices;
     private final boolean isConfigured;
-    public static final TaintMethodSummary SAFE_SUMMARY;
+    public static final TaintMethodConfig SAFE_SUMMARY;
     private static final Pattern fullMethodPattern;
 
     static {
-        SAFE_SUMMARY = new TaintMethodSummary(false);
+        SAFE_SUMMARY = new TaintMethodConfig(false);
         SAFE_SUMMARY.outputTaint = new Taint(Taint.State.SAFE);
 
         String classWithPackageRegex = "([a-z][a-z0-9]*\\/)*[A-Z][a-zA-Z0-9\\$]*";
@@ -55,7 +55,7 @@ public class TaintMethodSummary {
      * 
      * @param isConfigured true for configured summaries, false for derived
      */
-    public TaintMethodSummary(boolean isConfigured) {
+    public TaintMethodConfig(boolean isConfigured) {
         outputTaint = null;
         mutableStackIndices = new HashSet<Integer>();
         this.isConfigured = isConfigured;
@@ -66,7 +66,7 @@ public class TaintMethodSummary {
      * 
      * @param summary original summary to copy
      */
-    public TaintMethodSummary(TaintMethodSummary summary) {
+    public TaintMethodConfig(TaintMethodConfig summary) {
         this.mutableStackIndices = summary.mutableStackIndices;
         this.isConfigured = summary.isConfigured;
     }
@@ -143,11 +143,11 @@ public class TaintMethodSummary {
      * @return new instance of default summary
      * @throws IllegalArgumentException for stackSize &lt; 1
      */
-    public static TaintMethodSummary getDefaultConstructorSummary(int stackSize) {
+    public static TaintMethodConfig getDefaultConstructorSummary(int stackSize) {
         if (stackSize < 1) {
             throw new IllegalArgumentException("stack size less than 1");
         }
-        TaintMethodSummary summary = new TaintMethodSummary(false);
+        TaintMethodConfig summary = new TaintMethodConfig(false);
         summary.outputTaint = new Taint(Taint.State.UNKNOWN);
         summary.mutableStackIndices.add(stackSize - 1);
         summary.mutableStackIndices.add(stackSize);
@@ -269,7 +269,7 @@ public class TaintMethodSummary {
      * @throws java.io.IOException for bad format of paramter
      * @throws NullPointerException if argument is null
      */
-    public static TaintMethodSummary load(String str) throws IOException {
+    public static TaintMethodConfig load(String str) throws IOException {
         if (str == null) {
             throw new NullPointerException("string is null");
         }
@@ -277,7 +277,7 @@ public class TaintMethodSummary {
         if (str.isEmpty()) {
             throw new IOException("No taint method summary specified");
         }
-        TaintMethodSummary summary = new TaintMethodSummary(true);
+        TaintMethodConfig summary = new TaintMethodConfig(true);
         str = loadMutableStackIndeces(str, summary);
         String[] tuple = str.split("\\|");
         if (tuple.length == 2) {
@@ -292,7 +292,7 @@ public class TaintMethodSummary {
         return summary;
     }
 
-    private static String loadMutableStackIndeces(String str, TaintMethodSummary summary) throws IOException {
+    private static String loadMutableStackIndeces(String str, TaintMethodConfig summary) throws IOException {
         String[] tuple = str.split("#");
         if (tuple.length == 2) {
             str = tuple[0];
@@ -310,7 +310,7 @@ public class TaintMethodSummary {
         return str;
     }
     
-    private static void loadStatesAndParameters(String str, TaintMethodSummary summary) throws IOException {
+    private static void loadStatesAndParameters(String str, TaintMethodConfig summary) throws IOException {
         if (str.isEmpty()) {
             throw new IOException("No taint information set");
         } else if (isTaintStateValue(str)) {
@@ -335,7 +335,7 @@ public class TaintMethodSummary {
         }
     }
 
-    private static void loadTags(String tagInfo, TaintMethodSummary summary) throws IOException {
+    private static void loadTags(String tagInfo, TaintMethodConfig summary) throws IOException {
         if (tagInfo.isEmpty()) {
             throw new IOException("No taint tags specified");
         }

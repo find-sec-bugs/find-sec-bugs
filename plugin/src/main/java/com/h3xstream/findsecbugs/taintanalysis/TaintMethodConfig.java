@@ -25,7 +25,9 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
- * Summary of information about a method related to taint analysis
+ * Summary of information about a method related to taint analysis.<br />
+ *<br />
+ * For loading sinks files please see {@link com.h3xstream.findsecbugs.injection.SinksLoader}
  *
  * @author David Formanek (Y Soft Corporation, a.s.)
  */
@@ -36,6 +38,7 @@ public class TaintMethodConfig implements TaintTypeConfig {
     private final boolean isConfigured;
     public static final TaintMethodConfig SAFE_SUMMARY;
     private static final Pattern fullMethodPattern;
+    private static final Pattern summaryPattern;
 
     static {
         SAFE_SUMMARY = new TaintMethodConfig(false);
@@ -48,6 +51,22 @@ public class TaintMethodConfig implements TaintTypeConfig {
         String signatureRegex = "\\((" + typeRegex + ")*\\)" + returnRegex;
         String fullMathodNameRegex = classWithPackageRegex + "\\." + methodRegex + signatureRegex;
         fullMethodPattern = Pattern.compile(fullMathodNameRegex);
+
+        String taintStateNameRegex = "[A-Z_]+";
+        String stackIndexRegex = "[0-9]+";
+        String resultStateOrStackIndexRegex = "("+ taintStateNameRegex + "|" + stackIndexRegex + ")";
+        String commaSeparatedTaintResultsRegex = "("+resultStateOrStackIndexRegex+",)*"+resultStateOrStackIndexRegex;
+
+        String taintTagNameRegex = taintStateNameRegex;
+        String taintTagModificationRegex = "[+-]" + taintTagNameRegex;
+
+        String commaSeparatedTaintTagModificationRegex = "("+taintTagModificationRegex+",)*"+taintTagModificationRegex;
+        String commaSeparatedStackMutationIndexesRegex = "("+stackIndexRegex+",)*" + stackIndexRegex;
+
+        String summaryRegex = commaSeparatedTaintResultsRegex;
+        summaryRegex += "(\\|" + commaSeparatedTaintTagModificationRegex + ")?";
+        summaryRegex += "(#" + commaSeparatedStackMutationIndexesRegex+ ")?";
+        summaryPattern = Pattern.compile(summaryRegex);
     }
 
     /**
@@ -257,13 +276,58 @@ public class TaintMethodConfig implements TaintTypeConfig {
         }
     }
 
-    public static boolean accepts(String typeSignature) {
-        return fullMethodPattern.matcher(typeSignature).matches();
+    public static boolean accepts(String typeSignature, String summary) {
+        return fullMethodPattern.matcher(typeSignature).matches() && summaryPattern.matcher(summary).matches();
     }
 
     /**
-     * Loads method summary from String
-     * 
+     * Loads method summary from String. <br />
+     * <br />
+     * The summary should have the following syntax:<br />
+     * <code>resultTaintState |resultTaintTags #stackMutationIndexes</code>, where <ul>
+     *     <li><code>resultTaintState</code> are stack indexes or {@link Taint.State} enums separated by comma, e.g. <code>1,2</code> or <code>TAINTED</code></li>
+     *     <li><code>resultTaintTags</code> are {@link Taint.Tag} enums separated by comma, started with plus or minus sign, e.g. <code>+CR_ENCODED,-XSS_SAFE</code></li>
+     *     <li><code>stackMutationIndexes</code> are  stack indexes separated by comma, e.g. <code>3,4</code></li>
+     * </ul>
+     *
+     * Example: <br/>
+     * <code>org/owasp/esapi/Encoder.encodeForHTML(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE,+CR_ENCODED,+LF_ENCODED</code><br />
+     * <ul>
+     *     <li>Here the summary is: <code>0|+XSS_SAFE,+CR_ENCODED,+LF_ENCODED</code></li>
+     *     <li>The result taint will be merged with the first method argument, index 0</li>
+     *     <li>The result taint will have <code>XSS_SAFE</code>, <code>CR_ENCODED</code> and <code>CR_ENCODED</code> tags set</li>
+     *     <li>Practically, the result string will keep the taint but will receive XSS_SAFE tags which are processed by XssJspDetector</li>
+     * </ul>
+     *
+     * Example: <br/>
+     * <code>org/owasp/esapi/Encoder.decodeForHTML(Ljava/lang/String;)Ljava/lang/String;:0|-XSS_SAFE,-CR_ENCODED,-LF_ENCODED</code><br />
+     * <ul>
+     *     <li>Here the result taint will be merged with the first method argument, index 0</li>
+     *     <li>The framework removes <code>XSS_SAFE</code>, <code>CR_ENCODED</code> and <code>CR_ENCODED</code> tags</li>
+     *     <li>Practically, the result string will keep the taint but XSS_SAFE tag is removed again</li>
+     * </ul>
+     *
+     * Example: <br/>
+     * <code>java/lang/StringBuilder.<init>(Ljava/lang/String;)V:0#1,2</code>
+     * <ul>
+     *     <li>Here the result taint will be merged with the first constructor argument, index 0</li>
+     *     <li>Framework also mutates taint of the StringBuilder object itself with the result taint, index 1</li>
+     *     <li>Because we are in a constructor, we need to specify one more taint index => 2</li>
+     *     <li>Practically, when the original String is tainted then StringBuilder will be tainted too</li>
+     * </ul>
+     *
+     * Example: <br/>
+     * <code>java/lang/StringBuilder.append(Ljava/lang/String;)Ljava/lang/StringBuilder;:0,1#1</code>
+     * <ul>
+     *     <li>Here the result taint will be merged with the method argument and the taint of the StringBuilder, index 0 and 1</li>
+     *     <li>Framework also mutates taint of the StringBuilder object itself with the result taint, index 1</li>
+     *     <li>Practically, the result taint is a merge of the String argument and previous taint of StringBuilder, on top propagates the result into StringBuilder's taint state again</li>
+     * </ul>
+     * Important notes about stack indexes:<ul>
+     *     <li>long and double types take two slots on stack and need two subsequent indexes, i.e. index of the String parameter in <code>method(Ljava/lang/String;D)</code> is 2, not 1 as one would expect</li>
+     *     <li>taint analysis adds two Taint objects on stack for constructors, don't forget to specify both</li>
+     * </ul>
+     *
      * @param summary (state or parameter indices to merge separated by comma)#mutable position
      * @return initialized object with taint method summary
      * @throws java.io.IOException for bad format of parameter

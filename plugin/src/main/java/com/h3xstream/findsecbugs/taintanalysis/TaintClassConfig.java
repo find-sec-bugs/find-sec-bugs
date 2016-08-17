@@ -34,19 +34,52 @@ public class TaintClassConfig implements TaintTypeConfig {
     private Taint.State taintState = DEFAULT_TAINT_STATE;
     private boolean immutable;
     private static final Pattern typePattern;
+    private static final Pattern summaryPattern;
 
     static {
         String classWithPackageRegex = "([a-z][a-z0-9]*\\/)*[A-Z][a-zA-Z0-9\\$]*";
         String typeRegex = "(\\[)*((L" + classWithPackageRegex + ";)|B|C|D|F|I|J|S|Z)";
         typePattern = Pattern.compile(typeRegex);
+
+        String summaryRegex = "([A-Z_]+|#IMMUTABLE|[A-Z_]+#IMMUTABLE)";
+        summaryPattern = Pattern.compile(summaryRegex);
     }
 
-    public static boolean accepts(String typeSignature) {
-        return typePattern.matcher(typeSignature).matches();
+    public static boolean accepts(String typeSignature, String summary) {
+        return typePattern.matcher(typeSignature).matches() && summaryPattern.matcher(summary).matches();
     }
 
     /**
-     * Loads class summary from String
+     * Loads class summary from String<br/>
+     * <br/>
+     * The summary should have the following syntax:<br />
+     * <code>defaultTaintState #IMMUTABLE</code>, where <ol>
+     *     <li><code>defaultTaintState</code> means the Taint state for type casting and return types. Usually <code>SAFE</code> is used to specify classes that cannot contain injection escape characters</li>
+     *     <li><code>#IMMUTABLE</code> flags is used for classes that cannot be subject to taint state mutation during taint analysis</li>
+     *     <li>at least one of two above are required</li>
+     * </ol>
+     *
+     * Example: <br/>
+     * <code>Ljava/lang/Boolean;:SAFE#IMMUTABLE</code><br />
+     * <ul>
+     *     <li>Here the summary is: <code>SAFE#IMMUTABLE</code></li>
+     *     <li>When a object is casted to Boolean or Boolean is a method result type, the taint state will be always SAFE</li>
+     *     <li>When applying taint mutation to method arguments, Boolean arguments cannot change taint state</li>
+     *     <li>Practically, Booleans cannot transfer characters that could cause injections and thus are SAFE as return types and casts</li>
+     * </ul>
+     *
+     * Example: <br/>
+     * <code>Ljava/lang/String;:#IMMUTABLE</code><br />
+     * <ul>
+     *     <li>String is immutable class and therefore String method arguments cannot change taint state</li>
+     *     <li>Practically, String can carry injection sensitive characters but is always immutable</li>
+     * </ul>
+     *
+     * Example: <br/>
+     * <code>Ljava/util/concurrent/atomic/AtomicBoolean;:SAFE</code><br />
+     * <ul>
+     *     <li>AtomicBoolean value can be changed but cannot carry injection sensitive value</li>
+     * </ul>
      *
      * @param summary <code>state#IMMUTABLE</code>, where state is one of Taint.STATE or empty
      * @return initialized object with taint class summary

@@ -64,14 +64,14 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
      * @param methodGen method to analyze
      * @param dfs DFS algorithm
      * @param descriptor descriptor of the method to analyze
-     * @param methodSummaries configured and derived taint summaries
+     * @param taintConfig configured and derived taint summaries
      */
     public TaintAnalysis(MethodGen methodGen, DepthFirstSearch dfs,
-            MethodDescriptor descriptor, TaintMethodSummaryMap methodSummaries) {
+            MethodDescriptor descriptor, TaintConfig taintConfig) {
         super(dfs);
         this.methodGen = methodGen;
         this.methodDescriptor = (MethodInfo) descriptor;
-        this.visitor = new TaintFrameModelingVisitor(methodGen.getConstantPool(), descriptor, methodSummaries);
+        this.visitor = new TaintFrameModelingVisitor(methodGen.getConstantPool(), descriptor, taintConfig);
         computeParametersInfo(descriptor.getSignature(), descriptor.isStatic());
     }
 

@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 public class MethodSummaryValidationTest {
     private static final boolean DEBUG = true;
 
-    TaintMethodSummaryMapLoader loader = new TaintMethodSummaryMapLoader();
+    TaintConfigLoader loader = new TaintConfigLoader();
 
     @Test
     public void validateMethodSummaries() throws IOException {
@@ -70,13 +70,13 @@ public class MethodSummaryValidationTest {
     }
 
     public void validateFile(InputStream inFile) throws IOException {
-        loader.load(inFile, new TaintMethodSummaryMapLoader.TaintMethodSummaryReceiver() {
+        loader.load(inFile, new TaintConfigLoader.TaintConfigReceiver() {
             @Override
-            public void receiveTaintMethodSummary(String fullMethodName, TaintMethodSummary taintMethodSummary) {
+            public void receiveTaintConfigSummary(String typeSignature, String summary) throws IOException {
                 if (DEBUG) {
-                    System.out.println("[?] fmn: " + fullMethodName);
+                    System.out.println("[?] fmn: " + typeSignature);
                 }
-                String[] methodParts = fullMethodName.split("\\.");
+                String[] methodParts = typeSignature.split("\\.");
 
                 //Test the validity of the class name
                 String className = methodParts[0].replace('/','.');
@@ -88,6 +88,9 @@ public class MethodSummaryValidationTest {
     public void validateClass(String className) {
         if (className.startsWith("scala")) {
             return;
+        }
+        if (className.startsWith("L") && className.endsWith(";")) {
+            className = className.substring(1, className.length() - 1);
         }
         try {
             Class.forName(className);

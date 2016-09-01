@@ -35,6 +35,11 @@ public class HttpOnlyCookieSamples {
         Cookie newCookie = new Cookie("test1","1234");
     }
 
+    void unsafeCookie6() {
+        Cookie cookie = new Cookie("test1", "1234");
+        cookie.setHttpOnly(true);
+        cookie.setHttpOnly(false); // The last call is unsafe - It should get flagged
+    }
 
     void safeCookie1() {
         Cookie cookie = new Cookie("test1","1234");
@@ -63,7 +68,14 @@ public class HttpOnlyCookieSamples {
 
     void safeCookie5(Cookie cookieOther) {
         Cookie newCookie = new Cookie("test1","1234");
+        newCookie.setHttpOnly(true);
         cookieOther.setHttpOnly(false); //Unrelated
+    }
+
+    void safeCookie6() {
+        Cookie cookie = new Cookie("test1", "1234");
+        cookie.setHttpOnly(false);
+        cookie.setHttpOnly(true); // The last call is a safe one - It should not get flagged
     }
 
     // If you add unsafe calls in this method, you must change the CookieFlagsDetectorTest - It is validated with the
@@ -72,19 +84,19 @@ public class HttpOnlyCookieSamples {
         Cookie safeHttpOnlyCookie = new Cookie("cookie 1", "foo");
         safeHttpOnlyCookie.setHttpOnly(true);
 
-        // The line bellow should stay line 74 - It is used with the .atLine() annotation in the test
+        // The line bellow should stay line 88 - It is used with the .atLine() annotation in the test
         Cookie unsafeHttpOnlyCookie = new Cookie("cookie 2", "bar");
         unsafeHttpOnlyCookie.setHttpOnly(false);
 
-        // The line bellow should stay line 78 - It is used with the .atLine() annotation in the test
+        // The line bellow should stay line 92 - It is used with the .atLine() annotation in the test
         Cookie unsafeCookie = new Cookie("cookie 3", "foo");
 
         Cookie mixedCookiesSafe = new Cookie("cookie 4", "bar");
-        // The line bellow should stay line 82 - It is used with the .atLine() annotation in the test
+        // The line bellow should stay line 96 - It is used with the .atLine() annotation in the test
         Cookie mixedCookies = new Cookie("cookie 5", "bar");
         mixedCookiesSafe.setHttpOnly(true);
 
-        // The line bellow should stay line 86 - It is used with the .atLine() annotation in the test
+        // The line bellow should stay line 100 - It is used with the .atLine() annotation in the test
         Cookie unsafeHttpOnlyCookie2 = new Cookie("c1", "foo");
         unsafeHttpOnlyCookie2.setHttpOnly(false);
 

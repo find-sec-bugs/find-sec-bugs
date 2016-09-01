@@ -17,10 +17,12 @@
  */
 package com.h3xstream.findsecbugs.cookie;
 
-import com.h3xstream.findsecbugs.common.detectors.AbstractInstanceTrackingDetector;
+import com.h3xstream.findsecbugs.common.detectors.InstanceTracking.BasicInstanceTrackingDetector;
+import com.h3xstream.findsecbugs.common.detectors.InstanceTracking.TrackedCall;
+import com.h3xstream.findsecbugs.common.detectors.InstanceTracking.TrackedObject;
 import edu.umd.cs.findbugs.BugReporter;
 
-public class CookieFlagsDetector extends AbstractInstanceTrackingDetector {
+public class CookieFlagsDetector extends BasicInstanceTrackingDetector {
 
     private static final int TRUE_INT_VALUE = 1;
 
@@ -30,7 +32,17 @@ public class CookieFlagsDetector extends AbstractInstanceTrackingDetector {
     public CookieFlagsDetector(BugReporter bugReporter) {
         super(bugReporter);
 
-        addTrackedCall("javax/servlet/http/Cookie.<init>", "javax/servlet/http/Cookie.setSecure", 0, TRUE_INT_VALUE, true, INSECURE_COOKIE_TYPE);
-        addTrackedCall("javax/servlet/http/Cookie.<init>", "javax/servlet/http/Cookie.setHttpOnly", 0, TRUE_INT_VALUE, true, HTTPONLY_COOKIE_TYPE);
+
+        addTrackedObject(
+                new TrackedObject("javax/servlet/http/Cookie.<init>")
+                        .addTrackedCallForObject(
+                                new TrackedCall("javax/servlet/http/Cookie.setHttpOnly", TRUE_INT_VALUE, 1)
+                                        .setBugType(HTTPONLY_COOKIE_TYPE).reportBugWhenNotLastCall(true)
+                        )
+                        .addTrackedCallForObject(
+                                new TrackedCall("javax/servlet/http/Cookie.setSecure", TRUE_INT_VALUE, 1)
+                                        .setBugType(INSECURE_COOKIE_TYPE).reportBugWhenNotLastCall(true)
+                        )
+        );
     }
 }

@@ -36,11 +36,11 @@ public class CookieFlagsDetector extends BasicInstanceTrackingDetector {
         addTrackedObject(
                 new TrackedObject("javax/servlet/http/Cookie.<init>")
                         .addTrackedCallForObject(
-                                new TrackedCall("javax/servlet/http/Cookie.setHttpOnly", TRUE_INT_VALUE, 1)
+                                new TrackedCall("javax/servlet/http/Cookie.setHttpOnly", TRUE_INT_VALUE, 0)
                                         .setBugType(HTTPONLY_COOKIE_TYPE).reportBugWhenNotLastCall(true)
                         )
                         .addTrackedCallForObject(
-                                new TrackedCall("javax/servlet/http/Cookie.setSecure", TRUE_INT_VALUE, 1)
+                                new TrackedCall("javax/servlet/http/Cookie.setSecure", TRUE_INT_VALUE, 0)
                                         .setBugType(INSECURE_COOKIE_TYPE).reportBugWhenNotLastCall(true)
                         )
         );

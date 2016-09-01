@@ -29,7 +29,7 @@ public abstract class BasicInstanceTrackingDetector extends AbstractInstanceTrac
         for (TrackedCall trackedCall : trackedObject.getTrackedCalls()) {
             if (trackedCall.getInvokeInstruction().equals(call)) {
 
-                if (stack.getStackItem(trackedCall.getExpectedValue().getKey()).equals(trackedCall.getExpectedValue().getValue())) {
+                if (stack.getStackItem(trackedCall.getParameterIndex()).getConstant().equals(trackedCall.getExpectedValue())) {
                     if (trackedCall.getReportBugWhenCalled()) {
                         bugReporter.reportBug(new BugInstance(this, trackedCall.getBugType(), Priorities.LOW_PRIORITY)
                                 .addClass(instance.getInitJavaClass()).addMethod(instance.getInitMethodDescriptor())

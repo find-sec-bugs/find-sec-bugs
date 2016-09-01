@@ -27,7 +27,7 @@ public class TrackedObjectInstance {
     public List<String> getBugsFound() { return bugsFound; }
     public void removeBug(String bugType) { bugsFound.remove(bugType); }
     public void addBug(String bugType) {
-        if (bugsFound.contains(bugType)) {
+        if (!bugsFound.contains(bugType)) {
             bugsFound.add(bugType);
         }
     }

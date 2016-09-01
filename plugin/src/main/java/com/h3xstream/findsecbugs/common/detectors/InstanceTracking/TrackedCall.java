@@ -5,14 +5,18 @@ import javafx.util.Pair;
 public class TrackedCall {
     public TrackedCall(String invokeInstruction, Object expectedValue, int parameterIndex) {
         this.invokeInstruction = invokeInstruction;
-        this.expectedValue = new Pair<Integer, Object>(parameterIndex, expectedValue);
+        this.expectedValue = expectedValue;
+        this.parameterIndex = parameterIndex;
     }
 
     private String invokeInstruction;
     public String getInvokeInstruction() { return invokeInstruction; }
 
-    private Pair<Integer, Object> expectedValue;
-    public Pair<Integer, Object> getExpectedValue() { return expectedValue; }
+    private Object expectedValue;
+    public Object getExpectedValue() { return expectedValue; }
+
+    private int parameterIndex;
+    public int getParameterIndex() { return parameterIndex; }
 
     private String bugType;
     public String getBugType() { return bugType; }

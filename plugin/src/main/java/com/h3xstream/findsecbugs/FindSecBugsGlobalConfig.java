@@ -48,7 +48,7 @@ public class FindSecBugsGlobalConfig {
         reportPotentialXssWrongContext = Boolean.parseBoolean(loadFromSystem("findsecbugs.taint.reportpotentialxsswrongcontext", Boolean.FALSE.toString()));
     }
 
-    public static String loadFromSystem(String key, String defaultValue) {
+    public String loadFromSystem(String key, String defaultValue) {
         String value = System.getenv(key);
         value = SystemProperties.getProperty(key, value);
 

@@ -59,6 +59,10 @@ public class FindSecBugsGlobalConfig {
         return value;
     }
 
+    public String getCustomConfigFile(String suffix) {
+        return loadFromSystem("findsecbugs.injection.customconfigfile." + suffix, null);
+    }
+
     public static FindSecBugsGlobalConfig getInstance() {
         return instance;
     }

@@ -50,6 +50,11 @@ public class FindSecBugsGlobalConfig {
 
     public static String loadFromSystem(String key, String defaultValue) {
         String value = System.getenv(key);
+        if (value == null) {
+            // Environment variables containing dots are difficult to setup in
+            // bash. Thus also accept underscores instead of dots.
+            value = System.getenv(key.replace('.', '_'));
+        }
         value = SystemProperties.getProperty(key, value);
 
         if (value == null) {

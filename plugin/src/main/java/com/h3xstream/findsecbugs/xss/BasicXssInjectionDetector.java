@@ -33,15 +33,13 @@ public abstract class BasicXssInjectionDetector extends BasicInjectionDetector {
     @Override
     protected int getPriority(Taint taint) {
         if (!taint.isSafe() && taint.hasTag(Taint.Tag.XSS_SAFE)) {
-            if (FindSecBugsGlobalConfig.getInstance()
-                    .isReportPotentialXssWrongContext()) {
+            if (FindSecBugsGlobalConfig.getInstance().isReportPotentialXssWrongContext()) {
                 return Priorities.LOW_PRIORITY;
             } else {
                 return Priorities.IGNORE_PRIORITY;
             }
         } else if (!taint.isSafe()
-                && (taint.hasTag(Taint.Tag.QUOTE_ENCODED) || taint
-                        .hasTag(Taint.Tag.APOSTROPHE_ENCODED))
+                && (taint.hasTag(Taint.Tag.QUOTE_ENCODED) || taint.hasTag(Taint.Tag.APOSTROPHE_ENCODED))
                 && taint.hasTag(Taint.Tag.LT_ENCODED)) {
             return Priorities.LOW_PRIORITY;
         } else {

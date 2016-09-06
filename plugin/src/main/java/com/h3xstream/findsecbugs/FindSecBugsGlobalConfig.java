@@ -48,7 +48,7 @@ public class FindSecBugsGlobalConfig {
         reportPotentialXssWrongContext = Boolean.parseBoolean(loadFromSystem("findsecbugs.taint.reportpotentialxsswrongcontext", Boolean.FALSE.toString()));
     }
 
-    public static String loadFromSystem(String key, String defaultValue) {
+    public String loadFromSystem(String key, String defaultValue) {
         String value = System.getenv(key);
         if (value == null) {
             // Environment variables containing dots are difficult to setup in
@@ -62,6 +62,10 @@ public class FindSecBugsGlobalConfig {
         }
 
         return value;
+    }
+
+    public String getCustomConfigFile(String suffix) {
+        return loadFromSystem("findsecbugs.injection.customconfigfile." + suffix, null);
     }
 
     public static FindSecBugsGlobalConfig getInstance() {

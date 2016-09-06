@@ -1454,11 +1454,11 @@ The method identified is susceptible to injection. The input should be validated
     
     <!-- Custom XSS Injection -->
     <Detector class="com.h3xstream.findsecbugs.xss.CustomXssInjectionDetector">
-        <Details>Detector that find injection for custom methods.</Details>
+        <Details>Detector that finds XSS injections for custom methods.</Details>
     </Detector>
 
     <BugPattern type="CUSTOM_XSS_INJECTION">
-        <ShortDescription>Potential injection (custom)</ShortDescription>
+        <ShortDescription>Potential XSS injection (custom)</ShortDescription>
         <LongDescription>This use of {3} can be vulnerable to XSS injection</LongDescription>
         <Details>
             <![CDATA[
@@ -1468,7 +1468,7 @@ The method identified is susceptible to XSS injection. The input should be valid
 
 <p>
     <b>Vulnerable code samples:</b><br/>
-    <pre>HtmlRenderer.render("<a href='...'>" + parameterInput + "</a>");</pre>
+    <pre>HtmlRenderer.render("&lt;a href='...'\&gt;" + parameterInput + "&lt;/a&gt;");</pre>
 </p>
 <p>
     Refer to the online wiki for detailed instructions on <a href="https://github.com/find-sec-bugs/find-sec-bugs/wiki/Custom-signatures">how to configure custom signatures</a>.
@@ -1476,7 +1476,7 @@ The method identified is susceptible to XSS injection. The input should be valid
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECCUSTOMXSSI">Custom Injection</BugCode>
+    <BugCode abbrev="SECCUSTOMXSSI">Custom XSS Injection</BugCode>
     
 
     <!-- SQL Injection -->

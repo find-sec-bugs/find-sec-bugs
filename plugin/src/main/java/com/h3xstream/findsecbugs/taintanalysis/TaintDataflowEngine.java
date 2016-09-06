@@ -18,6 +18,7 @@
 package com.h3xstream.findsecbugs.taintanalysis;
 
 import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
+
 import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.ba.CFG;
 import edu.umd.cs.findbugs.ba.DepthFirstSearch;
@@ -26,6 +27,7 @@ import edu.umd.cs.findbugs.classfile.IAnalysisCache;
 import edu.umd.cs.findbugs.classfile.IMethodAnalysisEngine;
 import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 import edu.umd.cs.findbugs.io.IO;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,6 +40,7 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.apache.bcel.generic.MethodGen;
 
 /**
@@ -136,6 +139,12 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
                 stream = new FileInputStream(file);
             } else {
                 stream = getClass().getClassLoader().getResourceAsStream(path);
+            }
+            if (stream == null) {
+                String message = String.format("Could not add custom config. "
+                        + "Neither file %s nor resource matching %s found.",
+                        file.getAbsolutePath(), path);
+                throw new IllegalArgumentException(message);
             }
             taintConfig.load(stream, false);
             LOGGER.log(Level.INFO, "Custom taint config loaded from {0}", path);

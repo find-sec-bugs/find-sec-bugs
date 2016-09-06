@@ -17,15 +17,12 @@
  */
 package com.h3xstream.findsecbugs.xss;
 
-import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import com.h3xstream.findsecbugs.common.InterfaceUtils;
-import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
-import com.h3xstream.findsecbugs.taintanalysis.Taint;
+
 import edu.umd.cs.findbugs.BugReporter;
-import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.ba.ClassContext;
 
-public class XssJspDetector extends BasicInjectionDetector {
+public class XssJspDetector extends BasicXssInjectionDetector {
 
     private static final String XSS_JSP_PRINT_TYPE = "XSS_JSP_PRINT";
 
@@ -37,24 +34,6 @@ public class XssJspDetector extends BasicInjectionDetector {
     public XssJspDetector(BugReporter bugReporter) {
         super(bugReporter);
         loadConfiguredSinks("xss-jsp.txt", XSS_JSP_PRINT_TYPE);
-    }
-
-    @Override
-    protected int getPriority(Taint taint) {
-        if (!taint.isSafe() && taint.hasTag(Taint.Tag.XSS_SAFE)) {
-            if(FindSecBugsGlobalConfig.getInstance().isReportPotentialXssWrongContext()) {
-                return Priorities.LOW_PRIORITY;
-            }
-            else {
-                return Priorities.IGNORE_PRIORITY;
-            }
-        } else if (!taint.isSafe()
-                && (taint.hasTag(Taint.Tag.QUOTE_ENCODED) || taint.hasTag(Taint.Tag.APOSTROPHE_ENCODED))
-                && taint.hasTag(Taint.Tag.LT_ENCODED)) {
-            return Priorities.LOW_PRIORITY;
-        } else {
-            return super.getPriority(taint);
-        }
     }
     
     @Override

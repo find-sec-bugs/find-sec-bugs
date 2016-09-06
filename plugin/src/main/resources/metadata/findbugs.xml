@@ -84,7 +84,8 @@
     <Detector class="com.h3xstream.findsecbugs.scala.ScalaSensitiveDataExposureDetector" reports="SCALA_SENSITIVE_DATA_EXPOSURE"/>
     <Detector class="com.h3xstream.findsecbugs.scala.XssMvcApiDetector" reports="SCALA_XSS_MVC_API" />
     <Detector class="com.h3xstream.findsecbugs.scala.XssTwirlDetector" reports="SCALA_XSS_TWIRL" />
-
+    <Detector class="com.h3xstream.findsecbugs.xss.CustomXssInjectionDetector" reports="CUSTOM_XSS_INJECTION" />
+    
     <BugPattern type="PREDICTABLE_RANDOM" abbrev="SECPR" category="SECURITY" cweid="330"/>
     <BugPattern type="PREDICTABLE_RANDOM_SCALA" abbrev="SECPRS" category="SECURITY" cweid="330"/>
     <BugPattern type="SERVLET_PARAMETER" abbrev="SECSP" category="SECURITY"/>
@@ -122,6 +123,7 @@
     <BugPattern type="STRUTS2_ENDPOINT" abbrev="SECSTR2" category="SECURITY"/>
     <BugPattern type="SPRING_ENDPOINT" abbrev="SECSC" category="SECURITY"/>
     <BugPattern type="CUSTOM_INJECTION" abbrev="SECCUSTOMI" category="SECURITY" cweid="74"/>
+    <BugPattern type="CUSTOM_XSS_INJECTION" abbrev="SECCUSTOMXSSI" category="SECURITY" />
     <BugPattern type="SQL_INJECTION_HIBERNATE" abbrev="SECSQLIHIB" category="SECURITY" cweid="564"/>
     <BugPattern type="SQL_INJECTION_JDO" abbrev="SECSQLIJDO" category="SECURITY" cweid="89"/>
     <BugPattern type="SQL_INJECTION_JPA" abbrev="SECSQLIJPA" category="SECURITY" cweid="89"/>

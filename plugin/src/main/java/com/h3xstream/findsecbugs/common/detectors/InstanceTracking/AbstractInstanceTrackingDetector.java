@@ -113,7 +113,7 @@ public abstract class AbstractInstanceTrackingDetector extends OpcodeStackDetect
      * @return True if the operation is an Invoke instruction. Otherwise, False.
      */
     private static boolean isInvokeInstruction(int seen) {
-        return seen >= INVOKEVIRTUAL && seen <= INVOKEINTERFACE;
+        return seen == INVOKEVIRTUAL || seen == INVOKEINTERFACE || seen == INVOKESPECIAL;
     }
 
     /**

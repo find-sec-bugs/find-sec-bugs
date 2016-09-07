@@ -19,8 +19,9 @@ package com.h3xstream.findsecbugs.xss;
 
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.never;
 
+import org.mockito.internal.verification.VerificationModeFactory;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -61,6 +62,14 @@ public class CustomXssInjectionDetectorTest extends BaseDetectorTest {
                         .inClass("CustomXssInjection").inMethod("testInjection").atLine(14)
                         .build()
         );
+        
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("CUSTOM_XSS_INJECTION")
+                        .inClass("CustomXssInjection").inMethod("testInjection").atLine(13)
+                        .build()
+        );
+
 
     }
 }

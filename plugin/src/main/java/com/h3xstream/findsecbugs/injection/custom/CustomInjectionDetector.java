@@ -50,14 +50,14 @@ public class CustomInjectionDetector extends BasicInjectionDetector {
             LOG.info("Loading additional injection sources from " + Arrays.toString(urls.toArray()) + "");
         }
 
-        /*for(URL url : urls) {
+        for(URL url : urls) {
             try {
                 InputStream in = url.openStream();
                 loadConfiguredSinks(in, "CUSTOM_INJECTION");
             } catch (IOException e) {
                 LOG.log(Level.SEVERE, "Unable to load injection sources from :" + url.toString(), e);
             }
-        }*/
+        }
 
     }
 

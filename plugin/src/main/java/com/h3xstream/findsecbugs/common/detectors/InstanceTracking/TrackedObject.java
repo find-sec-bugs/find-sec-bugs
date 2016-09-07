@@ -23,7 +23,15 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.bcel.classfile.JavaClass;
 
+/**
+ * This object is used to provide the AbstractInstanceTrackingDetector class with the information required
+ * to track method calls on object instances.
+ *
+ * It stores the Invoke instructions used to initialize this object and the calls we want to track.
+ * The detector will also store the instances found during code analysis in this object.
+ */
 public class TrackedObject {
+
     public TrackedObject(String initInstruction) {
         initInstructions.add(initInstruction);
     }
@@ -32,6 +40,8 @@ public class TrackedObject {
     public List<String> getInitInstructions() { return initInstructions; }
     public TrackedObject addInitInstruction(String initInstruction) {
         initInstructions.add(initInstruction);
+
+        // We return this object to make daisy chaining calls possible.
         return this;
     }
 
@@ -39,6 +49,8 @@ public class TrackedObject {
     public List<TrackedCall> getTrackedCalls() { return trackedCalls; }
     public TrackedObject addTrackedCallForObject(TrackedCall newCall) {
         trackedCalls.add(newCall);
+
+        // We return this object to make daisy chaining calls possible.
         return this;
     }
 
@@ -48,6 +60,7 @@ public class TrackedObject {
         TrackedObjectInstance instance = new TrackedObjectInstance(initJavaClass, initMethodDescriptor, initSourceLine);
         trackedObjectInstances.add(instance);
 
+        // We return the added object instance to make daisy chaining calls possible.
         return instance;
     }
 }

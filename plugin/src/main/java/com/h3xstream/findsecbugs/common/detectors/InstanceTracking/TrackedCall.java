@@ -17,7 +17,14 @@
  */
 package com.h3xstream.findsecbugs.common.detectors.InstanceTracking;
 
+/**
+ * This object is used in the AbstractInstanceTrackingDetector to track specific method calls.
+ *
+ * It stores the textual representation of the Invoke instruction for the call, its expected value
+ * and the reporting behavior of the detector when this call is encountered.
+ */
 public class TrackedCall {
+
     public TrackedCall(String invokeInstruction, Object expectedValue, int parameterIndex, String bugType) {
         this.invokeInstruction = invokeInstruction;
         this.expectedValue = expectedValue;

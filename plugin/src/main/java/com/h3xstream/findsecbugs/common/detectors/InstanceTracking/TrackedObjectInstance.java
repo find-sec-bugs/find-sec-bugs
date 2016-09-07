@@ -23,6 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.bcel.classfile.JavaClass;
 
+/**
+ * This object is used in the AbstractInstanceTrackingDetector to store the location of object instances and
+ * the bugs found for this particular object.
+ */
 public class TrackedObjectInstance {
 
     public TrackedObjectInstance(JavaClass initJavaClass, MethodDescriptor initMethodDescriptor, SourceLineAnnotation initLocation) {
@@ -44,6 +48,8 @@ public class TrackedObjectInstance {
     public List<String> getBugsFound() { return bugsFound; }
     public void removeBug(String bugType) { bugsFound.remove(bugType); }
     public void addBug(String bugType) {
+
+        // Check if the bug is already in the list to avoid duplicated bugs.
         if (!bugsFound.contains(bugType)) {
             bugsFound.add(bugType);
         }

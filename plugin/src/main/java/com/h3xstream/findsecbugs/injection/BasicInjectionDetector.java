@@ -101,7 +101,7 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
      * </ul>
      */
     protected void loadCustomConfigFiles() {
-        String customConfigFile = FindSecBugsGlobalConfig.loadFromSystem("findsecbugs.injection.customconfigfile." + getClass().getSimpleName(), null);
+        String customConfigFile = FindSecBugsGlobalConfig.getInstance().getCustomConfigFile(getClass().getSimpleName());
         if (customConfigFile != null && !customConfigFile.isEmpty()) {
             for (String configFile : customConfigFile.split(File.pathSeparator)) {
                 String[] injectionDefinition = configFile.split(Pattern.quote("|"));

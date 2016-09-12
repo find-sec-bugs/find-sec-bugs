@@ -1,1 +1,2 @@
 play/api/mvc/Results$Status.apply(Ljava/lang/Object;Lplay/api/http/Writeable;)Lplay/api/mvc/Result;:1
+play/api/mvc/Cookie.<init>(Ljava/lang/String;Ljava/lang/String;Lscala/Option;Ljava/lang/String;Lscala/Option;ZZ)V:5,6

@@ -47,3 +47,5 @@ scala/collection/mutable/StringBuilder.substring(II)Ljava/lang/String;:2
 scala/collection/mutable/StringBuilder.subSequence(II)Ljava/lang/CharSequence;:2
 
 scala/collection/mutable/StringBuilder.toString()Ljava/lang/String;:0
+
+scala/Option.get()Ljava/lang/Object;:0

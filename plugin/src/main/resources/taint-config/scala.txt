@@ -49,3 +49,5 @@ scala/collection/mutable/StringBuilder.subSequence(II)Ljava/lang/CharSequence;:2
 scala/collection/mutable/StringBuilder.toString()Ljava/lang/String;:0
 
 scala/Option.get()Ljava/lang/Object;:0
+
+play/api/mvc/Cookie.<init>(Ljava/lang/String;Ljava/lang/String;Lscala/Option;Ljava/lang/String;Lscala/Option;ZZ)V:5,6#7,8

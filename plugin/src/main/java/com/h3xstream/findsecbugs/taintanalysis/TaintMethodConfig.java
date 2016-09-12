@@ -22,30 +22,59 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
- * Summary of information about a method related to taint analysis
+ * Summary of information about a method related to taint analysis.<br />
+ *<br />
+ * For loading sinks files please see {@link com.h3xstream.findsecbugs.injection.SinksLoader}
  *
  * @author David Formanek (Y Soft Corporation, a.s.)
  */
-public class TaintMethodSummary {
+public class TaintMethodConfig implements TaintTypeConfig {
 
     private Taint outputTaint = null;
     private final Set<Integer> mutableStackIndices;
     private final boolean isConfigured;
-    public static final TaintMethodSummary SAFE_SUMMARY;
+    public static final TaintMethodConfig SAFE_SUMMARY;
+    protected static final Pattern fullMethodPattern;
+    protected static final Pattern summaryPattern;
 
     static {
-        SAFE_SUMMARY = new TaintMethodSummary(false);
+        SAFE_SUMMARY = new TaintMethodConfig(false);
         SAFE_SUMMARY.outputTaint = new Taint(Taint.State.SAFE);
+
+        String classWithPackageRegex = "([a-z][a-z0-9]*\\/)*[A-Z][a-zA-Z0-9\\$]*";
+        String typeRegex = "(\\[)*((L" + classWithPackageRegex + ";)|B|C|D|F|I|J|S|Z)";
+        String returnRegex = "(V|(" + typeRegex + "))";
+        String methodRegex = "(([a-zA-Z][a-zA-Z0-9]*)|(<init>))";
+        String signatureRegex = "\\((" + typeRegex + ")*\\)" + returnRegex;
+        String fullMathodNameRegex = classWithPackageRegex + "\\." + methodRegex + signatureRegex;
+        fullMethodPattern = Pattern.compile(fullMathodNameRegex);
+
+        String taintStateNameRegex = "[A-Z_]+";
+        String stackIndexRegex = "[0-9]+";
+        String resultStateOrStackIndexRegex = "("+ taintStateNameRegex + "|" + stackIndexRegex + ")";
+        String commaSeparatedTaintResultsRegex = "("+resultStateOrStackIndexRegex+",)*"+resultStateOrStackIndexRegex;
+
+        String taintTagNameRegex = taintStateNameRegex;
+        String taintTagModificationRegex = "[+-]" + taintTagNameRegex;
+
+        String commaSeparatedTaintTagModificationRegex = "("+taintTagModificationRegex+",)*"+taintTagModificationRegex;
+        String commaSeparatedStackMutationIndexesRegex = "("+stackIndexRegex+",)*" + stackIndexRegex;
+
+        String summaryRegex = commaSeparatedTaintResultsRegex;
+        summaryRegex += "(\\|" + commaSeparatedTaintTagModificationRegex + ")?";
+        summaryRegex += "(#" + commaSeparatedStackMutationIndexesRegex+ ")?";
+        summaryPattern = Pattern.compile(summaryRegex);
     }
 
     /**
-     * Constructs an emty summary
+     * Constructs an empty summary
      * 
      * @param isConfigured true for configured summaries, false for derived
      */
-    public TaintMethodSummary(boolean isConfigured) {
+    public TaintMethodConfig(boolean isConfigured) {
         outputTaint = null;
         mutableStackIndices = new HashSet<Integer>();
         this.isConfigured = isConfigured;
@@ -56,7 +85,7 @@ public class TaintMethodSummary {
      * 
      * @param summary original summary to copy
      */
-    public TaintMethodSummary(TaintMethodSummary summary) {
+    public TaintMethodConfig(TaintMethodConfig summary) {
         this.mutableStackIndices = summary.mutableStackIndices;
         this.isConfigured = summary.isConfigured;
     }
@@ -133,11 +162,11 @@ public class TaintMethodSummary {
      * @return new instance of default summary
      * @throws IllegalArgumentException for stackSize &lt; 1
      */
-    public static TaintMethodSummary getDefaultConstructorSummary(int stackSize) {
+    public static TaintMethodConfig getDefaultConstructorSummary(int stackSize) {
         if (stackSize < 1) {
             throw new IllegalArgumentException("stack size less than 1");
         }
-        TaintMethodSummary summary = new TaintMethodSummary(false);
+        TaintMethodConfig summary = new TaintMethodConfig(false);
         summary.outputTaint = new Taint(Taint.State.UNKNOWN);
         summary.mutableStackIndices.add(stackSize - 1);
         summary.mutableStackIndices.add(stackSize);
@@ -247,45 +276,94 @@ public class TaintMethodSummary {
         }
     }
 
+    public static boolean accepts(String typeSignature, String summary) {
+        return fullMethodPattern.matcher(typeSignature).matches() && summaryPattern.matcher(summary).matches();
+    }
+
     /**
-     * Loads method summary from String
-     * 
-     * @param str (state or parameter indices to merge separated by comma)#mutable position
+     * Loads method summary from String. <br />
+     * <br />
+     * The summary should have the following syntax:<br />
+     * <code>resultTaintState |resultTaintTags #stackMutationIndexes</code>, where <ul>
+     *     <li><code>resultTaintState</code> are stack indexes or {@link Taint.State} enums separated by comma, e.g. <code>1,2</code> or <code>TAINTED</code></li>
+     *     <li><code>resultTaintTags</code> are {@link Taint.Tag} enums separated by comma, started with plus or minus sign, e.g. <code>+CR_ENCODED,-XSS_SAFE</code></li>
+     *     <li><code>stackMutationIndexes</code> are  stack indexes separated by comma, e.g. <code>3,4</code></li>
+     * </ul>
+     *
+     * Example: <br/>
+     * <code>org/owasp/esapi/Encoder.encodeForHTML(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE,+CR_ENCODED,+LF_ENCODED</code><br />
+     * <ul>
+     *     <li>Here the summary is: <code>0|+XSS_SAFE,+CR_ENCODED,+LF_ENCODED</code></li>
+     *     <li>The result taint will be merged with the first method argument, index 0</li>
+     *     <li>The result taint will have <code>XSS_SAFE</code>, <code>CR_ENCODED</code> and <code>CR_ENCODED</code> tags set</li>
+     *     <li>Practically, the result string will keep the taint but will receive XSS_SAFE tags which are processed by XssJspDetector</li>
+     * </ul>
+     *
+     * Example: <br/>
+     * <code>org/owasp/esapi/Encoder.decodeForHTML(Ljava/lang/String;)Ljava/lang/String;:0|-XSS_SAFE,-CR_ENCODED,-LF_ENCODED</code><br />
+     * <ul>
+     *     <li>Here the result taint will be merged with the first method argument, index 0</li>
+     *     <li>The framework removes <code>XSS_SAFE</code>, <code>CR_ENCODED</code> and <code>CR_ENCODED</code> tags</li>
+     *     <li>Practically, the result string will keep the taint but XSS_SAFE tag is removed again</li>
+     * </ul>
+     *
+     * Example: <br/>
+     * <code>java/lang/StringBuilder.<init>(Ljava/lang/String;)V:0#1,2</code>
+     * <ul>
+     *     <li>Here the result taint will be merged with the first constructor argument, index 0</li>
+     *     <li>Framework also mutates taint of the StringBuilder object itself with the result taint, index 1</li>
+     *     <li>Because we are in a constructor, we need to specify one more taint index => 2</li>
+     *     <li>Practically, when the original String is tainted then StringBuilder will be tainted too</li>
+     * </ul>
+     *
+     * Example: <br/>
+     * <code>java/lang/StringBuilder.append(Ljava/lang/String;)Ljava/lang/StringBuilder;:0,1#1</code>
+     * <ul>
+     *     <li>Here the result taint will be merged with the method argument and the taint of the StringBuilder, index 0 and 1</li>
+     *     <li>Framework also mutates taint of the StringBuilder object itself with the result taint, index 1</li>
+     *     <li>Practically, the result taint is a merge of the String argument and previous taint of StringBuilder, on top propagates the result into StringBuilder's taint state again</li>
+     * </ul>
+     * Important notes about stack indexes:<ul>
+     *     <li>long and double types take two slots on stack and need two subsequent indexes, i.e. index of the String parameter in <code>method(Ljava/lang/String;D)</code> is 2, not 1 as one would expect</li>
+     *     <li>taint analysis adds two Taint objects on stack for constructors, don't forget to specify both</li>
+     * </ul>
+     *
+     * @param summary (state or parameter indices to merge separated by comma)#mutable position
      * @return initialized object with taint method summary
-     * @throws java.io.IOException for bad format of paramter
+     * @throws java.io.IOException for bad format of parameter
      * @throws NullPointerException if argument is null
      */
-    public static TaintMethodSummary load(String str) throws IOException {
-        if (str == null) {
+    @Override
+    public TaintMethodConfig load(String summary) throws IOException {
+        if (summary == null) {
             throw new NullPointerException("string is null");
         }
-        str = str.trim();
-        if (str.isEmpty()) {
+        summary = summary.trim();
+        if (summary.isEmpty()) {
             throw new IOException("No taint method summary specified");
         }
-        TaintMethodSummary summary = new TaintMethodSummary(true);
-        str = loadMutableStackIndeces(str, summary);
-        String[] tuple = str.split("\\|");
+        summary = loadMutableStackIndeces(summary);
+        String[] tuple = summary.split("\\|");
         if (tuple.length == 2) {
-            str = tuple[0];
+            summary = tuple[0];
         } else if (tuple.length != 1) {
             throw new IOException("Bad format: only one '|' expected");
         }
-        loadStatesAndParameters(str, summary);
+        loadStatesAndParameters(summary);
         if (tuple.length == 2) {
-            loadTags(tuple[1], summary);
+            loadTags(tuple[1]);
         }
-        return summary;
+        return this;
     }
 
-    private static String loadMutableStackIndeces(String str, TaintMethodSummary summary) throws IOException {
+    private String loadMutableStackIndeces(String str) throws IOException {
         String[] tuple = str.split("#");
         if (tuple.length == 2) {
             str = tuple[0];
             try {
                 String[] indices = tuple[1].split(",");
                 for (String index : indices) {
-                    summary.addMutableStackIndex(Integer.parseInt(index.trim()));
+                    addMutableStackIndex(Integer.parseInt(index.trim()));
                 }
             } catch (NumberFormatException ex) {
                 throw new IOException("Cannot parse mutable stack offsets", ex);
@@ -296,11 +374,11 @@ public class TaintMethodSummary {
         return str;
     }
     
-    private static void loadStatesAndParameters(String str, TaintMethodSummary summary) throws IOException {
+    private void loadStatesAndParameters(String str) throws IOException {
         if (str.isEmpty()) {
             throw new IOException("No taint information set");
         } else if (isTaintStateValue(str)) {
-            summary.setOuputTaint(Taint.valueOf(str));
+            setOuputTaint(Taint.valueOf(str));
         } else {
             String[] tuple = str.split(",");
             int count = tuple.length;
@@ -317,11 +395,11 @@ public class TaintMethodSummary {
                     }
                 }
             }
-            summary.setOuputTaint(taint);
+            setOuputTaint(taint);
         }
     }
 
-    private static void loadTags(String tagInfo, TaintMethodSummary summary) throws IOException {
+    private void loadTags(String tagInfo) throws IOException {
         if (tagInfo.isEmpty()) {
             throw new IOException("No taint tags specified");
         }
@@ -332,15 +410,15 @@ public class TaintMethodSummary {
                 throw new IOException("Bad format: unknown taint tag " + tagName);
             }
             Taint.Tag tag = Taint.Tag.valueOf(tagName);
-            if (summary.outputTaint.hasTag(tag) || summary.outputTaint.getTagsToRemove().contains(tag)) {
+            if (outputTaint.hasTag(tag) || outputTaint.getTagsToRemove().contains(tag)) {
                 throw new IOException("Bad format: tag " + tag + " already present");
             }
             switch (sign) {
                 case '+':
-                    summary.outputTaint.addTag(tag);
+                    outputTaint.addTag(tag);
                     break;
                 case '-':
-                    summary.outputTaint.removeTag(tag);
+                    outputTaint.removeTag(tag);
                     break;
                 default:
                     throw new IOException("Bad format: taint tag sign must be + or - but is " + sign);
@@ -348,7 +426,7 @@ public class TaintMethodSummary {
         }
     }
     
-    private static boolean isTaintTagValue(String value) {
+    private boolean isTaintTagValue(String value) {
         assert value != null && !value.isEmpty();
         for (Taint.Tag tag : Taint.Tag.values()) {
             if (tag.name().equals(value)) {
@@ -358,7 +436,7 @@ public class TaintMethodSummary {
         return false;
     }
     
-    private static boolean isTaintStateValue(String value) {
+    private boolean isTaintStateValue(String value) {
         assert value != null && !value.isEmpty();
         Taint.State[] states = Taint.State.values();
         for (Taint.State state : states) {

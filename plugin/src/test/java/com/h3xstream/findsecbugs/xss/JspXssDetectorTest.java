@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.jsp;
+package com.h3xstream.findsecbugs.xss;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
@@ -195,6 +195,21 @@ public class JspXssDetectorTest extends BaseDetectorTest {
         );
 
         verify(reporter, times(1)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
+    }
+
+    @Test
+    public void detectXssFalsePositiveDirectCast() throws Exception {
+        //Locate test code
+        String[] files = {
+            getJspFilePath("xss/xss_7_false_positive_direct_cast.jsp")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        //No alert should be trigger
+        verify(reporter, never()).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
     }
 
 }

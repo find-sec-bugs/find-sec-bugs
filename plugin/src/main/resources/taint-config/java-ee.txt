@@ -109,3 +109,12 @@ javax/servlet/http/Cookie.getValue()Ljava/lang/String;:TAINTED
 javax/servlet/ServletContext.getContextPath()Ljava/lang/String;:SAFE
 -javax/servlet/ServletContext.getInitParameter(Ljava/lang/String;)Ljava/lang/String;:?
 -javax/servlet/ServletContext.getInitParameterNames()Ljava/util/Enumeration;:?
+
+-- The following methods receive arguments but will not alter the objects received
+-- (It avoids tainting the parameters that are not immutable)
+javax/servlet/jsp/JspWriter.write([C)V:UNKNOWN
+javax/servlet/jsp/JspWriter.write([CII)V:UNKNOWN
+javax/servlet/jsp/JspWriter.print([C)V:UNKNOWN
+javax/servlet/jsp/JspWriter.print(Ljava/lang/Object;)V:UNKNOWN
+javax/servlet/jsp/JspWriter.println([C)V:UNKNOWN
+javax/servlet/jsp/JspWriter.println(Ljava/lang/Object;)V:UNKNOWN

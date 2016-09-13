@@ -77,14 +77,17 @@ public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
         checkSink(cpg, invoke, fact, sourceLine, currentMethod);
         InjectionPoint injectionPoint = getInjectionPoint(invoke, cpg, handle);
         for (int offset : injectionPoint.getInjectableArguments()) {
-            Taint parameterTaint = fact.getStackValue(offset);
-            int priority = getPriority(parameterTaint);
+            int priority = getPriorityFromTaintFrame(fact, offset);
             if (priority == Priorities.IGNORE_PRIORITY) {
                 continue;
             }
+
+            Taint parameterTaint = fact.getStackValue(offset);
+
             InjectionSink injectionSink = new InjectionSink(this, injectionPoint.getBugType(), priority,
                     classContext, method, handle, injectionPoint.getInjectableMethod());
             injectionSink.addLines(parameterTaint.getLocations());
+
             if (parameterTaint.hasParameters()) {
                 // add sink to multi map
                 Set<InjectionSink> sinkSet = injectionSinks.get(currentMethod);
@@ -101,6 +104,23 @@ public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
             }
             return;
         }
+    }
+
+    /**
+     * The default implementation of <code>getPriorityFromTaintFrame()</code> can be overridden if the detector must base its
+     * priority on multiple parameters or special conditions like constant values.
+     *
+     * By default, this method will call the <code>getPriority()</code> method with the parameter taint at the specified offset.
+     *
+     * @param fact The TaintFrame for the inspected instruction call.
+     * @param offset The offset of the checked parameter.
+     * @return Priorities interface values from 1 to 5 (Enum-like interface)
+     * @throws DataflowAnalysisException An exception thrown when the TaintFrame cannot be analyzed.
+     */
+    protected int getPriorityFromTaintFrame(TaintFrame fact, int offset)
+            throws DataflowAnalysisException {
+        Taint parameterTaint = fact.getStackValue(offset);
+        return getPriority(parameterTaint);
     }
 
     /**

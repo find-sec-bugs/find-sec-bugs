@@ -17,13 +17,21 @@
  */
 package com.h3xstream.findsecbugs.injection;
 
+import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import edu.umd.cs.findbugs.BugReporter;
+import edu.umd.cs.findbugs.SystemProperties;
+import edu.umd.cs.findbugs.ba.AnalysisContext;
+import edu.umd.cs.findbugs.io.IO;
 import edu.umd.cs.findbugs.util.ClassName;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
+
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InvokeInstruction;
@@ -41,6 +49,8 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
 
     protected BasicInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
+
+        loadCustomConfigFiles();
     }
 
     @Override
@@ -76,6 +86,63 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
                 addParsedInjectionPoint(fullMethodName, injectionPoint);
             }
         });
+    }
+
+    /**
+     * Loads taint sinks from custom file. The file name is passed using system property based on the current class name.<br />
+     * <br />
+     * Example for Linux/Mac OS X:<ul>
+     *     <li>-Dfindsecbugs.injection.customconfigfile.SqlInjectionDetector="/tmp/sql-custom.txt|SQL_INJECTION_HIBERNATE:/tmp/sql2-custom.txt|SQL_INJECTION_HIBERNATE"</li>
+     *     <li>-Dfindsecbugs.injection.customconfigfile.ScriptInjectionDetector="/tmp/script-engine-custom.txt|SCRIPT_ENGINE_INJECTION:/tmp/el-custom.txt|EL_INJECTION"</li>
+     * </ul>
+     * Example for Windows:<ul>
+     *     <li>-Dfindsecbugs.injection.customconfigfile.SqlInjectionDetector="C:\Temp\sql-custom.txt|SQL_INJECTION_HIBERNATE;C:\Temp\sql2-custom.txt|SQL_INJECTION_HIBERNATE"</li>
+     *     <li>-Dfindsecbugs.injection.customconfigfile.ScriptInjectionDetector="C:\Temp\script-engine-custom.txt|SCRIPT_ENGINE_INJECTION;C:\Temp\el-custom.txt|EL_INJECTION"</li>
+     * </ul>
+     */
+    protected void loadCustomConfigFiles() {
+        String customConfigFile = FindSecBugsGlobalConfig.getInstance().getCustomConfigFile(getClass().getSimpleName());
+        if (customConfigFile != null && !customConfigFile.isEmpty()) {
+            for (String configFile : customConfigFile.split(File.pathSeparator)) {
+                String[] injectionDefinition = configFile.split(Pattern.quote("|"));
+
+                if (injectionDefinition.length != 2 ||
+                    injectionDefinition[0].trim().isEmpty() ||
+                    injectionDefinition[1].trim().isEmpty()) {
+
+                    AnalysisContext.logError("Wrong injection config file definition: " + configFile + ". Syntax: fileName|bugType, example: sql-custom.txt|SQL_INJECTION_HIBERNATE");
+
+                    continue;
+                }
+
+                loadCustomSinks(injectionDefinition[0], injectionDefinition[1]);
+            }
+        }
+    }
+
+    /**
+     * Loads taint sinks configuration file from file system. If the file doesn't exist on file system, loads the file from classpath.
+     *
+     * @param fileName name of the configuration file
+     * @param bugType type of an injection bug
+     */
+    protected void loadCustomSinks(String fileName, String bugType) {
+        InputStream stream = null;
+        try {
+            File file = new File(fileName);
+            if (file.exists()) {
+                stream = new FileInputStream(file);
+                loadConfiguredSinks(stream, bugType);
+            }
+            else {
+                stream = getClass().getClassLoader().getResourceAsStream(fileName);
+                loadConfiguredSinks(stream, bugType);
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException("Cannot load custom injection sinks from " + fileName, ex);
+        } finally {
+            IO.close(stream);
+        }
     }
 
     /**

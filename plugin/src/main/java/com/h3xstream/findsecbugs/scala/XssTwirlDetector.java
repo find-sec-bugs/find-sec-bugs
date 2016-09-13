@@ -17,28 +17,36 @@
  */
 package com.h3xstream.findsecbugs.scala;
 
+import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
 import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 
-public class ScalaSensitiveDataExposureDetector extends BasicInjectionDetector {
+public class XssTwirlDetector extends BasicInjectionDetector {
 
-    private static final String SCALA_SENSITIVE_DATA_EXPOSURE_TYPE = "SCALA_SENSITIVE_DATA_EXPOSURE";
+    private static final String SCALA_XSS_TWIRL_TYPE = "SCALA_XSS_TWIRL";
 
-    public ScalaSensitiveDataExposureDetector(BugReporter bugReporter) {
+    public XssTwirlDetector(BugReporter bugReporter) {
         super(bugReporter);
-        loadConfiguredSinks("sensitive-data-exposure-scala.txt", SCALA_SENSITIVE_DATA_EXPOSURE_TYPE);
+        loadConfiguredSinks("xss-scala-twirl.txt", SCALA_XSS_TWIRL_TYPE);
     }
 
     @Override
     protected int getPriority(Taint taint) {
-
-        // If this call doesn't contain any sensitive data - There is no reason to report it.
-        if (!taint.hasTag(Taint.Tag.SENSITIVE_DATA)) {
-            return Priorities.IGNORE_PRIORITY;
+        if (!taint.isSafe() && taint.hasTag(Taint.Tag.XSS_SAFE)) {
+            if(FindSecBugsGlobalConfig.getInstance().isReportPotentialXssWrongContext()) {
+                return Priorities.LOW_PRIORITY;
+            }
+            else {
+                return Priorities.IGNORE_PRIORITY;
+            }
+        } else if (!taint.isSafe()
+                && (taint.hasTag(Taint.Tag.QUOTE_ENCODED) || taint.hasTag(Taint.Tag.APOSTROPHE_ENCODED))
+                && taint.hasTag(Taint.Tag.LT_ENCODED)) {
+            return Priorities.LOW_PRIORITY;
+        } else {
+            return super.getPriority(taint);
         }
-
-        return super.getPriority(taint);
     }
 }

@@ -25,9 +25,15 @@ public class PathTraversalDetector extends BasicInjectionDetector {
     private static final String PATH_TRAVERSAL_IN_TYPE = "PATH_TRAVERSAL_IN";
     private static final String PATH_TRAVERSAL_OUT_TYPE = "PATH_TRAVERSAL_OUT";
 
+    private static final String SCALA_PATH_TRAVERSAL_IN_TYPE = "SCALA_PATH_TRAVERSAL_IN";
+
     public PathTraversalDetector(BugReporter bugReporter) {
         super(bugReporter);
         loadConfiguredSinks("path-traversal-in.txt", PATH_TRAVERSAL_IN_TYPE);
         loadConfiguredSinks("path-traversal-out.txt", PATH_TRAVERSAL_OUT_TYPE);
+        loadConfiguredSinks("scala-path-traversal-in.txt", SCALA_PATH_TRAVERSAL_IN_TYPE);
+
+        // We are not using a Scala-specific message because it doesn't have an embed code example
+        loadConfiguredSinks("scala-path-traversal-out.txt", PATH_TRAVERSAL_OUT_TYPE);
     }
 }

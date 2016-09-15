@@ -1,6 +1,6 @@
 - Scala collections and and Scala-lang
 
-scala/Predef$.wrapRefArray([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;:0#0
+scala/Predef$.wrapRefArray([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;:0
 
 scala/collection/Seq$.apply(Lscala/collection/Seq;)Lscala/collection/GenTraversable;:0#0
 scala/collection/immutable/Vector$.apply(Lscala/collection/Seq;)Lscala/collection/GenTraversable;:0#0
@@ -50,3 +50,9 @@ scala/collection/mutable/StringBuilder.toString()Ljava/lang/String;:0
 
 - Scala Play framework MVC
 play/api/mvc/Results$Status.apply(Ljava/lang/Object;Lplay/api/http/Writeable;)Lplay/api/mvc/Result;:1
+
+- Anorm database framework
+anorm/package$.SQL(Ljava/lang/String;)Lanorm/SqlQuery;:0#0
+anorm/package$.sqlToSimple(Lanorm/SqlQuery;)Lanorm/SimpleSql;:0
+anorm/package$.SqlStringInterpolation(Lscala/StringContext;)Lscala/StringContext;:0
+anorm/package$SqlStringInterpolation$.SQL$extension(Lscala/StringContext;Lscala/collection/Seq;)Lanorm/SimpleSql;:1

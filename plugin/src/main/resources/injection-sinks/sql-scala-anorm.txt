@@ -1,0 +1,11 @@
+- API reference:
+- https://www.playframework.com/documentation/2.5.x/ScalaAnorm
+
+anorm/SimpleSql.execute(Ljava/sql/Connection;)Z:1
+anorm/SimpleSql.executeUpdate(Ljava/sql/Connection;)I:1
+anorm/SimpleSql.executeQuery(Ljava/sql/Connection;)Lanorm/SqlQueryResult;:1
+anorm/SimpleSql.executeInsert(Lanorm/ResultSetParser;Ljava/sql/Connection;)Ljava/lang/Object;:2
+anorm/SimpleSql.as(Lanorm/ResultSetParser;Ljava/sql/Connection;)Ljava/lang/Object;:2
+
+anorm/BatchSql$.apply(Ljava/lang/String;Lscala/collection/Seq;)Lanorm/BatchSql;:1
+anorm/BatchSql$.apply(Ljava/lang/String;Lscala/collection/Seq;Lscala/collection/Seq;)Lanorm/BatchSql;:2

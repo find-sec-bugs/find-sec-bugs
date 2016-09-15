@@ -40,6 +40,7 @@ import org.apache.bcel.generic.BIPUSH;
 import org.apache.bcel.generic.CHECKCAST;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.GETFIELD;
+import org.apache.bcel.generic.GETSTATIC;
 import org.apache.bcel.generic.ICONST;
 import org.apache.bcel.generic.INVOKEINTERFACE;
 import org.apache.bcel.generic.INVOKESPECIAL;
@@ -186,7 +187,21 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         taint.setConstantValue(String.valueOf((char) obj.getValue().shortValue()));
         getFrame().pushValue(taint);
     }
-    
+
+    @Override
+    public void visitGETSTATIC(GETSTATIC obj) {
+        if (obj.getLoadClassType(getCPG()).getSignature().equals("Lscala/collection/immutable/Nil$;")) {
+
+            if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
+                getFrame().pushValue(new Taint(Taint.State.NULL).setDebugInfo("NULL"));
+            } else {
+                getFrame().pushValue(new Taint(Taint.State.NULL));
+            }
+        } else {
+            super.visitGETSTATIC(obj);
+        }
+    }
+
     @Override
     public void visitACONST_NULL(ACONST_NULL obj) {
         if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {

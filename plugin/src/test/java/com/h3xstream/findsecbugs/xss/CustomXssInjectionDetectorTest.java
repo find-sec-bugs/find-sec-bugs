@@ -15,23 +15,25 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.injection.custom;
+package com.h3xstream.findsecbugs.xss;
 
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.never;
 
+import org.mockito.internal.verification.VerificationModeFactory;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 
-public class CustomInjectionDetectorTest extends BaseDetectorTest {
+public class CustomXssInjectionDetectorTest extends BaseDetectorTest {
 
     @BeforeTest
     public void before() {
-        String path = this.getClass().getResource("/com/h3xstream/findsecbugs/injection/custom/CustomInjectionSource.txt").getPath();
-        System.setProperty("findsecbugs.injection.sources", path);
+        String path = this.getClass().getResource("/com/h3xstream/findsecbugs/injection/custom/CustomXssInjectionSource.txt").getPath();
+        System.setProperty("findsecbugs.injection.customconfigfile.CustomXssInjectionDetector", path + "|CUSTOM_XSS_INJECTION");
     }
 
     @Test
@@ -40,7 +42,7 @@ public class CustomInjectionDetectorTest extends BaseDetectorTest {
 
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/sqli/CustomInjection")
+                getClassFilePath("testcode/xss/CustomXssInjection")
         };
 
         //Run the analysis
@@ -49,10 +51,25 @@ public class CustomInjectionDetectorTest extends BaseDetectorTest {
 
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("CUSTOM_INJECTION")
-                        .inClass("CustomInjection").inMethod("testQueries").atLine(16)
+                        .bugType("CUSTOM_XSS_INJECTION")
+                        .inClass("CustomXssInjection").inMethod("testInjection").atLine(12)
                         .build()
         );
-    }
+        
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("CUSTOM_XSS_INJECTION")
+                        .inClass("CustomXssInjection").inMethod("testInjection").atLine(14)
+                        .build()
+        );
+        
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("CUSTOM_XSS_INJECTION")
+                        .inClass("CustomXssInjection").inMethod("testInjection").atLine(13)
+                        .build()
+        );
 
+
+    }
 }

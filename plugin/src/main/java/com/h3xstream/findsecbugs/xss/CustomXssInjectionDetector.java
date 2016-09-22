@@ -15,18 +15,18 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.scala;
-
-import com.h3xstream.findsecbugs.xss.BasicXssInjectionDetector;
+package com.h3xstream.findsecbugs.xss;
 
 import edu.umd.cs.findbugs.BugReporter;
 
-public class XssTwirlDetector extends BasicXssInjectionDetector {
+/**
+ * Detectors xss injections defined by custom config files that can be set using
+ * -Dfindsecbugs_injection_customconfigfile_CustomXssInjectionDetector="xss_custom.txt|CUSTOM_XSS_INJECTION"
+ */
+public class CustomXssInjectionDetector extends BasicXssInjectionDetector {
 
-    private static final String SCALA_XSS_TWIRL_TYPE = "SCALA_XSS_TWIRL";
-
-    public XssTwirlDetector(BugReporter bugReporter) {
+    public CustomXssInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
-        loadConfiguredSinks("xss-scala-twirl.txt", SCALA_XSS_TWIRL_TYPE);
     }
+
 }

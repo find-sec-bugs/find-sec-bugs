@@ -20,7 +20,7 @@
               reports="SERVLET_PARAMETER,SERVLET_CONTENT_TYPE,SERVLET_SERVER_NAME,SERVLET_SESSION_ID,SERVLET_QUERY_STRING,SERVLET_HEADER,SERVLET_HEADER_REFERER,SERVLET_HEADER_USER_AGENT"/>
     <Detector class="com.h3xstream.findsecbugs.cookie.CookieReadDetector" reports="COOKIE_USAGE"/>
     <Detector class="com.h3xstream.findsecbugs.cookie.CookieFlagsDetector" reports="INSECURE_COOKIE,HTTPONLY_COOKIE"/>
-    <Detector class="com.h3xstream.findsecbugs.file.PathTraversalDetector" reports="PATH_TRAVERSAL_IN,PATH_TRAVERSAL_OUT"/>
+    <Detector class="com.h3xstream.findsecbugs.file.PathTraversalDetector" reports="PATH_TRAVERSAL_IN,PATH_TRAVERSAL_OUT,SCALA_PATH_TRAVERSAL_IN"/>
     <Detector class="com.h3xstream.findsecbugs.injection.command.CommandInjectionDetector" reports="COMMAND_INJECTION,SCALA_COMMAND_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.WeakFilenameUtilsMethodDetector" reports="WEAK_FILENAMEUTILS"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.WeakTrustManagerDetector" reports="WEAK_TRUST_MANAGER,WEAK_HOSTNAME_VERIFIER"/>
@@ -100,6 +100,7 @@
     <BugPattern type="HTTPONLY_COOKIE" abbrev="SECHOC" category="SECURITY"/>
     <BugPattern type="PATH_TRAVERSAL_IN" abbrev="SECPTI" category="SECURITY" cweid="22"/>
     <BugPattern type="PATH_TRAVERSAL_OUT" abbrev="SECPTO" category="SECURITY" cweid="22"/>
+    <BugPattern type="SCALA_PATH_TRAVERSAL_IN" abbrev="SSECPTI" category="SECURITY" cweid="22"/>
     <BugPattern type="COMMAND_INJECTION" abbrev="SECCI" category="SECURITY" cweid="78"/>
     <BugPattern type="SCALA_COMMAND_INJECTION" abbrev="SECSCI" category="SECURITY" cweid="78"/>
     <BugPattern type="WEAK_FILENAMEUTILS" abbrev="SECWF" category="SECURITY"/>

@@ -48,5 +48,8 @@ scala/collection/mutable/StringBuilder.subSequence(II)Ljava/lang/CharSequence;:2
 
 scala/collection/mutable/StringBuilder.toString()Ljava/lang/String;:0
 
+- Scala I/O
+scala/reflect/io/Path$.string2path(Ljava/lang/String;)Lscala/reflect/io/Path;:0
+
 - Scala Play framework MVC
 play/api/mvc/Results$Status.apply(Ljava/lang/Object;Lplay/api/http/Writeable;)Lplay/api/mvc/Result;:1

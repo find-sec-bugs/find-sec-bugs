@@ -10,6 +10,8 @@ scala/StringContext.s(Lscala/collection/Seq;)Ljava/lang/String;:0,1
 
 scala/Tuple2.<init>(Ljava/lang/Object;Ljava/lang/Object;)V:0,1#3
 
+scala/Option.get()Ljava/lang/Object;:0
+
 scala/collection/mutable/StringBuilder.<init>()V:SAFE
 scala/collection/mutable/StringBuilder.<init>(I)V:SAFE
 scala/collection/mutable/StringBuilder.<init>(Ljava/lang/String;)V:0#1,2
@@ -53,3 +55,4 @@ scala/reflect/io/Path$.string2path(Ljava/lang/String;)Lscala/reflect/io/Path;:0
 
 - Scala Play framework MVC
 play/api/mvc/Results$Status.apply(Ljava/lang/Object;Lplay/api/http/Writeable;)Lplay/api/mvc/Result;:1
+play/api/mvc/Cookie.<init>(Ljava/lang/String;Ljava/lang/String;Lscala/Option;Ljava/lang/String;Lscala/Option;ZZ)V:5,6#7,8

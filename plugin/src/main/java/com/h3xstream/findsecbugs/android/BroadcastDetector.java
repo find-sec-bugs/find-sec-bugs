@@ -37,11 +37,14 @@ public class BroadcastDetector extends OpcodeStackDetector {
         //printOpCode(seen);
 
         if (seen == Constants.INVOKEVIRTUAL &&
-                (getNameConstantOperand().equals("sendBroadcast") ||
-                getNameConstantOperand().equals("sendBroadcastAsUser") ||
-                getNameConstantOperand().equals("sendOrderedBroadcast") ||
-                getNameConstantOperand().equals("sendOrderedBroadcastAsUser")
-                )) {
+                (
+                    getNameConstantOperand().equals("sendBroadcast") ||
+                    getNameConstantOperand().equals("sendBroadcastAsUser") ||
+                    getNameConstantOperand().equals("sendOrderedBroadcast") ||
+                    getNameConstantOperand().equals("sendOrderedBroadcastAsUser")
+                )
+                && !getClassConstantOperand().endsWith("LocalBroadcastManager")     // The LocalBroadcastManager object is safe. The broadcast doesn't leave the application scope.
+                ) {
             bugReporter.reportBug(new BugInstance(this, ANDROID_BROADCAST_TYPE, Priorities.NORMAL_PRIORITY) //
                     .addClass(this).addMethod(this).addSourceLine(this));
         }

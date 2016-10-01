@@ -44,11 +44,11 @@ public class BroadcastDetectorTest extends BaseDetectorTest {
                         .bugType("ANDROID_BROADCAST") //
                         .inClass("BroadcastIntentActivity") //
                         .inMethod("onCreate") //
-                        .atLine(23) //
+                        .atLine(24) //
                         .build()
         );
 
-        int line = 25; //First line
+        int line = 26; //First line
         while(line++ < 30) {
             verify(reporter).doReportBug(
                     bugDefinition() //

@@ -18,6 +18,7 @@
 package com.h3xstream.findsecbugs.taintanalysis;
 
 import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
+
 import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.ba.CFG;
 import edu.umd.cs.findbugs.ba.DepthFirstSearch;
@@ -26,7 +27,9 @@ import edu.umd.cs.findbugs.classfile.IAnalysisCache;
 import edu.umd.cs.findbugs.classfile.IMethodAnalysisEngine;
 import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 import edu.umd.cs.findbugs.io.IO;
+
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -37,11 +40,12 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.apache.bcel.generic.MethodGen;
 
 /**
  * Requests or creates needed objects and execute taint analysis,
- * extends taint method summaries with analyzed methods
+ * extends taint summaries with analyzed methods
  * 
  * @author David Formanek (Y Soft Corporation, a.s.)
  */
@@ -49,8 +53,8 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
 
     private static final FindSecBugsGlobalConfig CONFIG = FindSecBugsGlobalConfig.getInstance();
     private static final Logger LOGGER = Logger.getLogger(TaintDataflowEngine.class.getName());
-    private static final String METHODS_SUMMARIES_PATH = "taint-config/";
-    private static final String[] METHODS_SUMMARIES_FILENAMES = {
+    private static final String TAINT_CONFIG_PATH = "taint-config/";
+    private static final String[] TAINT_CONFIG_FILENAMES = {
         "java-lang.txt",
         "java-ee.txt",
         "collections.txt",
@@ -58,6 +62,7 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
         "scala.txt",
         "logging.txt",
         "other.txt",
+        "portlet.txt"
     };
     private static final String SAFE_ENCODERS_PATH = "safe-encoders/";
     private static final String[] SAFE_ENCODERS_FILENAMES = {
@@ -65,7 +70,7 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
         "apache-commons.txt",
         "other.txt"
     };
-    private final TaintMethodSummaryMap methodSummaries = new TaintMethodSummaryMap();
+    private final TaintConfig taintConfig = new TaintConfig();
     private static Writer writer = null;
     
     static {
@@ -88,35 +93,37 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
      * Constructs the engine and loads all configured method summaries
      */
     public TaintDataflowEngine() {
-        for (String path : METHODS_SUMMARIES_FILENAMES) {
-            loadMethodSummaries(METHODS_SUMMARIES_PATH.concat(path), true);
+        for (String path : TAINT_CONFIG_FILENAMES) {
+            loadTaintConfig(TAINT_CONFIG_PATH.concat(path), true);
         }
         for (String path : SAFE_ENCODERS_FILENAMES) {
-            loadMethodSummaries(SAFE_ENCODERS_PATH.concat(path), true);
+            loadTaintConfig(SAFE_ENCODERS_PATH.concat(path), true);
         }
 
         // Override the sensitive data taints
-        loadMethodSummaries(METHODS_SUMMARIES_PATH.concat("taint-sensitive-data.txt"), false);
+        loadTaintConfig(TAINT_CONFIG_PATH.concat("taint-sensitive-data.txt"), false);
 
         if (CONFIG.isTaintedSystemVariables()) {
-            loadMethodSummaries(METHODS_SUMMARIES_PATH.concat("tainted-system-variables.txt"), false);
+            loadTaintConfig(TAINT_CONFIG_PATH.concat("tainted-system-variables.txt"), false);
             LOGGER.info("System variables are considered to be tainted");
         }
         String customConfigFile = CONFIG.getCustomConfigFile();
         if (customConfigFile != null && !customConfigFile.isEmpty()) {
-            addCustomSummaries(customConfigFile);
+            for (String configFile : customConfigFile.split(File.pathSeparator)) {
+                addCustomConfig(configFile);
+            }
         }
         if (!CONFIG.isTaintedMainArgument()) {
             LOGGER.info("The argument of the main method is not considered tainted");
         }
     }
     
-    private void loadMethodSummaries(String path, boolean checkRewrite) {
+    private void loadTaintConfig(String path, boolean checkRewrite) {
         assert path != null && !path.isEmpty();
         InputStream stream = null;
         try {
             stream = getClass().getClassLoader().getResourceAsStream(path);
-            methodSummaries.load(stream, checkRewrite);
+            taintConfig.load(stream, checkRewrite);
         } catch (IOException ex) {
             assert false : ex.getMessage();
         } finally {
@@ -124,14 +131,25 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
         }
     }
     
-    private void addCustomSummaries(String path) {
+    private void addCustomConfig(String path) {
         InputStream stream = null;
         try {
-            stream = new FileInputStream(path);
-            methodSummaries.load(stream, false);
+            File file = new File(path);
+            if (file.exists()) {
+                stream = new FileInputStream(file);
+            } else {
+                stream = getClass().getClassLoader().getResourceAsStream(path);
+            }
+            if (stream == null) {
+                String message = String.format("Could not add custom config. "
+                        + "Neither file %s nor resource matching %s found.",
+                        file.getAbsolutePath(), path);
+                throw new IllegalArgumentException(message);
+            }
+            taintConfig.load(stream, false);
             LOGGER.log(Level.INFO, "Custom taint config loaded from {0}", path);
         } catch (IOException ex) {
-            AnalysisContext.logError("cannot load custom taint config method summaries", ex);
+            throw new RuntimeException("Cannot load custom taint config from " + path, ex);
         } finally {
             IO.close(stream);
         }
@@ -143,12 +161,12 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
         CFG cfg = cache.getMethodAnalysis(CFG.class, descriptor);
         DepthFirstSearch dfs = cache.getMethodAnalysis(DepthFirstSearch.class, descriptor);
         MethodGen methodGen = cache.getMethodAnalysis(MethodGen.class, descriptor);
-        TaintAnalysis analysis = new TaintAnalysis(methodGen, dfs, descriptor, methodSummaries);
+        TaintAnalysis analysis = new TaintAnalysis(methodGen, dfs, descriptor, taintConfig);
         TaintDataflow flow = new TaintDataflow(cfg, analysis);
         flow.execute();
         analysis.finishAnalysis();
         if (CONFIG.isDebugOutputSummaries() && writer != null) {
-            TaintMethodSummary derivedSummary = methodSummaries.get(getSlashedMethodName(methodGen));
+            TaintMethodConfig derivedSummary = taintConfig.get(getSlashedMethodName(methodGen));
             if (derivedSummary != null) {
                 try {
                     writer.append(getSlashedMethodName(methodGen) + ":" + derivedSummary + "\n");

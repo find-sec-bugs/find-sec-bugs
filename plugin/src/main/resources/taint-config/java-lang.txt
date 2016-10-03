@@ -1,3 +1,41 @@
+-- Following classes are immutable
+Ljava/lang/String;:#IMMUTABLE
+Ljava/math/BigInteger;:#IMMUTABLE
+Ljava/io/File;:#IMMUTABLE
+Ljava/util/Locale;:#IMMUTABLE
+Ljava/net/Inet4Address;:#IMMUTABLE
+Ljava/net/Inet6Address;:#IMMUTABLE
+Ljava/net/InetSocketAddress;:#IMMUTABLE
+Ljava/net/URI;:#IMMUTABLE
+Ljava/net/URL;:#IMMUTABLE
+
+-- Following classes are SAFE (and also immutable)
+Ljava/lang/Boolean;:SAFE#IMMUTABLE
+Ljava/lang/Character;:SAFE#IMMUTABLE
+Ljava/lang/Double;:SAFE#IMMUTABLE
+Ljava/lang/Float;:SAFE#IMMUTABLE
+Ljava/lang/Integer;:SAFE#IMMUTABLE
+Ljava/lang/Long;:SAFE#IMMUTABLE
+Ljava/lang/Byte;:SAFE#IMMUTABLE
+Ljava/lang/Short;:SAFE#IMMUTABLE
+Ljava/math/BigDecimal;:SAFE#IMMUTABLE
+Ljava/util/Date;:SAFE#IMMUTABLE
+Ljava/sql/Time;:SAFE#IMMUTABLE
+Ljava/time/Duration;:SAFE#IMMUTABLE
+Ljava/time/Instant;:SAFE#IMMUTABLE
+Ljava/time/LocalDate;:SAFE#IMMUTABLE
+Ljava/time/LocalDateTime;:SAFE#IMMUTABLE
+Ljava/time/LocalTime;:SAFE#IMMUTABLE
+Ljava/time/MonthDay;:SAFE#IMMUTABLE
+Ljava/time/OffsetDateTime;:SAFE#IMMUTABLE
+Ljava/time/OffsetTime;:SAFE#IMMUTABLE
+Ljava/time/Period;:SAFE#IMMUTABLE
+Ljava/time/Year;:SAFE#IMMUTABLE
+Ljava/time/YearMonth;:SAFE#IMMUTABLE
+Ljava/time/ZonedDateTime;:SAFE#IMMUTABLE
+Ljava/time/ZonedId;:SAFE#IMMUTABLE
+Ljava/time/ZoneOffset;:SAFE#IMMUTABLE
+
 java/lang/Object.clone()Ljava/lang/Object;:0
 java/lang/Object.equals(Ljava/lang/Object;)Z:UNKNOWN
 

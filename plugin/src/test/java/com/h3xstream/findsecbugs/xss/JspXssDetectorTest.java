@@ -197,5 +197,20 @@ public class JspXssDetectorTest extends BaseDetectorTest {
         verify(reporter, times(1)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
     }
 
+    @Test
+    public void detectXssFalsePositiveDirectCast() throws Exception {
+        //Locate test code
+        String[] files = {
+            getJspFilePath("xss/xss_7_false_positive_direct_cast.jsp")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        //No alert should be trigger
+        verify(reporter, never()).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
+    }
+
 }
 

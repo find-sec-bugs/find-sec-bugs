@@ -434,6 +434,58 @@ by the user. If that is the case, the reported instance is a false positive.</p>
     </BugPattern>
     <BugCode abbrev="SECPTO">Potential Path Traversal (File Write)</BugCode>
 
+    <!-- Path traversal with a Scala-specific code sample -->
+    <BugPattern type="SCALA_PATH_TRAVERSAL_IN">
+        <ShortDescription>Potential Path Traversal (file read)</ShortDescription>
+        <LongDescription>{3} reads a file whose location might be specified by user input</LongDescription>
+        <Details>
+            <![CDATA[
+<p>A file is opened to read its content. The filename comes from an <b>input</b> parameter.
+If an unfiltered parameter is passed to this file API, files from an arbitrary filesystem location could be read.</p>
+<p>This rule identifies <b>potential</b> path traversal vulnerabilities. In many cases, the constructed file path cannot be controlled
+by the user. If that is the case, the reported instance is a false positive.</p>
+<br/>
+
+<p>
+    <b>Vulnerable Code:</b><br/>
+<pre>def getWordList(value:String) = Action {
+  if (!Files.exists(Paths.get("public/lists/" + value))) {
+    NotFound("File not found")
+  } else {
+    val result = Source.fromFile("public/lists/" + value).getLines().mkString // Weak point
+    Ok(result)
+  }
+}</pre>
+</p>
+<br/>
+
+<p>
+    <b>Solution:</b><br/>
+<pre>import org.apache.commons.io.FilenameUtils;
+
+def getWordList(value:String) = Action {
+  val filename = "public/lists/" + FilenameUtils.getName(value)
+
+  if (!Files.exists(Paths.get(filename))) {
+    NotFound("File not found")
+  } else {
+    val result = Source.fromFile(filename).getLines().mkString // Weak point
+    Ok(result)
+  }
+}</pre>
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246952/Path%20Traversal">WASC: Path Traversal</a><br/>
+<a href="https://www.owasp.org/index.php/Path_Traversal">OWASP: Path Traversal</a><br/>
+<a href="http://capec.mitre.org/data/definitions/126.html">CAPEC-126: Path Traversal</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/22.html">CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SSECPTI">Potential Path Traversal (file read)</BugCode>
 
     <!-- Command injection -->
     <Detector class="com.h3xstream.findsecbugs.injection.command.CommandInjectionDetector">
@@ -3901,13 +3953,13 @@ A potential XSS was found. It could be used to execute unwanted JavaScript in a 
 <p>
     <b>Vulnerable Code:</b>
 <pre>def doGet(value:String) = Action {
-    Ok("Hello "+value+" !").as("text/html")
+    Ok("Hello " + value + " !").as("text/html")
   }</pre>
 </p>
 <p>
     <b>Solution:</b>
 <pre>def doGet(value:String) = Action {
-    Ok("Hello "+value+" !").as("text/html")
+    Ok("Hello " + Encode.forHtml(value) + " !")
   }</pre>
 </p>
 <p>

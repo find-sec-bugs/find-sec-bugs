@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.android;
 
+import com.h3xstream.findsecbugs.common.InterfaceUtils;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
@@ -37,13 +38,21 @@ public class BroadcastDetector extends OpcodeStackDetector {
         //printOpCode(seen);
 
         if (seen == Constants.INVOKEVIRTUAL &&
-                (getNameConstantOperand().equals("sendBroadcast") ||
-                getNameConstantOperand().equals("sendBroadcastAsUser") ||
-                getNameConstantOperand().equals("sendOrderedBroadcast") ||
-                getNameConstantOperand().equals("sendOrderedBroadcastAsUser")
+                (
+                    getNameConstantOperand().equals("sendBroadcast") ||
+                    getNameConstantOperand().equals("sendBroadcastAsUser") ||
+                    getNameConstantOperand().equals("sendOrderedBroadcast") ||
+                    getNameConstantOperand().equals("sendOrderedBroadcastAsUser")
                 )) {
-            bugReporter.reportBug(new BugInstance(this, ANDROID_BROADCAST_TYPE, Priorities.NORMAL_PRIORITY) //
-                    .addClass(this).addMethod(this).addSourceLine(this));
+
+            // The LocalBroadcastManager object is safe. The broadcast doesn't leave the application scope.
+            // We check if the class extends android.support.v4.content.LocalBroadcastManager
+            // We will also check if the class is named "LocalBroadcastManager" in case the version in the namespace changes.
+            if (!InterfaceUtils.isSubtype(getClassConstantOperand(), "android.support.v4.content.LocalBroadcastManager")
+                    && !getClassConstantOperand().endsWith("LocalBroadcastManager")) {
+                bugReporter.reportBug(new BugInstance(this, ANDROID_BROADCAST_TYPE, Priorities.NORMAL_PRIORITY) //
+                        .addClass(this).addMethod(this).addSourceLine(this));
+            }
         }
     }
 }

@@ -1,0 +1,4 @@
+scala/io/Source$.fromFile(Ljava/lang/String;Lscala/io/Codec;)Lscala/io/BufferedSource;:1
+scala/io/Source$.fromFile(Ljava/lang/String;Ljava/lang/String;)Lscala/io/BufferedSource;:1
+scala/io/Source$.fromFile(Ljava/net/URI;Lscala/io/Codec;)Lscala/io/BufferedSource;:1
+scala/io/Source$.fromFile(Ljava/net/URI;Ljava/lang/String;)Lscala/io/BufferedSource;:1

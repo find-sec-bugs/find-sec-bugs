@@ -56,7 +56,7 @@ public class XssJspDetector extends BasicInjectionDetector {
             return super.getPriority(taint);
         }
     }
-    
+
     @Override
     public boolean shouldAnalyzeClass(ClassContext classContext) {
         String className = classContext.getClassDescriptor().getDottedClassName();

@@ -1,4 +1,8 @@
-package android.content;
+package android.support.v4.content;
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 
 public class LocalBroadcastManager {
     public static LocalBroadcastManager getInstance(Context context) { return new LocalBroadcastManager(); }

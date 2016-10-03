@@ -22,11 +22,35 @@ import edu.umd.cs.findbugs.ba.Hierarchy;
 import org.apache.bcel.classfile.JavaClass;
 
 public class InterfaceUtils {
-
-
+    /**
+     * Test if the given class is a subtype of ONE of the super classes given.
+     * <br/>
+     * The following test that the class is a subclass of Hashtable.
+     *
+     * <pre>
+     * boolean isHashtable = InterfaceUtils.isSubtype( classThatCouldBeAHashTable, "java.util.Hashtable");
+     * </pre>
+     *
+     * @param javaClass Class to test
+     * @param superClasses If classes extends or implements those classes
+     * @return
+     */
     public static boolean isSubtype(JavaClass javaClass, String... superClasses) {
         return isSubtype(javaClass.getClassName(),superClasses);
     }
+
+    /**
+     * Test if the given class is a subtype of ONE of the super classes given.
+     * <br/>
+     * The following test that the class is a subclass of Hashtable.
+     * <pre>
+     * boolean isHashtable = InterfaceUtils.isSubtype( classThatCouldBeAHashTable, "java.util.Hashtable");
+     * </pre>
+     *
+     * @param className Class to test
+     * @param superClasses If classes extends or implements those classes
+     * @return
+     */
     public static boolean isSubtype(String className, String... superClasses) {
         for(String potentialSuperClass : superClasses) {
             try {

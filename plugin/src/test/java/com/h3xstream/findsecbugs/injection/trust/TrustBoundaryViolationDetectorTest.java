@@ -21,21 +21,14 @@ import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-/**
- *
- */
 public class TrustBoundaryViolationDetectorTest extends BaseDetectorTest {
 
     @Test
-    public void detectUnvalidatedRedirect() throws Exception {
+    public void detectTBV() throws Exception {
         //Locate test code
         String[] files = {
                 getClassFilePath("testcode/trust/TrustBoundaryViolation")
@@ -50,12 +43,12 @@ public class TrustBoundaryViolationDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("TRUST_BOUNDARY_VIOLATION").inClass("TrustBoundaryViolation")
-                        .inMethod("setSessionAttributeNameTainted").withPriority("High").build()
+                        .inMethod("setSessionAttributeNameTainted").withPriority("Medium").build()
         );
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("TRUST_BOUNDARY_VIOLATION").inClass("TrustBoundaryViolation")
-                        .inMethod("setSessionAttributeValueTainted").withPriority("High").build()
+                        .inMethod("setSessionAttributeValueTainted").withPriority("Low").build()
         );
 
         //=== From unknown sources

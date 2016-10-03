@@ -41,10 +41,16 @@ public class TrustBoundaryViolationValueDetector extends BasicInjectionDetector 
      */
     @Override
     protected int getPriority(Taint taint) {
-        if (taint.isTainted()) {
-            return Priorities.HIGH_PRIORITY;
-        }
-        else if (!taint.isSafe()) {
+        //**Low risk**
+        //It is very common that variable are not sanetize and store in session.
+        //By it self it pose little risk. The thinking is the injection or the critical operation
+        //will be catch.
+        //After all storing value in the session is not so different to storing value in local variables or any indirection.
+        //**False positive**
+        //The usual and most common configuration is to hide LOW priority (confidence).
+        //This way this FP producer will not polute day to day review by developers.
+
+        if (taint.isTainted() || !taint.isSafe()) {
             return Priorities.LOW_PRIORITY;
         }
         else {

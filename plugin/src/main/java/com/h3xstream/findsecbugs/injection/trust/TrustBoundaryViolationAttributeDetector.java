@@ -57,8 +57,9 @@ public class TrustBoundaryViolationAttributeDetector extends BasicInjectionDetec
      */
     @Override
     protected int getPriority(Taint taint) {
+
         if (taint.isTainted()) {
-            return Priorities.HIGH_PRIORITY;
+            return Priorities.NORMAL_PRIORITY;
         }
         else if (!taint.isSafe()) {
             return Priorities.LOW_PRIORITY;

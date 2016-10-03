@@ -2,7 +2,7 @@ package testcode.trust;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class TrustBoundaryViolation {
+public class TrustBoundaryViolationAttribute {
 
     //Taint input
 
@@ -23,7 +23,7 @@ public class TrustBoundaryViolation {
     }
 
     public void setSessionAttributeValueUnknownSource(HttpServletRequest req, String input) {
-        req.getSession().setAttribute("user",input); //Reported as low
+        req.getSession().setAttribute("user",input);
     }
 
     //Legacy api
@@ -33,7 +33,7 @@ public class TrustBoundaryViolation {
     }
 
     public void setSessionAttributeValueUnknownSourceLegacy(HttpServletRequest req, String input) {
-        req.getSession().putValue("user",input); //Reported as low
+        req.getSession().putValue("user",input);
     }
 
     //Safe

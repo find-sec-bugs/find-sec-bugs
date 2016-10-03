@@ -3656,8 +3656,11 @@ Removing gadget is an hardening practice to reduce the risk of being exploited.
 
 
     <!-- Trust Boundary Violation -->
-    <Detector class="com.h3xstream.findsecbugs.TrustBoundaryViolationDetector">
-        <Details>Detect potential unwanted access to session attribute (Trust Boundary Violation).</Details>
+    <Detector class="com.h3xstream.findsecbugs.injection.trust.TrustBoundaryViolationValueDetector">
+        <Details>Detect potential unwanted access to session attribute value (Trust Boundary Violation).</Details>
+    </Detector>
+    <Detector class="com.h3xstream.findsecbugs.injection.trust.TrustBoundaryViolationAttributeDetector">
+        <Details>Detect potential unwanted access to session attribute name (Trust Boundary Violation).</Details>
     </Detector>
 
     <BugPattern type="TRUST_BOUNDARY_VIOLATION">

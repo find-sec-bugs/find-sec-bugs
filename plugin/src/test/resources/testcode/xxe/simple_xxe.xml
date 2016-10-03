@@ -1,0 +1,4 @@
+<!DOCTYPE xmhell [<!ENTITY xxe SYSTEM "http://csrf.me/findsecbugs" > ]>
+<xmhell>
+    <msg>Hello &xxe;</msg>
+</xmhell>

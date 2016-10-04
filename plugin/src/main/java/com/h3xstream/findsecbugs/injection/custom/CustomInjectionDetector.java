@@ -72,6 +72,9 @@ public class CustomInjectionDetector extends BasicInjectionDetector {
 
     private List<URL> getSystemProperty() {
         String propertyValue = FindSecBugsGlobalConfig.getInstance().loadFromSystem(SYSTEM_PROPERTY, "");
+        if(propertyValue.equals("")) {
+            return new ArrayList<URL>();
+        }
         String[] resourcePaths = propertyValue.split(",");
         List<URL> urls = new ArrayList<URL>(resourcePaths.length);
         for (String resourcePath : resourcePaths) {

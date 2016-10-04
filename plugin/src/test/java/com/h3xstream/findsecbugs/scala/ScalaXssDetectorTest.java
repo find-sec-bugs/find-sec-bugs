@@ -24,6 +24,7 @@ import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class ScalaXssDetectorTest extends BaseDetectorTest {
@@ -31,7 +32,7 @@ public class ScalaXssDetectorTest extends BaseDetectorTest {
     @Test
     public void detectXssInController() throws Exception {
         //FindSecBugsGlobalConfig.getInstance().setDebugPrintInstructionVisited(true);
-        //FindSecBugsGlobalConfig.getInstance().setDebugPrintInvocationVisited(false);
+        //FindSecBugsGlobalConfig.getInstance().setDebugPrintInvocationVisited(true);
         //FindSecBugsGlobalConfig.getInstance().setDebugTaintState(true);
 
         //Locate test code
@@ -73,13 +74,14 @@ public class ScalaXssDetectorTest extends BaseDetectorTest {
                         .build()
         );
 
-        // TODO: Verify the .scala.html files
-        //verify(reporter).doReportBug(
-        //        bugDefinition()
-        //                .bugType("SCALA_XSS_TWIRL")
-        //                .inClass("xssString").atLine(7)
-        //                .build()
-        //);
+        //XSS in xssString.scala.html
+        verify(reporter,times(1)).doReportBug(
+                bugDefinition()
+                        .bugType("SCALA_XSS_TWIRL")
+                        .inClass("views.html.xssString_Scope0$xssString")
+                        //.atLine(31)
+                        .build()
+        );
 
 
         //Assertions for safe calls and false positives

@@ -22,6 +22,7 @@ import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
@@ -44,12 +45,12 @@ public class XxeDetectorTest extends BaseDetectorTest {
                         .inClass("SaxParserVulnerable").inMethod("receiveXMLStream").atLine(22)
                         .build()
         );
-        Mockito.verify(reporter, Mockito.never()).doReportBug(
+        Mockito.verify(reporter, never()).doReportBug(
                 bugDefinition()
                         .bugType("XXE_XMLREADER")
                         .build()
         );
-        Mockito.verify(reporter, Mockito.never()).doReportBug(
+        Mockito.verify(reporter, never()).doReportBug(
                 bugDefinition()
                         .bugType("XXE_DOCUMENT")
                         .build()
@@ -65,21 +66,21 @@ public class XxeDetectorTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = Mockito.spy(new SecurityReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         //Assertions
-        Mockito.verify(reporter, Mockito.never()).doReportBug(
+        Mockito.verify(reporter, never()).doReportBug(
                 bugDefinition()
                         .bugType("XXE_SAXPARSER")
                         .build()
         );
-        Mockito.verify(reporter, Mockito.never()).doReportBug(
+        Mockito.verify(reporter, never()).doReportBug(
                 bugDefinition()
                         .bugType("XXE_XMLREADER")
                         .build()
         );
-        Mockito.verify(reporter, Mockito.never()).doReportBug(
+        Mockito.verify(reporter, never()).doReportBug(
                 bugDefinition()
                         .bugType("XXE_DOCUMENT")
                         .build()
@@ -95,21 +96,21 @@ public class XxeDetectorTest extends BaseDetectorTest {
         };
 
         //Run the analysis
-        EasyBugReporter reporter = Mockito.spy(new SecurityReporter());
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
         //Assertions
-        Mockito.verify(reporter, Mockito.never()).doReportBug(
+        verify(reporter, never()).doReportBug(
                 bugDefinition()
                         .bugType("XXE_SAXPARSER")
                         .build()
         );
-        Mockito.verify(reporter, Mockito.never()).doReportBug(
+        verify(reporter, never()).doReportBug(
                 bugDefinition()
                         .bugType("XXE_XMLREADER")
                         .build()
         );
-        Mockito.verify(reporter, Mockito.never()).doReportBug(
+        verify(reporter, never()).doReportBug(
                 bugDefinition()
                         .bugType("XXE_DOCUMENT")
                         .build()

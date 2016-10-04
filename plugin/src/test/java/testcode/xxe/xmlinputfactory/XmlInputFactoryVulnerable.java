@@ -3,15 +3,13 @@ package testcode.xxe.xmlinputfactory;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.events.XMLEvent;
-import java.io.FileInputStream;
 import java.io.InputStream;
 
-public class XmlnputFactoryVulnerable {
+public class XmlInputFactoryVulnerable {
 
 
     public static void main(String[] args) throws Exception {
-        new XmlnputFactoryVulnerable().loadXml();
+        new XmlInputFactoryVulnerable().loadXml();
     }
 
     public void loadXml() throws XMLStreamException {
@@ -24,7 +22,7 @@ public class XmlnputFactoryVulnerable {
     }
 
     public void parseXMLdefaultValue(InputStream input) throws XMLStreamException {
-        StringBuilder content = new StringBuilder();
+
         XMLInputFactory factory = XMLInputFactory.newFactory();
 //        factory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
 //        factory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
@@ -35,7 +33,7 @@ public class XmlnputFactoryVulnerable {
     }
 
     public void parseXMLwithWrongFlag(InputStream input) throws XMLStreamException {
-        StringBuilder content = new StringBuilder();
+
         XMLInputFactory factory = XMLInputFactory.newFactory();
         factory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, true);
         factory.setProperty(XMLInputFactory.SUPPORT_DTD, true);

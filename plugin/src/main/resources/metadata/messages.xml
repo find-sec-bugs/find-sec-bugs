@@ -4079,4 +4079,78 @@ which explains these defenses in significant detail.
     </BugPattern>
     <BugCode abbrev="SECSXSS">Potential XSS in Scala MVC API</BugCode>
 
+    <!-- Potential template injection with Velocity -->
+    <Detector class="com.h3xstream.findsecbugs.template.VelocityDetector">
+        <Details>Identify usage of the Velocity template engine.</Details>
+    </Detector>
+    <BugPattern type="TEMPLATE_INJECTION_VELOCITY">
+        <ShortDescription>Potential template injection with Velocity</ShortDescription>
+        <LongDescription>Potential template injection with Velocity template</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Velocity template engine is powerful. It is possible to add logic including condition statements, loops and external calls.
+It is not design to be sandbox to templating operations. A malicious user in control of a template can run malicious code
+on the server-side. Velocity templates should be seen as scripts.
+</p>
+<p>
+    <b>Vulnerable Code:</b>
+<pre>[...]
+
+Velocity.evaluate(context, swOut, "test", userInput);</pre>
+</p>
+<p>
+    <b>Solution:</b>
+<br/>
+Avoid letting end users manipulate templates with Velocity. If you need to expose template editing to your users,
+prefer logic-less template engines such as Handlebars or Moustache (See references).
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="http://blog.portswigger.net/2015/08/server-side-template-injection.html">PortSwigger: Server-Side Template Injection </a><br/>
+<a href="https://jknack.github.io/handlebars.java/">Handlebars.java</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECVELO">Potential template injection with Velocity</BugCode>
+
+    <!-- Potential template injection with Freemarker -->
+    <Detector class="com.h3xstream.findsecbugs.template.FreemarkerDetector">
+        <Details>Identify usage of the Freemarker template engine.</Details>
+    </Detector>
+    <BugPattern type="TEMPLATE_INJECTION_FREEMARKER">
+        <ShortDescription>Potential template injection with Freemarker</ShortDescription>
+        <LongDescription>Potential template injection with Freemarker template</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Freemarker template engine is powerful. It is possible to add logic including condition statements, loops and external calls.
+It is not design to be sandbox to templating operations. A malicious user in control of a template can run malicious code
+on the server-side. Freemarker templates should be seen as scripts.
+</p>
+<p>
+    <b>Vulnerable Code:</b>
+<pre>[...]
+
+Velocity.evaluate(context, swOut, "test", userInput);</pre>
+</p>
+<p>
+    <b>Solution:</b>
+<br/>
+Avoid letting end users manipulate templates with Freemarker. If you need to expose template editing to your users,
+prefer logic-less template engines such as Handlebars or Moustache (See references).
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="http://blog.portswigger.net/2015/08/server-side-template-injection.html">PortSwigger: Server-Side Template Injection </a><br/>
+<a href="https://jknack.github.io/handlebars.java/">Handlebars.java</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECFREEM">Potential template injection with Velocity</BugCode>
+
 </MessageCollection>

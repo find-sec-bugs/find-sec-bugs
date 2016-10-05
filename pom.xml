@@ -63,6 +63,7 @@
                         <exclude>**/groovy/lang/**.java</exclude>
                         <exclude>**/scala/**.java</exclude>
                         <exclude>**/**/ReadMe.java</exclude>
+                        <exclude>**/freemarker/template/**/**.java</exclude>
                     </excludes>
                     <properties>
                         <project>Find Security Bugs</project>

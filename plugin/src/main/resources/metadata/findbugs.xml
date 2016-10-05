@@ -86,6 +86,8 @@
     <Detector class="com.h3xstream.findsecbugs.scala.ScalaSensitiveDataExposureDetector" reports="SCALA_SENSITIVE_DATA_EXPOSURE"/>
     <Detector class="com.h3xstream.findsecbugs.scala.XssMvcApiDetector" reports="SCALA_XSS_MVC_API" />
     <Detector class="com.h3xstream.findsecbugs.scala.XssTwirlDetector" reports="SCALA_XSS_TWIRL" />
+    <Detector class="com.h3xstream.findsecbugs.template.VelocityDetector" reports="TEMPLATE_INJECTION_VELOCITY" />
+    <Detector class="com.h3xstream.findsecbugs.template.FreemarkerDetector" reports="TEMPLATE_INJECTION_FREEMARKER" />
 
     <BugPattern type="PREDICTABLE_RANDOM" abbrev="SECPR" category="SECURITY" cweid="330"/>
     <BugPattern type="PREDICTABLE_RANDOM_SCALA" abbrev="SECPRS" category="SECURITY" cweid="330"/>
@@ -178,5 +180,7 @@
     <BugPattern type="SCALA_SENSITIVE_DATA_EXPOSURE" abbrev="SECSDL" category="SECURITY" cweid="200"/>
     <BugPattern type="SCALA_XSS_TWIRL" abbrev="SECSXSST" category="SECURITY" cweid="79"/>
     <BugPattern type="SCALA_XSS_MVC_API" abbrev="SECSXSS" category="SECURITY" cweid="79"/>
+    <BugPattern type="TEMPLATE_INJECTION_VELOCITY" abbrev="SECVELO" category="SECURITY" cweid="94"/>
+    <BugPattern type="TEMPLATE_INJECTION_FREEMARKER" abbrev="SECFREEM" category="SECURITY" cweid="94"/>
 
 </FindbugsPlugin>

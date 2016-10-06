@@ -52,11 +52,12 @@ def buildMapping(InputStream xmlStream) {
 
 //Version and download links
 
-downloadUrl = "http://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/1.4.6/findsecbugs-plugin-1.4.6.jar"
-mavenCentralSearch = "http://search.maven.org/#search|gav|1|g:%22com.h3xstream.findsecbugs%22 AND a:%22findsecbugs-plugin%22"
-releaseNotesUrl = "https://github.com/find-sec-bugs/find-sec-bugs/releases"
-latestVersion = "1.4.6"
-latestUpdateDate = "2nd June 2016"
+
+latestVersion = "1.5.0"
+downloadUrl = "https://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/${latestVersion}/findsecbugs-plugin-${latestVersion}.jar"
+mavenCentralSearch = "https://search.maven.org/#search|gav|1|g:%22com.h3xstream.findsecbugs%22 AND a:%22findsecbugs-plugin%22"
+releaseNotesUrl = "https://github.com/find-sec-bugs/find-sec-bugs/releases/latest" //This link redirect to the latest release
+latestUpdateDate = "6th October 2016"
 
 //Screenshots
 

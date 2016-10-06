@@ -4132,9 +4132,9 @@ on the server-side. Freemarker templates should be seen as scripts.
 </p>
 <p>
     <b>Vulnerable Code:</b>
-<pre>[...]
-
-Velocity.evaluate(context, swOut, "test", userInput);</pre>
+<pre>Template template = cfg.getTemplate(inputTemplate);
+[...]
+template.process(data, swOut);</pre>
 </p>
 <p>
     <b>Solution:</b>
@@ -4151,6 +4151,6 @@ prefer logic-less template engines such as Handlebars or Moustache (See referenc
             ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECFREEM">Potential template injection with Velocity</BugCode>
+    <BugCode abbrev="SECFREEM">Potential template injection with Freemarker</BugCode>
 
 </MessageCollection>

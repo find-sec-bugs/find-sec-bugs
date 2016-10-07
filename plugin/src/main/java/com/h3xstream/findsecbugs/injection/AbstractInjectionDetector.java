@@ -94,7 +94,7 @@ public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
                 if (sinkSet == null) {
                     sinkSet = new HashSet<InjectionSink>();
                 }
-                assert !sinkSet.contains(injectionSink) : "duplicit sink";
+                assert !sinkSet.contains(injectionSink) : "duplicate sink";
                 sinkSet.add(injectionSink);
                 injectionSinks.put(currentMethod, sinkSet);
                 sinkTaints.put(new MethodAndSink(currentMethod, injectionSink), parameterTaint);

@@ -2393,6 +2393,10 @@ The code should be replaced with:<br/>
         <Details>Identify hardcoded credentials in context initialization</Details>
     </Detector>
 
+    <Detector class="com.h3xstream.findsecbugs.password.IntuitiveHardcodePasswordDetector">
+        <Details>Identify hardcoded credentials in custom API.</Details>
+    </Detector>
+
     <BugPattern type="HARD_CODE_PASSWORD">
         <ShortDescription>Hard Coded Password</ShortDescription>
         <LongDescription>Hard coded password found</LongDescription>

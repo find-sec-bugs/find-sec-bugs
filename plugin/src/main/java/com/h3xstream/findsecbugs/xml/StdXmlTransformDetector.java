@@ -20,6 +20,10 @@ package com.h3xstream.findsecbugs.xml;
 import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
 import edu.umd.cs.findbugs.BugReporter;
 
+/**
+ * Detect XSLT transformation.
+ * The risk will exist if an end-user can control the template.
+ */
 public class StdXmlTransformDetector extends BasicInjectionDetector {
 
     public StdXmlTransformDetector(BugReporter bugReporter) {

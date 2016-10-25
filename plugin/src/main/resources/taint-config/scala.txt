@@ -56,3 +56,6 @@ scala/reflect/io/Path$.string2path(Ljava/lang/String;)Lscala/reflect/io/Path;:0
 - Scala Play framework MVC
 play/api/mvc/Results$Status.apply(Ljava/lang/Object;Lplay/api/http/Writeable;)Lplay/api/mvc/Result;:1
 play/api/mvc/Cookie.<init>(Ljava/lang/String;Ljava/lang/String;Lscala/Option;Ljava/lang/String;Lscala/Option;ZZ)V:5,6#7,8
+
+- Scala WebService Library
+play/api/libs/ws/WS$.url(Ljava/lang/String;Lplay/api/Application;)Lplay/api/libs/ws/WSRequest;:1

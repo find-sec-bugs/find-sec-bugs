@@ -3997,6 +3997,47 @@ Path traversal <sup>[3][4]</sup> are not possible.
     </BugPattern>
     <BugCode abbrev="SECSDL">Configuration or system information leakage</BugCode>
 
+    <!-- Scala Play Server Side Request Forgery -->
+    <Detector class="com.h3xstream.findsecbugs.scala.SSRFDetector">
+        <Details>Identify potential Scala Play Server-Side Request Forgery (SSRF)</Details>
+    </Detector>
+    <BugPattern type="SCALA_PLAY_SSRF">
+        <ShortDescription>Scala Play Server-Side Request Forgery (SSRF)</ShortDescription>
+        <LongDescription>This web server request could be used by an attacker to expose internal services.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    Server-Side Request Forgery occur when a web server executes a request to a user supplied destination
+    parameter that is not validated. Such vulnerabilities could allow an attacker to access internal services
+    or to launch attacks from your web server.
+</p>
+<p>
+    <b>Vulnerable Code:</b>
+<pre>def doGet(value:String) = Action {
+    WS.url(value).get().map { response =>
+        Ok(response.body)
+    }
+}</pre>
+</p>
+<p>
+    <b>Solution/Countermeasures:</b><br/>
+    <ul>
+        <li>Don't accept request destinations from users</li>
+        <li>Accept a destination key, and use it to look up the target (legal) destination</li>
+        <li>White list URLs (if possible)</li>
+        <li>Validate that the beginning of the URL is part of a white list</li>
+    </ul>
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://cwe.mitre.org/data/definitions/918.html">CWE-918: Server-Side Request Forgery (SSRF)</a><br/>
+<a href="https://www.bishopfox.com/blog/2015/04/vulnerable-by-design-understanding-server-side-request-forgery/">Understanding Server-Side Request Forgery</a><br/>
+</p>
+            ]]></Details>
+    </BugPattern>
+    <BugCode abbrev="SECSSSRF">Scala Play Server-Side Request Forgery</BugCode>
+
     <!-- XSS in Scala Play Twirl template engine -->
     <Detector class="com.h3xstream.findsecbugs.scala.XssTwirlDetector">
         <Details>Identify potential Cross-Site Scripting in Scala Twirl template engine.</Details>

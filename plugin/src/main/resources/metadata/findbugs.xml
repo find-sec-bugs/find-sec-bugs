@@ -85,6 +85,7 @@
     <Detector class="com.h3xstream.findsecbugs.scala.PlayUnvalidatedRedirectDetector" reports="PLAY_UNVALIDATED_REDIRECT" />
     <Detector class="com.h3xstream.findsecbugs.scala.SslDisablerDetector" reports="WEAK_TRUST_MANAGER,WEAK_HOSTNAME_VERIFIER"/>
     <Detector class="com.h3xstream.findsecbugs.scala.ScalaSensitiveDataExposureDetector" reports="SCALA_SENSITIVE_DATA_EXPOSURE"/>
+    <Detector class="com.h3xstream.findsecbugs.scala.SSRFDetector" reports="SCALA_PLAY_SSRF"/>
     <Detector class="com.h3xstream.findsecbugs.scala.XssMvcApiDetector" reports="SCALA_XSS_MVC_API" />
     <Detector class="com.h3xstream.findsecbugs.scala.XssTwirlDetector" reports="SCALA_XSS_TWIRL" />
     <Detector class="com.h3xstream.findsecbugs.template.VelocityDetector" reports="TEMPLATE_INJECTION_VELOCITY" />
@@ -179,6 +180,7 @@
     <BugPattern type="DESERIALIZATION_GADGET" abbrev="SECDESGAD" category="SECURITY" cweid="502"  experimental="true"/>
     <BugPattern type="TRUST_BOUNDARY_VIOLATION" abbrev="SECTBV" category="SECURITY" cweid="501"/>
     <BugPattern type="SCALA_SENSITIVE_DATA_EXPOSURE" abbrev="SECSDL" category="SECURITY" cweid="200"/>
+    <BugPattern type="SCALA_PLAY_SSRF" abbrev="SECSSSRF" category="SECURITY" cweid="918"/>
     <BugPattern type="SCALA_XSS_TWIRL" abbrev="SECSXSST" category="SECURITY" cweid="79"/>
     <BugPattern type="SCALA_XSS_MVC_API" abbrev="SECSXSS" category="SECURITY" cweid="79"/>
     <BugPattern type="TEMPLATE_INJECTION_VELOCITY" abbrev="SECVELO" category="SECURITY" cweid="94"/>

@@ -19,6 +19,7 @@ package com.h3xstream.findsecbugs.scala;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
+import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import org.testng.annotations.Test;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -52,14 +53,14 @@ public class SSRFDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("SCALA_PLAY_SSRF")
-                        .inClass("SSRFController").inMethod("vulnerablePost").atLine(29)
+                        .inClass("SSRFController").inMethod("vulnerablePost").atLine(28)
                         .build()
         );
 
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("SCALA_PLAY_SSRF")
-                        .inClass("SSRFController").inMethod("vulnerablePost").atLine(33)
+                        .inClass("SSRFController").inMethod("vulnerablePost").atLine(32)
                         .build()
         );
 
@@ -67,7 +68,7 @@ public class SSRFDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("SCALA_PLAY_SSRF")
-                        .inClass("SSRFController").inMethod("vulnerablePost").atLine(38)
+                        .inClass("SSRFController").inMethod("vulnerablePost").atLine(37)
                         .build()
         );
 
@@ -75,13 +76,13 @@ public class SSRFDetectorTest extends BaseDetectorTest {
 
         verify(reporter, never()).doReportBug(
                 bugDefinition()
-                        .bugType("SCALA_XSS_MVC_API")
+                        .bugType("SCALA_PLAY_SSRF")
                         .inClass("SSRFController").inMethod("safeGetNotTainted")
                         .build()
         );
         verify(reporter, never()).doReportBug(
                 bugDefinition()
-                        .bugType("SCALA_XSS_TWIRL")
+                        .bugType("SCALA_PLAY_SSRF")
                         .inClass("SSRFController").inMethod("safePostNotTainted")
                         .build()
         );

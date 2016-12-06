@@ -42,18 +42,18 @@ public class UnencryptedSocketDetectorTest extends BaseDetectorTest {
 
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("UNENCRYPTED_SOCKET")
-                        .inClass("UnencryptedSocket")
-                        .inMethod("plainSocket")
-                        .atLine(23)
+                        .bugType("UNENCRYPTED_SERVER_SOCKET")
+                        .inClass("UnencryptedServerSocket")
+                        .inMethod("plainServerSocket")
+                        .atLine(16)
                         .build()
         );
 
-        for (Integer line : Arrays.asList(28, 31, 34)) {
+        for (Integer line : Arrays.asList(21, 23, 26)) {
             verify(reporter).doReportBug(
                     bugDefinition()
-                            .bugType("UNENCRYPTED_SOCKET")
-                            .inClass("UnencryptedSocket")
+                            .bugType("UNENCRYPTED_SERVER_SOCKET")
+                            .inClass("UnencryptedServerSocket")
                             .inMethod("otherConstructors")
                             .atLine(line)
                             .build()

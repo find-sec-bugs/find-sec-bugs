@@ -46,7 +46,7 @@
               reports="HAZELCAST_SYMMETRIC_ENCRYPTION"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.NullCipherDetector" reports="NULL_CIPHER"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.UnencryptedSocketDetector" reports="UNENCRYPTED_SOCKET"/>
-    <Detector class="com.h3xstream.findsecbugs.crypto.UnencryptedServerSocketDetector" reports="UNENCRYPTED_SOCKET"/>
+    <Detector class="com.h3xstream.findsecbugs.crypto.UnencryptedServerSocketDetector" reports="UNENCRYPTED_SERVER_SOCKET"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.DesUsageDetector" reports="DES_USAGE"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.RsaNoPaddingDetector" reports="RSA_NO_PADDING"/>
     <Detector class="com.h3xstream.findsecbugs.password.ConstantPasswordDetector" reports="HARD_CODE_PASSWORD,HARD_CODE_KEY"/>

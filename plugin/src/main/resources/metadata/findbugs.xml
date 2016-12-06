@@ -141,6 +141,7 @@
     <BugPattern type="HAZELCAST_SYMMETRIC_ENCRYPTION" abbrev="SECHAZ" category="SECURITY" cweid="327"/>
     <BugPattern type="NULL_CIPHER" abbrev="SECNC" category="SECURITY" cweid="327"/>
     <BugPattern type="UNENCRYPTED_SOCKET" abbrev="SECUS" category="SECURITY" cweid="319"/>
+    <BugPattern type="UNENCRYPTED_SERVER_SOCKET" abbrev="SECUSS" category="SECURITY" cweid="319"/>
     <BugPattern type="DES_USAGE" abbrev="SECDU" category="SECURITY" cweid="326"/>
     <BugPattern type="RSA_NO_PADDING" abbrev="SECRNP" category="SECURITY" cweid="780"/>
     <BugPattern type="HARD_CODE_PASSWORD" abbrev="SECHCP" category="SECURITY" cweid="259"/>

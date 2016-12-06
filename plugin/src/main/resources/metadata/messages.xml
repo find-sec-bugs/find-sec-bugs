@@ -2307,6 +2307,10 @@ to do this correctly.
         </Details>
     </BugPattern>
     <BugCode abbrev="SECUS">Unencrypted Socket</BugCode>
+    <!-- Unencrypted Server Socket encryption -->
+    <Detector class="com.h3xstream.findsecbugs.crypto.UnencryptedServerSocketDetector">
+        <Details>Unencrypted Server Socket</Details>
+    </Detector>
     <BugPattern type="UNENCRYPTED_SERVER_SOCKET">
         <ShortDescription>Unencrypted Server Socket</ShortDescription>
         <LongDescription>Unencrypted server socket (instead of SSLServerSocket)</LongDescription>

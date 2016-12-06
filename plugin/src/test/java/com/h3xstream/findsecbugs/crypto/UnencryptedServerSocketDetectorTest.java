@@ -33,7 +33,7 @@ public class UnencryptedServerSocketDetectorTest extends BaseDetectorTest {
     public void detectUnencryptedSocket() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/crypto/UnencryptedSocket")
+                getClassFilePath("testcode/crypto/UnencryptedServerSocket")
         };
 
         //Run the analysis

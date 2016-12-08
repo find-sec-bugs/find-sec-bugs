@@ -46,6 +46,7 @@
               reports="HAZELCAST_SYMMETRIC_ENCRYPTION"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.NullCipherDetector" reports="NULL_CIPHER"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.UnencryptedSocketDetector" reports="UNENCRYPTED_SOCKET"/>
+    <Detector class="com.h3xstream.findsecbugs.crypto.UnencryptedServerSocketDetector" reports="UNENCRYPTED_SERVER_SOCKET"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.DesUsageDetector" reports="DES_USAGE"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.RsaNoPaddingDetector" reports="RSA_NO_PADDING"/>
     <Detector class="com.h3xstream.findsecbugs.password.ConstantPasswordDetector" reports="HARD_CODE_PASSWORD,HARD_CODE_KEY"/>
@@ -140,6 +141,7 @@
     <BugPattern type="HAZELCAST_SYMMETRIC_ENCRYPTION" abbrev="SECHAZ" category="SECURITY" cweid="327"/>
     <BugPattern type="NULL_CIPHER" abbrev="SECNC" category="SECURITY" cweid="327"/>
     <BugPattern type="UNENCRYPTED_SOCKET" abbrev="SECUS" category="SECURITY" cweid="319"/>
+    <BugPattern type="UNENCRYPTED_SERVER_SOCKET" abbrev="SECUSS" category="SECURITY" cweid="319"/>
     <BugPattern type="DES_USAGE" abbrev="SECDU" category="SECURITY" cweid="326"/>
     <BugPattern type="RSA_NO_PADDING" abbrev="SECRNP" category="SECURITY" cweid="780"/>
     <BugPattern type="HARD_CODE_PASSWORD" abbrev="SECHCP" category="SECURITY" cweid="259"/>

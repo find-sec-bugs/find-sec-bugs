@@ -1558,7 +1558,7 @@ such a setter. The use of these parameters should be reviewed to make sure they 
         <LongDescription>{0} is a Spring endpoint (Controller)</LongDescription>
         <Details>
             <![CDATA[
-<p>This class is a Spring Controller. All methods annotated with <code>RequestMapping</code> are reachable remotely.
+<p>This class is a Spring Controller. All methods annotated with <code>RequestMapping</code> (as well as its shortcut annotations <code>GetMapping</code>, <code>PostMapping</code>, <code>PutMapping</code>, <code>DeleteMapping</code>, and <code>PatchMapping</code>) are reachable remotely.
 This class should be analyzed to make sure that remotely exposed methods are safe to expose to potential attackers.</p>
 ]]>
         </Details>

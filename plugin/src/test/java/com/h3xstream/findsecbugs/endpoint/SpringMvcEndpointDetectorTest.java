@@ -58,8 +58,23 @@ public class SpringMvcEndpointDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition().bugType("SPRING_ENDPOINT").inMethod("hello6").build()
         );
+        verify(reporter).doReportBug(
+                bugDefinition().bugType("SPRING_ENDPOINT").inMethod("helloGet").build()
+        );
+        verify(reporter).doReportBug(
+                bugDefinition().bugType("SPRING_ENDPOINT").inMethod("helloPost").build()
+        );
+        verify(reporter).doReportBug(
+                bugDefinition().bugType("SPRING_ENDPOINT").inMethod("helloPut").build()
+        );
+        verify(reporter).doReportBug(
+                bugDefinition().bugType("SPRING_ENDPOINT").inMethod("helloDelete").build()
+        );
+        verify(reporter).doReportBug(
+                bugDefinition().bugType("SPRING_ENDPOINT").inMethod("helloPatch").build()
+        );
 
-        verify(reporter, times(6)).doReportBug(
+        verify(reporter, times(11)).doReportBug(
                 bugDefinition().bugType("SPRING_ENDPOINT").build()
         );
     }

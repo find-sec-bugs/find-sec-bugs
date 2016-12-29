@@ -55,7 +55,7 @@
 
 
         <dependency>
-            <groupId>org.apache.commons</groupId>
+            <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <scope>test</scope>
         </dependency>

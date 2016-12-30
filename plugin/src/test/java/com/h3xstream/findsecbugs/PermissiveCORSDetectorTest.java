@@ -44,15 +44,36 @@ public class PermissiveCORSDetectorTest extends BaseDetectorTest {
                         .inClass("PermissiveCORS").inMethod("addPermissiveCORS").atLine(25)
                         .build()
         );
-        //2nd variation resp.setHeader("Access-Control-Allow-Origin", "*");
+        //2nd - lower case: resp.addHeader("access-control-allow-origin", "*")
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("PERMISSIVE_CORS")
-                        .inClass("PermissiveCORS").inMethod("setPermissiveCORS").atLine(29)
+                        .inClass("PermissiveCORS").inMethod("addPermissiveCORS2").atLine(29)
+                        .build()
+        );
+        //3rd - wildcards: resp.addHeader("Access-Control-Allow-Origin", "*.example.com")
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("PERMISSIVE_CORS")
+                        .inClass("PermissiveCORS").inMethod("addWildcardsCORS").atLine(33)
+                        .build()
+        );
+        //4th - null Origin: resp.addHeader("Access-Control-Allow-Origin", "null")
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("PERMISSIVE_CORS")
+                        .inClass("PermissiveCORS").inMethod("addNullCORS").atLine(37)
+                        .build()
+        );
+        //5th - set instead of add: resp.setHeader("Access-Control-Allow-Origin", "*");
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("PERMISSIVE_CORS")
+                        .inClass("PermissiveCORS").inMethod("setPermissiveCORS").atLine(41)
                         .build()
         );
 
-        verify(reporter, times(2)).doReportBug(
+        verify(reporter, times(5)).doReportBug(
                 bugDefinition()
                         .bugType("PERMISSIVE_CORS")
                         .build()

@@ -81,8 +81,9 @@ public class PermissiveCORSDetector implements Detector {
 
                     LDC ldc = ByteCode.getPrevInstruction(location.getHandle().getPrev(), LDC.class);
                     if (ldc != null) {
-                        if ("Access-Control-Allow-Origin".equals(ldc.getValue(cpg)) &&
-                            "*".equals(ByteCode.getConstantLDC(location.getHandle().getPrev(), cpg, String.class))) {
+                        String headerValue = ByteCode.getConstantLDC(location.getHandle().getPrev(), cpg, String.class);
+                        if ("Access-Control-Allow-Origin".equalsIgnoreCase((String)ldc.getValue(cpg)) &&
+                            (headerValue.contains("*") || "null".equalsIgnoreCase(headerValue))) {
 
                             JavaClass clz = classContext.getJavaClass();
                             bugReporter.reportBug(new BugInstance(this, PERMISSIVE_CORS, Priorities.HIGH_PRIORITY)

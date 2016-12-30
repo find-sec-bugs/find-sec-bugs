@@ -25,6 +25,18 @@ public class PermissiveCORS extends HttpServlet {
         resp.addHeader("Access-Control-Allow-Origin", "*");
     }
 
+    public void addPermissiveCORS2(HttpServletResponse resp) {
+        resp.addHeader("access-control-allow-origin", "*");
+    }
+
+    public void addWildcardsCORS(HttpServletResponse resp) {
+        resp.addHeader("Access-Control-Allow-Origin", "*.example.com");
+    }
+
+    public void addNullCORS(HttpServletResponse resp) {
+        resp.addHeader("Access-Control-Allow-Origin", "null");
+    }
+
     public void setPermissiveCORS(HttpServletResponse resp) {
         resp.setHeader("Access-Control-Allow-Origin", "*");
     }

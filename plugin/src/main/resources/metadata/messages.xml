@@ -4348,4 +4348,46 @@ cookie.setMaxAge(60*60*24*365);
     </BugPattern>
     <BugCode abbrev="SECCP">Persistent Cookie Usage</BugCode>
 
+
+    <!-- URL Rewriting Methods -->
+    <Detector class="com.h3xstream.findsecbugs.cookie.UrlRewritingDetector">
+        <Details>Detect the URL rewriting methods.
+        </Details>
+    </Detector>
+
+    <BugPattern type="URL_REWRITING">
+        <ShortDescription>URL rewriting method</ShortDescription>
+        <LongDescription>Method rewriting session ID into the URL</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+The implementation of this method includes the logic to determine whether the session ID needs to be encoded in the URL.<br/>
+URL rewriting has significant security risks. Since session ID appears in the URL, it may be easily seen by third parties. Session ID in the URL can be disclosed in many ways, for example:<br/>
+<ul>
+    <li>Log files,</li>
+    <li>The browser history,</li>
+    <li>By copy-and-pasting it into an e-mail or posting,</li>
+    <li>The HTTP Referrer.</li>
+</ul>
+</p>
+<p>
+    <b>Vulnerable Code:</b><br/>
+<pre>out.println("Click &lt;a href=" + 
+                res.encodeURL(HttpUtils.getRequestURL(req).toString()) + 
+                "&gt;here&lt;/a&gt;");</pre>
+</p>
+<p>
+    <b>Solution:</b><br/>
+Avoid using those methods. If you are looking to encode a URL String or form parameters do not confuse the URL rewriting methods with the URLEncoder class.
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2010-A3-Broken_Authentication_and_Session_Management">OWASP Top 10 2010-A3-Broken Authentication and Session Management</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECURLR">URL Rewriting Methods</BugCode>
+
 </MessageCollection>

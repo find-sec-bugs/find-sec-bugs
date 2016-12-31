@@ -4236,4 +4236,39 @@ prefer logic-less template engines such as Handlebars or Moustache (See referenc
     </BugPattern>
     <BugCode abbrev="SECFREEM">Potential template injection with Freemarker</BugCode>
 
+    
+    <!-- LDAP anonymous bind detector -->
+    <Detector class="com.h3xstream.findsecbugs.AnonymousLdapDetector">
+        <Details>Identify use of anonymous LDAP bind</Details>
+    </Detector>
+    <BugPattern type="LDAP_ANONYMOUS">
+        <ShortDescription>Anonymous LDAP bind</ShortDescription>
+        <LongDescription>Anonymous LDAP bind</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Without proper access control, executing an LDAP statement that contains a user-controlled value can allow an attacker to abuse poorly configured LDAP environment. All LDAP queries executed against ctx will be performed without authentication and access control. An attacker may be able to manipulate one of these queries in an unexpected way to gain access to records that would otherwise be protected by the directory's access control mechanism.
+</p>
+<p>
+    <b>Vulnerable Code:</b>
+<pre>...
+env.put(Context.SECURITY_AUTHENTICATION, "none");
+DirContext ctx = new InitialDirContext(env);
+...</pre>
+</p>
+<p>
+    <b>Solution:</b>
+<br/>
+Consider other modes of authentication to LDAP and ensure proper access control mechanism.
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://docs.oracle.com/javase/tutorial/jndi/ldap/auth_mechs.html">Ldap Authentication Mechanisms</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="LDAPA">Anonymous LDAP bind</BugCode>
+
 </MessageCollection>

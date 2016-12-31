@@ -91,7 +91,9 @@
     <Detector class="com.h3xstream.findsecbugs.scala.XssTwirlDetector" reports="SCALA_XSS_TWIRL" />
     <Detector class="com.h3xstream.findsecbugs.template.VelocityDetector" reports="TEMPLATE_INJECTION_VELOCITY" />
     <Detector class="com.h3xstream.findsecbugs.template.FreemarkerDetector" reports="TEMPLATE_INJECTION_FREEMARKER" />
+    <Detector class="com.h3xstream.findsecbugs.PermissiveCORSDetector" reports="PERMISSIVE_CORS"/>
 
+    <BugPattern type="PERMISSIVE_CORS" abbrev="SECCORS" category="SECURITY"/>
     <BugPattern type="PREDICTABLE_RANDOM" abbrev="SECPR" category="SECURITY" cweid="330"/>
     <BugPattern type="PREDICTABLE_RANDOM_SCALA" abbrev="SECPRS" category="SECURITY" cweid="330"/>
     <BugPattern type="SERVLET_PARAMETER" abbrev="SECSP" category="SECURITY"/>

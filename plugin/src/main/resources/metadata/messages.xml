@@ -4236,4 +4236,39 @@ prefer logic-less template engines such as Handlebars or Moustache (See referenc
     </BugPattern>
     <BugCode abbrev="SECFREEM">Potential template injection with Freemarker</BugCode>
 
+
+    <!-- Overly permissive CORS policy -->
+    <Detector class="com.h3xstream.findsecbugs.PermissiveCORSDetector">
+        <Details>Detect overly permissive CORS policy.
+        </Details>
+    </Detector>
+
+    <BugPattern type="PERMISSIVE_CORS">
+        <ShortDescription>Overly permissive CORS policy</ShortDescription>
+        <LongDescription>The program defines an overly permissive Cross-Origin Resource Sharing (CORS) policy</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Prior to HTML5, Web browsers enforced the Same Origin Policy which ensures that in order for JavaScript to access the contents of a Web page, both the JavaScript and the Web page must originate from the same domain. Without the Same Origin Policy, a malicious website could serve up JavaScript that loads sensitive information from other websites using a client's credentials, cull through it, and communicate it back to the attacker. HTML5 makes it possible for JavaScript to access data across domains if a new HTTP header called Access-Control-Allow-Origin is defined. With this header, a Web server defines which other domains are allowed to access its domain using cross-origin requests. However, caution should be taken when defining the header because an overly permissive CORS policy will allow a malicious application to communicate with the victim application in an inappropriate way, leading to spoofing, data theft, relay and other attacks.
+</p>
+<p>
+    <b>Vulnerable Code:</b>
+<pre>response.addHeader("Access-Control-Allow-Origin", "*");</pre>
+</p>
+<p>
+    <b>Solution:</b>
+<br/>
+Avoid using * as the value of the Access-Control-Allow-Origin header, which indicates that the application's data is accessible to JavaScript running on any domain.
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://www.w3.org/TR/cors/">W3C Cross-Origin Resource Sharing</a><br/>
+<a href="http://enable-cors.org/">Enable Cross-Origin Resource Sharing</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECCORS">Overly permissive CORS policy</BugCode>
+
 </MessageCollection>

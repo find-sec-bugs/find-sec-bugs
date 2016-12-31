@@ -93,7 +93,9 @@
     <Detector class="com.h3xstream.findsecbugs.template.FreemarkerDetector" reports="TEMPLATE_INJECTION_FREEMARKER" />
     <Detector class="com.h3xstream.findsecbugs.AnonymousLdapDetector" reports="LDAP_ANONYMOUS"/>
     <Detector class="com.h3xstream.findsecbugs.PermissiveCORSDetector" reports="PERMISSIVE_CORS"/>
+    <Detector class="com.h3xstream.findsecbugs.cookie.PersistentCookieDetector" reports="COOKIE_PERSISTENT" />
 
+    <BugPattern type="COOKIE_PERSISTENT" abbrev="SECCP" category="SECURITY"/>
     <BugPattern type="LDAP_ANONYMOUS" abbrev="LDAPA" category="SECURITY"/>
     <BugPattern type="PERMISSIVE_CORS" abbrev="SECCORS" category="SECURITY"/>
     <BugPattern type="PREDICTABLE_RANDOM" abbrev="SECPR" category="SECURITY" cweid="330"/>

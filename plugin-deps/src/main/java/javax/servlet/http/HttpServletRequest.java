@@ -14,6 +14,8 @@ public interface HttpServletRequest extends ServletRequest {
 
     String getRequestedSessionId();
 
+    String getRequestURI();
+
     Cookie[] getCookies();
 
     HttpSession getSession();

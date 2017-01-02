@@ -4305,4 +4305,47 @@ Consider other modes of authentication to LDAP and ensure proper access control 
     </BugPattern>
     <BugCode abbrev="LDAPA">Anonymous LDAP bind</BugCode>
 
+
+    <!-- Persistent Cookie Usage-->
+    <Detector class="com.h3xstream.findsecbugs.cookie.PersistentCookieDetector">
+        <Details>Identify persistent cookie usage</Details>
+    </Detector>
+    <BugPattern type="COOKIE_PERSISTENT">
+        <ShortDescription>Persistent Cookie Usage</ShortDescription>
+        <LongDescription>Cookie Set To Expire In 1 Year Or More</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Storing sensitive data in a persistent cookie for an extended period of time can lead to a breach of confidentiality or account compromise. 
+</p>
+<p>
+    <b>Explanation:</b><br/>
+If private information is stored in persistent cookies, attackers have a larger time window in which to steal this data - especially since persistent cookies are often set to expire in the distant future. Persistent cookies are generally stored in a text file on the client and an attacker with access to the victim's machine can steal this information.<br/>
+Persistent cookies are often used to profile users as they interact with a site. Depending on what is done with this tracking data, it is possible to use persistent cookies to violate users' privacy.
+</p>
+<p>
+    <b>Vulnerable Code:</b> The following code sets a cookie to expire in 1 year.<br/>
+<pre>[...]
+Cookie cookie = new Cookie("email", email);
+cookie.setMaxAge(60*60*24*365);
+[...]</pre>
+</p>
+<p>
+    <b>Solution:</b><br/>
+<ul>
+    <li>Use persistent cookies only if necessary and limit their maximum age.</li>
+    <li>Don't use persistent cookies for sensitive data.</li>
+</ul>
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://tomcat.apache.org/tomcat-5.5-doc/servletapi/javax/servlet/http/Cookie.html#setMaxAge%28int%29">Class Cookie setMaxAge documentation</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/539.html">CWE-539: Information Exposure Through Persistent Cookies</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECCP">Persistent Cookie Usage</BugCode>
+
 </MessageCollection>

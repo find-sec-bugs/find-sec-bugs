@@ -29,9 +29,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.apache.bcel.Repository;
+import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InvokeInstruction;
@@ -57,11 +60,35 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
     protected InjectionPoint getInjectionPoint(InvokeInstruction invoke, ConstantPoolGen cpg,
             InstructionHandle handle) {
         assert invoke != null && cpg != null;
-        InjectionPoint injectionPoint = injectionMap.get(getFullMethodName(invoke, cpg));
-        if (injectionPoint == null) {
-            return InjectionPoint.NONE;
+
+        //1. Verify if the class used has a known sink
+        String fullMethodName = getFullMethodName(invoke, cpg);
+        //This will skip the most common lookup
+        if("java/lang/Object.<init>()V".equals(fullMethodName)) return InjectionPoint.NONE;
+
+        InjectionPoint injectionPoint = injectionMap.get(fullMethodName);
+        if (injectionPoint != null) {
+            return injectionPoint;
         }
-        return injectionPoint;
+
+        try {
+            //2. Verify if the super classes match a known sink
+            JavaClass classDef = Repository.lookupClass(invoke.getClassName(cpg));
+            for(JavaClass superClass : classDef.getSuperClasses()) {
+                if("java.lang.Object".equals(superClass.getClassName())) continue;
+
+                String superClassFullMethodName = superClass.getClassName().replace('.','/')+"." + invoke.getMethodName(cpg) + invoke.getSignature(cpg);
+
+                injectionPoint = injectionMap.get(superClassFullMethodName);
+                if (injectionPoint != null) {
+                    return injectionPoint;
+                }
+            }
+        } catch (ClassNotFoundException e) {
+            AnalysisContext.reportMissingClass(e);
+        }
+
+        return InjectionPoint.NONE;
     }
 
     protected void loadConfiguredSinks(InputStream stream, String bugType) throws IOException {
@@ -161,7 +188,7 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
     }
 
     protected void addParsedInjectionPoint(String fullMethodName, InjectionPoint injectionPoint) {
-        assert !injectionMap.containsKey(fullMethodName);
+        assert !injectionMap.containsKey(fullMethodName): "Duplicate method name loaded: "+fullMethodName;
         injectionMap.put(fullMethodName, injectionPoint);
     }
     

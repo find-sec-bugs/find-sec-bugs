@@ -49,7 +49,7 @@ public class WeakMessageDigestDetectorTest extends BaseDetectorTest {
             );
         }
         //SHA1
-        for(int line : Arrays.asList(20,24)) {
+        for(int line : Arrays.asList(20,24,28)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("WEAK_MESSAGE_DIGEST_SHA1")
@@ -65,7 +65,7 @@ public class WeakMessageDigestDetectorTest extends BaseDetectorTest {
                         .build()
         );
 
-        verify(reporter,times(2)).doReportBug(
+        verify(reporter,times(3)).doReportBug(
                 bugDefinition()
                         .bugType("WEAK_MESSAGE_DIGEST_SHA1")
                         .inClass("WeakMessageDigest").inMethod("main")
@@ -85,7 +85,7 @@ public class WeakMessageDigestDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         //Message Digest
-        for(int line = 41; line<=48;line++) {
+        for(int line = 45; line<=52;line++) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("WEAK_MESSAGE_DIGEST_MD5")
@@ -94,7 +94,7 @@ public class WeakMessageDigestDetectorTest extends BaseDetectorTest {
             );
         }
 
-        for(int line = 50; line<=57;line++) {
+        for(int line = 54; line<=61;line++) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("WEAK_MESSAGE_DIGEST_SHA1")
@@ -140,18 +140,18 @@ public class WeakMessageDigestDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("WEAK_MESSAGE_DIGEST_MD5")
-                        .inClass("WeakMessageDigestAdditionalSig").inMethod("weakDigestMoreSig").atLine(28)
+                        .inClass("WeakMessageDigestAdditionalSig").inMethod("weakDigestMoreSig").atLine(30)
                         .build()
         );
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("WEAK_MESSAGE_DIGEST_MD5")
-                        .inClass("WeakMessageDigestAdditionalSig").inMethod("weakDigestMoreSig").atLine(29)
+                        .inClass("WeakMessageDigestAdditionalSig").inMethod("weakDigestMoreSig").atLine(31)
                         .build()
         );
 
         //SHA-1 Assertions
-        for(int line = 21; line <= 24; line++) {
+        for(int line = 21; line <= 26; line++) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("WEAK_MESSAGE_DIGEST_SHA1")
@@ -162,7 +162,7 @@ public class WeakMessageDigestDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("WEAK_MESSAGE_DIGEST_SHA1")
-                        .inClass("WeakMessageDigestAdditionalSig").inMethod("weakDigestMoreSig").atLine(30)
+                        .inClass("WeakMessageDigestAdditionalSig").inMethod("weakDigestMoreSig").atLine(32)
                         .build()
         );
 
@@ -172,7 +172,7 @@ public class WeakMessageDigestDetectorTest extends BaseDetectorTest {
                         .inClass("WeakMessageDigestAdditionalSig").inMethod("weakDigestMoreSig")
                         .build()
         );
-        verify(reporter,times(5)).doReportBug(
+        verify(reporter,times(7)).doReportBug(
                 bugDefinition()
                         .bugType("WEAK_MESSAGE_DIGEST_SHA1")
                         .inClass("WeakMessageDigestAdditionalSig").inMethod("weakDigestMoreSig")

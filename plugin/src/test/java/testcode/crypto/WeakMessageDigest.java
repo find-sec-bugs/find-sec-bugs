@@ -17,13 +17,17 @@ public class WeakMessageDigest {
         md5Digest.update("123".getBytes());
         printHex(md5Digest.digest());
 
-        MessageDigest sha1Digest = MessageDigest.getInstance("SHA1");
+        MessageDigest sha1Digest = MessageDigest.getInstance("SHA");
         sha1Digest.update("123".getBytes());
         printHex(sha1Digest.digest());
-
-        MessageDigest sha1Digest2 = MessageDigest.getInstance("SHA-1");
+        
+        MessageDigest sha1Digest2 = MessageDigest.getInstance("SHA1");
         sha1Digest2.update("123".getBytes());
         printHex(sha1Digest2.digest());
+
+        MessageDigest sha1Digest3 = MessageDigest.getInstance("SHA-1");
+        sha1Digest3.update("123".getBytes());
+        printHex(sha1Digest3.digest());
 
         MessageDigest sha256Digest = MessageDigest.getInstance("SHA256"); //OK!
         sha256Digest.update("123".getBytes());

@@ -68,7 +68,7 @@ org/springframework/jdbc/core/JdbcOperations.update(Ljava/lang/String;[Ljava/lan
 org/springframework/jdbc/core/JdbcOperations.update(Ljava/lang/String;[Ljava/lang/Object;[I)I:2
 org/springframework/jdbc/core/JdbcOperations.update(Ljava/lang/String;Lorg/springframework/jdbc/core/PreparedStatementSetter;)I:1
 
-
+-JdbcTemplate is implementing JdbcOperations
 org/springframework/jdbc/core/JdbcTemplate.batchUpdate([Ljava/lang/String;)[I:0
 org/springframework/jdbc/core/JdbcTemplate.batchUpdate(Ljava/lang/String;Lorg/springframework/jdbc/core/BatchPreparedStatementSetter;)[I:1
 org/springframework/jdbc/core/JdbcTemplate.batchUpdate(Ljava/lang/String;Ljava/util/Collection;ILorg/springframework/jdbc/core/ParameterizedPreparedStatementSetter;)[[I:3

@@ -43,13 +43,19 @@ public class InsufficientKeySizeRsaDetectorTest extends BaseDetectorTest {
         for (Integer line : Arrays.asList(14, 21, 29, 37)) {
             verify(reporter).doReportBug(
                     bugDefinition().bugType("RSA_KEY_SIZE")
-                            .inClass("InsufficientKeySizeRsa").atLine(line)
+                            .inClass("InsufficientKeySizeRsa").withPriority("Medium").atLine(line)
                             .build()
             );
         }
 
-        //More than two means a false positive was trigger
-        verify(reporter, times(4)).doReportBug(
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("RSA_KEY_SIZE")
+                        .inClass("InsufficientKeySizeRsa").inMethod("weakKeySize5Recommended").withPriority("Low").atLine(45)
+                        .build()
+        );
+
+        verify(reporter, times(5)).doReportBug(
                 bugDefinition().bugType("RSA_KEY_SIZE").build());
     }
 }

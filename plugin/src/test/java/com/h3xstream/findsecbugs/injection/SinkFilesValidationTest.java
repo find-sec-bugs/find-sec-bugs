@@ -26,6 +26,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.fail;
+
 import org.testng.annotations.Test;
 
 public class SinkFilesValidationTest {
@@ -63,12 +65,14 @@ public class SinkFilesValidationTest {
     public void validateClass(String className) {
         if(className.endsWith("$")) return; //Skipping Scala class
         if(className.startsWith("play.")) return; //Temporary skip Play
+        if(className.contains(".log")) return;
+        if(className.contains(".Log")) return;
+        if(className.equals("javax.naming.directory.Context")) return; //FIXME: It seems to be a error in the LDAP configuration file
         try {
             Class.forName(className);
         } catch (ClassNotFoundException e) {
-            if(!className.contains("log")) { //Temporary the logging API are not validate
-                System.err.println("[!] Class not found "+className); //FIXME: Replace with assert
-            }
+            System.err.println("[!] Class not found "+className);
+            fail("Method configurations were added for a class that does not exist. It is likely a typographical error or because the API was not tested.");
         }
     }
 

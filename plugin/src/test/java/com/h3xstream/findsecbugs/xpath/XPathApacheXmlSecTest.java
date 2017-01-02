@@ -25,7 +25,7 @@ public class XPathApacheXmlSecTest extends BaseDetectorTest {
 
 
         //Assertions
-        for (Integer line : Arrays.asList(17, 18)) {
+        for (Integer line : Arrays.asList(19, 20, 25, 26, 30, 31)) {
             verify(reporter).doReportBug(
                     bugDefinition().bugType("XPATH_INJECTION")
                             .inClass("XPathApacheXmlSec").inMethod("main").atLine(line)
@@ -34,7 +34,7 @@ public class XPathApacheXmlSecTest extends BaseDetectorTest {
         }
 
         //More than three means a false positive was trigger
-        verify(reporter, times(2)).doReportBug(
+        verify(reporter, times(6)).doReportBug(
                 bugDefinition().bugType("XPATH_INJECTION").build());
     }
 }

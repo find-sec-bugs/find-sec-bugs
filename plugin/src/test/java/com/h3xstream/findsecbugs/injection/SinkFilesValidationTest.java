@@ -61,7 +61,8 @@ public class SinkFilesValidationTest {
 
 
     public void validateClass(String className) {
-        if(className.startsWith("scala")) return;
+        if(className.endsWith("$")) return; //Skipping Scala class
+        if(className.startsWith("play.")) return; //Temporary skip Play
         try {
             Class.forName(className);
         } catch (ClassNotFoundException e) {

@@ -21,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
 import org.apache.bcel.Constants;
 
 /**
@@ -56,7 +57,7 @@ public class SinksLoader {
     }
 
     protected void loadSinks(InputStream input, String bugType, InjectionPointReceiver receiver) throws IOException {
-        assert input != null && bugType != null && !bugType.isEmpty();
+        assert input != null && bugType != null && !bugType.isEmpty() : "Sinks file not found";
         BufferedReader reader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
         for (;;) {
             String line = reader.readLine();

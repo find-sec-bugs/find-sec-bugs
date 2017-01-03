@@ -22,14 +22,15 @@ import com.h3xstream.findbugs.test.EasyBugReporter;
 import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class TurbineSqlDetectorTest extends BaseDetectorTest {
+/**
+ * Those tests are identical to TurbineSqlDetectorTest.
+ */
+public class TorqueSqlDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectInjection() throws Exception {
@@ -37,22 +38,18 @@ public class TurbineSqlDetectorTest extends BaseDetectorTest {
 
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/sqli/TurbineSql"),
-                getClassFilePath("org/apache/turbine/om/peer/BasePeer"),
-                getClassFilePath("org/apache/turbine/om/security/peer/GroupPeer"),
-                getClassFilePath("org/apache/turbine/util/db/Criteria"),
-                getClassFilePath("org/apache/turbine/util/db/pool/DBConnection")
+                getClassFilePath("testcode/sqli/TorqueSql")
         };
 
         //Run the analysis
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        for (Integer line : range(9,14)) {
+        for (Integer line : range(8,13)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("SQL_INJECTION_TURBINE")
-                            .inClass("TurbineSql")
+                            .inClass("TorqueSql")
                             .inMethod("injection1").atLine(line)
                             .build()
             );
@@ -62,17 +59,17 @@ public class TurbineSqlDetectorTest extends BaseDetectorTest {
         verify(reporter, times(6)).doReportBug(
                 bugDefinition()
                         .bugType("SQL_INJECTION_TURBINE")
-                        .inClass("TurbineSql")
+                        .inClass("TorqueSql")
                         .inMethod("injection1")
                         .build()
         );
 
 
-        for (Integer line : range(18,23)) {
+        for (Integer line : range(17,22)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("SQL_INJECTION_TURBINE")
-                            .inClass("TurbineSql")
+                            .inClass("TorqueSql")
                             .inMethod("injection2").atLine(line)
                             .build()
             );
@@ -82,54 +79,17 @@ public class TurbineSqlDetectorTest extends BaseDetectorTest {
         verify(reporter, times(6)).doReportBug(
                 bugDefinition()
                         .bugType("SQL_INJECTION_TURBINE")
-                        .inClass("TurbineSql")
+                        .inClass("TorqueSql")
                         .inMethod("injection2")
                         .build()
         );
 
-        for (Integer line : range(27,32)) {
-            verify(reporter).doReportBug(
-                    bugDefinition()
-                            .bugType("SQL_INJECTION_TURBINE")
-                            .inClass("TurbineSql")
-                            .inMethod("injection3").atLine(line)
-                            .build()
-            );
-        }
-
-        //Only 6 bugs are expected
-        verify(reporter, times(6)).doReportBug(
-                bugDefinition()
-                        .bugType("SQL_INJECTION_TURBINE")
-                        .inClass("TurbineSql")
-                        .inMethod("injection3")
-                        .build()
-        );
-
-        for (Integer line : range(36,41)) {
-            verify(reporter).doReportBug(
-                    bugDefinition()
-                            .bugType("SQL_INJECTION_TURBINE")
-                            .inClass("TurbineSql")
-                            .inMethod("injection4").atLine(line)
-                            .build()
-            );
-        }
-
-        //Only 6 bugs are expected
-        verify(reporter, times(6)).doReportBug(
-                bugDefinition()
-                        .bugType("SQL_INJECTION_TURBINE")
-                        .inClass("TurbineSql")
-                        .inMethod("injection4")
-                        .build()
-        );
 
         //Only 6 bugs are expected
         verify(reporter, never()).doReportBug(
                 bugDefinition()
                         .bugType("SQL_INJECTION_TURBINE")
-                        .inClass("TurbineSql")
+                        .inClass("TorqueSql")
                         .inMethod("falsePositive")
                         .build()
         );

@@ -1,0 +1,13 @@
+org/apache/turbine/om/peer/BasePeer.executeQuery(Ljava/lang/String;)Ljava/util/Vector;:0
+org/apache/turbine/om/peer/BasePeer.executeQuery(Ljava/lang/String;Ljava/lang/String;)Ljava/util/Vector;:1
+org/apache/turbine/om/peer/BasePeer.executeQuery(Ljava/lang/String;Ljava/lang/String;Z)Ljava/util/Vector;:2
+org/apache/turbine/om/peer/BasePeer.executeQuery(Ljava/lang/String;ZLorg/apache/turbine/util/db/pool/DBConnection;)Ljava/util/Vector;:2
+org/apache/turbine/om/peer/BasePeer.executeQuery(Ljava/lang/String;IIZLorg/apache/turbine/util/db/pool/DBConnection;)Ljava/util/Vector;:4
+org/apache/turbine/om/peer/BasePeer.executeQuery(Ljava/lang/String;IILjava/lang/String;Z)Ljava/util/Vector;:4
+
+org/apache/torque/util/BasePeer.executeQuery(Ljava/lang/String;)Ljava/util/Vector;:0
+org/apache/torque/util/BasePeer.executeQuery(Ljava/lang/String;Ljava/lang/String;)Ljava/util/Vector;:1
+org/apache/torque/util/BasePeer.executeQuery(Ljava/lang/String;Ljava/lang/String;Z)Ljava/util/Vector;:2
+org/apache/torque/util/BasePeer.executeQuery(Ljava/lang/String;ZLorg/apache/turbine/util/db/pool/DBConnection;)Ljava/util/Vector;:2
+org/apache/torque/util/BasePeer.executeQuery(Ljava/lang/String;IIZLorg/apache/turbine/util/db/pool/DBConnection;)Ljava/util/Vector;:4
+org/apache/torque/util/BasePeer.executeQuery(Ljava/lang/String;IILjava/lang/String;Z)Ljava/util/Vector;:4

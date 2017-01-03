@@ -11,15 +11,17 @@ Website : http://find-sec-bugs.github.io/
 
 ## Notable contributions
 
- - [David Formánek](https://github.com/formanek) : 
+ - [David Formánek](https://github.com/formanek)
    - Major improvements and refactoring on the taint analysis for injections.
    - The creation of a detector for Hard coded passwords and cryptographic keys.
+ - [Tomáš Polešovský](https://github.com/topolik)
+   - Improvements and bug fixes related to the the taint analysis.
  - [Maxime Nadeau](https://github.com/MaxNad)
    - New detectors surrounding the Play Framework and improvements related to Scala.
- - [Naoki Kimura](https://github.com/naokikimura) : 
+ - [Naoki Kimura](https://github.com/naokikimura)
    - Detector for [injection in custom API](http://h3xstream.github.io/find-sec-bugs/bugs.htm#CUSTOM_INJECTION)
    - Translation of [messages in Japanese](http://h3xstream.github.io/find-sec-bugs/bugs_ja.htm)
- - [Dave Wichers](https://github.com/davewichers) :
+ - [Dave Wichers](https://github.com/davewichers)
    - Improvement to vulnerability descriptions
 
 ## Screenshots

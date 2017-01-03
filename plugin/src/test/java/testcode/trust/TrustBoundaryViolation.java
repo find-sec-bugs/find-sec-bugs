@@ -23,7 +23,7 @@ public class TrustBoundaryViolation {
     }
 
     public void setSessionAttributeValueUnknownSource(HttpServletRequest req, String input) {
-        req.getSession().setAttribute("user",input);
+        req.getSession().setAttribute("user",input); //Reported as low
     }
 
     //Legacy api
@@ -33,7 +33,7 @@ public class TrustBoundaryViolation {
     }
 
     public void setSessionAttributeValueUnknownSourceLegacy(HttpServletRequest req, String input) {
-        req.getSession().putValue("user",input);
+        req.getSession().putValue("user",input); //Reported as low
     }
 
     //Safe

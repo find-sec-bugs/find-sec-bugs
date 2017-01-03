@@ -33,7 +33,18 @@ public class XssServletDetector extends BasicInjectionDetector {
         "Ljavax/servlet/http/ServletResponse;",
         "Ljavax/servlet/http/ServletResponseWrapper;",
         "Ljavax/servlet/http/HttpServletResponse;",
-        "Ljavax/servlet/http/HttpServletResponseWrapper;"
+        "Ljavax/servlet/http/HttpServletResponseWrapper;",
+        "Lorg/apache/jetspeed/portlet/PortletResponse;",
+        "Lorg/apache/jetspeed/portlet/PortletResponseWrapper;",
+        "Ljavax/portlet/RenderResponse;",
+        "Ljavax/portlet/MimeResponse;",
+        "Ljavax/portlet/filter/RenderResponseWrapper;",
+        "Ljavax/portlet/PortletResponse;",
+        "Ljavax/portlet/ActionResponseWrapper;",
+        "Ljavax/portlet/EventResponseWrapper;",
+        "Ljavax/portlet/PortletResponseWrapper;",
+        "Ljavax/portlet/RenderResponseWrapper;",
+        "Ljavax/portlet/ResourceResponseWrapper;",
     };
 
     public XssServletDetector(BugReporter bugReporter) {
@@ -41,7 +52,7 @@ public class XssServletDetector extends BasicInjectionDetector {
         loadConfiguredSinks("xss-servlet.txt", XSS_SERVLET_TYPE);
     }
 
-     @Override
+    @Override
     protected int getPriority(Taint taint) {
         if (!taint.isSafe() && taint.hasTag(Taint.Tag.XSS_SAFE)) {
             if(FindSecBugsGlobalConfig.getInstance().isReportPotentialXssWrongContext()) {

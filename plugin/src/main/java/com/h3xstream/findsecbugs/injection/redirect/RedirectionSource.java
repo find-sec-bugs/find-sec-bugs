@@ -45,7 +45,7 @@ public class RedirectionSource implements InjectionSource {
                     LDC ldc = ByteCode.getPrevInstruction(insHandle, LDC.class);
                     if (ldc != null) {
                         Object value = ldc.getValue(cpg);
-                        if ("Location".equals(value)) {
+                        if (value != null && "Location".equalsIgnoreCase((String) value)) {
                             InjectionPoint ip = new InjectionPoint(new int[]{0}, UNVALIDATED_REDIRECT_TYPE);
                             ip.setInjectableMethod(className + "." + methodName + "(\"Location\", ...)");
                             return ip;

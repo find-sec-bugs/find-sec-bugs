@@ -45,8 +45,6 @@ import static com.h3xstream.findsecbugs.common.matcher.InstructionDSL.invokeInst
  */
 public class ReDosDetector extends OpcodeStackDetector {
 
-    private static final boolean DEBUG = true;
-
     private static final String REDOS_TYPE = "REDOS";
 
     private static final char[] OPENING_CHAR = {'(', '['};

@@ -20,7 +20,7 @@
               reports="SERVLET_PARAMETER,SERVLET_CONTENT_TYPE,SERVLET_SERVER_NAME,SERVLET_SESSION_ID,SERVLET_QUERY_STRING,SERVLET_HEADER,SERVLET_HEADER_REFERER,SERVLET_HEADER_USER_AGENT"/>
     <Detector class="com.h3xstream.findsecbugs.cookie.CookieReadDetector" reports="COOKIE_USAGE"/>
     <Detector class="com.h3xstream.findsecbugs.cookie.CookieFlagsDetector" reports="INSECURE_COOKIE,HTTPONLY_COOKIE"/>
-    <Detector class="com.h3xstream.findsecbugs.file.PathTraversalDetector" reports="PATH_TRAVERSAL_IN,PATH_TRAVERSAL_OUT"/>
+    <Detector class="com.h3xstream.findsecbugs.file.PathTraversalDetector" reports="PATH_TRAVERSAL_IN,PATH_TRAVERSAL_OUT,SCALA_PATH_TRAVERSAL_IN"/>
     <Detector class="com.h3xstream.findsecbugs.injection.command.CommandInjectionDetector" reports="COMMAND_INJECTION,SCALA_COMMAND_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.WeakFilenameUtilsMethodDetector" reports="WEAK_FILENAMEUTILS"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.WeakTrustManagerDetector" reports="WEAK_TRUST_MANAGER,WEAK_HOSTNAME_VERIFIER"/>
@@ -33,6 +33,7 @@
     <Detector class="com.h3xstream.findsecbugs.file.FileUploadFilenameDetector" reports="FILE_UPLOAD_FILENAME"/>
     <Detector class="com.h3xstream.findsecbugs.ReDosDetector" reports="REDOS"/>
     <Detector class="com.h3xstream.findsecbugs.xml.XxeDetector" reports="XXE_SAXPARSER,XXE_XMLREADER,XXE_DOCUMENT"/>
+    <Detector class="com.h3xstream.findsecbugs.xml.XmlStreamReaderDetector" reports="XXE_XMLSTREAMREADER"/>
     <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionDetector" reports="XPATH_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.endpoint.Struts1EndpointDetector" reports="STRUTS1_ENDPOINT"/>
     <Detector class="com.h3xstream.findsecbugs.endpoint.Struts2EndpointDetector" reports="STRUTS2_ENDPOINT"/>
@@ -50,6 +51,7 @@
     <Detector class="com.h3xstream.findsecbugs.password.ConstantPasswordDetector" reports="HARD_CODE_PASSWORD,HARD_CODE_KEY"/>
     <Detector class="com.h3xstream.findsecbugs.password.GoogleApiKeyDetector" reports="HARD_CODE_PASSWORD"/>
     <Detector class="com.h3xstream.findsecbugs.password.JndiCredentialsDetector" reports="HARD_CODE_PASSWORD"/>
+    <Detector class="com.h3xstream.findsecbugs.password.IntuitiveHardcodePasswordDetector" reports="HARD_CODE_PASSWORD"/>
     <Detector class="com.h3xstream.findsecbugs.StrutsValidatorFormDetector" reports="STRUTS_FORM_VALIDATION"/>
     <Detector class="com.h3xstream.findsecbugs.xss.XSSRequestWrapperDetector" reports="XSS_REQUEST_WRAPPER"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.InsufficientKeySizeBlowfishDetector" reports="BLOWFISH_KEY_SIZE"/>
@@ -78,12 +80,15 @@
     <Detector class="com.h3xstream.findsecbugs.android.WebViewJavascriptInterfaceDetector" reports="ANDROID_WEB_VIEW_JAVASCRIPT_INTERFACE"/>
     <Detector class="com.h3xstream.findsecbugs.serial.ObjectDeserializationDetector" reports="OBJECT_DESERIALIZATION"/>
     <Detector class="com.h3xstream.findsecbugs.serial.DeserializationGadgetDetector" reports="DESERIALIZATION_GADGET"/>
-    <Detector class="com.h3xstream.findsecbugs.TrustBoundaryViolationDetector" reports="TRUST_BOUNDARY_VIOLATION"/>
+    <Detector class="com.h3xstream.findsecbugs.injection.trust.TrustBoundaryViolationAttributeDetector" reports="TRUST_BOUNDARY_VIOLATION"/>
+    <Detector class="com.h3xstream.findsecbugs.injection.trust.TrustBoundaryViolationValueDetector" reports="TRUST_BOUNDARY_VIOLATION"/>
     <Detector class="com.h3xstream.findsecbugs.scala.PlayUnvalidatedRedirectDetector" reports="PLAY_UNVALIDATED_REDIRECT" />
     <Detector class="com.h3xstream.findsecbugs.scala.SslDisablerDetector" reports="WEAK_TRUST_MANAGER,WEAK_HOSTNAME_VERIFIER"/>
     <Detector class="com.h3xstream.findsecbugs.scala.ScalaSensitiveDataExposureDetector" reports="SCALA_SENSITIVE_DATA_EXPOSURE"/>
     <Detector class="com.h3xstream.findsecbugs.scala.XssMvcApiDetector" reports="SCALA_XSS_MVC_API" />
     <Detector class="com.h3xstream.findsecbugs.scala.XssTwirlDetector" reports="SCALA_XSS_TWIRL" />
+    <Detector class="com.h3xstream.findsecbugs.template.VelocityDetector" reports="TEMPLATE_INJECTION_VELOCITY" />
+    <Detector class="com.h3xstream.findsecbugs.template.FreemarkerDetector" reports="TEMPLATE_INJECTION_FREEMARKER" />
 
     <BugPattern type="PREDICTABLE_RANDOM" abbrev="SECPR" category="SECURITY" cweid="330"/>
     <BugPattern type="PREDICTABLE_RANDOM_SCALA" abbrev="SECPRS" category="SECURITY" cweid="330"/>
@@ -100,6 +105,7 @@
     <BugPattern type="HTTPONLY_COOKIE" abbrev="SECHOC" category="SECURITY"/>
     <BugPattern type="PATH_TRAVERSAL_IN" abbrev="SECPTI" category="SECURITY" cweid="22"/>
     <BugPattern type="PATH_TRAVERSAL_OUT" abbrev="SECPTO" category="SECURITY" cweid="22"/>
+    <BugPattern type="SCALA_PATH_TRAVERSAL_IN" abbrev="SSECPTI" category="SECURITY" cweid="22"/>
     <BugPattern type="COMMAND_INJECTION" abbrev="SECCI" category="SECURITY" cweid="78"/>
     <BugPattern type="SCALA_COMMAND_INJECTION" abbrev="SECSCI" category="SECURITY" cweid="78"/>
     <BugPattern type="WEAK_FILENAMEUTILS" abbrev="SECWF" category="SECURITY"/>
@@ -117,6 +123,7 @@
     <BugPattern type="XXE_SAXPARSER" abbrev="SECXXESAX" category="SECURITY" cweid="611"/>
     <BugPattern type="XXE_XMLREADER" abbrev="SECXXEREAD" category="SECURITY" cweid="611"/>
     <BugPattern type="XXE_DOCUMENT" abbrev="SECXXEDOC" category="SECURITY" cweid="611"/>
+    <BugPattern type="XXE_XMLSTREAMREADER" abbrev="SECXXESTR" category="SECURITY" cweid="611"/>
     <BugPattern type="XPATH_INJECTION" abbrev="SECXPI" category="SECURITY" cweid="643"/>
     <BugPattern type="STRUTS1_ENDPOINT" abbrev="SECSTR1" category="SECURITY"/>
     <BugPattern type="STRUTS2_ENDPOINT" abbrev="SECSTR2" category="SECURITY"/>
@@ -176,5 +183,7 @@
     <BugPattern type="SCALA_SENSITIVE_DATA_EXPOSURE" abbrev="SECSDL" category="SECURITY" cweid="200"/>
     <BugPattern type="SCALA_XSS_TWIRL" abbrev="SECSXSST" category="SECURITY" cweid="79"/>
     <BugPattern type="SCALA_XSS_MVC_API" abbrev="SECSXSS" category="SECURITY" cweid="79"/>
+    <BugPattern type="TEMPLATE_INJECTION_VELOCITY" abbrev="SECVELO" category="SECURITY" cweid="94"/>
+    <BugPattern type="TEMPLATE_INJECTION_FREEMARKER" abbrev="SECFREEM" category="SECURITY" cweid="94"/>
 
 </FindbugsPlugin>

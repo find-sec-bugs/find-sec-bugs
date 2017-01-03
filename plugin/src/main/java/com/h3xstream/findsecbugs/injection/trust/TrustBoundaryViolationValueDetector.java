@@ -15,22 +15,19 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs;
+package com.h3xstream.findsecbugs.injection.trust;
 
 import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
 import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 
-/**
- * Trust Boundary Violation is fancy name to describe tainted value passed directly to session attribute.
- * This could be an expected behavior that allow an attacker to change the session state.
- */
-public class TrustBoundaryViolationDetector extends BasicInjectionDetector {
 
-    public TrustBoundaryViolationDetector(BugReporter bugReporter) {
+public class TrustBoundaryViolationValueDetector extends BasicInjectionDetector {
+
+    public TrustBoundaryViolationValueDetector(BugReporter bugReporter) {
         super(bugReporter);
-        loadConfiguredSinks("trust-boundary-violation.txt", "TRUST_BOUNDARY_VIOLATION");
+        loadConfiguredSinks("trust-boundary-violation-value.txt", "TRUST_BOUNDARY_VIOLATION");
     }
 
     /**=
@@ -44,11 +41,19 @@ public class TrustBoundaryViolationDetector extends BasicInjectionDetector {
      */
     @Override
     protected int getPriority(Taint taint) {
-        if (taint.isTainted()) {
-            return Priorities.HIGH_PRIORITY;
-        } else if (!taint.isSafe()) {
+        //**Low risk**
+        //It is very common that variable are not sanetize and store in session.
+        //By it self it pose little risk. The thinking is the injection or the critical operation
+        //will be catch.
+        //After all storing value in the session is not so different to storing value in local variables or any indirection.
+        //**False positive**
+        //The usual and most common configuration is to hide LOW priority (confidence).
+        //This way this FP producer will not polute day to day review by developers.
+
+        if (taint.isTainted() || !taint.isSafe()) {
             return Priorities.LOW_PRIORITY;
-        } else {
+        }
+        else {
             return Priorities.IGNORE_PRIORITY;
         }
     }

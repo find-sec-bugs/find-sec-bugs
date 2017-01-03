@@ -7,7 +7,7 @@
     <artifactId>findsecbugs-root-pom</artifactId>
 
     <packaging>pom</packaging>
-    <version>1.5.0-SNAPSHOT</version>
+    <version>1.6.0-SNAPSHOT</version>
 
     <name>Find Security Bugs root</name>
 
@@ -21,10 +21,13 @@
 
     <build>
         <plugins>
-            <!-- Force the use of Java 6 compiler -->
+            <!-- Force the use the compatibility to Java 6 -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
+                <!-- Be careful before updating this plugin..
+                    The current deployment process will fail.
+                    (https://github.com/find-sec-bugs/find-sec-bugs/wiki/Compiling#release-process) -->
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
@@ -63,6 +66,7 @@
                         <exclude>**/groovy/lang/**.java</exclude>
                         <exclude>**/scala/**.java</exclude>
                         <exclude>**/**/ReadMe.java</exclude>
+                        <exclude>**/freemarker/template/**/**.java</exclude>
                     </excludes>
                     <properties>
                         <project>Find Security Bugs</project>
@@ -77,6 +81,14 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <additionalparam>-Xdoclint:none</additionalparam>
+                </configuration>
             </plugin>
         </plugins>
 
@@ -205,7 +217,7 @@
     Ref: https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide#SonatypeOSSMavenRepositoryUsageGuide-6.CentralSyncRequirement
     -->
 
-    <url>http://find-sec-bugs.github.io/</url>
+    <url>https://find-sec-bugs.github.io/</url>
 
     <licenses>
         <license>

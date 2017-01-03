@@ -669,17 +669,23 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     /**
      * For debugging purpose.
      * Print the state of the stack with information about the values in place.
+     *
+     * Usage: Call this function from your debugger (From your IDE UI: See Watches/Expressions)
      */
     private void printStackState() {
+         printStackState(getFrame());
+    }
+
+    public static void printStackState(TaintFrame frame) {
         try {
             System.out.println("============================");
             if(!FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
                 System.out.println(" /!\\ Warning : The taint debugging is not fully activated.");
             }
             System.out.println("[[ Stack ]]");
-            int stackDepth = getFrame().getStackDepth();
+            int stackDepth = frame.getStackDepth();
             for (int i = 0; i < stackDepth; i++) {
-                Taint taintValue = getFrame().getStackValue(i);
+                Taint taintValue = frame.getStackValue(i);
                 System.out.println(String.format("%s. %s {%s}",
                         i, taintValue.getState().toString(), taintValue.getDebugInfo()));
             }

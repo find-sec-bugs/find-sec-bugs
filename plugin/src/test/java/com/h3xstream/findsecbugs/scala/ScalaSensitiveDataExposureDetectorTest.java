@@ -54,6 +54,9 @@ public class ScalaSensitiveDataExposureDetectorTest extends BaseDetectorTest {
         methodBugLines.put("vulnerable1", new int[]{16, 17, 18, 19, 20, /**/ 22, 23, 24, 25, 26});
         methodBugLines.put("vulnerable2", new int[]{33, 34, 35, 36, 37, /**/ 39, 40, 41, 42, 43});
         methodBugLines.put("vulnerable3", new int[]{49, 50, 51, 52, 53});
+        methodBugLines.put("vulnerableCookie1", new int[]{63, 64, 65, 66});
+        methodBugLines.put("vulnerableCookie2", new int[]{73, 74, 75, 76});
+        methodBugLines.put("vulnerableCookie3", new int[]{82, 83});
 
         for (Entry<String, int[]> entry : methodBugLines.entrySet()) {
             // Lets check every line specified above

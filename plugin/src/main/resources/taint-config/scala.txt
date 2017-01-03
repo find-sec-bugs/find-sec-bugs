@@ -62,3 +62,6 @@ anorm/package$.SQL(Ljava/lang/String;)Lanorm/SqlQuery;:0#0
 anorm/package$.sqlToSimple(Lanorm/SqlQuery;)Lanorm/SimpleSql;:0
 anorm/package$.SqlStringInterpolation(Lscala/StringContext;)Lscala/StringContext;:0
 anorm/package$SqlStringInterpolation$.SQL$extension(Lscala/StringContext;Lscala/collection/Seq;)Lanorm/SimpleSql;:1
+
+- Scala WebService Library
+play/api/libs/ws/WS$.url(Ljava/lang/String;Lplay/api/Application;)Lplay/api/libs/ws/WSRequest;:1

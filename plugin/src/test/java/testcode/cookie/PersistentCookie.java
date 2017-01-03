@@ -1,5 +1,4 @@
-package testcode;
-
+package testcode.cookie;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -8,12 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * It might be unwanted to set a cookie with far away expiration day.
- * http://projects.webappsec.org/w/page/13246944/Insufficient%20Session%20Expiration
- */
-public class PersistantCookie extends HttpServlet {
-
+public class PersistentCookie extends HttpServlet {
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -26,7 +20,6 @@ public class PersistantCookie extends HttpServlet {
     }
 
     //3600 seconds == 1 hour
-
     private void setCookieFor1Week(String email) { //Reasonable duration. No warning will be trigger
         Cookie cookie = new Cookie("emailCookie", email);
         cookie.setMaxAge(3600*24*7);

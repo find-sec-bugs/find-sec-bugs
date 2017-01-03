@@ -2,6 +2,7 @@ package testcode;
 
 import java.security.SecureRandom;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class InsecureRandom {
 
@@ -14,6 +15,11 @@ public class InsecureRandom {
     public static void mathRandom() {
         //Indirectly using Random class
         System.out.println(Math.random());
+    }
+
+    public static void threadLocalRandom() {
+        //Example call to ThreadLocalRandom - random generator since Java 7
+        System.out.println(ThreadLocalRandom.current().nextInt(10000));
     }
 
     public static void mathOther() {
@@ -34,6 +40,7 @@ public class InsecureRandom {
     public static void main(String[] args) {
         newRandomObj();
         mathRandom();
+        threadLocalRandom();
         mathOther();
         scalaRandom();
     }

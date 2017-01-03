@@ -23,67 +23,60 @@ import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-
-public class PredictableRandomDetectorTest extends BaseDetectorTest {
+public class PermissiveCORSDetectorTest extends BaseDetectorTest {
 
     @Test
-    public void detectUsePredictableRandom() throws Exception {
+    public void detectPermissiveCORS() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/InsecureRandom")
+                getClassFilePath("testcode/PermissiveCORS")
         };
 
         //Run the analysis
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        //Assertions
 
-        //1rst variation new Random()
+        //1rst variation resp.addHeader("Access-Control-Allow-Origin", "*")
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("PREDICTABLE_RANDOM")
-                        .inClass("InsecureRandom").inMethod("newRandomObj").atLine(10)
+                        .bugType("PERMISSIVE_CORS")
+                        .inClass("PermissiveCORS").inMethod("addPermissiveCORS").atLine(25)
                         .build()
         );
-        //2nd variation Math.random()
+        //2nd - lower case: resp.addHeader("access-control-allow-origin", "*")
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("PREDICTABLE_RANDOM")
-                        .inClass("InsecureRandom").inMethod("mathRandom").atLine(17)
+                        .bugType("PERMISSIVE_CORS")
+                        .inClass("PermissiveCORS").inMethod("addPermissiveCORS2").atLine(29)
                         .build()
         );
-
-        //3nd variation ThreadLocalRandom.current()
+        //3rd - wildcards: resp.addHeader("Access-Control-Allow-Origin", "*.example.com")
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("PREDICTABLE_RANDOM")
-                        .inClass("InsecureRandom").inMethod("threadLocalRandom").atLine(22)
+                        .bugType("PERMISSIVE_CORS")
+                        .inClass("PermissiveCORS").inMethod("addWildcardsCORS").atLine(33)
+                        .build()
+        );
+        //4th - null Origin: resp.addHeader("Access-Control-Allow-Origin", "null")
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("PERMISSIVE_CORS")
+                        .inClass("PermissiveCORS").inMethod("addNullCORS").atLine(37)
+                        .build()
+        );
+        //5th - set instead of add: resp.setHeader("Access-Control-Allow-Origin", "*");
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("PERMISSIVE_CORS")
+                        .inClass("PermissiveCORS").inMethod("setPermissiveCORS").atLine(41)
                         .build()
         );
 
-        //Scala random number generator (mirror of java.util.Random)
-        for(Integer line : Arrays.asList(36,37)) {
-            verify(reporter).doReportBug(
-                    bugDefinition()
-                            .bugType("PREDICTABLE_RANDOM_SCALA")
-                            .inClass("InsecureRandom").inMethod("scalaRandom").atLine(line)
-                            .build()
-            );
-        }
-
-
-        verify(reporter, times(3)).doReportBug( //3 java api
+        verify(reporter, times(5)).doReportBug(
                 bugDefinition()
-                        .bugType("PREDICTABLE_RANDOM")
-                        .build()
-        );
-        verify(reporter, times(2)).doReportBug( //2 scala variations
-                bugDefinition()
-                        .bugType("PREDICTABLE_RANDOM_SCALA")
+                        .bugType("PERMISSIVE_CORS")
                         .build()
         );
     }
-
 }

@@ -1,0 +1,2 @@
+play/api/libs/ws/WSRequest.get()Lscala/concurrent/Future;:0
+play/api/libs/ws/WSRequest.post(Ljava/lang/Object;Lplay/api/http/Writeable;)Lscala/concurrent/Future;:1,2

@@ -1558,7 +1558,7 @@ such a setter. The use of these parameters should be reviewed to make sure they 
         <LongDescription>{0} is a Spring endpoint (Controller)</LongDescription>
         <Details>
             <![CDATA[
-<p>This class is a Spring Controller. All methods annotated with <code>RequestMapping</code> are reachable remotely.
+<p>This class is a Spring Controller. All methods annotated with <code>RequestMapping</code> (as well as its shortcut annotations <code>GetMapping</code>, <code>PostMapping</code>, <code>PutMapping</code>, <code>DeleteMapping</code>, and <code>PatchMapping</code>) are reachable remotely.
 This class should be analyzed to make sure that remotely exposed methods are safe to expose to potential attackers.</p>
 ]]>
         </Details>
@@ -2387,7 +2387,45 @@ to do this correctly.
         </Details>
     </BugPattern>
     <BugCode abbrev="SECUS">Unencrypted Socket</BugCode>
-
+    <!-- Unencrypted Server Socket encryption -->
+    <Detector class="com.h3xstream.findsecbugs.crypto.UnencryptedServerSocketDetector">
+        <Details>Unencrypted Server Socket</Details>
+    </Detector>
+    <BugPattern type="UNENCRYPTED_SERVER_SOCKET">
+        <ShortDescription>Unencrypted Server Socket</ShortDescription>
+        <LongDescription>Unencrypted server socket (instead of SSLServerSocket)</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+The communication channel used is not encrypted. The traffic could be read by an attacker intercepting the network traffic.
+</p>
+<p>
+<b>Vulnerable Code:</b><br/>
+Plain server socket (Cleartext communication):
+<pre>ServerSocket soc = new ServerSocket(1234);</pre>
+</p>
+<p>
+<b>Solution:</b><br/>
+SSL Server Socket (Secure communication):
+<pre>ServerSocket soc = SSLServerSocketFactory.getDefault().createServerSocket(1234);</pre>
+</p>
+<p>Beyond using an SSL server socket, you need to make sure your use of SSLServerSocketFactory does all the appropriate certificate validation checks to
+make sure you are not subject to man-in-the-middle attacks. Please read the OWASP Transport Layer Protection Cheat Sheet for details on how
+to do this correctly.
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2010-A9">OWASP: Top 10 2010-A9-Insufficient Transport Layer Protection</a><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2013-A6-Sensitive_Data_Exposure">OWASP: Top 10 2013-A6-Sensitive Data Exposure</a><br/>
+<a href="https://www.owasp.org/index.php/Transport_Layer_Protection_Cheat_Sheet">OWASP: Transport Layer Protection Cheat Sheet</a><br/>
+<a href="http://projects.webappsec.org/w/page/13246945/Insufficient%20Transport%20Layer%20Protection">WASC-04: Insufficient Transport Layer Protection</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/319.html">CWE-319: Cleartext Transmission of Sensitive Information</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECUSS">Unencrypted Server Socket</BugCode>
 
     <!-- DES usage -->
     <Detector class="com.h3xstream.findsecbugs.crypto.DesUsageDetector">
@@ -4077,6 +4115,47 @@ Path traversal <sup>[3][4]</sup> are not possible.
     </BugPattern>
     <BugCode abbrev="SECSDL">Configuration or system information leakage</BugCode>
 
+    <!-- Scala Play Server Side Request Forgery -->
+    <Detector class="com.h3xstream.findsecbugs.scala.SSRFDetector">
+        <Details>Identify potential Scala Play Server-Side Request Forgery (SSRF)</Details>
+    </Detector>
+    <BugPattern type="SCALA_PLAY_SSRF">
+        <ShortDescription>Scala Play Server-Side Request Forgery (SSRF)</ShortDescription>
+        <LongDescription>This web server request could be used by an attacker to expose internal services.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    Server-Side Request Forgery occur when a web server executes a request to a user supplied destination
+    parameter that is not validated. Such vulnerabilities could allow an attacker to access internal services
+    or to launch attacks from your web server.
+</p>
+<p>
+    <b>Vulnerable Code:</b>
+<pre>def doGet(value:String) = Action {
+    WS.url(value).get().map { response =>
+        Ok(response.body)
+    }
+}</pre>
+</p>
+<p>
+    <b>Solution/Countermeasures:</b><br/>
+    <ul>
+        <li>Don't accept request destinations from users</li>
+        <li>Accept a destination key, and use it to look up the target (legal) destination</li>
+        <li>White list URLs (if possible)</li>
+        <li>Validate that the beginning of the URL is part of a white list</li>
+    </ul>
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://cwe.mitre.org/data/definitions/918.html">CWE-918: Server-Side Request Forgery (SSRF)</a><br/>
+<a href="https://www.bishopfox.com/blog/2015/04/vulnerable-by-design-understanding-server-side-request-forgery/">Understanding Server-Side Request Forgery</a><br/>
+</p>
+            ]]></Details>
+    </BugPattern>
+    <BugCode abbrev="SECSSSRF">Scala Play Server-Side Request Forgery</BugCode>
+
     <!-- XSS in Scala Play Twirl template engine -->
     <Detector class="com.h3xstream.findsecbugs.scala.XssTwirlDetector">
         <Details>Identify potential Cross-Site Scripting in Scala Twirl template engine.</Details>
@@ -4236,5 +4315,159 @@ prefer logic-less template engines such as Handlebars or Moustache (See referenc
         </Details>
     </BugPattern>
     <BugCode abbrev="SECFREEM">Potential template injection with Freemarker</BugCode>
+
+  
+    <!-- Overly permissive CORS policy -->
+    <Detector class="com.h3xstream.findsecbugs.PermissiveCORSDetector">
+        <Details>Detect overly permissive CORS policy.
+        </Details>
+    </Detector>
+
+    <BugPattern type="PERMISSIVE_CORS">
+        <ShortDescription>Overly permissive CORS policy</ShortDescription>
+        <LongDescription>The program defines an overly permissive Cross-Origin Resource Sharing (CORS) policy</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Prior to HTML5, Web browsers enforced the Same Origin Policy which ensures that in order for JavaScript to access the contents of a Web page, both the JavaScript and the Web page must originate from the same domain. Without the Same Origin Policy, a malicious website could serve up JavaScript that loads sensitive information from other websites using a client's credentials, cull through it, and communicate it back to the attacker. HTML5 makes it possible for JavaScript to access data across domains if a new HTTP header called Access-Control-Allow-Origin is defined. With this header, a Web server defines which other domains are allowed to access its domain using cross-origin requests. However, caution should be taken when defining the header because an overly permissive CORS policy will allow a malicious application to communicate with the victim application in an inappropriate way, leading to spoofing, data theft, relay and other attacks.
+</p>
+<p>
+    <b>Vulnerable Code:</b>
+<pre>response.addHeader("Access-Control-Allow-Origin", "*");</pre>
+</p>
+<p>
+    <b>Solution:</b>
+<br/>
+Avoid using * as the value of the Access-Control-Allow-Origin header, which indicates that the application's data is accessible to JavaScript running on any domain.
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://www.w3.org/TR/cors/">W3C Cross-Origin Resource Sharing</a><br/>
+<a href="http://enable-cors.org/">Enable Cross-Origin Resource Sharing</a><br/>
+</p>]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECCORS">Overly permissive CORS policy</BugCode>
+
+    <!-- LDAP anonymous bind detector -->
+    <Detector class="com.h3xstream.findsecbugs.AnonymousLdapDetector">
+        <Details>Identify use of anonymous LDAP bind</Details>
+    </Detector>
+    <BugPattern type="LDAP_ANONYMOUS">
+        <ShortDescription>Anonymous LDAP bind</ShortDescription>
+        <LongDescription>Anonymous LDAP bind</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Without proper access control, executing an LDAP statement that contains a user-controlled value can allow an attacker to abuse poorly configured LDAP environment. All LDAP queries executed against ctx will be performed without authentication and access control. An attacker may be able to manipulate one of these queries in an unexpected way to gain access to records that would otherwise be protected by the directory's access control mechanism.
+</p>
+<p>
+    <b>Vulnerable Code:</b>
+<pre>...
+env.put(Context.SECURITY_AUTHENTICATION, "none");
+DirContext ctx = new InitialDirContext(env);
+...</pre>
+</p>
+<p>
+    <b>Solution:</b>
+<br/>
+Consider other modes of authentication to LDAP and ensure proper access control mechanism.
+
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://docs.oracle.com/javase/tutorial/jndi/ldap/auth_mechs.html">Ldap Authentication Mechanisms</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="LDAPA">Anonymous LDAP bind</BugCode>
+
+
+    <!-- Persistent Cookie Usage-->
+    <Detector class="com.h3xstream.findsecbugs.cookie.PersistentCookieDetector">
+        <Details>Identify persistent cookie usage</Details>
+    </Detector>
+    <BugPattern type="COOKIE_PERSISTENT">
+        <ShortDescription>Persistent Cookie Usage</ShortDescription>
+        <LongDescription>Cookie Set To Expire In 1 Year Or More</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Storing sensitive data in a persistent cookie for an extended period of time can lead to a breach of confidentiality or account compromise. 
+</p>
+<p>
+    <b>Explanation:</b><br/>
+If private information is stored in persistent cookies, attackers have a larger time window in which to steal this data - especially since persistent cookies are often set to expire in the distant future. Persistent cookies are generally stored in a text file on the client and an attacker with access to the victim's machine can steal this information.<br/>
+Persistent cookies are often used to profile users as they interact with a site. Depending on what is done with this tracking data, it is possible to use persistent cookies to violate users' privacy.
+</p>
+<p>
+    <b>Vulnerable Code:</b> The following code sets a cookie to expire in 1 year.<br/>
+<pre>[...]
+Cookie cookie = new Cookie("email", email);
+cookie.setMaxAge(60*60*24*365);
+[...]</pre>
+</p>
+<p>
+    <b>Solution:</b><br/>
+<ul>
+    <li>Use persistent cookies only if necessary and limit their maximum age.</li>
+    <li>Don't use persistent cookies for sensitive data.</li>
+</ul>
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://tomcat.apache.org/tomcat-5.5-doc/servletapi/javax/servlet/http/Cookie.html#setMaxAge%28int%29">Class Cookie setMaxAge documentation</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/539.html">CWE-539: Information Exposure Through Persistent Cookies</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECCP">Persistent Cookie Usage</BugCode>
+
+
+    <!-- URL Rewriting Methods -->
+    <Detector class="com.h3xstream.findsecbugs.cookie.UrlRewritingDetector">
+        <Details>Detect the URL rewriting methods.
+        </Details>
+    </Detector>
+
+    <BugPattern type="URL_REWRITING">
+        <ShortDescription>URL rewriting method</ShortDescription>
+        <LongDescription>Method rewriting session ID into the URL</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+The implementation of this method includes the logic to determine whether the session ID needs to be encoded in the URL.<br/>
+URL rewriting has significant security risks. Since session ID appears in the URL, it may be easily seen by third parties. Session ID in the URL can be disclosed in many ways, for example:<br/>
+<ul>
+    <li>Log files,</li>
+    <li>The browser history,</li>
+    <li>By copy-and-pasting it into an e-mail or posting,</li>
+    <li>The HTTP Referrer.</li>
+</ul>
+</p>
+<p>
+    <b>Vulnerable Code:</b><br/>
+<pre>out.println("Click &lt;a href=" + 
+                res.encodeURL(HttpUtils.getRequestURL(req).toString()) + 
+                "&gt;here&lt;/a&gt;");</pre>
+</p>
+<p>
+    <b>Solution:</b><br/>
+Avoid using those methods. If you are looking to encode a URL String or form parameters do not confuse the URL rewriting methods with the URLEncoder class.
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2010-A3-Broken_Authentication_and_Session_Management">OWASP Top 10 2010-A3-Broken Authentication and Session Management</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECURLR">URL Rewriting Methods</BugCode>
 
 </MessageCollection>

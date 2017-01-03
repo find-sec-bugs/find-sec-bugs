@@ -32,6 +32,11 @@ public class HttpServletRequestWrapper extends ServletRequestWrapper implements 
     }
 
     @Override
+    public String getRequestURI() {
+        return null;
+    }
+
+    @Override
     public Cookie[] getCookies() {
         return new Cookie[0];
     }

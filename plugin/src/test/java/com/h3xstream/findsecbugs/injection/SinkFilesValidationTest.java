@@ -65,6 +65,8 @@ public class SinkFilesValidationTest {
     public void validateClass(String className) {
         if(className.endsWith("$")) return; //Skipping Scala class
         if(className.startsWith("play.")) return; //Temporary skip Play
+        if(className.startsWith("anorm")) return; //Skipping Scala anorm library classes
+        if(className.startsWith("slick")) return; //Skipping Scala slick library classes
         if(className.contains(".log")) return;
         if(className.contains(".Log")) return;
         if(className.equals("javax.naming.directory.Context")) return; //FIXME: It seems to be a error in the LDAP configuration file

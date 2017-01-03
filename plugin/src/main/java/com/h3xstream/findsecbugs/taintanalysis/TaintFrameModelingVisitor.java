@@ -190,6 +190,8 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     @Override
     public void visitGETSTATIC(GETSTATIC obj) {
+        // Scala uses some classes to represent null instances of objects
+        // If we find one of them, we will handle it as a Java Null
         if (obj.getLoadClassType(getCPG()).getSignature().equals("Lscala/collection/immutable/Nil$;")) {
 
             if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {

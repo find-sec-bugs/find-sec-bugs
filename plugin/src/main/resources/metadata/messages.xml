@@ -1607,6 +1607,105 @@ The method identified is susceptible to injection. The input should be validated
         <Details>Identify various kinds of SQL Injection in SQL APIs that accept strings (Hibernate, JPA and JDO).</Details>
     </Detector>
 
+    <!-- SQL Injection (Generic) -->
+    <!-- Specialized description are below -->
+    <BugPattern type="SQL_INJECTION">
+        <ShortDescription>Potential SQL Injection</ShortDescription>
+        <LongDescription>This use of {3} can be vulnerable to SQL injection</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+The input values included in SQL queries need to be passed in safely.
+Bind variables in prepared statements can be used to easily mitigate the risk of SQL injection.
+Alternatively to prepare statements, each parameter can be escaped manually.
+</p>
+<p>
+    <b>Vulnerable Code:</b><br/>
+    <pre>
+createQuery("select * from User where id = '"+inputId+"'");
+</pre>
+</p>
+<p>
+    <b>Solution:</b><br/>
+
+    <pre>
+import org.owasp.esapi.Encoder;
+
+createQuery("select * from User where id = '"+Encoder.encodeForSQL(inputId)+"'");
+</pre>
+</p>
+<br/>
+<p>
+<b>References (SQL injection)</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-19: SQL Injection</a><br/>
+<a href="http://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
+<a href="https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet">OWASP: SQL Injection Prevention Cheat Sheet</a><br/>
+<a href="https://www.owasp.org/index.php/Query_Parameterization_Cheat_Sheet">OWASP: Query Parameterization Cheat Sheet</a><br/>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSQLI">SQL Injection</BugCode>
+
+    <!-- SQL Injection Turbine -->
+    <BugPattern type="SQL_INJECTION_TURBINE">
+        <ShortDescription>Potential SQL Injection with Turbine</ShortDescription>
+        <LongDescription>This use of {3} can be vulnerable to SQL injection</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+The input values included in SQL queries need to be passed in safely.
+Bind variables in prepared statements can be used to easily mitigate the risk of SQL injection.
+Turbine API provide a DSL to build query with Java code.
+</p>
+<p>
+    <b>Vulnerable Code:</b><br/>
+    <pre>
+List&lt;Record&gt; BasePeer.executeQuery( "select * from Customer where id=" + inputId );
+</pre>
+</p>
+<p>
+    <b>Solution (using Criteria DSL):</b><br/>
+
+    <pre>
+Criteria c = new Criteria();
+c.add( CustomerPeer.ID, inputId );
+
+List&lt;Customer&gt; customers = CustomerPeer.doSelect( c );
+</pre>
+
+    <b>Solution (using specialized method):</b><br/>
+
+<pre>
+Customer customer = CustomerPeer.retrieveByPK( new NumberKey( inputId ) );
+</pre>
+
+    <b>Solution (using OWASP Encoder):</b><br/>
+
+    <pre>
+import org.owasp.esapi.Encoder;
+
+BasePeer.executeQuery("select * from Customer where id = '"+Encoder.encodeForSQL(inputId)+"'");
+</pre>
+</p>
+<br/>
+<p>
+<b>References (Turbine)</b><br/>
+<a href="https://turbine.apache.org/turbine/turbine-2.1/howto/criteria-howto.html">Turbine Documentation: Criteria Howto</a><br/>
+<b>References (SQL injection)</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-19: SQL Injection</a><br/>
+<a href="http://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
+<a href="https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet">OWASP: SQL Injection Prevention Cheat Sheet</a><br/>
+<a href="https://www.owasp.org/index.php/Query_Parameterization_Cheat_Sheet">OWASP: Query Parameterization Cheat Sheet</a><br/>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSQLITU">SQL Injection with Turbine</BugCode>
 
     <!-- HQL Injection -->
     <BugPattern type="SQL_INJECTION_HIBERNATE">
@@ -1617,7 +1716,7 @@ The method identified is susceptible to injection. The input should be validated
 <p>
 The input values included in SQL queries need to be passed in safely.
 Bind variables in prepared statements can be used to easily mitigate the risk of SQL injection.
-Alternatively to prepare statement, Hibernate Criteria can be used.
+Alternatively to prepare statements, Hibernate Criteria can be used.
 </p>
 <p>
     <b>Vulnerable Code:</b><br/>

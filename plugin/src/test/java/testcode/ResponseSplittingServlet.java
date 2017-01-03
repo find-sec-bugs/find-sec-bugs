@@ -4,6 +4,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+
 import org.owasp.esapi.ESAPI;
 
 public abstract class ResponseSplittingServlet extends HttpServlet {
@@ -24,6 +26,11 @@ public abstract class ResponseSplittingServlet extends HttpServlet {
         safeCookie.setValue(safe + "x");
         resp.setHeader("header", safe);
         resp.addHeader("header", encoded.concat(safe));
+
+
+        HttpServletResponseWrapper resWrapper = new HttpServletResponseWrapper(resp);
+        resWrapper.setHeader("header2",req.getParameter("a"));
+        resWrapper.addHeader("header3",req.getParameter("b"));
     }
     
     private void cookieSink(String param) {

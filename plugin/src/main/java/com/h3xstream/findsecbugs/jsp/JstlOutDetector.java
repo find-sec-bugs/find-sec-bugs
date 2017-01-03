@@ -24,6 +24,7 @@ import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Detector;
 import edu.umd.cs.findbugs.Priorities;
+import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.ba.CFG;
 import edu.umd.cs.findbugs.ba.CFGBuilderException;
 import edu.umd.cs.findbugs.ba.ClassContext;
@@ -70,6 +71,7 @@ public class JstlOutDetector implements Detector {
                 return;
             }
         } catch (ClassNotFoundException e) {
+            AnalysisContext.reportMissingClass(e);
         }
         for (Method m : javaClass.getMethods()) {
             try {

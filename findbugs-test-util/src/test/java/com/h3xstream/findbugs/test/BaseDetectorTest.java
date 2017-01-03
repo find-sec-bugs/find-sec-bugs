@@ -80,6 +80,14 @@ public class BaseDetectorTest {
         return Matchers.<BugInstance>any();
     }
 
+    public static List<Integer> range(int from, int to) {
+        List<Integer> rangeList = new ArrayList<Integer>();
+        for(int i=from;i<Math.max(from,to);i++) {
+            rangeList.add(i);
+        }
+        return rangeList;
+    }
+
     @AfterClass
     public void after() {
         System.gc();

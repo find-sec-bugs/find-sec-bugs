@@ -40,7 +40,7 @@ import java.util.List;
  * <code>MonClient.defMotDePasse("abc123!");</code></p>
  *
  * <p>It will match method that contains other keywords prefixing or suffixing.
- * <code>MonClient.setConnectionPwd("abc123!");</code></p>
+ * <code>MyClient.setConnectionPwd("abc123!");</code></p>
  */
 public class IntuitiveHardcodePasswordDetector extends BasicInjectionDetector {
 

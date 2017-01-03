@@ -94,7 +94,9 @@
     <Detector class="com.h3xstream.findsecbugs.AnonymousLdapDetector" reports="LDAP_ANONYMOUS"/>
     <Detector class="com.h3xstream.findsecbugs.PermissiveCORSDetector" reports="PERMISSIVE_CORS"/>
     <Detector class="com.h3xstream.findsecbugs.cookie.PersistentCookieDetector" reports="COOKIE_PERSISTENT" />
+    <Detector class="com.h3xstream.findsecbugs.cookie.UrlRewritingDetector" reports="URL_REWRITING"/>
 
+    <BugPattern type="URL_REWRITING" abbrev="SECURLR" category="SECURITY"/>
     <BugPattern type="COOKIE_PERSISTENT" abbrev="SECCP" category="SECURITY"/>
     <BugPattern type="LDAP_ANONYMOUS" abbrev="LDAPA" category="SECURITY"/>
     <BugPattern type="PERMISSIVE_CORS" abbrev="SECCORS" category="SECURITY"/>

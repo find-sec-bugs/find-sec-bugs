@@ -12,4 +12,12 @@ public interface HttpServletResponse extends ServletResponse {
     void setHeader(String header, String value);
 
     void sendRedirect(String url) throws IOException;
+
+    String encodeURL(String url);
+
+    String encodeUrl(String url);
+
+    String encodeRedirectURL(String url);
+
+    String encodeRedirectUrl(String url);
 }

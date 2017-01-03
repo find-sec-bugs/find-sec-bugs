@@ -74,7 +74,7 @@ public class CustomInjectionDetector extends BasicInjectionDetector {
         String propertyValue = FindSecBugsGlobalConfig.getInstance().loadFromSystem(SYSTEM_PROPERTY, "");
         String[] resourcePaths = propertyValue.split(",");
         List<URL> urls = new ArrayList<URL>(resourcePaths.length);
-        /*for (String resourcePath : resourcePaths) {
+        for (String resourcePath : resourcePaths) {
             File file = new File(resourcePath);
             if (file.exists()) {
                 try {
@@ -89,7 +89,7 @@ public class CustomInjectionDetector extends BasicInjectionDetector {
                     urls.add(url);
                 }
             }
-        }*/
+        }
 
         return urls;
     }

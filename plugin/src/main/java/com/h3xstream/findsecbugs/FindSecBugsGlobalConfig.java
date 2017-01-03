@@ -34,14 +34,14 @@ public class FindSecBugsGlobalConfig {
     private boolean debugTaintState = false;
     
     // set through SystemProperties
-    private boolean debugOutputSummaries;
+    private boolean debugOutputTaintConfigs;
     private boolean taintedSystemVariables;
     private String customConfigFile;
     private boolean taintedMainArgument;
     private boolean reportPotentialXssWrongContext;
 
     protected FindSecBugsGlobalConfig() {
-        debugOutputSummaries = Boolean.parseBoolean(loadFromSystem("findsecbugs.taint.outputsummaries", Boolean.FALSE.toString()));
+        debugOutputTaintConfigs = Boolean.parseBoolean(loadFromSystem("findsecbugs.taint.outputconfigs", Boolean.FALSE.toString()));
         taintedSystemVariables = Boolean.parseBoolean(loadFromSystem("findsecbugs.taint.taintedsystemvariables", Boolean.FALSE.toString()));
         customConfigFile = loadFromSystem("findsecbugs.taint.customconfigfile", null);
         taintedMainArgument = Boolean.parseBoolean(loadFromSystem("findsecbugs.taint.taintedmainargument", Boolean.TRUE.toString()));
@@ -82,12 +82,12 @@ public class FindSecBugsGlobalConfig {
         this.findSecBugsVersion = findSecBugsVersion;
     }
 
-    public boolean isDebugOutputSummaries() {
-        return debugOutputSummaries;
+    public boolean isDebugOutputTaintConfigs() {
+        return debugOutputTaintConfigs;
     }
 
-    public void setDebugOutputSummaries(boolean debugOutputSummaries) {
-        this.debugOutputSummaries = debugOutputSummaries;
+    public void setDebugOutputTaintConfigs(boolean debugOutputTaintConfigs) {
+        this.debugOutputTaintConfigs = debugOutputTaintConfigs;
     }
 
     public boolean isDebugPrintInstructionVisited() {

@@ -36,13 +36,13 @@ public class TaintMethodConfig implements TaintTypeConfig {
     private Taint outputTaint = null;
     private final Set<Integer> mutableStackIndices;
     private final boolean isConfigured;
-    public static final TaintMethodConfig SAFE_SUMMARY;
+    public static final TaintMethodConfig SAFE_CONFIG;
     protected static final Pattern fullMethodPattern;
-    protected static final Pattern summaryPattern;
+    protected static final Pattern configPattern;
 
     static {
-        SAFE_SUMMARY = new TaintMethodConfig(false);
-        SAFE_SUMMARY.outputTaint = new Taint(Taint.State.SAFE);
+        SAFE_CONFIG = new TaintMethodConfig(false);
+        SAFE_CONFIG.outputTaint = new Taint(Taint.State.SAFE);
 
         String classWithPackageRegex = "([a-z][a-z0-9]*\\/)*[A-Z][a-zA-Z0-9\\$]*";
         String typeRegex = "(\\[)*((L" + classWithPackageRegex + ";)|B|C|D|F|I|J|S|Z)";
@@ -63,10 +63,10 @@ public class TaintMethodConfig implements TaintTypeConfig {
         String commaSeparatedTaintTagModificationRegex = "("+taintTagModificationRegex+",)*"+taintTagModificationRegex;
         String commaSeparatedStackMutationIndexesRegex = "("+stackIndexRegex+",)*" + stackIndexRegex;
 
-        String summaryRegex = commaSeparatedTaintResultsRegex;
-        summaryRegex += "(\\|" + commaSeparatedTaintTagModificationRegex + ")?";
-        summaryRegex += "(#" + commaSeparatedStackMutationIndexesRegex+ ")?";
-        summaryPattern = Pattern.compile(summaryRegex);
+        String configRegex = commaSeparatedTaintResultsRegex;
+        configRegex += "(\\|" + commaSeparatedTaintTagModificationRegex + ")?";
+        configRegex += "(#" + commaSeparatedStackMutationIndexesRegex+ ")?";
+        configPattern = Pattern.compile(configRegex);
     }
 
     /**
@@ -83,11 +83,11 @@ public class TaintMethodConfig implements TaintTypeConfig {
     /**
      * Creates a copy of the summary (output taint not copied)
      * 
-     * @param summary original summary to copy
+     * @param config Original taint config to copy
      */
-    public TaintMethodConfig(TaintMethodConfig summary) {
-        this.mutableStackIndices = summary.mutableStackIndices;
-        this.isConfigured = summary.isConfigured;
+    public TaintMethodConfig(TaintMethodConfig config) {
+        this.mutableStackIndices = config.mutableStackIndices;
+        this.isConfigured = config.isConfigured;
     }
     
     /**
@@ -162,15 +162,15 @@ public class TaintMethodConfig implements TaintTypeConfig {
      * @return new instance of default summary
      * @throws IllegalArgumentException for stackSize &lt; 1
      */
-    public static TaintMethodConfig getDefaultConstructorSummary(int stackSize) {
+    public static TaintMethodConfig getDefaultConstructorConfig(int stackSize) {
         if (stackSize < 1) {
             throw new IllegalArgumentException("stack size less than 1");
         }
-        TaintMethodConfig summary = new TaintMethodConfig(false);
-        summary.outputTaint = new Taint(Taint.State.UNKNOWN);
-        summary.mutableStackIndices.add(stackSize - 1);
-        summary.mutableStackIndices.add(stackSize);
-        return summary;
+        TaintMethodConfig config = new TaintMethodConfig(false);
+        config.outputTaint = new Taint(Taint.State.UNKNOWN);
+        config.mutableStackIndices.add(stackSize - 1);
+        config.mutableStackIndices.add(stackSize);
+        return config;
     }
 
     /**
@@ -179,7 +179,7 @@ public class TaintMethodConfig implements TaintTypeConfig {
      * @return true if summary should be saved, false otherwise
      */
     public boolean isInformative() {
-        if (this == SAFE_SUMMARY) {
+        if (this == SAFE_CONFIG) {
             // these are loaded automatically, do not need to store them
             return false;
         }
@@ -276,8 +276,8 @@ public class TaintMethodConfig implements TaintTypeConfig {
         }
     }
 
-    public static boolean accepts(String typeSignature, String summary) {
-        return fullMethodPattern.matcher(typeSignature).matches() && summaryPattern.matcher(summary).matches();
+    public static boolean accepts(String typeSignature, String config) {
+        return fullMethodPattern.matcher(typeSignature).matches() && configPattern.matcher(config).matches();
     }
 
     /**
@@ -328,28 +328,28 @@ public class TaintMethodConfig implements TaintTypeConfig {
      *     <li>taint analysis adds two Taint objects on stack for constructors, don't forget to specify both</li>
      * </ul>
      *
-     * @param summary (state or parameter indices to merge separated by comma)#mutable position
+     * @param taintConfig (state or parameter indices to merge separated by comma)#mutable position
      * @return initialized object with taint method summary
      * @throws java.io.IOException for bad format of parameter
      * @throws NullPointerException if argument is null
      */
     @Override
-    public TaintMethodConfig load(String summary) throws IOException {
-        if (summary == null) {
+    public TaintMethodConfig load(String taintConfig) throws IOException {
+        if (taintConfig == null) {
             throw new NullPointerException("string is null");
         }
-        summary = summary.trim();
-        if (summary.isEmpty()) {
-            throw new IOException("No taint method summary specified");
+        taintConfig = taintConfig.trim();
+        if (taintConfig.isEmpty()) {
+            throw new IOException("No taint method config specified");
         }
-        summary = loadMutableStackIndeces(summary);
-        String[] tuple = summary.split("\\|");
+        taintConfig = loadMutableStackIndeces(taintConfig);
+        String[] tuple = taintConfig.split("\\|");
         if (tuple.length == 2) {
-            summary = tuple[0];
+            taintConfig = tuple[0];
         } else if (tuple.length != 1) {
             throw new IOException("Bad format: only one '|' expected");
         }
-        loadStatesAndParameters(summary);
+        loadStatesAndParameters(taintConfig);
         if (tuple.length == 2) {
             loadTags(tuple[1]);
         }

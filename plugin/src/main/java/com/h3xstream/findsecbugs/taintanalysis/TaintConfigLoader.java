@@ -56,15 +56,15 @@ public class TaintConfigLoader {
         }
         String[] tuple = line.split("\\:");
         if (tuple.length != 2) {
-            throw new IOException("Line format is not 'type signature:summary info': " + line);
+            throw new IOException("Line format is not 'type signature:config info': " + line);
         }
-        receiver.receiveTaintConfigSummary(tuple[0].trim(), tuple[1]);
+        receiver.receiveTaintConfig(tuple[0].trim(), tuple[1]);
     }
 
     /**
      * Specifies what to do for each loaded summary
      */
     public interface TaintConfigReceiver {
-        void receiveTaintConfigSummary(String typeSignature, String summary) throws IOException;
+        void receiveTaintConfig(String typeSignature, String config) throws IOException;
     }
 }

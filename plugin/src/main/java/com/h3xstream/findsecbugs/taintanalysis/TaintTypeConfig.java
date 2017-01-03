@@ -29,10 +29,10 @@ public interface TaintTypeConfig {
     /**
      * Initializes the taint config object from String
      *
-     * @param summary definition of the state
+     * @param taintConfig definition of the state
      * @return initialized object with taint summary
      * @throws java.io.IOException for bad format of parameter
      * @throws NullPointerException if argument is null
      */
-    public TaintTypeConfig load(String summary) throws IOException;
+    public TaintTypeConfig load(String taintConfig) throws IOException;
 }

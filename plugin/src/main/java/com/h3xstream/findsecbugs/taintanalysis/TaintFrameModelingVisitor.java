@@ -19,22 +19,17 @@ package com.h3xstream.findsecbugs.taintanalysis;
 
 import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import com.h3xstream.findsecbugs.common.ByteCode;
-import com.h3xstream.findsecbugs.common.InterfaceUtils;
 import edu.umd.cs.findbugs.ba.AbstractFrameModelingVisitor;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
-import edu.umd.cs.findbugs.ba.Hierarchy;
 import edu.umd.cs.findbugs.ba.InvalidBytecodeException;
 import edu.umd.cs.findbugs.ba.generic.GenericSignatureParser;
-import edu.umd.cs.findbugs.classfile.ClassDescriptor;
 import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 import edu.umd.cs.findbugs.util.ClassName;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.bcel.Constants;
 import org.apache.bcel.generic.AALOAD;
@@ -71,7 +66,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     private static final Map<String, Taint.Tag> REPLACE_TAGS;
     private final MethodDescriptor methodDescriptor;
     private final TaintConfig taintConfig;
-    private final TaintMethodConfig analyzedMethodSummary;
+    private final TaintMethodConfig analyzedMethodConfig;
 
     static {
         REPLACE_TAGS = new HashMap<String, Taint.Tag>();
@@ -101,7 +96,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         }
         this.methodDescriptor = method;
         this.taintConfig = taintConfig;
-        this.analyzedMethodSummary = new TaintMethodConfig(false);
+        this.analyzedMethodConfig = new TaintMethodConfig(false);
     }
 
     private Collection<Integer> getMutableStackIndices(String signature) {
@@ -363,8 +358,8 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     public void visitARETURN(ARETURN obj) {
         try {
             Taint returnTaint = getFrame().getTopValue();
-            Taint currentTaint = analyzedMethodSummary.getOutputTaint();
-            analyzedMethodSummary.setOuputTaint(Taint.merge(returnTaint, currentTaint));
+            Taint currentTaint = analyzedMethodConfig.getOutputTaint();
+            analyzedMethodConfig.setOuputTaint(Taint.merge(returnTaint, currentTaint));
         } catch (DataflowAnalysisException ex) {
             throw new InvalidBytecodeException("empty stack before reference return", ex);
         }
@@ -380,10 +375,10 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     private void visitInvoke(InvokeInstruction obj) {
         assert obj != null;
         try {
-            TaintMethodConfig methodSummary = getMethodSummary(obj);
-            ObjectType realInstanceClass = (methodSummary == null) ?
-                    null : methodSummary.getOutputTaint().getRealInstanceClass();
-            Taint taint = getMethodTaint(methodSummary);
+            TaintMethodConfig methodConfig = getMethodConfig(obj);
+            ObjectType realInstanceClass = (methodConfig == null) ?
+                    null : methodConfig.getOutputTaint().getRealInstanceClass();
+            Taint taint = getMethodTaint(methodConfig);
             assert taint != null;
             if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
                 taint.setDebugInfo(obj.getMethodName(cpg) + "()");
@@ -391,8 +386,8 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             if (taint.isUnknown()) {
                 taint.addLocation(getTaintLocation(), false);
             }
-            taintMutableArguments(methodSummary, obj);
-            transferTaintToMutables(methodSummary, taint); // adds variable index to taint too
+            taintMutableArguments(methodConfig, obj);
+            transferTaintToMutables(methodConfig, taint); // adds variable index to taint too
             Taint taintCopy = new Taint(taint);
             // return type is not always the instance type
             taintCopy.setRealInstanceClass(realInstanceClass);
@@ -406,30 +401,30 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         }
     }
 
-    private TaintMethodConfig getMethodSummary(InvokeInstruction obj) {
+    private TaintMethodConfig getMethodConfig(InvokeInstruction obj) {
         String signature = obj.getSignature(cpg);
         String returnType = getReturnType(signature);
         String className = getInstanceClassName(obj);
         String methodName = obj.getMethodName(cpg);
         String methodId = "." + methodName + signature;
-        TaintMethodConfig summary = taintConfig.getMethodSummary(getFrame(), methodDescriptor, className, methodId);
-        if (summary != null) {
-            summary = getSummaryWithReplaceTags(summary, className, methodName);
+        TaintMethodConfig config = taintConfig.getMethodConfig(getFrame(), methodDescriptor, className, methodId);
+        if (config != null) {
+            config = getConfigWithReplaceTags(config, className, methodName);
         }
-        if (summary != null && summary.isConfigured()) {
-            return summary;
+        if (config != null && config.isConfigured()) {
+            return config;
         }
         if (taintConfig.isClassTaintSafe(returnType)) {
-            return TaintMethodConfig.SAFE_SUMMARY;
+            return TaintMethodConfig.SAFE_CONFIG;
         }
-        if (summary != null) {
-            return summary;
+        if (config != null) {
+            return config;
         }
         if (Constants.CONSTRUCTOR_NAME.equals(methodName)
                 && !taintConfig.isClassTaintSafe("L" + className + ";")) {
             try {
                 int stackSize = getFrame().getNumArgumentsIncludingObjectInstance(obj, cpg);
-                return TaintMethodConfig.getDefaultConstructorSummary(stackSize);
+                return TaintMethodConfig.getDefaultConstructorConfig(stackSize);
             } catch (DataflowAnalysisException ex) {
                 throw new InvalidBytecodeException(ex.getMessage(), ex);
             }
@@ -437,23 +432,23 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         return null;
     }
 
-    private TaintMethodConfig getSummaryWithReplaceTags(
-            TaintMethodConfig summary, String className, String methodName) {
+    private TaintMethodConfig getConfigWithReplaceTags(
+            TaintMethodConfig config, String className, String methodName) {
         if (!"java/lang/String".equals(className)) {
-            return summary;
+            return config;
         }
         boolean isRegex = "replaceAll".equals(methodName);
         if (!isRegex && !"replace".equals(methodName)) {
             // not a replace method
-            return summary;
+            return config;
         }
         try {
             String toReplace = getFrame().getStackValue(1).getConstantValue();
             if (toReplace == null) {
                 // we don't know the exact value
-                return summary;
+                return config;
             }
-            Taint taint = summary.getOutputTaint();
+            Taint taint = config.getOutputTaint();
             for (Map.Entry<String, Taint.Tag> replaceTag : REPLACE_TAGS.entrySet()) {
                 String tagString = replaceTag.getKey();
                 if ((isRegex && toReplace.contains(tagString))
@@ -461,9 +456,9 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                     taint.addTag(replaceTag.getValue());
                 }
             }
-            TaintMethodConfig summaryCopy = new TaintMethodConfig(summary);
-            summaryCopy.setOuputTaint(taint);
-            return summaryCopy;
+            TaintMethodConfig configCopy = new TaintMethodConfig(config);
+            configCopy.setOuputTaint(taint);
+            return configCopy;
         } catch (DataflowAnalysisException ex) {
             throw new InvalidBytecodeException(ex.getMessage(), ex);
         }
@@ -492,13 +487,13 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         return signature.substring(signature.indexOf(')') + 1);
     }
 
-    private Taint getMethodTaint(TaintMethodConfig methodSummary) {
-        if (methodSummary == null) {
+    private Taint getMethodTaint(TaintMethodConfig methodConfig) {
+        if (methodConfig == null) {
             return getDefaultValue();
         }
-        Taint taint = methodSummary.getOutputTaint();
+        Taint taint = methodConfig.getOutputTaint();
         assert taint != null;
-        assert taint != methodSummary.getOutputTaint() : "defensive copy not made";
+        assert taint != methodConfig.getOutputTaint() : "defensive copy not made";
         Taint taintCopy = new Taint(taint); 
         if (taint.isUnknown() && taint.hasParameters()) {
             Taint merge = mergeTransferParameters(taint.getParameters());
@@ -523,8 +518,8 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         return taint;
     }
 
-    private void taintMutableArguments(TaintMethodConfig methodSummary, InvokeInstruction obj) {
-        if (methodSummary != null && methodSummary.isConfigured()) {
+    private void taintMutableArguments(TaintMethodConfig methodConfig, InvokeInstruction obj) {
+        if (methodConfig != null && methodConfig.isConfigured()) {
             return;
         }
         Collection<Integer> mutableStackIndices = getMutableStackIndices(obj.getSignature(cpg));
@@ -562,14 +557,14 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         return taint;
     }
 
-    private void transferTaintToMutables(TaintMethodConfig methodSummary, Taint taint) {
+    private void transferTaintToMutables(TaintMethodConfig methodConfig, Taint taint) {
         assert taint != null;
-        if (methodSummary == null || !methodSummary.hasMutableStackIndices()) {
+        if (methodConfig == null || !methodConfig.hasMutableStackIndices()) {
             return;
         }
         try {
             int stackDepth = getFrame().getStackDepth();
-            for (Integer mutableStackIndex : methodSummary.getMutableStackIndices()) {
+            for (Integer mutableStackIndex : methodConfig.getMutableStackIndices()) {
                 assert mutableStackIndex >= 0;
                 if (mutableStackIndex >= stackDepth) {
                     if (!Constants.CONSTRUCTOR_NAME.equals(methodDescriptor.getName())
@@ -628,8 +623,8 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
      * This method must be called from outside at the end of the method analysis
      */
     public void finishAnalysis() {
-        assert analyzedMethodSummary != null;
-        Taint outputTaint = analyzedMethodSummary.getOutputTaint();
+        assert analyzedMethodConfig != null;
+        Taint outputTaint = analyzedMethodConfig.getOutputTaint();
         if (outputTaint == null) {
             // void methods
             return;
@@ -643,16 +638,16 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         if (returnType.equals("L" + realInstanceClassName + ";")) {
             // storing it in method summary is useless
             outputTaint.setRealInstanceClass(null);
-            analyzedMethodSummary.setOuputTaint(outputTaint);
+            analyzedMethodConfig.setOuputTaint(outputTaint);
         }
         String className = methodDescriptor.getSlashedClassName();
         String methodId = "." + methodDescriptor.getName() + methodDescriptor.getSignature();
-        if (analyzedMethodSummary.isInformative()
-                || taintConfig.getSuperMethodSummary(className, methodId) != null) {
+        if (analyzedMethodConfig.isInformative()
+                || taintConfig.getSuperMethodConfig(className, methodId) != null) {
             String fullMethodName = className.concat(methodId);
             if (!taintConfig.containsKey(fullMethodName)) {
                 // prefer configured summaries to derived
-                taintConfig.put(fullMethodName, analyzedMethodSummary);
+                taintConfig.put(fullMethodName, analyzedMethodConfig);
             }
         }
     }

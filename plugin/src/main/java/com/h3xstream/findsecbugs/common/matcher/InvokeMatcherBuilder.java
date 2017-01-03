@@ -34,7 +34,7 @@ public class InvokeMatcherBuilder {
 
     public InvokeMatcherBuilder atClass(String... classesNames) {
         for(String clz : classesNames) {
-            this.classesNames.add(clz);
+            this.classesNames.add(clz.replace('/','.'));
         }
         return this;
     }
@@ -54,7 +54,7 @@ public class InvokeMatcherBuilder {
     }
 
     public boolean matches(OpcodeStackDetector opcodeStackDetector) {
-        if(classesNames.size() != 0 && !classesNames.contains(opcodeStackDetector.getClassConstantOperand())) {
+        if(classesNames.size() != 0 && !classesNames.contains(opcodeStackDetector.getClassConstantOperand().replace('/','.'))) {
             return false;
         }
         if(methodNames.size() != 0 && !methodNames.contains(opcodeStackDetector.getNameConstantOperand())) {

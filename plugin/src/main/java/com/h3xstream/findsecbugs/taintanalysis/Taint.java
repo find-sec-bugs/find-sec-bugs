@@ -98,7 +98,10 @@ public class Taint {
         APOSTROPHE_ENCODED,
         LT_ENCODED,
         SENSITIVE_DATA,
-        CUSTOM_INJECTION_SAFE;
+        CUSTOM_INJECTION_SAFE,
+
+        PASSWORD_VARIABLE,
+        CREDIT_CARD_VARIABLE;
     }
     
     private State state;

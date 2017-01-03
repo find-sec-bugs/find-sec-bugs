@@ -55,15 +55,15 @@ public class TaintMethodConfigWithArgumentsAndLocation extends TaintMethodConfig
         super(true);
     }
 
-    public static boolean accepts(String typeSignature, String summary) {
-        int pos = summary.lastIndexOf('@');
+    public static boolean accepts(String typeSignature, String config) {
+        int pos = config.lastIndexOf('@');
         if (pos < 0) {
             return false;
         }
-        summary = summary.substring(0, pos);
+        config = config.substring(0, pos);
 
         return methodWithStringConstantOrEnumPattern.matcher(typeSignature).matches() &&
-                TaintMethodConfig.summaryPattern.matcher(summary).matches();
+                TaintMethodConfig.configPattern.matcher(config).matches();
     }
 
     /**
@@ -71,30 +71,30 @@ public class TaintMethodConfigWithArgumentsAndLocation extends TaintMethodConfig
      * <br />
      * The method accepts syntax similar to {@link TaintMethodConfig#load(String)} with small difference.<br />
      * The summary must ends with '@' character followed by class name<br />
-     * @param summary method summary with syntax described above
+     * @param taintConfig method summary with syntax described above
      * @return initialized object with taint method summary
      * @throws IOException for bad format of parameter
      * @throws NullPointerException if argument is null
      */
     @Override
-    public TaintMethodConfigWithArgumentsAndLocation load(String summary) throws IOException {
-        if (summary == null) {
-            throw new NullPointerException("string is null");
+    public TaintMethodConfigWithArgumentsAndLocation load(String taintConfig) throws IOException {
+        if (taintConfig == null) {
+            throw new NullPointerException("String is null");
         }
-        summary = summary.trim();
-        if (summary.isEmpty()) {
-            throw new IOException("No taint method summary specified");
+        taintConfig = taintConfig.trim();
+        if (taintConfig.isEmpty()) {
+            throw new IOException("No taint method config specified");
         }
 
-        int locationPos = summary.lastIndexOf('@');
+        int locationPos = taintConfig.lastIndexOf('@');
         if (locationPos < 0) {
             throw new IOException("Bad format: @ expected");
         }
 
-        location = summary.substring(locationPos + 1).trim();
-        summary = summary.substring(0, locationPos);
+        location = taintConfig.substring(locationPos + 1).trim();
+        taintConfig = taintConfig.substring(0, locationPos);
 
-        super.load(summary);
+        super.load(taintConfig);
 
         return this;
     }

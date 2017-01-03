@@ -49,7 +49,7 @@ import java.util.TreeSet;
 public class TaintConfig extends HashMap<String, TaintMethodConfig> {
     
     private static final long serialVersionUID = 1L;
-    private final Map<String, TaintClassConfig> taintClassSummaryMap = new HashMap<String, TaintClassConfig>();
+    private final Map<String, TaintClassConfig> taintClassConfigMap = new HashMap<String, TaintClassConfig>();
     private final Map<String, TaintMethodConfigWithArgumentsAndLocation> taintMethodConfigWithArgumentsAndLocationMap =
             new HashMap<String, TaintMethodConfigWithArgumentsAndLocation>();
 
@@ -77,32 +77,32 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
     public void load(InputStream input, final boolean checkRewrite) throws IOException {
         new TaintConfigLoader().load(input, new TaintConfigLoader.TaintConfigReceiver() {
             @Override
-            public void receiveTaintConfigSummary(String typeSignature, String summary) throws IOException {
-                if (TaintMethodConfig.accepts(typeSignature, summary)) {
+            public void receiveTaintConfig(String typeSignature, String config) throws IOException {
+                if (TaintMethodConfig.accepts(typeSignature, config)) {
                     if (checkRewrite && containsKey(typeSignature)) {
-                        throw new IllegalStateException("Summary for " + typeSignature + " already loaded");
+                        throw new IllegalStateException("Config for " + typeSignature + " already loaded");
                     }
-                    TaintMethodConfig taintMethodSummary = new TaintMethodConfig(true).load(summary);
-                    put(typeSignature, taintMethodSummary);
+                    TaintMethodConfig taintMethodConfig = new TaintMethodConfig(true).load(config);
+                    put(typeSignature, taintMethodConfig);
                     return;
                 }
 
-                if (TaintClassConfig.accepts(typeSignature, summary)) {
-                    if (checkRewrite && taintClassSummaryMap.containsKey(typeSignature)) {
-                        throw new IllegalStateException("Summary for " + typeSignature + " already loaded");
+                if (TaintClassConfig.accepts(typeSignature, config)) {
+                    if (checkRewrite && taintClassConfigMap.containsKey(typeSignature)) {
+                        throw new IllegalStateException("Config for " + typeSignature + " already loaded");
                     }
-                    TaintClassConfig taintClassSummary = new TaintClassConfig().load(summary);
-                    taintClassSummaryMap.put(typeSignature, taintClassSummary);
+                    TaintClassConfig taintClassConfig = new TaintClassConfig().load(config);
+                    taintClassConfigMap.put(typeSignature, taintClassConfig);
                     return;
                 }
 
-                if (TaintMethodConfigWithArgumentsAndLocation.accepts(typeSignature, summary)) {
+                if (TaintMethodConfigWithArgumentsAndLocation.accepts(typeSignature, config)) {
                     if (checkRewrite && taintMethodConfigWithArgumentsAndLocationMap.containsKey(typeSignature)) {
-                        throw new IllegalStateException("Summary for " + typeSignature + " already loaded");
+                        throw new IllegalStateException("Config for " + typeSignature + " already loaded");
                     }
 
                     TaintMethodConfigWithArgumentsAndLocation methodConfig =
-                            new TaintMethodConfigWithArgumentsAndLocation().load(summary);
+                            new TaintMethodConfigWithArgumentsAndLocation().load(config);
 
                     String key = typeSignature + '@' + methodConfig.getLocation();
                     taintMethodConfigWithArgumentsAndLocationMap.put(key, methodConfig);
@@ -120,12 +120,12 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
             return false;
         }
 
-        TaintClassConfig summary = taintClassSummaryMap.get(typeSignature);
-        if (summary == null) {
+        TaintClassConfig classConfig = taintClassConfigMap.get(typeSignature);
+        if (classConfig == null) {
             return false;
         }
 
-        return summary.isImmutable();
+        return classConfig.isImmutable();
     }
 
     public boolean isClassTaintSafe(String typeSignature) {
@@ -133,12 +133,12 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
             return false;
         }
 
-        TaintClassConfig taintClassSummary = getClassSummary(typeSignature);
-        if (taintClassSummary == null) {
+        TaintClassConfig taintClassConfig = getTaintClassConfig(typeSignature);
+        if (taintClassConfig == null) {
             return false;
         }
 
-        return taintClassSummary.getTaintState().equals(Taint.State.SAFE);
+        return taintClassConfig.getTaintState().equals(Taint.State.SAFE);
     }
 
     public Taint.State getClassTaintState(String typeSignature, Taint.State defaultState) {
@@ -146,48 +146,48 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
             return defaultState;
         }
 
-        TaintClassConfig taintClassSummary = getClassSummary(typeSignature);
+        TaintClassConfig taintClassConfig = getTaintClassConfig(typeSignature);
 
-        if (taintClassSummary == null) {
+        if (taintClassConfig == null) {
             return defaultState;
         }
 
-        Taint.State classSummaryTaintState = taintClassSummary.getTaintState();
+        Taint.State taintClassConfigState = taintClassConfig.getTaintState();
 
-        if (classSummaryTaintState.equals(TaintClassConfig.DEFAULT_TAINT_STATE)) {
+        if (taintClassConfigState.equals(TaintClassConfig.DEFAULT_TAINT_STATE)) {
             return defaultState;
         }
 
-        return classSummaryTaintState;
+        return taintClassConfigState;
     }
 
-    public TaintClassConfig getClassSummary(String typeSignature) {
+    public TaintClassConfig getTaintClassConfig(String typeSignature) {
         if (!isClassType(typeSignature)) {
             return null;
         }
 
-        return taintClassSummaryMap.get(typeSignature);
+        return taintClassConfigMap.get(typeSignature);
     }
 
     private boolean isClassType(String typeSignature) {
         return typeSignature != null && typeSignature.length() > 2 && typeSignature.charAt(0) == 'L';
     }
 
-    public TaintMethodConfig getMethodSummary(TaintFrame frame, MethodDescriptor methodDescriptor, String className, String methodId) {
-        TaintMethodConfig taintMethodSummary = getTaintMethodConfigWithArgumentsAndLocation(frame, methodDescriptor, className, methodId);
+    public TaintMethodConfig getMethodConfig(TaintFrame frame, MethodDescriptor methodDescriptor, String className, String methodId) {
+        TaintMethodConfig taintMethodConfig = getTaintMethodConfigWithArgumentsAndLocation(frame, methodDescriptor, className, methodId);
 
-        if (taintMethodSummary == null) {
-            taintMethodSummary = get(className.concat(methodId));
+        if (taintMethodConfig == null) {
+            taintMethodConfig = get(className.concat(methodId));
         }
 
-        if (taintMethodSummary == null) {
-            taintMethodSummary = getSuperMethodSummary(className, methodId);
+        if (taintMethodConfig == null) {
+            taintMethodConfig = getSuperMethodConfig(className, methodId);
         }
 
-        return taintMethodSummary;
+        return taintMethodConfig;
     }
 
-    public TaintMethodConfig getSuperMethodSummary(String className, String methodId) {
+    public TaintMethodConfig getSuperMethodConfig(String className, String methodId) {
         try {
             if (className.endsWith("]")) {
                 // not a real class
@@ -195,24 +195,24 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
             }
             JavaClass javaClass = Repository.lookupClass(className);
             assert javaClass != null;
-            TaintMethodConfig summary = getSuperMethodSummary(javaClass.getSuperClasses(), methodId);
-            if (summary != null) {
-                return summary;
+            TaintMethodConfig methodConfig = getSuperMethodConfig(javaClass.getSuperClasses(), methodId);
+            if (methodConfig != null) {
+                return methodConfig;
             }
-            return getSuperMethodSummary(javaClass.getAllInterfaces(), methodId);
+            return getSuperMethodConfig(javaClass.getAllInterfaces(), methodId);
         } catch (ClassNotFoundException ex) {
             AnalysisContext.reportMissingClass(ex);
             return null;
         }
     }
 
-    private TaintMethodConfig getSuperMethodSummary(JavaClass[] javaClasses, String method) {
+    private TaintMethodConfig getSuperMethodConfig(JavaClass[] javaClasses, String method) {
         assert javaClasses != null;
         for (JavaClass classOrInterface : javaClasses) {
             String fullMethodName = classOrInterface.getClassName().replace('.', '/').concat(method);
-            TaintMethodConfig summary = get(fullMethodName);
-            if (summary != null) {
-                return summary;
+            TaintMethodConfig conf = get(fullMethodName);
+            if (conf != null) {
+                return conf;
             }
         }
         return null;

@@ -4569,4 +4569,49 @@ Avoid using those methods. If you are looking to encode a URL String or form par
     </BugPattern>
     <BugCode abbrev="SECURLR">URL Rewriting Methods</BugCode>
 
+
+    <!-- Insecure SMTP SSL connection -->
+    <Detector class="com.h3xstream.findsecbugs.crypto.InsecureSmtpSslDetector">
+        <Details>Detect Insecure SMTP SSL connection.
+        </Details>
+    </Detector>
+
+    <BugPattern type="INSECURE_SMTP_SSL">
+        <ShortDescription>Insecure SMTP SSL connection</ShortDescription>
+        <LongDescription> This SMTP SSL conncection does not verify the server certificate</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Server identity verification is disabled when making SSL connections. Some email libraries that enable SSL connections do not verify the server certificate by default. This is equivalent to trusting all certificates. When trying to connect to the server, this application would readily accept a certificate issued to "hackedserver.com". The application would now potentially leak sensitive user information on a broken SSL connection to the hacked server.
+</p>
+<p>
+    <b>Vulnerable Code:</b><br/>
+<pre>...
+Email email = new SimpleEmail();
+email.setHostName("smtp.servermail.com");
+email.setSmtpPort(465);
+email.setAuthenticator(new DefaultAuthenticator(username, password));
+email.setSSLOnConnect(true);
+email.setFrom("user@gmail.com");
+email.setSubject("TestMail");
+email.setMsg("This is a test mail ... :-)");
+email.addTo("foo@bar.com");
+email.send();
+...</pre>
+</p>
+<p>
+    <b>Solution:</b><br/>
+Please add the following check to verify the server cerfiticate:
+<pre>email.setSSLCheckServerIdentity(true);</pre>
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://cwe.mitre.org/data/definitions/297.html">CWE-297: Improper Validation of Certificate with Host Mismatch</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECISC">Insecure SMTP SSL connection</BugCode>
+
 </MessageCollection>

@@ -18,6 +18,8 @@ public class WeakMessageDigestAdditionalSig {
         MessageDigest.getInstance("MD5", new DummyProvider());
         MessageDigest.getInstance("MD4", new DummyProvider());
         MessageDigest.getInstance("MD2", new DummyProvider());
+        MessageDigest.getInstance("SHA", "SUN");
+        MessageDigest.getInstance("SHA", new DummyProvider());
         MessageDigest.getInstance("SHA1", "SUN");
         MessageDigest.getInstance("SHA1", new DummyProvider());
         MessageDigest.getInstance("SHA-1", "SUN");

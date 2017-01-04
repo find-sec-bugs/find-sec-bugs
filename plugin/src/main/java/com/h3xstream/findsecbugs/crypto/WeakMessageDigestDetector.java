@@ -113,7 +113,7 @@ public class WeakMessageDigestDetector extends OpcodeStackDetector {
             bugReporter.reportBug(new BugInstance(this, WEAK_MESSAGE_DIGEST_MD5_TYPE, Priorities.HIGH_PRIORITY) //
                     .addClass(this).addMethod(this).addSourceLine(this) //
                     .addString(algorithm));
-        } else if ("SHA1".equals(algorithm) || "SHA-1".equals(algorithm)) { //Lower priority for SHA-1
+        } else if ("SHA1".equals(algorithm) || "SHA-1".equals(algorithm) || "SHA".equals(algorithm)) { //Lower priority for SHA-1
             bugReporter.reportBug(new BugInstance(this, WEAK_MESSAGE_DIGEST_SHA1_TYPE, Priorities.NORMAL_PRIORITY) //
                     .addClass(this).addMethod(this).addSourceLine(this) //
                     .addString(algorithm));

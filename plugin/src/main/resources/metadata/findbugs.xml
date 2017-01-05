@@ -39,7 +39,7 @@
     <Detector class="com.h3xstream.findsecbugs.endpoint.Struts2EndpointDetector" reports="STRUTS2_ENDPOINT"/>
     <Detector class="com.h3xstream.findsecbugs.endpoint.SpringMvcEndpointDetector" reports="SPRING_ENDPOINT"/>
     <Detector class="com.h3xstream.findsecbugs.injection.custom.CustomInjectionDetector" reports="CUSTOM_INJECTION"/>
-    <Detector class="com.h3xstream.findsecbugs.injection.sql.SqlInjectionDetector" reports="SQL_INJECTION,SQL_INJECTION_TURBINE,SQL_INJECTION_HIBERNATE,SQL_INJECTION_JDO,SQL_INJECTION_JPA,SQL_INJECTION_JDBC,SQL_INJECTION_SPRING_JDBC"/>
+    <Detector class="com.h3xstream.findsecbugs.injection.sql.SqlInjectionDetector" reports="SQL_INJECTION,SQL_INJECTION_TURBINE,SQL_INJECTION_HIBERNATE,SQL_INJECTION_JDO,SQL_INJECTION_JPA,SQL_INJECTION_JDBC,SQL_INJECTION_SPRING_JDBC,SCALA_SQL_INJECTION_SLICK,SCALA_SQL_INJECTION_ANORM"/>
     <Detector class="com.h3xstream.findsecbugs.injection.ldap.LdapInjectionDetector" reports="LDAP_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.BadHexadecimalConversionDetector" reports="BAD_HEXA_CONVERSION"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.HazelcastSymmetricEncryptionDetector"
@@ -146,6 +146,8 @@
     <BugPattern type="SQL_INJECTION_JPA" abbrev="SECSQLIJPA" category="SECURITY" cweid="89"/>
     <BugPattern type="SQL_INJECTION_SPRING_JDBC" abbrev="SECSQLISPRJDBC" category="SECURITY" cweid="89"/>
     <BugPattern type="SQL_INJECTION_JDBC" abbrev="SECSQLIJDBC" category="SECURITY" cweid="89"/>
+    <BugPattern type="SCALA_SQL_INJECTION_SLICK" abbrev="SECSSQLS" category="SECURITY" cweid="89"/>
+    <BugPattern type="SCALA_SQL_INJECTION_ANORM" abbrev="SECSSQLA" category="SECURITY" cweid="89"/>
     <BugPattern type="LDAP_INJECTION" abbrev="SECLDAPI" category="SECURITY" cweid="90"/>
     <BugPattern type="BAD_HEXA_CONVERSION" abbrev="SECBHC" category="SECURITY" cweid="704"/>
     <BugPattern type="HAZELCAST_SYMMETRIC_ENCRYPTION" abbrev="SECHAZ" category="SECURITY" cweid="327"/>

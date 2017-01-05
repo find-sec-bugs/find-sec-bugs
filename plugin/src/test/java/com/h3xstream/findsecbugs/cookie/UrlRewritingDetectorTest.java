@@ -15,75 +15,62 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs;
-
-import static org.mockito.Mockito.*;
+package com.h3xstream.findsecbugs.cookie;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.testng.annotations.Test;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
 
-import java.util.Arrays;
-
-public class PredictableRandomDetectorTest extends BaseDetectorTest {
-
+public class UrlRewritingDetectorTest extends BaseDetectorTest {
+    
     @Test
-    public void detectUsePredictableRandom() throws Exception {
+    public void detectUrlRewriting() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/InsecureRandom")
+                getClassFilePath("testcode/cookie/UrlRewriting")
         };
 
         //Run the analysis
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        //Assertions
 
-        //1rst variation new Random()
+        //1rst variation encodeURL(req.getRequestURI())
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("PREDICTABLE_RANDOM")
-                        .inClass("InsecureRandom").inMethod("newRandomObj").atLine(10)
+                        .bugType("URL_REWRITING")
+                        .inClass("UrlRewriting").inMethod("encodeURLRewrite").atLine(17)
                         .build()
         );
-        //2nd variation Math.random()
+        //2nd variation, deprecated encodeUrl(req.getRequestURI())
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("PREDICTABLE_RANDOM")
-                        .inClass("InsecureRandom").inMethod("mathRandom").atLine(17)
+                        .bugType("URL_REWRITING")
+                        .inClass("UrlRewriting").inMethod("encodeUrlRewrite").atLine(21)
                         .build()
         );
-
-        //3nd variation ThreadLocalRandom.current()
+        //3rd variation encodeRedirectURL(req.getRequestURI())
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("PREDICTABLE_RANDOM")
-                        .inClass("InsecureRandom").inMethod("threadLocalRandom").atLine(22)
+                        .bugType("URL_REWRITING")
+                        .inClass("UrlRewriting").inMethod("encodeRedirectURLRewrite").atLine(25)
+                        .build()
+        );
+        //4th variation, deprecated encodeRedirectUrl(req.getRequestURI())
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("URL_REWRITING")
+                        .inClass("UrlRewriting").inMethod("encodeRedirectUrlRewrite").atLine(29)
                         .build()
         );
 
-        //Scala random number generator (mirror of java.util.Random)
-        for(Integer line : Arrays.asList(36,37)) {
-            verify(reporter).doReportBug(
-                    bugDefinition()
-                            .bugType("PREDICTABLE_RANDOM_SCALA")
-                            .inClass("InsecureRandom").inMethod("scalaRandom").atLine(line)
-                            .build()
-            );
-        }
-
-
-        verify(reporter, times(3)).doReportBug( //3 java api
+        verify(reporter, times(4)).doReportBug(
                 bugDefinition()
-                        .bugType("PREDICTABLE_RANDOM")
-                        .build()
-        );
-        verify(reporter, times(2)).doReportBug( //2 scala variations
-                bugDefinition()
-                        .bugType("PREDICTABLE_RANDOM_SCALA")
+                        .bugType("URL_REWRITING")
                         .build()
         );
     }
-
 }

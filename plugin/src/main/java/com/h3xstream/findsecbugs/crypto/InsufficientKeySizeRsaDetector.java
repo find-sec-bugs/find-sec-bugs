@@ -74,7 +74,6 @@ public class InsufficientKeySizeRsaDetector implements Detector {
             Location location = i.next();
 
             Instruction inst = location.getHandle().getInstruction();
-//            ByteCode.printOpCode(inst, cpg);
 
             if (inst instanceof INVOKESTATIC) { //KeyPairGenerator.getInstance is called
                 INVOKESTATIC invoke = (INVOKESTATIC) inst;
@@ -101,9 +100,8 @@ public class InsufficientKeySizeRsaDetector implements Detector {
                         }
                     }
 
-                    if (n != null && n.intValue() < 1024) {
-                        initializeWeakKeyLength = true;
-                        locationWeakness = location;
+                    if (n != null && n.intValue() < 2048 && createRsaKeyGen) {
+                        addToReport(m, classContext, location, n);
                     }
                 }
             } else if (inst instanceof INVOKESPECIAL) { // new RSAKeyGenParameterSpec() is called
@@ -118,22 +116,21 @@ public class InsufficientKeySizeRsaDetector implements Detector {
                         }
                     }
 
-                    if (n != null && n.intValue() < 1024) {
-                        initializeWeakKeyLength = true;
-                        locationWeakness = location;
+                    if (n != null && n.intValue() < 2048 && createRsaKeyGen) {
+                        addToReport(m, classContext, location, n);
                     }
                 }
             }
-        }
+        }       
+    }
 
-        //Both condition have been found in the same method
-        if (createRsaKeyGen && initializeWeakKeyLength) {
-            JavaClass clz = classContext.getJavaClass();
-            bugReporter.reportBug(new BugInstance(this, RSA_KEY_SIZE_TYPE, Priorities.NORMAL_PRIORITY) //
-                    .addClass(clz)
-                    .addMethod(clz, m)
-                    .addSourceLine(classContext, m, locationWeakness));
-        }
+    private void addToReport(Method m, ClassContext classContext, Location locationWeakness, Number n){
+        JavaClass clz = classContext.getJavaClass();
+        int priority = (n.intValue() < 1024) ? Priorities.NORMAL_PRIORITY : Priorities.LOW_PRIORITY;
+        bugReporter.reportBug(new BugInstance(this, RSA_KEY_SIZE_TYPE, priority) //
+                .addClass(clz)
+                .addMethod(clz, m)
+                .addSourceLine(classContext, m, locationWeakness));
     }
 
     @Override

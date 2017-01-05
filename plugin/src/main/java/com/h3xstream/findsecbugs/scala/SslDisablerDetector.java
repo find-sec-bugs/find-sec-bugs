@@ -17,15 +17,11 @@
  */
 package com.h3xstream.findsecbugs.scala;
 
-import com.h3xstream.findsecbugs.common.matcher.InvokeMatcherBuilder;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.ba.XField;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import sun.reflect.FieldInfo;
-
-import static com.h3xstream.findsecbugs.common.matcher.InstructionDSL.invokeInstruction;
 
 public class SslDisablerDetector extends OpcodeStackDetector {
 

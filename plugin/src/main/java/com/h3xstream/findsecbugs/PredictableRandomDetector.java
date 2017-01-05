@@ -71,6 +71,13 @@ public class PredictableRandomDetector extends OpcodeStackDetector {
                     .addClass(this).addMethod(this).addSourceLine(this) //
                     .addString("java.lang.Math.random()"));
 
+        } else if (seen == Constants.INVOKESTATIC && getClassConstantOperand().equals("java/util/concurrent/ThreadLocalRandom")
+                && getNameConstantOperand().equals("current")) {
+            
+            bugReporter.reportBug(new BugInstance(this, PREDICTABLE_RANDOM_TYPE, Priorities.NORMAL_PRIORITY) //
+                    .addClass(this).addMethod(this).addSourceLine(this) //
+                    .addString("java.util.concurrent.ThreadLocalRandom"));
+
         } else if (seen == Constants.INVOKESPECIAL && getClassConstantOperand().equals("scala/util/Random")
                 && getNameConstantOperand().equals("<init>")) {
 

@@ -1,7 +1,12 @@
 package testcode;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,5 +51,30 @@ public class SpringTestController {
     @RequestMapping(value = "/hello6", method = RequestMethod.GET)
     public void hello6(@RequestParam("description") String description, @RequestPart("file") MultipartFile file) {
         logger.fine("hello #6");
+    }
+
+    @GetMapping(value = "/hello-get")
+    public void helloGet() {
+        logger.fine("hello GET");
+    }
+
+    @PostMapping(value = "/hello-post")
+    public void helloPost() {
+        logger.fine("hello POST");
+    }
+
+    @PutMapping(value = "/hello-put")
+    public void helloPut() {
+        logger.fine("hello PUT");
+    }
+
+    @DeleteMapping(value = "/hello-delete")
+    public void helloDelete() {
+        logger.fine("hello DELETE");
+    }
+
+    @PatchMapping(value = "/hello-patch")
+    public void helloPatch() {
+        logger.fine("hello PATCH");
     }
 }

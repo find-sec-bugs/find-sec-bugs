@@ -26,12 +26,24 @@ import org.apache.bcel.classfile.AnnotationEntry;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  *
  */
 public class SpringMvcEndpointDetector implements Detector {
 
     private static final String SPRING_ENDPOINT_TYPE = "SPRING_ENDPOINT";
+
+    private static final List<String> REQUEST_MAPPING_ANNOTATION_TYPES = Arrays.asList(
+            "Lorg/springframework/web/bind/annotation/RequestMapping;", //
+            "Lorg/springframework/web/bind/annotation/GetMapping;", //
+            "Lorg/springframework/web/bind/annotation/PostMapping;", //
+            "Lorg/springframework/web/bind/annotation/PutMapping;", //
+            "Lorg/springframework/web/bind/annotation/DeleteMapping;", //
+            "Lorg/springframework/web/bind/annotation/PatchMapping;");
+
     private BugReporter bugReporter;
 
     public SpringMvcEndpointDetector(BugReporter bugReporter) {
@@ -45,7 +57,7 @@ public class SpringMvcEndpointDetector implements Detector {
 
             for (AnnotationEntry ae : m.getAnnotationEntries()) {
 
-                if (ae.getAnnotationType().equals("Lorg/springframework/web/bind/annotation/RequestMapping;")) {
+                if (REQUEST_MAPPING_ANNOTATION_TYPES.contains(ae.getAnnotationType())) {
                     bugReporter.reportBug(new BugInstance(this, SPRING_ENDPOINT_TYPE, Priorities.LOW_PRIORITY) //
                             .addClassAndMethod(javaClass, m));
                     continue method;

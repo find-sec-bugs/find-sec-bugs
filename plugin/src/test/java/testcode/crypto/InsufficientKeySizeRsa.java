@@ -40,9 +40,9 @@ public class InsufficientKeySizeRsa {
         return key;
     }
 
-    public KeyPair okKeySize() throws NoSuchAlgorithmException {
+    public KeyPair weakKeySize5Recommended() throws NoSuchAlgorithmException {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-        keyGen.initialize(1024);
+        keyGen.initialize(1024); //BAD with lower priority
 
         return keyGen.generateKeyPair();
     }

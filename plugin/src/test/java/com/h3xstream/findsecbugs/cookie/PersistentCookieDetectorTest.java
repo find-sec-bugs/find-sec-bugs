@@ -15,47 +15,46 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.crypto;
+package com.h3xstream.findsecbugs.cookie;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.testng.annotations.Test;
-
-import java.util.Arrays;
-
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
 
-public class InsufficientKeySizeRsaDetectorTest extends BaseDetectorTest {
+public class PersistentCookieDetectorTest extends BaseDetectorTest {
+
     @Test
-    public void detectBadKeySize() throws Exception {
+    public void detectPersistentCookieUsage() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/crypto/InsufficientKeySizeRsa")
+                getClassFilePath("testcode/cookie/PersistentCookie")
         };
 
         //Run the analysis
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        //Assertions
-        for (Integer line : Arrays.asList(14, 21, 29, 37)) {
-            verify(reporter).doReportBug(
-                    bugDefinition().bugType("RSA_KEY_SIZE")
-                            .inClass("InsufficientKeySizeRsa").withPriority("Medium").atLine(line)
-                            .build()
-            );
-        }
-
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("RSA_KEY_SIZE")
-                        .inClass("InsufficientKeySizeRsa").inMethod("weakKeySize5Recommended").withPriority("Low").atLine(45)
+                        .bugType("COOKIE_PERSISTENT")
+                        .inClass("PersistentCookie").inMethod("setCookieFor1DayUnitConfusion").atLine(30)
+                        .build()
+        );
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("COOKIE_PERSISTENT")
+                        .inClass("PersistentCookie").inMethod("setCookieFor1Year").atLine(35)
                         .build()
         );
 
-        verify(reporter, times(5)).doReportBug(
-                bugDefinition().bugType("RSA_KEY_SIZE").build());
+        //Total bugs found
+        verify(reporter, times(2)).doReportBug(
+                bugDefinition()
+                        .bugType("COOKIE_PERSISTENT")
+                        .build()
+        );
     }
 }

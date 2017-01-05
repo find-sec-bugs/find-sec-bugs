@@ -1558,7 +1558,7 @@ such a setter. The use of these parameters should be reviewed to make sure they 
         <LongDescription>{0} is a Spring endpoint (Controller)</LongDescription>
         <Details>
             <![CDATA[
-<p>This class is a Spring Controller. All methods annotated with <code>RequestMapping</code> are reachable remotely.
+<p>This class is a Spring Controller. All methods annotated with <code>RequestMapping</code> (as well as its shortcut annotations <code>GetMapping</code>, <code>PostMapping</code>, <code>PutMapping</code>, <code>DeleteMapping</code>, and <code>PatchMapping</code>) are reachable remotely.
 This class should be analyzed to make sure that remotely exposed methods are safe to expose to potential attackers.</p>
 ]]>
         </Details>
@@ -1932,6 +1932,86 @@ updateSales.setString(2, coffeeName);</pre>
         </Details>
     </BugPattern>
     <BugCode abbrev="SECSQLIJDBC">SQL Injection (JDBC)</BugCode>
+
+    <!-- Scala Slick SQL Injection -->
+    <BugPattern type="SCALA_SQL_INJECTION_SLICK">
+        <ShortDescription>Potential Scala Slick Injection</ShortDescription>
+        <LongDescription>This use of {3} can be vulnerable to SQL injection</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+The input values included in SQL queries need to be passed in safely.
+Bind variables in prepared statements can be used to easily mitigate the risk of SQL injection.
+</p>
+
+<p>
+    <b>Vulnerable Code:</b><br/>
+    <pre>db.run {
+  sql"select * from people where name = '#$value'".as[Person]
+}</pre>
+</p>
+<p>
+    <b>Solution:</b><br/>
+    <pre>db.run {
+  sql"select * from people where name = $value".as[Person]
+}</pre>
+</p>
+<br/>
+
+<b>References (SQL injection)</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-19: SQL Injection</a><br/>
+<a href="http://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
+<a href="https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet">OWASP: SQL Injection Prevention Cheat Sheet</a><br/>
+<a href="https://www.owasp.org/index.php/Query_Parameterization_Cheat_Sheet">OWASP: Query Parameterization Cheat Sheet</a><br/>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSSQLS">SQL Injection (Scala - Slick)</BugCode>
+
+    <!-- Scala Anorm SQL Injection -->
+    <BugPattern type="SCALA_SQL_INJECTION_ANORM">
+        <ShortDescription>Potential Scala Anorm Injection</ShortDescription>
+        <LongDescription>This use of {3} can be vulnerable to SQL injection</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+The input values included in SQL queries need to be passed in safely.
+Bind variables in prepared statements can be used to easily mitigate the risk of SQL injection.
+</p>
+
+<p>
+    <b>Vulnerable Code:</b><br/>
+    <pre>val peopleParser = Macro.parser[Person]("id", "name", "age")
+
+DB.withConnection { implicit c =>
+  val people: List[Person] = SQL("select * from people where name = '" + value + "'").as(peopleParser.*)
+}</pre>
+</p>
+<p>
+    <b>Solution:</b><br/>
+    <pre>val peopleParser = Macro.parser[Person]("id", "name", "age")
+
+DB.withConnection { implicit c =>
+  val people: List[Person] = SQL"select * from people where name = $value".as(peopleParser.*)
+}</pre>
+</p>
+<br/>
+
+<b>References (SQL injection)</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-19: SQL Injection</a><br/>
+<a href="http://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
+<a href="https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet">OWASP: SQL Injection Prevention Cheat Sheet</a><br/>
+<a href="https://www.owasp.org/index.php/Query_Parameterization_Cheat_Sheet">OWASP: Query Parameterization Cheat Sheet</a><br/>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSSQLA">SQL Injection (Scala - Anorm)</BugCode>
 
     <!-- LDAP Injection -->
     <Detector class="com.h3xstream.findsecbugs.injection.ldap.LdapInjectionDetector">
@@ -4334,5 +4414,159 @@ prefer logic-less template engines such as Handlebars or Moustache (See referenc
         </Details>
     </BugPattern>
     <BugCode abbrev="SECFREEM">Potential template injection with Freemarker</BugCode>
+
+  
+    <!-- Overly permissive CORS policy -->
+    <Detector class="com.h3xstream.findsecbugs.PermissiveCORSDetector">
+        <Details>Detect overly permissive CORS policy.
+        </Details>
+    </Detector>
+
+    <BugPattern type="PERMISSIVE_CORS">
+        <ShortDescription>Overly permissive CORS policy</ShortDescription>
+        <LongDescription>The program defines an overly permissive Cross-Origin Resource Sharing (CORS) policy</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Prior to HTML5, Web browsers enforced the Same Origin Policy which ensures that in order for JavaScript to access the contents of a Web page, both the JavaScript and the Web page must originate from the same domain. Without the Same Origin Policy, a malicious website could serve up JavaScript that loads sensitive information from other websites using a client's credentials, cull through it, and communicate it back to the attacker. HTML5 makes it possible for JavaScript to access data across domains if a new HTTP header called Access-Control-Allow-Origin is defined. With this header, a Web server defines which other domains are allowed to access its domain using cross-origin requests. However, caution should be taken when defining the header because an overly permissive CORS policy will allow a malicious application to communicate with the victim application in an inappropriate way, leading to spoofing, data theft, relay and other attacks.
+</p>
+<p>
+    <b>Vulnerable Code:</b>
+<pre>response.addHeader("Access-Control-Allow-Origin", "*");</pre>
+</p>
+<p>
+    <b>Solution:</b>
+<br/>
+Avoid using * as the value of the Access-Control-Allow-Origin header, which indicates that the application's data is accessible to JavaScript running on any domain.
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://www.w3.org/TR/cors/">W3C Cross-Origin Resource Sharing</a><br/>
+<a href="http://enable-cors.org/">Enable Cross-Origin Resource Sharing</a><br/>
+</p>]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECCORS">Overly permissive CORS policy</BugCode>
+
+    <!-- LDAP anonymous bind detector -->
+    <Detector class="com.h3xstream.findsecbugs.AnonymousLdapDetector">
+        <Details>Identify use of anonymous LDAP bind</Details>
+    </Detector>
+    <BugPattern type="LDAP_ANONYMOUS">
+        <ShortDescription>Anonymous LDAP bind</ShortDescription>
+        <LongDescription>Anonymous LDAP bind</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Without proper access control, executing an LDAP statement that contains a user-controlled value can allow an attacker to abuse poorly configured LDAP environment. All LDAP queries executed against ctx will be performed without authentication and access control. An attacker may be able to manipulate one of these queries in an unexpected way to gain access to records that would otherwise be protected by the directory's access control mechanism.
+</p>
+<p>
+    <b>Vulnerable Code:</b>
+<pre>...
+env.put(Context.SECURITY_AUTHENTICATION, "none");
+DirContext ctx = new InitialDirContext(env);
+...</pre>
+</p>
+<p>
+    <b>Solution:</b>
+<br/>
+Consider other modes of authentication to LDAP and ensure proper access control mechanism.
+
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://docs.oracle.com/javase/tutorial/jndi/ldap/auth_mechs.html">Ldap Authentication Mechanisms</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="LDAPA">Anonymous LDAP bind</BugCode>
+
+
+    <!-- Persistent Cookie Usage-->
+    <Detector class="com.h3xstream.findsecbugs.cookie.PersistentCookieDetector">
+        <Details>Identify persistent cookie usage</Details>
+    </Detector>
+    <BugPattern type="COOKIE_PERSISTENT">
+        <ShortDescription>Persistent Cookie Usage</ShortDescription>
+        <LongDescription>Cookie Set To Expire In 1 Year Or More</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Storing sensitive data in a persistent cookie for an extended period of time can lead to a breach of confidentiality or account compromise. 
+</p>
+<p>
+    <b>Explanation:</b><br/>
+If private information is stored in persistent cookies, attackers have a larger time window in which to steal this data - especially since persistent cookies are often set to expire in the distant future. Persistent cookies are generally stored in a text file on the client and an attacker with access to the victim's machine can steal this information.<br/>
+Persistent cookies are often used to profile users as they interact with a site. Depending on what is done with this tracking data, it is possible to use persistent cookies to violate users' privacy.
+</p>
+<p>
+    <b>Vulnerable Code:</b> The following code sets a cookie to expire in 1 year.<br/>
+<pre>[...]
+Cookie cookie = new Cookie("email", email);
+cookie.setMaxAge(60*60*24*365);
+[...]</pre>
+</p>
+<p>
+    <b>Solution:</b><br/>
+<ul>
+    <li>Use persistent cookies only if necessary and limit their maximum age.</li>
+    <li>Don't use persistent cookies for sensitive data.</li>
+</ul>
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://tomcat.apache.org/tomcat-5.5-doc/servletapi/javax/servlet/http/Cookie.html#setMaxAge%28int%29">Class Cookie setMaxAge documentation</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/539.html">CWE-539: Information Exposure Through Persistent Cookies</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECCP">Persistent Cookie Usage</BugCode>
+
+
+    <!-- URL Rewriting Methods -->
+    <Detector class="com.h3xstream.findsecbugs.cookie.UrlRewritingDetector">
+        <Details>Detect the URL rewriting methods.
+        </Details>
+    </Detector>
+
+    <BugPattern type="URL_REWRITING">
+        <ShortDescription>URL rewriting method</ShortDescription>
+        <LongDescription>Method rewriting session ID into the URL</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+The implementation of this method includes the logic to determine whether the session ID needs to be encoded in the URL.<br/>
+URL rewriting has significant security risks. Since session ID appears in the URL, it may be easily seen by third parties. Session ID in the URL can be disclosed in many ways, for example:<br/>
+<ul>
+    <li>Log files,</li>
+    <li>The browser history,</li>
+    <li>By copy-and-pasting it into an e-mail or posting,</li>
+    <li>The HTTP Referrer.</li>
+</ul>
+</p>
+<p>
+    <b>Vulnerable Code:</b><br/>
+<pre>out.println("Click &lt;a href=" + 
+                res.encodeURL(HttpUtils.getRequestURL(req).toString()) + 
+                "&gt;here&lt;/a&gt;");</pre>
+</p>
+<p>
+    <b>Solution:</b><br/>
+Avoid using those methods. If you are looking to encode a URL String or form parameters do not confuse the URL rewriting methods with the URLEncoder class.
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2010-A3-Broken_Authentication_and_Session_Management">OWASP Top 10 2010-A3-Broken Authentication and Session Management</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECURLR">URL Rewriting Methods</BugCode>
 
 </MessageCollection>

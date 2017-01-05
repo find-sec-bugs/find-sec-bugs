@@ -36,8 +36,8 @@ public class TaintMethodConfigWithArgumentsAndLocation extends TaintMethodConfig
     private String location;
 
     static {
-        String classWithPackageRegex = "([a-z][a-z0-9]*\\/)*[A-Z][a-zA-Z0-9\\$]*";
-        String methodRegex = "(([a-zA-Z][a-zA-Z0-9]*)|(<init>))";
+        String classWithPackageRegex = "([a-z][a-z0-9]*\\/)*(package|[A-Z])[a-zA-Z0-9\\$]*";
+        String methodRegex = "(([a-zA-Z][a-zA-Z0-9]*(\\$extension)?)|(<init>))";
 
         // javax/servlet/http/HttpServletRequest.getAttribute("applicationConstant"):SAFE@org/apache/jsp/edit_jsp
         // javax/servlet/http/HttpServletRequest.getAttribute(UNKNOWN):SAFE@org/apache/jsp/constants_jsp

@@ -28,7 +28,7 @@ public class FindSecBugsGlobalConfig {
 
     private static final FindSecBugsGlobalConfig instance = new FindSecBugsGlobalConfig();
 
-    private String findSecBugsVersion = "1.4.6";
+    private String findSecBugsVersion = "1.6.0";
     private boolean debugPrintInstructionVisited = false;
     private boolean debugPrintInvocationVisited = false;
     private boolean debugTaintState = false;

@@ -35,8 +35,8 @@ public class IntuitiveHardcodePasswordDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectHardCodePasswordsAndKeys() throws Exception {
-        FindSecBugsGlobalConfig.getInstance().setDebugPrintInstructionVisited(true);
-        FindSecBugsGlobalConfig.getInstance().setDebugTaintState(true);
+//        FindSecBugsGlobalConfig.getInstance().setDebugPrintInstructionVisited(false);
+//        FindSecBugsGlobalConfig.getInstance().setDebugTaintState(false);
 
 
         String[] files = {

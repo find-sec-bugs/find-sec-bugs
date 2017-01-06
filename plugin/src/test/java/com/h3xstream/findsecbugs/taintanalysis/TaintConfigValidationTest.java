@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-
 package com.h3xstream.findsecbugs.taintanalysis;
 
 import java.io.BufferedReader;
@@ -25,15 +24,14 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.fail;
+
 import org.testng.annotations.Test;
 
-public class MethodSummaryValidationTest {
-    private static final boolean DEBUG = true;
+public class TaintConfigValidationTest extends BaseConfigValidationTest {
 
-    TaintConfigLoader loader = new TaintConfigLoader();
-
-    @Test
-    public void validateMethodSummaries() throws IOException {
+    @Test(enabled = false)
+    public void validateGeneralTaintConfigAndSafeEncoders() throws IOException {
         for(String directory : Arrays.asList("/taint-config", "/safe-encoders")) {
             InputStream in = getClass().getResourceAsStream(directory);
             assertNotNull(in, "Unable list the resources in the taint-config directory");
@@ -41,9 +39,7 @@ public class MethodSummaryValidationTest {
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             String file;
             while ((file = br.readLine()) != null) {
-                if (DEBUG) {
-                    System.out.println("File : " + file);
-                }
+                System.out.println("File : " + file);
 
                 ////////////
                 // Validate annotation (list of annotation with parameters)
@@ -53,7 +49,7 @@ public class MethodSummaryValidationTest {
                     String line;
                     while ((line = br2.readLine()) != null) {
                         String annotation = line.replace('/', '.');
-                        validateClass(annotation);
+                        validateClass(annotation, file);
                     }
 
                 }
@@ -62,40 +58,10 @@ public class MethodSummaryValidationTest {
                 else {
                     InputStream inFile = getClass().getResourceAsStream(directory+"/"+ file);
                     assertNotNull(inFile, "File not found: "+ directory+ "/"+file);
-                    validateFile(inFile);
+                    validateFile(inFile,file);
                 }
             }
         }
 
-    }
-
-    public void validateFile(InputStream inFile) throws IOException {
-        loader.load(inFile, new TaintConfigLoader.TaintConfigReceiver() {
-            @Override
-            public void receiveTaintConfigSummary(String typeSignature, String summary) throws IOException {
-                if (DEBUG) {
-                    System.out.println("[?] fmn: " + typeSignature);
-                }
-                String[] methodParts = typeSignature.split("\\.");
-
-                //Test the validity of the class name
-                String className = methodParts[0].replace('/','.');
-                validateClass(className);
-            }
-        });
-    }
-
-    public void validateClass(String className) {
-        if (className.startsWith("scala")) {
-            return;
-        }
-        if (className.startsWith("L") && className.endsWith(";")) {
-            className = className.substring(1, className.length() - 1);
-        }
-        try {
-            Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            System.err.println("[!] Class not found "+className); //FIXME: Replace with assert
-        }
     }
 }

@@ -67,7 +67,7 @@ public class TaintMethodConfigWithArgumentsAndLocation extends TaintMethodConfig
     }
 
     /**
-     * Loads method summary from String, the method summary contains a current class as the context<br />
+     * Loads method config from String, the method config contains a current class as the context<br />
      * <br />
      * The method accepts syntax similar to {@link TaintMethodConfig#load(String)} with small difference.<br />
      * The summary must ends with '@' character followed by class name<br />

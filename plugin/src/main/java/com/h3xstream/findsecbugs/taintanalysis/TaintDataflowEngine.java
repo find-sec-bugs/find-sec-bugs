@@ -74,17 +74,17 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
     private static Writer writer = null;
     
     static {
-        if (CONFIG.isDebugOutputSummaries()) {
+        if (CONFIG.isDebugOutputTaintConfigs()) {
             try {
-                final String fileName = "derived-summaries.txt";
+                final String fileName = "derived-config.txt";
                 writer = new BufferedWriter(new OutputStreamWriter(
                         new FileOutputStream(fileName), "utf-8"));
                 // note: writer is not closed until the end
-                LOGGER.info("Derived method summaries will be output to " + fileName);
+                LOGGER.info("Derived method configs will be output to " + fileName);
             } catch (UnsupportedEncodingException ex) {
                 assert false : ex.getMessage();
             } catch (FileNotFoundException ex) {
-                AnalysisContext.logError("File for derived summaries cannot be created or opened", ex);
+                AnalysisContext.logError("File for derived configs cannot be created or opened", ex);
             }
         }
     }
@@ -165,14 +165,14 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
         TaintDataflow flow = new TaintDataflow(cfg, analysis);
         flow.execute();
         analysis.finishAnalysis();
-        if (CONFIG.isDebugOutputSummaries() && writer != null) {
-            TaintMethodConfig derivedSummary = taintConfig.get(getSlashedMethodName(methodGen));
-            if (derivedSummary != null) {
+        if (CONFIG.isDebugOutputTaintConfigs() && writer != null) {
+            TaintMethodConfig derivedConfig = taintConfig.get(getSlashedMethodName(methodGen));
+            if (derivedConfig != null) {
                 try {
-                    writer.append(getSlashedMethodName(methodGen) + ":" + derivedSummary + "\n");
+                    writer.append(getSlashedMethodName(methodGen) + ":" + derivedConfig + "\n");
                     writer.flush();
                 } catch (IOException ex) {
-                    AnalysisContext.logError("cannot write derived summaries", ex);
+                    AnalysisContext.logError("Cannot write derived configs", ex);
                 }
             }
         }

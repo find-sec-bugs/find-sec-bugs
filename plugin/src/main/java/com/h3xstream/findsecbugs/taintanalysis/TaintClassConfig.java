@@ -34,19 +34,19 @@ public class TaintClassConfig implements TaintTypeConfig {
     private Taint.State taintState = DEFAULT_TAINT_STATE;
     private boolean immutable;
     private static final Pattern typePattern;
-    private static final Pattern summaryPattern;
+    private static final Pattern taintConfigPattern;
 
     static {
         String classWithPackageRegex = "([a-z][a-z0-9]*\\/)*(package|[A-Z])[a-zA-Z0-9\\$]*";
         String typeRegex = "(\\[)*((L" + classWithPackageRegex + ";)|B|C|D|F|I|J|S|Z)";
         typePattern = Pattern.compile(typeRegex);
 
-        String summaryRegex = "([A-Z_]+|#IMMUTABLE|[A-Z_]+#IMMUTABLE)";
-        summaryPattern = Pattern.compile(summaryRegex);
+        String taintConfigRegex = "([A-Z_]+|#IMMUTABLE|[A-Z_]+#IMMUTABLE)";
+        taintConfigPattern = Pattern.compile(taintConfigRegex);
     }
 
-    public static boolean accepts(String typeSignature, String summary) {
-        return typePattern.matcher(typeSignature).matches() && summaryPattern.matcher(summary).matches();
+    public static boolean accepts(String typeSignature, String taintConfig) {
+        return typePattern.matcher(typeSignature).matches() && taintConfigPattern.matcher(taintConfig).matches();
     }
 
     /**
@@ -81,31 +81,31 @@ public class TaintClassConfig implements TaintTypeConfig {
      *     <li>AtomicBoolean value can be changed but cannot carry injection sensitive value</li>
      * </ul>
      *
-     * @param summary <code>state#IMMUTABLE</code>, where state is one of Taint.STATE or empty
+     * @param taintConfig <code>state#IMMUTABLE</code>, where state is one of Taint.STATE or empty
      * @return initialized object with taint class summary
      * @throws java.io.IOException for bad format of parameter
      * @throws NullPointerException if argument is null
      */
     @Override
-    public TaintClassConfig load(String summary) throws IOException {
-        if (summary == null) {
-            throw new NullPointerException("Summary is null");
+    public TaintClassConfig load(String taintConfig) throws IOException {
+        if (taintConfig == null) {
+            throw new NullPointerException("Taint config is null");
         }
-        summary = summary.trim();
-        if (summary.isEmpty()) {
-            throw new IOException("No taint class summary specified");
+        taintConfig = taintConfig.trim();
+        if (taintConfig.isEmpty()) {
+            throw new IOException("No taint class config specified");
         }
-        TaintClassConfig taintClassSummary = new TaintClassConfig();
-        if (summary.endsWith(IMMUTABLE)) {
-            taintClassSummary.immutable = true;
-            summary = summary.substring(0, summary.length() - IMMUTABLE.length());
-        }
-
-        if (!summary.isEmpty()) {
-            taintClassSummary.taintState = Taint.State.valueOf(summary);
+        TaintClassConfig taintClassConfig = new TaintClassConfig();
+        if (taintConfig.endsWith(IMMUTABLE)) {
+            taintClassConfig.immutable = true;
+            taintConfig = taintConfig.substring(0, taintConfig.length() - IMMUTABLE.length());
         }
 
-        return taintClassSummary;
+        if (!taintConfig.isEmpty()) {
+            taintClassConfig.taintState = Taint.State.valueOf(taintConfig);
+        }
+
+        return taintClassConfig;
     }
 
     public Taint.State getTaintState() {

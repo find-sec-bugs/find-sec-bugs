@@ -19,10 +19,7 @@ package com.h3xstream.findsecbugs.injection.sql;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
-import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import org.testng.annotations.Test;
-
-import java.util.Arrays;
 
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -33,15 +30,11 @@ public class TurbineSqlDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectInjection() throws Exception {
-        FindSecBugsGlobalConfig.getInstance().setDebugPrintInvocationVisited(true);
 
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/sqli/TurbineSql"),
-                getClassFilePath("org/apache/turbine/om/peer/BasePeer"),
-                getClassFilePath("org/apache/turbine/om/security/peer/GroupPeer"),
-                getClassFilePath("org/apache/turbine/util/db/Criteria"),
-                getClassFilePath("org/apache/turbine/util/db/pool/DBConnection")
+                getClassFilePath("testcode/sqli/turbine/TurbineSql"),
+                getClassFilePath("testcode/sqli/turbine/SomePeer"),
         };
 
         //Run the analysis

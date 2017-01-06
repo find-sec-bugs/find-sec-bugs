@@ -67,6 +67,7 @@
                         <exclude>**/scala/**.java</exclude>
                         <exclude>**/**/ReadMe.java</exclude>
                         <exclude>**/freemarker/template/**/**.java</exclude>
+                        <exclude>**/PluginDepsClassPathFinder.java</exclude>
                     </excludes>
                     <properties>
                         <project>Find Security Bugs</project>

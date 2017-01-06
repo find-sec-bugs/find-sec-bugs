@@ -28,7 +28,9 @@ import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
 
 import java.lang.management.ManagementFactory;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.reset;
@@ -42,8 +44,6 @@ public class BaseDetectorTest {
 
     private ClassFileLocator classFileLocator;
     private FindBugsLauncher findBugsLauncher;
-
-//    private List<Object> mocksToReset = new ArrayList<Object>();
 
     public BaseDetectorTest() {
         classFileLocator = new ClassFileLocator();
@@ -63,14 +63,51 @@ public class BaseDetectorTest {
     }
 
     public void analyze(String[] classFiles, BugReporter bugReporter) throws Exception {
-//        mocksToReset.add(bugReporter);
-        findBugsLauncher.analyze(classFiles, bugReporter);
+        List<String> classPath = new ArrayList<String>();
+        classPath.add(getPluginDepsJarPath());
+        findBugsLauncher.analyze(classFiles, classPath.toArray(new String[classPath.size()]), bugReporter);
     }
 
-    public void analyze(String[] classFiles, String[] classPaths, BugReporter bugReporter) throws Exception {
-//        mocksToReset.add(bugReporter);
-        findBugsLauncher.analyze(classFiles, classPaths, bugReporter);
+    public void analyze(String[] classFiles, String[] classPathsOrig, BugReporter bugReporter) throws Exception {
+        List<String> classPath = new ArrayList<String>(Arrays.asList(classPathsOrig));
+        classPath.add(getPluginDepsJarPath());
+        findBugsLauncher.analyze(classFiles, classPath.toArray(new String[classPath.size()]), bugReporter);
     }
+
+    /**
+     * The test dependencies are added by default to avoid ClassNotFoundException when analyzing the test sample.
+     * Those classes are required if the inheritance hierarchy is analyzed.
+     * @return The path to either the compiled directory of the project or its jar.
+     */
+    private String getPluginDepsJarPath() {
+        ClassLoader cl = getClass().getClassLoader();
+        String url = cl.getResource("PluginDepsClassPathFinder.class").toExternalForm();
+
+        String separateFile = "/target/classes/PluginDepsClassPathFinder.class"; //In the IDE, the compiled directory are used.
+        String insideJar = "!/PluginDepsClassPathFinder.class"; //With Maven, the jar will be reference.
+        for(String suffix : Arrays.asList(separateFile, insideJar)) {
+            if(url.endsWith(suffix)) {
+                String filename = url.substring(0,url.length() - suffix.length());
+
+                if(suffix == separateFile) {
+                    filename += "/target/classes/"; //This part of the suffix need to be kept
+                }
+
+                //FindBugs will open file handle (java.io.File). The protocol file: need to be removed.
+                for(String prefix : Arrays.asList("file:", "jar:file:")) {
+                    if (filename.startsWith(prefix)) {
+                        filename = filename.substring(prefix.length());
+                    }
+                }
+                return filename;
+            }
+        }
+
+        throw new RuntimeException("Unable to locate the dependencies for test in the classpath.");
+    }
+
+
+    /// Various utility for Hamcrest matcher
 
     public BugInstanceMatcherBuilder bugDefinition() {
         return new BugInstanceMatcherBuilder();

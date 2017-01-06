@@ -18,6 +18,8 @@
 
 package com.h3xstream.findsecbugs.injection;
 
+import com.h3xstream.findsecbugs.taintanalysis.BaseConfigValidationTest;
+import com.h3xstream.findsecbugs.taintanalysis.TaintConfigValidationTest;
 import org.testng.annotations.Test;
 
 import java.io.BufferedReader;
@@ -30,7 +32,7 @@ import static org.testng.Assert.fail;
 
 import org.testng.annotations.Test;
 
-public class SinkFilesValidationTest {
+public class SinkFilesValidationTest extends BaseConfigValidationTest {
     private static final boolean DEBUG = false;
 
     @Test
@@ -44,7 +46,7 @@ public class SinkFilesValidationTest {
         String line = null;
         while((line = br.readLine()) != null) {
             if(DEBUG) System.out.println("File :"+line);
-
+            final String fileName = line;
             loader.loadConfiguredSinks(line, "DUMMY",
                     new SinksLoader.InjectionPointReceiver() {
                         @Override
@@ -54,27 +56,10 @@ public class SinkFilesValidationTest {
 
                             //Test the validity of the class name
                             String className = methodParts[0].replace('/','.');
-                            validateClass(className);
+                            validateClass(className, fileName);
                         }
                     }
             );
-        }
-    }
-
-
-    public void validateClass(String className) {
-        if(className.endsWith("$")) return; //Skipping Scala class
-        if(className.startsWith("play.")) return; //Temporary skip Play
-        if(className.startsWith("anorm")) return; //Skipping Scala anorm library classes
-        if(className.startsWith("slick")) return; //Skipping Scala slick library classes
-        if(className.contains(".log")) return;
-        if(className.contains(".Log")) return;
-        if(className.equals("javax.naming.directory.Context")) return; //FIXME: It seems to be a error in the LDAP configuration file
-        try {
-            Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            System.err.println("[!] Class not found "+className);
-            fail("Method configurations were added for a class that does not exist. It is likely a typographical error or because the API was not tested.");
         }
     }
 

@@ -253,7 +253,7 @@ public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
         String dottedClassName = invoke.getReferenceType(cpg).toString();
         return ClassName.toSlashedClassName(dottedClassName);
     }
-    
+
     abstract protected InjectionPoint getInjectionPoint(
             InvokeInstruction invoke, ConstantPoolGen cpg, InstructionHandle handle);
 }

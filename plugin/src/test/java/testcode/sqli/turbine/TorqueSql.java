@@ -1,4 +1,4 @@
-package testcode.sqli;
+package testcode.sqli.turbine;
 
 import org.apache.torque.util.BasePeer;
 

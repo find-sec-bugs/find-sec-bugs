@@ -34,11 +34,11 @@ public class TorqueSqlDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectInjection() throws Exception {
-        FindSecBugsGlobalConfig.getInstance().setDebugPrintInvocationVisited(true);
+//        FindSecBugsGlobalConfig.getInstance().setDebugPrintInvocationVisited(true);
 
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/sqli/TorqueSql")
+                getClassFilePath("testcode/sqli/turbine/TorqueSql")
         };
 
         //Run the analysis

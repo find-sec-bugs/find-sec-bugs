@@ -4646,7 +4646,7 @@ SelectResult sdbResult = sdbc.select(new SelectRequest(query));
 </p>
 <p>
     <b>Solution:</b><br/>
-This issue is analogical to SQL Injection. Sanitize user input before using it in a SimpleDb query.
+This issue is analogical to SQL Injection. Sanitize user input before using it in a SimpleDB query.
 </p>
 <br/>
 <p>

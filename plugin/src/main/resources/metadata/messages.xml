@@ -1566,6 +1566,43 @@ This class should be analyzed to make sure that remotely exposed methods are saf
     <BugCode abbrev="SECSC">Spring Endpoint</BugCode>
 
 
+    <!-- Spring CSRF Protection Disabled -->
+    <Detector class="com.h3xstream.findsecbugs.csrf.SpringCsrfProtectionDisabledDetector">
+        <Details>Detect the disabling of Spring CSRF protection</Details>
+    </Detector>
+
+    <BugPattern type="SPRING_CSRF_PROTECTION_DISABLED">
+        <ShortDescription>Spring CSRF protection disabled</ShortDescription>
+        <LongDescription>Disabling Spring Security's CSRF protection is unsafe for standard web applications</LongDescription>
+        <Details>
+            <![CDATA[
+<p>Disabling Spring Security's CSRF protection is unsafe for standard web applications.</p>
+<p>A valid use case for disabling this protection would be a service exposing state-changing operations
+that is guaranteed to be used only by non-browser clients.</p>
+<p>
+    <b>Insecure configuration:</b><br/>
+<pre>@EnableWebSecurity
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.csrf().disable();
+    }
+}</pre>
+</p>
+<p>
+<b>References</b><br/>
+<a href="https://docs.spring.io/spring-security/site/docs/current/reference/html/csrf.html#when-to-use-csrf-protection">Spring Security Official Documentation: When to use CSRF protection</a><br/>
+<a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29">OWASP: Cross-Site Request Forgery</a><br/>
+<a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29_Prevention_Cheat_Sheet">OWASP: CSRF Prevention Cheat Sheet</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/352.html">CWE-352: Cross-Site Request Forgery (CSRF)</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSPRCSRFPD">Spring CSRF Protection Disabled</BugCode>
+
+
     <!-- Custom Injection -->
     <Detector class="com.h3xstream.findsecbugs.injection.custom.CustomInjectionDetector">
         <Details>Detector that find injection for custom methods.</Details>

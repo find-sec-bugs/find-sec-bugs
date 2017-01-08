@@ -38,6 +38,7 @@
     <Detector class="com.h3xstream.findsecbugs.endpoint.Struts1EndpointDetector" reports="STRUTS1_ENDPOINT"/>
     <Detector class="com.h3xstream.findsecbugs.endpoint.Struts2EndpointDetector" reports="STRUTS2_ENDPOINT"/>
     <Detector class="com.h3xstream.findsecbugs.endpoint.SpringMvcEndpointDetector" reports="SPRING_ENDPOINT"/>
+    <Detector class="com.h3xstream.findsecbugs.csrf.SpringCsrfProtectionDisabledDetector" reports="SPRING_CSRF_PROTECTION_DISABLED"/>
     <Detector class="com.h3xstream.findsecbugs.injection.custom.CustomInjectionDetector" reports="CUSTOM_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.injection.sql.SqlInjectionDetector" reports="SQL_INJECTION,SQL_INJECTION_TURBINE,SQL_INJECTION_HIBERNATE,SQL_INJECTION_JDO,SQL_INJECTION_JPA,SQL_INJECTION_JDBC,SQL_INJECTION_SPRING_JDBC,SCALA_SQL_INJECTION_SLICK,SCALA_SQL_INJECTION_ANORM"/>
     <Detector class="com.h3xstream.findsecbugs.injection.ldap.LdapInjectionDetector" reports="LDAP_INJECTION"/>
@@ -140,6 +141,7 @@
     <BugPattern type="STRUTS1_ENDPOINT" abbrev="SECSTR1" category="SECURITY"/>
     <BugPattern type="STRUTS2_ENDPOINT" abbrev="SECSTR2" category="SECURITY"/>
     <BugPattern type="SPRING_ENDPOINT" abbrev="SECSC" category="SECURITY"/>
+    <BugPattern type="SPRING_CSRF_PROTECTION_DISABLED" abbrev="SECSPRCSRFPD" category="SECURITY" cweid="352"/>
     <BugPattern type="CUSTOM_INJECTION" abbrev="SECCUSTOMI" category="SECURITY" cweid="74"/>
     <BugPattern type="SQL_INJECTION" abbrev="SECSQLIHIB" category="SECURITY" cweid="564"/>
     <BugPattern type="SQL_INJECTION_TURBINE" abbrev="SECSQLITU" category="SECURITY" cweid="564"/>

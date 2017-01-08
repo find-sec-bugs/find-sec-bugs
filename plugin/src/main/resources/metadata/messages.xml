@@ -1603,6 +1603,95 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     <BugCode abbrev="SECSPRCSRFPD">Spring CSRF Protection Disabled</BugCode>
 
 
+    <!-- Spring CSRF Unrestricted RequestMapping -->
+    <Detector class="com.h3xstream.findsecbugs.csrf.SpringCsrfUnrestrictedRequestMappingDetector">
+        <Details>Detect Spring CSRF unrestricted RequestMapping</Details>
+    </Detector>
+
+    <BugPattern type="SPRING_CSRF_UNRESTRICTED_REQUEST_MAPPING">
+        <ShortDescription>Spring CSRF unrestricted RequestMapping</ShortDescription>
+        <LongDescription>Unrestricted Spring's RequestMapping makes the method vulnerable to CSRF attacks</LongDescription>
+        <Details>
+            <![CDATA[
+<p>Methods annotated with <code>RequestMapping</code> are by default mapped to all the HTTP request methods.
+However, Spring Security's CSRF protection is not enabled by default
+for the HTTP request methods <code>GET</code>, <code>HEAD</code>, <code>TRACE</code>, and <code>OPTIONS</code>
+(as this could cause the tokens to be leaked).
+Therefore, state-changing methods annotated with <code>RequestMapping</code> and not narrowing the mapping
+to the HTTP request methods <code>POST</code>, <code>PUT</code>, <code>DELETE</code>, or <code>PATCH</code>
+are vulnerable to CSRF attacks.</p>
+<p>
+    <b>Vulnerable Code:</b><br/>
+<pre>@Controller
+public class UnsafeController {
+
+    @RequestMapping("/path")
+    public void writeData() {
+        // State-changing operations performed within this method.
+    }
+}</pre>
+</p>
+<p>
+    <b>Solution (Spring Framework 4.3 and later):</b><br/>
+<pre>@Controller
+public class SafeController {
+
+    /**
+     * For methods without side-effects use @GetMapping.
+     */
+    @GetMapping("/path")
+    public String readData() {
+        // No state-changing operations performed within this method.
+        return "";
+    }
+
+    /**
+     * For state-changing methods use either @PostMapping, @PutMapping, @DeleteMapping, or @PatchMapping.
+     */
+    @PostMapping("/path")
+    public void writeData() {
+        // State-changing operations performed within this method.
+    }
+}</pre>
+</p>
+<p>
+    <b>Solution (Before Spring Framework 4.3):</b><br/>
+<pre>@Controller
+public class SafeController {
+
+    /**
+     * For methods without side-effects use either
+     * RequestMethod.GET, RequestMethod.HEAD, RequestMethod.TRACE, or RequestMethod.OPTIONS.
+     */
+    @RequestMapping(value = "/path", method = RequestMethod.GET)
+    public String readData() {
+        // No state-changing operations performed within this method.
+        return "";
+    }
+
+    /**
+     * For state-changing methods use either
+     * RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, or RequestMethod.PATCH.
+     */
+    @RequestMapping(value = "/path", method = RequestMethod.POST)
+    public void writeData() {
+        // State-changing operations performed within this method.
+    }
+}</pre>
+</p>
+<p>
+<b>References</b><br/>
+<a href="https://docs.spring.io/spring-security/site/docs/current/reference/html/csrf.html#csrf-use-proper-verbs">Spring Security Official Documentation: Use proper HTTP verbs (CSRF protection)</a><br/>
+<a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29">OWASP: Cross-Site Request Forgery</a><br/>
+<a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29_Prevention_Cheat_Sheet">OWASP: CSRF Prevention Cheat Sheet</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/352.html">CWE-352: Cross-Site Request Forgery (CSRF)</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSPRCSRFURM">Spring CSRF Unrestricted RequestMapping</BugCode>
+
+
     <!-- Custom Injection -->
     <Detector class="com.h3xstream.findsecbugs.injection.custom.CustomInjectionDetector">
         <Details>Detector that find injection for custom methods.</Details>

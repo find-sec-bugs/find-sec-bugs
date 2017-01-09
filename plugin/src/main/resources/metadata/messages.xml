@@ -4614,4 +4614,48 @@ Please add the following check to verify the server cerfiticate:
     </BugPattern>
     <BugCode abbrev="SECISC">Insecure SMTP SSL connection</BugCode>
 
+
+    <!-- AWS Query Injection -->
+    <Detector class="com.h3xstream.findsecbugs.injection.aws.AwsQueryInjectionDetector">
+        <Details>Detect AWS Query Injection.
+        </Details>
+    </Detector>
+
+    <BugPattern type="AWS_QUERY_INJECTION">
+        <ShortDescription>AWS Query Injection</ShortDescription>
+        <LongDescription>This SimpleDB client accepts data from an untrusted source.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Constructing SimpleDB queries containing user input can allow an attacker to view unauthorized records.<br/>
+The following example dynamically constructs and executes a SimpleDB select() query allowing the user to specify the productCategory. The attacker can modify the query, bypass the required authentication for customerID and view records matching any customer.
+</p>
+<p>
+    <b>Vulnerable Code:</b><br/>
+<pre>...
+String customerID = getAuthenticatedCustomerID(customerName, customerCredentials);
+String productCategory = request.getParameter("productCategory");
+...
+AmazonSimpleDBClient sdbc = new AmazonSimpleDBClient(appAWSCredentials);
+String query = "select * from invoices where productCategory = '"
+            + productCategory + "' and customerID = '"
+            + customerID + "' order by '"
+            + sortColumn + "' asc";
+SelectResult sdbResult = sdbc.select(new SelectRequest(query));
+</pre>
+</p>
+<p>
+    <b>Solution:</b><br/>
+This issue is analogical to SQL Injection. Sanitize user input before using it in a SimpleDB query.
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://cwe.mitre.org/data/definitions/943.html">CWE-943: Improper Neutralization of Special Elements in Data Query Logic</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECAQI">AWS Query Injection</BugCode>
+
 </MessageCollection>

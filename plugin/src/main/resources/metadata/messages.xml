@@ -4784,4 +4784,44 @@ This issue is analogical to SQL Injection. Sanitize user input before using it i
     </BugPattern>
     <BugCode abbrev="SECAQI">AWS Query Injection</BugCode>
 
+
+    <!-- JavaBeans Property Injection -->
+    <Detector class="com.h3xstream.findsecbugs.injection.beans.BeanInjectionDetector">
+        <Details>Detect JavaBeans Property Injection
+        </Details>
+    </Detector>
+
+    <BugPattern type="BEAN_PROPERTY_INJECTION">
+        <ShortDescription>JavaBeans Property Injection</ShortDescription>
+        <LongDescription>JavaBeans property name populated with user controlled parameters</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+An attacker can set arbitrary bean properties that can compromise system integrity. Bean population functions allow to set a bean property or a nested property. An attacker can leverage this functionality to access special bean properties like class.classLoader that will allow him to override system properties and potentially execute arbitrary code.
+</p>
+<p>
+    <b>Vulnerable Code:</b><br/>
+<pre>MyBean bean = ...;
+HashMap map = new HashMap();
+Enumeration names = request.getParameterNames();
+while (names.hasMoreElements()) {
+    String name = (String) names.nextElement();
+    map.put(name, request.getParameterValues(name));
+}
+BeanUtils.populate(bean, map);</pre>
+</p>
+<p>
+    <b>Solution:</b><br/>
+Avoid using user controlled values to populate Bean property names.
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://cwe.mitre.org/data/definitions/15.html">CWE-15: External Control of System or Configuration Setting</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECBPI">JavaBeans Property Injection</BugCode>
+
 </MessageCollection>

@@ -1,0 +1,2 @@
+org/apache/commons/beanutils/BeanUtils.populate(Ljava/lang/Object;Ljava/util/Map;)V:0
+org/apache/commons/beanutils/BeanUtilsBean.populate(Ljava/lang/Object;Ljava/util/Map;)V:0

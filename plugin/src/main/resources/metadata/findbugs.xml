@@ -99,7 +99,9 @@
     <Detector class="com.h3xstream.findsecbugs.cookie.UrlRewritingDetector" reports="URL_REWRITING"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.InsecureSmtpSslDetector" reports="INSECURE_SMTP_SSL"/>
     <Detector class="com.h3xstream.findsecbugs.injection.aws.AwsQueryInjectionDetector" reports="AWS_QUERY_INJECTION"/>
+    <Detector class="com.h3xstream.findsecbugs.injection.beans.BeanInjectionDetector" reports="BEAN_PROPERTY_INJECTION"/>
 
+    <BugPattern type="BEAN_PROPERTY_INJECTION" abbrev="SECBPI" category="SECURITY"/>
     <BugPattern type="AWS_QUERY_INJECTION" abbrev="SECAQI" category="SECURITY"/>
     <BugPattern type="INSECURE_SMTP_SSL" abbrev="SECISC" category="SECURITY"/>
     <BugPattern type="URL_REWRITING" abbrev="SECURLR" category="SECURITY"/>

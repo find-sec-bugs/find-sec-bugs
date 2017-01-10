@@ -3,5 +3,5 @@ jdk:
   - oraclejdk8
 #Activate container based infra https://docs.travis-ci.com/user/workers/container-based-infrastructure/
 sudo: false
-install: mvn clean -V
-script: mvn test -V -Ptravisci
+install: mvn clean -B -V
+script: mvn verify -B -V -Ptravisci

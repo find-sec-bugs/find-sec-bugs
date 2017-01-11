@@ -117,7 +117,33 @@
                 <artifactId>coveralls-maven-plugin</artifactId>
                 <version>4.2.0</version>
             </plugin>
-            
+
+            <!--
+              Verify that the sources of this module are API compatible
+              with the Java version officially used by FindBugs.
+              The test sources are not checked by this plugin
+              (see https://github.com/mojohaus/animal-sniffer/issues/5),
+              so more recent Java APIs can be used in the tests.
+            -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>animal-sniffer-maven-plugin</artifactId>
+                <version>1.15</version>
+                <configuration>
+                    <signature>
+                        <groupId>org.codehaus.mojo.signature</groupId>
+                        <artifactId>java17</artifactId>
+                        <version>1.0</version>
+                    </signature>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
         </plugins>
     </build>

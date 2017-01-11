@@ -4824,4 +4824,73 @@ Avoid using user controlled values to populate Bean property names.
     </BugPattern>
     <BugCode abbrev="SECBPI">JavaBeans Property Injection</BugCode>
 
+
+    <!-- Struts and Spring File Disclosure -->
+    <Detector class="com.h3xstream.findsecbugs.injection.fileDisclosure.FileDisclosureDetector">
+        <Details>Detect Struts and Spring File Disclosure
+        </Details>
+    </Detector>
+    
+    <!-- Struts File Disclosure -->
+    <BugPattern type="STRUTS_FILE_DISCLOSURE">
+        <ShortDescription>Struts File Disclosure</ShortDescription>
+        <LongDescription>ActionForward populated with user controlled parameters</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Constructing a server-side redirect path with user input could allow an attacker to download application binaries (including application classes or jar files) or view arbitrary files within protected directories.<br/>
+An attacker may be able to forge a request parameter to match sensitive file locations. For example, requesting "http://example.com/?returnURL=WEB-INF/applicationContext.xml" would display the application's applicationContext.xml file. The attacker would be able to locate and download the applicationContext.xml referenced in the other configuration files, and even class files or jar files, obtaining sensitive information and launching other types of attacks.
+</p>
+<p>
+    <b>Vulnerable Code:</b><br/>
+<pre>... 
+String returnURL = request.getParameter("returnURL"); 
+Return new ActionForward(returnURL); 
+...</pre>
+</p>
+<p>
+    <b>Solution:</b><br/>
+Avoid constructing server-side redirects using user controlled input.
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://cwe.mitre.org/data/definitions/552.html">CWE-552: Files or Directories Accessible to External Parties</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSFD">Struts File Disclosure</BugCode>
+
+    <!-- Spring File Disclosure -->
+    <BugPattern type="SPRING_FILE_DISCLOSURE">
+        <ShortDescription>Spring File Disclosure</ShortDescription>
+        <LongDescription>ModelAndView populated with user controlled parameters</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Constructing a server-side redirect path with user input could allow an attacker to download application binaries (including application classes or jar files) or view arbitrary files within protected directories.<br/>
+An attacker may be able to forge a request parameter to match sensitive file locations. For example, requesting "http://example.com/?returnURL=WEB-INF/applicationContext.xml" would display the application's applicationContext.xml file. The attacker would be able to locate and download the applicationContext.xml referenced in the other configuration files, and even class files or jar files, obtaining sensitive information and launching other types of attacks.
+</p>
+<p>
+    <b>Vulnerable Code:</b><br/>
+<pre>... 
+String returnURL = request.getParameter("returnURL");
+return new ModelAndView(returnURL); 
+...</pre>
+</p>
+<p>
+    <b>Solution:</b><br/>
+Avoid constructing server-side redirects using user controlled input.
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://cwe.mitre.org/data/definitions/552.html">CWE-552: Files or Directories Accessible to External Parties</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSF">Spring File Disclosure</BugCode>
+
 </MessageCollection>

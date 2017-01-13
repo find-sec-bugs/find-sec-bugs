@@ -1,0 +1,5 @@
+org/apache/struts/action/ActionForward.<init>(Ljava/lang/String;)V:0
+org/apache/struts/action/ActionForward.<init>(Ljava/lang/String;Z)V:1
+org/apache/struts/action/ActionForward.<init>(Ljava/lang/String;Ljava/lang/String;Z)V:1
+org/apache/struts/action/ActionForward.<init>(Ljava/lang/String;Ljava/lang/String;ZZ)V:2
+org/apache/struts/action/ActionForward.setPath(Ljava/lang/String;)V:0

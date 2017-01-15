@@ -33,7 +33,7 @@ org/owasp/encoder/Encode.forJavaScriptAttribute(Ljava/lang/String;)Ljava/lang/St
 org/owasp/encoder/Encode.forJavaScriptBlock(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE
 org/owasp/encoder/Encode.forJavaScriptSource(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE
 org/owasp/encoder/Encode.forUri(Ljava/lang/String;)Ljava/lang/String;:0|+CR_ENCODED,+LF_ENCODED,+XSS_SAFE
-org/owasp/encoder/Encode.forUriComponent(Ljava/lang/String;)Ljava/lang/String;:0|+CR_ENCODED,+LF_ENCODED,+XSS_SAFE
+org/owasp/encoder/Encode.forUriComponent(Ljava/lang/String;)Ljava/lang/String;:0|+CR_ENCODED,+LF_ENCODED,+XSS_SAFE,+HTTP_POLLUTION_SAFE
 org/owasp/encoder/Encode.forXml(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE,+XPATH_INJECTION_SAFE
 org/owasp/encoder/Encode.forXmlAttribute(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE,+XPATH_INJECTION_SAFE
 org/owasp/encoder/Encode.forXmlComment(Ljava/lang/String;)Ljava/lang/String;:0

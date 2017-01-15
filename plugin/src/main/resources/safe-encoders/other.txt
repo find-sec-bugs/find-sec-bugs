@@ -1,7 +1,7 @@
-java/net/URLEncoder.encode(Ljava/lang/String;)Ljava/lang/String;:0|+CR_ENCODED,+LF_ENCODED,+XSS_SAFE
-java/net/URLEncoder.encode(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:1|+CR_ENCODED,+LF_ENCODED,+XSS_SAFE
-java/net/URLDecoder.decode(Ljava/lang/String;)Ljava/lang/String;:0|-CR_ENCODED,-LF_ENCODED,-XSS_SAFE
-java/net/URLDecoder.decode(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:1|-CR_ENCODED,-LF_ENCODED,-XSS_SAFE
+java/net/URLEncoder.encode(Ljava/lang/String;)Ljava/lang/String;:0|+CR_ENCODED,+LF_ENCODED,+XSS_SAFE,+HTTP_POLLUTION_SAFE
+java/net/URLEncoder.encode(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:1|+CR_ENCODED,+LF_ENCODED,+XSS_SAFE,+HTTP_POLLUTION_SAFE
+java/net/URLDecoder.decode(Ljava/lang/String;)Ljava/lang/String;:0|-CR_ENCODED,-LF_ENCODED,-XSS_SAFE,-HTTP_POLLUTION_SAFE
+java/net/URLDecoder.decode(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:1|-CR_ENCODED,-LF_ENCODED,-XSS_SAFE,-HTTP_POLLUTION_SAFE
 
 
 --Spring Framework

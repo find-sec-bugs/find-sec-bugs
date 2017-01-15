@@ -92,6 +92,7 @@ public class Taint {
         COMMAND_INJECTION_SAFE,
         LDAP_INJECTION_SAFE,
         XPATH_INJECTION_SAFE,
+        HTTP_POLLUTION_SAFE,
         CR_ENCODED,
         LF_ENCODED,
         QUOTE_ENCODED,

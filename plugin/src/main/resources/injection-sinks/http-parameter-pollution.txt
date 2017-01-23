@@ -1,0 +1,4 @@
+org/apache/commons/httpclient/methods/GetMethod.<init>(Ljava/lang/String;)V:0
+org/apache/commons/httpclient/methods/GetMethod.setQueryString(Ljava/lang/String;)V:0
+
+org/apache/http/client/methods/HttpGet.<init>(Ljava/lang/String;)V:0

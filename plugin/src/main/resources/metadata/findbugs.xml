@@ -102,7 +102,9 @@
     <Detector class="com.h3xstream.findsecbugs.injection.beans.BeanInjectionDetector" reports="BEAN_PROPERTY_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.injection.fileDisclosure.FileDisclosureDetector" reports="STRUTS_FILE_DISCLOSURE,SPRING_FILE_DISCLOSURE"/>
     <Detector class="com.h3xstream.findsecbugs.injection.formatter.FormatStringManipulationDetector" reports="FORMAT_STRING_MANIPULATION"/>
+    <Detector class="com.h3xstream.findsecbugs.injection.http.HttpParameterPollutionDetector" reports="HTTP_PARAMETER_POLLUTION"/>
 
+    <BugPattern type="HTTP_PARAMETER_POLLUTION" abbrev="SECHPP" category="SECURITY"/>
     <BugPattern type="FORMAT_STRING_MANIPULATION" abbrev="SECFSM" category="SECURITY"/>
     <BugPattern type="SPRING_FILE_DISCLOSURE" abbrev="SECSF" category="SECURITY"/>
     <BugPattern type="STRUTS_FILE_DISCLOSURE" abbrev="SECSFD" category="SECURITY"/>

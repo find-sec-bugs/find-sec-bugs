@@ -4930,4 +4930,40 @@ Avoid using user controlled values in the format string argument.
     </BugPattern>
     <BugCode abbrev="SECFSM">Format String Manipulation</BugCode>
 
+
+    <!-- HTTP Parameter Pollution -->
+    <Detector class="com.h3xstream.findsecbugs.injection.http.HttpParameterPollutionDetector">
+        <Details>Detect concatenating user-controlled input into a URL.
+        </Details>
+    </Detector>
+
+    <BugPattern type="HTTP_PARAMETER_POLLUTION">
+        <ShortDescription>HTTP Parameter Pollution</ShortDescription>
+        <LongDescription>Concatenating user-controlled input into a URL</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Concatenating unvalidated user input into a URL can allow an attacker to override the value of a request parameter. Attacker may be able to override existing parameter values, inject a new parameter or exploit variables out of a direct reach. HTTP Parameter Pollution (HPP) attacks consist of injecting encoded query string delimiters into other existing parameters. If a web application does not properly sanitize the user input, a malicious user may compromise the logic of the application to perform either client-side or server-side attacks.<br/>
+In the following example the programmer has not considered the possibility that an attacker could provide a lang such as en&user_id=1, which would enable him to change the user_id at will.
+</p>
+<p>
+    <b>Vulnerable Code:</b><br/>
+<pre>String lang = request.getParameter("lang");
+GetMethod get = new GetMethod("http://www.host.com");
+get.setQueryString("lang=" + lang + "&user_id=" + user_id);
+get.execute();</pre>
+<p>
+    <b>Solution:</b><br/>
+Sanitize user input before using it in HTTP parameters.
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://capec.mitre.org/data/definitions/460.html">CAPEC-460: HTTP Parameter Pollution (HPP)</a>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECHPP">HTTP Parameter Pollution</BugCode>
+
 </MessageCollection>

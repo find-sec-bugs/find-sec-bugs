@@ -31,9 +31,8 @@ import org.apache.bcel.Constants;
 public class RsaNoPaddingDetector extends OpcodeStackDetector {
 
     private static final String RSA_NO_PADDING_TYPE = "RSA_NO_PADDING";
-    private static final boolean DEBUG = false;
 
-    private BugReporter bugReporter;
+    private final BugReporter bugReporter;
 
     public RsaNoPaddingDetector(BugReporter bugReporter) {
         this.bugReporter = bugReporter;
@@ -41,13 +40,13 @@ public class RsaNoPaddingDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
-        if (seen == Constants.INVOKESTATIC && getClassConstantOperand().equals("javax/crypto/Cipher") &&
-                getNameConstantOperand().equals("getInstance")) {
-            OpcodeStack.Item item = stack.getStackItem(stack.getStackDepth() - 1); //The first argument is last
+        if (seen == Constants.INVOKESTATIC
+                && getClassConstantOperand().equals("javax/crypto/Cipher")
+                && getNameConstantOperand().equals("getInstance")) {
+            OpcodeStack.Item item = stack.getStackItem(getSigConstantOperand().contains(";L") ? 1 : 0);
             if (StackUtils.isConstantString(item)) {
                 String cipherValue = (String) item.getConstant();
-                if (DEBUG) System.out.println(cipherValue);
-
+                // default padding for "RSA" only is PKCS1 so it is not reported
                 if (cipherValue.startsWith("RSA/") && cipherValue.endsWith("/NoPadding")) {
                     bugReporter.reportBug(new BugInstance(this, RSA_NO_PADDING_TYPE, Priorities.NORMAL_PRIORITY) //
                             .addClass(this).addMethod(this).addSourceLine(this));

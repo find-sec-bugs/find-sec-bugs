@@ -22,17 +22,21 @@ import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Detector;
 import edu.umd.cs.findbugs.Priorities;
-import edu.umd.cs.findbugs.ba.*;
-import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
+import edu.umd.cs.findbugs.ba.AnalysisContext;
+import edu.umd.cs.findbugs.ba.CFG;
+import edu.umd.cs.findbugs.ba.CFGBuilderException;
+import edu.umd.cs.findbugs.ba.ClassContext;
+import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
+import edu.umd.cs.findbugs.ba.Location;
+import java.util.Iterator;
+import javax.crypto.Cipher;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
-import org.apache.bcel.generic.*;
-
-import javax.crypto.Cipher;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.ICONST;
+import org.apache.bcel.generic.INVOKESPECIAL;
+import org.apache.bcel.generic.INVOKEVIRTUAL;
+import org.apache.bcel.generic.Instruction;
 
 /**
  * <p>
@@ -50,32 +54,26 @@ public class StaticIvDetector implements Detector {
 
     private static final boolean DEBUG = false;
     private static final String STATIC_IV = "STATIC_IV";
-    private BugReporter bugReporter;
+    private final BugReporter bugReporter;
 
     public StaticIvDetector(BugReporter bugReporter) {
         this.bugReporter = bugReporter;
     }
 
-
     @Override
     public void visitClassContext(ClassContext classContext) {
         JavaClass javaClass = classContext.getJavaClass();
-
         Method[] methodList = javaClass.getMethods();
-
         for (Method m : methodList) {
-
             try {
-                analyzeMethod(m,classContext);
-            } catch (CFGBuilderException e) {
-            } catch (DataflowAnalysisException e) {
+                analyzeMethod(m, classContext);
+            } catch (CFGBuilderException | DataflowAnalysisException e) {
+                AnalysisContext.logError("Cannot analyze method", e);
             }
         }
     }
 
-
     private void analyzeMethod(Method m, ClassContext classContext) throws CFGBuilderException, DataflowAnalysisException {
-
         ConstantPoolGen cpg = classContext.getConstantPoolGen();
         CFG cfg = classContext.getCFG(m);
 
@@ -84,17 +82,13 @@ public class StaticIvDetector implements Detector {
         //therefore it is a false positive
         boolean atLeastOneDecryptCipher = false;
         boolean atLeastOneEncryptCipher = false;
-
         boolean ivFetchFromCipher = false;
 
         //First pass : it look for encryption and decryption mode to detect if the method does decryption only
         for (Iterator<Location> i = cfg.locationIterator(); i.hasNext(); ) {
             Location location = nextLocation(i, cpg);
             Instruction inst = location.getHandle().getInstruction();
-
-
             //ByteCode.printOpCode(inst,cpg);
-
 
             if (inst instanceof INVOKEVIRTUAL) {
                 INVOKEVIRTUAL invoke = (INVOKEVIRTUAL) inst;
@@ -102,11 +96,9 @@ public class StaticIvDetector implements Detector {
                 //INVOKEVIRTUAL javax/crypto/Cipher.init ((ILjava/security/Key;)V)
                 if (("javax.crypto.Cipher").equals(invoke.getClassName(cpg)) &&
                         "init".equals(invoke.getMethodName(cpg))) {
-
                     ICONST iconst = ByteCode.getPrevInstruction(location.getHandle(), ICONST.class);
                     if (iconst != null) {
                         int mode = iconst.getValue().intValue();
-
                         switch (mode) {
                             case Cipher.ENCRYPT_MODE:
                                 atLeastOneEncryptCipher = true;
@@ -117,7 +109,6 @@ public class StaticIvDetector implements Detector {
                         }
                     }
                 }
-
                 //INVOKEVIRTUAL javax/crypto/Cipher.getIV (()[B)
                 else if (("javax.crypto.Cipher").equals(invoke.getClassName(cpg)) &&
                         "getIV".equals(invoke.getMethodName(cpg))) {
@@ -137,9 +128,7 @@ public class StaticIvDetector implements Detector {
                         "nextBytes".equals(invoke.getMethodName(cpg))) {
                     foundSafeIvGeneration = true;
                 }
-            }
-
-            else if (inst instanceof INVOKESPECIAL &&
+            } else if (inst instanceof INVOKESPECIAL &&
                     !ivFetchFromCipher //IV was generate with the KeyGenerator
                     && (!atLeastOneDecryptCipher || atLeastOneEncryptCipher) //The cipher is in decrypt mode (no iv generation)
                     && !foundSafeIvGeneration) {
@@ -159,13 +148,13 @@ public class StaticIvDetector implements Detector {
 
     private Location nextLocation(Iterator<Location> i,ConstantPoolGen cpg) {
         Location loc = i.next();
-        if(DEBUG) ByteCode.printOpCode(loc.getHandle().getInstruction(), cpg);
+        if(DEBUG) {
+            ByteCode.printOpCode(loc.getHandle().getInstruction(), cpg);
+        }
         return loc;
     }
 
-
     @Override
     public void report() {
-
     }
 }

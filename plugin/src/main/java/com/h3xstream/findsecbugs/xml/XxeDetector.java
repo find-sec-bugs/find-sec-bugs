@@ -22,16 +22,22 @@ import com.h3xstream.findsecbugs.common.InterfaceUtils;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
+import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.ba.CFG;
 import edu.umd.cs.findbugs.ba.CFGBuilderException;
 import edu.umd.cs.findbugs.ba.ClassContext;
 import edu.umd.cs.findbugs.ba.Location;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
+import java.util.Iterator;
 import org.apache.bcel.Constants;
 import org.apache.bcel.classfile.JavaClass;
-import org.apache.bcel.generic.*;
-
-import java.util.Iterator;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.ICONST;
+import org.apache.bcel.generic.INVOKEINTERFACE;
+import org.apache.bcel.generic.INVOKEVIRTUAL;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InvokeInstruction;
+import org.apache.bcel.generic.LDC;
 
 /**
  * The SaxParser use the Xerces XML Parser engine.
@@ -57,14 +63,12 @@ public class XxeDetector extends OpcodeStackDetector {
     private static final String XXE_SAX_PARSER_TYPE = "XXE_SAXPARSER";
     private static final String XXE_XML_READER_TYPE = "XXE_XMLREADER";
     private static final String XXE_DOCUMENT_TYPE = "XXE_DOCUMENT";
-
     private static final String FEATURE_DISALLOW_DTD = "http://apache.org/xml/features/disallow-doctype-decl";
     private static final String FEATURE_SECURE_PROCESSING = "http://javax.xml.XMLConstants/feature/secure-processing";
-
     private static final String FEATURE_GENERAL_ENTITIES = "http://xml.org/sax/features/external-general-entities";
     private static final String FEATURE_EXTERNAL_ENTITIES = "http://xml.org/sax/features/external-parameter-entities";
 
-    private BugReporter bugReporter;
+    private final BugReporter bugReporter;
 
     public XxeDetector(BugReporter bugReporter) {
         this.bugReporter = bugReporter;
@@ -72,41 +76,37 @@ public class XxeDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
-        if(seen != Constants.INVOKEVIRTUAL && seen != INVOKEINTERFACE) return;
-
+        if (seen != Constants.INVOKEVIRTUAL && seen != INVOKEINTERFACE) {
+            return;
+        }
         String fullClassName = getClassConstantOperand();
         String method = getNameConstantOperand();
-
         //The method call is doing XML parsing (see class javadoc)
-        if ((seen == Constants.INVOKEVIRTUAL &&
-                fullClassName.equals("javax/xml/parsers/SAXParser") &&
-                method.equals("parse")) ||
-                (seen == Constants.INVOKEINTERFACE &&
-                        fullClassName.equals("org/xml/sax/XMLReader") &&
-                        method.equals("parse")) ||
-                (seen == Constants.INVOKEVIRTUAL &&
-                        getClassConstantOperand().equals("javax/xml/parsers/DocumentBuilder") &&
-                        method.equals("parse"))) {
-
+        if ((seen == Constants.INVOKEVIRTUAL && fullClassName.equals("javax/xml/parsers/SAXParser")
+                  && method.equals("parse"))
+                || (seen == Constants.INVOKEINTERFACE && fullClassName.equals("org/xml/sax/XMLReader")
+                  && method.equals("parse"))
+                || (seen == Constants.INVOKEVIRTUAL
+                    && getClassConstantOperand().equals("javax/xml/parsers/DocumentBuilder")
+                  && method.equals("parse"))) {
             JavaClass javaClass = getThisClass();
-
             //(1rst solution for secure parsing proposed by the CERT) Sandbox in an action with limited privileges
             if (InterfaceUtils.isSubtype(javaClass, "java.security.PrivilegedExceptionAction")) {
                 return; //Assuming the proper right are apply to the sandbox
             }
-
             ClassContext classCtx = getClassContext();
             ConstantPoolGen cpg = classCtx.getConstantPoolGen();
-
-            CFG cfg = null;
+            CFG cfg;
             try {
                 cfg = classCtx.getCFG(getMethod());
             } catch (CFGBuilderException e) {
+                AnalysisContext.logError("Cannot get CFG", e);
+                return;
             }
 
             //The combination of the 4 following is consider safe (expand option is only available with DocumentBuilderFactory)
             boolean hasSetXIncludeAware = false;
-            boolean hasExpandEntityReferences = getClassConstantOperand().equals("javax/xml/parsers/DocumentBuilder") ? false : true;
+            boolean hasExpandEntityReferences = !getClassConstantOperand().equals("javax/xml/parsers/DocumentBuilder");
             boolean hasFeatureGeneralEntities = false;
             boolean hasFeatureExternalEntities = false;
 
@@ -115,7 +115,6 @@ public class XxeDetector extends OpcodeStackDetector {
                 Instruction inst = location.getHandle().getInstruction();
                 //ByteCode.printOpCode(inst, cpg);
 
-
                 //(2nd solution for secure parsing proposed by the CERT) Look for entity custom resolver
                 if (inst instanceof INVOKEINTERFACE) { //XMLReader.setEntityResolver is called
                     INVOKEINTERFACE invoke = (INVOKEINTERFACE) inst;
@@ -123,7 +122,6 @@ public class XxeDetector extends OpcodeStackDetector {
                         return;
                     }
                 }
-
                 //DTD disallow
                 //SAXParser.setFeature and DocumentBuilder.setFeature => INVOKEVIRTUAL
                 //XMLReader.setFeature => INVOKEINTERFACE
@@ -131,61 +129,47 @@ public class XxeDetector extends OpcodeStackDetector {
                     InvokeInstruction invoke = (InvokeInstruction) inst;
                     if ("setFeature".equals(invoke.getMethodName(cpg))) {
                         LDC loadConst = ByteCode.getPrevInstruction(location.getHandle(), LDC.class);
-
                         if (loadConst != null) {
                             if (FEATURE_DISALLOW_DTD.equals(loadConst.getValue(cpg))){
                                 return;
-                            }
-                            else if (FEATURE_SECURE_PROCESSING.equals(loadConst.getValue(cpg))){
+                            } else if (FEATURE_SECURE_PROCESSING.equals(loadConst.getValue(cpg))){
                                 return;
-                            }
-                            else if (FEATURE_GENERAL_ENTITIES.equals(loadConst.getValue(cpg))){
+                            } else if (FEATURE_GENERAL_ENTITIES.equals(loadConst.getValue(cpg))){
                                 hasFeatureGeneralEntities = true;
-                            }
-                            else if (FEATURE_EXTERNAL_ENTITIES.equals(loadConst.getValue(cpg))){
+                            } else if (FEATURE_EXTERNAL_ENTITIES.equals(loadConst.getValue(cpg))){
                                 hasFeatureExternalEntities = true;
                             }
                         }
-                    }
-
-                    else if ("setXIncludeAware".equals(invoke.getMethodName(cpg))) {
+                    } else if ("setXIncludeAware".equals(invoke.getMethodName(cpg))) {
                         ICONST boolConst = ByteCode.getPrevInstruction(location.getHandle(), ICONST.class);
                         if (boolConst != null && boolConst.getValue().equals(0)) {
                             hasSetXIncludeAware = true;
                         }
-                    }
-
-                    else if ("setExpandEntityReferences".equals(invoke.getMethodName(cpg))) {
+                    } else if ("setExpandEntityReferences".equals(invoke.getMethodName(cpg))) {
                         ICONST boolConst = ByteCode.getPrevInstruction(location.getHandle(), ICONST.class);
                         if (boolConst != null && boolConst.getValue().equals(0)) {
                             hasExpandEntityReferences = true;
                         }
                     }
                 }
-
-
             }
 
             //Manual configuration include all the suggested settings
-            if(hasFeatureExternalEntities && hasFeatureGeneralEntities && hasSetXIncludeAware && hasExpandEntityReferences) {
+            if (hasFeatureExternalEntities && hasFeatureGeneralEntities && hasSetXIncludeAware && hasExpandEntityReferences) {
                 return;
             }
-
-
-            String simpleClassName = fullClassName.substring(fullClassName.lastIndexOf('/')+1);
+            String simpleClassName = fullClassName.substring(fullClassName.lastIndexOf('/') + 1);
 
             //Raise a bug
-            if(fullClassName.equals("javax/xml/parsers/SAXParser")) {
+            if (fullClassName.equals("javax/xml/parsers/SAXParser")) {
                 bugReporter.reportBug(new BugInstance(this, XXE_SAX_PARSER_TYPE, Priorities.NORMAL_PRIORITY) //
                         .addClass(this).addMethod(this).addSourceLine(this)
                         .addString(simpleClassName + "." + method + "(...)"));
-            }
-            else if(fullClassName.equals("org/xml/sax/XMLReader")) {
+            } else if(fullClassName.equals("org/xml/sax/XMLReader")) {
                 bugReporter.reportBug(new BugInstance(this, XXE_XML_READER_TYPE, Priorities.NORMAL_PRIORITY) //
                         .addClass(this).addMethod(this).addSourceLine(this)
                         .addString(simpleClassName + "." + method + "(...)"));
-            }
-            else if(fullClassName.equals("javax/xml/parsers/DocumentBuilder")) {
+            } else if(fullClassName.equals("javax/xml/parsers/DocumentBuilder")) {
                 bugReporter.reportBug(new BugInstance(this, XXE_DOCUMENT_TYPE, Priorities.NORMAL_PRIORITY) //
                         .addClass(this).addMethod(this).addSourceLine(this)
                         .addString(simpleClassName + "." + method + "(...)"));

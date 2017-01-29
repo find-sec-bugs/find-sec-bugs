@@ -19,20 +19,16 @@ package com.h3xstream.findsecbugs.injection;
 
 import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import edu.umd.cs.findbugs.BugReporter;
-import edu.umd.cs.findbugs.SystemProperties;
 import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.io.IO;
 import edu.umd.cs.findbugs.util.ClassName;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-
 import org.apache.bcel.Repository;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ConstantPoolGen;
@@ -52,7 +48,6 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
 
     protected BasicInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
-
         loadCustomConfigFiles();
     }
 
@@ -64,7 +59,9 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
         //1. Verify if the class used has a known sink
         String fullMethodName = getFullMethodName(invoke, cpg);
         //This will skip the most common lookup
-        if("java/lang/Object.<init>()V".equals(fullMethodName)) return InjectionPoint.NONE;
+        if ("java/lang/Object.<init>()V".equals(fullMethodName)) {
+            return InjectionPoint.NONE;
+        }
 
         InjectionPoint injectionPoint = injectionMap.get(fullMethodName);
         if (injectionPoint != null) {
@@ -74,11 +71,12 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
         try {
             //2. Verify if the super classes match a known sink
             JavaClass classDef = Repository.lookupClass(invoke.getClassName(cpg));
-            for(JavaClass superClass : classDef.getSuperClasses()) {
-                if("java.lang.Object".equals(superClass.getClassName())) continue;
-
-                String superClassFullMethodName = superClass.getClassName().replace('.','/')+"." + invoke.getMethodName(cpg) + invoke.getSignature(cpg);
-
+            for (JavaClass superClass : classDef.getSuperClasses()) {
+                if ("java.lang.Object".equals(superClass.getClassName())) {
+                    continue;
+                }
+                String superClassFullMethodName = superClass.getClassName().replace('.','/')
+                        + "." + invoke.getMethodName(cpg) + invoke.getSignature(cpg);
                 injectionPoint = injectionMap.get(superClassFullMethodName);
                 if (injectionPoint != null) {
                     return injectionPoint;
@@ -87,7 +85,6 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
         } catch (ClassNotFoundException e) {
             AnalysisContext.reportMissingClass(e);
         }
-
         return InjectionPoint.NONE;
     }
 
@@ -132,16 +129,13 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
         if (customConfigFile != null && !customConfigFile.isEmpty()) {
             for (String configFile : customConfigFile.split(File.pathSeparator)) {
                 String[] injectionDefinition = configFile.split(Pattern.quote("|"));
-
                 if (injectionDefinition.length != 2 ||
                     injectionDefinition[0].trim().isEmpty() ||
                     injectionDefinition[1].trim().isEmpty()) {
-
-                    AnalysisContext.logError("Wrong injection config file definition: " + configFile + ". Syntax: fileName|bugType, example: sql-custom.txt|SQL_INJECTION_HIBERNATE");
-
+                    AnalysisContext.logError("Wrong injection config file definition: " + configFile
+                            + ". Syntax: fileName|bugType, example: sql-custom.txt|SQL_INJECTION_HIBERNATE");
                     continue;
                 }
-
                 loadCustomSinks(injectionDefinition[0], injectionDefinition[1]);
             }
         }
@@ -160,8 +154,7 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
             if (file.exists()) {
                 stream = new FileInputStream(file);
                 loadConfiguredSinks(stream, bugType);
-            }
-            else {
+            } else {
                 stream = getClass().getClassLoader().getResourceAsStream(fileName);
                 loadConfiguredSinks(stream, bugType);
             }

@@ -9,7 +9,7 @@ Ljava/net/InetSocketAddress;:#IMMUTABLE
 Ljava/net/URI;:#IMMUTABLE
 Ljava/net/URL;:#IMMUTABLE
 
--- Following classes are SAFE (and also immutable)
+-- Following classes are SAFE (and also immutable in sense of being tainted)
 Ljava/lang/Boolean;:SAFE#IMMUTABLE
 Ljava/lang/Character;:SAFE#IMMUTABLE
 Ljava/lang/Double;:SAFE#IMMUTABLE
@@ -35,6 +35,14 @@ Ljava/time/YearMonth;:SAFE#IMMUTABLE
 Ljava/time/ZonedDateTime;:SAFE#IMMUTABLE
 Ljava/time/ZonedId;:SAFE#IMMUTABLE
 Ljava/time/ZoneOffset;:SAFE#IMMUTABLE
+Ljava/text/Format;:SAFE#IMMUTABLE
+Ljava/text/DateFormat;:SAFE#IMMUTABLE
+Ljava/text/SimpleDateFormat;:SAFE#IMMUTABLE
+Ljava/text/MessageFormat;:SAFE#IMMUTABLE
+Ljava/text/NumberFormat;:SAFE#IMMUTABLE
+Ljava/text/ChoiceFormat;:SAFE#IMMUTABLE
+Ljava/text/DecimalFormat;:SAFE#IMMUTABLE
+
 
 java/lang/Object.clone()Ljava/lang/Object;:0
 java/lang/Object.equals(Ljava/lang/Object;)Z:UNKNOWN

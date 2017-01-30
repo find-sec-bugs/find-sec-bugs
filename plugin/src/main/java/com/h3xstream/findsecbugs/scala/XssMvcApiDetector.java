@@ -30,7 +30,7 @@ public class XssMvcApiDetector extends BasicInjectionDetector {
     private static final String SCALA_XSS_MVC_API_TYPE = "SCALA_XSS_MVC_API";
 
     // This variable is compared with a .toLowerCase() variable. Please keep this const lowercase.
-    private final String VULNERABLE_CONTENT_TYPE = "text/html";
+    private static final String VULNERABLE_CONTENT_TYPE = "text/html";
 
     public XssMvcApiDetector(BugReporter bugReporter) {
         super(bugReporter);
@@ -59,10 +59,9 @@ public class XssMvcApiDetector extends BasicInjectionDetector {
     @Override
     protected int getPriority(Taint taint) {
         if (!taint.isSafe() && taint.hasTag(Taint.Tag.XSS_SAFE)) {
-            if(FindSecBugsGlobalConfig.getInstance().isReportPotentialXssWrongContext()) {
+            if (FindSecBugsGlobalConfig.getInstance().isReportPotentialXssWrongContext()) {
                 return Priorities.LOW_PRIORITY;
-            }
-            else {
+            } else {
                 return Priorities.IGNORE_PRIORITY;
             }
         } else if (!taint.isSafe()

@@ -35,7 +35,7 @@ public class CipherWithNoIntegrityDetectorTest extends BaseDetectorTest {
      * @throws Exception
      */
     @Test
-    public void detectCustomDigest() throws Exception {
+    public void detectNoIntegrity() throws Exception {
         //Locate test code
         String[] files = {
             getClassFilePath("testcode/crypto/CipherNoIntegrity"),
@@ -61,7 +61,7 @@ public class CipherWithNoIntegrityDetectorTest extends BaseDetectorTest {
                 .build()
         );
 
-        List<Integer> linesNoIntegrity = Arrays.asList(9, 10, 11, 12);
+        List<Integer> linesNoIntegrity = Arrays.asList(9, 10, 11, 12, 21);
         for (Integer line : linesNoIntegrity) {
             verify(reporter).doReportBug(
                     bugDefinition()

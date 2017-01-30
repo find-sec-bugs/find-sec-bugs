@@ -23,23 +23,14 @@ import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Detector;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.ba.ClassContext;
-import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
-import org.apache.bcel.generic.GETFIELD;
-import org.apache.bcel.generic.Instruction;
-import org.apache.bcel.generic.InstructionHandle;
-import org.apache.bcel.generic.InvokeInstruction;
-import org.apache.bcel.generic.MethodGen;
-
-import java.util.Iterator;
 
 public class GeolocationDetector implements Detector {
 
     private static final boolean DEBUG = false;
     private static final String ANDROID_GEOLOCATION_TYPE = "ANDROID_GEOLOCATION";
-    private BugReporter bugReporter;
+    private final BugReporter bugReporter;
 
     public GeolocationDetector(BugReporter bugReporter) {
         this.bugReporter = bugReporter;
@@ -48,27 +39,24 @@ public class GeolocationDetector implements Detector {
     @Override
     public void visitClassContext(ClassContext classContext) {
         JavaClass javaClass = classContext.getJavaClass();
-
+        
         //The class extends WebChromeClient
         boolean isWebChromeClient = InterfaceUtils.isSubtype(javaClass, "android.webkit.WebChromeClient");
-
+        
         //Not the target of this detector
-        if (!isWebChromeClient) return;
-
+        if (!isWebChromeClient) {
+            return;
+        }
         Method[] methodList = javaClass.getMethods();
-
         for (Method m : methodList) {
-            MethodGen methodGen = classContext.getMethodGen(m);
-
-            if (DEBUG) System.out.println(">>> Method: " + m.getName());
-
+            if (DEBUG) {
+                System.out.println(">>> Method: " + m.getName());
+            }
             //The presence of onGeolocationPermissionsShowPrompt is not enforce for the moment
             if (!m.getName().equals("onGeolocationPermissionsShowPrompt")) {
                 continue;
             }
-
             //Since the logic implemented need to be analyze by a human, all implementation will be flagged.
-
             bugReporter.reportBug(new BugInstance(this, ANDROID_GEOLOCATION_TYPE, Priorities.NORMAL_PRIORITY) //
                     .addClassAndMethod(javaClass, m));
         }
@@ -76,6 +64,5 @@ public class GeolocationDetector implements Detector {
 
     @Override
     public void report() {
-
     }
 }

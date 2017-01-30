@@ -78,7 +78,7 @@ public class CipherWithNoIntegrityDetector extends OpcodeStackDetector {
                 || !getNameConstantOperand().equals("getInstance")) {
             return;
         }
-        OpcodeStack.Item item = stack.getStackItem(stack.getStackDepth() - 1);
+        OpcodeStack.Item item = stack.getStackItem(getSigConstantOperand().contains(";L") ? 1 : 0);
         String cipherValue;
         if (StackUtils.isConstantString(item)) {
             cipherValue = (String) item.getConstant();

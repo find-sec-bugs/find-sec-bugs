@@ -18,27 +18,29 @@
 package com.h3xstream.findsecbugs.jsp;
 
 import com.h3xstream.findsecbugs.common.ByteCode;
+import static com.h3xstream.findsecbugs.common.matcher.InstructionDSL.invokeInstruction;
 import com.h3xstream.findsecbugs.common.matcher.InvokeMatcherBuilder;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Detector;
 import edu.umd.cs.findbugs.Priorities;
-import edu.umd.cs.findbugs.ba.*;
+import edu.umd.cs.findbugs.ba.AnalysisContext;
+import edu.umd.cs.findbugs.ba.CFG;
+import edu.umd.cs.findbugs.ba.CFGBuilderException;
+import edu.umd.cs.findbugs.ba.ClassContext;
+import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
+import edu.umd.cs.findbugs.ba.Hierarchy;
+import edu.umd.cs.findbugs.ba.Location;
+import java.util.Iterator;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.Instruction;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-
-import static com.h3xstream.findsecbugs.common.matcher.InstructionDSL.invokeInstruction;
-
 public class XslTransformJspDetector implements Detector {
+    
     private static final String JSP_XSLT = "JSP_XSLT";
-
-    private BugReporter bugReporter;
-
+    private final BugReporter bugReporter;
     private static final InvokeMatcherBuilder TRANSFORM_TAG_XSLT = invokeInstruction()
             .atClass("org.apache.taglibs.standard.tag.rt.xml.TransformTag") //
             .atMethod("setXslt") //
@@ -48,22 +50,21 @@ public class XslTransformJspDetector implements Detector {
         this.bugReporter = bugReporter;
     }
 
-
     @Override
     public void visitClassContext(ClassContext classContext) {
         JavaClass javaClass = classContext.getJavaClass();
-
         try {
-            if(!Hierarchy.isSubtype(javaClass.getClassName(), "javax.servlet.http.HttpServlet")) {
+            if (!Hierarchy.isSubtype(javaClass.getClassName(), "javax.servlet.http.HttpServlet")) {
                 return;
             }
         } catch (ClassNotFoundException e) {
+            AnalysisContext.reportMissingClass(e);
         }
         for (Method m : javaClass.getMethods()) {
             try {
                 analyzeMethod(m, classContext);
-            } catch (CFGBuilderException e) {
-            } catch (DataflowAnalysisException e) {
+            } catch (CFGBuilderException | DataflowAnalysisException e) {
+                AnalysisContext.logError("Cannot analyze method", e);
             }
         }
     }
@@ -90,38 +91,28 @@ public class XslTransformJspDetector implements Detector {
 //        XslTransformJspDetector: [0068]  aload   4
 //        XslTransformJspDetector: [0070]  invokevirtual   org/apache/taglibs/standard/tag/rt/xml/TransformTag.doEndTag ()I
 
-
         //Conditions that needs to fill to identify the vulnerability
         ConstantPoolGen cpg = classContext.getConstantPoolGen();
         CFG cfg = classContext.getCFG(m);
 
-        LinkedList<Instruction> instructionVisited = new LinkedList<Instruction>();
-
         for (Iterator<Location> i = cfg.locationIterator(); i.hasNext(); ) {
             Location location = i.next();
-
             Instruction inst = location.getHandle().getInstruction();
-            instructionVisited.add(inst);
-
             //ByteCode.printOpCode(inst,cpg);
-
-            if(TRANSFORM_TAG_XSLT.matches(inst,cpg)) {
+            if (TRANSFORM_TAG_XSLT.matches(inst,cpg)) {
                 String value = ByteCode.getConstantLDC(location.getHandle().getPrev(),cpg,String.class);
-                if(value == null) {
+                if (value == null) {
                     JavaClass clz = classContext.getJavaClass();
                     bugReporter.reportBug(new BugInstance(this, JSP_XSLT, Priorities.HIGH_PRIORITY) //
                             .addClass(clz)
                             .addMethod(clz, m)
                             .addSourceLine(classContext, m, location));
                 }
-
             }
         }
-
     }
 
     @Override
     public void report() {
-
     }
 }

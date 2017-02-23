@@ -9,10 +9,10 @@ import static org.mockito.Mockito.spy;
 
 public class OutOfBoundMutableTest extends BaseDetectorTest {
 
-    @Test(enabled = false)
+    @Test
     public void detectSecureFlagCookieBasic() throws Exception {
-        FindSecBugsGlobalConfig.getInstance().setDebugTaintState(true);
-        FindSecBugsGlobalConfig.getInstance().setDebugPrintInstructionVisited(true);
+        //FindSecBugsGlobalConfig.getInstance().setDebugTaintState(true);
+        //FindSecBugsGlobalConfig.getInstance().setDebugPrintInstructionVisited(true);
         //FindSecBugsGlobalConfig.getInstance().setDebugPrintInvocationVisited(true);
 
         //Locate test code

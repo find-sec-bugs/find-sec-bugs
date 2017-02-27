@@ -17,7 +17,11 @@
  */
 package com.h3xstream.findsecbugs.taintanalysis;
 
+import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
+import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
 import edu.umd.cs.findbugs.ba.Frame;
+import org.apache.bcel.generic.LocalVariableGen;
+import org.apache.bcel.generic.MethodGen;
 
 /**
  * Representation of the dataflow value (fact) modeling taint state of local
@@ -29,5 +33,54 @@ public class TaintFrame extends Frame<Taint> {
 
     public TaintFrame(int numLocals) {
         super(numLocals);
+    }
+
+
+    public String toString(MethodGen method) {
+        String[] variables = new String[method.getLocalVariables().length];
+        LocalVariableGen[] variablesGen = method.getLocalVariables();
+        for(int i=0; i<variablesGen.length ;i++) {
+            variables[i] = variablesGen[i].getName();
+        }
+        return toString(variables);
+    }
+
+    @Override
+    public String toString() {
+        return toString(new String[getNumLocals()]);
+    }
+
+    public String toString(String[] variableNames) {
+        StringBuilder str = new StringBuilder();
+        try {
+            str.append("+============================\n");
+            if(!FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
+                str.append("| /!\\ Warning : The taint debugging is not fully activated.\n");
+            }
+            str.append("| [[ Stack ]]\n");
+            int stackDepth = getStackDepth();
+            for (int i = 0; i < stackDepth; i++) {
+                Taint taintValue = getStackValue(i);
+                str.append(String.format("| %s. %s {%s}\n",
+                        i, taintValue.getState().toString(), taintValue.toString()));
+            }
+            if (stackDepth == 0) {
+                str.append("| Empty\n");
+            }
+            str.append("|============================\n");
+            str.append("| [[ Local variables ]]\n");
+            int nb = getNumLocals();
+            for (int i = 0; i < nb; i++) {
+                Taint taintValue = getValue(i);
+                str.append("| ").append(variableNames[i]).append(" = ")
+                        .append(taintValue.toString())
+                        .append("\n");
+            }
+            str.append("+============================\n");
+        } catch (DataflowAnalysisException e) {
+            str.append("Oups "+e.getMessage());
+        }
+
+        return str.toString();
     }
 }

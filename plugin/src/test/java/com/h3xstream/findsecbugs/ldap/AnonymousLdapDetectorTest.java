@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs;
+package com.h3xstream.findsecbugs.ldap;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
@@ -30,7 +30,7 @@ public class AnonymousLdapDetectorTest extends BaseDetectorTest {
     public void detectAnonymousLdapBind() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/AnonymousLdap")
+                getClassFilePath("testcode/ldap/AnonymousLdap")
         };
 
         //Run the analysis

@@ -158,6 +158,9 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
     @Override
     public TaintDataflow analyze(IAnalysisCache cache, MethodDescriptor descriptor)
             throws CheckedAnalysisException {
+        if(FindSecBugsGlobalConfig.getInstance().isDebugPrintInstructionVisited() || FindSecBugsGlobalConfig.getInstance().isDebugPrintInvocationVisited()) {
+            System.out.println("==[ Method: "+descriptor.getName()+" ]==");
+        }
         CFG cfg = cache.getMethodAnalysis(CFG.class, descriptor);
         DepthFirstSearch dfs = cache.getMethodAnalysis(DepthFirstSearch.class, descriptor);
         MethodGen methodGen = cache.getMethodAnalysis(MethodGen.class, descriptor);

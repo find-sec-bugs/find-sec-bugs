@@ -17,7 +17,8 @@
  */
 package com.h3xstream.findbugs.test.matcher;
 
-import com.h3xstream.findbugs.test.jsp.SMAPSourceDebugExtension;
+import com.h3xstream.findbugs.test.jsp.DebugExtensionExtractor;
+import com.h3xstream.findbugs.test.jsp.SmapParser;
 import com.h3xstream.findbugs.test.service.ClassFileLocator;
 import edu.umd.cs.findbugs.BugInstance;
 import org.apache.commons.io.IOUtils;
@@ -28,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -125,17 +127,34 @@ public class BugInstanceMatcherBuilder {
     }
 
     private static List<Integer>  mapJspToJavaLine(String jspFile, Integer jspLine) {
-        List<Integer> outJavaLines = null;
+        List<Integer> outJavaLines = new ArrayList<>();
 
         ClassFileLocator locator = new ClassFileLocator();
-        File smapFile = new File(locator.getJspFilePath(jspFile) + ".smap");
-        if(!smapFile.exists()) {
-            throw new RuntimeException("SMAP File are missing. ("+smapFile+")");
-        }
+        String jspClassLocation = locator.getJspFilePath(jspFile);
+        File smapFile = new File(jspClassLocation + ".smap");
+
+
         try {
+            String debugInfo;
+            if(smapFile.exists()) {
+                debugInfo = IOUtils.toString(new FileInputStream(smapFile),"UTF-8");
+            }
+            else {
+                //
+                if(!new File(jspClassLocation).exists())
+                    throw new RuntimeException("Unable to locate the class file "+ jspClassLocation);
+
+                debugInfo = new DebugExtensionExtractor().getDebugExtFromClass(new FileInputStream(jspClassLocation));
+
+                if(debugInfo == null)
+                    throw new RuntimeException("SMAP info is missing. ("+smapFile+" or embedded in "+jspClassLocation+")");
+            }
+
             //Convert
-            SMAPSourceDebugExtension smapDebug = new SMAPSourceDebugExtension(IOUtils.toString(new FileInputStream(smapFile), "UTF-8"));
-            outJavaLines = smapDebug.getOriginalLine(jspLine);
+            SmapParser smapDebug = new SmapParser(debugInfo);
+
+            for(Integer val : smapDebug.getOriginalLine(jspLine)) outJavaLines.add(val);
+
             log.info("The JSP line "+jspLine+" was mapped to "+ Arrays.toString(outJavaLines.toArray()));
             if(outJavaLines.isEmpty()) {
                 throw new RuntimeException("Unable to find the mapping for the JSP line "+jspLine);

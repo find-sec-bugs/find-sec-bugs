@@ -76,7 +76,7 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-jspc-maven-plugin</artifactId>
-                <version>9.0.7.v20131107</version> <!-- Higher version than 9.0.7 doesn't support smap file -->
+                <version>9.4.2.v20170220</version>
                 <executions>
                     <execution>
                         <id>jspc</id>
@@ -86,10 +86,14 @@
                             <goal>jspc</goal>
                         </goals>
                         <configuration>
+                            <jspc>
+                                <smapSuppressed>false</smapSuppressed>
+                                <smapDumped>true</smapDumped>
+                            </jspc>
+                            <keepSources>true</keepSources>
                             <!-- Use the test folders to avoid polluting the resulting jar -->
                             <generatedClasses>${project.build.directory}/test-classes</generatedClasses>
                             <webAppSourceDirectory>${basedir}/src/test/webapp</webAppSourceDirectory>
-                            <suppressSmap>false</suppressSmap>
                             <useProvidedScope>true</useProvidedScope>
                         </configuration>
                     </execution>
@@ -115,7 +119,7 @@
             <plugin>
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
-                <version>4.2.0</version>
+                <version>4.3.0</version>
             </plugin>
 
             <!--

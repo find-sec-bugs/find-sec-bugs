@@ -15,7 +15,7 @@ Website : http://find-sec-bugs.github.io/
    - Major improvements and refactoring on the taint analysis for injections.
    - The creation of a detector for Hard coded passwords and cryptographic keys.
  - [Tomáš Polešovský](https://github.com/topolik)
-   - Improvements and bug fixes related to the the taint analysis.
+   - Improvements and bug fixes related to the taint analysis.
  - [Maxime Nadeau](https://github.com/MaxNad)
    - New detectors surrounding the Play Framework and improvements related to Scala.
  - [Naoki Kimura](https://github.com/naokikimura)

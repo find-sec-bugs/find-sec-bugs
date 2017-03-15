@@ -35,6 +35,15 @@
                 </executions>
             </plugin>
 
+            <!-- The test utility are indirectly test during the unit test of the plugin -->
+            <!-- Cobertura will not instrument the current project when it is run in other projects -->
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
         </plugins>
 
     </build>

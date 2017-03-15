@@ -1,7 +1,13 @@
 language: java
 jdk:
   - oraclejdk8
-#Activate container based infra https://docs.travis-ci.com/user/workers/container-based-infrastructure/
+# Activate container based infra https://docs.travis-ci.com/user/workers/container-based-infrastructure/
 sudo: false
 install: mvn clean -B -V
 script: mvn verify -B -V -Ptravisci
+
+
+after_success:
+# Coveralls
+# Report available here : https://coveralls.io/github/find-sec-bugs/find-sec-bugs
+  - mvn clean cobertura:cobertura coveralls:report

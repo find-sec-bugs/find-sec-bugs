@@ -2897,7 +2897,7 @@ the XSS protection rules defined in the OWASP XSS Prevention Cheat Sheet.
             <![CDATA[
 <p>
 The Blowfish cipher supports keysizes from 32 bits to 448 bits. A small key size makes the ciphertext vulnerable to brute force attacks.
-At least 128 bits of entropy should be used when generating the key if the usage of Blowfish must be retained.
+At least 128 bits of entropy should be used when generating the key if use of Blowfish is required.
 </p>
 <p>
 If the algorithm can be changed, the AES block cipher should be used instead.
@@ -2934,7 +2934,7 @@ keyGen.init(128);</pre>
         <Details>
             <![CDATA[
 <p>
-    NIST recommend the use of <u>2048 bits and higher</u> keys for the RSA algorithm.
+    The NIST recommends the use of <u>2048 bits and higher</u> keys for the RSA algorithm.
 </p>
 <blockquote>
     "Digital Signature Verification | RSA: 1024 &le; len(n) &lt; 2048 | Legacy-use"<br/>

@@ -43,9 +43,6 @@ public class WeakTLSDetector extends OpcodeStackDetector {
             && getSigConstantOperand().equals("()V")) {
           
             //DefaultHttpClient constructor with no parameter
-            System.out.println("Stack depth ="  + stack.getStackDepth());
-            System.out.println("DefaultHttpClient constructor with no parameter");
-
             bugReporter.reportBug(new BugInstance(this, DEFAULT_HTTP_CLIENT, Priorities.NORMAL_PRIORITY)
                     .addClass(this).addMethod(this).addSourceLine(this));
         }
@@ -55,7 +52,7 @@ public class WeakTLSDetector extends OpcodeStackDetector {
             && getNameConstantOperand().equals("getInstance")
             && getSigConstantOperand().equals("(Ljava/lang/String;)Ljavax/net/ssl/SSLContext;")) {
           
-            System.out.println("SSLContext.getInstance(" + this.getSigConstantOperand() + ")");            
+            //System.out.println("SSLContext.getInstance(" + this.getSigConstantOperand() + ")");
             final OpcodeStack.Item item = stack.getStackItem(0);              
             String sslContextName = (String) item.getConstant(); //Null if the value passed isn't constant
               

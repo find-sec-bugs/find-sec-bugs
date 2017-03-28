@@ -1004,11 +1004,29 @@ Upgrade your implementation to use one of the recommended constructs and configu
 
 <p>
 <ul>
+  <li>Use <a href="http://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/client/SystemDefaultHttpClient.html">SystemDefaultHttpClient</a> instead</li>
+<p>
+    <b>Sample Code:</b><br/>
+<pre>
+    HttpClient client = new SystemDefaultHttpClient();
+</pre>
+</p>
   <li>Create an HttpClient based on SSLSocketFactory - get an SSLScoketFactory instance with <a href="https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/conn/ssl/SSLSocketFactory.html#getSystemSocketFactory()">getSystemSocketFactory()</a> and use this instance for HttpClient creation</li>
   <li>Create an HttpClient based on SSLConnectionSocketFactory - get an instance with <a href="https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/conn/ssl/SSLConnectionSocketFactory.html#getSystemSocketFactory()">getSystemSocketFactory()</a> and use this instance for HttpClient creation</li>
-  <li>Use <a href="http://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/client/SystemDefaultHttpClient.html">SystemDefaultHttpClient</a> instead</li>
   <li>Use HttpClientBuilder - call <a href="http://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/client/HttpClientBuilder.html#useSystemProperties()">useSystemProperties()</a> before calling build()</li>
+<p>
+    <b>Sample Code:</b><br/>
+<pre>
+    HttpClient client = HttpClientBuilder.create().useSystemProperties().build();
+</pre>
+</p>
   <li>HttpClients - call <a href="https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/client/HttpClients.html#createSystem()">createSystem()</a> to create an instance</li>
+<p>
+    <b>Sample Code:</b><br/>
+<pre>
+    HttpClient client = HttpClients.createSystem();
+</pre>
+</p>
 </ul>
 </p>
 <br/>

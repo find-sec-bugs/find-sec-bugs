@@ -29,6 +29,7 @@
     <Detector class="com.h3xstream.findsecbugs.endpoint.TapestryEndpointDetector" reports="TAPESTRY_ENDPOINT"/>
     <Detector class="com.h3xstream.findsecbugs.endpoint.WicketEndpointDetector" reports="WICKET_ENDPOINT"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.WeakMessageDigestDetector" reports="WEAK_MESSAGE_DIGEST_MD5,WEAK_MESSAGE_DIGEST_SHA1"/>
+    <Detector class="com.h3xstream.findsecbugs.crypto.WeakTLSDetector" reports="DEFAULT_HTTP_CLIENT,SSL_CONTEXT"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.CustomMessageDigestDetector" reports="CUSTOM_MESSAGE_DIGEST"/>
     <Detector class="com.h3xstream.findsecbugs.file.FileUploadFilenameDetector" reports="FILE_UPLOAD_FILENAME"/>
     <Detector class="com.h3xstream.findsecbugs.ReDosDetector" reports="REDOS"/>
@@ -142,6 +143,8 @@
     <BugPattern type="WICKET_ENDPOINT" abbrev="SECWE" category="SECURITY"/>
     <BugPattern type="WEAK_MESSAGE_DIGEST_MD5" abbrev="SECMD5" category="SECURITY" cweid="328"/>
     <BugPattern type="WEAK_MESSAGE_DIGEST_SHA1" abbrev="SECSHA1" category="SECURITY" cweid="328"/>
+    <BugPattern type="DEFAULT_HTTP_CLIENT" abbrev="SECHTTPCLIENT" category="SECURITY"/>
+    <BugPattern type="SSL_CONTEXT" abbrev="SECSSL" category="SECURITY"/>
     <BugPattern type="CUSTOM_MESSAGE_DIGEST" abbrev="SECCMD" category="SECURITY" cweid="327"/>
     <BugPattern type="FILE_UPLOAD_FILENAME" abbrev="SECFUN" category="SECURITY"/>
     <BugPattern type="REDOS" abbrev="SECRD" category="SECURITY" cweid="400"/>

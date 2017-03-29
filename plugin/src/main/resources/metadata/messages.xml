@@ -981,6 +981,94 @@ uses. <b>PBKDF2</b> should be use to hash password for example.</p>
     <BugCode abbrev="SECSHA1">SHA-1 is a weak hash function</BugCode>
 
 
+    <!-- Weak SSL/TLS protocols -->
+    <Detector class="com.h3xstream.findsecbugs.crypto.WeakTLSDetector">
+        <Details>Identify the usage of weak SSL/TLS protocols</Details>
+    </Detector>
+
+    <BugPattern type="DEFAULT_HTTP_CLIENT">
+        <ShortDescription>DefaultHttpClient with default constructor is not compatible with TLS 1.2</ShortDescription>
+        <LongDescription>DefaultHttpClient with default constructor is not compatible with TLS 1.2</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    <b>Vulnerable Code:</b><br/>
+<pre>
+    HttpClient client = new DefaultHttpClient();
+</pre>
+</p>
+<p>
+<p><b>Solution:</b><br/>
+
+Upgrade your implementation to use one of the recommended constructs and configure https.protocols JVM option to include TLSv1.2:</p>
+
+<p>
+<ul>
+  <li>Use <a href="http://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/client/SystemDefaultHttpClient.html">SystemDefaultHttpClient</a> instead</li>
+<p>
+    <b>Sample Code:</b><br/>
+<pre>
+    HttpClient client = new SystemDefaultHttpClient();
+</pre>
+</p>
+  <li>Create an HttpClient based on SSLSocketFactory - get an SSLScoketFactory instance with <a href="https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/conn/ssl/SSLSocketFactory.html#getSystemSocketFactory()">getSystemSocketFactory()</a> and use this instance for HttpClient creation</li>
+  <li>Create an HttpClient based on SSLConnectionSocketFactory - get an instance with <a href="https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/conn/ssl/SSLConnectionSocketFactory.html#getSystemSocketFactory()">getSystemSocketFactory()</a> and use this instance for HttpClient creation</li>
+  <li>Use HttpClientBuilder - call <a href="http://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/client/HttpClientBuilder.html#useSystemProperties()">useSystemProperties()</a> before calling build()</li>
+<p>
+    <b>Sample Code:</b><br/>
+<pre>
+    HttpClient client = HttpClientBuilder.create().useSystemProperties().build();
+</pre>
+</p>
+  <li>HttpClients - call <a href="https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/client/HttpClients.html#createSystem()">createSystem()</a> to create an instance</li>
+<p>
+    <b>Sample Code:</b><br/>
+<pre>
+    HttpClient client = HttpClients.createSystem();
+</pre>
+</p>
+</ul>
+</p>
+<br/>
+
+<p>
+<b>References</b><br/>
+<a href="https://blogs.oracle.com/java-platform-group/entry/diagnosing_tls_ssl_and_https">Diagnosing TLS, SSL, and HTTPS</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECHTTPCLIENT">DefaultHttpClient</BugCode>
+
+    <BugPattern type="SSL_CONTEXT">
+        <ShortDescription>Weak SSLContext</ShortDescription>
+        <LongDescription>SSLContext needs to be compatible with TLS 1.2</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    <b>Vulnerable Code:</b><br/>
+<pre>
+    SSLContext.getInstance("SSL");
+</pre>
+</p>
+<p>
+<p><b>Solution:</b><br/>
+
+Upgrade your implementation to the following, and configure https.protocols JVM option to include TLSv1.2:</p>
+<pre>
+    SSLContext.getInstance("TLS");
+</pre>
+<p>
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://blogs.oracle.com/java-platform-group/entry/diagnosing_tls_ssl_and_https">Diagnosing TLS, SSL, and HTTPS</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSSL">SSLContext</BugCode>
 
     <!-- Custom Message Digest -->
     <Detector class="com.h3xstream.findsecbugs.crypto.CustomMessageDigestDetector">

@@ -3067,6 +3067,10 @@ keyGen.initialize(2048);
         <Details>Identify unvalidated redirects with Play Framework (Scala)</Details>
     </Detector>
 
+    <Detector class="com.h3xstream.findsecbugs.spring.SpringUnvalidatedRedirectDetector">
+        <Details>Identify unvalidated redirects with Spring Framework</Details>
+    </Detector>
+
     <BugPattern type="UNVALIDATED_REDIRECT">
         <ShortDescription>Unvalidated Redirect</ShortDescription>
         <LongDescription>The following redirection could be use by an attacker to redirect users to a fishing website.</LongDescription>
@@ -3165,6 +3169,57 @@ keyGen.initialize(2048);
         </Details>
     </BugPattern>
     <BugCode abbrev="SECPUR">Unvalidated Redirect (Play Framewok)</BugCode>
+
+    <BugPattern type="SPRING_UNVALIDATED_REDIRECT">
+        <ShortDescription>Spring Unvalidated Redirect</ShortDescription>
+        <LongDescription>The following redirection could be use by an attacker to redirect users to a fishing website.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    Unvalidated redirects occur when an application redirects a user to a destination URL specified by a user supplied
+    parameter that is not validated. Such vulnerabilities can be used to facilitate phishing attacks.
+</p>
+<p>
+    <b>Scenario</b><br/>
+    1. A user is tricked into visiting the malicious URL: <code>http://website.com/login?redirect=http://evil.vvebsite.com/fake/login</code><br/>
+    2. The user is redirected to a fake login page that looks like a site they trust. (<code>http://evil.vvebsite.com/fake/login</code>)<br/>
+    3. The user enters his credentials.<br/>
+    4. The evil site steals the user's credentials and redirects him to the original website.<br/>
+    <br/>
+    This attack is plausible because most users don't double check the URL after the redirection. Also, redirection to
+    an authentication page is very common.
+</p>
+<p>
+    <b>Vulnerable Code:</b></br/>
+    <pre>@RequestMapping("/redirect")
+    public String redirect(@RequestParam("url") String url) {
+    [...]
+    return "redirect:" + url;
+    }
+</pre>
+</p>
+<p>
+    <b>Solution/Countermeasures:</b><br/>
+    <ul>
+        <li>Don't accept redirection destinations from users</li>
+        <li>Accept a destination key, and use it to look up the target (legal) destination</li>
+        <li>Accept only relative paths</li>
+        <li>White list URLs (if possible)</li>
+        <li>Validate that the beginning of the URL is part of a white list</li>
+    </ul>
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246981/URL%20Redirector%20Abuse">WASC-38: URL Redirector Abuse</a><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2013-A10-Unvalidated_Redirects_and_Forwards">OWASP: Top 10 2013-A10: Unvalidated Redirects and Forwards</a><br/>
+<a href="https://www.owasp.org/index.php/Unvalidated_Redirects_and_Forwards_Cheat_Sheet">OWASP: Unvalidated Redirects and Forwards Cheat Sheet</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/601.html">CWE-601: URL Redirection to Untrusted Site ('Open Redirect')</a>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSUR">Spring Unvalidated Redirect</BugCode>
 
 
     <!-- JSP Include -->

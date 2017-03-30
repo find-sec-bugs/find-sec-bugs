@@ -3192,11 +3192,10 @@ keyGen.initialize(2048);
 <p>
     <b>Vulnerable Code:</b></br/>
     <pre>@RequestMapping("/redirect")
-    public String redirect(@RequestParam("url") String url) {
+public String redirect(@RequestParam("url") String url) {
     [...]
     return "redirect:" + url;
-    }
-</pre>
+}</pre>
 </p>
 <p>
     <b>Solution/Countermeasures:</b><br/>

@@ -1,0 +1,5 @@
+<FindBugsFilter>
+  <Match>
+    <Bug pattern="GRAPH_BUG" />
+  </Match>
+</FindBugsFilter>

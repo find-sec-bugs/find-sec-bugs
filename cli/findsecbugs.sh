@@ -1,2 +1,1 @@
-@echo off
-java -jar findbugs.jar -quiet -pluginList findsecbugs-1.4.4.jar $@
+java -cp lib/\* edu.umd.cs.findbugs.LaunchAppropriateUI -quiet -pluginList lib/findsecbugs-plugin-1.6.0.jar -include include.xml $@

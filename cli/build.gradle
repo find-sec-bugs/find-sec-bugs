@@ -1,0 +1,15 @@
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.github.spotbugs:spotbugs:3.1.0-RC1'
+    compile 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.6.0'
+}
+
+task copyRuntimeLibs(type: Copy) {
+    into "lib"
+    from configurations.runtime
+}

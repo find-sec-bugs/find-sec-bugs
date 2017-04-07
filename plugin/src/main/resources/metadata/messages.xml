@@ -2819,9 +2819,9 @@ The code should be replaced with:<br/>
         <Details>Identify hardcoded Google API key</Details>
     </Detector>
 
-    <!-- Hard coded JNDI credentials -->
-    <Detector class="com.h3xstream.findsecbugs.password.JndiCredentialsDetector">
-        <Details>Identify hardcoded credentials in context initialization</Details>
+    <!-- Hard coded JNDI credentials and other password in map -->
+    <Detector class="com.h3xstream.findsecbugs.password.HardcodePasswordInMapDetector">
+        <Details>Identify hardcoded credentials in map</Details>
     </Detector>
 
     <Detector class="com.h3xstream.findsecbugs.password.IntuitiveHardcodePasswordDetector">

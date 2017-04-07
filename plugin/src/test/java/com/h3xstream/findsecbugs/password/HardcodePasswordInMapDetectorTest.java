@@ -28,7 +28,34 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class JndiCredentialsDetectorTest extends BaseDetectorTest {
+public class HardcodePasswordInMapDetectorTest extends BaseDetectorTest {
+
+    @Test
+    public void detectHardCodeCredentialsVariousMap() throws Exception {
+        //FindSecBugsGlobalConfig.getInstance().setDebugPrintInstructionVisited(true);//setDebugPrintInvocationVisited(true);
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/password/VariousMap")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        //Assertions
+        for (Integer line : Arrays.asList(14, 20, 26, 32)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("HARD_CODE_PASSWORD")
+                            .inClass("VariousMap").atLine(line)
+                            .build()
+            );
+        }
+
+        //More than two occurrence == false positive
+        verify(reporter, times(4)).doReportBug(
+                bugDefinition().bugType("HARD_CODE_PASSWORD").build());
+    }
 
     @Test
     public void detectHardCodeCredentials() throws Exception {

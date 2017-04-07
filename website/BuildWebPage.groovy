@@ -1,6 +1,7 @@
 import groovy.text.SimpleTemplateEngine
+import groovy.io.FileType
 
-System.setProperty("file.encoding", "UTF-8");
+System.setProperty("file.encoding", "UTF-8")
 
 String metaDataDir = "../plugin/src/main/resources/metadata"
 
@@ -16,14 +17,6 @@ def getTemplateReader(String path) {
 
 //Generated page will be place there
 outDir = "out_web/"
-
-//Loading detectors
-
-println "Importing message from messages.xml"
-bugsBindingEn = buildMapping(messagesStreamEn)
-bugsBindingEn['lang'] = 'en'
-bugsBindingJa = buildMapping(messagesStreamJa)
-bugsBindingJa['lang'] = 'ja'
 
 def buildMapping(InputStream xmlStream) {
     rootXml = new XmlParser().parse(new InputStreamReader(xmlStream,"UTF-8"))
@@ -46,18 +39,41 @@ def buildMapping(InputStream xmlStream) {
     rootXml.Detector.each { detector ->
         bugsBinding['nbDetectors']++
     }
-    return bugsBinding;
+    return bugsBinding
 }
 
+int countSignature(String folder) {
+    def dir = new File(folder)
+
+    int count = 0
+    dir.eachFileRecurse (FileType.FILES) { file ->
+        //println file.getName()
+        file.eachLine { line ->
+            String lineTrim = line.trim()
+            if(lineTrim == "" || lineTrim.startsWith("-")) return
+            count++
+        }
+    }
+    return count
+}
+
+//Loading detectors
+println "Importing message from messages.xml"
+bugsBindingEn = buildMapping(messagesStreamEn)
+bugsBindingEn['lang'] = 'en'
+bugsBindingJa = buildMapping(messagesStreamJa)
+bugsBindingJa['lang'] = 'ja'
+
+nbSignatures = countSignature("../plugin/src/main/resources/injection-sinks/") + countSignature("../plugin/src/main/resources/password-methods/")
 
 //Version and download links
 
 
-latestVersion = "1.5.0"
+latestVersion = "1.6.0"
 downloadUrl = "https://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/${latestVersion}/findsecbugs-plugin-${latestVersion}.jar"
 mavenCentralSearch = "https://search.maven.org/#search|gav|1|g:%22com.h3xstream.findsecbugs%22 AND a:%22findsecbugs-plugin%22"
 releaseNotesUrl = "https://github.com/find-sec-bugs/find-sec-bugs/releases/latest" //This link redirect to the latest release
-latestUpdateDate = "6th October 2016"
+latestUpdateDate = "March 15th, 2017"
 
 //Screenshots
 
@@ -86,6 +102,7 @@ new File(outDir,"index.htm").withWriter {
         w << engine.createTemplate(getTemplateReader("/home.htm")).make(['latestVersion':latestVersion,
                                                                          'latestUpdateDate':latestUpdateDate,
                                                                          'nbPatterns':bugsBindingEn['nbPatterns'],
+                                                                         'nbSignatures':nbSignatures,
                                                                          'screenshots':screenshots,
                                                                          'releaseNotesUrl':releaseNotesUrl
                                                                          ])

@@ -1675,8 +1675,8 @@ byte[] cipherText = c.doFinal(plainText);</pre>
         <Details>ハードコードされた Google API キーを特定します。</Details>
     </Detector>
 
-    <!-- Hard coded JNDI credentials -->
-    <Detector class="com.h3xstream.findsecbugs.password.JndiCredentialsDetector">
+    <!-- Hard coded JNDI credentials and other password in map -->
+    <Detector class="com.h3xstream.findsecbugs.password.HardcodePasswordInMapDetector">
         <Details>コンテキスト初期設定内にハードコードされた認証情報を特定します。</Details>
     </Detector>
 

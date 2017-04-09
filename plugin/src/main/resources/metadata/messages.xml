@@ -4223,7 +4223,7 @@ cookie.setHttpOnly(true); //HttpOnly flag
 </p>
 <p>
     Deserialization is a sensible operation that has a great history of vulnerabilities. The web application might
-    become vulnerable has soon as a new vulnerability is found in the Java Virtual Machine<sup>[2] [3]</sup>.
+    become vulnerable as soon as a new vulnerability is found in the Java Virtual Machine<sup>[2] [3]</sup>.
 </p>
 
 <p>

@@ -2495,7 +2495,7 @@ response.addCookie(cookie);</pre>
         <Details>
             <![CDATA[
 <p>
-    When data from untusted source are put into a logger and not neutralized correctly,
+    When data from an untrusted source is put into a logger and not neutralized correctly,
     an attacker could forge log entries or include malicious content.
     Inserted false entries could be used to skew statistics, distract the administrator
     or even to implicate another party in the commission of a malicious act.

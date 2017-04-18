@@ -36,6 +36,7 @@ public class TaintFrame extends Frame<Taint> {
     }
 
 
+
     public String toString(MethodGen method) {
         String[] variables = new String[method.getLocalVariables().length];
         LocalVariableGen[] variablesGen = method.getLocalVariables();
@@ -50,6 +51,13 @@ public class TaintFrame extends Frame<Taint> {
         return toString(new String[getNumLocals()]);
     }
 
+    /**
+     * The toString method are intended for debugging.
+     * To see the visual state of TaintFrame in IntelliJ, Right-Click on the variable and select "View Text".
+     *
+     * @param variableNames List of variables names that will be map to local sloths.
+     * @return View of the stack followed by the local variables
+     */
     public String toString(String[] variableNames) {
         StringBuilder str = new StringBuilder();
         try {
@@ -73,7 +81,7 @@ public class TaintFrame extends Frame<Taint> {
             for (int i = 0; i < nb; i++) {
                 Taint taintValue = getValue(i);
                 str.append("| ").append(variableNames[i]).append(" = ")
-                        .append(taintValue.toString())
+                        .append(taintValue == null ? "<not set>" : taintValue.toString())
                         .append("\n");
             }
             str.append("+============================\n");

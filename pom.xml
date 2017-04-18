@@ -65,11 +65,12 @@
                         <exclude>**/scala/util/**/**.java</exclude>
                         <exclude>**/groovy/lang/**.java</exclude>
                         <exclude>**/scala/**.java</exclude>
+                        <exclude>**/scala/**/**.java</exclude>
                         <exclude>**/**/ReadMe.java</exclude>
                         <exclude>**/freemarker/template/**/**.java</exclude>
                         <exclude>**/PluginDepsClassPathFinder.java</exclude>
                         <exclude>**/java/flexjson/**.java</exclude>
-                        <exclude>**/java/com/typesafe/**.java</exclude>
+                        <exclude>**/java/com/typesafe/**/**.java</exclude>
                     </excludes>
                     <properties>
                         <project>Find Security Bugs</project>

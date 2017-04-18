@@ -53,14 +53,14 @@ public class LdapEntryPoisoningDetector extends OpcodeStackDetector {
             if(PATTERN_SEARCH_CONTROLS_INIT.matches(this)) {
                 OpcodeStack.Item item = stack.getStackItem(1);
                 Object param = item.getConstant();
-                shouldReportBug = param instanceof Integer && param == Integer.valueOf(1);
+                shouldReportBug = param instanceof Integer && Integer.valueOf(1).equals(param);
             }
         }
         else if(seen == INVOKEVIRTUAL) {
             if(PATTERN_SEARCH_CONTROLS_SETTER.matches(this)) {
                 OpcodeStack.Item item = stack.getStackItem(0);
                 Object param = item.getConstant();
-                shouldReportBug = param instanceof Integer && param == Integer.valueOf(1);
+                shouldReportBug = param instanceof Integer && Integer.valueOf(1).equals(param);
             }
         }
 

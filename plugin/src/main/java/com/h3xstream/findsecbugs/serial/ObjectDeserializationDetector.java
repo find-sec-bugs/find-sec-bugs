@@ -50,10 +50,6 @@ public class ObjectDeserializationDetector implements Detector {
 
     private static final String OBJECT_DESERIALIZATION_TYPE = "OBJECT_DESERIALIZATION";
 
-    /**
-     * For testing purpose
-     */
-    protected static boolean DEBUG = false;
     private BugReporter bugReporter;
 
 
@@ -72,9 +68,6 @@ public class ObjectDeserializationDetector implements Detector {
 
         for (Method m : methodList) {
 
-            if (DEBUG) {
-                System.out.println(">>> Method: " + m.getName());
-            }
             try {
                 if((OBJECT_INPUTSTREAM_READ_METHODS.contains(m.getName()) && InterfaceUtils.isSubtype(javaClass, "java.io.Serializable")) ||
                         (InterfaceUtils.isSubtype(javaClass, "java.lang.reflect.InvocationHandler"))) {
@@ -130,17 +123,4 @@ public class ObjectDeserializationDetector implements Detector {
 
     }
 
-    //@Override
-//    public void sawOpcode(int code) {
-//        //printOpCode(code);
-//        if ((code == INVOKEVIRTUAL)) {
-//            if("java/io/ObjectInputStream".equals(getClassConstantOperand()) || getClassConstantOperand().contains("InputStream") || InterfaceUtils.isSubtype(getClassConstantOperand(),"java.io.ObjectInputStream")) {
-//
-//                String methodName = getNameConstantOperand();
-//                if (OBJECT_INPUTSTREAM_READ_METHODS.contains(methodName)) {
-//                    bugReporter.reportBug(new BugInstance(this, "OBJECT_DESERIALIZATION", HIGH_PRIORITY).addClassAndMethod(this).addSourceLine(this));
-//                }
-//            }
-//        }
-//    }
 }

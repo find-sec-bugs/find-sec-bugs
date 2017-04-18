@@ -30,7 +30,9 @@ import org.testng.annotations.Test;
 
 public class TaintConfigValidationTest extends BaseConfigValidationTest {
 
-    @Test(enabled = false)
+    private static final boolean DEBUG = false;
+
+    @Test
     public void validateGeneralTaintConfigAndSafeEncoders() throws IOException {
         for(String directory : Arrays.asList("/taint-config", "/safe-encoders")) {
             InputStream in = getClass().getResourceAsStream(directory);
@@ -58,10 +60,43 @@ public class TaintConfigValidationTest extends BaseConfigValidationTest {
                 else {
                     InputStream inFile = getClass().getResourceAsStream(directory+"/"+ file);
                     assertNotNull(inFile, "File not found: "+ directory+ "/"+file);
+
                     validateFile(inFile,file);
                 }
             }
         }
 
+    }
+
+    /**
+     * Processing of taint configuration files
+     * @param inFile
+     * @param origfileName
+     * @throws IOException
+     */
+    public void validateFile(InputStream inFile, final String origfileName) throws IOException {
+        loader.load(inFile, new TaintConfigLoader.TaintConfigReceiver() {
+            @Override
+            public void receiveTaintConfig(String typeSignature, String config) throws IOException {
+                if (DEBUG) {
+                    System.out.println("[?] fmn: " + typeSignature);
+                }
+
+                String className;
+                if(typeSignature.startsWith("L") && typeSignature.endsWith(";")) {
+                    String immutableType = typeSignature.substring(1,typeSignature.length()-1);
+                    className = immutableType;
+                }
+                else {
+                    String[] methodParts = typeSignature.split("\\.");
+                    className = methodParts[0];
+                }
+
+                className = className.replace('/','.');
+
+                //Test the validity of the class name
+                validateClass(className, origfileName);
+            }
+        });
     }
 }

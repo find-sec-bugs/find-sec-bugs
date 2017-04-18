@@ -32,10 +32,6 @@ import java.util.Iterator;
 
 public class BadHexadecimalConversionDetector implements Detector {
 
-    /**
-     * For testing purpose
-     */
-    protected static boolean DEBUG = false;
     private static final String BAD_HEXA_CONVERSION_TYPE = "BAD_HEXA_CONVERSION";
     private BugReporter bugReporter;
 
@@ -52,10 +48,6 @@ public class BadHexadecimalConversionDetector implements Detector {
         for (Method m : methodList) {
             MethodGen methodGen = classContext.getMethodGen(m);
 
-            if (DEBUG) {
-                System.out.println(">>> Method: " + m.getName());
-            }
-
             //To suspect that an invalid String representation is being build,
             //we identify the construction of a MessageDigest and
             //the use of a function that trim leading 0.
@@ -68,9 +60,7 @@ public class BadHexadecimalConversionDetector implements Detector {
             }
             for (Iterator itIns = methodGen.getInstructionList().iterator();itIns.hasNext();) {
                 Instruction inst = ((InstructionHandle) itIns.next()).getInstruction();
-                if (DEBUG) {
-                    ByteCode.printOpCode(inst, cpg);
-                }
+//                    ByteCode.printOpCode(inst, cpg);
 
                 if (inst instanceof INVOKEVIRTUAL) { //MessageDigest.digest is called
                     INVOKEVIRTUAL invoke = (INVOKEVIRTUAL) inst;

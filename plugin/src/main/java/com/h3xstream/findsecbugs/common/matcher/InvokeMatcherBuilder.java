@@ -68,18 +68,16 @@ public class InvokeMatcherBuilder {
 
 
     public boolean matches(Instruction instruction, ConstantPoolGen cpg) {
-        if(instruction instanceof InvokeInstruction) {
+        if(instruction != null && instruction instanceof InvokeInstruction) {
             InvokeInstruction invokeInstruction = (InvokeInstruction) instruction;
-            if (invokeInstruction != null) {
-                if (classesNames.size() != 0 && !classesNames.contains(invokeInstruction.getClassName(cpg))) {
-                    return false;
-                }
-                if (methodNames.size() != 0 && !methodNames.contains(invokeInstruction.getMethodName(cpg))) {
-                    return false;
-                }
-                if (argSignatures.size() != 0 && !argSignatures.contains(invokeInstruction.getSignature(cpg))) {
-                    return false;
-                }
+            if (classesNames.size() != 0 && !classesNames.contains(invokeInstruction.getClassName(cpg))) {
+                return false;
+            }
+            else if (methodNames.size() != 0 && !methodNames.contains(invokeInstruction.getMethodName(cpg))) {
+                return false;
+            }
+            else if (argSignatures.size() != 0 && !argSignatures.contains(invokeInstruction.getSignature(cpg))) {
+                return false;
             }
             return true;
         }

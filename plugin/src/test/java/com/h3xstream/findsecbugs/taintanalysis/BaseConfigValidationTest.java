@@ -17,8 +17,8 @@
  */
 package com.h3xstream.findsecbugs.taintanalysis;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.testng.Assert.fail;
 
@@ -31,24 +31,11 @@ public class BaseConfigValidationTest {
 
     TaintConfigLoader loader = new TaintConfigLoader();
 
-    public void validateFile(InputStream inFile, final String origfileName) throws IOException {
-        loader.load(inFile, new TaintConfigLoader.TaintConfigReceiver() {
-            @Override
-            public void receiveTaintConfig(String typeSignature, String config) throws IOException {
-                if (DEBUG) {
-                    System.out.println("[?] fmn: " + typeSignature);
-                }
-                String[] methodParts = typeSignature.split("\\.");
-
-                //Test the validity of the class name
-                String className = methodParts[0].replace('/','.');
-                validateClass(className, origfileName);
-            }
-        });
-    }
-
+    private List<String> java8classes = Arrays.asList("java.time.ZonedId");
 
     public void validateClass(String className, String origfileName) {
+        if(java8classes.contains(className)) return;
+
         if(className.endsWith("$")) return; //Skipping Scala class
         if(className.startsWith("play.")) return; //Temporary skip Play
         if(className.startsWith("anorm")) return; //Skipping Scala anorm library classes

@@ -30,16 +30,6 @@ import com.h3xstream.findbugs.test.EasyBugReporter;
 
 public class BadHexadecimalConversionDetectorTest extends BaseDetectorTest {
 
-    @BeforeClass
-    public void setUp() {
-        BadHexadecimalConversionDetector.DEBUG = true;
-    }
-
-    @AfterClass
-    public void tearDown() {
-        BadHexadecimalConversionDetector.DEBUG = false;
-    }
-
     @Test
     public void detectBadHexa() throws Exception {
         //Locate test code

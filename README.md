@@ -38,6 +38,10 @@ Website : http://find-sec-bugs.github.io/
 
 ![SonarQube](http://find-sec-bugs.github.io/images/screens/sonar.png)
 
+### Codacy
+
+![Codacy](http://find-sec-bugs.github.io/images/screens/codacy.png)
+
 ## License
 
 This software is release under [LGPL](http://www.gnu.org/licenses/lgpl.html).

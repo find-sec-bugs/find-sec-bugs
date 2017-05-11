@@ -44,10 +44,12 @@ public class TaintMethodConfig implements TaintTypeConfig {
         SAFE_CONFIG = new TaintMethodConfig(false);
         SAFE_CONFIG.outputTaint = new Taint(Taint.State.SAFE);
 
-        String classWithPackageRegex = "([a-z][a-z0-9]*\\/)*(package|[A-Z])[a-zA-Z0-9\\$]*";
+        String javaIdentifierRegex = "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";
+        String classWithPackageRegex = javaIdentifierRegex+"(\\/"+javaIdentifierRegex+")*";
+
         String typeRegex = "(\\[)*((L" + classWithPackageRegex + ";)|B|C|D|F|I|J|S|Z)";
         String returnRegex = "(V|(" + typeRegex + "))";
-        String methodRegex = "(([a-zA-Z][a-zA-Z0-9]*(\\$extension)?)|(<init>))";
+        String methodRegex = "(("+javaIdentifierRegex+"(\\$extension)?)|(<init>))";
         String signatureRegex = "\\((" + typeRegex + ")*\\)" + returnRegex;
         String fullMathodNameRegex = classWithPackageRegex + "\\." + methodRegex + signatureRegex;
         fullMethodPattern = Pattern.compile(fullMathodNameRegex);

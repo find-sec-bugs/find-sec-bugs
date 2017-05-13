@@ -36,15 +36,16 @@ public class TaintMethodConfigWithArgumentsAndLocation extends TaintMethodConfig
     private String location;
 
     static {
-        String classWithPackageRegex = "([a-z][a-z0-9]*\\/)*(package|[A-Z])[a-zA-Z0-9\\$]*";
-        String methodRegex = "(([a-zA-Z][a-zA-Z0-9]*(\\$extension)?)|(<init>))";
+        String javaIdentifierRegex = "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";
+        String classNameRegex = javaIdentifierRegex+"(\\/"+javaIdentifierRegex+")*";
+        String methodRegex = "(("+javaIdentifierRegex+"(\\$extension)?)|(<init>))";
 
         // javax/servlet/http/HttpServletRequest.getAttribute("applicationConstant"):SAFE@org/apache/jsp/edit_jsp
         // javax/servlet/http/HttpServletRequest.getAttribute(UNKNOWN):SAFE@org/apache/jsp/constants_jsp
         String stringConstantRegex = "\"[^\"]*\"";
         String enumNameRegex = "[A-Z_]+";
         String methodArguments = "(" + stringConstantRegex + ",?|" + enumNameRegex + ",?)*";
-        String methodWithStringConstantOrEnumRegex = classWithPackageRegex + "\\." + methodRegex + "\\(" + methodArguments + "\\)";
+        String methodWithStringConstantOrEnumRegex = classNameRegex + "\\." + methodRegex + "\\(" + methodArguments + "\\)";
         methodWithStringConstantOrEnumPattern = Pattern.compile(methodWithStringConstantOrEnumRegex);
     }
 

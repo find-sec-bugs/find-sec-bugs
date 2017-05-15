@@ -469,7 +469,7 @@ def getWordList(value:String) = Action {
   if (!Files.exists(Paths.get(filename))) {
     NotFound("File not found")
   } else {
-    val result = Source.fromFile(filename).getLines().mkString // Weak point
+    val result = Source.fromFile(filename).getLines().mkString // Fix
     Ok(result)
   }
 }</pre>

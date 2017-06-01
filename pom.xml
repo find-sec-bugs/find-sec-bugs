@@ -71,6 +71,7 @@
                         <exclude>**/PluginDepsClassPathFinder.java</exclude>
                         <exclude>**/java/flexjson/**.java</exclude>
                         <exclude>**/java/com/typesafe/**/**.java</exclude>
+                        <exclude>**/java/com/fasterxml/jackson/**/**.java</exclude>
                     </excludes>
                     <properties>
                         <project>Find Security Bugs</project>

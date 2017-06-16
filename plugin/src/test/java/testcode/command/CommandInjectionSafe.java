@@ -1,5 +1,8 @@
 package testcode.command;
 
+import org.owasp.esapi.ESAPI;
+import org.owasp.esapi.codecs.WindowsCodec;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,6 +43,11 @@ public class CommandInjectionSafe {
 
         List<String> cmd2 = Arrays.asList("ls","-la");
         new ProcessBuilder().command(cmd2);
+    }
+
+    public void safeCommandEcoded(String input) {
+        String cmd = "ls "+ ESAPI.encoder().encodeForOS(new WindowsCodec() , input);
+        new ProcessBuilder().command(cmd.split(" "));
     }
 
 }

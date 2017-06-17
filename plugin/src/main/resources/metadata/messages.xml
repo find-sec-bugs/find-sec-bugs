@@ -2441,6 +2441,39 @@ public void parseExpressionInterface(Person personObj,String property) {
     </BugPattern>
     <BugCode abbrev="SECSEAM">Expression Language (EL) Injection</BugCode>
 
+    <!-- OGNL injection -->
+    <Detector class="com.h3xstream.findsecbugs.injection.script.OgnlInjectionDetector">
+        <Details>Identify OGNL injection.</Details>
+    </Detector>
+
+    <BugPattern type="OGNL_INJECTION">
+        <ShortDescription>Potential code injection when using OGNL expression</ShortDescription>
+        <LongDescription>Potential code injection when using OGNL expression</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    A expression is built with a dynamic value. The source of the value(s) should be verified to avoid
+    that unfiltered values fall into this risky code evaluation.
+</p>
+<p><b>Code at risk:</b></p>
+<p>
+<pre>
+
+</pre>
+</p>
+<br/>
+<p>
+    <b>References</b><br/>
+    <a href="https://community.saas.hpe.com/t5/Security-Research/Struts-2-OGNL-Expression-Injections/ba-p/288881">HP Enterprise: Struts 2 OGNL Expression Injections by Alvaro Mu&Atilde;&plusmn;oz</a><br/>
+    <a href="https://blog.gdssecurity.com/labs/2017/3/27/an-analysis-of-cve-2017-5638.html">Gotham Digital Science: An Analysis Of CVE-2017-5638</a><br/>
+    <a href="http://struts.apache.org/docs/s2-016.html">Apache Struts2: Vulnerability S2-016</a><br/>
+    <a href="https://struts.apache.org/docs/ognl.html">Apache Struts 2 Documentation: OGNL</a><br/>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECOGNL">Expression Language (EL) Injection</BugCode>
+
 
     <!-- HTTP Response Splitting -->
     <Detector class="com.h3xstream.findsecbugs.HttpResponseSplittingDetector">
@@ -2485,7 +2518,7 @@ response.addCookie(cookie);</pre>
 
 
     <!-- CRLF injection in logs -->
-    <Detector class="com.h3xstream.findsecbugs.CrlfLogInjectionDetector">
+    <Detector class="com.h3xstream.findsecbugs.injection.crlf.CrlfLogInjectionDetector">
         <Details>Searches for CRLF injection in logs</Details>
     </Detector>
 

@@ -62,7 +62,7 @@
                         <exclude>**/org/jboss/**/**.java</exclude>
                         <exclude>**/org/springframework/**/**.java</exclude>
                         <exclude>**/com/unboundid/ldap/**/**.java</exclude>
-                        <exclude>**/scala/util/**/**.java</exclude>
+                        <exclude>**/java/scala/util/**/**.java</exclude>
                         <exclude>**/groovy/lang/**.java</exclude>
                         <exclude>**/scala/**.java</exclude>
                         <exclude>**/scala/**/**.java</exclude>
@@ -71,6 +71,8 @@
                         <exclude>**/PluginDepsClassPathFinder.java</exclude>
                         <exclude>**/java/flexjson/**.java</exclude>
                         <exclude>**/java/com/typesafe/**/**.java</exclude>
+                        <exclude>**/java/ognl/**/**.java</exclude>
+                        <exclude>**/com/opensymphony/**/**.java</exclude>
                     </excludes>
                     <properties>
                         <project>Find Security Bugs</project>

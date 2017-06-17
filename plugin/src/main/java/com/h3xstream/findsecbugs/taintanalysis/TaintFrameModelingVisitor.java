@@ -633,7 +633,13 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     }
 
     private TaintLocation getTaintLocation() {
-        return new TaintLocation(methodDescriptor, getLocation().getHandle().getPosition());
+        Instruction inst = getLocation().getHandle().getInstruction();
+        if(inst instanceof InvokeInstruction) {
+            InvokeInstruction invoke = (InvokeInstruction) inst;
+            String sig = invoke.getClassName(cpg).replaceAll("\\.","/") + "." + invoke.getMethodName(cpg) + invoke.getSignature(cpg);
+            return new TaintLocation(methodDescriptor, getLocation().getHandle().getPosition(), sig);
+        }
+        return new TaintLocation(methodDescriptor, getLocation().getHandle().getPosition(), "Oups!!");
     }
 
     /**

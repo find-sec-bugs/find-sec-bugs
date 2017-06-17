@@ -15,32 +15,39 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs;
+package com.h3xstream.findsecbugs.injection.sql;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import com.h3xstream.findbugs.test.EasyBugReporter;
+import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import org.testng.annotations.Test;
 
-public class CrlfLogInjectionDetectorTest extends BaseDetectorTest {
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+
+public class SqlMethodUnknownSourceTest  extends BaseDetectorTest {
 
     @Test
-    public void detectResponseSplitting() throws Exception {
+    public void detectInjection() throws Exception {
+        FindSecBugsGlobalConfig.getInstance().setDebugTaintState(true);
+
+        //Locate test code
         String[] files = {
-            getClassFilePath("testcode/Logging")
+                getClassFilePath("testcode/sqli/source/MethodUnknownSource")
         };
-        SecurityReporter reporter = spy(new SecurityReporter());
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        for (int line = 20; line < 49; line++) {
+        for (Integer line : range(15, 25)) {
             verify(reporter).doReportBug(
                     bugDefinition()
-                    .bugType("CRLF_INJECTION_LOGS")
-                    .inClass("Logging").inMethod("javaUtilLogging").atLine(line)
-                    .build()
+                            .bugType("SQL_INJECTION_JDO")
+                            .inClass("MethodUnknownSource")
+                            .inMethod("getUserByUsername1").atLine(line)
+                            .build()
             );
         }
-        verify(reporter, times(49 - 20)).doReportBug(bugDefinition().bugType("CRLF_INJECTION_LOGS").build());
     }
 }

@@ -17,49 +17,49 @@ public abstract class UnsafeTaintedByAnnotationEndpoint {
 
     public abstract String getUnknownValue();
 
-    //No tainted annotation therefore, the level of confidence should not be rise
+    //Single tainted annotation
 
-    public void noTaintAnnotation(@RequestParam("input") String user) {
+    public void taintAnnotation(@RequestParam("input") String user) {
         sessionFactory.openSession().createQuery("FROM comment WHERE user='"+user+"'"); //High
     }
 
-    public void safeAnnotation1(@ModelAttribute("comment") CommentDto comment,@RequestParam("input") String input) {
+    public void unsafeAnnotation1(@ModelAttribute("comment") CommentDto comment,@RequestParam("input") String input) {
         sessionFactory.openSession().createQuery("FROM comment WHERE user='"+input+"'"); //High
     }
 
-    //Some tainted annotation are present but they are not place to sink location
+    //Multiple tainted annotations
 
-    public void safeAnnotation2(@RequestParam("comment") String comment, @RequestParam("input") String input) {
+    public void unsafeAnnotation2(@RequestParam("comment") String comment, @RequestParam("input") String input) {
         sessionFactory.openSession().createQuery("FROM comment WHERE user='"+input+"'"); //High
     }
 
-    public void safeAnnotation3(@RequestParam("input") String input, @RequestParam("unsafe") String unsafe) {
+    public void unsafeAnnotation3(@RequestParam("input") String input, @RequestParam("unsafe") String unsafe) {
         sessionFactory.openSession().createQuery("FROM comment WHERE user='"+input+"'"); //High
     }
 
-    public void safeAnnotation4(String unusedParameter, @RequestParam("input") String input, @RequestParam("unsafe") String unsafe) {
+    public void unsafeAnnotation4(String unusedParameter, @RequestParam("input") String input, @RequestParam("unsafe") String unsafe) {
         sessionFactory.openSession().createQuery("FROM comment WHERE user='"+input+"'"); //High
     }
 
-    public void safeAnnotation5(int unusedParameter1, String unusedParameter2, @RequestParam("input") String input, @RequestParam("unsafe") String unsafe) {
+    public void unsafeAnnotation5(int unusedParameter1, String unusedParameter2, @RequestParam("input") String input, @RequestParam("unsafe") String unsafe) {
         sessionFactory.openSession().createQuery("FROM comment WHERE user='"+input+"'"); //High
     }
 
     //Makes sure that primitive types that takes two slots are properly consider
 
-    public void safeAnnotation6(double unusedParameter1, @RequestParam("input") String input, @RequestParam("unsafe") String unsafe) {
+    public void unsafeAnnotation6(double unusedParameter1, @RequestParam("input") String input, @RequestParam("unsafe") String unsafe) {
         sessionFactory.openSession().createQuery("FROM comment WHERE user='"+input+"'"); //High
     }
 
-    public void safeAnnotation7(@RequestParam("input") String input, @RequestParam("unsafe") String unsafe, double unusedParameter1) {
+    public void unsafeAnnotation7(@RequestParam("input") String input, @RequestParam("unsafe") String unsafe, double unusedParameter1) {
         sessionFactory.openSession().createQuery("FROM comment WHERE user='"+input+"'"); //High
     }
 
-    public void safeAnnotation8(long unusedParameter1, @RequestParam("input") String input, @RequestParam("unsafe") String unsafe) {
+    public void unsafeAnnotation8(long unusedParameter1, @RequestParam("input") String input, @RequestParam("unsafe") String unsafe) {
         sessionFactory.openSession().createQuery("FROM comment WHERE user='"+input+"'"); //High
     }
 
-    public void safeAnnotation9(@RequestParam("input") String input, @RequestParam("unsafe") String unsafe, long unusedParameter1) {
+    public void unsafeAnnotation9(@RequestParam("input") String input, @RequestParam("unsafe") String unsafe, long unusedParameter1) {
         sessionFactory.openSession().createQuery("FROM comment WHERE user='"+input+"'"); //High
     }
 

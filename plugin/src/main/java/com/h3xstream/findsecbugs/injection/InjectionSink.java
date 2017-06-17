@@ -24,14 +24,18 @@ import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.SourceLineAnnotation;
 import edu.umd.cs.findbugs.StringAnnotation;
 import edu.umd.cs.findbugs.ba.ClassContext;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+
+import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.InstructionHandle;
+import org.apache.bcel.generic.InvokeInstruction;
 
 /**
  * Used to represent location of a taint sink
@@ -50,6 +54,7 @@ public class InjectionSink {
     private static final int UNKNOWN_SINK_PRIORITY = Integer.MAX_VALUE;
     private int sinkPriority = UNKNOWN_SINK_PRIORITY;
     private final List<SourceLineAnnotation> lines = new LinkedList<SourceLineAnnotation>();
+    private final List<TaintLocation> unknownSources = new LinkedList<TaintLocation>();
 
     /**
      * Constructs the instance and stores immutable values for reporting
@@ -103,7 +108,7 @@ public class InjectionSink {
         Objects.requireNonNull(line, "line");
         lines.add(line);
     }
-    
+
     /**
      * Adds lines with tainted source or path for reporting
      * 
@@ -114,6 +119,12 @@ public class InjectionSink {
         for (TaintLocation location : locations) {
             lines.add(SourceLineAnnotation.fromVisitedInstruction(
                 location.getMethodDescriptor(), location.getPosition()));
+        }
+    }
+
+    public void addUnknownSources(Collection<TaintLocation> sources) {
+        for(TaintLocation source : sources) {
+            unknownSources.add(source);
         }
     }
     
@@ -127,6 +138,13 @@ public class InjectionSink {
         BugInstance bug = new BugInstance(detector, bugType, originalPriority);
         bug.addClassAndMethod(classContext.getJavaClass(), method);
         bug.addSourceLine(SourceLineAnnotation.fromVisitedInstruction(classContext, method, instructionHandle));
+        addMessage(bug, "Sink method", sinkMethod);
+
+        for(TaintLocation source : unknownSources) {
+            addMessage(bug, "Unknown source", source.getTaintSource());
+            //md.getSlashedClassName() + "." + md.getName() + md.getSignature());
+        }
+
         addMessage(bug, "Sink method", sinkMethod);
         if (sinkPriority != UNKNOWN_SINK_PRIORITY) {
             // higher priority is represented by lower integer

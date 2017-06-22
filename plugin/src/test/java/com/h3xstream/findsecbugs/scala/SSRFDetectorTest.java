@@ -21,14 +21,20 @@ import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import org.testng.annotations.Test;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 public class SSRFDetectorTest extends BaseDetectorTest {
 
+    private static final String SCALA_PLAY_SSRF_TYPE = "SCALA_PLAY_SSRF";
+
     @Test
-    public void detectXssInController() throws Exception {
+    public void detectSSRFInController() throws Exception {
         //FindSecBugsGlobalConfig.getInstance().setDebugPrintInstructionVisited(true);
         //FindSecBugsGlobalConfig.getInstance().setDebugPrintInvocationVisited(false);
         //FindSecBugsGlobalConfig.getInstance().setDebugTaintState(true);
@@ -42,48 +48,47 @@ public class SSRFDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new BaseDetectorTest.SecurityReporter());
         analyze(files, reporter);
 
-        // Test the MVC API checks
-        verify(reporter).doReportBug(
-                bugDefinition()
-                        .bugType("SCALA_PLAY_SSRF")
-                        .inClass("SSRFController").inMethod("vulnerableGet").atLine(20)
-                        .build()
-        );
+        //Assertions for bugs
+        Map<String, int[]> methodBugLines = new HashMap<String, int[]>();
+        methodBugLines.put("vulnerableGet", new int[]{24, 33});
+        methodBugLines.put("vulnerablePost", new int[]{44, 48, 53, /**/ 61, 65, 70});
 
-        verify(reporter).doReportBug(
-                bugDefinition()
-                        .bugType("SCALA_PLAY_SSRF")
-                        .inClass("SSRFController").inMethod("vulnerablePost").atLine(28)
-                        .build()
-        );
-
-        verify(reporter).doReportBug(
-                bugDefinition()
-                        .bugType("SCALA_PLAY_SSRF")
-                        .inClass("SSRFController").inMethod("vulnerablePost").atLine(32)
-                        .build()
-        );
-
-        // Test the Twirl template engine checks
-        verify(reporter).doReportBug(
-                bugDefinition()
-                        .bugType("SCALA_PLAY_SSRF")
-                        .inClass("SSRFController").inMethod("vulnerablePost").atLine(37)
-                        .build()
-        );
+        for (Map.Entry<String, int[]> entry : methodBugLines.entrySet()) {
+            // Lets check every line specified above
+            for (int line : entry.getValue()) {
+                verify(reporter).doReportBug(
+                        bugDefinition()
+                                .bugType(SCALA_PLAY_SSRF_TYPE)
+                                .inClass("SSRFController").inMethod(entry.getKey()).atLine(line)
+                                .build()
+                );
+            }
+        }
 
         //Assertions for safe calls and false positives
-
         verify(reporter, never()).doReportBug(
                 bugDefinition()
-                        .bugType("SCALA_PLAY_SSRF")
+                        .bugType(SCALA_PLAY_SSRF_TYPE)
                         .inClass("SSRFController").inMethod("safeGetNotTainted")
                         .build()
         );
         verify(reporter, never()).doReportBug(
                 bugDefinition()
-                        .bugType("SCALA_PLAY_SSRF")
+                        .bugType(SCALA_PLAY_SSRF_TYPE)
                         .inClass("SSRFController").inMethod("safePostNotTainted")
+                        .build()
+        );
+
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType(SCALA_PLAY_SSRF_TYPE)
+                        .inClass("SSRFController").inMethod("safeGetWithWhitelist")
+                        .build()
+        );
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType(SCALA_PLAY_SSRF_TYPE)
+                        .inClass("SSRFController").inMethod("safePostWithWhitelist")
                         .build()
         );
     }

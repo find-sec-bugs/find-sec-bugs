@@ -1,0 +1,9 @@
+--DatabaseUtils
+
+android/database/DatabaseUtils.concatenateWhere(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:1#2
+
+android/database/DatabaseUtils.appendEscapedSQLString(Ljava/lang/StringBuilder;Ljava/lang/String;)V:0|+SQL_INJECTION_SAFE
+android/database/DatabaseUtils.sqlEscapeString(Ljava/lang/String;)Ljava/lang/String;:0|+SQL_INJECTION_SAFE
+android/database/DatabaseUtils.appendValueToSql(Ljava/lang/StringBuilder;Ljava/lang/Object;)V:0|+SQL_INJECTION_SAFE
+
+android/database/sqlite/SQLiteQueryBuilder.appendWhereEscapeString(Ljava/lang/String;)V:0|+SQL_INJECTION_SAFE

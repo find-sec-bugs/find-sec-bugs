@@ -469,7 +469,7 @@ def getWordList(value:String) = Action {
   if (!Files.exists(Paths.get(filename))) {
     NotFound("File not found")
   } else {
-    val result = Source.fromFile(filename).getLines().mkString // Weak point
+    val result = Source.fromFile(filename).getLines().mkString // Fix
     Ok(result)
   }
 }</pre>
@@ -2577,7 +2577,7 @@ response.addCookie(cookie);</pre>
         <Details>
             <![CDATA[
 <p>
-    When data from untusted source are put into a logger and not neutralized correctly,
+    When data from an untrusted source is put into a logger and not neutralized correctly,
     an attacker could forge log entries or include malicious content.
     Inserted false entries could be used to skew statistics, distract the administrator
     or even to implicate another party in the commission of a malicious act.
@@ -3149,6 +3149,10 @@ keyGen.initialize(2048);
         <Details>Identify unvalidated redirects with Play Framework (Scala)</Details>
     </Detector>
 
+    <Detector class="com.h3xstream.findsecbugs.spring.SpringUnvalidatedRedirectDetector">
+        <Details>Identify unvalidated redirects with Spring Framework</Details>
+    </Detector>
+
     <BugPattern type="UNVALIDATED_REDIRECT">
         <ShortDescription>Unvalidated Redirect</ShortDescription>
         <LongDescription>The following redirection could be use by an attacker to redirect users to a fishing website.</LongDescription>
@@ -3247,6 +3251,56 @@ keyGen.initialize(2048);
         </Details>
     </BugPattern>
     <BugCode abbrev="SECPUR">Unvalidated Redirect (Play Framewok)</BugCode>
+
+    <BugPattern type="SPRING_UNVALIDATED_REDIRECT">
+        <ShortDescription>Spring Unvalidated Redirect</ShortDescription>
+        <LongDescription>The following redirection could be use by an attacker to redirect users to a fishing website.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    Unvalidated redirects occur when an application redirects a user to a destination URL specified by a user supplied
+    parameter that is not validated. Such vulnerabilities can be used to facilitate phishing attacks.
+</p>
+<p>
+    <b>Scenario</b><br/>
+    1. A user is tricked into visiting the malicious URL: <code>http://website.com/login?redirect=http://evil.vvebsite.com/fake/login</code><br/>
+    2. The user is redirected to a fake login page that looks like a site they trust. (<code>http://evil.vvebsite.com/fake/login</code>)<br/>
+    3. The user enters his credentials.<br/>
+    4. The evil site steals the user's credentials and redirects him to the original website.<br/>
+    <br/>
+    This attack is plausible because most users don't double check the URL after the redirection. Also, redirection to
+    an authentication page is very common.
+</p>
+<p>
+    <b>Vulnerable Code:</b></br/>
+    <pre>@RequestMapping("/redirect")
+public String redirect(@RequestParam("url") String url) {
+    [...]
+    return "redirect:" + url;
+}</pre>
+</p>
+<p>
+    <b>Solution/Countermeasures:</b><br/>
+    <ul>
+        <li>Don't accept redirection destinations from users</li>
+        <li>Accept a destination key, and use it to look up the target (legal) destination</li>
+        <li>Accept only relative paths</li>
+        <li>White list URLs (if possible)</li>
+        <li>Validate that the beginning of the URL is part of a white list</li>
+    </ul>
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246981/URL%20Redirector%20Abuse">WASC-38: URL Redirector Abuse</a><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2013-A10-Unvalidated_Redirects_and_Forwards">OWASP: Top 10 2013-A10: Unvalidated Redirects and Forwards</a><br/>
+<a href="https://www.owasp.org/index.php/Unvalidated_Redirects_and_Forwards_Cheat_Sheet">OWASP: Unvalidated Redirects and Forwards Cheat Sheet</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/601.html">CWE-601: URL Redirection to Untrusted Site ('Open Redirect')</a>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSUR">Spring Unvalidated Redirect</BugCode>
 
 
     <!-- JSP Include -->
@@ -4251,7 +4305,7 @@ cookie.setHttpOnly(true); //HttpOnly flag
 </p>
 <p>
     Deserialization is a sensible operation that has a great history of vulnerabilities. The web application might
-    become vulnerable has soon as a new vulnerability is found in the Java Virtual Machine<sup>[2] [3]</sup>.
+    become vulnerable as soon as a new vulnerability is found in the Java Virtual Machine<sup>[2] [3]</sup>.
 </p>
 
 <p>
@@ -4286,6 +4340,64 @@ Avoid deserializing object provided by remote users.
         </Details>
     </BugPattern>
     <BugCode abbrev="SECOBDES">Object deserialization is used</BugCode>
+
+    <!-- Deserialization vulnerability -->
+    <Detector class="com.h3xstream.findsecbugs.serial.UnsafeJacksonDeserializationDetector">
+        <Details>Jackson databind Object deserialization detector</Details>
+    </Detector>
+
+    <BugPattern type="JACKSON_UNSAFE_DESERIALIZATION">
+        <ShortDescription>Unsafe Jackson deserialization configuration</ShortDescription>
+        <LongDescription>Unsafe Jackson deserialization configuration used in {1} {2} {3}</LongDescription>
+        <Details>
+            <![CDATA[
+<p>When the Jackson databind library is used incorrectly the deserialization of untrusted data can lead to remote code execution, if there is a class in classpath that allows the trigger of malicious operation.
+
+<p>
+<b>Solutions:</b><br/>
+<p>
+Explicitly define what types and subtypes you want to be available when using polymorphism through JsonTypeInfo.Id.NAME.
+Also, never call ObjectMapper.<strong>enableDefaultTyping</strong> (and then readValue a type that holds a Object or Serializable or Comparable or a known deserialization type).
+</p>
+
+<p>
+<b>Code at risk:</b><br/>
+<pre>
+public class Example {
+    static class ABean {
+        public int id;
+        public Object obj;
+    }
+
+    static class AnotherBean {
+        @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS) // or JsonTypeInfo.Id.MINIMAL_CLASS
+        public Object obj;
+    }
+
+    public void example(String json) throws JsonMappingException {
+         ObjectMapper mapper = new ObjectMapper();
+         mapper.enableDefaultTyping();
+         mapper.readValue(json, ABean.class);
+    }
+
+    public void exampleTwo(String json) throws JsonMappingException {
+         ObjectMapper mapper = new ObjectMapper();
+         mapper.readValue(json, AnotherBean.class);
+    }
+
+}
+</pre>
+</p>
+
+<p>
+<b>References</b><br/>
+<a href="https://github.com/FasterXML/jackson-databind/issues/1599">Jackson Deserializer security vulnerability</a><br>
+<a href="https://github.com/mbechler/marshalsec">Java Unmarshaller Security - Turning your data into code execution</a><br>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECUJDES">Jackson databind deserialization is used unsafely.</BugCode>
 
     <!-- Deserialization vulnerability -->
     <Detector class="com.h3xstream.findsecbugs.serial.DeserializationGadgetDetector">

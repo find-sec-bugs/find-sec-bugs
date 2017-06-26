@@ -37,7 +37,8 @@ public class TaintClassConfig implements TaintTypeConfig {
     private static final Pattern taintConfigPattern;
 
     static {
-        String classWithPackageRegex = "([a-z][a-z0-9]*\\/)*(package|[A-Z])[a-zA-Z0-9\\$]*";
+        String javaIdentifierRegex = "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";
+        String classWithPackageRegex = javaIdentifierRegex+"(\\/"+javaIdentifierRegex+")*";
         String typeRegex = "(\\[)*((L" + classWithPackageRegex + ";)|B|C|D|F|I|J|S|Z)";
         typePattern = Pattern.compile(typeRegex);
 

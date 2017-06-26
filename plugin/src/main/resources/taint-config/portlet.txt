@@ -42,7 +42,7 @@ javax/portlet/ResourceRequest.getETag()Ljava/lang/String;:TAINTED
 javax/portlet/ResourceRequest.getResourceID()Ljava/lang/String;:TAINTED
 javax/portlet/ResourceRequest.getPrivateRenderParameterMap()Ljava/util/Map;:TAINTED
 
-javax/portlet/PortletResponse.encodeURL(Ljava/lang/String;)Ljava/lang/String;:0|+CR_ENCODED,+LF_ENCODED,+QUOTE_ENCODED,+LT_ENCODED
+javax/portlet/PortletResponse.encodeURL(Ljava/lang/String;)Ljava/lang/String;:0|+URL_ENCODED
 javax/portlet/PortletResponse.getNamespace()Ljava/lang/String;:SAFE
 
 javax/portlet/MimeResponse.createRenderURL()Ljavax/portlet/PortletURL;:SAFE
@@ -62,4 +62,4 @@ javax/portlet/BaseURL.setParameter(Ljava/lang/String;[Ljava/lang/String;)V:0,1#2
 javax/portlet/BaseURL.setParameters(Ljava/util/Map;)V:0#1
 javax/portlet/BaseURL.addProperty(Ljava/lang/String;Ljava/lang/String;)V:0,1#2
 javax/portlet/BaseURL.setProperty(Ljava/lang/String;Ljava/lang/String;)V:0,1#2
-javax/portlet/BaseURL.toString()Ljava/lang/String;:0|+CR_ENCODED,+LF_ENCODED,+QUOTE_ENCODED,+LT_ENCODED
+javax/portlet/BaseURL.toString()Ljava/lang/String;:0|+CR_ENCODED,+LF_ENCODED,+QUOTE_ENCODED,+LT_ENCODED,+URL_ENCODED

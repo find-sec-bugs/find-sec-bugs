@@ -18,8 +18,7 @@
 
 package com.h3xstream.findsecbugs.injection;
 
-import com.h3xstream.findsecbugs.taintanalysis.BaseConfigValidationTest;
-import com.h3xstream.findsecbugs.taintanalysis.TaintConfigValidationTest;
+import com.h3xstream.findsecbugs.taintanalysis.BaseConfigValidation;
 import org.testng.annotations.Test;
 
 import java.io.BufferedReader;
@@ -30,9 +29,7 @@ import java.io.InputStreamReader;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.fail;
 
-import org.testng.annotations.Test;
-
-public class SinkFilesValidationTest extends BaseConfigValidationTest {
+public class SinkFilesValidationTest extends BaseConfigValidation {
     private static final boolean DEBUG = false;
 
     @Test

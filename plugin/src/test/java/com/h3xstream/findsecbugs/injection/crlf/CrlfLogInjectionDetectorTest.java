@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs;
+package com.h3xstream.findsecbugs.injection.crlf;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import static org.mockito.Mockito.spy;

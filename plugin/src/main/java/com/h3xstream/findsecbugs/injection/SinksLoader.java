@@ -100,13 +100,14 @@ public class SinksLoader {
 
     protected void addSink(String fullMethodName, int[] injectableParameters, String bugType, InjectionPointReceiver receiver) {
         InjectionPoint injectionPoint = new InjectionPoint(injectableParameters, bugType);
-        String classAndMethodName = fullMethodName.substring(0, fullMethodName.indexOf('('));
-        int slashIndex = classAndMethodName.lastIndexOf('/');
-        String shortName = classAndMethodName.substring(slashIndex + 1);
-        if (shortName.endsWith(Constants.CONSTRUCTOR_NAME)) {
-            shortName = shortName.substring(0, shortName.indexOf('.'));
-        }
-        injectionPoint.setInjectableMethod(shortName.concat("(...)"));
+//        String classAndMethodName = fullMethodName.substring(0, fullMethodName.indexOf('('));
+//        int slashIndex = classAndMethodName.lastIndexOf('/');
+//        String shortName = classAndMethodName.substring(slashIndex + 1);
+//        if (shortName.endsWith(Constants.CONSTRUCTOR_NAME)) {
+//            shortName = shortName.substring(0, shortName.indexOf('.'));
+//        }
+//        injectionPoint.setInjectableMethod(shortName.concat("(...)"));
+        injectionPoint.setInjectableMethod(fullMethodName);
         receiver.receiveInjectionPoint(fullMethodName, injectionPoint);
     }
 

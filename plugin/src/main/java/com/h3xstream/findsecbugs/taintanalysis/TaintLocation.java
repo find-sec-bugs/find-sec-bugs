@@ -17,7 +17,9 @@
  */
 package com.h3xstream.findsecbugs.taintanalysis;
 
+import edu.umd.cs.findbugs.ba.Location;
 import edu.umd.cs.findbugs.classfile.MethodDescriptor;
+import org.apache.bcel.generic.ConstantPoolGen;
 
 /**
  * Global comparable specification of a taint source (or path node) location
@@ -28,6 +30,7 @@ public class TaintLocation implements Comparable<TaintLocation> {
     
     private final MethodDescriptor methodDescriptor;
     private final int position;
+    private final String taintedSource;
 
     /**
      * Constructs a location from the specified method and position inside
@@ -37,7 +40,7 @@ public class TaintLocation implements Comparable<TaintLocation> {
      * @throws NullPointerException if method is null
      * @throws IllegalArgumentException if position is negative
      */
-    public TaintLocation(MethodDescriptor methodDescriptor, int position) {
+    public TaintLocation(MethodDescriptor methodDescriptor, int position, String taintedSource) {
         if (methodDescriptor == null) {
             throw new NullPointerException("method not specified");
         }
@@ -46,6 +49,7 @@ public class TaintLocation implements Comparable<TaintLocation> {
         }
         this.methodDescriptor = methodDescriptor;
         this.position = position;
+        this.taintedSource = taintedSource;
     }
 
     /**
@@ -64,6 +68,10 @@ public class TaintLocation implements Comparable<TaintLocation> {
      */
     public int getPosition() {
         return position;
+    }
+
+    public String getTaintSource() {
+        return taintedSource;
     }
 
     @Override

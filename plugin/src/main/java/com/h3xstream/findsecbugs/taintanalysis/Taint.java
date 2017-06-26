@@ -21,10 +21,13 @@ import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.util.ClassName;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import org.apache.bcel.generic.ObjectType;
@@ -58,7 +61,7 @@ public class Taint {
         /**
          * Returns the "more dangerous" state (TAINTED &gt; UNKNOWN &gt; SAFE
          * &gt; NULL &gt; INVALID) as a merge of two states
-         * 
+         *
          * @param a first state to merge
          * @param b second state to merge
          * @return one of the values a, b
@@ -100,11 +103,12 @@ public class Taint {
         LT_ENCODED,
         SENSITIVE_DATA,
         CUSTOM_INJECTION_SAFE,
+        URL_ENCODED,
 
         PASSWORD_VARIABLE,
         CREDIT_CARD_VARIABLE;
     }
-    
+
     private State state;
     private static final int INVALID_INDEX = -1;
     private int variableIndex;
@@ -120,7 +124,7 @@ public class Taint {
 
     /**
      * Constructs a new empty instance of Taint with the specified state
-     * 
+     *
      * @param state state of the fact
      * @throws NullPointerException if argument is null
      * @throws IllegalArgumentException if argument is INVALID
@@ -147,7 +151,7 @@ public class Taint {
 
     /**
      * Creates a hard copy of the specified Taint instance
-     * 
+     *
      * @param taint instance to copy
      * @throws NullPointerException if argument is null
      */
@@ -171,7 +175,7 @@ public class Taint {
 
     /**
      * Returns the taint state of this fact
-     * 
+     *
      * @return taint state
      */
     public State getState() {
@@ -190,7 +194,7 @@ public class Taint {
     /**
      * If known (check first), returns the index of the local variable,
      * where the value matching this fact is stored
-     * 
+     *
      * @return the index in the frame
      * @throws IllegalStateException if index is uknown
      */
@@ -204,7 +208,7 @@ public class Taint {
 
     /**
      * Checks if the index of the local variable matching this fact is known
-     * 
+     *
      * @return true if index is known, false otherwise
      */
     public boolean hasValidVariableIndex() {
@@ -224,7 +228,7 @@ public class Taint {
 
     /**
      * Adds location for a taint source or path to remember for reporting
-     * 
+     *
      * @param location location to remember
      * @param isKnownTaintSource true for tainted value, false if just not safe
      * @throws NullPointerException if location is null
@@ -242,14 +246,28 @@ public class Taint {
      * Returns locations with taint sources or nodes on path from those
      * sources, if there are some locations confirmed to be tainted,
      * only those are returned
-     * 
+     *
      * @return unmodifiable set of locations
      */
-    public Set<TaintLocation> getLocations() {
-        if (taintLocations.isEmpty()) {
-            return Collections.unmodifiableSet(unknownLocations);
-        }
+    public Set<TaintLocation> getTaintedLocations() {
         return Collections.unmodifiableSet(taintLocations);
+    }
+
+    /**
+     * @return All the location of tainted and unknown locations.
+     */
+    public Collection<TaintLocation> getUnknownLocations() {
+        return Collections.unmodifiableSet(unknownLocations);
+    }
+
+    /**
+     * @return All the location of tainted and unknown locations.
+     */
+    public Collection<TaintLocation> getAllLocations() {
+        List<TaintLocation> allLocations = new ArrayList<>();
+        allLocations.addAll(unknownLocations);
+        allLocations.addAll(taintLocations);
+        return allLocations;
     }
 
     /**

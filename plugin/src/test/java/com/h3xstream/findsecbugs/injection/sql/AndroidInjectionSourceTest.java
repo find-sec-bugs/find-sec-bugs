@@ -19,8 +19,6 @@ package com.h3xstream.findsecbugs.injection.sql;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
-import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
@@ -32,10 +30,10 @@ import static org.mockito.Mockito.verify;
 
 public class AndroidInjectionSourceTest extends BaseDetectorTest {
 
-    @BeforeClass
-    public void setUp() {
-//        FindSecBugsGlobalConfig.getInstance().setDebugPrintInvocationVisited(true);
-    }
+//    @BeforeClass
+//    public void setUp() {
+////        FindSecBugsGlobalConfig.getInstance().setDebugPrintInvocationVisited(true);
+//    }
 
     @Test
     public void detectAndroidInjection() throws Exception {
@@ -94,7 +92,7 @@ public class AndroidInjectionSourceTest extends BaseDetectorTest {
                 getClassFilePath("testcode/sqli/android/AndroidContentProviderUsage"),
                 getClassFilePath("testcode/sqli/android/LocalProvider"),
                 getClassFilePath("testcode/sqli/android/NullContentProvider"),
-                getClassFilePath("android/content/ContentProvider")
+                //getClassFilePath("android/content/ContentProvider")
         };
 
         //Run the analysis
@@ -125,7 +123,7 @@ public class AndroidInjectionSourceTest extends BaseDetectorTest {
                 getClassFilePath("testcode/sqli/android/AndroidContentProviderUsage"),
                 getClassFilePath("testcode/sqli/android/LocalProvider"),
                 getClassFilePath("testcode/sqli/android/NullContentProvider"),
-                getClassFilePath("android/content/ContentProvider")
+                //getClassFilePath("android/content/ContentProvider")
         };
 
         //Run the analysis

@@ -36,9 +36,8 @@ public class HttpResponseSplittingDetector extends BasicInjectionDetector {
     
     @Override
     protected int getPriority(Taint taint) {
-        if (!taint.isSafe()
-                && taint.hasTag(Taint.Tag.CR_ENCODED)
-                && taint.hasTag(Taint.Tag.LF_ENCODED)) {
+        boolean newLineSafe = taint.hasTag(Taint.Tag.CR_ENCODED) && taint.hasTag(Taint.Tag.LF_ENCODED);
+        if (!taint.isSafe() && newLineSafe || taint.hasTag(Taint.Tag.URL_ENCODED)) {
             return Priorities.IGNORE_PRIORITY;
         } else if (taint.isTainted()) {
             return Priorities.NORMAL_PRIORITY;

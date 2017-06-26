@@ -26,6 +26,7 @@ import org.mockito.Matchers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 
 import java.lang.management.ManagementFactory;
 import java.net.URL;
@@ -40,7 +41,7 @@ import static org.mockito.Mockito.reset;
  */
 public class BaseDetectorTest {
     private static final Logger log = LoggerFactory.getLogger(BaseDetectorTest.class);
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     private ClassFileLocator classFileLocator;
     private FindBugsLauncher findBugsLauncher;
@@ -123,6 +124,12 @@ public class BaseDetectorTest {
             rangeList.add(i);
         }
         return rangeList;
+    }
+
+    @BeforeClass
+    public void before() {
+        Class concreteClass = this.getClass();
+        log.info("Starting test suite "+concreteClass.getSimpleName());
     }
 
     @AfterClass

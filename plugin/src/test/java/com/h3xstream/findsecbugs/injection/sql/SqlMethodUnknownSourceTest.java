@@ -29,7 +29,7 @@ public class SqlMethodUnknownSourceTest  extends BaseDetectorTest {
 
     @Test
     public void detectInjection() throws Exception {
-        FindSecBugsGlobalConfig.getInstance().setDebugTaintState(true);
+        //FindSecBugsGlobalConfig.getInstance().setDebugTaintState(true);
 
         //Locate test code
         String[] files = {
@@ -40,14 +40,19 @@ public class SqlMethodUnknownSourceTest  extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        for (Integer line : range(15, 25)) {
-            verify(reporter).doReportBug(
-                    bugDefinition()
-                            .bugType("SQL_INJECTION_JDO")
-                            .inClass("MethodUnknownSource")
-                            .inMethod("getUserByUsername1").atLine(line)
-                            .build()
-            );
-        }
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("SQL_INJECTION_JPA")
+                        .inClass("MethodUnknownSource").inMethod("getUserByUsername1")
+                        .atLine(15)
+                        .build()
+        );
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("SQL_INJECTION_JPA")
+                        .inClass("MethodUnknownSource").inMethod("getUserByUsername2")
+                        .atLine(25)
+                        .build()
+        );
     }
 }

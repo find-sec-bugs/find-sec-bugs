@@ -155,8 +155,8 @@
 
         <!-- FindBugs API (Detector interface and transitive deps like BCEL..) -->
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>findbugs</artifactId>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs</artifactId>
             <scope>provided</scope>
         </dependency>
 

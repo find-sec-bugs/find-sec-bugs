@@ -128,7 +128,7 @@
               (see https://github.com/mojohaus/animal-sniffer/issues/5),
               so more recent Java APIs can be used in the tests.
             -->
-            <plugin>
+            <!--<plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>animal-sniffer-maven-plugin</artifactId>
                 <version>1.15</version>
@@ -146,7 +146,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
 
         </plugins>
     </build>

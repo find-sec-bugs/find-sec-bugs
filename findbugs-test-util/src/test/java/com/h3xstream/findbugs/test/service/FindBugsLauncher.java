@@ -155,7 +155,7 @@ public class FindBugsLauncher {
             final File dir = new File(metadata.toURI());
             
             //Add files to the jar stream
-            addFilesToStream(cl, jar, dir, "");
+            addFilesToStream(cl, jar, dir, "", "findbugs.xml", "messages.xml");
         }
         jar.finish();
         jar.close();
@@ -164,15 +164,12 @@ public class FindBugsLauncher {
     }
 
     private void addFilesToStream(final ClassLoader cl, final JarOutputStream jar, final File dir,
-            final String path) throws IOException {
-        for (final File nextFile : dir.listFiles()) {
-            if (nextFile.isFile()) {
-                final String resource = path + nextFile.getName();
-                jar.putNextEntry(new ZipEntry(resource));
-                jar.write(IOUtils.toByteArray(cl.getResourceAsStream("metadata/" + resource)));
-            } else {
-            	addFilesToStream(cl, jar, nextFile, path + nextFile.getName() + "/");
-            }
+            final String path,String... files) throws IOException {
+        for (final String file : files) {
+
+            jar.putNextEntry(new ZipEntry(file));
+            jar.write(IOUtils.toByteArray(cl.getResourceAsStream(file)));
+
         }
     }
 }

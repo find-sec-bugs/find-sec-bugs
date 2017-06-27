@@ -30,47 +30,8 @@
                     <archive>
                         <addMavenDescriptor>false</addMavenDescriptor>
                     </archive>
-                    <excludes>
-                        <exclude>metadata/**</exclude>
-                    </excludes>
                 </configuration>
             </plugin>
-            <!-- Moving findbugs config to root -->
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>ant-magic</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <tasks>
-                                <copy todir="${project.build.outputDirectory}">
-                                    <fileset dir="${project.build.outputDirectory}/metadata"/>
-                                </copy>
-                            </tasks>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- More verbose failure on stdout (for Travis-CI) -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.19.1</version>
-                <configuration>
-                    <properties>
-                        <property>
-                            <name>listener</name>
-                            <value>com.h3xstream.testng.VerboseTestListener</value>
-                        </property>
-                    </properties>
-                </configuration>
-            </plugin>
-
 
             <!-- Compilation of the JSP test pages -->
             <plugin>
@@ -135,7 +96,7 @@
                 <configuration>
                     <signature>
                         <groupId>org.codehaus.mojo.signature</groupId>
-                        <artifactId>java17</artifactId>
+                        <artifactId>java18</artifactId>
                         <version>1.0</version>
                     </signature>
                 </configuration>

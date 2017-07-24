@@ -2507,8 +2507,16 @@ public void parseExpressionInterface(Person personObj,String property) {
 <p><b>Code at risk:</b></p>
 <p>
 <pre>
-
+public void getUserProperty(String property) {
+  [...]
+  //The first argument is the dynamic expression.
+  return ognlUtil.getValue("user."+property, ctx, root, String.class);
+}
 </pre>
+</p>
+<p><b>Solution:</b></p>
+<p>
+In general, method evaluating OGNL expression should not received user input. It is intented to be used in static configurations and JSP.
 </p>
 <br/>
 <p>

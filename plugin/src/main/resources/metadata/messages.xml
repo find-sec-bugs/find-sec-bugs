@@ -849,7 +849,7 @@ mapped in this way are properly validated before they are used.</p>
         <LongDescription>{3} is not a recommended cryptographic hash function</LongDescription>
         <Details>
             <![CDATA[
-<p>The algorithms MD2, MD4 and MD5 are not a recommended MessageDigest. <b>PBKDF2</b> should be use to hash password for example.</p>
+<p>The algorithms MD2, MD4 and MD5 are not a recommended MessageDigest. <b>PBKDF2</b> should be used to hash password for example.</p>
 
 <blockquote>
     "The security of the MD5 hash function is severely compromised. A collision attack exists that can find collisions
@@ -919,7 +919,7 @@ mapped in this way are properly validated before they are used.</p>
         <Details>
             <![CDATA[
 <p>The algorithms SHA-1 is not a recommended algorithm for hash password, for signature verification and other
-uses. <b>PBKDF2</b> should be use to hash password for example.</p>
+uses. <b>PBKDF2</b> should be used to hash password for example.</p>
 
 <blockquote>
     "<b>SHA-1 for digital signature generation:</b><br/>
@@ -2589,18 +2589,41 @@ response.addCookie(cookie);</pre>
 <br/>
 <p>
 <b>Code at risk:</b><br/>
-<pre>String val = request.getParameter("val");
-try {
-    number = Integer.parseInt(val);
-} catch (NumberFormatException) {
-    log.info("Failed to parse val = " + val);
-}</pre>
+<pre>String val = request.getParameter("user");
+String metadata = request.getParameter("metadata");
+[...]
+if(authenticated) {
+    log.info("User " + val + " (" + metadata + ") was authenticated successfully");
+}
+else {
+    log.info("User " + val + " (" + metadata + ") was not authenticated");
+}
+</pre>
+
+A malicious user could send the metadata parameter with the value: <code>"Firefox) was authenticated successfully\r\n[INFO] User bbb (Internet Explorer"</code>.
 </p>
+
+<b>Solution:</b><br/>
+<p>
+You can manually sanitize each parameter.
+<pre>
+log.info("User " + val.replaceAll("[\r\n]","") + " (" + userAgent.replaceAll("[\r\n]","") + ") was not authenticated");
+</pre>
+</p>
+
+<p>
+You can also configure your logger service to replace new line for all message events. Here is sample configuration for LogBack <a href="https://logback.qos.ch/manual/layouts.html#replace">using the replace function</a>.
+<pre>
+&lt;pattern&gt;%-5level - %replace(%msg){'[\r\n]', ''}%n&lt;/pattern&gt;
+</pre>
+</p>
+
 <br/>
 <p>
     <b>References</b><br/>
     <a href="http://cwe.mitre.org/data/definitions/117.html">CWE-117: Improper Output Neutralization for Logs</a><br/>
     <a href="http://cwe.mitre.org/data/definitions/93.html">CWE-93: Improper Neutralization of CRLF Sequences ('CRLF Injection')</a><br/>
+    <a href="https://logback.qos.ch/manual/layouts.html#replace">CWE-93: Improper Neutralization of CRLF Sequences ('CRLF Injection')</a><br/>
 </p>
 
 ]]>
@@ -3155,7 +3178,7 @@ keyGen.initialize(2048);
 
     <BugPattern type="UNVALIDATED_REDIRECT">
         <ShortDescription>Unvalidated Redirect</ShortDescription>
-        <LongDescription>The following redirection could be use by an attacker to redirect users to a fishing website.</LongDescription>
+        <LongDescription>The following redirection could be used by an attacker to redirect users to a phishing website.</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -3205,7 +3228,7 @@ keyGen.initialize(2048);
 
     <BugPattern type="PLAY_UNVALIDATED_REDIRECT">
         <ShortDescription>Unvalidated Redirect (Play Framework)</ShortDescription>
-        <LongDescription>The following redirection could be use by an attacker to redirect users to a fishing website.</LongDescription>
+        <LongDescription>The following redirection could be used by an attacker to redirect users to a phishing website.</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -3254,7 +3277,7 @@ keyGen.initialize(2048);
 
     <BugPattern type="SPRING_UNVALIDATED_REDIRECT">
         <ShortDescription>Spring Unvalidated Redirect</ShortDescription>
-        <LongDescription>The following redirection could be use by an attacker to redirect users to a fishing website.</LongDescription>
+        <LongDescription>The following redirection could be used by an attacker to redirect users to a phishing website.</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -4410,12 +4433,12 @@ public class Example {
         <Details>
             <![CDATA[
 <p>
-Deserialization gadget are class that could be use by an attacker to take advantage of a remote API using Native Serialization.
+Deserialization gadget are class that could be used by an attacker to take advantage of a remote API using Native Serialization.
 This class is either adding custom behavior to deserialization with the readObject method (Serializable) or can be called
  from a serialized object (InvocationHandler).
 </p>
 <p>
-This detector is intended to be use mostly by researcher. The real issue is using deserialization for remote operation.
+This detector is intended to be used mostly by researcher. The real issue is using deserialization for remote operation.
 Removing gadget is an hardening practice to reduce the risk of being exploited.
 </p>
 <p>

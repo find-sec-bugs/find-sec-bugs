@@ -26,9 +26,11 @@ import edu.umd.cs.findbugs.Priorities;
 public class SSRFDetector extends BasicInjectionDetector {
 
     private static final String SCALA_PLAY_SSRF_TYPE = "SCALA_PLAY_SSRF";
+    private static final String URLCONNECTION_SSRF_FD = "URLCONNECTION_SSRF_FD";
 
     public SSRFDetector(BugReporter bugReporter) {
         super(bugReporter);
         loadConfiguredSinks("scala-play-ssrf.txt", SCALA_PLAY_SSRF_TYPE);
+        loadConfiguredSinks("urlconnection-ssrf.txt", URLCONNECTION_SSRF_FD);
     }
 }

@@ -44,4 +44,14 @@ public class ServletRequestWrapper implements ServletRequest {
     public Locale getLocale() {
         return null;
     }
+
+    @Override
+    public RequestDispatcher getRequestDispatcher(String path) {
+        return null;
+    }
+
+    @Override
+    public ServletContext getServletContext() {
+        return null;
+    }
 }

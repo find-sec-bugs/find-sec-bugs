@@ -108,7 +108,7 @@
     <Detector class="com.h3xstream.findsecbugs.crypto.InsecureSmtpSslDetector" reports="INSECURE_SMTP_SSL"/>
     <Detector class="com.h3xstream.findsecbugs.injection.aws.AwsQueryInjectionDetector" reports="AWS_QUERY_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.injection.beans.BeanInjectionDetector" reports="BEAN_PROPERTY_INJECTION"/>
-    <Detector class="com.h3xstream.findsecbugs.injection.fileDisclosure.FileDisclosureDetector" reports="STRUTS_FILE_DISCLOSURE,SPRING_FILE_DISCLOSURE"/>
+    <Detector class="com.h3xstream.findsecbugs.injection.fileDisclosure.FileDisclosureDetector" reports="STRUTS_FILE_DISCLOSURE,SPRING_FILE_DISCLOSURE,REQUESTDISPATCHER_FILE_DISCLOSURE"/>
     <Detector class="com.h3xstream.findsecbugs.injection.formatter.FormatStringManipulationDetector" reports="FORMAT_STRING_MANIPULATION"/>
     <Detector class="com.h3xstream.findsecbugs.injection.http.HttpParameterPollutionDetector" reports="HTTP_PARAMETER_POLLUTION"/>
     <Detector class="com.h3xstream.findsecbugs.spring.SpringUnvalidatedRedirectDetector" reports="SPRING_UNVALIDATED_REDIRECT"/>
@@ -117,6 +117,7 @@
     <BugPattern type="FORMAT_STRING_MANIPULATION" abbrev="SECFSM" category="SECURITY"/>
     <BugPattern type="SPRING_FILE_DISCLOSURE" abbrev="SECSF" category="SECURITY"/>
     <BugPattern type="STRUTS_FILE_DISCLOSURE" abbrev="SECSFD" category="SECURITY"/>
+    <BugPattern type="REQUESTDISPATCHER_FILE_DISCLOSURE" abbrev="SECSFDR" category="SECURITY"/>
     <BugPattern type="BEAN_PROPERTY_INJECTION" abbrev="SECBPI" category="SECURITY"/>
     <BugPattern type="AWS_QUERY_INJECTION" abbrev="SECAQI" category="SECURITY"/>
     <BugPattern type="INSECURE_SMTP_SSL" abbrev="SECISC" category="SECURITY"/>

@@ -26,5 +26,6 @@ public class FileDisclosureDetector extends BasicInjectionDetector {
         super(bugReporter);
         loadConfiguredSinks("spring-file-disclosure.txt", "SPRING_FILE_DISCLOSURE");
         loadConfiguredSinks("struts-file-disclosure.txt", "STRUTS_FILE_DISCLOSURE");
+        loadConfiguredSinks("requestdispatcher-file-disclosure.txt", "REQUESTDISPATCHER_FILE_DISCLOSURE");
     }
 }

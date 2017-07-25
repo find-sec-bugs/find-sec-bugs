@@ -20,4 +20,7 @@ public interface ServletRequest {
 
     Locale getLocale();
 
+    RequestDispatcher getRequestDispatcher(String path);
+
+    ServletContext getServletContext();
 }

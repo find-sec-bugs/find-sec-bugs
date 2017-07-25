@@ -66,3 +66,13 @@ anorm/package$SqlStringInterpolation$.SQL$extension(Lscala/StringContext;Lscala/
 - Scala WebService Library
 play/api/libs/ws/WSClient.url(Ljava/lang/String;)Lplay/api/libs/ws/WSRequest;:0
 play/api/libs/ws/WS$.url(Ljava/lang/String;Lplay/api/Application;)Lplay/api/libs/ws/WSRequest;:1
+
+play/api/libs/ws/WSRequest.withAuth(Ljava/lang/String;Ljava/lang/String;Lplay/api/libs/ws/WSAuthScheme;)Lplay/api/libs/ws/WSRequest;:3
+play/api/libs/ws/WSRequest.withBody(Lplay/api/libs/ws/WSBody;)Lplay/api/libs/ws/WSRequest;:1
+play/api/libs/ws/WSRequest.withFollowRedirects(Z)Lplay/api/libs/ws/WSRequest;:1
+play/api/libs/ws/WSRequest.withHeaders(Lscala/collection/Seq;)Lplay/api/libs/ws/WSRequest;:1
+play/api/libs/ws/WSRequest.withMethod(Ljava/lang/String;)Lplay/api/libs/ws/WSRequest;:1
+play/api/libs/ws/WSRequest.withQueryString(Lscala/collection/Seq;)Lplay/api/libs/ws/WSRequest;:1
+play/api/libs/ws/WSRequest.withRequestFilter(Lplay/api/libs/ws/WSRequestFilter;)Lplay/api/libs/ws/WSRequest;:1
+play/api/libs/ws/WSRequest.withRequestTimeout(Lscala/concurrent/duration/Duration;)Lplay/api/libs/ws/WSRequest;:1
+play/api/libs/ws/WSRequest.withVirtualHost(Ljava/lang/String;)Lplay/api/libs/ws/WSRequest;:1

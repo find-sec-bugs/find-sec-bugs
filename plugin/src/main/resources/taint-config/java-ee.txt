@@ -11,6 +11,7 @@ javax/servlet/ServletRequest.getProtocol()Ljava/lang/String;:SAFE
 javax/servlet/ServletRequest.getRealPath(Ljava/lang/String;)Ljava/lang/String;:0
 javax/servlet/ServletRequest.getRemoteAddr()Ljava/lang/String;:SAFE
 javax/servlet/ServletRequest.getRemoteHost()Ljava/lang/String;:TAINTED
+javax/servlet/ServletRequest.getRequestDispatcher(Ljava/lang/String;)Ljavax/servlet/RequestDispatcher;:0
 javax/servlet/ServletRequest.getScheme()Ljava/lang/String;:SAFE
 javax/servlet/ServletRequest.getServerName()Ljava/lang/String;:TAINTED
 
@@ -40,6 +41,7 @@ javax/servlet/http/HttpServletRequest.getRealPath(Ljava/lang/String;)Ljava/lang/
 javax/servlet/http/HttpServletRequest.getRemoteAddr()Ljava/lang/String;:SAFE
 javax/servlet/http/HttpServletRequest.getRemoteHost()Ljava/lang/String;:TAINTED
 javax/servlet/http/HttpServletRequest.getRemoteUser()Ljava/lang/String;:TAINTED
+javax/servlet/http/HttpServletRequest.getRequestDispatcher(Ljava/lang/String;)Ljavax/servlet/RequestDispatcher;:0
 javax/servlet/http/HttpServletRequest.getRequestURI()Ljava/lang/String;:TAINTED
 javax/servlet/http/HttpServletRequest.getRequestURL()Ljava/lang/StringBuffer;:TAINTED
 javax/servlet/http/HttpServletRequest.getScheme()Ljava/lang/String;:SAFE
@@ -71,6 +73,7 @@ javax/servlet/http/HttpServletRequestWrapper.getRealPath(Ljava/lang/String;)Ljav
 javax/servlet/http/HttpServletRequestWrapper.getRemoteAddr()Ljava/lang/String;:SAFE
 javax/servlet/http/HttpServletRequestWrapper.getRemoteHost()Ljava/lang/String;:TAINTED
 javax/servlet/http/HttpServletRequestWrapper.getRemoteUser()Ljava/lang/String;:TAINTED
+javax/servlet/http/HttpServletRequestWrapper.getRequestDispatcher(Ljava/lang/String;)Ljavax/servlet/RequestDispatcher;:0
 javax/servlet/http/HttpServletRequestWrapper.getRequestURI()Ljava/lang/String;:TAINTED
 javax/servlet/http/HttpServletRequestWrapper.getRequestURL()Ljava/lang/StringBuffer;:TAINTED
 javax/servlet/http/HttpServletRequestWrapper.getScheme()Ljava/lang/String;:SAFE
@@ -90,6 +93,7 @@ javax/servlet/ServletRequestWrapper.getProtocol()Ljava/lang/String;:SAFE
 javax/servlet/ServletRequestWrapper.getRealPath(Ljava/lang/String;)Ljava/lang/String;:0
 javax/servlet/ServletRequestWrapper.getRemoteAddr()Ljava/lang/String;:SAFE
 javax/servlet/ServletRequestWrapper.getRemoteHost()Ljava/lang/String;:TAINTED
+javax/servlet/ServletRequestWrapper.getRequestDispatcher(Ljava/lang/String;)Ljavax/servlet/RequestDispatcher;:0
 javax/servlet/ServletRequestWrapper.getScheme()Ljava/lang/String;:SAFE
 javax/servlet/ServletRequestWrapper.getServerName()Ljava/lang/String;:TAINTED
 
@@ -109,6 +113,12 @@ javax/servlet/http/Cookie.getValue()Ljava/lang/String;:TAINTED
 javax/servlet/ServletContext.getContextPath()Ljava/lang/String;:SAFE
 -javax/servlet/ServletContext.getInitParameter(Ljava/lang/String;)Ljava/lang/String;:?
 -javax/servlet/ServletContext.getInitParameterNames()Ljava/util/Enumeration;:?
+javax/servlet/ServletContext.getNamedDispatcher(Ljava/lang/String;)Ljavax/servlet/RequestDispatcher;:0
+javax/servlet/ServletContext.getRequestDispatcher(Ljava/lang/String;)Ljavax/servlet/RequestDispatcher;:0
+javax/servlet/ServletContext.getRealPath(Ljava/lang/String;)Ljava/lang/String;:0
+javax/servlet/ServletContext.getResource(Ljava/lang/String;)Ljava/net/URL;:0
+javax/servlet/ServletContext.getResourceAsStream(Ljava/lang/String;)Ljava/io/InputStream;:0
+javax/servlet/ServletContext.getResourcePaths(Ljava/lang/String;)Ljava/util/Set;:0
 
 -- The following methods receive arguments but will not alter the objects received
 -- (It avoids tainting the parameters that are not immutable)

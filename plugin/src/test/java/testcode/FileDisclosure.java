@@ -3,6 +3,8 @@ package testcode;
 import java.io.IOException;
 import org.apache.struts.action.ActionForward;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,5 +47,22 @@ public class FileDisclosure extends HttpServlet{
         }catch(Exception e){
          System.out.println(e);
        }
+    }
+
+    public void doGet2(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        try{
+            String jspFile = request.getParameter("jspFile");
+
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher(jspFile);
+
+            requestDispatcher.include(request, response);
+
+            requestDispatcher = request.getServletContext().getRequestDispatcher(jspFile);
+
+            requestDispatcher.forward(request, response);
+
+        }catch(Exception e){
+            System.out.println(e);
+        }
     }
 }

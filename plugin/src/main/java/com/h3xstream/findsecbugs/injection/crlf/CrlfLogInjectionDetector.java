@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs;
+package com.h3xstream.findsecbugs.injection.crlf;
 
 import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
 import com.h3xstream.findsecbugs.taintanalysis.Taint;
@@ -36,11 +36,16 @@ public class CrlfLogInjectionDetector extends BasicInjectionDetector {
 
     @Override
     protected int getPriority(Taint taint) {
-        if (!taint.isSafe()
-                && taint.hasTag(Taint.Tag.CR_ENCODED)
-                && taint.hasTag(Taint.Tag.LF_ENCODED)) {
-            return Priorities.IGNORE_PRIORITY;
-        } else if (taint.isTainted()) {
+        if (!taint.isSafe()) {
+            //(Condition extracted for clarity)
+            //Either specifically safe for new line or URL encoded which encoded few other characters
+            boolean newLineSafe = (taint.hasTag(Taint.Tag.CR_ENCODED) && taint.hasTag(Taint.Tag.LF_ENCODED));
+            boolean urlSafe = (taint.hasTag(Taint.Tag.URL_ENCODED));
+            if(newLineSafe || urlSafe) {
+                return Priorities.IGNORE_PRIORITY;
+            }
+        }
+        if (taint.isTainted()) {
             return Priorities.NORMAL_PRIORITY;
         } else if (!taint.isSafe()) {
             return Priorities.LOW_PRIORITY;

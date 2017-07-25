@@ -55,6 +55,7 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
     private static final Logger LOGGER = Logger.getLogger(TaintDataflowEngine.class.getName());
     private static final String TAINT_CONFIG_PATH = "taint-config/";
     private static final String[] TAINT_CONFIG_FILENAMES = {
+        "android-taint-sql.txt",
         "java-lang.txt",
         "java-ee.txt",
         "collections.txt",

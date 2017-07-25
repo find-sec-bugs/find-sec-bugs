@@ -62,7 +62,7 @@
                         <exclude>**/org/jboss/**/**.java</exclude>
                         <exclude>**/org/springframework/**/**.java</exclude>
                         <exclude>**/com/unboundid/ldap/**/**.java</exclude>
-                        <exclude>**/scala/util/**/**.java</exclude>
+                        <exclude>**/java/scala/util/**/**.java</exclude>
                         <exclude>**/groovy/lang/**.java</exclude>
                         <exclude>**/scala/**.java</exclude>
                         <exclude>**/scala/**/**.java</exclude>
@@ -72,6 +72,8 @@
                         <exclude>**/java/flexjson/**.java</exclude>
                         <exclude>**/java/com/typesafe/**/**.java</exclude>
                         <exclude>**/java/com/fasterxml/jackson/**/**.java</exclude>
+                        <exclude>**/java/ognl/**/**.java</exclude>
+                        <exclude>**/com/opensymphony/**/**.java</exclude>
                     </excludes>
                     <properties>
                         <project>Find Security Bugs</project>
@@ -103,6 +105,7 @@
                 <artifactId>coveralls-maven-plugin</artifactId>
                 <version>4.3.0</version>
             </plugin>
+
         </plugins>
 
     </build>
@@ -143,6 +146,12 @@
     <!-- All the dependencies are declare here. Modules will refer to those without specifying the version. -->
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs</artifactId>
+                <version>3.1.0-RC3</version>
+            </dependency>
 
             <!-- Artefact definition of the module -->
 
@@ -189,12 +198,6 @@
             </dependency>
 
 
-            <dependency>
-                <groupId>com.google.code.findbugs</groupId>
-                <artifactId>findbugs</artifactId>
-                <version>3.0.1</version>
-                <scope>test</scope>
-            </dependency>
 
             <dependency>
                 <groupId>commons-io</groupId>

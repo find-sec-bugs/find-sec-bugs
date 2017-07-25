@@ -849,7 +849,7 @@ mapped in this way are properly validated before they are used.</p>
         <LongDescription>{3} is not a recommended cryptographic hash function</LongDescription>
         <Details>
             <![CDATA[
-<p>The algorithms MD2, MD4 and MD5 are not a recommended MessageDigest. <b>PBKDF2</b> should be use to hash password for example.</p>
+<p>The algorithms MD2, MD4 and MD5 are not a recommended MessageDigest. <b>PBKDF2</b> should be used to hash password for example.</p>
 
 <blockquote>
     "The security of the MD5 hash function is severely compromised. A collision attack exists that can find collisions
@@ -919,7 +919,7 @@ mapped in this way are properly validated before they are used.</p>
         <Details>
             <![CDATA[
 <p>The algorithms SHA-1 is not a recommended algorithm for hash password, for signature verification and other
-uses. <b>PBKDF2</b> should be use to hash password for example.</p>
+uses. <b>PBKDF2</b> should be used to hash password for example.</p>
 
 <blockquote>
     "<b>SHA-1 for digital signature generation:</b><br/>
@@ -2227,6 +2227,55 @@ DB.withConnection { implicit c =>
     </BugPattern>
     <BugCode abbrev="SECSSQLA">SQL Injection (Scala - Anorm)</BugCode>
 
+
+    <!-- Android SQL Injection -->
+    <Detector class="com.h3xstream.findsecbugs.injection.sql.AndroidSqlInjectionDetector">
+        <Details>Identify various kinds of SQL Injection with Android API</Details>
+    </Detector>
+
+    <!-- Android SQL Injection -->
+    <BugPattern type="SQL_INJECTION_ANDROID">
+        <ShortDescription>Potential Android SQL Injection</ShortDescription>
+        <LongDescription>This use of {3} can be vulnerable to SQL injection</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+The input values included in SQL queries need to be passed in safely.
+Bind variables in prepared statements can be used to easily mitigate the risk of SQL injection.
+</p>
+
+<p>
+    <b>Vulnerable Code:</b><br/>
+    <pre>String query = "SELECT * FROM  messages WHERE uid= '"+userInput+"'" ;
+Cursor cursor = this.getReadableDatabase().rawQuery(query,null);</pre>
+</p>
+<p>
+    <b>Solution:</b><br/>
+    <pre>String query = "SELECT * FROM  messages WHERE uid= ?" ;
+Cursor cursor = this.getReadableDatabase().rawQuery(query,new String[] {userInput});</pre>
+</p>
+<br/>
+
+<b>References (Android SQLite)</b><br/>
+<a href="http://www.informit.com/articles/article.aspx?p=2268753&seqNum=5">InformIT.com: Practical Advice for Building Secure Android Databases in SQLite</a><br/>
+<a href="https://www.packtpub.com/books/content/knowing-sql-injection-attacks-and-securing-our-android-applications-them">Packtpub.com: Knowing the SQL-injection attacks and securing our Android applications from them</a><br/>
+<a href="https://books.google.ca/books?id=SXlMAQAAQBAJ&lpg=PR1&pg=PA64#v=onepage&q&f=false">Android Database Support (Enterprise Android: Programming Android Database Applications for the Enterprise)</a><br/>
+<a href="https://stackoverflow.com/a/29797229/89769">Safe example of Insert, Select, Update and Delete queryies provided by Suragch</a><br/>
+
+<b>References (SQL injection)</b><br/>
+<a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-19: SQL Injection</a><br/>
+<a href="http://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
+<a href="https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet">OWASP: SQL Injection Prevention Cheat Sheet</a><br/>
+<a href="https://www.owasp.org/index.php/Query_Parameterization_Cheat_Sheet">OWASP: Query Parameterization Cheat Sheet</a><br/>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSQLITEA">SQL Injection in SQLite Android API</BugCode>
+
+
     <!-- LDAP Injection -->
     <Detector class="com.h3xstream.findsecbugs.injection.ldap.LdapInjectionDetector">
         <Details>Identify various kinds of LDAP Injection in JNDI and UnboundID APIs.</Details>
@@ -2441,6 +2490,47 @@ public void parseExpressionInterface(Person personObj,String property) {
     </BugPattern>
     <BugCode abbrev="SECSEAM">Expression Language (EL) Injection</BugCode>
 
+    <!-- OGNL injection -->
+    <Detector class="com.h3xstream.findsecbugs.injection.script.OgnlInjectionDetector">
+        <Details>Identify OGNL injection.</Details>
+    </Detector>
+
+    <BugPattern type="OGNL_INJECTION">
+        <ShortDescription>Potential code injection when using OGNL expression</ShortDescription>
+        <LongDescription>Potential code injection when using OGNL expression</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    A expression is built with a dynamic value. The source of the value(s) should be verified to avoid
+    that unfiltered values fall into this risky code evaluation.
+</p>
+<p><b>Code at risk:</b></p>
+<p>
+<pre>
+public void getUserProperty(String property) {
+  [...]
+  //The first argument is the dynamic expression.
+  return ognlUtil.getValue("user."+property, ctx, root, String.class);
+}
+</pre>
+</p>
+<p><b>Solution:</b></p>
+<p>
+In general, method evaluating OGNL expression should not received user input. It is intented to be used in static configurations and JSP.
+</p>
+<br/>
+<p>
+    <b>References</b><br/>
+    <a href="https://community.saas.hpe.com/t5/Security-Research/Struts-2-OGNL-Expression-Injections/ba-p/288881">HP Enterprise: Struts 2 OGNL Expression Injections by Alvaro Mu&Atilde;&plusmn;oz</a><br/>
+    <a href="https://blog.gdssecurity.com/labs/2017/3/27/an-analysis-of-cve-2017-5638.html">Gotham Digital Science: An Analysis Of CVE-2017-5638</a><br/>
+    <a href="http://struts.apache.org/docs/s2-016.html">Apache Struts2: Vulnerability S2-016</a><br/>
+    <a href="https://struts.apache.org/docs/ognl.html">Apache Struts 2 Documentation: OGNL</a><br/>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECOGNL">Expression Language (EL) Injection</BugCode>
+
 
     <!-- HTTP Response Splitting -->
     <Detector class="com.h3xstream.findsecbugs.HttpResponseSplittingDetector">
@@ -2485,7 +2575,7 @@ response.addCookie(cookie);</pre>
 
 
     <!-- CRLF injection in logs -->
-    <Detector class="com.h3xstream.findsecbugs.CrlfLogInjectionDetector">
+    <Detector class="com.h3xstream.findsecbugs.injection.crlf.CrlfLogInjectionDetector">
         <Details>Searches for CRLF injection in logs</Details>
     </Detector>
 
@@ -2507,18 +2597,41 @@ response.addCookie(cookie);</pre>
 <br/>
 <p>
 <b>Code at risk:</b><br/>
-<pre>String val = request.getParameter("val");
-try {
-    number = Integer.parseInt(val);
-} catch (NumberFormatException) {
-    log.info("Failed to parse val = " + val);
-}</pre>
+<pre>String val = request.getParameter("user");
+String metadata = request.getParameter("metadata");
+[...]
+if(authenticated) {
+    log.info("User " + val + " (" + metadata + ") was authenticated successfully");
+}
+else {
+    log.info("User " + val + " (" + metadata + ") was not authenticated");
+}
+</pre>
+
+A malicious user could send the metadata parameter with the value: <code>"Firefox) was authenticated successfully\r\n[INFO] User bbb (Internet Explorer"</code>.
 </p>
+
+<b>Solution:</b><br/>
+<p>
+You can manually sanitize each parameter.
+<pre>
+log.info("User " + val.replaceAll("[\r\n]","") + " (" + userAgent.replaceAll("[\r\n]","") + ") was not authenticated");
+</pre>
+</p>
+
+<p>
+You can also configure your logger service to replace new line for all message events. Here is sample configuration for LogBack <a href="https://logback.qos.ch/manual/layouts.html#replace">using the replace function</a>.
+<pre>
+&lt;pattern&gt;%-5level - %replace(%msg){'[\r\n]', ''}%n&lt;/pattern&gt;
+</pre>
+</p>
+
 <br/>
 <p>
     <b>References</b><br/>
     <a href="http://cwe.mitre.org/data/definitions/117.html">CWE-117: Improper Output Neutralization for Logs</a><br/>
     <a href="http://cwe.mitre.org/data/definitions/93.html">CWE-93: Improper Neutralization of CRLF Sequences ('CRLF Injection')</a><br/>
+    <a href="https://logback.qos.ch/manual/layouts.html#replace">CWE-93: Improper Neutralization of CRLF Sequences ('CRLF Injection')</a><br/>
 </p>
 
 ]]>
@@ -3073,7 +3186,7 @@ keyGen.initialize(2048);
 
     <BugPattern type="UNVALIDATED_REDIRECT">
         <ShortDescription>Unvalidated Redirect</ShortDescription>
-        <LongDescription>The following redirection could be use by an attacker to redirect users to a fishing website.</LongDescription>
+        <LongDescription>The following redirection could be used by an attacker to redirect users to a phishing website.</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -3123,7 +3236,7 @@ keyGen.initialize(2048);
 
     <BugPattern type="PLAY_UNVALIDATED_REDIRECT">
         <ShortDescription>Unvalidated Redirect (Play Framework)</ShortDescription>
-        <LongDescription>The following redirection could be use by an attacker to redirect users to a fishing website.</LongDescription>
+        <LongDescription>The following redirection could be used by an attacker to redirect users to a phishing website.</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -3172,7 +3285,7 @@ keyGen.initialize(2048);
 
     <BugPattern type="SPRING_UNVALIDATED_REDIRECT">
         <ShortDescription>Spring Unvalidated Redirect</ShortDescription>
-        <LongDescription>The following redirection could be use by an attacker to redirect users to a fishing website.</LongDescription>
+        <LongDescription>The following redirection could be used by an attacker to redirect users to a phishing website.</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -4328,12 +4441,12 @@ public class Example {
         <Details>
             <![CDATA[
 <p>
-Deserialization gadget are class that could be use by an attacker to take advantage of a remote API using Native Serialization.
+Deserialization gadget are class that could be used by an attacker to take advantage of a remote API using Native Serialization.
 This class is either adding custom behavior to deserialization with the readObject method (Serializable) or can be called
  from a serialized object (InvocationHandler).
 </p>
 <p>
-This detector is intended to be use mostly by researcher. The real issue is using deserialization for remote operation.
+This detector is intended to be used mostly by researcher. The real issue is using deserialization for remote operation.
 Removing gadget is an hardening practice to reduce the risk of being exploited.
 </p>
 <p>

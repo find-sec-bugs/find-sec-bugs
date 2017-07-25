@@ -22,10 +22,7 @@ import java.util.List;
 
 import static org.testng.Assert.fail;
 
-/**
- * Created by parteau on 1/5/2017.
- */
-public class BaseConfigValidationTest {
+public class BaseConfigValidation {
     private static final boolean DEBUG = false;
 
 
@@ -33,6 +30,13 @@ public class BaseConfigValidationTest {
 
     private List<String> java8classes = Arrays.asList("java.time.ZonedId");
 
+    /**
+     * Validate if the class name exists.
+     * It is expecting that API will be in the classpath. The class are either part of the dependencies or in most
+     * cases the stubs
+     * @param className
+     * @param origfileName
+     */
     public void validateClass(String className, String origfileName) {
         if(java8classes.contains(className)) return;
 

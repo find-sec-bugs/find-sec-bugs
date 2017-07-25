@@ -28,5 +28,6 @@ public class ScriptInjectionDetector extends BasicInjectionDetector {
         loadConfiguredSinks("script-engine.txt", "SCRIPT_ENGINE_INJECTION");
         loadConfiguredSinks("el.txt", "EL_INJECTION");
         loadConfiguredSinks("seam-el.txt", "SEAM_LOG_INJECTION");
+
     }
 }

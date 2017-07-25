@@ -28,7 +28,7 @@ import static org.testng.Assert.fail;
 
 import org.testng.annotations.Test;
 
-public class TaintConfigValidationTest extends BaseConfigValidationTest {
+public class TaintConfigValidationTest extends BaseConfigValidation {
 
     private static final boolean DEBUG = false;
 

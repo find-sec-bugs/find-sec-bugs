@@ -86,8 +86,8 @@ public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
 
             InjectionSink injectionSink = new InjectionSink(this, injectionPoint.getBugType(), priority,
                     classContext, method, handle, injectionPoint.getInjectableMethod());
-            injectionSink.addLines(parameterTaint.getLocations());
-
+            injectionSink.addLines(parameterTaint.getAllLocations());
+            injectionSink.addUnknownSources(parameterTaint.getUnknownLocations());
             if (parameterTaint.hasParameters()) {
                 // add sink to multi map
                 Set<InjectionSink> sinkSet = injectionSinks.get(currentMethod);
@@ -182,7 +182,7 @@ public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
             }
             if (!finalTaint.isSafe()) {
                 sink.addLine(line);
-                sink.addLines(finalTaint.getLocations());
+                sink.addLines(finalTaint.getAllLocations());
             }
         }
     }

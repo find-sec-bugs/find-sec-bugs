@@ -17,11 +17,19 @@
  */
 package com.h3xstream.findsecbugs.taintanalysis;
 
+import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertTrue;
 
 public class TaintFrameTest {
+
+    @BeforeClass
+    public void setUp() {
+        //Make sure their are not side effect when print the stack frames
+        FindSecBugsGlobalConfig.getInstance().setDebugTaintState(false);
+    }
 
     @Test
     public void validateSimpleTaintFrame() {

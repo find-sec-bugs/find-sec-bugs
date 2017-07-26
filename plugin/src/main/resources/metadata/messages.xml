@@ -4693,6 +4693,46 @@ Path traversal <sup>[3][4]</sup> are not possible.
             ]]></Details>
     </BugPattern>
     <BugCode abbrev="SECSSSRF">Scala Play Server-Side Request Forgery</BugCode>
+    <BugPattern type="URLCONNECTION_SSRF_FD">
+        <ShortDescription>URLConnection Server-Side Request Forgery (SSRF) and File Disclosure</ShortDescription>
+        <LongDescription>This web server request could be used by an attacker to expose internal services and filesystem.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    Server-Side Request Forgery occur when a web server executes a request to a user supplied destination
+    parameter that is not validated. Such vulnerabilities could allow an attacker to access internal services
+    or to launch attacks from your web server.
+</p>
+<p>
+    URLConnection can be used with file:// protocol or other protocols to access local filesystem and potentially other services.
+<p>
+    <b>Vulnerable Code:</b>
+<pre>
+new URL(String url).openConnection()
+new URL(String url).openStream()
+new URL(String url).getContent()
+</pre>
+</p>
+<p>
+    <b>Solution/Countermeasures:</b><br/>
+    <ul>
+        <li>Don't accept URL destinations from users</li>
+        <li>Accept a destination key, and use it to look up the target (legal) destination</li>
+        <li>White list URLs (if possible)</li>
+        <li>Validate that the beginning of the URL is part of a white list</li>
+    </ul>
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://cwe.mitre.org/data/definitions/918.html">CWE-918: Server-Side Request Forgery (SSRF)</a><br/>
+<a href="https://www.bishopfox.com/blog/2015/04/vulnerable-by-design-understanding-server-side-request-forgery/">Understanding Server-Side Request Forgery</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/73.html">CWE-73: External Control of File Name or Path</a><br/>
+<a href="https://www.pwntester.com/blog/2013/11/28/abusing-jar-downloads/">Abusing jar:// downloads</a><br />
+</p>
+            ]]></Details>
+    </BugPattern>
+    <BugCode abbrev="SECSSSRFUC">URLConnection Server-Side Request Forgery</BugCode>
 
     <!-- XSS in Scala Play Twirl template engine -->
     <Detector class="com.h3xstream.findsecbugs.scala.XssTwirlDetector">
@@ -5260,6 +5300,36 @@ Avoid constructing server-side redirects using user controlled input.
     </BugPattern>
     <BugCode abbrev="SECSF">Spring File Disclosure</BugCode>
 
+    <!-- RequestDispatcher File Disclosure -->
+    <BugPattern type="REQUESTDISPATCHER_FILE_DISCLOSURE">
+        <ShortDescription>RequestDispatcher File Disclosure</ShortDescription>
+        <LongDescription>RequestDispatcher populated with user controlled parameters</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Constructing a server-side redirect path with user input could allow an attacker to download application binaries (including application classes or jar files) or view arbitrary files within protected directories.<br/>
+An attacker may be able to forge a request parameter to match sensitive file locations. For example, requesting "http://example.com/?jspFile=../applicationContext.xml%3F" would display the application's applicationContext.xml file. The attacker would be able to locate and download the applicationContext.xml referenced in the other configuration files, and even class files or jar files, obtaining sensitive information and launching other types of attacks.
+</p>
+<p>
+    <b>Vulnerable Code:</b><br/>
+<pre>...
+String jspFile = request.getParameter("jspFile");
+request.getRequestDispatcher("/WEB-INF/jsps/" + jspFile + ".jsp").include(request, response);
+...</pre>
+</p>
+<p>
+    <b>Solution:</b><br/>
+Avoid constructing server-side redirects using user controlled input.
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://cwe.mitre.org/data/definitions/552.html">CWE-552: Files or Directories Accessible to External Parties</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSFDR">RequestDispatcher File Disclosure</BugCode>
 
     <!-- Format String Manipulation -->
     <Detector class="com.h3xstream.findsecbugs.injection.formatter.FormatStringManipulationDetector">

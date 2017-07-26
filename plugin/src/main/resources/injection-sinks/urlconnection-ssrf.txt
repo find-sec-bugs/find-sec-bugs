@@ -1,0 +1,5 @@
+java/net/URL.openConnection()Ljava/net/URLConnection;:0
+java/net/URL.openConnection(Ljava/net/Proxy;)Ljava/net/URLConnection;:0,1
+java/net/URL.openStream()Ljava/io/InputStream;:0
+java/net/URL.getContent()Ljava/lang/Object;:0
+java/net/URL.getContent([Ljava/lang/Class;)Ljava/lang/Object;:1

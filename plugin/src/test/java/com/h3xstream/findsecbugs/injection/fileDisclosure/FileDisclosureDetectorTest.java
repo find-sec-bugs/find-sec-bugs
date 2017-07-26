@@ -38,7 +38,7 @@ public class FileDisclosureDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        for (Integer line : Arrays.asList(18, 20, 22, 24, 27)) {
+        for (Integer line : Arrays.asList(20, 22, 24, 26, 29)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("STRUTS_FILE_DISCLOSURE")
@@ -47,7 +47,7 @@ public class FileDisclosureDetectorTest extends BaseDetectorTest {
             );
         }
 
-        for (Integer line : Arrays.asList(33, 35, 37, 40)) {
+        for (Integer line : Arrays.asList(35, 37, 39, 42)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("SPRING_FILE_DISCLOSURE")
@@ -67,4 +67,19 @@ public class FileDisclosureDetectorTest extends BaseDetectorTest {
         );
     }
 
+    @Test
+    public void detectFileDisclosureWithRequestDispatcher() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/FileDisclosure")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter, times(2)).doReportBug(
+                bugDefinition().bugType("REQUESTDISPATCHER_FILE_DISCLOSURE").inMethod("doGet2").build()
+        );
+    }
 }

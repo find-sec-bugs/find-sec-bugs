@@ -50,8 +50,8 @@ public class SSRFDetectorTest extends BaseDetectorTest {
 
         //Assertions for bugs
         Map<String, int[]> methodBugLines = new HashMap<String, int[]>();
-        methodBugLines.put("vulnerableGet", new int[]{24, 33});
-        methodBugLines.put("vulnerablePost", new int[]{44, 48, 53, /**/ 61, 65, 70});
+        methodBugLines.put("vulnerableGet", new int[]{27, 31, 32, 33, 34, 35, 36, 37, 38, 39, 47});
+        methodBugLines.put("vulnerablePost", new int[]{58, 62, 67, 71, 72, 73, 74, 75, 76, 77, 78, 79, 86, 90, 95});
 
         for (Map.Entry<String, int[]> entry : methodBugLines.entrySet()) {
             // Lets check every line specified above

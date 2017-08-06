@@ -1,8 +1,7 @@
 java/net/URLEncoder.encode(Ljava/lang/String;)Ljava/lang/String;:0|+URL_ENCODED,+XSS_SAFE
 java/net/URLEncoder.encode(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:1|+URL_ENCODED,+XSS_SAFE
-java/net/URLDecoder.decode(Ljava/lang/String;)Ljava/lang/String;:0|+URL_ENCODED,+XSS_SAFE
-java/net/URLDecoder.decode(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:1|+URL_ENCODED,+XSS_SAFE
-
+java/net/URLDecoder.decode(Ljava/lang/String;)Ljava/lang/String;:0|-URL_ENCODED,-XSS_SAFE
+java/net/URLDecoder.decode(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:1|-URL_ENCODED,-XSS_SAFE
 
 --Spring Framework
 org/springframework/web/util/HtmlUtils.htmlEscape(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE

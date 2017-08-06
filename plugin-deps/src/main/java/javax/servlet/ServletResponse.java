@@ -8,4 +8,6 @@ public interface ServletResponse {
     PrintWriter getWriter() throws IOException;
 
     ServletOutputStream getOutputStream() throws IOException;
+
+    void setContentType(String contentType);
 }

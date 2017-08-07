@@ -6,3 +6,5 @@ java/io/RandomAccessFile.<init>(Ljava/lang/String;Ljava/lang/String;)V:1
 
 java/io/FileReader.<init>(Ljava/lang/String;)V:0
 java/io/FileInputStream.<init>(Ljava/lang/String;)V:0
+
+java/nio/file/Paths.get(Ljava/lang/String;[Ljava/lang/String;)Ljava/nio/file/Path;:0,1

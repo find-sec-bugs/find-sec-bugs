@@ -1,6 +1,5 @@
 -- Following classes are immutable
 Ljava/lang/String;:#IMMUTABLE
-Ljava/math/BigInteger;:#IMMUTABLE
 Ljava/io/File;:#IMMUTABLE
 Ljava/util/Locale;:#IMMUTABLE
 Ljava/net/Inet4Address;:#IMMUTABLE
@@ -18,6 +17,7 @@ Ljava/lang/Integer;:SAFE#IMMUTABLE
 Ljava/lang/Long;:SAFE#IMMUTABLE
 Ljava/lang/Byte;:SAFE#IMMUTABLE
 Ljava/lang/Short;:SAFE#IMMUTABLE
+Ljava/math/BigInteger;:SAFE#IMMUTABLE
 Ljava/math/BigDecimal;:SAFE#IMMUTABLE
 Ljava/util/Date;:SAFE#IMMUTABLE
 Ljava/sql/Time;:SAFE#IMMUTABLE
@@ -181,6 +181,7 @@ java/lang/String.valueOf(F)Ljava/lang/String;:SAFE
 java/lang/String.valueOf(I)Ljava/lang/String;:SAFE
 java/lang/String.valueOf(J)Ljava/lang/String;:SAFE
 java/lang/String.valueOf(Ljava/lang/Object;)Ljava/lang/String;:0
+java/lang/String.valueOf([C)Ljava/lang/String;:0
 
 java/util/Arrays.toString([Ljava/lang/Object;)Ljava/lang/String;:0
 

@@ -26,6 +26,6 @@ If you are submitting an issue, here are key points to keep in mind.
  - You have created test cases for new detector or signatures
  - Your pull request will be link in the release notes. Make sure the description is clear for the **users** 
 
-## Developpers guideline
+## Find Security Bugs internals
 
-If you want to learn more about Find Security Bugs internal, you read the wiki pages under the section [Developers corner](https://github.com/find-sec-bugs/find-sec-bugs/wiki#wrench-developers-corner).
+If you want to learn more about Find Security Bugs internals, you read the wiki pages under the section [Developers corner](https://github.com/find-sec-bugs/find-sec-bugs/wiki#wrench-developers-corner).

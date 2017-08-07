@@ -28,7 +28,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class PathTraversalDetectorTest extends BaseDetectorTest {
+public class NioPathTraversalDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectPathTraversal() throws Exception {
@@ -36,32 +36,22 @@ public class PathTraversalDetectorTest extends BaseDetectorTest {
 
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/pathtraversal/PathTraversal")
+                getClassFilePath("testcode/pathtraversal/NioPathTraversal")
         };
 
         //Run the analysis
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        for (Integer line : Arrays.asList(17, 18, 19, 20, 22, 23)) {
+        for (Integer line : Arrays.asList(8,9,10,11,12)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("PATH_TRAVERSAL_IN")
-                            .inClass("PathTraversal").inMethod("main").atLine(line)
+                            .inClass("NioPathTraversal").atLine(line)
                             .build()
             );
         }
 
-        for (Integer line : Arrays.asList(25, 26, 27, 28)) {
-            verify(reporter).doReportBug(
-                    bugDefinition()
-                            .bugType("PATH_TRAVERSAL_OUT")
-                            .inClass("PathTraversal").inMethod("main").atLine(line)
-                            .build()
-            );
-        }
-        
-        verify(reporter, times(6)).doReportBug(bugDefinition().bugType("PATH_TRAVERSAL_IN").build());
-        verify(reporter, times(4)).doReportBug(bugDefinition().bugType("PATH_TRAVERSAL_OUT").build());
+        verify(reporter, times(5)).doReportBug(bugDefinition().bugType("PATH_TRAVERSAL_IN").build());
     }
 }

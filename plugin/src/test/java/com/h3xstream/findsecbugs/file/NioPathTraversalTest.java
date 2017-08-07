@@ -28,7 +28,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class NioPathTraversalDetectorTest extends BaseDetectorTest {
+public class NioPathTraversalTest extends BaseDetectorTest {
 
     @Test
     public void detectPathTraversal() throws Exception {

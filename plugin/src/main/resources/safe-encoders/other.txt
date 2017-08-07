@@ -15,3 +15,18 @@ org/springframework/web/util/JavaScriptUtils.javaScriptEscape(Ljava/lang/String;
 
 org/springframework/util/StringUtils.getFilename(Ljava/lang/String;)Ljava/lang/String;:SAFE
 org/springframework/util/StringUtils.getFilenameExtension(Ljava/lang/String;)Ljava/lang/String;:SAFE
+
+--Safe date values
+java/util/Calendar.getDisplayName(IILjava/util/Locale;)Ljava/lang/String;:SAFE
+java/util/Calendar.getDisplayNames(IILjava/util/Locale;)Ljava/util/Map;:SAFE
+java/util/UUID.randomUUID()Ljava/util/UUID;:SAFE
+
+--Hash values should not be malicious even if the input is controlled by the user (exploitability is unlikely)
+java/security/MessageDigest.digest([B)[B:SAFE
+
+--Hexadecimal representation
+javax/xml/bind/DatatypeConverter.printHexBinary([B)Ljava/lang/String;:SAFE
+org/apache/commons/codec/binary/Hex.encodeHex([B)[C:SAFE
+org/apache/commons/codec/binary/Hex.encodeHex([BZ)[C:SAFE
+org/apache/commons/codec/binary/Hex.encodeHexString([B)Ljava/lang/String;:SAFE
+org/apache/commons/codec/binary/Hex.encodeHexString([BZ)Ljava/lang/String;:SAFE

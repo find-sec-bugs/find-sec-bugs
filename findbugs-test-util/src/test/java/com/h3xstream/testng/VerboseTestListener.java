@@ -17,6 +17,7 @@
  */
 package com.h3xstream.testng;
 
+import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.ITestContext;
@@ -41,6 +42,7 @@ public class VerboseTestListener extends TestListenerAdapter {
     @Override
     public void onStart(ITestContext ctx) {
         log.info("<<<<<<<<<<<<<<<<<<<< {} started >>>>>>>>>>>>>>>>>>>>", ctx.getName());
+        EasyBugReporter.runningFromMaven = true;
     }
 
     @Override

@@ -104,9 +104,10 @@ public class Taint {
         SENSITIVE_DATA,
         CUSTOM_INJECTION_SAFE,
         URL_ENCODED,
+        PATH_TRAVERSAL_SAFE,
 
-        PASSWORD_VARIABLE,
-        CREDIT_CARD_VARIABLE;
+        CREDIT_CARD_VARIABLE,
+        PASSWORD_VARIABLE;
     }
 
     private State state;
@@ -385,6 +386,19 @@ public class Taint {
      */
     public boolean hasTag(Tag tag) {
         return tags.contains(tag);
+    }
+
+    /**
+     * Checks whether one of the specified taint tag is present for this fact
+     *
+     * @param tags Tags to test
+     * @return true if at least one is present, false otherwise
+     */
+    public boolean hasOneTag(Tag... tags) {
+        for(Tag t : tags) {
+            if (this.tags.contains(t)) return true;
+        }
+        return false;
     }
     
     /**

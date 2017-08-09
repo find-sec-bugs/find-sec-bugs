@@ -39,7 +39,7 @@ public class CrlfLogInjectionDetector extends BasicInjectionDetector {
         if (!taint.isSafe()) {
             //(Condition extracted for clarity)
             //Either specifically safe for new line or URL encoded which encoded few other characters
-            boolean newLineSafe = (taint.hasTag(Taint.Tag.CR_ENCODED) && taint.hasTag(Taint.Tag.LF_ENCODED));
+            boolean newLineSafe = taint.hasTag(Taint.Tag.CR_ENCODED) && taint.hasTag(Taint.Tag.LF_ENCODED);
             boolean urlSafe = (taint.hasTag(Taint.Tag.URL_ENCODED));
             if(newLineSafe || urlSafe) {
                 return Priorities.IGNORE_PRIORITY;

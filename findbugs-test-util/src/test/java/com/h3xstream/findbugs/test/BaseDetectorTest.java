@@ -129,7 +129,7 @@ public class BaseDetectorTest {
     @BeforeClass
     public void before() {
         Class concreteClass = this.getClass();
-        log.info("Starting test suite "+concreteClass.getSimpleName());
+        log.info(">>>> Starting test suite "+concreteClass.getSimpleName()+" <<<<");
     }
 
     @AfterClass

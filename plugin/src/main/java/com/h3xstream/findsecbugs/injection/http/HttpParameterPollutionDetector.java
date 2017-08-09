@@ -31,7 +31,7 @@ public class HttpParameterPollutionDetector extends BasicInjectionDetector {
 
     @Override
     protected int getPriority(Taint taint) {
-        if (!taint.isSafe() && (taint.hasTag(Taint.Tag.HTTP_POLLUTION_SAFE) || taint.hasTag(Taint.Tag.URL_ENCODED))) {
+        if (!taint.isSafe() && (taint.hasOneTag(Taint.Tag.HTTP_POLLUTION_SAFE, Taint.Tag.URL_ENCODED))) {
             return Priorities.IGNORE_PRIORITY;
         } else {
             return super.getPriority(taint);

@@ -29,7 +29,12 @@ org/apache/commons/lang3/StringEscapeUtils.unescapeXml(Ljava/lang/String;)Ljava/
 org/apache/commons/lang3/StringEscapeUtils.escapeXml10(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE,+XPATH_INJECTION_SAFE
 org/apache/commons/lang3/StringEscapeUtils.escapeXml11(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE,+XPATH_INJECTION_SAFE
 
+org/apache/commons/text/StringEscapeUtils.escapeHtml3(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE
+org/apache/commons/text/StringEscapeUtils.escapeHtml4(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE
+org/apache/commons/text/StringEscapeUtils.escapeEcmaScript(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE
+org/apache/commons/text/StringEscapeUtils.escapeXml10(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE
+org/apache/commons/text/StringEscapeUtils.escapeXml11(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE
 
-org/apache/commons/io/FilenameUtils.getName(Ljava/lang/String;)Ljava/lang/String;:SAFE
-org/apache/commons/io/FilenameUtils.getExtension(Ljava/lang/String;)Ljava/lang/String;:SAFE
-org/apache/commons/io/FilenameUtils.getBaseName(Ljava/lang/String;)Ljava/lang/String;:SAFE
+org/apache/commons/io/FilenameUtils.getName(Ljava/lang/String;)Ljava/lang/String;:0|+PATH_TRAVERSAL_SAFE
+org/apache/commons/io/FilenameUtils.getExtension(Ljava/lang/String;)Ljava/lang/String;:0|+PATH_TRAVERSAL_SAFE
+org/apache/commons/io/FilenameUtils.getBaseName(Ljava/lang/String;)Ljava/lang/String;:0|+PATH_TRAVERSAL_SAFE

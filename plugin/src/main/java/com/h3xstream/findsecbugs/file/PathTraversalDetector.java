@@ -18,7 +18,9 @@
 package com.h3xstream.findsecbugs.file;
 
 import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
+import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import edu.umd.cs.findbugs.BugReporter;
+import edu.umd.cs.findbugs.Priorities;
 
 public class PathTraversalDetector extends BasicInjectionDetector {
 
@@ -35,5 +37,15 @@ public class PathTraversalDetector extends BasicInjectionDetector {
 
         // We are not using a Scala-specific message because it doesn't have an embed code example
         loadConfiguredSinks("scala-path-traversal-out.txt", PATH_TRAVERSAL_OUT_TYPE);
+    }
+
+
+    @Override
+    protected int getPriority(Taint taint) {
+        if (!taint.isSafe() && taint.hasTag(Taint.Tag.PATH_TRAVERSAL_SAFE)) {
+            return Priorities.IGNORE_PRIORITY;
+        } else {
+            return super.getPriority(taint);
+        }
     }
 }

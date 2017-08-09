@@ -61,7 +61,7 @@ public class XssServletDetector extends BasicInjectionDetector {
                 return Priorities.IGNORE_PRIORITY;
             }
         } else if (!taint.isSafe()
-                && (taint.hasTag(Taint.Tag.QUOTE_ENCODED) || taint.hasTag(Taint.Tag.APOSTROPHE_ENCODED))
+                && (taint.hasOneTag(Taint.Tag.QUOTE_ENCODED, Taint.Tag.APOSTROPHE_ENCODED))
                 && taint.hasTag(Taint.Tag.LT_ENCODED)) {
             return Priorities.LOW_PRIORITY;
         } else {

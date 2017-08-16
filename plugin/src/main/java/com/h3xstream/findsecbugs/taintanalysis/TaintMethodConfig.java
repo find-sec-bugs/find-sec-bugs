@@ -36,6 +36,7 @@ public class TaintMethodConfig implements TaintTypeConfig {
     private Taint outputTaint = null;
     private final Set<Integer> mutableStackIndices;
     private final boolean isConfigured;
+    private String typeSignature;
     public static final TaintMethodConfig SAFE_CONFIG;
     protected static final Pattern fullMethodPattern;
     protected static final Pattern configPattern;
@@ -215,9 +216,13 @@ public class TaintMethodConfig implements TaintTypeConfig {
     @Override
     public String toString() {
         if (outputTaint == null) {
-            return "";
+            return typeSignature != null ? typeSignature : "";
         }
         StringBuilder sb = new StringBuilder();
+        if (typeSignature != null) {
+            sb.append(typeSignature);
+            sb.append(":");
+        }
         if (outputTaint.isUnknown() && outputTaint.hasParameters()) {
             appendJoined(sb, outputTaint.getParameters());
             Taint.State nonParametricState = outputTaint.getNonParametricState();
@@ -447,5 +452,9 @@ public class TaintMethodConfig implements TaintTypeConfig {
             }
         }
         return false;
+    }
+
+    public void setTypeSignature(String typeSignature) {
+        this.typeSignature = typeSignature;
     }
 }

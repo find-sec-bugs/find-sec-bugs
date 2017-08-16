@@ -49,6 +49,6 @@ java/net/URL.toExternalForm()Ljava/lang/String;:0
 java/net/URL.toString()Ljava/lang/String;:0
 java/net/URL.toURI()Ljava/net/URI;:0
 
-java/io/File.createTempFile(Ljava/lang/String;Ljava/lang/String;)Ljava/io/File;:0,1#2,3
-java/io/File.createTempFile(Ljava/lang/String;Ljava/lang/String;Ljava/io/File;)Ljava/io/File;:0,1,2#3,4
+java/io/File.createTempFile(Ljava/lang/String;Ljava/lang/String;)Ljava/io/File;:0,1
+java/io/File.createTempFile(Ljava/lang/String;Ljava/lang/String;Ljava/io/File;)Ljava/io/File;:0,1,2
 java/io/File.getCanonicalPath()Ljava/lang/String;:0

@@ -586,7 +586,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                 if (mutableStackIndex >= stackDepth) {
                     if (!Constants.CONSTRUCTOR_NAME.equals(methodDescriptor.getName())
                             && !Constants.STATIC_INITIALIZER_NAME.equals(methodDescriptor.getName())) {
-                        assert false : "Out of bounds mutables in " + methodDescriptor;
+                        assert false : "Out of bounds mutables in " + methodDescriptor + " Method Config: " + methodConfig.toString();
                     }
                     continue; // ignore if assertions disabled or if in constructor
                 }

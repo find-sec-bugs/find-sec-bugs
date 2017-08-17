@@ -31,5 +31,9 @@ public class PathTraversal {
         new RandomAccessFile("safe", args[0]);
         new FileWriter("safe".toUpperCase());
         new File(new URI("safe"));
+
+        File.createTempFile(input, "safe");
+        File.createTempFile("safe", input);
+        File.createTempFile("safe", input, new File("safeDir"));
     }
 }

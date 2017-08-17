@@ -43,7 +43,7 @@ public class PathTraversalDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        for (Integer line : Arrays.asList(17, 18, 19, 20, 22, 23)) {
+        for (Integer line : Arrays.asList(17, 18, 19, 20, 22, 23, 35, 36, 37)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("PATH_TRAVERSAL_IN")
@@ -61,7 +61,7 @@ public class PathTraversalDetectorTest extends BaseDetectorTest {
             );
         }
         
-        verify(reporter, times(6)).doReportBug(bugDefinition().bugType("PATH_TRAVERSAL_IN").build());
+        verify(reporter, times(9)).doReportBug(bugDefinition().bugType("PATH_TRAVERSAL_IN").build());
         verify(reporter, times(4)).doReportBug(bugDefinition().bugType("PATH_TRAVERSAL_OUT").build());
     }
 }

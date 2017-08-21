@@ -20,9 +20,7 @@ package com.h3xstream.findsecbugs.xss;
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.util.Arrays;
 
@@ -210,6 +208,39 @@ public class JspXssDetectorTest extends BaseDetectorTest {
 
         //No alert should be trigger
         verify(reporter, never()).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
+    }
+
+    @Test
+    public void detectXssRequestAttribute() throws Exception {
+        //Locate test code
+        String[] files = {
+                getJspFilePath("xss/xss_8_request_attribute.jsp")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+
+        String customConfigFile = FindSecBugsGlobalConfig.getInstance().getCustomConfigFile();
+        String path = this.getClass().getResource("/com/h3xstream/findsecbugs/xss/CustomConfig.txt").getPath();
+        FindSecBugsGlobalConfig.getInstance().setCustomConfigFile(path);
+
+        try {
+            analyze(files, reporter);
+        } finally {
+            FindSecBugsGlobalConfig.getInstance().setCustomConfigFile(customConfigFile == null ? "" : customConfigFile);
+        }
+
+        for (Integer line : Arrays.asList(16, 17)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("XSS_JSP_PRINT")
+                            .inJspFile("xss/xss_8_request_attribute.jsp")
+                            .atJspLine(line)
+                            .build()
+            );
+        }
+
+        verify(reporter, times(2)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
     }
 
 }

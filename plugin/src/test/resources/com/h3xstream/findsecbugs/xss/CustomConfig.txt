@@ -1,0 +1,6 @@
+javax/servlet/http/HttpServletRequest.getAttribute("safe"):SAFE@org/apache/jsp/xss/xss_005f8_005frequest_005fattribute_jsp
+javax/servlet/http/HttpServletRequest.getAttribute("tainted"):TAINTED@org/apache/jsp/xss/xss_005f8_005frequest_005fattribute_jsp
+
+javax/servlet/http/HttpSession.getAttribute(UNKNOWN):SAFE@org/apache/jsp/xss/xss_005f8_005frequest_005fattribute_jsp
+
+org/apache/jsp/xss/xss_005f8_005frequest_005fattribute_jsp.suffix(TAINTED,SAFE,"_suffix"):SAFE@org/apache/jsp/xss/xss_005f8_005frequest_005fattribute_jsp

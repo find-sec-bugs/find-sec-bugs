@@ -43,7 +43,7 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        for (String method : Arrays.asList("unsafeCookie1", "unsafeCookie2", "unsafeCookie4", "unsafeCookie5")) {
+        for (String method : Arrays.asList("unsafeCookie1", "unsafeCookie2", "unsafeCookie4", "unsafeCookie5", "unsafeCookie6")) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("INSECURE_COOKIE")
@@ -53,7 +53,7 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
         }
 
         // Advanced checks when multiple cookies are set
-        List<Integer> lines = Arrays.asList(new Integer[] { 73, 77, 81, 85 });
+        List<Integer> lines = Arrays.asList(new Integer[] { 85, 89, 93, 97 });
         for (int line : lines) {
             verify(reporter).doReportBug(
                     bugDefinition()
@@ -75,7 +75,7 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        for (String method : Arrays.asList("safeCookie1", "safeCookie2")) {
+        for (String method : Arrays.asList("safeCookie1", "safeCookie2", "safeCookie3", "safeCookie4", "safeCookie5", "safeCookie6")) {
             verify(reporter,never()).doReportBug(
                     bugDefinition()
                             .bugType("INSECURE_COOKIE")
@@ -104,7 +104,7 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        for (String method : Arrays.asList("unsafeCookie1", "unsafeCookie2", "unsafeCookie4", "unsafeCookie5")) {
+        for (String method : Arrays.asList("unsafeCookie1", "unsafeCookie2", "unsafeCookie4", "unsafeCookie5", "unsafeCookie6")) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("HTTPONLY_COOKIE")
@@ -114,7 +114,7 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
         }
 
         // Advanced checks when multiple cookies are set
-        List<Integer> lines = Arrays.asList(new Integer[] { 76, 80, 84, 88 });
+        List<Integer> lines = Arrays.asList(new Integer[] { 88, 92, 96, 100 });
         for (int line : lines) {
             verify(reporter).doReportBug(
                     bugDefinition()
@@ -136,7 +136,7 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        for (String method : Arrays.asList("safeCookie1", "safeCookie2")) {
+        for (String method : Arrays.asList("safeCookie1", "safeCookie2", "safeCookie3", "safeCookie4", "safeCookie5", "safeCookie6")) {
             verify(reporter,never()).doReportBug(
                     bugDefinition()
                             .bugType("HTTPONLY_COOKIE")

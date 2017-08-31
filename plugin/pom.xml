@@ -68,6 +68,7 @@
                             <value>com.h3xstream.testng.VerboseTestListener</value>
                         </property>
                     </properties>
+  	           <enableAssertions>true</enableAssertions>
                 </configuration>
             </plugin>
 

@@ -125,6 +125,7 @@
                         <version>2.20</version>
                         <configuration>
                             <argLine>-Xmx3000m -Dbcel.dontCache=true</argLine>
+		           <enableAssertions>true</enableAssertions>
                         </configuration>
                     </plugin>
                 </plugins>

@@ -25,37 +25,13 @@ import edu.umd.cs.findbugs.ba.InvalidBytecodeException;
 import edu.umd.cs.findbugs.ba.generic.GenericSignatureParser;
 import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 import edu.umd.cs.findbugs.util.ClassName;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.bcel.Constants;
-import org.apache.bcel.generic.AALOAD;
-import org.apache.bcel.generic.AASTORE;
-import org.apache.bcel.generic.ACONST_NULL;
-import org.apache.bcel.generic.ANEWARRAY;
-import org.apache.bcel.generic.ARETURN;
-import org.apache.bcel.generic.BIPUSH;
-import org.apache.bcel.generic.CHECKCAST;
-import org.apache.bcel.generic.ConstantPoolGen;
-import org.apache.bcel.generic.GETFIELD;
-import org.apache.bcel.generic.GETSTATIC;
-import org.apache.bcel.generic.ICONST;
-import org.apache.bcel.generic.INVOKEINTERFACE;
-import org.apache.bcel.generic.INVOKESPECIAL;
-import org.apache.bcel.generic.INVOKESTATIC;
-import org.apache.bcel.generic.INVOKEVIRTUAL;
-import org.apache.bcel.generic.Instruction;
-import org.apache.bcel.generic.InvokeInstruction;
-import org.apache.bcel.generic.LDC;
-import org.apache.bcel.generic.LDC2_W;
-import org.apache.bcel.generic.LoadInstruction;
-import org.apache.bcel.generic.NEW;
-import org.apache.bcel.generic.ObjectType;
-import org.apache.bcel.generic.SIPUSH;
-import org.apache.bcel.generic.StoreInstruction;
+import org.apache.bcel.generic.*;
 
 /**
  * Visitor to make instruction transfer of taint values easier
@@ -64,10 +40,15 @@ import org.apache.bcel.generic.StoreInstruction;
  */
 public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Taint, TaintFrame> {
 
+    private static final Logger LOG = Logger.getLogger(TaintFrameModelingVisitor.class.getName());
+
     private static final Map<String, Taint.Tag> REPLACE_TAGS;
     private final MethodDescriptor methodDescriptor;
     private final TaintConfig taintConfig;
     private final TaintMethodConfig analyzedMethodConfig;
+
+    private final List<TaintFrameAdditionalVisitor> visitors;
+    private final MethodGen methodGen;
 
     static {
         REPLACE_TAGS = new HashMap<String, Taint.Tag>();
@@ -87,7 +68,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
      * @throws NullPointerException if arguments method or taintConfig is null
      */
     public TaintFrameModelingVisitor(ConstantPoolGen cpg, MethodDescriptor method,
-            TaintConfig taintConfig) {
+            TaintConfig taintConfig, List<TaintFrameAdditionalVisitor> visitors,MethodGen methodGen) {
         super(cpg);
         if (method == null) {
             throw new NullPointerException("null method descriptor");
@@ -98,6 +79,8 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         this.methodDescriptor = method;
         this.taintConfig = taintConfig;
         this.analyzedMethodConfig = new TaintMethodConfig(false);
+        this.visitors = visitors;
+        this.methodGen = methodGen;
     }
 
     private Collection<Integer> getMutableStackIndices(String signature) {
@@ -267,17 +250,32 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     }
 
     @Override
-    public void handleLoadInstruction(LoadInstruction obj) {
-        int numProduced = obj.produceStack(cpg);
+    public void handleLoadInstruction(LoadInstruction load) {
+        int numProducedOrig = load.produceStack(cpg);
+        int numProduced = numProducedOrig;
         if (numProduced == Constants.UNPREDICTABLE) {
             throw new InvalidBytecodeException("Unpredictable stack production");
         }
-        int index = obj.getIndex() + numProduced;
+        int index = load.getIndex() + numProduced;
         while (numProduced-- > 0) {
             Taint value = getFrame().getValue(--index);
-            assert value.hasValidVariableIndex() : "index not set in " + methodDescriptor;
-            assert index == value.getVariableIndex() : "bad index in " + methodDescriptor;
+            //assert value.hasValidVariableIndex() :
+            if(!value.hasValidVariableIndex()) {
+                throw new RuntimeException("index not set in " + methodDescriptor);
+            }
+            if(index != value.getVariableIndex()) {
+                throw new RuntimeException("bad index in " + methodDescriptor);
+            }
             getFrame().pushValue(new Taint(value));
+        }
+
+        for(TaintFrameAdditionalVisitor visitor : visitors) {
+            try {
+                visitor.visitLoad(load, cpg, methodGen, getFrame(), numProducedOrig);
+            }
+            catch (Throwable e) {
+                LOG.log(Level.SEVERE,"Error while executing "+visitor.getClass().getName(),e);
+            }
         }
     }
 
@@ -415,6 +413,15 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             String signature = obj.getSignature(cpg);
 
             throw new RuntimeException("Unable to call " + className + '.' + methodName + signature, e);
+        }
+
+        for(TaintFrameAdditionalVisitor visitor : visitors) {
+            try {
+                visitor.visitInvoke(obj, cpg, methodGen, getFrame());
+            }
+            catch (Throwable e) {
+                LOG.log(Level.SEVERE,"Error while executing "+visitor.getClass().getName(),e);
+            }
         }
     }
 

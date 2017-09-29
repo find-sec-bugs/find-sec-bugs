@@ -107,7 +107,8 @@ public class Taint {
         PATH_TRAVERSAL_SAFE,
 
         CREDIT_CARD_VARIABLE,
-        PASSWORD_VARIABLE;
+        PASSWORD_VARIABLE,
+        HASH_VARIABLE;
     }
 
     private State state;
@@ -594,8 +595,9 @@ public class Taint {
                 && this.parameters.equals(other.parameters)
                 && this.nonParametricState == other.nonParametricState
                 && Objects.equals(this.realInstanceClass, other.realInstanceClass)
-                && this.tags.equals(other.tags)
-                && Objects.equals(this.constantValue, other.constantValue);
+                //&& this.tags.equals(other.tags)
+                //&& Objects.equals(this.constantValue, other.constantValue)
+        ;
     }
 
     @Override

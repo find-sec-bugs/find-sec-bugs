@@ -2941,6 +2941,10 @@ The code should be replaced with:<br/>
         <Details>Identify hardcoded credentials in custom API.</Details>
     </Detector>
 
+    <Detector class="com.h3xstream.findsecbugs.password.HardcodedPasswordEqualsDetector">
+        <Details>Identify hardcoded credentials when variable named password are compared to a constant value.</Details>
+    </Detector>
+
     <BugPattern type="HARD_CODE_PASSWORD">
         <ShortDescription>Hard Coded Password</ShortDescription>
         <LongDescription>Hard coded password found</LongDescription>
@@ -2997,6 +3001,50 @@ return aesCipher.doFinal(secretData);</pre>
         </Details>
     </BugPattern>
     <BugCode abbrev="SECHCK">Hard Coded Key</BugCode>
+
+
+    <Detector class="com.h3xstream.findsecbugs.password.HashUnsafeEqualsDetector">
+        <Details>Identify unsafe comparison of hash that are susceptible to timing attack.</Details>
+    </Detector>
+
+    <BugPattern type="UNSAFE_HASH_EQUALS">
+        <ShortDescription>Unsafe hash equals</ShortDescription>
+        <LongDescription>Unsafe comparison of hash that are susceptible to timing attack</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+An attacker might be able to detect the value of the secret hash due to the exposure of comparison timing. When the
+functions <code>Arrays.equals()</code> or <code>String.equals()</code> are called, they will exited earlier if less
+bytes are matched.
+</p>
+<p>
+<p><b>Vulnerable Code:</b><br/>
+
+<pre>
+String actualHash = ...
+
+if(userInput.equals(actualHash)) {
+    ...
+}</pre>
+</p>
+<p><b>Solution:</b><br/>
+
+<pre>
+String actualHash = ...
+
+if(MessageDigest.isEqual(userInput.getBytes(),actualHash.getBytes())) {
+    ...
+}</pre>
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://cwe.mitre.org/data/definitions/203.html">CWE-203: Information Exposure Through DiscrepancyKey</a><br/>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECUHE">Hard Coded Key</BugCode>
 
 
     <!-- Struts Form Validation -->

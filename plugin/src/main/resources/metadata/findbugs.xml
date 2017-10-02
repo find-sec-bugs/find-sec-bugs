@@ -57,6 +57,8 @@
     <Detector class="com.h3xstream.findsecbugs.password.GoogleApiKeyDetector" reports="HARD_CODE_PASSWORD"/>
     <Detector class="com.h3xstream.findsecbugs.password.HardcodePasswordInMapDetector" reports="HARD_CODE_PASSWORD"/>
     <Detector class="com.h3xstream.findsecbugs.password.IntuitiveHardcodePasswordDetector" reports="HARD_CODE_PASSWORD"/>
+    <Detector class="com.h3xstream.findsecbugs.password.HardcodedPasswordEqualsDetector" reports="HARD_CODE_PASSWORD"/>
+    <Detector class="com.h3xstream.findsecbugs.password.HashUnsafeEqualsDetector" reports="UNSAFE_HASH_EQUALS"/>
     <Detector class="com.h3xstream.findsecbugs.StrutsValidatorFormDetector" reports="STRUTS_FORM_VALIDATION"/>
     <Detector class="com.h3xstream.findsecbugs.xss.XSSRequestWrapperDetector" reports="XSS_REQUEST_WRAPPER"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.InsufficientKeySizeBlowfishDetector" reports="BLOWFISH_KEY_SIZE"/>
@@ -188,6 +190,7 @@
     <BugPattern type="DES_USAGE" abbrev="SECDU" category="SECURITY" cweid="326"/>
     <BugPattern type="RSA_NO_PADDING" abbrev="SECRNP" category="SECURITY" cweid="780"/>
     <BugPattern type="HARD_CODE_PASSWORD" abbrev="SECHCP" category="SECURITY" cweid="259"/>
+    <BugPattern type="UNSAFE_HASH_EQUALS" abbrev="SECUHE" category="SECURITY" cweid="203"/>
     <BugPattern type="HARD_CODE_KEY" abbrev="SECHCK" category="SECURITY" cweid="321"/>
     <BugPattern type="STRUTS_FORM_VALIDATION" abbrev="SECSFV" category="SECURITY" cweid="106"/>
     <BugPattern type="XSS_REQUEST_WRAPPER" abbrev="SECXRW" category="SECURITY" cweid="79"/>

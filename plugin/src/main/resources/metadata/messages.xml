@@ -5451,4 +5451,17 @@ Sanitize user input before using it in HTTP parameters.
     </BugPattern>
     <BugCode abbrev="SECHPP">HTTP Parameter Pollution</BugCode>
 
+
+    <Detector class="com.h3xstream.findsecbugs.graph.GraphBuilder">
+        <Details>Method tracing to build graph</Details>
+    </Detector>
+
+    <BugPattern type="GRAPH_BUG">
+        <ShortDescription></ShortDescription>
+        <LongDescription></LongDescription>
+        <Details></Details>
+    </BugPattern>
+    <BugCode abbrev="SECGRAPH">Predictable Pseudo Random Generator</BugCode>
+
+
 </MessageCollection>

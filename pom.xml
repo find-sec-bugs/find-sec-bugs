@@ -29,8 +29,8 @@
                     The current deployment process will fail.
                     (https://github.com/find-sec-bugs/find-sec-bugs/wiki/Compiling#release-process) -->
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
 
@@ -132,9 +132,6 @@
             </build>
         </profile>
     </profiles>
-
-
-
 
 
     <modules>

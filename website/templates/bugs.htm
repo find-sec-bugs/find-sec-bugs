@@ -24,7 +24,12 @@
     bugPatterns.each {b->
     print """
     <section>
-        <a class="anchor" name="${b.type}"></a><h2 class="page-header">${b.title}  <a href="#${b.type}" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="${b.type}"></a>
+        <h2 class="page-header">
+            ${b.title}
+            <a href="#${b.type}" title="Permanent link"><small><i class="fa fa-link"></i></small></a>
+        </h2>
+        <p><b>Bug Pattern:</b> <tt>${b.type}</tt></p>
 
         ${b.description}
     </section>

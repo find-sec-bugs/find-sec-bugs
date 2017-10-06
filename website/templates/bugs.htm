@@ -8,10 +8,19 @@
     </div>
 </div>
 
-
-
-
-
+<div class="container">
+    <h2>Table of Contents</h2>
+    <ul>
+        <% bugPatterns.each { b->
+        print """
+          <li><a href="#${b.type}">
+              ${b.title} (${b.type})
+          </a></li>
+        """
+        }
+        %>
+    </ul>
+</div>
 
 <div class="container">
     <div class="row">

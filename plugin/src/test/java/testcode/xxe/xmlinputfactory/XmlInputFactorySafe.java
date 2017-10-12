@@ -12,12 +12,21 @@ public class XmlInputFactorySafe {
 
     public void loadXml() throws XMLStreamException {
         InputStream in = getClass().getResourceAsStream("/testcode/xxe/simple_xxe.xml");
+        InputStream dos_in = getClass().getResourceAsStream("/testcode/xxe/dos_xxe.xml");
 
-        if(in == null) System.out.println("Oups file not found.");
+        if(in == null) System.out.println("Oups XML file not found.");
+        if(dos_in == null) System.out.println("Oups XML DoS file not found.");
 
-//        parseXMLSafe1(in);
-        parseXMLSafe2(in);
-//        parseXMLSafe3(in);
+        //parseXMLSafe1(in);
+        //parseXMLSafe2(in);
+        //parseXMLSafe3(in);
+        //parseXMLSafe4(in);
+
+        // Testing for entity embedding (lol bomb)
+        //parseXMLSafe1(dos_in);
+        //parseXMLSafe2(dos_in);
+        //parseXMLSafe3(dos_in);
+        //parseXMLSafe4(dos_in);
     }
 
     public void parseXMLSafe1(InputStream input) throws XMLStreamException {

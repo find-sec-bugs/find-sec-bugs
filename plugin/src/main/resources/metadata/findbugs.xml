@@ -34,6 +34,7 @@
     <Detector class="com.h3xstream.findsecbugs.file.FileUploadFilenameDetector" reports="FILE_UPLOAD_FILENAME"/>
     <Detector class="com.h3xstream.findsecbugs.ReDosDetector" reports="REDOS"/>
     <Detector class="com.h3xstream.findsecbugs.xml.XxeDetector" reports="XXE_SAXPARSER,XXE_XMLREADER,XXE_DOCUMENT"/>
+    <Detector class="com.h3xstream.findsecbugs.xml.TransformerFactoryDetector" reports="XXE_DTD_TRANSFORM_FACTORY,XXE_XSLT_TRANSFORM_FACTORY"/>
     <Detector class="com.h3xstream.findsecbugs.xml.XmlStreamReaderDetector" reports="XXE_XMLSTREAMREADER"/>
     <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionDetector" reports="XPATH_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.endpoint.Struts1EndpointDetector" reports="STRUTS1_ENDPOINT"/>
@@ -161,6 +162,8 @@
     <BugPattern type="XXE_SAXPARSER" abbrev="SECXXESAX" category="SECURITY" cweid="611"/>
     <BugPattern type="XXE_XMLREADER" abbrev="SECXXEREAD" category="SECURITY" cweid="611"/>
     <BugPattern type="XXE_DOCUMENT" abbrev="SECXXEDOC" category="SECURITY" cweid="611"/>
+    <BugPattern type="XXE_DTD_TRANSFORM_FACTORY" abbrev="SECXXETFDTD" category="SECURITY" cweid="611"/>
+    <BugPattern type="XXE_XSLT_TRANSFORM_FACTORY" abbrev="SECXXETFXSLT" category="SECURITY" cweid="611"/>
     <BugPattern type="XXE_XMLSTREAMREADER" abbrev="SECXXESTR" category="SECURITY" cweid="611"/>
     <BugPattern type="XPATH_INJECTION" abbrev="SECXPI" category="SECURITY" cweid="643"/>
     <BugPattern type="STRUTS1_ENDPOINT" abbrev="SECSTR1" category="SECURITY"/>

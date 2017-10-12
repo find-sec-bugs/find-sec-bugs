@@ -121,8 +121,8 @@ public class TransformerFactoryVulnerable {
     public void parseXMLWithWrongFlag1(Source input) throws XMLStreamException, TransformerException {
 
         TransformerFactory factory = TransformerFactory.newInstance();
-        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "http");
-        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "http");
+        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "all");
+        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "all");
 
         Transformer transformer = factory.newTransformer();
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");

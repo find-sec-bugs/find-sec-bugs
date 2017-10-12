@@ -102,13 +102,13 @@ public class TransformerFactoryDetector extends OpcodeStackDetector {
                         LDC loadConst = ByteCode.getPrevInstruction(location.getHandle(), LDC.class);
                         if (propertyConst != null && loadConst != null) {
                             if (PROPERTY_SUPPORT_DTD.equals(propertyConst.getValue(cpg))) {
-                                // Values "" and "all" disable external DTD processing. All other
-                                // values are considered vulnerable
-                                hasFeatureDTD = ("".equals(loadConst.getValue(cpg)) || "all".equals(loadConst.getValue(cpg)));
+                                // All values other than "all", "http" and "jar" will disable external DTD processing.
+                                // Since other vulnerable values could be added, we do not want to use a blacklist mechanism.
+                                hasFeatureDTD = ( "".equals(loadConst.getValue(cpg)) );
                             } else if (PROPERTY_SUPPORT_STYLESHEET.equals(propertyConst.getValue(cpg))){
-                                // Values "" and "all" disable external Stylesheet processing. All other
-                                // values are considered vulnerable
-                                hasFeatureStylesheet = ("".equals(loadConst.getValue(cpg)) || "all".equals(loadConst.getValue(cpg)));
+                                // All values other than "all", "http" and "jar" will disable external DTD processing.
+                                // Since other vulnerable values could be added, we do not want to use a blacklist mechanism.
+                                hasFeatureStylesheet = ( "".equals(loadConst.getValue(cpg)) );
                             }
                         }
                     } else if ("setFeature".equals(invoke.getMethodName(cpg))) {

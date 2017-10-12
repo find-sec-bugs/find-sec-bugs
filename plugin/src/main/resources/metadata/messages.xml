@@ -1704,7 +1704,6 @@ transformer.transform(input, result);</pre>
 <p>
 The following snippets show two available solutions. You can set one feature or both.
 </p>
-
 <p><b>Solution using "Secure processing" mode:</b></p>
 <p>
 This setting will protect you against remote file access but not denial of service.

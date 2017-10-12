@@ -50,24 +50,7 @@ public class TransformerFactorySafe {
         outWriter.toString();
     }
 
-    // https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Prevention_Cheat_Sheet#TransformerFactory
     public void parseXMLSafe2(Source input) throws XMLStreamException, TransformerException {
-
-        TransformerFactory factory = TransformerFactory.newInstance();
-        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "all");
-        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "all");
-
-        Transformer transformer = factory.newTransformer();
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-
-        StringWriter outWriter = new StringWriter();
-        StreamResult result = new StreamResult(outWriter);
-
-        transformer.transform(input, result);
-        outWriter.toString();
-    }
-
-    public void parseXMLSafe3(Source input) throws XMLStreamException, TransformerException {
 
         TransformerFactory factory = TransformerFactory.newInstance();
         factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
@@ -99,24 +82,7 @@ public class TransformerFactorySafe {
         outWriter.toString();
     }
 
-    // https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Prevention_Cheat_Sheet#TransformerFactory
     public void parseXSLTSafe2(Source input, Source xslt) throws XMLStreamException, TransformerException {
-
-        TransformerFactory factory = TransformerFactory.newInstance();
-        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "all");
-        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "all");
-
-        Transformer transformer = factory.newTransformer(xslt);
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-
-        StringWriter outWriter = new StringWriter();
-        StreamResult result = new StreamResult(outWriter);
-
-        transformer.transform(input, result);
-        outWriter.toString();
-    }
-
-    public void parseXSLTSafe3(Source input, Source xslt) throws XMLStreamException, TransformerException {
 
         TransformerFactory factory = TransformerFactory.newInstance();
         factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);

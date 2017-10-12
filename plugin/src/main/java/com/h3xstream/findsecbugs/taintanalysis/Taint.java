@@ -106,9 +106,6 @@ public class Taint {
         URL_ENCODED,
         PATH_TRAVERSAL_SAFE,
 
-        XML_DTD_SAFE,
-        XML_STYLESHEET_SAFE,
-
         CREDIT_CARD_VARIABLE,
         PASSWORD_VARIABLE,
         HASH_VARIABLE;

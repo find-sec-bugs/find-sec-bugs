@@ -72,6 +72,23 @@ public class TransformerFactoryDetectorTest extends BaseDetectorTest {
                             .build()
             );
         }
+
+        // We do not want to spam users with multiple report of the "same" vulnerability
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_SAXPARSER")
+                        .build()
+        );
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_XMLREADER")
+                        .build()
+        );
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_DOCUMENT")
+                        .build()
+        );
     }
 
     @Test
@@ -94,6 +111,23 @@ public class TransformerFactoryDetectorTest extends BaseDetectorTest {
         verify(reporter, never()).doReportBug(
                 bugDefinition()
                         .bugType("XXE_XSLT_TRANSFORM_FACTORY")
+                        .build()
+        );
+
+        // We do not want to spam users with multiple report of the "same" vulnerability
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_SAXPARSER")
+                        .build()
+        );
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_XMLREADER")
+                        .build()
+        );
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_DOCUMENT")
                         .build()
         );
     }

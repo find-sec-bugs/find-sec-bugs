@@ -18,34 +18,34 @@
 package com.h3xstream.findsecbugs.xml;
 
 import com.h3xstream.findsecbugs.common.ByteCode;
-import com.h3xstream.findsecbugs.common.InterfaceUtils;
-import com.h3xstream.findsecbugs.common.StackUtils;
-import com.h3xstream.findsecbugs.common.matcher.InvokeMatcherBuilder;
-import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
-import com.h3xstream.findsecbugs.injection.InjectionPoint;
-import com.h3xstream.findsecbugs.password.IntuitiveHardcodePasswordDetector;
-import com.h3xstream.findsecbugs.taintanalysis.Taint;
-import com.h3xstream.findsecbugs.taintanalysis.TaintFrame;
-import com.h3xstream.findsecbugs.taintanalysis.TaintFrameAdditionalVisitor;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
-import edu.umd.cs.findbugs.ba.*;
+import edu.umd.cs.findbugs.ba.CFG;
+import edu.umd.cs.findbugs.ba.Location;
+import edu.umd.cs.findbugs.ba.ClassContext;
+import edu.umd.cs.findbugs.ba.AnalysisContext;
+import edu.umd.cs.findbugs.ba.CFGBuilderException;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 import org.apache.bcel.Constants;
-import org.apache.bcel.classfile.JavaClass;
-import org.apache.bcel.generic.*;
+import org.apache.bcel.generic.LDC;
+import org.apache.bcel.generic.ICONST;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.INVOKEVIRTUAL;
+import org.apache.bcel.generic.INVOKEINTERFACE;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.InvokeInstruction;
 
 import java.util.Iterator;
 
-import static com.h3xstream.findsecbugs.common.matcher.InstructionDSL.invokeInstruction;
-
 /**
  * Currently the detector look for a specific code sequence. If the value is not hardcoded or computed at runtime, it will
- * be consider has possible unsafe.
+ * be consider as possibly unsafe.
  *
- * Minimal effort was put in this detector to avoid giving alot of resource for code section that usually all look the
+ * Minimal effort was put in this detector to avoid giving a lot of resource for code section that usually all look the
  * same.
+ *
+ * Do note that the "safe" state for the TransformerFactory doesn't prevent denial of service attack like the LoL Bomb.
  */
 public class TransformerFactoryDetector extends OpcodeStackDetector {
 
@@ -55,9 +55,6 @@ public class TransformerFactoryDetector extends OpcodeStackDetector {
     private static final String PROPERTY_SUPPORT_DTD = "http://javax.xml.XMLConstants/property/accessExternalDTD";
     private static final String PROPERTY_SUPPORT_STYLESHEET = "http://javax.xml.XMLConstants/property/accessExternalStylesheet";
     private static final String PROPERTY_SECURE_PROCESSING = "http://javax.xml.XMLConstants/feature/secure-processing";
-
-    private static final InvokeMatcherBuilder TRANSFORM_METHOD = invokeInstruction() //
-            .atClass("javax/xml/transform/Transformer").atMethod("transform").withArgs("(Ljavax/xml/transform/Source;Ljavax/xml/transform/Result;)V");
 
     private final BugReporter bugReporter;
 
@@ -94,9 +91,8 @@ public class TransformerFactoryDetector extends OpcodeStackDetector {
             for (Iterator<Location> i = cfg.locationIterator(); i.hasNext();) {
                 Location location = i.next();
                 Instruction inst = location.getHandle().getInstruction();
-                //ByteCode.printOpCode(inst, cpg);
 
-                //DTD disallow
+                //DTD and Stylesheet disallow
                 //factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
                 //factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
                 if(inst instanceof INVOKEVIRTUAL || inst instanceof INVOKEINTERFACE) {

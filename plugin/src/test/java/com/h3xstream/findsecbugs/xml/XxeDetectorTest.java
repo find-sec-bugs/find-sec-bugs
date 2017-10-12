@@ -55,6 +55,16 @@ public class XxeDetectorTest extends BaseDetectorTest {
                         .bugType("XXE_DOCUMENT")
                         .build()
         );
+        Mockito.verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_DTD_TRANSFORM_FACTORY")
+                        .build()
+        );
+        Mockito.verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_XSLT_TRANSFORM_FACTORY")
+                        .build()
+        );
     }
 
     @Test
@@ -85,6 +95,16 @@ public class XxeDetectorTest extends BaseDetectorTest {
                         .bugType("XXE_DOCUMENT")
                         .build()
         );
+        Mockito.verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_DTD_TRANSFORM_FACTORY")
+                        .build()
+        );
+        Mockito.verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_XSLT_TRANSFORM_FACTORY")
+                        .build()
+        );
     }
 
     @Test
@@ -113,6 +133,16 @@ public class XxeDetectorTest extends BaseDetectorTest {
         verify(reporter, never()).doReportBug(
                 bugDefinition()
                         .bugType("XXE_DOCUMENT")
+                        .build()
+        );
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_DTD_TRANSFORM_FACTORY")
+                        .build()
+        );
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_XSLT_TRANSFORM_FACTORY")
                         .build()
         );
     }

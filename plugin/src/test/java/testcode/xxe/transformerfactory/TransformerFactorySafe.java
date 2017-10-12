@@ -27,7 +27,7 @@ public class TransformerFactorySafe {
         Source source = new StreamSource(in);
         Source xslt = new StreamSource(xslt_in);
 
-        parseXMLSafe1(source);
+        //parseXMLSafe1(source);
         //parseXMLSafe2(source);
         //parseXSLTSafe1(source, xslt);
         //parseXSLTSafe2(source, xslt);

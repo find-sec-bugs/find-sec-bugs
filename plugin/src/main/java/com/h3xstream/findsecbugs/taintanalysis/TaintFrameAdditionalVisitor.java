@@ -30,7 +30,7 @@ public interface TaintFrameAdditionalVisitor {
      * @param methodGen
      * @param frameType
      */
-    void visitInvoke(InvokeInstruction invoke, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType);
+    void visitInvoke(InvokeInstruction invoke, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType) throws ClassNotFoundException;
 
     /**
      * @param load

@@ -87,26 +87,28 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
             //System.out.println("[DEBUG] "+sourceCall + " -> " + invokeCall);
 
             Node sourceNode = graphDb.findNode(lbl, "name", sourceCall);
-            Node invokeNode = graphDb.findNode(lbl, "name", invokeCall);
-            Node sourceClassNode = graphDb.findNode(lbl2, "name", sourceClass);
-            Node invokeClassNode = graphDb.findNode(lbl2, "name", invokeClass);
-
             if(sourceNode == null) {
                 sourceNode = graphDb.createNode(lbl);
                 sourceNode.setProperty("name", sourceCall);
                 sourceNode.setProperty("class", sourceClass);
                 sourceNode.setProperty("function", methodGen.getName());
             }
+
+            Node invokeNode = graphDb.findNode(lbl, "name", invokeCall);
             if(invokeNode == null) {
                 invokeNode = graphDb.createNode(lbl);
                 invokeNode.setProperty("name", invokeCall);
                 invokeNode.setProperty("class", invokeClass);
                 invokeNode.setProperty("function", invoke.getMethodName(cpg));
             }
+
+            Node sourceClassNode = graphDb.findNode(lbl2, "name", sourceClass);
             if (sourceClassNode == null){
                 sourceClassNode = graphDb.createNode(lbl2);
                 sourceClassNode.setProperty("name", sourceClass);
             }
+
+            Node invokeClassNode = graphDb.findNode(lbl2, "name", invokeClass);
             if (invokeClassNode == null){
                 invokeClassNode = graphDb.createNode(lbl2);
                 invokeClassNode.setProperty("name", invokeClass);
@@ -167,12 +169,14 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
     }
 
     private ArrayList<ClassDescriptor> listOfSuperClasses(ClassDescriptor cd){
-        ClassDescriptor temp = cd;
+        ClassDescriptor temp;
         ArrayList<ClassDescriptor> superClasses = new ArrayList<>();
         XClass xclassTemp = AnalysisContext.currentXFactory().getXClass(cd);
         if (xclassTemp != null){
             temp = xclassTemp.getSuperclassDescriptor();
         }
+        else temp = null;
+
         if (temp != null){
             if (!temp.getClassName().equals("java/lang/Object")){
                 superClasses.add(temp);
@@ -185,6 +189,7 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
                         }
                         temp = xSuper;
                     }
+                    else break;
                 }
             }
         }
@@ -228,22 +233,23 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
         String sourceClassName = sourceClass.getClassName().replaceAll("\\.", "/");
         Node sourceClassNode = graphDb.findNode(lbl2, "name", sourceClassName);
         XClass xclass = AnalysisContext.currentXFactory().getXClass(sourceClass);
-        ClassDescriptor [] interfaces = xclass.getInterfaceDescriptorList();
-        if (interfaces.length != 0){
-             for (int i = 0 ;i<interfaces.length; ++i){
-                 String sourceClassInterface = interfaces[i].getClassName().replaceAll("\\.", "/");
-                 Node sourceClassInterfaceNode = graphDb.findNode(lbl3, "name", sourceClassInterface);
-                 if(sourceClassInterfaceNode == null){
-                     sourceClassInterfaceNode = graphDb.createNode(lbl3);
-                     sourceClassInterfaceNode.setProperty("name", sourceClassInterface);
-                 }
-                 if(!hasRelationship(sourceClassNode,sourceClassInterfaceNode, RelTypes.IMPLEMENTS))
-                 {
-                     sourceClassNode.createRelationshipTo(sourceClassInterfaceNode, RelTypes.IMPLEMENTS);
-                     System.out.println("Create link "+sourceClassName + " -> " + sourceClassInterface);
+        if (xclass != null) {
+            ClassDescriptor[] interfaces = xclass.getInterfaceDescriptorList();
+            if (interfaces.length != 0) {
+                for (int i = 0; i < interfaces.length; ++i) {
+                    String sourceClassInterface = interfaces[i].getClassName().replaceAll("\\.", "/");
+                    Node sourceClassInterfaceNode = graphDb.findNode(lbl3, "name", sourceClassInterface);
+                    if (sourceClassInterfaceNode == null) {
+                        sourceClassInterfaceNode = graphDb.createNode(lbl3);
+                        sourceClassInterfaceNode.setProperty("name", sourceClassInterface);
+                    }
+                    if (!hasRelationship(sourceClassNode, sourceClassInterfaceNode, RelTypes.IMPLEMENTS)) {
+                        sourceClassNode.createRelationshipTo(sourceClassInterfaceNode, RelTypes.IMPLEMENTS);
+                        System.out.println("Create link " + sourceClassName + " -> " + sourceClassInterface);
 //                relationship.add(hashCode);
-                 }
-             }
+                    }
+                }
+            }
         }
     }
 

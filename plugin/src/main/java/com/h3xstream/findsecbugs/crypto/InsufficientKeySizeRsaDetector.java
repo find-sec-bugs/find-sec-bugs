@@ -121,7 +121,7 @@ public class InsufficientKeySizeRsaDetector implements Detector {
                     }
                 }
             }
-        }       
+        }
     }
 
     private void addToReport(Method m, ClassContext classContext, Location locationWeakness, Number n){

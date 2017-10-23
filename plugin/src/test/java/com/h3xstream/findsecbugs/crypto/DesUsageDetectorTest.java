@@ -41,7 +41,7 @@ public class DesUsageDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         //Assertions
-        for (Integer line : Arrays.asList(20, 21, 22, 23, 24, 25, 26, 27, 33, 34)) {
+        for (Integer line : Arrays.asList(20, 21, 22, 23, 33, 34)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("DES_USAGE")
@@ -51,11 +51,28 @@ public class DesUsageDetectorTest extends BaseDetectorTest {
                             .build()
             );
         }
+        for (Integer line : Arrays.asList(24, 25, 26, 27)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("TDES_USAGE")
+                            .inClass("BlockCipherList")
+                            .inMethod("main")
+                            .atLine(line)
+                            .build()
+            );
+        }
+
 
         //Nothing more than the previous 10
-        verify(reporter, times(10)).doReportBug(
+        verify(reporter, times(6)).doReportBug(
                 bugDefinition()
                         .bugType("DES_USAGE")
+                        .inClass("BlockCipherList")
+                        .build()
+        );
+        verify(reporter, times(4)).doReportBug(
+                bugDefinition()
+                        .bugType("TDES_USAGE")
                         .inClass("BlockCipherList")
                         .build()
         );
@@ -73,7 +90,7 @@ public class DesUsageDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         //Assertions
-        for (Integer line : Arrays.asList(11,12,13,14,15,16,17,18,19,20)) {
+        for (Integer line : Arrays.asList(11,12,13,14,15,16)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("DES_USAGE")
@@ -83,11 +100,27 @@ public class DesUsageDetectorTest extends BaseDetectorTest {
                             .build()
             );
         }
+        for (Integer line : Arrays.asList(17,18,19,20)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("TDES_USAGE")
+                            .inClass("DesKeyGeneration")
+                            .inMethod("weakDesKeyGenerator")
+                            .atLine(line)
+                            .build()
+            );
+        }
 
-        //Nothing more than the previous 4
-        verify(reporter, times(10)).doReportBug(
+        //Nothing more than the previous
+        verify(reporter, times(6)).doReportBug(
                 bugDefinition()
                         .bugType("DES_USAGE")
+                        .inClass("DesKeyGeneration")
+                        .build()
+        );
+        verify(reporter, times(4)).doReportBug(
+                bugDefinition()
+                        .bugType("TDES_USAGE")
                         .inClass("DesKeyGeneration")
                         .build()
         );

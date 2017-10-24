@@ -75,7 +75,7 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
         "other.txt"
     };
     private final TaintConfig taintConfig = new TaintConfig();
-    private static Writer writer = null;
+    protected static Writer writer = null;
     private static List<TaintFrameAdditionalVisitor> visitors = new ArrayList<TaintFrameAdditionalVisitor>();
 
 

@@ -203,9 +203,8 @@ public class Taint {
      * @throws IllegalStateException if index is uknown
      */
     public int getVariableIndex() {
-        if (variableIndex == INVALID_INDEX) {
-            throw new IllegalStateException("index not set or has been invalidated");
-        }
+        if (variableIndex == INVALID_INDEX) throw new IllegalStateException("index not set or has been invalidated");
+
         assert variableIndex >= 0;
         return variableIndex;
     }
@@ -220,9 +219,7 @@ public class Taint {
     }
 
     void setVariableIndex(int index) {
-        if (index < 0) {
-            throw new IllegalArgumentException("negative index");
-        }
+        if (index < 0) throw new IllegalArgumentException("negative index");
         variableIndex = index;
     }
 
@@ -675,7 +672,7 @@ public class Taint {
             sb.append(" potential=").append(potentialValue);
         }
         if (tags.size() > 0) {
-            sb.append(" tags: ").append(Arrays.toString(tags.toArray()));
+            sb.append(" tags=").append(Arrays.toString(tags.toArray()));
         }
         return sb.toString();
     }

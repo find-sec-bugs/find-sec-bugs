@@ -18,6 +18,7 @@
 package com.h3xstream.findsecbugs.password;
 
 import com.h3xstream.findsecbugs.common.StackUtils;
+import com.h3xstream.findsecbugs.common.TaintUtil;
 import com.h3xstream.findsecbugs.common.matcher.InvokeMatcherBuilder;
 import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
 import com.h3xstream.findsecbugs.injection.InjectionPoint;
@@ -33,6 +34,8 @@ import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.bcel.generic.LoadInstruction;
 import org.apache.bcel.generic.LocalVariableGen;
 import org.apache.bcel.generic.MethodGen;
+
+import java.util.List;
 
 import static com.h3xstream.findsecbugs.common.matcher.InstructionDSL.invokeInstruction;
 
@@ -71,8 +74,8 @@ public class HardcodedPasswordEqualsDetector extends BasicInjectionDetector impl
 
         //If a constant value is compare with the variable
         //Empty constant are ignored.. it is most likely a validation to make sure it is not empty
-        boolean valueHardcodedLeft = leftValue.getConstantValue() != null && !leftValue.getConstantValue().isEmpty();
-        boolean valueHardcodedRight = rightValue.getConstantValue() != null && !rightValue.getConstantValue().isEmpty();
+        boolean valueHardcodedLeft = TaintUtil.isConstantValueAndNotEmpty(leftValue);
+        boolean valueHardcodedRight = TaintUtil.isConstantValueAndNotEmpty(rightValue);
 
         //Is a constant value that was tag because the value was place in a variable name "password" at some point.
         if ((passwordVariableLeft && valueHardcodedRight) ||
@@ -82,6 +85,7 @@ public class HardcodedPasswordEqualsDetector extends BasicInjectionDetector impl
             return Priorities.IGNORE_PRIORITY;
         }
     }
+
 
     @Override
     protected InjectionPoint getInjectionPoint(InvokeInstruction invoke, ConstantPoolGen cpg,
@@ -93,7 +97,7 @@ public class HardcodedPasswordEqualsDetector extends BasicInjectionDetector impl
     }
 
     @Override
-    public void visitInvoke(InvokeInstruction instruction, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType) {
+    public void visitInvoke(InvokeInstruction instruction, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType, List<Taint> parameters) {
         //ByteCode.printOpCode(instruction, cpg);
     }
 

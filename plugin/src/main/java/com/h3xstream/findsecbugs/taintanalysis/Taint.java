@@ -68,9 +68,7 @@ public class Taint {
          */
         public static State merge(State a, State b) {
             if (a == null || b == null) {
-                throw new NullPointerException(
-                        "use Taint.State." + INVALID.name() + " instead of null"
-                );
+                throw new NullPointerException("use Taint.State." + INVALID.name() + " instead of null");
             }
             if (a == TAINTED || b == TAINTED) {
                 return TAINTED;
@@ -122,6 +120,7 @@ public class Taint {
     private final Set<Tag> tags;
     private final Set<Tag> tagsToRemove;
     private String constantValue;
+    private String potentialValue;
     private String debugInfo = null;
 
     /**
@@ -170,6 +169,7 @@ public class Taint {
         this.tags = EnumSet.copyOf(taint.tags);
         this.tagsToRemove = EnumSet.copyOf(taint.tagsToRemove);
         this.constantValue = taint.constantValue;
+        this.potentialValue = taint.potentialValue;
         if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             this.debugInfo = taint.debugInfo;
         }
@@ -201,9 +201,8 @@ public class Taint {
      * @throws IllegalStateException if index is uknown
      */
     public int getVariableIndex() {
-        if (variableIndex == INVALID_INDEX) {
-            throw new IllegalStateException("index not set or has been invalidated");
-        }
+        if (variableIndex == INVALID_INDEX) throw new IllegalStateException("index not set or has been invalidated");
+
         assert variableIndex >= 0;
         return variableIndex;
     }
@@ -218,9 +217,7 @@ public class Taint {
     }
 
     void setVariableIndex(int index) {
-        if (index < 0) {
-            throw new IllegalArgumentException("negative index");
-        }
+        if (index < 0) throw new IllegalArgumentException("negative index");
         variableIndex = index;
     }
 
@@ -460,10 +457,27 @@ public class Taint {
         return constantValue;
     }
     
-    void setConstantValue(String value) {
+    public void setConstantValue(String value) {
         this.constantValue = value;
     }
-    
+
+    /**
+     * Returns the constant value that will be set under a specific condition
+     *
+     * @return constant value or null if unknown
+     */
+    public String getPotentialValue() {
+        return potentialValue;
+    }
+
+    public void setPotentialValue(String value) {
+        this.potentialValue = value;
+    }
+
+    public String getConstantOrPotentialValue() {
+        return constantValue != null ? constantValue : potentialValue;
+    }
+
     /**
      * Constructs a new instance of taint from the specified state name
      * 
@@ -529,6 +543,12 @@ public class Taint {
             result.setDebugInfo("[" + a.getDebugInfo() + "]+[" + b.getDebugInfo() + "]");
         }
         assert !result.hasParameters() || result.isUnknown();
+        if(a.potentialValue != null) {
+            result.potentialValue = a.potentialValue;
+        }
+        else if(b.potentialValue != null) {
+            result.potentialValue = b.potentialValue;
+        }
         return result;
     }
 
@@ -643,8 +663,14 @@ public class Taint {
         if (debugInfo != null) {
             sb.append(" {").append(debugInfo).append('}');
         }
+        if (constantValue != null) {
+            sb.append(" constant=").append(constantValue);
+        }
+        if (potentialValue != null) {
+            sb.append(" potential=").append(potentialValue);
+        }
         if (tags.size() > 0) {
-            sb.append(" tags: ").append(Arrays.toString(tags.toArray()));
+            sb.append(" tags=").append(Arrays.toString(tags.toArray()));
         }
         return sb.toString();
     }

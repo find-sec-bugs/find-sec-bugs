@@ -3032,17 +3032,53 @@ to do this correctly.
     <BugCode abbrev="SECUSS">Unencrypted Server Socket</BugCode>
 
     <!-- DES usage -->
-    <Detector class="com.h3xstream.findsecbugs.crypto.DesUsageDetector">
-        <Details>DES / DESede should be replace by AES</Details>
+    <Detector class="com.h3xstream.findsecbugs.crypto.cipher.DesUsageDetector">
+        <Details>DES should be replace by AES</Details>
     </Detector>
     <BugPattern type="DES_USAGE">
-        <ShortDescription>DES/DESede is insecure</ShortDescription>
-        <LongDescription>DES/DESede should be replaced with AES</LongDescription>
+        <ShortDescription>DES is insecure</ShortDescription>
+        <LongDescription>DES should be replaced with AES</LongDescription>
         <Details>
             <![CDATA[
 <p>
-DES and DESede (3DES) are not considered strong ciphers for modern applications. Currently, NIST recommends the 
-usage of AES block ciphers instead of DES/3DES.
+DES is considered strong ciphers for modern applications. Currently, NIST recommends the
+usage of AES block ciphers instead of DES.
+</p>
+<p>
+    <b>Example weak code:</b>
+<pre>Cipher c = Cipher.getInstance("DES/ECB/PKCS5Padding");
+c.init(Cipher.ENCRYPT_MODE, k, iv);
+byte[] cipherText = c.doFinal(plainText);</pre>
+</p>
+<p>
+    <b>Example solution:</b>
+    <pre>Cipher c = Cipher.getInstance("AES/GCM/NoPadding");
+c.init(Cipher.ENCRYPT_MODE, k, iv);
+byte[] cipherText = c.doFinal(plainText);</pre>
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="http://www.nist.gov/itl/fips/060205_des.cfm">NIST Withdraws Outdated Data Encryption Standard</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/326.html">CWE-326: Inadequate Encryption Strength</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECDU">DES</BugCode>
+
+    <!-- TDES usage -->
+    <Detector class="com.h3xstream.findsecbugs.crypto.cipher.TDesUsageDetector">
+        <Details>DESede should be replace by AES</Details>
+    </Detector>
+    <BugPattern type="TDES_USAGE">
+        <ShortDescription>DESede is insecure</ShortDescription>
+        <LongDescription>DESede should be replaced with AES</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Triple DES (also known as 3DES or DESede) is considered strong ciphers for modern applications. Currently, NIST recommends the
+usage of AES block ciphers instead of 3DES.
 </p>
 <p>
     <b>Example weak code:</b>
@@ -3065,11 +3101,10 @@ byte[] cipherText = c.doFinal(plainText);</pre>
 ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECDU">DES / DESede</BugCode>
-
+    <BugCode abbrev="SECTDU">DESede</BugCode>
 
     <!-- RSA NoPadding -->
-    <Detector class="com.h3xstream.findsecbugs.crypto.RsaNoPaddingDetector">
+    <Detector class="com.h3xstream.findsecbugs.crypto.cipher.RsaNoPaddingDetector">
         <Details>RSA cipher without proper padding</Details>
     </Detector>
     <BugPattern type="RSA_NO_PADDING">
@@ -5628,5 +5663,10 @@ Sanitize user input before using it in HTTP parameters.
         </Details>
     </BugPattern>
     <BugCode abbrev="SECHPP">HTTP Parameter Pollution</BugCode>
+
+
+    <Detector class="com.h3xstream.findsecbugs.PotentialValueDetector">
+        <Details>Help other detector at finding hardcoded value used if a dynamic parameter is null.</Details>
+    </Detector>
 
 </MessageCollection>

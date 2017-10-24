@@ -2846,7 +2846,7 @@ byte[] cipherText = c.doFinal(plainText);</pre>
 
 
     <!-- RSA NoPadding -->
-    <Detector class="com.h3xstream.findsecbugs.crypto.RsaNoPaddingDetector">
+    <Detector class="com.h3xstream.findsecbugs.crypto.cipher.RsaNoPaddingDetector">
         <Details>適切なパディングなしの RSA 暗号です。</Details>
     </Detector>
     <BugPattern type="RSA_NO_PADDING">

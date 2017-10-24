@@ -41,14 +41,15 @@ import org.apache.bcel.Constants;
  *
  * Ref: <a href="http://docs.oracle.com/javase/7/docs/api/javax/crypto/Cipher.html">Partial list of ciphers</a>
  */
-public class DesUsageDetector extends OpcodeStackDetector {
+@Deprecated
+public class OldDesUsageDetector extends OpcodeStackDetector {
 
     private static final boolean DEBUG = false;
     private static final String DES_USAGE_TYPE = "DES_USAGE";
 
     private BugReporter bugReporter;
 
-    public DesUsageDetector(BugReporter bugReporter) {
+    public OldDesUsageDetector(BugReporter bugReporter) {
         this.bugReporter = bugReporter;
     }
 

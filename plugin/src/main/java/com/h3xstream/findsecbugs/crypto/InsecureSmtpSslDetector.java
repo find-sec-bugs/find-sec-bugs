@@ -71,7 +71,6 @@ public class InsecureSmtpSslDetector implements Detector {
 
         HashMap<Location, String> sslConnMap = new HashMap<Location, String>();
         HashSet<String> sslCertVerSet = new HashSet<String>();
-        Location locationWeakness = null;
         String hostName = null;
 
         ConstantPoolGen cpg = classContext.getConstantPoolGen();

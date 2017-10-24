@@ -74,6 +74,7 @@
                         <exclude>**/java/com/fasterxml/jackson/**/**.java</exclude>
                         <exclude>**/java/ognl/**/**.java</exclude>
                         <exclude>**/com/opensymphony/**/**.java</exclude>
+                        <exclude>**/com/google/**/**.java</exclude>
                     </excludes>
                     <properties>
                         <project>Find Security Bugs</project>

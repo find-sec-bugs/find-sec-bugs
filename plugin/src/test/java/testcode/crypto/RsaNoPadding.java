@@ -17,4 +17,13 @@ public class RsaNoPadding {
         Cipher.getInstance("RSA/NONE/NoPadding");
         Cipher.getInstance("RSA/NONE/NoPadding", "BC");
     }
+
+    public void dataflowCipherWeak() throws Exception {
+        String cipher1 = null;
+        Cipher.getInstance(cipher1);
+        String cipher2 = "RSA/NONE/NoPadding";
+        Cipher.getInstance(cipher2);
+        String cipher3 = null;
+        Cipher.getInstance(cipher3);
+    }
 }

@@ -68,9 +68,7 @@ public class Taint {
          */
         public static State merge(State a, State b) {
             if (a == null || b == null) {
-                throw new NullPointerException(
-                        "use Taint.State." + INVALID.name() + " instead of null"
-                );
+                throw new NullPointerException("use Taint.State." + INVALID.name() + " instead of null");
             }
             if (a == TAINTED || b == TAINTED) {
                 return TAINTED;

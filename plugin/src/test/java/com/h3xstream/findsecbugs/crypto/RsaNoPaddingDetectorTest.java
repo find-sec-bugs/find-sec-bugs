@@ -19,10 +19,9 @@ package com.h3xstream.findsecbugs.crypto;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
 import org.testng.annotations.Test;
+
+import static org.mockito.Mockito.*;
 
 public class RsaNoPaddingDetectorTest extends BaseDetectorTest {
 
@@ -61,6 +60,14 @@ public class RsaNoPaddingDetectorTest extends BaseDetectorTest {
                 .inClass("RsaNoPadding")
                 .inMethod("rsaCipherOk")
                 .build()
+        );
+
+        verify(reporter,times(1)).doReportBug(
+                bugDefinition()
+                        .bugType("RSA_NO_PADDING")
+                        .inClass("RsaNoPadding")
+                        .inMethod("dataflowCipherWeak")
+                        .build()
         );
     }
 

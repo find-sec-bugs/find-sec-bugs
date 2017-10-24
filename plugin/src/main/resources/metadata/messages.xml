@@ -3104,7 +3104,7 @@ byte[] cipherText = c.doFinal(plainText);</pre>
     <BugCode abbrev="SECTDU">DESede</BugCode>
 
     <!-- RSA NoPadding -->
-    <Detector class="com.h3xstream.findsecbugs.crypto.RsaNoPaddingDetector">
+    <Detector class="com.h3xstream.findsecbugs.crypto.cipher.RsaNoPaddingDetector">
         <Details>RSA cipher without proper padding</Details>
     </Detector>
     <BugPattern type="RSA_NO_PADDING">

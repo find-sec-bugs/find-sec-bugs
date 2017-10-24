@@ -54,7 +54,7 @@
     <Detector class="com.h3xstream.findsecbugs.crypto.UnencryptedServerSocketDetector" reports="UNENCRYPTED_SERVER_SOCKET"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.cipher.DesUsageDetector" reports="DES_USAGE"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.cipher.TDesUsageDetector" reports="TDES_USAGE"/>
-    <Detector class="com.h3xstream.findsecbugs.crypto.RsaNoPaddingDetector" reports="RSA_NO_PADDING"/>
+    <Detector class="com.h3xstream.findsecbugs.crypto.cipher.RsaNoPaddingDetector" reports="RSA_NO_PADDING"/>
     <Detector class="com.h3xstream.findsecbugs.password.ConstantPasswordDetector" reports="HARD_CODE_PASSWORD,HARD_CODE_KEY"/>
     <Detector class="com.h3xstream.findsecbugs.password.GoogleApiKeyDetector" reports="HARD_CODE_PASSWORD"/>
     <Detector class="com.h3xstream.findsecbugs.password.HardcodePasswordInMapDetector" reports="HARD_CODE_PASSWORD"/>

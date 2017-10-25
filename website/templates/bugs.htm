@@ -9,22 +9,35 @@
 </div>
 
 <div class="container">
-    <h2>Table of Contents</h2>
-    <ul>
-        <% bugPatterns.each { b->
-        print """
-          <li><a href="#${b.type}">
-              ${b.title} (${b.type})
-          </a></li>
-        """
-        }
-        %>
-    </ul>
-</div>
 
-<div class="container">
+
+
     <div class="row">
         <div class="col-md-11" id="mainCol">
+
+
+            <h2>Table of Contents</h2>
+
+            <p>
+                <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    Display / Hide
+                </a>
+            </p>
+            <div class="collapse" id="collapseExample">
+                <div class="card card-block">
+
+                    <ul>
+                        <% bugPatterns.each { b->
+                        print """
+                        <li><a href="#${b.type}">
+                            ${b.title} (${b.type})
+                        </a></li>
+                        """
+                        }
+                        %>
+                    </ul>
+                </div>
+            </div>
 
     <%
 

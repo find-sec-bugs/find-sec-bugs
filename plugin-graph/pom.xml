@@ -10,14 +10,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.h3xstream.findsecbugs</groupId>
-    <artifactId>findsecbugs-plugin</artifactId>
+    <artifactId>findsecbugs-graph-plugin</artifactId>
 
     <packaging>jar</packaging>
 
-    <name>Find Security Bugs Plugin</name>
+    <name>Find Security Bugs Graph Builder Plugin</name>
     <description>
-        Core module of the project. It include all the FindBugs detectors.
-        The resulting jar is the published plugin.
+        This module build graph database from the code.
     </description>
 
     <build>
@@ -73,34 +72,6 @@
             </plugin>
 
 
-            <!-- Compilation of the JSP test pages -->
-            <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-jspc-maven-plugin</artifactId>
-                <version>9.4.6.v20170531</version>
-                <executions>
-                    <execution>
-                        <id>jspc</id>
-                        <!-- Needed to make the bytecode available for the tests -->
-                        <phase>test-compile</phase>
-                        <goals>
-                            <goal>jspc</goal>
-                        </goals>
-                        <configuration>
-                            <jspc>
-                                <smapSuppressed>false</smapSuppressed>
-                                <smapDumped>true</smapDumped>
-                            </jspc>
-                            <keepSources>true</keepSources>
-                            <!-- Use the test folders to avoid polluting the resulting jar -->
-                            <generatedClasses>${project.build.directory}/test-classes</generatedClasses>
-                            <webAppSourceDirectory>${basedir}/src/test/webapp</webAppSourceDirectory>
-                            <useProvidedScope>true</useProvidedScope>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
             <!-- Cobertura configuration -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -122,33 +93,6 @@
                 <artifactId>coveralls-maven-plugin</artifactId>
             </plugin>
 
-            <!--
-              Verify that the sources of this module are API compatible
-              with the Java version officially used by FindBugs.
-              The test sources are not checked by this plugin
-              (see https://github.com/mojohaus/animal-sniffer/issues/5),
-              so more recent Java APIs can be used in the tests.
-            -->
-            <!--<plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>animal-sniffer-maven-plugin</artifactId>
-                <version>1.15</version>
-                <configuration>
-                    <signature>
-                        <groupId>org.codehaus.mojo.signature</groupId>
-                        <artifactId>java17</artifactId>
-                        <version>1.0</version>
-                    </signature>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>-->
-
         </plugins>
     </build>
 
@@ -161,6 +105,10 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.h3xstream.findsecbugs</groupId>
+            <artifactId>findsecbugs-plugin</artifactId>
+        </dependency>
 
         <!-- Toolkit for easy detector testing -->
         <dependency>
@@ -202,6 +150,12 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j</artifactId>
+            <version>3.2.6</version>
+            <scope>provided</scope>
+        </dependency>
 
     </dependencies>
 

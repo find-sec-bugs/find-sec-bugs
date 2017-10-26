@@ -238,7 +238,5 @@
     <BugPattern type="TEMPLATE_INJECTION_FREEMARKER" abbrev="SECFREEM" category="SECURITY" cweid="94"/>
     <BugPattern type="URLCONNECTION_SSRF_FD" abbrev="SECSSSRFUC" category="SECURITY" cweid="918"/>
 
-    <Detector class="com.h3xstream.findsecbugs.graph.GraphBuilder" reports="GRAPH_BUG"/>
-    <BugPattern type="GRAPH_BUG" abbrev="SECGRAPH" category="SECURITY"/>
 
 </FindbugsPlugin>

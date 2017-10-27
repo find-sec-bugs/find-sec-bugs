@@ -13,12 +13,23 @@ import java.io.InputStream;
 public class XmlService {
 
 
-    public static void receiveXMLStream(final String xml)
+    public static void receiveXMLStream(final long dummyLong, int dummyInt, final String xml)
             throws ParserConfigurationException, SAXException, IOException {
         // ...
         InputStream inStream = new ByteArrayInputStream(xml.getBytes());
         SAXParserFactory spf = SAXParserFactory.newInstance();
         final SAXParser saxParser = spf.newSAXParser();
         saxParser.parse(inStream, new DefaultHandler());
+
+        receiveLong(dummyLong);
+        receiveLong(dummyInt);
+    }
+
+    public static void receiveLong(long dummyLong) {
+        dummyLong++;
+    }
+
+    public static void receiveInt(int dummyInt) {
+        dummyInt++;
     }
 }

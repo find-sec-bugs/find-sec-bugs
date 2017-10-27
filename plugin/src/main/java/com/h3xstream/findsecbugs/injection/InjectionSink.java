@@ -55,6 +55,7 @@ public class InjectionSink {
     private int sinkPriority = UNKNOWN_SINK_PRIORITY;
     private final List<SourceLineAnnotation> lines = new LinkedList<SourceLineAnnotation>();
     private final List<TaintLocation> unknownSources = new LinkedList<TaintLocation>();
+    private final int parameterOffset;
 
     /**
      * Constructs the instance and stores immutable values for reporting
@@ -66,11 +67,12 @@ public class InjectionSink {
      * @param method method with the sink
      * @param instructionHandle instruction with the sink
      * @param sinkMethod called method (sink)
+     * @param parameterOffset Parameter Offset
      * @throws NullPointerException if any argument is null
      */
     public InjectionSink(Detector detector, String bugType, int originalPriority,
             ClassContext classContext, Method method, InstructionHandle instructionHandle,
-            String sinkMethod) {
+            String sinkMethod, int parameterOffset) {
         Objects.requireNonNull(detector, "detector");
         Objects.requireNonNull(bugType, "bugType");
         Objects.requireNonNull(classContext, "classContext");
@@ -83,6 +85,7 @@ public class InjectionSink {
         this.method = method;
         this.instructionHandle = instructionHandle;
         this.sinkMethod = (sinkMethod == null) ? "unknown" : sinkMethod;
+        this.parameterOffset = parameterOffset;
     }
 
     /**
@@ -139,6 +142,7 @@ public class InjectionSink {
         bug.addClassAndMethod(classContext.getJavaClass(), method);
         bug.addSourceLine(SourceLineAnnotation.fromVisitedInstruction(classContext, method, instructionHandle));
         addMessage(bug, "Sink method", sinkMethod);
+        addMessage(bug, "Sink parameter", String.valueOf(parameterOffset));
 
         for(TaintLocation source : unknownSources) {
             addMessage(bug, "Unknown source", source.getTaintSource());

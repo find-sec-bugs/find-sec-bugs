@@ -17,10 +17,15 @@
  */
 package com.h3xstream.findsecbugs.graph;
 
+import com.h3xstream.findsecbugs.graph.model.GraphLabels;
 import com.h3xstream.findsecbugs.graph.model.RelTypes;
+import com.h3xstream.findsecbugs.graph.util.ClassMetadata;
 import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
+import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import com.h3xstream.findsecbugs.taintanalysis.TaintFrame;
 import com.h3xstream.findsecbugs.taintanalysis.TaintFrameAdditionalVisitor;
+import com.h3xstream.findsecbugs.taintanalysis.data.TaintSource;
+import com.h3xstream.findsecbugs.taintanalysis.data.TaintSourceType;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.ba.XClass;
@@ -31,227 +36,331 @@ import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.bcel.generic.LoadInstruction;
 import org.apache.bcel.generic.MethodGen;
 import org.neo4j.graphdb.*;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+
+import static com.h3xstream.findsecbugs.graph.HashMapBuilder.*;
 
 public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAdditionalVisitor {
-    private static boolean dbInit = false;
-    private static GraphDatabaseService graphDb;
-    private static Label lbl = Label.label("Function");
-    private static Label lbl2 = Label.label("Class");
-    private static Label lbl3 = Label.label("Interface");
+
+    /**
+     * Do NOT store GraphDatabaseService directly. It would limit the capability to switch db in unit test.
+     */
+    private static GraphInstance graphDb;
+
+    private static List<String> EXCLUDED_PACKAGES = Arrays.asList("java/", "javax/");
+    private static List<String> INCLUDE_JAVA_API = Arrays.asList("java/sql/Statement","java/lang/Runtime","java/lang/ProcessBuilder",
+            "java/io/File","java/io/RandomFile","java/io/FileReader","java/io/FileInputStream","java/nio/file/Paths","java/io/FileWriter",
+            "java/io/FileOutputStream","java/net/URL","java/io/PrintWriter","javax/servlet/http/");
+    private static Map<String, Node> nodesCache = new HashMap<>();
+    private static Set<Integer> relationshipCache = new HashSet<>();
 
     public GraphBuilder(BugReporter bugReporter) {
         super(bugReporter);
 
         registerVisitor(this);
-        if(!dbInit) {
-            dbInit = true;
-            init();
-        }
+
+        graphDb = GraphInstance.getInstance();
     }
 
-    private void init() {
-        File dbLocation = new File("codegraph.db");
-        System.out.println("Graph db created : "+dbLocation.toString());
-        graphDb = new GraphDatabaseFactory().newEmbeddedDatabase(dbLocation);
-        Runtime.getRuntime().addShutdownHook( new Thread() {
-            @Override
-            public void run()
-            {
-                graphDb.shutdown();
-            }
-        } );
+
+    public static void clearCache() {
+        nodesCache.clear();
+        relationshipCache.clear();
     }
 
     @Override
-    public void visitInvoke(InvokeInstruction invoke, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frame) throws ClassNotFoundException {
+    public void visitInvoke(InvokeInstruction invoke, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frame, List<Taint> parameters) throws ClassNotFoundException {
+        GraphDatabaseService db = graphDb.getDb();
+        try (Transaction tx = db.beginTx()) {
 
-        Set<Integer> relationship = new HashSet<>();
-
-        try (Transaction tx = graphDb.beginTx()) {
-
-            //Source
-            String sourceClass = methodGen.getClassName().replaceAll("\\.", "/");
+            //Source method
+            String sourceClass = getSlashClassName(methodGen.getClassName());
             String sourceCall = sourceClass + "." + methodGen.getName() + methodGen.getSignature();
-            //Target
-            String invokeClass = invoke.getClassName(cpg).replaceAll("\\.", "/");
+
+            //Target method
+            String invokeClass = getSlashClassName(invoke.getClassName(cpg));
             String invokeCall = invokeClass + "." + invoke.getMethodName(cpg) + invoke.getSignature(cpg);
-            //System.out.println("[DEBUG] "+sourceCall + " -> " + invokeCall);
 
-            Node sourceNode = graphDb.findNode(lbl, "name", sourceCall);
-            if(sourceNode == null) {
-                sourceNode = graphDb.createNode(lbl);
-                sourceNode.setProperty("name", sourceCall);
-                sourceNode.setProperty("class", sourceClass);
-                sourceNode.setProperty("function", methodGen.getName());
-            }
+            /////
+            //Create function nodes
+            Node sourceNode = createNode(GraphLabels.LABEL_FUNCTION, "name", sourceCall,
+                "class", sourceClass,
+                "function", methodGen.getName());
 
-            Node invokeNode = graphDb.findNode(lbl, "name", invokeCall);
-            if(invokeNode == null) {
-                invokeNode = graphDb.createNode(lbl);
-                invokeNode.setProperty("name", invokeCall);
-                invokeNode.setProperty("class", invokeClass);
-                invokeNode.setProperty("function", invoke.getMethodName(cpg));
-            }
+            Node invokeNode = createNode(GraphLabels.LABEL_FUNCTION, "name", invokeCall,
+                "class", invokeClass,
+                "function", invoke.getMethodName(cpg));
 
-            Node sourceClassNode = graphDb.findNode(lbl2, "name", sourceClass);
-            if (sourceClassNode == null){
-                sourceClassNode = graphDb.createNode(lbl2);
-                sourceClassNode.setProperty("name", sourceClass);
-            }
+            /////
+            //Create class nodes
+            Node sourceClassNode = createNode(GraphLabels.LABEL_CLASS, "name", sourceClass);
+            Node invokeClassNode = createNode(GraphLabels.LABEL_CLASS, "name", invokeClass);
 
-            Node invokeClassNode = graphDb.findNode(lbl2, "name", invokeClass);
-            if (invokeClassNode == null){
-                invokeClassNode = graphDb.createNode(lbl2);
-                invokeClassNode.setProperty("name", invokeClass);
-            }
+            createRelationship(sourceNode, invokeNode, RelTypes.CALL);
+            createRelationship(sourceNode, sourceClassNode, RelTypes.FROM_CLASS);
+            createRelationship(invokeNode, invokeClassNode, RelTypes.FROM_CLASS);
 
-            //int hashCode = sourceCall.hashCode() & invokeCall.hashCode();
-            //if(!relationship.contains(hashCode))
-            if(!hasRelationship(sourceNode,invokeNode, RelTypes.CALL))
-            {
-                sourceNode.createRelationshipTo(invokeNode, RelTypes.CALL);
-                System.out.println("Create link "+sourceCall + " -> " + invokeCall);
-//                relationship.add(hashCode);
-            }
-            if(!hasRelationship(sourceNode, sourceClassNode, RelTypes.FROM))
-            {
-                sourceNode.createRelationshipTo(sourceClassNode, RelTypes.FROM);
-                System.out.println("Create link "+sourceCall + " -> " + sourceClass);
-//                relationship.add(hashCode);
-            }
-            if(!hasRelationship(invokeNode, invokeClassNode, RelTypes.FROM))
-            {
-                invokeNode.createRelationshipTo(invokeClassNode, RelTypes.FROM);
-                System.out.println("Create link "+invokeCall + " -> " + invokeClass);
-//                relationship.add(hashCode);
-            }
+
+            /////
+            //Create subclasses nodes
 
             ClassDescriptor cdSource = DescriptorFactory.createClassDescriptorFromDottedClassName(methodGen.getClassName());
             ClassDescriptor cdInvoke = DescriptorFactory.createClassDescriptorFromDottedClassName(invoke.getClassName(cpg));
 
-            ArrayList<ClassDescriptor> listSuperClassesSource = listOfSuperClasses(cdSource);
-            ArrayList<ClassDescriptor> listSuperClassesInvoke = listOfSuperClasses(cdInvoke);
+            ArrayList<ClassDescriptor> listSuperClassesSource = ClassMetadata.listOfSuperClasses(cdSource);
+            ArrayList<ClassDescriptor> listSuperClassesInvoke = ClassMetadata.listOfSuperClasses(cdInvoke);
 
             //create extended classes nodes
             if (listSuperClassesSource.size() != 0)
-                createSuperClassesNodes(sourceClassNode, listSuperClassesSource);
+                createSuperClasses(sourceClassNode, listSuperClassesSource);
             if (listSuperClassesInvoke.size() != 0)
-                createSuperClassesNodes(invokeClassNode, listSuperClassesInvoke);
+                createSuperClasses(invokeClassNode, listSuperClassesInvoke);
 
             //create interfaces nodes
-            createClassInterfaces(cdSource);
-            createClassInterfaces(cdInvoke);
+            createInterfaces(cdSource);
+            createInterfaces(cdInvoke);
             if (listSuperClassesSource.size() != 0){
                 for (int i = 0; i<listSuperClassesSource.size(); ++i)
-                    createClassInterfaces(listSuperClassesSource.get(i));
+                    createInterfaces(listSuperClassesSource.get(i));
             }
-            if (listSuperClassesInvoke.size() != 0){
+            else if (listSuperClassesInvoke.size() != 0){
                 for (int i = 0; i<listSuperClassesInvoke.size(); ++i)
-                    createClassInterfaces(listSuperClassesInvoke.get(i));
+                    createInterfaces(listSuperClassesInvoke.get(i));
             }
+
+            /////
+            //Create variable nodes
+
+            //Skip some API to reduce the graph size
+            boolean isExclude = false;
+            for (String exclPackage: EXCLUDED_PACKAGES) {
+                if(invokeClass.startsWith(exclPackage)) {
+                    isExclude = true;
+                }
+            }
+            boolean isInclude = false;
+            for (String exclPackage: INCLUDE_JAVA_API) {
+                if(invokeClass.startsWith(exclPackage)) {
+                    isInclude = true;
+                }
+            }
+            if(!isExclude || isInclude) {
+                //ByteCode.printOpCode(invoke,cpg);
+                int destParamIndex = 0;
+                for (Taint param : parameters) {
+
+                    if(param.getSources().size() > 0) {
+                        //Destination
+                        String destParamKey = invokeCall + "_p" + destParamIndex;
+
+                        //
+                        Node destParamNode = createNode(GraphLabels.LABEL_VARIABLE,
+                                "name", destParamKey,
+                                "state", param.getState().name(),
+                                "type", "P");
+
+                        //Source
+                        for(TaintSource source : param.getSources()) {
+                            linkSourceToNode(source, destParamNode, sourceCall);
+                        }
+
+                    }
+                    destParamIndex++;
+                }
+            }
+
+
 
             tx.success();
         }
     }
 
     @Override
+    public void visitReturn(InvokeInstruction invoke, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType) throws Exception {
+        GraphDatabaseService db = graphDb.getDb();
+        try (Transaction tx = db.beginTx()) {
+            //Source method
+            String sourceClass = getSlashClassName(methodGen.getClassName());
+            String sourceCall = sourceClass + "." + methodGen.getName() + methodGen.getSignature();
+
+
+            Taint returnValue = frameType.getStackValue(0);
+            if(returnValue.getSources().size() > 0) {
+                //Destination
+                String destParamKey = sourceCall + "_ret";
+
+                //
+                Node destParamNode = createNode(GraphLabels.LABEL_VARIABLE,
+                        "name", destParamKey,
+                        "state", returnValue.getState().name(),
+                        "type", "P");
+
+                //Source
+                for(TaintSource source : returnValue.getSources()) {
+                    linkSourceToNode(source, destParamNode, sourceCall);
+                }
+                tx.success();
+            }
+        }
+    }
+
+    private void linkSourceToNode(TaintSource source, Node destParamNode, String sourceCall) {
+        TaintSourceType type = source.getSourceType();
+        switch (type) {
+            case FIELD: // Field -TRANSFER-> node
+                //TODO : Implement field transfer
+                break;
+            case PARAMETER: // Parameter -TRANSFER-> node
+
+                int sourceParamIndex = source.getParameterIndex();
+                String srcParamKey = sourceCall + "_p"+ sourceParamIndex;
+
+
+                Node srcParamNode = createNode(GraphLabels.LABEL_VARIABLE,
+                        "name", srcParamKey,
+                        "state", source.getState().name(),
+                        "type", "P");
+
+                createRelationship(srcParamNode, destParamNode, RelTypes.TRANSFER, sourceCall);
+
+                break;
+
+            case RETURN: // return value -TRANSFER-> node
+
+                String srcMethodKey = source.getSignatureMethod()+"_ret";
+
+                Node srcMethodNode = createNode(GraphLabels.LABEL_VARIABLE,
+                        "name", srcMethodKey,
+                        "state", source.getState().name(),
+                        "source", sourceCall,
+                        "type", "R");
+
+                createRelationship(srcMethodNode, destParamNode, RelTypes.TRANSFER, sourceCall);
+
+                break;
+        }
+    }
+
+    /**
+     * This function is creating a node if does not exist already.
+     * It use an map to keep track of previously loaded node rather communicating with Neo4j.
+     *
+     * @param lbl
+     * @param properties
+     * @return
+     */
+    private Node createNode(Label lbl, String... properties) {
+        Map<String,String> props = build(properties);
+        String name = props.get("name");
+
+        //Node node = graphDb.findNode(LABEL_VARIABLE, "name", props.get("name"));
+        //The cache is used because findNode seems do be a cursor that is not scaling on large library
+        Node node = nodesCache.get(name);
+
+        if(node == null) { //Node is not found so we create it
+            node = graphDb.getDb().createNode(lbl);
+            for(Map.Entry<String,String> prop : props.entrySet()) {
+                node.setProperty(prop.getKey(), prop.getValue());
+            }
+            nodesCache.put(name, node);
+        }
+
+        return node;
+    }
+
+
+
+    @Override
     public void visitLoad(LoadInstruction instruction, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frame, int numProduced) {
 
     }
 
-    private ArrayList<ClassDescriptor> listOfSuperClasses(ClassDescriptor cd){
-        ClassDescriptor temp;
-        ArrayList<ClassDescriptor> superClasses = new ArrayList<>();
-        XClass xclassTemp = AnalysisContext.currentXFactory().getXClass(cd);
-        if (xclassTemp != null){
-            temp = xclassTemp.getSuperclassDescriptor();
-        }
-        else temp = null;
+    private void createSuperClasses(Node sourceClassNode, List<ClassDescriptor> listOfSuperClasses){
+        String superClassSource = getSlashClassName(listOfSuperClasses.get(0).getClassName());
+        Node superClassNode = createNode(GraphLabels.LABEL_CLASS, "name", superClassSource);
 
-        if (temp != null){
-            if (!temp.getClassName().equals("java/lang/Object")){
-                superClasses.add(temp);
-                while (temp != null && !temp.getClassName().equals("java/lang/Object")){
-                    XClass xclass = AnalysisContext.currentXFactory().getXClass(temp);
-                    if (xclass != null){
-                        ClassDescriptor xSuper = xclass.getSuperclassDescriptor();
-                        if (xSuper != null) {
-                            superClasses.add(xSuper);
-                        }
-                        temp = xSuper;
-                    }
-                    else break;
-                }
-            }
-        }
-        return superClasses;
-    }
+        createRelationship(sourceClassNode, superClassNode, RelTypes.EXTENDS);
 
-    private void createSuperClassesNodes(Node sourceClassNode, ArrayList<ClassDescriptor> listOfSuperClasses){
-        String superClassSource = listOfSuperClasses.get(0).getClassName().replaceAll("\\.", "/");
-        Node superClassNode = graphDb.findNode(lbl2, "name", superClassSource);
-        if (superClassNode == null){
-            superClassNode = graphDb.createNode(lbl2);
-            superClassNode.setProperty("name", superClassSource);
-        }
+        for (int i = 1; i<listOfSuperClasses.size(); ++i) {
+            String superSuperClassSource = getSlashClassName(listOfSuperClasses.get(i).getClassName());
+            Node superSuperClassNode = createNode(GraphLabels.LABEL_CLASS, "name", superSuperClassSource);
 
-        if(!hasRelationship(sourceClassNode,superClassNode, RelTypes.EXTENDS))
-        {
-            sourceClassNode.createRelationshipTo(superClassNode, RelTypes.EXTENDS);
-            System.out.println("Create link "+ sourceClassNode.getProperty("name") + " -> " + superClassSource);
-//                relationship.add(hashCode);
-        }
-
-        for (int i = 1; i<listOfSuperClasses.size(); ++i){
-            String superSuperClassSource = listOfSuperClasses.get(i).getClassName().replaceAll("\\.", "/");
-            Node superSuperClassNode = graphDb.findNode(lbl2, "name", superSuperClassSource);
-            if(superSuperClassNode == null){
-                superSuperClassNode = graphDb.createNode(lbl2);
-                superSuperClassNode.setProperty("name", superSuperClassSource);
-            }
-            if(!hasRelationship(superClassNode,superSuperClassNode, RelTypes.EXTENDS))
-            {
-                superClassNode.createRelationshipTo(superSuperClassNode, RelTypes.EXTENDS);
-                System.out.println("Create link "+superClassSource + " -> " + superSuperClassSource);
-//                relationship.add(hashCode);
-            }
-            superClassSource = superSuperClassSource;
+            createRelationship(superClassNode,superSuperClassNode, RelTypes.EXTENDS);
             superClassNode = superSuperClassNode;
         }
     }
 
-    private void createClassInterfaces(ClassDescriptor sourceClass){
-        String sourceClassName = sourceClass.getClassName().replaceAll("\\.", "/");
-        Node sourceClassNode = graphDb.findNode(lbl2, "name", sourceClassName);
+    private void createInterfaces(ClassDescriptor sourceClass) {
+        String sourceClassName = getSlashClassName(sourceClass.getClassName());
+        Node sourceClassNode = createNode(GraphLabels.LABEL_CLASS, "name", sourceClassName);
         XClass xclass = AnalysisContext.currentXFactory().getXClass(sourceClass);
         if (xclass != null) {
             ClassDescriptor[] interfaces = xclass.getInterfaceDescriptorList();
             if (interfaces.length != 0) {
                 for (int i = 0; i < interfaces.length; ++i) {
-                    String sourceClassInterface = interfaces[i].getClassName().replaceAll("\\.", "/");
-                    Node sourceClassInterfaceNode = graphDb.findNode(lbl3, "name", sourceClassInterface);
-                    if (sourceClassInterfaceNode == null) {
-                        sourceClassInterfaceNode = graphDb.createNode(lbl3);
-                        sourceClassInterfaceNode.setProperty("name", sourceClassInterface);
-                    }
-                    if (!hasRelationship(sourceClassNode, sourceClassInterfaceNode, RelTypes.IMPLEMENTS)) {
-                        sourceClassNode.createRelationshipTo(sourceClassInterfaceNode, RelTypes.IMPLEMENTS);
-                        System.out.println("Create link " + sourceClassName + " -> " + sourceClassInterface);
-//                relationship.add(hashCode);
-                    }
+                    String sourceClassInterface = getSlashClassName(interfaces[i].getClassName());
+                    Node sourceClassInterfaceNode = createNode(GraphLabels.LABEL_INTERFACE, "name", sourceClassInterface);
+
+                    createRelationship(sourceClassNode,sourceClassInterfaceNode, RelTypes.IMPLEMENTS);
                 }
             }
         }
     }
 
-    private boolean hasRelationship(Node fromNode,Node toNode, RelationshipType... rt) {
+    private String getSlashClassName(String dottedClassName) {
+        return dottedClassName.replaceAll("\\.", "/");
+    }
 
+    private void createRelationship(Node fromNode,Node toNode, RelationshipType rt) {
+        createRelationship(fromNode,toNode,rt,null);
+    }
+
+    /**
+     * Create a relationship if it does not exist.
+     * @param fromNode
+     * @param toNode
+     * @param rt
+     */
+    private void createRelationship(Node fromNode,Node toNode, RelationshipType rt, String sourceCall) {
+        if(hasRelationship(fromNode, toNode, sourceCall, rt)) {
+            return;
+        }
+
+        int key = Objects.hash(fromNode.getProperty("name").hashCode(), toNode.getProperty("name"), sourceCall);
+        relationshipCache.add(key);
+        Relationship relation = fromNode.createRelationshipTo(toNode,rt);
+        if(sourceCall != null) {
+            relation.setProperty("source", sourceCall);
+        }
+    }
+
+    /**
+     * Look at the cache relationship. This method assume relationship were created using the createRelationship method.
+     *
+     * @param fromNode
+     * @param toNode
+     * @param rt
+     * @return
+     */
+    private boolean hasRelationship(Node fromNode,Node toNode, String sourceCall, RelationshipType rt) {
+
+        int key = Objects.hash(fromNode.getProperty("name"), toNode.getProperty("name"),sourceCall);
+        if (relationshipCache.contains(key)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * This function is
+     * @param fromNode
+     * @param toNode
+     * @param rt
+     * @return
+     */
+    private boolean hasRelationshipRemote(Node fromNode,Node toNode, RelationshipType... rt) {
         if (fromNode.hasRelationship(Direction.OUTGOING, rt)) {
             Iterable<Relationship> relations = fromNode.getRelationships(Direction.OUTGOING, rt);
             for (Relationship relation : relations) {

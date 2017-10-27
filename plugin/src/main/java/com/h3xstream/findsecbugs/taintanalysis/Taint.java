@@ -18,6 +18,7 @@
 package com.h3xstream.findsecbugs.taintanalysis;
 
 import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
+import com.h3xstream.findsecbugs.taintanalysis.data.TaintSource;
 import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.util.ClassName;
 
@@ -122,6 +123,7 @@ public class Taint {
     private String constantValue;
     private String potentialValue;
     private String debugInfo = null;
+    private Set<TaintSource> sources = new HashSet<>();
 
     /**
      * Constructs a new empty instance of Taint with the specified state
@@ -173,6 +175,7 @@ public class Taint {
         if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             this.debugInfo = taint.debugInfo;
         }
+        this.sources.addAll(taint.sources);
     }
 
     /**
@@ -549,6 +552,8 @@ public class Taint {
         else if(b.potentialValue != null) {
             result.potentialValue = b.potentialValue;
         }
+        result.addAllSources(a.sources);
+        result.addAllSources(b.sources);
         return result;
     }
 
@@ -646,6 +651,18 @@ public class Taint {
         return this;
     }
 
+    public Set<TaintSource> getSources() {
+        return sources;
+    }
+
+    public void addSource(TaintSource source) {
+        this.sources.add(source);
+    }
+
+    protected void addAllSources(Set<TaintSource> sources) {
+        this.sources.addAll(sources);
+    }
+
     @Override
     public String toString() {
         assert state != null;
@@ -660,8 +677,22 @@ public class Taint {
         if (nonParametricState != State.INVALID) {
             sb.append('(').append(nonParametricState.name().substring(0, 1)).append(')');
         }
-        if (debugInfo != null) {
-            sb.append(" {").append(debugInfo).append('}');
+        if (sources != null && sources.size() > 0) {
+            StringBuilder b = new StringBuilder();
+            for(TaintSource source : sources) {
+                switch (source.getSourceType()) {
+                    case FIELD:
+                        b.append("field["+source.getSignatureField()+"]");
+                        break;
+                    case RETURN:
+                        b.append("method["+source.getSignatureMethod()+"]");
+                        break;
+                    case PARAMETER:
+                        b.append("parameter["+source.getParameterIndex()+"]");
+                        break;
+                }
+            }
+            sb.append(" source={").append(b.toString()).append('}');
         }
         if (constantValue != null) {
             sb.append(" constant=").append(constantValue);

@@ -74,4 +74,9 @@ public class PotentialValueDetector extends BasicInjectionDetector implements Ta
     public void visitLoad(LoadInstruction load, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType, int numProduced) {
 
     }
+
+    @Override
+    public void visitReturn(InvokeInstruction invoke, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType) throws Exception {
+
+    }
 }

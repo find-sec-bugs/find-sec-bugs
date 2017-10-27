@@ -18,6 +18,8 @@
 package com.h3xstream.findsecbugs.taintanalysis;
 
 import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
+import com.h3xstream.findsecbugs.taintanalysis.data.TaintSource;
+import com.h3xstream.findsecbugs.taintanalysis.data.TaintSourceType;
 import edu.umd.cs.findbugs.ba.BasicBlock;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
 import edu.umd.cs.findbugs.ba.DepthFirstSearch;
@@ -108,6 +110,7 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
             Taint value = new Taint(Taint.State.UNKNOWN);
             if (i < numLocals) {
                 if (i < parameterStackSize) {
+                    int stackOffset = parameterStackSize - i - 1;
                     if (isTaintedByAnnotation(i - 1)) {
                         value = new Taint(Taint.State.TAINTED);
                         // this would add line number for the first instruction in the method
@@ -119,9 +122,11 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
                             value = new Taint(Taint.State.SAFE);
                         }
                     } else {
-                        int stackOffset = parameterStackSize - i - 1;
                         value.addParameter(stackOffset);
                     }
+                    value.addSource(new TaintSource(TaintSourceType.PARAMETER,value.getState()).setParameterIndex(stackOffset));
+//                    if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
+//                    }
                 }
                 value.setVariableIndex(i);
             }

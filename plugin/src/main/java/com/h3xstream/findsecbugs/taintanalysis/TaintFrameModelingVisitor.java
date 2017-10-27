@@ -19,6 +19,8 @@ package com.h3xstream.findsecbugs.taintanalysis;
 
 import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import com.h3xstream.findsecbugs.common.ByteCode;
+import com.h3xstream.findsecbugs.taintanalysis.data.TaintSource;
+import com.h3xstream.findsecbugs.taintanalysis.data.TaintSourceType;
 import edu.umd.cs.findbugs.ba.AbstractFrameModelingVisitor;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
 import edu.umd.cs.findbugs.ba.InvalidBytecodeException;
@@ -115,6 +117,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         //Print the bytecode instruction if it is globally configured
         if (FindSecBugsGlobalConfig.getInstance().isDebugPrintInvocationVisited()
                 && ins instanceof InvokeInstruction) {
+            //System.out.println(getFrame().toString());
             ByteCode.printOpCode(ins, cpg);
         } else if (FindSecBugsGlobalConfig.getInstance().isDebugPrintInstructionVisited()) {
             ByteCode.printOpCode(ins, cpg);
@@ -208,12 +211,14 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     @Override
     public void visitGETFIELD(GETFIELD obj) {
-        Taint.State state = taintConfig.getClassTaintState(obj.getSignature(cpg), Taint.State.UNKNOWN);
+        String fieldSig = obj.getSignature(cpg);
+        Taint.State state = taintConfig.getClassTaintState(fieldSig, Taint.State.UNKNOWN);
         Taint taint = new Taint(state);
 
         if (!state.equals(Taint.State.SAFE)){
             taint.addLocation(getTaintLocation(), false);
         }
+        taint.addSource(new TaintSource(TaintSourceType.FIELD,state).setSignatureField(fieldSig));
         if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             taint.setDebugInfo("." + obj.getFieldName(cpg));
         }
@@ -396,8 +401,9 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             Taint taint = getMethodTaint(methodConfig);
             assert taint != null;
             if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
-                taint.setDebugInfo(obj.getMethodName(cpg) + "()");
+                taint.setDebugInfo(obj.getMethodName(cpg) + "()"); //TODO: Deprecated debug info
             }
+            taint.addSource(new TaintSource(TaintSourceType.RETURN,taint.getState()).setSignatureMethod(obj.getClassName(cpg).replace(".","/")+"."+obj.getMethodName(cpg)+obj.getSignature(cpg)));
             if (taint.isUnknown()) {
                 taint.addLocation(getTaintLocation(), false);
             }
@@ -413,7 +419,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             int nbParam = getNumWordsConsumed(obj);
             List<Taint> parameters = new ArrayList<>(nbParam);
             for(int i=0;i<Math.min(stackDepth,nbParam);i++) {
-                parameters.add(tf.getStackValue(i));
+                parameters.add(new Taint(tf.getStackValue(i)));
             }
 
             modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taintCopy);

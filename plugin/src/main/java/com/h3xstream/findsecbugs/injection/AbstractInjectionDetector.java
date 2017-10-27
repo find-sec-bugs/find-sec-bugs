@@ -85,7 +85,7 @@ public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
             Taint parameterTaint = fact.getStackValue(offset);
 
             InjectionSink injectionSink = new InjectionSink(this, injectionPoint.getBugType(), priority,
-                    classContext, method, handle, injectionPoint.getInjectableMethod());
+                    classContext, method, handle, injectionPoint.getInjectableMethod(),offset);
             injectionSink.addLines(parameterTaint.getAllLocations());
             injectionSink.addUnknownSources(parameterTaint.getUnknownLocations());
             if (parameterTaint.hasParameters()) {

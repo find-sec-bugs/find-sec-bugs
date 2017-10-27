@@ -1,2 +1,2 @@
-
+org/apache/struts2/dispatcher/Parameter.getValue()Ljava/lang/String;:TAINTED
 org/apache/struts2/util/StrutsUtil.buildUrl(Ljava/lang/String;)Ljava/lang/String;:0|+URL_ENCODED,+XSS_SAFE

@@ -23,7 +23,7 @@ public class Application {
                 System.out.println("Loading ...");
 
                 String configXml = new String(Files.readAllBytes(Paths.get("/test")));
-                XmlService.receiveXMLStream(configXml);
+                XmlService.receiveXMLStream(1,1,configXml);
             }
             catch (Exception e) {
             }

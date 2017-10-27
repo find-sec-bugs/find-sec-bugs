@@ -98,6 +98,31 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j</artifactId>
+            <version>3.2.6</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.neo4j</groupId>
+                    <artifactId>neo4j-cypher-compiler-2.3</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.neo4j</groupId>
+                    <artifactId>neo4j-cypher-compiler-3.1</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.neo4j</groupId>
+                    <artifactId>neo4j-jmx</artifactId>
+                </exclusion>
+                <!--<exclusion>-->
+                <!--<groupId>org.neo4j</groupId>-->
+                <!--<artifactId>neo4j-consistency-check</artifactId>-->
+                <!--</exclusion>-->
+            </exclusions>
+        </dependency>
+
         <!-- FindBugs API (Detector interface and transitive deps like BCEL..) -->
         <dependency>
             <groupId>com.github.spotbugs</groupId>
@@ -143,17 +168,16 @@
             <artifactId>commons-io</artifactId>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
-            <groupId>com.h3xstream.findsecbugs</groupId>
-            <artifactId>findsecbugs-plugin-deps</artifactId>
-            <scope>provided</scope>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j</artifactId>
-            <version>3.2.6</version>
+            <groupId>com.h3xstream.findsecbugs</groupId>
+            <artifactId>findsecbugs-plugin-deps</artifactId>
             <scope>provided</scope>
         </dependency>
 

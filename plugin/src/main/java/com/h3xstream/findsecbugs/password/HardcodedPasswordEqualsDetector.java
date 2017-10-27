@@ -102,6 +102,11 @@ public class HardcodedPasswordEqualsDetector extends BasicInjectionDetector impl
     }
 
     @Override
+    public void visitReturn(InvokeInstruction invoke, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType) throws Exception {
+
+    }
+
+    @Override
     public void visitLoad(LoadInstruction instruction, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType, int numProduced) {
         //Extract the name of the variable
         int index = instruction.getIndex();

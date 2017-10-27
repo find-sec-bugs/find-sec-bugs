@@ -36,6 +36,16 @@ public interface TaintFrameAdditionalVisitor {
     void visitInvoke(InvokeInstruction invoke, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType, List<Taint> parameters) throws Exception;
 
     /**
+     *
+     * @param invoke
+     * @param cpg
+     * @param methodGen Method
+     * @param frameType Frame representation after the invoke (results)
+     */
+    void visitReturn(InvokeInstruction invoke, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType) throws Exception;
+
+
+    /**
      * @param load
      * @param cpg
      * @param methodGen

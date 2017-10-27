@@ -11,6 +11,6 @@ public class MainStart {
     public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException {
 
         String configXml = new String(Files.readAllBytes(Paths.get("/test")));
-        XmlService.receiveXMLStream(configXml);
+        XmlService.receiveXMLStream(1,1,configXml);
     }
 }

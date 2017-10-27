@@ -15,20 +15,27 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.graph.model;
+package com.h3xstream.findsecbugs.graph;
 
-import org.neo4j.graphdb.RelationshipType;
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 
-public enum RelTypes implements RelationshipType {
-    //Link between two methods
-    CALL,
+import java.io.File;
+import java.util.Map;
 
-    //Link between Class and method
-    FROM_CLASS,
+public class GraphSandbox {
+    
+    public static void main(String[] args){
+        File dbLocation = new File("codegraph.db");
+        System.out.println("Graph db created : "+dbLocation.toString());
+        GraphDatabaseService graphDb = new GraphDatabaseFactory().newEmbeddedDatabase(dbLocation);
 
-    //Link between Class and Class/Interface
-    EXTENDS,
-    IMPLEMENTS,
-
-    TRANSFER,
+        Runtime.getRuntime().addShutdownHook( new Thread() {
+            @Override
+            public void run()
+            {
+                graphDb.shutdown();
+            }
+        } );
+    }
 }

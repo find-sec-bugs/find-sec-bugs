@@ -11,7 +11,7 @@ public class WelcomeController {
 
     @GetMapping("/test")
     public String direct(@RequestParam("xml") String xml) throws Exception {
-        XmlService.receiveXMLStream(xml);
+        XmlService.receiveXMLStream(1,1, xml);
         return "/test";
     }
 
@@ -22,6 +22,6 @@ public class WelcomeController {
     }
 
     public void callMe(String xml) throws IOException, SAXException, ParserConfigurationException {
-        XmlService.receiveXMLStream(xml);
+        XmlService.receiveXMLStream(1,1,xml);
     }
 }

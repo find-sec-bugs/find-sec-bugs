@@ -99,5 +99,31 @@ public class TaintFrameTest {
         }
     }
 
+    @Test
+    public void validateSimpleTaintFrameWithOptionalAndConstant() {
+        Taint unknown = new Taint(Taint.State.UNKNOWN);
+        unknown.setPotentialValue("12345678");
+        unknown.addTag(Taint.Tag.PASSWORD_VARIABLE);
+
+        Taint constant = new Taint(Taint.State.SAFE);
+        constant.setConstantValue("H@rdC0deStr1ng");
+
+        TaintFrame frame = new TaintFrame(0);
+        frame.pushValue(new Taint(Taint.State.TAINTED));
+        frame.pushValue(unknown);
+        frame.pushValue(new Taint(Taint.State.NULL));
+        frame.pushValue(constant);
+
+        String debugOutput = frame.toString();
+        System.out.println(debugOutput);
+        assertTrue(debugOutput.contains("0. SAFE {S"));
+        assertTrue(debugOutput.contains("1. NULL {N}"));
+        assertTrue(debugOutput.contains("2. UNKNOWN {U"));
+        assertTrue(debugOutput.contains("3. TAINTED {T}"));
+        assertTrue(debugOutput.contains("12345678"));
+        assertTrue(debugOutput.contains("PASSWORD_VARIABLE"));
+        assertTrue(debugOutput.contains("H@rdC0deStr1ng"));
+    }
+
 
 }

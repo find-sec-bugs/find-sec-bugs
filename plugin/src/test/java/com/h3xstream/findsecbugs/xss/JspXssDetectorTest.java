@@ -211,7 +211,7 @@ public class JspXssDetectorTest extends BaseDetectorTest {
     }
 
     @Test
-    public void detectXssRequestAttribute() throws Exception {
+    public void detectXssRequestAttributeWithCustomConfiguration() throws Exception {
         //Locate test code
         String[] files = {
                 getJspFilePath("xss/xss_8_request_attribute.jsp")

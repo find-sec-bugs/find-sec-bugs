@@ -8,14 +8,36 @@
     </div>
 </div>
 
-
-
-
-
-
 <div class="container">
+
+
+
     <div class="row">
         <div class="col-md-11" id="mainCol">
+
+
+            <h2>Table of Contents</h2>
+
+            <p>
+                <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    Display / Hide
+                </a>
+            </p>
+            <div class="collapse" id="collapseExample">
+                <div class="card card-block">
+
+                    <ul>
+                        <% bugPatterns.each { b->
+                        print """
+                        <li><a href="#${b.type}">
+                            ${b.title} (${b.type})
+                        </a></li>
+                        """
+                        }
+                        %>
+                    </ul>
+                </div>
+            </div>
 
     <%
 
@@ -24,7 +46,12 @@
     bugPatterns.each {b->
     print """
     <section>
-        <a class="anchor" name="${b.type}"></a><h2 class="page-header">${b.title}  <a href="#${b.type}" title="Permanent link"><small><i class="fa fa-link"></i></small></a></h2>
+        <a class="anchor" name="${b.type}"></a>
+        <h2 class="page-header">
+            ${b.title}
+            <a href="#${b.type}" title="Permanent link"><small><i class="fa fa-link"></i></small></a>
+        </h2>
+        <p><b>Bug Pattern:</b> <tt>${b.type}</tt></p>
 
         ${b.description}
     </section>

@@ -406,22 +406,33 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             Taint taintCopy = new Taint(taint);
             // return type is not always the instance type
             taintCopy.setRealInstanceClass(realInstanceClass);
+
+            TaintFrame tf = getFrame();
+
+            int stackDepth = tf.getStackDepth();
+            int nbParam = getNumWordsConsumed(obj);
+            List<Taint> parameters = new ArrayList<>(nbParam);
+            for(int i=0;i<Math.min(stackDepth,nbParam);i++) {
+                parameters.add(tf.getStackValue(i));
+            }
+
             modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taintCopy);
+
+            for(TaintFrameAdditionalVisitor visitor : visitors) {
+                try {
+                    visitor.visitInvoke(obj, cpg, methodGen, getFrame() , parameters);
+                }
+                catch (Throwable e) {
+                    LOG.log(Level.SEVERE,"Error while executing "+visitor.getClass().getName(),e);
+                }
+            }
+
         } catch (Exception e) {
             String className = ClassName.toSlashedClassName(obj.getReferenceType(cpg).toString());
             String methodName = obj.getMethodName(cpg);
             String signature = obj.getSignature(cpg);
 
             throw new RuntimeException("Unable to call " + className + '.' + methodName + signature, e);
-        }
-
-        for(TaintFrameAdditionalVisitor visitor : visitors) {
-            try {
-                visitor.visitInvoke(obj, cpg, methodGen, getFrame());
-            }
-            catch (Throwable e) {
-                LOG.log(Level.SEVERE,"Error while executing "+visitor.getClass().getName(),e);
-            }
         }
     }
 

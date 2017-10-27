@@ -22,15 +22,18 @@ import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.bcel.generic.LoadInstruction;
 import org.apache.bcel.generic.MethodGen;
 
+import java.util.List;
+
 public interface TaintFrameAdditionalVisitor {
 
     /**
-     *  @param invoke
+     * @param invoke
      * @param cpg
-     * @param methodGen
-     * @param frameType
+     * @param methodGen Method
+     * @param frameType Frame representation after the invoke (results)
+     * @param parameters Stack representation just before the invoke
      */
-    void visitInvoke(InvokeInstruction invoke, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType) throws ClassNotFoundException;
+    void visitInvoke(InvokeInstruction invoke, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType, List<Taint> parameters) throws Exception;
 
     /**
      * @param load
@@ -39,6 +42,6 @@ public interface TaintFrameAdditionalVisitor {
      * @param frameType
      * @param numProduced
      */
-    void visitLoad(LoadInstruction load, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType, int numProduced);
+    void visitLoad(LoadInstruction load, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType, int numProduced) throws Exception;
 
 }

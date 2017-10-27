@@ -142,10 +142,8 @@ public class InjectionSink {
 
         for(TaintLocation source : unknownSources) {
             addMessage(bug, "Unknown source", source.getTaintSource());
-            //md.getSlashedClassName() + "." + md.getName() + md.getSignature());
         }
 
-        addMessage(bug, "Sink method", sinkMethod);
         if (sinkPriority != UNKNOWN_SINK_PRIORITY) {
             // higher priority is represented by lower integer
             if (sinkPriority < originalPriority) {

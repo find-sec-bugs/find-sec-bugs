@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.password;
 
+import com.h3xstream.findsecbugs.common.TaintUtil;
 import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
 import com.h3xstream.findsecbugs.injection.InjectionPoint;
 import com.h3xstream.findsecbugs.taintanalysis.Taint;
@@ -78,7 +79,7 @@ public class IntuitiveHardcodePasswordDetector extends BasicInjectionDetector {
             throws DataflowAnalysisException {
         Taint stringValue = fact.getStackValue(offset);
 
-        if (stringValue.isSafe() && stringValue.getConstantValue() != null) { //Is a constant value
+        if (TaintUtil.isConstantValue(stringValue)) { //Is a constant value
             return Priorities.NORMAL_PRIORITY;
         } else {
             return Priorities.IGNORE_PRIORITY;

@@ -28,13 +28,14 @@ import org.apache.bcel.Constants;
 /**
  * Ref: http://cwe.mitre.org/data/definitions/780.html
  */
-public class RsaNoPaddingDetector extends OpcodeStackDetector {
+@Deprecated
+public class OldRsaNoPaddingDetector extends OpcodeStackDetector {
 
     private static final String RSA_NO_PADDING_TYPE = "RSA_NO_PADDING";
 
     private final BugReporter bugReporter;
 
-    public RsaNoPaddingDetector(BugReporter bugReporter) {
+    public OldRsaNoPaddingDetector(BugReporter bugReporter) {
         this.bugReporter = bugReporter;
     }
 

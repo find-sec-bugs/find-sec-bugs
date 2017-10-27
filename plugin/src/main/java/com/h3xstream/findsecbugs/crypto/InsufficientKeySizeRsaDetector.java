@@ -35,7 +35,6 @@ import java.util.Iterator;
  */
 public class InsufficientKeySizeRsaDetector implements Detector {
 
-    private static final boolean DEBUG = false;
     private static final String RSA_KEY_SIZE_TYPE = "RSA_KEY_SIZE";
 
     private BugReporter bugReporter;
@@ -121,7 +120,7 @@ public class InsufficientKeySizeRsaDetector implements Detector {
                     }
                 }
             }
-        }       
+        }
     }
 
     private void addToReport(Method m, ClassContext classContext, Location locationWeakness, Number n){

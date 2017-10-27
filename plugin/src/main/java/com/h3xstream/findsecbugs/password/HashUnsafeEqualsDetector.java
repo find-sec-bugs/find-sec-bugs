@@ -103,7 +103,7 @@ public class HashUnsafeEqualsDetector extends BasicInjectionDetector implements 
     }
 
     @Override
-    public void visitInvoke(InvokeInstruction invoke, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType) {
+    public void visitInvoke(InvokeInstruction invoke, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType, List<Taint> parameters) {
 
     }
 

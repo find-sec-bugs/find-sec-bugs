@@ -34,6 +34,7 @@
     <Detector class="com.h3xstream.findsecbugs.file.FileUploadFilenameDetector" reports="FILE_UPLOAD_FILENAME"/>
     <Detector class="com.h3xstream.findsecbugs.ReDosDetector" reports="REDOS"/>
     <Detector class="com.h3xstream.findsecbugs.xml.XxeDetector" reports="XXE_SAXPARSER,XXE_XMLREADER,XXE_DOCUMENT"/>
+    <Detector class="com.h3xstream.findsecbugs.xml.TransformerFactoryDetector" reports="XXE_DTD_TRANSFORM_FACTORY,XXE_XSLT_TRANSFORM_FACTORY"/>
     <Detector class="com.h3xstream.findsecbugs.xml.XmlStreamReaderDetector" reports="XXE_XMLSTREAMREADER"/>
     <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionDetector" reports="XPATH_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.endpoint.Struts1EndpointDetector" reports="STRUTS1_ENDPOINT"/>
@@ -51,8 +52,9 @@
     <Detector class="com.h3xstream.findsecbugs.crypto.NullCipherDetector" reports="NULL_CIPHER"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.UnencryptedSocketDetector" reports="UNENCRYPTED_SOCKET"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.UnencryptedServerSocketDetector" reports="UNENCRYPTED_SERVER_SOCKET"/>
-    <Detector class="com.h3xstream.findsecbugs.crypto.DesUsageDetector" reports="DES_USAGE"/>
-    <Detector class="com.h3xstream.findsecbugs.crypto.RsaNoPaddingDetector" reports="RSA_NO_PADDING"/>
+    <Detector class="com.h3xstream.findsecbugs.crypto.cipher.DesUsageDetector" reports="DES_USAGE"/>
+    <Detector class="com.h3xstream.findsecbugs.crypto.cipher.TDesUsageDetector" reports="TDES_USAGE"/>
+    <Detector class="com.h3xstream.findsecbugs.crypto.cipher.RsaNoPaddingDetector" reports="RSA_NO_PADDING"/>
     <Detector class="com.h3xstream.findsecbugs.password.ConstantPasswordDetector" reports="HARD_CODE_PASSWORD,HARD_CODE_KEY"/>
     <Detector class="com.h3xstream.findsecbugs.password.GoogleApiKeyDetector" reports="HARD_CODE_PASSWORD"/>
     <Detector class="com.h3xstream.findsecbugs.password.HardcodePasswordInMapDetector" reports="HARD_CODE_PASSWORD"/>
@@ -114,6 +116,7 @@
     <Detector class="com.h3xstream.findsecbugs.injection.formatter.FormatStringManipulationDetector" reports="FORMAT_STRING_MANIPULATION"/>
     <Detector class="com.h3xstream.findsecbugs.injection.http.HttpParameterPollutionDetector" reports="HTTP_PARAMETER_POLLUTION"/>
     <Detector class="com.h3xstream.findsecbugs.spring.SpringUnvalidatedRedirectDetector" reports="SPRING_UNVALIDATED_REDIRECT"/>
+    <Detector class="com.h3xstream.findsecbugs.PotentialValueDetector" reports="HARD_CODE_PASSWORD,DES_USAGE,WEAK_MESSAGE_DIGEST_MD5,WEAK_MESSAGE_DIGEST_SHA1"/>
 
     <BugPattern type="HTTP_PARAMETER_POLLUTION" abbrev="SECHPP" category="SECURITY"/>
     <BugPattern type="FORMAT_STRING_MANIPULATION" abbrev="SECFSM" category="SECURITY"/>
@@ -161,6 +164,8 @@
     <BugPattern type="XXE_SAXPARSER" abbrev="SECXXESAX" category="SECURITY" cweid="611"/>
     <BugPattern type="XXE_XMLREADER" abbrev="SECXXEREAD" category="SECURITY" cweid="611"/>
     <BugPattern type="XXE_DOCUMENT" abbrev="SECXXEDOC" category="SECURITY" cweid="611"/>
+    <BugPattern type="XXE_DTD_TRANSFORM_FACTORY" abbrev="SECXXETFDTD" category="SECURITY" cweid="611"/>
+    <BugPattern type="XXE_XSLT_TRANSFORM_FACTORY" abbrev="SECXXETFXSLT" category="SECURITY" cweid="611"/>
     <BugPattern type="XXE_XMLSTREAMREADER" abbrev="SECXXESTR" category="SECURITY" cweid="611"/>
     <BugPattern type="XPATH_INJECTION" abbrev="SECXPI" category="SECURITY" cweid="643"/>
     <BugPattern type="STRUTS1_ENDPOINT" abbrev="SECSTR1" category="SECURITY"/>
@@ -187,7 +192,8 @@
     <BugPattern type="NULL_CIPHER" abbrev="SECNC" category="SECURITY" cweid="327"/>
     <BugPattern type="UNENCRYPTED_SOCKET" abbrev="SECUS" category="SECURITY" cweid="319"/>
     <BugPattern type="UNENCRYPTED_SERVER_SOCKET" abbrev="SECUSS" category="SECURITY" cweid="319"/>
-    <BugPattern type="DES_USAGE" abbrev="SECDU" category="SECURITY" cweid="326"/>
+    <BugPattern type="DES_USAGE" abbrev="SECDU" category="SECURITY" cweid="327"/>
+    <BugPattern type="TDES_USAGE" abbrev="SECTDU" category="SECURITY" cweid="326"/>
     <BugPattern type="RSA_NO_PADDING" abbrev="SECRNP" category="SECURITY" cweid="780"/>
     <BugPattern type="HARD_CODE_PASSWORD" abbrev="SECHCP" category="SECURITY" cweid="259"/>
     <BugPattern type="UNSAFE_HASH_EQUALS" abbrev="SECUHE" category="SECURITY" cweid="203"/>
@@ -209,7 +215,7 @@
     <BugPattern type="XML_DECODER" abbrev="XMLDEC" category="SECURITY"/>
     <BugPattern type="STATIC_IV" abbrev="STAIV" category="SECURITY" cweid="329"/>
     <BugPattern type="ECB_MODE" abbrev="SECECB" category="SECURITY" cweid="327"/>
-    <BugPattern type="PADDING_ORACLE" abbrev="PADORA" category="SECURITY"/>
+    <BugPattern type="PADDING_ORACLE" abbrev="PADORA" category="SECURITY" cweid="326"/>
     <BugPattern type="CIPHER_INTEGRITY" abbrev="CIPINT" category="SECURITY" cweid="353"/>
     <BugPattern type="ESAPI_ENCRYPTOR" abbrev="ESAPIENC" category="SECURITY"/>
     <BugPattern type="SCRIPT_ENGINE_INJECTION" abbrev="SCRIPTE" category="SECURITY" cweid="94"/>

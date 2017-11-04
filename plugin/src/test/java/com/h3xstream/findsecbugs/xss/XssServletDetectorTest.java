@@ -56,14 +56,9 @@ public class XssServletDetectorTest extends BaseDetectorTest {
     verify(reporter).doReportBug(
       bugDefinition()
         .bugType("XSS_SERVLET")
-        .inClass("XssServlet1").inMethod("doGet").withPriority("High").atLine(16)
+        .inClass("XssServlet1").inMethod("doGet").withPriority("High").atLine(17)
         .build());
 
-    verify(reporter).doReportBug(
-      bugDefinition()
-        .bugType("XSS_SERVLET")
-        .inClass("XssServlet1").inMethod("doGet").withPriority("Low").atLine(18)
-        .build());
     verify(reporter).doReportBug(
       bugDefinition()
         .bugType("XSS_SERVLET")
@@ -72,12 +67,17 @@ public class XssServletDetectorTest extends BaseDetectorTest {
     verify(reporter).doReportBug(
       bugDefinition()
         .bugType("XSS_SERVLET")
-        .inClass("XssServlet1").inMethod("doGet").withPriority("High").atLine(21)
+        .inClass("XssServlet1").inMethod("doGet").withPriority("Low").atLine(20)
         .build());
     verify(reporter).doReportBug(
       bugDefinition()
         .bugType("XSS_SERVLET")
         .inClass("XssServlet1").inMethod("doGet").withPriority("High").atLine(22)
+        .build());
+    verify(reporter).doReportBug(
+      bugDefinition()
+        .bugType("XSS_SERVLET")
+        .inClass("XssServlet1").inMethod("doGet").withPriority("High").atLine(23)
         .build());
 
     verify(reporter, times(5)).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());

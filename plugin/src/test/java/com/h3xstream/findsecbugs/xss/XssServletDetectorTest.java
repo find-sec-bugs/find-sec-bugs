@@ -187,4 +187,25 @@ public class XssServletDetectorTest extends BaseDetectorTest {
         verify(reporter, never()).doReportBug(bugDefinition().bugType("XSS_SERVLET").inClass("XssServlet6")
                 .inMethod("doPost").withPriority("Low").build());
     }
+
+    @Test
+    public void detectXssServlet7() throws Exception {
+        // Locate test code
+        String[] files = { getClassFilePath("testcode/xss/servlets/XssServlet7") };
+
+        // Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter).doReportBug(bugDefinition().bugType("XSS_SERVLET").inClass("XssServlet7")
+                .inMethod("doPost").atLine(32).withPriority("High").build());
+
+        verify(reporter).doReportBug(bugDefinition().bugType("XSS_SERVLET").inClass("XssServlet7")
+                .inMethod("doPost").atLine(34).withPriority("Low").build());
+
+        verify(reporter).doReportBug(bugDefinition().bugType("XSS_SERVLET").inClass("XssServlet7")
+                .inMethod("doPost").atLine(35).withPriority("Low").build());
+
+        verify(reporter, times(3)).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
+    }
 }

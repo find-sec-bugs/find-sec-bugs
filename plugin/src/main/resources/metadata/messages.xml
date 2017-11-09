@@ -5669,4 +5669,35 @@ Sanitize user input before using it in HTTP parameters.
         <Details>Help other detector at finding hardcoded value used if a dynamic parameter is null.</Details>
     </Detector>
 
+    <!-- ErrorMessageDetector -->
+    <Detector class="com.h3xstream.findsecbugs.crypto.ErrorMessageExposureDetector">
+        <Details>Detect possible information exposure through error message.
+        </Details>
+    </Detector>
+
+    <BugPattern type="INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE">
+        <ShortDescription>Information Exposure Through An Error Message</ShortDescription>
+        <LongDescription>Possible information exposure through an error message</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+The sensitive information may be valuable information on its own (such as a password), or it may be useful for launching other, more deadly attacks. If an attack fails, an attacker may use error information provided by the server to launch another more focused attack. For example, an attempt to exploit a path traversal weakness (CWE-22) might yield the full pathname of the installed application. In turn, this could be used to select the proper number of ".." sequences to navigate to the targeted file. An attack using SQL injection (CWE-89) might not initially succeed, but an error message could reveal the malformed query, which would expose query logic and possibly even passwords or other sensitive information used within the query.
+</p>
+<p>
+    <b>Vulnerable Code:</b><br/>
+<pre>try {
+    /.../
+}
+catch (Exception e) {
+    e.printStackTrace();
+}</pre>
+
+<p>
+<b>References</b><br/>
+<a href="https://cwe.mitre.org/data/definitions/209.html">CWE-209: Information Exposure Through an Error Message</a>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="ERRMSG">Information Exposure Through An Error Message</BugCode>
 </MessageCollection>

@@ -128,3 +128,5 @@ javax/servlet/jsp/JspWriter.print([C)V:UNKNOWN
 javax/servlet/jsp/JspWriter.print(Ljava/lang/Object;)V:UNKNOWN
 javax/servlet/jsp/JspWriter.println([C)V:UNKNOWN
 javax/servlet/jsp/JspWriter.println(Ljava/lang/Object;)V:UNKNOWN
+
+org/apache/commons/fileupload/FileItem.getName()Ljava/lang/String;:TAINTED

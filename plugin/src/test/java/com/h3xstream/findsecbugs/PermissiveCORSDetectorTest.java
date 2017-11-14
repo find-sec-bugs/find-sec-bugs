@@ -72,8 +72,22 @@ public class PermissiveCORSDetectorTest extends BaseDetectorTest {
                         .inClass("PermissiveCORS").inMethod("setPermissiveCORS").atLine(41)
                         .build()
         );
+        //6th - set instead of add: resp.setHeader("Access-Control-Allow-Origin", req.getParameter("tainted"));
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("PERMISSIVE_CORS")
+                        .inClass("PermissiveCORS").inMethod("setPermissiveCORSWithRequestVariable").atLine(45)
+                        .build()
+        );
+        //7th - set instead of add: resp.setHeader("Access-Control-Allow-Origin", unknown);
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("PERMISSIVE_CORS")
+                        .inClass("PermissiveCORS").inMethod("addPermissiveCORSWithRequestVariable").atLine(49)
+                        .build()
+        );
 
-        verify(reporter, times(5)).doReportBug(
+        verify(reporter, times(7)).doReportBug(
                 bugDefinition()
                         .bugType("PERMISSIVE_CORS")
                         .build()

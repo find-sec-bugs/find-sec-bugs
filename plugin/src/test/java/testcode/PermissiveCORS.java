@@ -15,12 +15,12 @@ public class PermissiveCORS extends HttpServlet {
         resp.getWriter().print(req.getSession().getAttribute("secret"));
     }
 
-    //False positive test
+    // False positive test
     private void falsePositiveCORS(HttpServletResponse resp) {
         resp.addHeader("Access-Control-Allow-Origin", "http://example.com");
     }
-    
-    //Overly permissive Cross-domain requests accepted
+
+    // Overly permissive Cross-domain requests accepted
     public void addPermissiveCORS(HttpServletResponse resp) {
         resp.addHeader("Access-Control-Allow-Origin", "*");
     }
@@ -39,5 +39,13 @@ public class PermissiveCORS extends HttpServlet {
 
     public void setPermissiveCORS(HttpServletResponse resp) {
         resp.setHeader("Access-Control-Allow-Origin", "*");
+    }
+
+    public void setPermissiveCORSWithRequestVariable(HttpServletResponse resp, HttpServletRequest req) {
+        resp.setHeader("Access-Control-Allow-Origin", req.getParameter("tainted"));
+    }
+
+    public void addPermissiveCORSWithRequestVariable(HttpServletResponse resp, String unknown) {
+        resp.addHeader("Access-Control-Allow-Origin", unknown);
     }
 }

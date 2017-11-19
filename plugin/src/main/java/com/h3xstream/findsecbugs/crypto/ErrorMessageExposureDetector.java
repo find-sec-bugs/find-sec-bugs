@@ -19,6 +19,7 @@ package com.h3xstream.findsecbugs.crypto;
 
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
+import edu.umd.cs.findbugs.OpcodeStack;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 import org.apache.bcel.Constants;
@@ -43,18 +44,37 @@ public class ErrorMessageExposureDetector extends OpcodeStackDetector {
     @Override
     public void sawOpcode(int seen) {
 //        printOpCode(seen);
-        if (seen == Constants.INVOKEVIRTUAL  && isVulnerableClassToPrint(getClassConstantOperand())
-                && getNameConstantOperand().equals("printStackTrace")) {
-            bugReporter.reportBug(new BugInstance(this,
-                    INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE_TYPE,
-                    Priorities.NORMAL_PRIORITY)
-                    .addClass(this).addMethod(this).addSourceLine(this));
+        if (seen == Constants.INVOKEVIRTUAL ) {
+            String fullClassName = getClassConstantOperand();
+            String method = getNameConstantOperand();
+            if(isVulnerableClassToPrint(fullClassName) && method.equals("printStackTrace")) {
+                if (stack.getStackDepth() > 1) { // If has parameters
+                    OpcodeStack.Item parameter = stack.getStackItem(0);
+                    if (parameter.getSignature().equals("Ljava/io/PrintStream;") ||
+                            parameter.getSignature().equals("Ljava/io/PrintWriter;")) {
+                        bugReporter.reportBug(new BugInstance(this,
+                                INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE_TYPE,
+                                Priorities.NORMAL_PRIORITY)
+                                .addClass(this).addMethod(this).addSourceLine(this));
+                    }
+                } else { // No parameter (only printStackTrace)
+                    bugReporter.reportBug(new BugInstance(this,
+                            INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE_TYPE,
+                            Priorities.LOW_PRIORITY)
+                            .addClass(this).addMethod(this).addSourceLine(this));
+                }
+            }
         }
     }
 
     private boolean isVulnerableClassToPrint(String classConstantOperand) {
         switch(classConstantOperand) {
-            // By following the recommendation from the CERT Oracle Secure Coding Standard for Java
+            // By following the parent classes of vulnerable class to print
+            case "java/lang/Throwable":
+            case "java/lang/Exception":
+            case "java/lang/Error":
+
+                // By following the recommendation from the CERT Oracle Secure Coding Standard for Java
             case "java/io/FileNotFoundException":
             case "java/sql/SQLException":
             case "java/net/BindException":

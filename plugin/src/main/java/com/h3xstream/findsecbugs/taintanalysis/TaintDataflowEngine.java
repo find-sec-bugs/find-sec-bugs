@@ -59,15 +59,19 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
     private static final String[] TAINT_CONFIG_FILENAMES = {
         "android-taint-sql.txt",
         "collections.txt",
+        "dropwizard.txt",
         "guava.txt",
         "java-ee.txt",
         "java-lang.txt",
         "java-net.txt",
+        "jetty.txt",
         "logging.txt",
         "other.txt",
         "portlet.txt",
         "scala.txt",
+        "sonarqube.txt",
         "struts2-taint.txt",
+        "wicket.txt",
     };
     private static final String SAFE_ENCODERS_PATH = "safe-encoders/";
     private static final String[] SAFE_ENCODERS_FILENAMES = {

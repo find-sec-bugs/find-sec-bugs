@@ -128,3 +128,6 @@ javax/servlet/jsp/JspWriter.print([C)V:UNKNOWN
 javax/servlet/jsp/JspWriter.print(Ljava/lang/Object;)V:UNKNOWN
 javax/servlet/jsp/JspWriter.println([C)V:UNKNOWN
 javax/servlet/jsp/JspWriter.println(Ljava/lang/Object;)V:UNKNOWN
+
+
+javax/ws/rs/core/MultivaluedMap.getFirst(Ljava/lang/Object;)Ljava/lang/Object;:TAINTED

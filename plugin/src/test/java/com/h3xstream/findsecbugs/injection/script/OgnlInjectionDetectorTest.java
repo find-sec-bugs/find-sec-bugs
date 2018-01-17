@@ -143,7 +143,7 @@ public class OgnlInjectionDetectorTest  extends BaseDetectorTest {
     @Test
     public void detectValueStack() throws Exception {
 
-        FindSecBugsGlobalConfig.getInstance().setDebugPrintInvocationVisited(true);
+//        FindSecBugsGlobalConfig.getInstance().setDebugPrintInvocationVisited(true);
 
         //Locate test code
         String[] files = {
@@ -153,7 +153,6 @@ public class OgnlInjectionDetectorTest  extends BaseDetectorTest {
         //Run the analysis
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
-
 
         for(Integer line : Arrays.asList(8,16)) {
             verify(reporter).doReportBug(
@@ -176,8 +175,8 @@ public class OgnlInjectionDetectorTest  extends BaseDetectorTest {
 
     @Test
     public void detectTaintedAndInjection() throws Exception {
-        FindSecBugsGlobalConfig.getInstance().setDebugTaintState(true);
-        FindSecBugsGlobalConfig.getInstance().setDebugPrintInvocationVisited(true);
+//        FindSecBugsGlobalConfig.getInstance().setDebugTaintState(true);
+//        FindSecBugsGlobalConfig.getInstance().setDebugPrintInvocationVisited(true);
 
         //Locate test code
         String[] files = {

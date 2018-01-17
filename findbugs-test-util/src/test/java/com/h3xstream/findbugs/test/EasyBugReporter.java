@@ -126,7 +126,9 @@ public class EasyBugReporter extends AbstractBugReporter {
         for(BugAnnotation ann : bugInstance.getAnnotations()) {
             if(ann instanceof StringAnnotation) {
                 StringAnnotation value = (StringAnnotation) ann;
-                sources.add(value.getValue());
+                if(value.getDescription().equals("Unknown source")) {
+                    sources.add(value.getValue());
+                }
             }
         }
         return sources;

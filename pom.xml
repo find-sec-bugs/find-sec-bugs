@@ -49,6 +49,8 @@
                     <excludes>
                         <exclude>**/SMAPSourceDebugExtension.java</exclude>
                         <exclude>**/testcode/**/**.java</exclude>
+                        <exclude>**/testcasesupport/**/**.java</exclude>
+                        <exclude>**/testcases/**/**.java</exclude>
                         <exclude>**/package-info.java</exclude>
                         <!-- Package that contains stub api -->
                         <exclude>**/java/android/**/**.java</exclude>
@@ -58,7 +60,10 @@
                         <exclude>**/org/apache/**/**.java</exclude>
                         <exclude>**/org/bouncycastle/**/**.java</exclude>
                         <exclude>**/org/hibernate/**/**.java</exclude>
+                        <exclude>**/org/eclipse/jetty/**/**.java</exclude>
+                        <exclude>**/org/sonarqube/**/**.java</exclude>
                         <exclude>**/org/owasp/**/**.java</exclude>
+                        <exclude>**/io/dropwizard/**/**.java</exclude>
                         <exclude>**/org/jboss/**/**.java</exclude>
                         <exclude>**/org/springframework/**/**.java</exclude>
                         <exclude>**/com/unboundid/ldap/**/**.java</exclude>

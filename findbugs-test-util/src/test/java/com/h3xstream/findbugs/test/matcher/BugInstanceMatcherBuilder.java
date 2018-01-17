@@ -49,6 +49,7 @@ public class BugInstanceMatcherBuilder {
     private String priority;
     private String jspFile;
     private Integer jspLine;
+    private List<String> unknownSources = new ArrayList<>();
 
     public BugInstanceMatcherBuilder bugType(String bugType) {
         this.bugType = bugType;
@@ -106,6 +107,11 @@ public class BugInstanceMatcherBuilder {
         return this;
     }
 
+    public BugInstanceMatcherBuilder causeBySource(String unknownSource) {
+        this.unknownSources.add(unknownSource);
+        return this;
+    }
+
     /**
      * @return Mockito Matcher
      */
@@ -123,7 +129,7 @@ public class BugInstanceMatcherBuilder {
             }
         }
 
-        return Matchers.argThat(new BugInstanceMatcher(bugType, className, methodName, fieldName, lineNumber, lineNumberApprox, priority, jspFile, multipleChoicesLine));
+        return Matchers.argThat(new BugInstanceMatcher(bugType, className, methodName, fieldName, lineNumber, lineNumberApprox, priority, jspFile, multipleChoicesLine,unknownSources));
     }
 
     private static List<Integer>  mapJspToJavaLine(String jspFile, Integer jspLine) {

@@ -19,8 +19,9 @@ package com.h3xstream.findsecbugs.taintanalysis;
 
 import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import com.h3xstream.findsecbugs.common.ByteCode;
-import com.h3xstream.findsecbugs.taintanalysis.data.TaintSource;
-import com.h3xstream.findsecbugs.taintanalysis.data.TaintSourceType;
+import com.h3xstream.findsecbugs.taintanalysis.data.TaintLocation;
+import com.h3xstream.findsecbugs.taintanalysis.data.UnknownSource;
+import com.h3xstream.findsecbugs.taintanalysis.data.UnknownSourceType;
 import edu.umd.cs.findbugs.ba.AbstractFrameModelingVisitor;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
 import edu.umd.cs.findbugs.ba.InvalidBytecodeException;
@@ -195,7 +196,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             if (!state.equals(Taint.State.SAFE)){
                 taint.addLocation(getTaintLocation(), false);
             }
-            taint.addSource(new TaintSource(TaintSourceType.FIELD,state).setSignatureField(fieldSig));
+            taint.addSource(new UnknownSource(UnknownSourceType.FIELD,state).setSignatureField(fieldSig));
 
             modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taint);
         }
@@ -228,7 +229,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         if (!state.equals(Taint.State.SAFE)){
             taint.addLocation(getTaintLocation(), false);
         }
-        taint.addSource(new TaintSource(TaintSourceType.FIELD,state).setSignatureField(fieldSig));
+        taint.addSource(new UnknownSource(UnknownSourceType.FIELD,state).setSignatureField(fieldSig));
         if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             taint.setDebugInfo("." + obj.getFieldName(cpg));
         }
@@ -413,7 +414,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
                 taint.setDebugInfo(obj.getMethodName(cpg) + "()"); //TODO: Deprecated debug info
             }
-            taint.addSource(new TaintSource(TaintSourceType.RETURN,taint.getState()).setSignatureMethod(obj.getClassName(cpg).replace(".","/")+"."+obj.getMethodName(cpg)+obj.getSignature(cpg)));
+            taint.addSource(new UnknownSource(UnknownSourceType.RETURN,taint.getState()).setSignatureMethod(obj.getClassName(cpg).replace(".","/")+"."+obj.getMethodName(cpg)+obj.getSignature(cpg)));
             if (taint.isUnknown()) {
                 taint.addLocation(getTaintLocation(), false);
             }
@@ -667,19 +668,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     }
 
     private TaintLocation getTaintLocation() {
-        Instruction inst = getLocation().getHandle().getInstruction();
-        if(inst instanceof InvokeInstruction) {
-            InvokeInstruction invoke = (InvokeInstruction) inst;
-            String sig = invoke.getClassName(cpg).replaceAll("\\.","/") + "." + invoke.getMethodName(cpg) + invoke.getSignature(cpg);
-            return new TaintLocation(methodDescriptor, getLocation().getHandle().getPosition(), sig);
-        }
-        else if(inst instanceof FieldInstruction) {
-            FieldInstruction field = (FieldInstruction) inst;
-            String className = field.getClassName(cpg).replace('.','/');
-            String fieldName = field.getFieldName(cpg);
-            return new TaintLocation(methodDescriptor, getLocation().getHandle().getPosition(), className + "." + fieldName);
-        }
-        return new TaintLocation(methodDescriptor, getLocation().getHandle().getPosition(), "!!Unknown source type!!");
+        return new TaintLocation(methodDescriptor, getLocation().getHandle().getPosition());
     }
 
     /**

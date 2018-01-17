@@ -18,8 +18,8 @@
 package com.h3xstream.findsecbugs.taintanalysis;
 
 import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
-import com.h3xstream.findsecbugs.taintanalysis.data.TaintSource;
-import com.h3xstream.findsecbugs.taintanalysis.data.TaintSourceType;
+import com.h3xstream.findsecbugs.taintanalysis.data.UnknownSource;
+import com.h3xstream.findsecbugs.taintanalysis.data.UnknownSourceType;
 import edu.umd.cs.findbugs.ba.BasicBlock;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
 import edu.umd.cs.findbugs.ba.DepthFirstSearch;
@@ -114,7 +114,7 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
                     if (isTaintedByAnnotation(i - 1)) {
                         value = new Taint(Taint.State.TAINTED);
                         // this would add line number for the first instruction in the method
-                        //value.addLocation(new TaintLocation(methodDescriptor, 0), true);
+                        //value.addLocation(new TaintLocation(methodDescriptor, 0,""), true);
                     } else if (inMainMethod) {
                         if (FindSecBugsGlobalConfig.getInstance().isTaintedMainArgument()) {
                             value = new Taint(Taint.State.TAINTED);
@@ -124,9 +124,7 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
                     } else {
                         value.addParameter(stackOffset);
                     }
-                    value.addSource(new TaintSource(TaintSourceType.PARAMETER,value.getState()).setParameterIndex(stackOffset));
-//                    if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
-//                    }
+                    value.addSource(new UnknownSource(UnknownSourceType.PARAMETER,value.getState()).setParameterIndex(stackOffset));
                 }
                 value.setVariableIndex(i);
             }

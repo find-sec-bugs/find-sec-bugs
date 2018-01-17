@@ -24,8 +24,8 @@ import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
 import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import com.h3xstream.findsecbugs.taintanalysis.TaintFrame;
 import com.h3xstream.findsecbugs.taintanalysis.TaintFrameAdditionalVisitor;
-import com.h3xstream.findsecbugs.taintanalysis.data.TaintSource;
-import com.h3xstream.findsecbugs.taintanalysis.data.TaintSourceType;
+import com.h3xstream.findsecbugs.taintanalysis.data.UnknownSource;
+import com.h3xstream.findsecbugs.taintanalysis.data.UnknownSourceType;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.ba.XClass;
@@ -158,7 +158,7 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
                                 "type", "P");
 
                         //Source
-                        for(TaintSource source : param.getSources()) {
+                        for(UnknownSource source : param.getSources()) {
                             linkSourceToNode(source, destParamNode, sourceCall);
                         }
 
@@ -194,7 +194,7 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
                         "type", "P");
 
                 //Source
-                for(TaintSource source : returnValue.getSources()) {
+                for(UnknownSource source : returnValue.getSources()) {
                     linkSourceToNode(source, destParamNode, sourceCall);
                 }
                 tx.success();
@@ -202,8 +202,8 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
         }
     }
 
-    private void linkSourceToNode(TaintSource source, Node destParamNode, String sourceCall) {
-        TaintSourceType type = source.getSourceType();
+    private void linkSourceToNode(UnknownSource source, Node destParamNode, String sourceCall) {
+        UnknownSourceType type = source.getSourceType();
         switch (type) {
             case FIELD: // Field -TRANSFER-> node
 
@@ -302,7 +302,7 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
                         "type", "F");
 
                 //Source
-                for(TaintSource source : returnValue.getSources()) {
+                for(UnknownSource source : returnValue.getSources()) {
                     linkSourceToNode(source, destParamNode, sourceCall);
                 }
                 tx.success();

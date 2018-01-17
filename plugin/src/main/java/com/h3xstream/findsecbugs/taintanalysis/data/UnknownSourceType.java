@@ -20,7 +20,7 @@ package com.h3xstream.findsecbugs.taintanalysis.data;
 /**
  * This enum document the type of unknown source.
  */
-public enum TaintSourceType {
+public enum UnknownSourceType {
     /**
      * Define unknown value where the value is coming from a function parameter.
      * It may also be the combination of a parameter with another source.

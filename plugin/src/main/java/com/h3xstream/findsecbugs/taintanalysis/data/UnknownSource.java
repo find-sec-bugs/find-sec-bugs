@@ -19,16 +19,16 @@ package com.h3xstream.findsecbugs.taintanalysis.data;
 
 import com.h3xstream.findsecbugs.taintanalysis.Taint;
 
-public class TaintSource {
+public class UnknownSource {
 
-    private TaintSourceType sourceType;
+    private UnknownSourceType sourceType;
 
     private int    parameterIndex  = -1;
     private String signatureMethod = "";
     private String signatureField  = "";
     private final Taint.State state;
 
-    public TaintSource(TaintSourceType sourceType, Taint.State state) {
+    public UnknownSource(UnknownSourceType sourceType, Taint.State state) {
         this.sourceType = sourceType;
         this.state      = state;
     }
@@ -38,11 +38,11 @@ public class TaintSource {
         return state;
     }
 
-    public TaintSourceType getSourceType() {
+    public UnknownSourceType getSourceType() {
         return sourceType;
     }
 
-    public TaintSource setSourceType(TaintSourceType sourceType) {
+    public UnknownSource setSourceType(UnknownSourceType sourceType) {
         this.sourceType = sourceType;
         return this;
     }
@@ -51,7 +51,7 @@ public class TaintSource {
         return parameterIndex;
     }
 
-    public TaintSource setParameterIndex(int parameterIndex) {
+    public UnknownSource setParameterIndex(int parameterIndex) {
         this.parameterIndex = parameterIndex;
         return this;
     }
@@ -60,7 +60,7 @@ public class TaintSource {
         return signatureMethod;
     }
 
-    public TaintSource setSignatureMethod(String signatureMethod) {
+    public UnknownSource setSignatureMethod(String signatureMethod) {
         this.signatureMethod = signatureMethod;
         return this;
     }
@@ -69,7 +69,7 @@ public class TaintSource {
         return signatureField;
     }
 
-    public TaintSource setSignatureField(String signatureField) {
+    public UnknownSource setSignatureField(String signatureField) {
         this.signatureField = signatureField;
         return this;
     }
@@ -79,7 +79,7 @@ public class TaintSource {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        TaintSource that = (TaintSource) o;
+        UnknownSource that = (UnknownSource) o;
 
         if (parameterIndex != that.parameterIndex) return false;
         if (sourceType != that.sourceType) return false;
@@ -94,5 +94,18 @@ public class TaintSource {
         result = 31 * result + signatureMethod.hashCode();
         result = 31 * result + signatureField.hashCode();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        if(parameterIndex != -1) {
+            return "Parameter (index=" + parameterIndex + ")";
+        }
+        else if(!signatureMethod.equals("")) {
+            return "Method "+signatureMethod;
+        }
+        else { //Field
+            return "Field "+signatureField;
+        }
     }
 }

@@ -18,7 +18,8 @@
 package com.h3xstream.findsecbugs.taintanalysis;
 
 import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
-import com.h3xstream.findsecbugs.taintanalysis.data.TaintSource;
+import com.h3xstream.findsecbugs.taintanalysis.data.TaintLocation;
+import com.h3xstream.findsecbugs.taintanalysis.data.UnknownSource;
 import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.util.ClassName;
 
@@ -123,7 +124,7 @@ public class Taint {
     private String constantValue;
     private String potentialValue;
     private String debugInfo = null;
-    private Set<TaintSource> sources = new HashSet<>();
+    private Set<UnknownSource> sources = new HashSet<>();
 
     /**
      * Constructs a new empty instance of Taint with the specified state
@@ -651,15 +652,15 @@ public class Taint {
         return this;
     }
 
-    public Set<TaintSource> getSources() {
+    public Set<UnknownSource> getSources() {
         return sources;
     }
 
-    public void addSource(TaintSource source) {
+    public void addSource(UnknownSource source) {
         this.sources.add(source);
     }
 
-    protected void addAllSources(Set<TaintSource> sources) {
+    protected void addAllSources(Set<UnknownSource> sources) {
         this.sources.addAll(sources);
     }
 
@@ -679,7 +680,7 @@ public class Taint {
         }
         if (sources != null && sources.size() > 0) {
             StringBuilder b = new StringBuilder();
-            for(TaintSource source : sources) {
+            for(UnknownSource source : sources) {
                 switch (source.getSourceType()) {
                     case FIELD:
                         b.append("field["+source.getSignatureField()+"]");

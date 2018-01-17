@@ -28,12 +28,7 @@ import com.h3xstream.findsecbugs.taintanalysis.TaintFrameAdditionalVisitor;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
-import org.apache.bcel.generic.ConstantPoolGen;
-import org.apache.bcel.generic.InstructionHandle;
-import org.apache.bcel.generic.InvokeInstruction;
-import org.apache.bcel.generic.LoadInstruction;
-import org.apache.bcel.generic.LocalVariableGen;
-import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.*;
 
 import java.util.List;
 
@@ -146,5 +141,11 @@ public class HardcodedPasswordEqualsDetector extends BasicInjectionDetector impl
         }
 
     }
+
+    @Override
+    public void visitField(FieldInstruction put, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType, int numProduced) throws Exception {
+
+    }
+
 
 }

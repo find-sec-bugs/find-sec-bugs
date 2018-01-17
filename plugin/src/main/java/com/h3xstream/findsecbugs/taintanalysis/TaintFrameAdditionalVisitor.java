@@ -17,10 +17,7 @@
  */
 package com.h3xstream.findsecbugs.taintanalysis;
 
-import org.apache.bcel.generic.ConstantPoolGen;
-import org.apache.bcel.generic.InvokeInstruction;
-import org.apache.bcel.generic.LoadInstruction;
-import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.*;
 
 import java.util.List;
 
@@ -53,5 +50,16 @@ public interface TaintFrameAdditionalVisitor {
      * @param numProduced
      */
     void visitLoad(LoadInstruction load, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType, int numProduced) throws Exception;
+
+
+    /**
+     * @param put
+     * @param cpg
+     * @param methodGen
+     * @param frameType
+     * @param numProduced
+     */
+    void visitField(FieldInstruction put, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType, int numProduced) throws Exception;
+
 
 }

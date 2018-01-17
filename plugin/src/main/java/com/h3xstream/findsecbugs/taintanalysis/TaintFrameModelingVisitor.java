@@ -187,7 +187,17 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                 getFrame().pushValue(new Taint(Taint.State.NULL));
             }
         } else {
-            super.visitGETSTATIC(obj);
+            //super.visitGETSTATIC(obj);
+            String fieldSig = obj.getClassName(cpg).replaceAll("\\.","/")+"."+obj.getName(cpg);
+            Taint.State state = taintConfig.getClassTaintState(fieldSig, Taint.State.UNKNOWN);
+            Taint taint = new Taint(state);
+
+            if (!state.equals(Taint.State.SAFE)){
+                taint.addLocation(getTaintLocation(), false);
+            }
+            taint.addSource(new TaintSource(TaintSourceType.FIELD,state).setSignatureField(fieldSig));
+
+            modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taint);
         }
     }
 
@@ -211,7 +221,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     @Override
     public void visitGETFIELD(GETFIELD obj) {
-        String fieldSig = obj.getSignature(cpg);
+        String fieldSig = obj.getClassName(cpg).replaceAll("\\.","/")+"."+obj.getName(cpg);
         Taint.State state = taintConfig.getClassTaintState(fieldSig, Taint.State.UNKNOWN);
         Taint taint = new Taint(state);
 
@@ -663,7 +673,13 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             String sig = invoke.getClassName(cpg).replaceAll("\\.","/") + "." + invoke.getMethodName(cpg) + invoke.getSignature(cpg);
             return new TaintLocation(methodDescriptor, getLocation().getHandle().getPosition(), sig);
         }
-        return new TaintLocation(methodDescriptor, getLocation().getHandle().getPosition(), "Oups!!");
+        else if(inst instanceof FieldInstruction) {
+            FieldInstruction field = (FieldInstruction) inst;
+            String className = field.getClassName(cpg).replace('.','/');
+            String fieldName = field.getFieldName(cpg);
+            return new TaintLocation(methodDescriptor, getLocation().getHandle().getPosition(), className + "." + fieldName);
+        }
+        return new TaintLocation(methodDescriptor, getLocation().getHandle().getPosition(), "!!Unknown source type!!");
     }
 
     /**

@@ -1,3 +1,20 @@
+/**
+ * Find Security Bugs
+ * Copyright (c) Philippe Arteau, All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.
+ */
 package com.h3xstream.findsecbugs.graph;
 
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -16,6 +33,7 @@ import java.util.Stack;
 public class GraphInstance {
 
     private static GraphInstance instance = new GraphInstance();
+    public static boolean mustDeleteDatabase = false;
 
     /**
      * Even though the current Graph database can be overridden, we need to keep track of previous DB to do proper cleanup
@@ -31,11 +49,13 @@ public class GraphInstance {
                 for(GraphDatabaseService db : dbs) {
                     db.shutdown();
                 }
-                for(File location : dbsLocation) {
-                    try {
-                        FileUtils.deleteRecursively(location);
-                    } catch (IOException e) {
-                        System.out.println("Attempt to delete "+location.toString()+":"+e.getMessage());
+                if(mustDeleteDatabase) {
+                    for (File location : dbsLocation) {
+                        try {
+                            FileUtils.deleteRecursively(location);
+                        } catch (IOException e) {
+                            System.out.println("Attempt to delete " + location.toString() + ":" + e.getMessage());
+                        }
                     }
                 }
             }

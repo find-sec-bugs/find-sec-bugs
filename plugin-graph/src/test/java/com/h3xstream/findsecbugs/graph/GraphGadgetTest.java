@@ -20,17 +20,14 @@ package com.h3xstream.findsecbugs.graph;
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.neo4j.graphdb.*;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
+import static com.h3xstream.findsecbugs.graph.util.GraphQueryUtil.getNodeCount;
 import static com.h3xstream.findsecbugs.graph.util.GraphQueryUtil.iterable;
 import static org.mockito.Mockito.spy;
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -40,12 +37,13 @@ public class GraphGadgetTest extends BaseDetectorTest {
 
     @Test
     public void analyzeGadget() throws Exception {
-//        FindSecBugsGlobalConfig.getInstance().setDebugPrintInstructionVisited(true);
+        //FindSecBugsGlobalConfig.getInstance().setDebugPrintInstructionVisited(true);
         //FindSecBugsGlobalConfig.getInstance().setDebugTaintState(true);
 
 
         File tempDb = TempDatabase.createTempDirectory();
         GraphDatabaseService db = GraphInstance.getInstance().init(tempDb.getCanonicalPath());
+        GraphInstance.mustDeleteDatabase = true;
 
         //Locate test code
         String[] files = {
@@ -98,7 +96,12 @@ public class GraphGadgetTest extends BaseDetectorTest {
                     "WHERE \n" + //
                     "  sink.name = $sink AND\n" + //
                     "  source.name = $source\n" + //
-                    "RETURN source,sink,r;",db);
+                    "RETURN source,sink,r;",
+
+                    HashMapBuilder.buildObj( //
+                            "sink","java/lang/Runtime.exec(Ljava/lang/String;)Ljava/lang/Process;_p0" //
+                            ,"source","testcode/gadget/cachedata/SpecialCacheData.executeCommand(Ljava/lang/String;IJ)Ljava/lang/String;_p3"),
+                    db);
             assertTrue(source2sink>0,"Path from executeCommand() to Runtime.exec() not found");
 
             int nbVariables = getNodeCount("MATCH (n:Variable) RETURN n;",db);
@@ -117,20 +120,6 @@ public class GraphGadgetTest extends BaseDetectorTest {
         GraphBuilder.clearCache();
     }
 
-    private int getNodeCount(String query, GraphDatabaseService db) {
-        Result resNodes = db.execute( query, //
-                HashMapBuilder.buildObj( //
-                        "sink","java/lang/Runtime.exec(Ljava/lang/String;)Ljava/lang/Process;_p0" //
-                        ,"source","testcode/gadget/cachedata/SpecialCacheData.executeCommand(Ljava/lang/String;IJ)Ljava/lang/String;_p3")
-        );
-        int count = 0;
-        for (Map<String,Object> node : iterable(resNodes)) {
-            //System.out.println(printNode((Node) node.get("n")));
-            count++;
-        }
-        return count;
-    }
-
     @Test
     public void analyzeWebApp() throws Exception {
 //        FindSecBugsGlobalConfig.getInstance().setDebugPrintInstructionVisited(true);
@@ -139,7 +128,7 @@ public class GraphGadgetTest extends BaseDetectorTest {
 
         File tempDb = TempDatabase.createTempDirectory();
         GraphDatabaseService db = GraphInstance.getInstance().init(tempDb.getCanonicalPath());
-
+        GraphInstance.mustDeleteDatabase = true;
 
         //Locate test code
         String[] files = {

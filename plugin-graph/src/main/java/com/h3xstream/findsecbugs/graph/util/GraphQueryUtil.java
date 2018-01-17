@@ -1,13 +1,29 @@
+/**
+ * Find Security Bugs
+ * Copyright (c) Philippe Arteau, All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.
+ */
 package com.h3xstream.findsecbugs.graph.util;
 
+import com.h3xstream.findsecbugs.graph.HashMapBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
 
 import java.util.*;
-
-import static com.h3xstream.findsecbugs.graph.util.GraphQueryUtil.iterable;
 
 public class GraphQueryUtil {
 
@@ -44,4 +60,18 @@ public class GraphQueryUtil {
         }
         return buffer.toString();
     }
+
+    public static int getNodeCount(String query,GraphDatabaseService db) {
+        return getNodeCount(query, HashMapBuilder.buildObj(),db);
+    }
+    public static int getNodeCount(String query,Map<String, Object> params, GraphDatabaseService db) {
+        Result resNodes = db.execute( query, params   );
+        int count = 0;
+        for (Map<String,Object> node : iterable(resNodes)) {
+            //System.out.println(printNode((Node) node.get("n")));
+            count++;
+        }
+        return count;
+    }
+
 }

@@ -31,10 +31,7 @@ import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.ba.XClass;
 import edu.umd.cs.findbugs.classfile.ClassDescriptor;
 import edu.umd.cs.findbugs.classfile.DescriptorFactory;
-import org.apache.bcel.generic.ConstantPoolGen;
-import org.apache.bcel.generic.InvokeInstruction;
-import org.apache.bcel.generic.LoadInstruction;
-import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.*;
 import org.neo4j.graphdb.*;
 
 import java.util.*;
@@ -53,7 +50,7 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
             "java/io/File","java/io/RandomFile","java/io/FileReader","java/io/FileInputStream","java/nio/file/Paths","java/io/FileWriter",
             "java/io/FileOutputStream","java/net/URL","java/io/PrintWriter","javax/servlet/http/");
     private static Map<String, Node> nodesCache = new HashMap<>();
-    private static Set<Integer> relationshipCache = new HashSet<>();
+    private static Set<String> relationshipCache = new HashSet<>();
 
     public GraphBuilder(BugReporter bugReporter) {
         super(bugReporter);
@@ -209,7 +206,16 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
         TaintSourceType type = source.getSourceType();
         switch (type) {
             case FIELD: // Field -TRANSFER-> node
-                //TODO : Implement field transfer
+
+                String field = source.getSignatureField();
+
+                Node srcFieldNode = createNode(GraphLabels.LABEL_VARIABLE,
+                        "name", field,
+                        "state", source.getState().name(),
+                        "type", "F");
+
+                createRelationship(srcFieldNode, destParamNode, RelTypes.TRANSFER, sourceCall);
+
                 break;
             case PARAMETER: // Parameter -TRANSFER-> node
 
@@ -233,7 +239,6 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
                 Node srcMethodNode = createNode(GraphLabels.LABEL_VARIABLE,
                         "name", srcMethodKey,
                         "state", source.getState().name(),
-                        "source", sourceCall,
                         "type", "R");
 
                 createRelationship(srcMethodNode, destParamNode, RelTypes.TRANSFER, sourceCall);
@@ -274,6 +279,35 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
     @Override
     public void visitLoad(LoadInstruction instruction, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frame, int numProduced) {
 
+    }
+
+    @Override
+    public void visitField(FieldInstruction store, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType, int numProduced) throws Exception {
+        GraphDatabaseService db = graphDb.getDb();
+        try (Transaction tx = db.beginTx()) {
+            //Source method
+            String sourceClass = getSlashClassName(methodGen.getClassName());
+            String sourceCall = sourceClass + "." + methodGen.getName() + methodGen.getSignature();
+
+
+            Taint returnValue = frameType.getStackValue(0);
+            if(returnValue.getSources().size() > 0) {
+                //Destination
+                String destParamKey = store.getName();
+
+                //
+                Node destParamNode = createNode(GraphLabels.LABEL_VARIABLE,
+                        "name", destParamKey,
+                        "state", returnValue.getState().name(),
+                        "type", "F");
+
+                //Source
+                for(TaintSource source : returnValue.getSources()) {
+                    linkSourceToNode(source, destParamNode, sourceCall);
+                }
+                tx.success();
+            }
+        }
     }
 
     private void createSuperClasses(Node sourceClassNode, List<ClassDescriptor> listOfSuperClasses){
@@ -323,16 +357,21 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
      * @param rt
      */
     private void createRelationship(Node fromNode,Node toNode, RelationshipType rt, String sourceCall) {
-        if(hasRelationship(fromNode, toNode, sourceCall, rt)) {
+        if(hasRelationship(fromNode, toNode, rt,sourceCall)) {
             return;
         }
 
-        int key = Objects.hash(fromNode.getProperty("name").hashCode(), toNode.getProperty("name"), sourceCall);
+        //int key = Objects.hash(fromNode.getProperty("name").hashCode(), toNode.getProperty("name"), sourceCall);
+        String key = getKey(fromNode,toNode,rt,sourceCall);
         relationshipCache.add(key);
         Relationship relation = fromNode.createRelationshipTo(toNode,rt);
         if(sourceCall != null) {
             relation.setProperty("source", sourceCall);
         }
+    }
+
+    private String getKey(Node fromNode,Node toNode, RelationshipType rt, String sourceCall) {
+       return new StringBuilder((String) fromNode.getProperty("name")).append("->").append(toNode.getProperty("name")).append("__").append(rt.name()).append("__").append(sourceCall==null?"":sourceCall).toString();
     }
 
     /**
@@ -343,9 +382,10 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
      * @param rt
      * @return
      */
-    private boolean hasRelationship(Node fromNode,Node toNode, String sourceCall, RelationshipType rt) {
+    private boolean hasRelationship(Node fromNode,Node toNode, RelationshipType rt, String sourceCall) {
 
-        int key = Objects.hash(fromNode.getProperty("name"), toNode.getProperty("name"),sourceCall);
+        //int key = Objects.hash(fromNode.getProperty("name"), toNode.getProperty("name"),sourceCall);
+        String key = getKey(fromNode,toNode,rt,sourceCall);
         if (relationshipCache.contains(key)) {
             return true;
         } else {

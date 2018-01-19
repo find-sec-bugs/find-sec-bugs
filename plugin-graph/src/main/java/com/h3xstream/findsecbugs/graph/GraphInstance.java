@@ -17,13 +17,15 @@
  */
 package com.h3xstream.findsecbugs.graph;
 
+import com.h3xstream.findsecbugs.graph.util.GraphQueryUtil;
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.io.fs.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Singleton to obtain the current Graph database.
@@ -32,45 +34,89 @@ import java.util.Stack;
  */
 public class GraphInstance {
 
+    private static Map<String, Node> nodesCache = new HashMap<>();
+    private static Set<String> relationshipCache = new HashSet<>();
+
     private static GraphInstance instance = new GraphInstance();
-    public static boolean mustDeleteDatabase = false;
+
+    public static boolean mustDeleteFileCreated = false;
+    public static boolean mustShutdownDatabase = true; //
+
+    private GraphDatabaseService db = null;
+    private File dbFile = null;
 
     /**
      * Even though the current Graph database can be overridden, we need to keep track of previous DB to do proper cleanup
      * at shutdown.
      */
-    private Stack<GraphDatabaseService> dbs = new Stack<>();
-    private Stack<File> dbsLocation = new Stack<>();
+    private List<GraphDatabaseService> dbsCreated = new ArrayList<>();
+    private List<File> dbFilesCreated = new ArrayList<>();
+    /**
+     * The clean up process the database
+     */
+    private boolean databaseRemoved = false;
+
 
     private GraphInstance() {
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                for(GraphDatabaseService db : dbs) {
-                    db.shutdown();
-                }
-                if(mustDeleteDatabase) {
-                    for (File location : dbsLocation) {
-                        try {
-                            FileUtils.deleteRecursively(location);
-                        } catch (IOException e) {
-                            System.out.println("Attempt to delete " + location.toString() + ":" + e.getMessage());
-                        }
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            shutdownDatabases();
+            removeDatabasesFile();
+        }
+        ));
+    }
+
+    public synchronized void shutdownDatabases() {
+        for (GraphDatabaseService db : dbsCreated) {
+            if(db.isAvailable(10)) {
+                db.shutdown();
+            }
+        }
+    }
+
+    public synchronized void removeDatabasesFile() {
+        if(!databaseRemoved) {
+            if (mustDeleteFileCreated) {
+                for (File dbToRemove : dbFilesCreated) {
+                    try {
+                        System.out.println("Deleting " + dbToRemove.toString());
+
+                        FileUtils.deleteRecursively(dbToRemove);
+
+                    } catch (IOException e) {
+                        System.err.println("Failed to delete " + dbFile.toString() + ":" + e.getMessage());
                     }
                 }
             }
-        });
+            databaseRemoved = true;
+        }
+    }
+
+    public Map<String, Node> getNodesCache() {
+        return nodesCache;
+    }
+
+    public Set<String> getRelationshipCache() {
+        return relationshipCache;
+    }
+
+    public void clearDatabase() {
+        nodesCache.clear();
+        relationshipCache.clear();
+        GraphQueryUtil.queryGraph("MATCH (n)\n" + //Ref : https://stackoverflow.com/a/33542193/89769
+                "WITH n LIMIT 1000000\n" +
+                "OPTIONAL MATCH (n)-[r]-()\n" +
+                "DELETE n,r",new HashMap<>(),db);
     }
 
     public static GraphInstance getInstance() {
         return instance;
     }
 
-    public GraphDatabaseService getDb() {
-        if(dbs.size() == 0) {
+    public synchronized GraphDatabaseService getDb() {
+        if(db == null) {
             init();
         }
-        return dbs.peek();
+        return db;
     }
 
     public GraphDatabaseService init() {
@@ -85,12 +131,13 @@ public class GraphInstance {
      * @return
      */
     public GraphDatabaseService init(String databasePath) {
-        File dbLocation = new File(databasePath);
-        System.out.println("Creating Neo4J database: " + dbLocation.toString());
+        File dbFile = new File(databasePath);
+        System.out.println("Creating Neo4J database: " + dbFile.toString());
 
-        dbsLocation.push(dbLocation);
-        dbs.push(new GraphDatabaseFactory().newEmbeddedDatabase(dbLocation));
+        db = new GraphDatabaseFactory().newEmbeddedDatabase(dbFile);
+        dbFilesCreated.add(dbFile); //Location is kept for potential deletation in test
+        dbsCreated.add(db);
 
-        return dbs.peek();
+        return db;
     }
 }

@@ -13,6 +13,10 @@
         <Details>Method tracing to build graph</Details>
     </Detector>
 
+    <Detector class="com.h3xstream.findsecbugs.graph.GraphGarbageCollector">
+        <Details>Cleanup task to shutdown the graph database. It also remove files in the case of tests</Details>
+    </Detector>
+
     <BugPattern type="GRAPH_BUG">
         <ShortDescription></ShortDescription>
         <LongDescription></LongDescription>

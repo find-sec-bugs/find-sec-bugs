@@ -32,14 +32,11 @@ import static com.h3xstream.findsecbugs.graph.util.GraphQueryUtil.iterable;
 import static org.mockito.Mockito.spy;
 import static org.testng.Assert.assertTrue;
 
-public class CWE113_HTTP_Response_Splitting__Environment_addCookieServlet_45Test extends BaseDetectorTest {
+public class CWE113_HTTP_Response_Splitting__Environment_addCookieServlet_45Test extends BaseGraphDetectorTest {
 
     @Test
     public void analyzeFieldToSink() throws Exception {
 
-        File tempDb = TempDatabase.createTempDirectory();
-        GraphDatabaseService db = GraphInstance.getInstance().init(tempDb.getCanonicalPath());
-        GraphInstance.mustDeleteDatabase = true;
 
         //Locate test code
         String[] files = {
@@ -68,7 +65,6 @@ public class CWE113_HTTP_Response_Splitting__Environment_addCookieServlet_45Test
             tx.success();
         }
 
-        GraphBuilder.clearCache();
     }
 
 

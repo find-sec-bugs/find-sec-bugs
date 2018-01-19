@@ -36,14 +36,10 @@ import static org.testng.Assert.assertTrue;
  * The first method test a very specific occurrence.
  * The second test with a the complete Struts core jar which is use as example. The problem affected any large code base.
  */
-public class ClassPathFinderSampleTest extends BaseDetectorTest {
+public class ClassPathFinderSampleTest extends BaseGraphDetectorTest {
 
     @Test
     public void analyzeStrutsClassPathFinderSample() throws Exception {
-
-        File tempDb = TempDatabase.createTempDirectory();
-        GraphDatabaseService db = GraphInstance.getInstance().init(tempDb.getCanonicalPath());
-        GraphInstance.mustDeleteDatabase = true;
 
         //Locate test code
         String[] files = {
@@ -78,7 +74,7 @@ public class ClassPathFinderSampleTest extends BaseDetectorTest {
                 Result res = db.execute("MATCH (source:Variable)-[r1:TRANSFER*0..5]->(node:Variable)-[r:TRANSFER]->(sink:Variable)\n" +
                         "WHERE source.state = \"UNKNOWN\" AND\n" +
                         "  sink.name = $sink AND\n" +
-                        "  r.source = $source\n" +
+                        "  node.source = $source\n" +
                         "RETURN source,sink,r1,node,r;", HashMapBuilder.buildObj("source", source, "sink", sink));
 
                 assertTrue(iterable(res).iterator().hasNext(), String.format("Could not find the source '%s'", source));
@@ -90,7 +86,7 @@ public class ClassPathFinderSampleTest extends BaseDetectorTest {
                 Result res = db.execute("MATCH (source:Variable)-[r1:TRANSFER*0..5]->(node:Variable)-[r:TRANSFER]->(sink:Variable)\n" +
                         "WHERE source.state = \"UNKNOWN\" AND\n" +
                         "  sink.name = $sink AND\n" +
-                        "  r.source = $source\n" +
+                        "  node.source = $source\n" +
                         "RETURN source,sink,r1,node,r;", HashMapBuilder.buildObj("source", source, "sink", sink));
 
                 assertTrue(iterable(res).iterator().hasNext(), String.format("Could not find the source '%s'", source));
@@ -98,17 +94,11 @@ public class ClassPathFinderSampleTest extends BaseDetectorTest {
 
             tx.success();
         }
-
-        GraphBuilder.clearCache();
     }
 
 
     @Test
     public void analyzeStrutsClassPathFinderComplete() throws Exception {
-
-        File tempDb = TempDatabase.createTempDirectory();
-        GraphDatabaseService db = GraphInstance.getInstance().init(tempDb.getCanonicalPath());
-        GraphInstance.mustDeleteDatabase = false;
 
         //Locate test code
         String[] files = {
@@ -149,7 +139,7 @@ public class ClassPathFinderSampleTest extends BaseDetectorTest {
                     Result res = db.execute("MATCH (source:Variable)-[r1:TRANSFER*0..5]->(node:Variable)-[r:TRANSFER]->(sink:Variable)\n" +
                             "WHERE source.state = \"UNKNOWN\" AND\n" +
                             "  sink.name = $sink AND\n" +
-                            "  r.source = $source\n" +
+                            "  node.source = $source\n" +
                             "RETURN source,sink,r1,node,r;", HashMapBuilder.buildObj("source", source, "sink", sink));
 
                     assertTrue(iterable(res).iterator().hasNext(), String.format("Could not find the source '%s'", source));
@@ -162,7 +152,7 @@ public class ClassPathFinderSampleTest extends BaseDetectorTest {
                 Result res = db.execute("MATCH (source:Variable)-[r1:TRANSFER*0..5]->(node:Variable)-[r:TRANSFER]->(sink:Variable)\n" +
                         "WHERE source.state = \"UNKNOWN\" AND\n" +
                         "  sink.name = $sink AND\n" +
-                        "  r.source = $source\n" +
+                        "  node.source = $source\n" +
                         "RETURN source,sink,r1,node,r;", HashMapBuilder.buildObj("source",source,"sink",sink));
 
                 assertTrue(iterable(res).iterator().hasNext(),String.format("Could not find the source '%s'",source));
@@ -173,14 +163,12 @@ public class ClassPathFinderSampleTest extends BaseDetectorTest {
                 Result res = db.execute("MATCH (source:Variable)-[r1:TRANSFER*0..5]->(node:Variable)-[r:TRANSFER]->(sink:Variable)\n" +
                         "WHERE source.state = \"UNKNOWN\" AND\n" +
                         "  sink.name = $sink AND\n" +
-                        "  r.source = $source\n" +
+                        "  node.source = $source\n" +
                         "RETURN source,sink,r1,node,r;", HashMapBuilder.buildObj("source",source,"sink",sink));
 
                 assertTrue(iterable(res).iterator().hasNext(),String.format("Could not find the source '%s'",source));
             }
             tx.success();
         }
-
-        GraphBuilder.clearCache();
     }
 }

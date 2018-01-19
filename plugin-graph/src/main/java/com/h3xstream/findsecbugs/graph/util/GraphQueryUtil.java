@@ -30,12 +30,11 @@ public class GraphQueryUtil {
     public static List<Map<String,Object>> queryGraph(String query, Map<String,Object> params, GraphDatabaseService graphDb) {
         try(Transaction tx = graphDb.beginTx()) {
             Result res = graphDb.execute(query, params);
-            tx.success();
-
             List<Map<String,Object>> nodes = new ArrayList<Map<String,Object>>();
             for (Map<String,Object> node : iterable(res)) {
                 nodes.add(node);
             }
+            tx.success();
             return nodes;
         }
     }

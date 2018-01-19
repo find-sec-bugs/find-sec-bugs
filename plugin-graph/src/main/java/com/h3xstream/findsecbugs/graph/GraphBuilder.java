@@ -49,8 +49,6 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
     private static List<String> INCLUDE_JAVA_API = Arrays.asList("java/sql/Statement","java/lang/Runtime","java/lang/ProcessBuilder",
             "java/io/File","java/io/RandomFile","java/io/FileReader","java/io/FileInputStream","java/nio/file/Paths","java/io/FileWriter",
             "java/io/FileOutputStream","java/net/URL","java/io/PrintWriter","javax/servlet/http/");
-    private static Map<String, Node> nodesCache = new HashMap<>();
-    private static Set<String> relationshipCache = new HashSet<>();
 
     public GraphBuilder(BugReporter bugReporter) {
         super(bugReporter);
@@ -60,11 +58,6 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
         graphDb = GraphInstance.getInstance();
     }
 
-
-    public static void clearCache() {
-        nodesCache.clear();
-        relationshipCache.clear();
-    }
 
     @Override
     public void visitInvoke(InvokeInstruction invoke, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frame, List<Taint> parameters) throws ClassNotFoundException {
@@ -81,7 +74,7 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
 
             /////
             //Create function nodes
-            Node sourceNode = createNode(GraphLabels.LABEL_FUNCTION, "name", sourceCall,
+            /*Node sourceNode = createNode(GraphLabels.LABEL_FUNCTION, "name", sourceCall,
                 "class", sourceClass,
                 "function", methodGen.getName());
 
@@ -125,6 +118,7 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
                 for (int i = 0; i<listSuperClassesInvoke.size(); ++i)
                     createInterfaces(listSuperClassesInvoke.get(i));
             }
+            */
 
             /////
             //Create variable nodes
@@ -202,80 +196,6 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
         }
     }
 
-    private void linkSourceToNode(UnknownSource source, Node destParamNode, String sourceCall) {
-        UnknownSourceType type = source.getSourceType();
-        switch (type) {
-            case FIELD: // Field -TRANSFER-> node
-
-                String field = source.getSignatureField();
-
-                Node srcFieldNode = createNode(GraphLabels.LABEL_VARIABLE,
-                        "name", field,
-                        "state", source.getState().name(),
-                        "type", "F");
-
-                createRelationship(srcFieldNode, destParamNode, RelTypes.TRANSFER, sourceCall);
-
-                break;
-            case PARAMETER: // Parameter -TRANSFER-> node
-
-                int sourceParamIndex = source.getParameterIndex();
-                String srcParamKey = sourceCall + "_p"+ sourceParamIndex;
-
-
-                Node srcParamNode = createNode(GraphLabels.LABEL_VARIABLE,
-                        "name", srcParamKey,
-                        "state", source.getState().name(),
-                        "type", "P");
-
-                createRelationship(srcParamNode, destParamNode, RelTypes.TRANSFER, sourceCall);
-
-                break;
-
-            case RETURN: // return value -TRANSFER-> node
-
-                String srcMethodKey = source.getSignatureMethod()+"_ret";
-
-                Node srcMethodNode = createNode(GraphLabels.LABEL_VARIABLE,
-                        "name", srcMethodKey,
-                        "state", source.getState().name(),
-                        "type", "R");
-
-                createRelationship(srcMethodNode, destParamNode, RelTypes.TRANSFER, sourceCall);
-
-                break;
-        }
-    }
-
-    /**
-     * This function is creating a node if does not exist already.
-     * It use an map to keep track of previously loaded node rather communicating with Neo4j.
-     *
-     * @param lbl
-     * @param properties
-     * @return
-     */
-    private Node createNode(Label lbl, String... properties) {
-        Map<String,String> props = build(properties);
-        String name = props.get("name");
-
-        //Node node = graphDb.findNode(LABEL_VARIABLE, "name", props.get("name"));
-        //The cache is used because findNode seems do be a cursor that is not scaling on large library
-        Node node = nodesCache.get(name);
-
-        if(node == null) { //Node is not found so we create it
-            node = graphDb.getDb().createNode(lbl);
-            for(Map.Entry<String,String> prop : props.entrySet()) {
-                node.setProperty(prop.getKey(), prop.getValue());
-            }
-            nodesCache.put(name, node);
-        }
-
-        return node;
-    }
-
-
-
     @Override
     public void visitLoad(LoadInstruction instruction, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frame, int numProduced) {
 
@@ -305,10 +225,90 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
                 for(UnknownSource source : returnValue.getSources()) {
                     linkSourceToNode(source, destParamNode, sourceCall);
                 }
-                tx.success();
             }
+            tx.success();
         }
     }
+
+
+    private void linkSourceToNode(UnknownSource source, Node destParamNode, String sourceCall) {
+        UnknownSourceType type = source.getSourceType();
+        switch (type) {
+            case FIELD: // Field -TRANSFER-> node
+
+                String field = source.getSignatureField();
+
+                Node srcFieldNode = createNode(GraphLabels.LABEL_VARIABLE,
+                        "name", field,
+                        //"state", source.getState().name(),
+                        "type", "F");
+
+                createExternalCallRelationship(srcFieldNode, destParamNode, RelTypes.TRANSFER, sourceCall, source);
+
+                break;
+            case PARAMETER: // Parameter -TRANSFER-> node
+
+                int sourceParamIndex = source.getParameterIndex();
+                String srcParamKey = sourceCall + "_p"+ sourceParamIndex;
+
+
+                Node srcParamNode = createNode(GraphLabels.LABEL_VARIABLE,
+                        "name", srcParamKey,
+                        //"state", source.getState().name(),
+                        "type", "P");
+
+                createExternalCallRelationship(srcParamNode, destParamNode, RelTypes.TRANSFER, sourceCall, source);
+
+                break;
+
+            case RETURN: // return value -TRANSFER-> node
+
+                String srcMethodKey = source.getSignatureMethod()+"_ret";
+
+                Node srcMethodNode = createNode(GraphLabels.LABEL_VARIABLE,
+                        "name", srcMethodKey,
+                        //"state", source.getState().name(),
+                        "type", "R");
+
+                createExternalCallRelationship(srcMethodNode, destParamNode, RelTypes.TRANSFER, sourceCall, source);
+
+                break;
+        }
+    }
+
+    /**
+     * This function is creating a node if does not exist already.
+     * It use an map to keep track of previously loaded node rather communicating with Neo4j.
+     *
+     * @param lbl
+     * @param properties
+     * @return
+     */
+    private Node createNode(Label lbl, String... properties) {
+        Map<String, Node> cache = graphDb.getNodesCache();
+
+        GraphDatabaseService db = graphDb.getDb();
+
+        Map<String,String> props = build(properties);
+        String name = props.get("name");
+
+        //Node node = graphDb.findNode(LABEL_VARIABLE, "name", props.get("name"));
+        //The cache is used because findNode seems do be a cursor that is not scaling on large library
+        Node node = cache.get(name);
+
+        if(node == null) { //Node is not found so we create it
+            node = graphDb.getDb().createNode(lbl);
+            for(Map.Entry<String,String> prop : props.entrySet()) {
+                node.setProperty(prop.getKey(), prop.getValue());
+            }
+            cache.put(name, node);
+        }
+
+        return node;
+    }
+
+
+
 
     private void createSuperClasses(Node sourceClassNode, List<ClassDescriptor> listOfSuperClasses){
         String superClassSource = getSlashClassName(listOfSuperClasses.get(0).getClassName());
@@ -346,6 +346,23 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
         return dottedClassName.replaceAll("\\.", "/");
     }
 
+    private void createExternalCallRelationship(Node fromNode,Node toNode, RelationshipType rt, String sourceCall,UnknownSource source) {
+
+        String from = (String) fromNode.getProperty("name");
+        String to   = (String) toNode.getProperty("name");
+
+        Node intermediateNode = createNode(GraphLabels.LABEL_VARIABLE,
+                "name", from+">>"+to+"!"+sourceCall, //FIXME: Not used.. but kept to keep track of node created
+                //"from", from,
+                //"to", to,
+                "source",sourceCall,
+                "state", source.getState().name(),
+                "type", "I");
+        createRelationship(fromNode,intermediateNode,rt,null);
+        createRelationship(intermediateNode,toNode,rt,null);
+    }
+
+
     private void createRelationship(Node fromNode,Node toNode, RelationshipType rt) {
         createRelationship(fromNode,toNode,rt,null);
     }
@@ -357,6 +374,8 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
      * @param rt
      */
     private void createRelationship(Node fromNode,Node toNode, RelationshipType rt, String sourceCall) {
+        Set<String> relationshipCache = graphDb.getRelationshipCache();
+
         if(hasRelationship(fromNode, toNode, rt,sourceCall)) {
             return;
         }
@@ -383,6 +402,7 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
      * @return
      */
     private boolean hasRelationship(Node fromNode,Node toNode, RelationshipType rt, String sourceCall) {
+        Set<String> relationshipCache = graphDb.getRelationshipCache();
 
         //int key = Objects.hash(fromNode.getProperty("name"), toNode.getProperty("name"),sourceCall);
         String key = getKey(fromNode,toNode,rt,sourceCall);

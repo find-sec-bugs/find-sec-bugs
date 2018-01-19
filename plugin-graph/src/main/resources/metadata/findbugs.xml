@@ -9,6 +9,7 @@
     <EngineRegistrar class="com.h3xstream.findsecbugs.taintanalysis.EngineRegistrar"/>
 
     <Detector class="com.h3xstream.findsecbugs.graph.GraphBuilder" reports="GRAPH_BUG"/>
+    <Detector class="com.h3xstream.findsecbugs.graph.GraphGarbageCollector" reports="GRAPH_BUG"/>
     <BugPattern type="GRAPH_BUG" abbrev="SECGRAPH" category="SECURITY"/>
 
 </FindbugsPlugin>

@@ -22,6 +22,7 @@ import edu.umd.cs.findbugs.BugReporter;
 import com.h3xstream.findbugs.test.matcher.BugInstanceMatcherBuilder;
 import com.h3xstream.findbugs.test.service.ClassFileLocator;
 import com.h3xstream.findbugs.test.service.FindBugsLauncher;
+import org.apache.commons.lang.StringUtils;
 import org.mockito.Matchers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +53,10 @@ public class BaseDetectorTest {
     }
 
     public String getClassFilePath(String path) {
+        //Convert dot class name to path
+        if(StringUtils.countMatches(path,".") > 1 && !path.endsWith(".jar")) {
+            path = path.replaceAll("\\.","/");
+        }
         return classFileLocator.getClassFilePath(path);
     }
 

@@ -22,3 +22,5 @@ javax/servlet/http/HttpServletResponse.sendError(ILjava/lang/String;)V:0
 javax/servlet/http/HttpServletResponse.setStatus(ILjava/lang/String;)V:0
 javax/servlet/http/HttpServletResponseWrapper.sendError(ILjava/lang/String;)V:0
 javax/servlet/http/HttpServletResponseWrapper.setStatus(ILjava/lang/String;)V:0
+javax/servlet/ServletOutputStream.print(Ljava/lang/String;)V:0
+javax/servlet/ServletOutputStream.println(Ljava/lang/String;)V:0

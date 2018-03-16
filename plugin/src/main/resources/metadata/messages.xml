@@ -1752,7 +1752,7 @@ transformer.transform(input, result);</pre>
     <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionDetector">
         <Details>Find XPath queries using tainted inputs</Details>
     </Detector>
-    
+
     <BugPattern type="XPATH_INJECTION">
         <ShortDescription>Potential XPath Injection</ShortDescription>
         <LongDescription>This use of {3} can be vulnerable to XPath Injection</LongDescription>
@@ -2816,8 +2816,8 @@ You can also configure your logger service to replace new line for all message e
         </Details>
     </BugPattern>
     <BugCode abbrev="SECCRLFLOG">CRLF Injection for logs</BugCode>
-    
-    
+
+
     <!-- External control of system or configuration setting -->
     <Detector class="com.h3xstream.findsecbugs.ExternalConfigurationControlDetector">
         <Details>Searches for external control of system or configuration setting</Details>
@@ -2848,7 +2848,7 @@ You can also configure your logger service to replace new line for all message e
         </Details>
     </BugPattern>
     <BugCode abbrev="SECCONFCTRL">External control of configuration</BugCode>
-    
+
 
     <!-- Bad Hexa -->
     <Detector class="com.h3xstream.findsecbugs.crypto.BadHexadecimalConversionDetector">
@@ -3186,7 +3186,7 @@ props.put(Context.SECURITY_CREDENTIALS, "p@ssw0rd");</pre>
     </BugPattern>
     <BugCode abbrev="SECHCP">Hard Coded Password</BugCode>
 
-<BugPattern type="HARD_CODE_KEY">
+    <BugPattern type="HARD_CODE_KEY">
         <ShortDescription>Hard Coded Key</ShortDescription>
         <LongDescription>Hard coded cryptographic key found</LongDescription>
         <Details>
@@ -3957,7 +3957,7 @@ byte[] cipherText = c.doFinal(plainText);</pre>
         <ShortDescription>Cipher is susceptible to Padding Oracle</ShortDescription>
         <LongDescription>The cipher is susceptible to padding oracle attacks</LongDescription>
         <Details>
-<![CDATA[
+            <![CDATA[
 <p>
     This specific mode of CBC with PKCS5Padding is susceptible to padding oracle attacks. An adversary could potentially decrypt the
     message if the system exposed the difference between plaintext with invalid padding or valid padding. The distinction between
@@ -3995,7 +3995,7 @@ byte[] cipherText = c.doFinal(plainText);</pre>
         <ShortDescription>Cipher with no integrity</ShortDescription>
         <LongDescription>The cipher does not provide data integrity</LongDescription>
         <Details>
-<![CDATA[
+            <![CDATA[
 <p>
     The ciphertext produced is susceptible to alteration by an adversary. This mean that the cipher provides no way to detect that the 
     data has been tampered with. If the ciphertext can be controlled by an attacker, it could be altered without detection.
@@ -4056,7 +4056,7 @@ In the example solution above, the GCM mode introduces an HMAC into the resultin
         <ShortDescription>Use of ESAPI Encryptor</ShortDescription>
         <LongDescription>The ESAPI encryptor API is used to encrypt data</LongDescription>
         <Details>
-<![CDATA[
+            <![CDATA[
 <p>
     The ESAPI has a small history of vulnerabilities within the cryptography component. Here is a quick validation list to
     make sure the Authenticated Encryption is working as expected.
@@ -5155,7 +5155,7 @@ prefer logic-less template engines such as Handlebars or Moustache (See referenc
     </BugPattern>
     <BugCode abbrev="SECFREEM">Potential template injection with Freemarker</BugCode>
 
-  
+
     <!-- Overly permissive CORS policy -->
     <Detector class="com.h3xstream.findsecbugs.PermissiveCORSDetector">
         <Details>Detect overly permissive CORS policy.
@@ -5498,7 +5498,7 @@ Avoid using user controlled values to populate Bean property names.
         <Details>Detect Struts and Spring File Disclosure
         </Details>
     </Detector>
-    
+
     <!-- Struts File Disclosure -->
     <BugPattern type="STRUTS_FILE_DISCLOSURE">
         <ShortDescription>Struts File Disclosure</ShortDescription>
@@ -5669,4 +5669,34 @@ Sanitize user input before using it in HTTP parameters.
         <Details>Help other detector at finding hardcoded value used if a dynamic parameter is null.</Details>
     </Detector>
 
+    <!-- ErrorMessageDetector -->
+    <Detector class="com.h3xstream.findsecbugs.crypto.ErrorMessageExposureDetector">
+        <Details>Detect possible information exposure through error message.
+        </Details>
+    </Detector>
+
+    <BugPattern type="INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE">
+        <ShortDescription>Information Exposure Through An Error Message</ShortDescription>
+        <LongDescription>Possible information exposure through an error message</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+The sensitive information may be valuable information on its own (such as a password), or it may be useful for launching other, more deadly attacks. If an attack fails, an attacker may use error information provided by the server to launch another more focused attack. For example, an attempt to exploit a path traversal weakness (CWE-22) might yield the full pathname of the installed application. In turn, this could be used to select the proper number of ".." sequences to navigate to the targeted file. An attack using SQL injection (CWE-89) might not initially succeed, but an error message could reveal the malformed query, which would expose query logic and possibly even passwords or other sensitive information used within the query.
+</p>
+<p>
+    <b>Vulnerable Code:</b><br/>
+<pre>try {
+  out = httpResponse.getOutputStream()
+} catch (Exception e) {
+  e.printStackTrace(out);
+}</pre>
+
+<p>
+<b>References</b><br/>
+<a href="https://cwe.mitre.org/data/definitions/209.html">CWE-209: Information Exposure Through an Error Message</a>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="ERRMSG">Information Exposure Through An Error Message</BugCode>
 </MessageCollection>

@@ -181,6 +181,14 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Temporary fix for Neo4j running in TestNG suite -->
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>4.2.0</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 </project>

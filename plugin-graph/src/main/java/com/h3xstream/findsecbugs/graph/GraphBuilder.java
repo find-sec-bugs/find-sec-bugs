@@ -19,7 +19,6 @@ package com.h3xstream.findsecbugs.graph;
 
 import com.h3xstream.findsecbugs.graph.model.GraphLabels;
 import com.h3xstream.findsecbugs.graph.model.RelTypes;
-import com.h3xstream.findsecbugs.graph.util.ClassMetadata;
 import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
 import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import com.h3xstream.findsecbugs.taintanalysis.TaintFrame;
@@ -27,10 +26,6 @@ import com.h3xstream.findsecbugs.taintanalysis.TaintFrameAdditionalVisitor;
 import com.h3xstream.findsecbugs.taintanalysis.data.UnknownSource;
 import com.h3xstream.findsecbugs.taintanalysis.data.UnknownSourceType;
 import edu.umd.cs.findbugs.BugReporter;
-import edu.umd.cs.findbugs.ba.AnalysisContext;
-import edu.umd.cs.findbugs.ba.XClass;
-import edu.umd.cs.findbugs.classfile.ClassDescriptor;
-import edu.umd.cs.findbugs.classfile.DescriptorFactory;
 import org.apache.bcel.generic.*;
 import org.neo4j.graphdb.*;
 
@@ -60,7 +55,7 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
 
 
     @Override
-    public void visitInvoke(InvokeInstruction invoke, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frame, List<Taint> parameters) throws ClassNotFoundException {
+    public void visitInvoke(InvokeInstruction invoke, MethodGen methodGen, TaintFrame frame, List<Taint> parameters, ConstantPoolGen cpg) throws ClassNotFoundException {
         GraphDatabaseService db = graphDb.getDb();
         try (Transaction tx = db.beginTx()) {
 
@@ -71,54 +66,6 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
             //Target method
             String invokeClass = getSlashClassName(invoke.getClassName(cpg));
             String invokeCall = invokeClass + "." + invoke.getMethodName(cpg) + invoke.getSignature(cpg);
-
-            /////
-            //Create function nodes
-            /*Node sourceNode = createNode(GraphLabels.LABEL_FUNCTION, "name", sourceCall,
-                "class", sourceClass,
-                "function", methodGen.getName());
-
-            Node invokeNode = createNode(GraphLabels.LABEL_FUNCTION, "name", invokeCall,
-                "class", invokeClass,
-                "function", invoke.getMethodName(cpg));
-
-            /////
-            //Create class nodes
-            Node sourceClassNode = createNode(GraphLabels.LABEL_CLASS, "name", sourceClass);
-            Node invokeClassNode = createNode(GraphLabels.LABEL_CLASS, "name", invokeClass);
-
-            createRelationship(sourceNode, invokeNode, RelTypes.CALL);
-            createRelationship(sourceNode, sourceClassNode, RelTypes.FROM_CLASS);
-            createRelationship(invokeNode, invokeClassNode, RelTypes.FROM_CLASS);
-
-
-            /////
-            //Create subclasses nodes
-
-            ClassDescriptor cdSource = DescriptorFactory.createClassDescriptorFromDottedClassName(methodGen.getClassName());
-            ClassDescriptor cdInvoke = DescriptorFactory.createClassDescriptorFromDottedClassName(invoke.getClassName(cpg));
-
-            ArrayList<ClassDescriptor> listSuperClassesSource = ClassMetadata.listOfSuperClasses(cdSource);
-            ArrayList<ClassDescriptor> listSuperClassesInvoke = ClassMetadata.listOfSuperClasses(cdInvoke);
-
-            //create extended classes nodes
-            if (listSuperClassesSource.size() != 0)
-                createSuperClasses(sourceClassNode, listSuperClassesSource);
-            if (listSuperClassesInvoke.size() != 0)
-                createSuperClasses(invokeClassNode, listSuperClassesInvoke);
-
-            //create interfaces nodes
-            createInterfaces(cdSource);
-            createInterfaces(cdInvoke);
-            if (listSuperClassesSource.size() != 0){
-                for (int i = 0; i<listSuperClassesSource.size(); ++i)
-                    createInterfaces(listSuperClassesSource.get(i));
-            }
-            else if (listSuperClassesInvoke.size() != 0){
-                for (int i = 0; i<listSuperClassesInvoke.size(); ++i)
-                    createInterfaces(listSuperClassesInvoke.get(i));
-            }
-            */
 
             /////
             //Create variable nodes
@@ -168,62 +115,63 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
     }
 
     @Override
-    public void visitReturn(InvokeInstruction invoke, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType) throws Exception {
+    public void visitReturn(MethodGen methodGen, Taint returnValue, ConstantPoolGen cpg) throws Exception {
         GraphDatabaseService db = graphDb.getDb();
         try (Transaction tx = db.beginTx()) {
             //Source method
             String sourceClass = getSlashClassName(methodGen.getClassName());
             String sourceCall = sourceClass + "." + methodGen.getName() + methodGen.getSignature();
 
+            if(returnValue != null) { //Skipping return void
+                if (returnValue.getSources().size() > 0) {
+                    //Destination
+                    String destParamKey = sourceCall + "_ret";
 
-            Taint returnValue = frameType.getStackValue(0);
-            if(returnValue.getSources().size() > 0) {
-                //Destination
-                String destParamKey = sourceCall + "_ret";
+                    //Multiple return instruction can be place in the same method. Therefore we can't hold the state in this specific node.
+                    Node destParamNode = createNode(GraphLabels.LABEL_VARIABLE,
+                            "name", destParamKey,
+                            //"state", returnValue.getState().name(),
+                            "type", "P");
 
-                //
-                Node destParamNode = createNode(GraphLabels.LABEL_VARIABLE,
-                        "name", destParamKey,
-                        "state", returnValue.getState().name(),
-                        "type", "P");
-
-                //Source
-                for(UnknownSource source : returnValue.getSources()) {
-                    linkSourceToNode(source, destParamNode, sourceCall);
+                    //Source
+                    for (UnknownSource source : returnValue.getSources()) {
+                        linkSourceToNode(source, destParamNode, sourceCall);
+                    }
+                    tx.success();
                 }
-                tx.success();
             }
         }
     }
 
     @Override
-    public void visitLoad(LoadInstruction instruction, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frame, int numProduced) {
+    public void visitLoad(LoadInstruction instruction, MethodGen methodGen, TaintFrame frame, int numProduced, ConstantPoolGen cpg) {
 
     }
 
     @Override
-    public void visitField(FieldInstruction store, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType, int numProduced) throws Exception {
+    public void visitField(FieldInstruction store, MethodGen methodGen, TaintFrame frameType, int numProduced, ConstantPoolGen cpg) throws Exception {
         GraphDatabaseService db = graphDb.getDb();
         try (Transaction tx = db.beginTx()) {
             //Source method
             String sourceClass = getSlashClassName(methodGen.getClassName());
             String sourceCall = sourceClass + "." + methodGen.getName() + methodGen.getSignature();
 
+            //Value load or store
+            Taint fieldValue = frameType.getStackValue(0);
+            if(fieldValue.getSources().size() > 0) {
+                if(store instanceof PUTFIELD || store instanceof PUTSTATIC) {
+                    //Destination
+                    String destParamKey = getSlashClassName(store.getClassName(cpg))+"."+store.getFieldName(cpg);
 
-            Taint returnValue = frameType.getStackValue(0);
-            if(returnValue.getSources().size() > 0) {
-                //Destination
-                String destParamKey = store.getName();
-
-                //
-                Node destParamNode = createNode(GraphLabels.LABEL_VARIABLE,
-                        "name", destParamKey,
-                        "state", returnValue.getState().name(),
-                        "type", "F");
-
-                //Source
-                for(UnknownSource source : returnValue.getSources()) {
-                    linkSourceToNode(source, destParamNode, sourceCall);
+                    //
+                    Node destParamNode = createNode(GraphLabels.LABEL_VARIABLE,
+                            "name", destParamKey,
+                            //"state", returnValue.getState().name(),
+                            "type", "F");
+                    //Source
+                    for(UnknownSource source : fieldValue.getSources()) {
+                        linkSourceToNode(source, destParamNode, sourceCall);
+                    }
                 }
             }
             tx.success();
@@ -287,8 +235,6 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
     private Node createNode(Label lbl, String... properties) {
         Map<String, Node> cache = graphDb.getNodesCache();
 
-        GraphDatabaseService db = graphDb.getDb();
-
         Map<String,String> props = build(properties);
         String name = props.get("name");
 
@@ -302,44 +248,10 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
                 node.setProperty(prop.getKey(), prop.getValue());
             }
             cache.put(name, node);
+            //System.out.println("Node created : "+props.get("name"));
         }
 
         return node;
-    }
-
-
-
-
-    private void createSuperClasses(Node sourceClassNode, List<ClassDescriptor> listOfSuperClasses){
-        String superClassSource = getSlashClassName(listOfSuperClasses.get(0).getClassName());
-        Node superClassNode = createNode(GraphLabels.LABEL_CLASS, "name", superClassSource);
-
-        createRelationship(sourceClassNode, superClassNode, RelTypes.EXTENDS);
-
-        for (int i = 1; i<listOfSuperClasses.size(); ++i) {
-            String superSuperClassSource = getSlashClassName(listOfSuperClasses.get(i).getClassName());
-            Node superSuperClassNode = createNode(GraphLabels.LABEL_CLASS, "name", superSuperClassSource);
-
-            createRelationship(superClassNode,superSuperClassNode, RelTypes.EXTENDS);
-            superClassNode = superSuperClassNode;
-        }
-    }
-
-    private void createInterfaces(ClassDescriptor sourceClass) {
-        String sourceClassName = getSlashClassName(sourceClass.getClassName());
-        Node sourceClassNode = createNode(GraphLabels.LABEL_CLASS, "name", sourceClassName);
-        XClass xclass = AnalysisContext.currentXFactory().getXClass(sourceClass);
-        if (xclass != null) {
-            ClassDescriptor[] interfaces = xclass.getInterfaceDescriptorList();
-            if (interfaces.length != 0) {
-                for (int i = 0; i < interfaces.length; ++i) {
-                    String sourceClassInterface = getSlashClassName(interfaces[i].getClassName());
-                    Node sourceClassInterfaceNode = createNode(GraphLabels.LABEL_INTERFACE, "name", sourceClassInterface);
-
-                    createRelationship(sourceClassNode,sourceClassInterfaceNode, RelTypes.IMPLEMENTS);
-                }
-            }
-        }
     }
 
     private String getSlashClassName(String dottedClassName) {
@@ -362,11 +274,6 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
         createRelationship(intermediateNode,toNode,rt,null);
     }
 
-
-    private void createRelationship(Node fromNode,Node toNode, RelationshipType rt) {
-        createRelationship(fromNode,toNode,rt,null);
-    }
-
     /**
      * Create a relationship if it does not exist.
      * @param fromNode
@@ -380,7 +287,6 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
             return;
         }
 
-        //int key = Objects.hash(fromNode.getProperty("name").hashCode(), toNode.getProperty("name"), sourceCall);
         String key = getKey(fromNode,toNode,rt,sourceCall);
         relationshipCache.add(key);
         Relationship relation = fromNode.createRelationshipTo(toNode,rt);
@@ -390,7 +296,7 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
     }
 
     private String getKey(Node fromNode,Node toNode, RelationshipType rt, String sourceCall) {
-       return new StringBuilder((String) fromNode.getProperty("name")).append("->").append(toNode.getProperty("name")).append("__").append(rt.name()).append("__").append(sourceCall==null?"":sourceCall).toString();
+       return fromNode.getProperty("name") + "->" + toNode.getProperty("name") + "__" + rt.name() + "__" + (sourceCall == null ? "" : sourceCall);
     }
 
     /**
@@ -404,32 +310,8 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
     private boolean hasRelationship(Node fromNode,Node toNode, RelationshipType rt, String sourceCall) {
         Set<String> relationshipCache = graphDb.getRelationshipCache();
 
-        //int key = Objects.hash(fromNode.getProperty("name"), toNode.getProperty("name"),sourceCall);
         String key = getKey(fromNode,toNode,rt,sourceCall);
-        if (relationshipCache.contains(key)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * This function is
-     * @param fromNode
-     * @param toNode
-     * @param rt
-     * @return
-     */
-    private boolean hasRelationshipRemote(Node fromNode,Node toNode, RelationshipType... rt) {
-        if (fromNode.hasRelationship(Direction.OUTGOING, rt)) {
-            Iterable<Relationship> relations = fromNode.getRelationships(Direction.OUTGOING, rt);
-            for (Relationship relation : relations) {
-                if (relation.getEndNode().equals(toNode)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return relationshipCache.contains(key);
     }
 
 }

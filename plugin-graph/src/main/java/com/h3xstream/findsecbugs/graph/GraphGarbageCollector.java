@@ -23,12 +23,18 @@ import edu.umd.cs.findbugs.classfile.CheckedAnalysisException;
 import edu.umd.cs.findbugs.classfile.ClassDescriptor;
 
 /**
- * Why this trigger to shutdown is needed.
- *
- * SpotBugs Maven Plugin will launch a scan for every sub-project in a different classloader (AntClassLoader)
- * This will effectively isolate every scan states.
- * The graph being built reuse the same database. Therefore we need to shutdown the database in order to reload it in
- * the next scan.
+ * <h3>Why this trigger to shutdown is needed.</h3>
+ * When running in the context of SpotBugs Maven Plugin. The plugin will launch a scan for every sub-project in a different classloader (AntClassLoader)
+ * This will effectively isolate every scan states. The singleton pattern use for GraphInstance class does not provide any guarantee of a single instantiation.
+ * <pre>
+ * [Maven]
+ *  \- Subproject 1 Execution (Classloader 1)
+ *  \- Subproject 2 Execution (Classloader 2)
+ *  \- ...
+ * </pre>
+ * It is not possible to connect in embedded mode (in-memory) multiple times to the same graph folder.
+ * The graph being built also need to be reuse. Sub-project might have interesting dependencies that need to be represent by the graph.
+ * Therefore, we need to shutdown the database in order to reload it in the next scan.
  */
 public class GraphGarbageCollector implements Detector2 {
 

@@ -54,7 +54,7 @@ public class PotentialValueDetector extends BasicInjectionDetector implements Ta
 
 
     @Override
-    public void visitInvoke(InvokeInstruction invoke, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType, List<Taint> parameters) throws DataflowAnalysisException{
+    public void visitInvoke(InvokeInstruction invoke, MethodGen methodGen, TaintFrame frameType, List<Taint> parameters, ConstantPoolGen cpg) throws DataflowAnalysisException{
 
         if(PROPERTIES_GET_WITH_DEFAULT.matches(invoke,cpg) || OPTIONAL_OR.matches(invoke,cpg) || HASHMAP_GET_WITH_DEFAULT.matches(invoke,cpg)) {
             Taint defaultVal = parameters.get(0); //Top of the stack last arguments
@@ -68,17 +68,17 @@ public class PotentialValueDetector extends BasicInjectionDetector implements Ta
     }
 
     @Override
-    public void visitLoad(LoadInstruction load, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType, int numProduced) {
+    public void visitLoad(LoadInstruction load, MethodGen methodGen, TaintFrame frameType, int numProduced, ConstantPoolGen cpg) {
 
     }
 
     @Override
-    public void visitReturn(InvokeInstruction invoke, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType) throws Exception {
+    public void visitReturn(MethodGen methodGen, Taint returnValue, ConstantPoolGen cpg) throws Exception {
 
     }
 
     @Override
-    public void visitField(FieldInstruction put, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType, int numProduced) throws Exception {
+    public void visitField(FieldInstruction put, MethodGen methodGen, TaintFrame frameType, int numProduced, ConstantPoolGen cpg) throws Exception {
 
     }
 

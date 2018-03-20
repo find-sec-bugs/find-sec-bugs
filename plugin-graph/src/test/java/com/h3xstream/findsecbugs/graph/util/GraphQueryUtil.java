@@ -25,21 +25,18 @@ import org.neo4j.graphdb.Transaction;
 
 import java.util.*;
 
+/**
+ * Utility class that make Graph query easier.
+ *
+ */
 public class GraphQueryUtil {
 
-    public static List<Map<String,Object>> queryGraph(String query, Map<String,Object> params, GraphDatabaseService graphDb) {
-        try(Transaction tx = graphDb.beginTx()) {
-            Result res = graphDb.execute(query, params);
-            List<Map<String,Object>> nodes = new ArrayList<Map<String,Object>>();
-            for (Map<String,Object> node : iterable(res)) {
-                nodes.add(node);
-            }
-            tx.success();
-            return nodes;
-        }
-    }
-
-
+    /**
+     * Allow iterator to be used in a for each loop.
+     * @param iterator
+     * @param <T>
+     * @return
+     */
     public static<T> Iterable<T> iterable(Iterator<T> iterator) {
         return new Iterable<T>() {
             @Override
@@ -49,7 +46,11 @@ public class GraphQueryUtil {
         };
     }
 
-
+    /**
+     * Print the node properties.
+     * @param node
+     * @return
+     */
     public static String printNode(Node node) {
         StringBuilder buffer = new StringBuilder();
         buffer.append("Node: "+Arrays.asList(node.getLabels()).toString()+"\n");
@@ -60,9 +61,23 @@ public class GraphQueryUtil {
         return buffer.toString();
     }
 
+    /**
+     * Execute a query with the number of nodes group matching the query.
+     * @param query
+     * @param db
+     * @return
+     */
     public static int getNodeCount(String query,GraphDatabaseService db) {
         return getNodeCount(query, HashMapBuilder.buildObj(),db);
     }
+
+    /**
+     * Execute a query with the number of nodes group matching the query.
+     * With the option to specify bind parameters.
+     * @param query
+     * @param db
+     * @return
+     */
     public static int getNodeCount(String query,Map<String, Object> params, GraphDatabaseService db) {
         Result resNodes = db.execute( query, params   );
         int count = 0;

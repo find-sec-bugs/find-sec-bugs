@@ -17,9 +17,9 @@
  */
 package com.h3xstream.findsecbugs.graph;
 
-import com.h3xstream.findsecbugs.graph.util.GraphQueryUtil;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.io.fs.FileUtils;
 
@@ -102,10 +102,18 @@ public class GraphInstance {
     public void clearDatabase() {
         nodesCache.clear();
         relationshipCache.clear();
-        GraphQueryUtil.queryGraph("MATCH (n)\n" + //Ref : https://stackoverflow.com/a/33542193/89769
+        queryGraph("MATCH (n)\n" + //Ref : https://stackoverflow.com/a/33542193/89769
                 "WITH n LIMIT 1000000\n" +
                 "OPTIONAL MATCH (n)-[r]-()\n" +
                 "DELETE n,r",new HashMap<>(),db);
+    }
+
+
+    private static void queryGraph(String query, Map<String,Object> params, GraphDatabaseService graphDb) {
+        try(Transaction tx = graphDb.beginTx()) {
+            graphDb.execute(query, params);
+            tx.success();
+        }
     }
 
     public static GraphInstance getInstance() {

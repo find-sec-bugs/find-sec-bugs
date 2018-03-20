@@ -97,7 +97,7 @@ public class ClassPathFinderSampleTest extends BaseGraphDetectorTest {
     }
 
 
-    @Test
+    @Test(enabled = false)
     public void analyzeStrutsClassPathFinderComplete() throws Exception {
 
         //Locate test code

@@ -92,17 +92,17 @@ public class HardcodedPasswordEqualsDetector extends BasicInjectionDetector impl
     }
 
     @Override
-    public void visitInvoke(InvokeInstruction instruction, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType, List<Taint> parameters) {
+    public void visitInvoke(InvokeInstruction instruction, MethodGen methodGen, TaintFrame frameType, List<Taint> parameters, ConstantPoolGen cpg) {
         //ByteCode.printOpCode(instruction, cpg);
     }
 
     @Override
-    public void visitReturn(InvokeInstruction invoke, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType) throws Exception {
+    public void visitReturn(MethodGen methodGen, Taint returnValue, ConstantPoolGen cpg) throws Exception {
 
     }
 
     @Override
-    public void visitLoad(LoadInstruction instruction, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType, int numProduced) {
+    public void visitLoad(LoadInstruction instruction, MethodGen methodGen, TaintFrame frameType, int numProduced, ConstantPoolGen cpg) {
         //Extract the name of the variable
         int index = instruction.getIndex();
         LocalVariableGen var = StackUtils.getLocalVariable(methodGen, index);
@@ -143,7 +143,7 @@ public class HardcodedPasswordEqualsDetector extends BasicInjectionDetector impl
     }
 
     @Override
-    public void visitField(FieldInstruction put, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType, int numProduced) throws Exception {
+    public void visitField(FieldInstruction put, MethodGen methodGen, TaintFrame frameType, int numProduced, ConstantPoolGen cpg) throws Exception {
 
     }
 

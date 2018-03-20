@@ -198,7 +198,11 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             }
             taint.addSource(new UnknownSource(UnknownSourceType.FIELD,state).setSignatureField(fieldSig));
 
-            modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taint);
+            int numConsumed = getNumWordsConsumed(obj);
+            int numProduced = getNumWordsProduced(obj);
+            modelInstruction(obj, numConsumed, numProduced, taint);
+
+            notifyAdditionalVisitor(obj, methodGen, getFrame(), numProduced);
         }
     }
 
@@ -233,7 +237,23 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             taint.setDebugInfo("." + obj.getFieldName(cpg));
         }
-        modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taint);
+        int numConsumed = getNumWordsConsumed(obj);
+        int numProduced = getNumWordsProduced(obj);
+        modelInstruction(obj, numConsumed, numProduced, taint);
+
+
+        notifyAdditionalVisitor(obj, methodGen, getFrame(), numProduced);
+    }
+
+    private void notifyAdditionalVisitor(FieldInstruction instruction, MethodGen methodGen, TaintFrame frame, int numProduced) {
+        for(TaintFrameAdditionalVisitor visitor : visitors) {
+            try {
+                visitor.visitField(instruction, methodGen, frame, numProduced, cpg);
+            }
+            catch (Throwable e) {
+                LOG.log(Level.SEVERE,"Error while executing "+visitor.getClass().getName(),e);
+            }
+        }
     }
 
     @Override
@@ -287,7 +307,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
         for(TaintFrameAdditionalVisitor visitor : visitors) {
             try {
-                visitor.visitLoad(load, cpg, methodGen, getFrame(), numProducedOrig);
+                visitor.visitLoad(load, methodGen, getFrame(), numProducedOrig, cpg);
             }
             catch (Throwable e) {
                 LOG.log(Level.SEVERE,"Error while executing "+visitor.getClass().getName(),e);
@@ -387,14 +407,24 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     @Override
     public void visitARETURN(ARETURN obj) {
+        Taint returnTaint = null;
         try {
-            Taint returnTaint = getFrame().getTopValue();
+            returnTaint = getFrame().getTopValue();
             Taint currentTaint = analyzedMethodConfig.getOutputTaint();
             analyzedMethodConfig.setOuputTaint(Taint.merge(returnTaint, currentTaint));
         } catch (DataflowAnalysisException ex) {
             throw new InvalidBytecodeException("empty stack before reference return", ex);
         }
         handleNormalInstruction(obj);
+
+        for(TaintFrameAdditionalVisitor visitor : visitors) {
+            try {
+                visitor.visitReturn(methodGen, returnTaint, cpg);
+            }
+            catch (Throwable e) {
+                LOG.log(Level.SEVERE,"Error while executing "+visitor.getClass().getName(),e);
+            }
+        }
     }
 
     /**
@@ -437,7 +467,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
             for(TaintFrameAdditionalVisitor visitor : visitors) {
                 try {
-                    visitor.visitInvoke(obj, cpg, methodGen, getFrame() , parameters);
+                    visitor.visitInvoke(obj, methodGen, getFrame() , parameters, cpg);
                 }
                 catch (Throwable e) {
                     LOG.log(Level.SEVERE,"Error while executing "+visitor.getClass().getName(),e);

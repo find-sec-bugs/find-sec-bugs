@@ -17,12 +17,10 @@
  */
 package com.h3xstream.findsecbugs.graph;
 
-import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import org.neo4j.graphdb.*;
 import org.testng.annotations.Test;
 
-import java.io.File;
 import java.util.*;
 
 import static com.h3xstream.findsecbugs.graph.util.GraphQueryUtil.getNodeCount;
@@ -30,13 +28,11 @@ import static com.h3xstream.findsecbugs.graph.util.GraphQueryUtil.iterable;
 import static org.mockito.Mockito.spy;
 import static org.testng.Assert.assertTrue;
 
-/**
- *
- */
 public class GraphGadgetTest extends BaseGraphDetectorTest {
 
     @Test
     public void analyzeGadget() throws Exception {
+        //GraphInstance.mustDeleteFileCreated = false; //For troubleshooting only
         //FindSecBugsGlobalConfig.getInstance().setDebugPrintInstructionVisited(true);
         //FindSecBugsGlobalConfig.getInstance().setDebugTaintState(true);
 
@@ -97,7 +93,7 @@ public class GraphGadgetTest extends BaseGraphDetectorTest {
                             "sink","java/lang/Runtime.exec(Ljava/lang/String;)Ljava/lang/Process;_p0" //
                             ,"source","testcode/gadget/cachedata/SpecialCacheData.executeCommand(Ljava/lang/String;IJ)Ljava/lang/String;_p3"),
                     db);
-            assertTrue(source2sink>0,"Path from executeCommand() to Runtime.exec() not found");
+            assertTrue(source2sink > 0,"Path from executeCommand() to Runtime.exec() not found");
 
             int nbVariables = getNodeCount("MATCH (n:Variable) RETURN n;",db);
             int nbFunctions = getNodeCount("MATCH (n:Function) RETURN n;",db);

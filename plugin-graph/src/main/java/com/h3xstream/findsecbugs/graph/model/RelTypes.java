@@ -20,15 +20,13 @@ package com.h3xstream.findsecbugs.graph.model;
 import org.neo4j.graphdb.RelationshipType;
 
 public enum RelTypes implements RelationshipType {
-    //Link between two methods
-    CALL,
 
-    //Link between Class and method
-    FROM_CLASS,
-
-    //Link between Class and Class/Interface
-    EXTENDS,
-    IMPLEMENTS,
-
+    /**
+     * Describe the link between two variable state.
+     * Example :
+     *  - A value being passed to function argument.
+     *  - A value being return from a function
+     *  - A value that is assign to a field
+     */
     TRANSFER,
 }

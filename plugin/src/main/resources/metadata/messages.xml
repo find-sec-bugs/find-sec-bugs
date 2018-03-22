@@ -3067,7 +3067,7 @@ byte[] cipherText = c.doFinal(plainText);</pre>
     </BugPattern>
     <BugCode abbrev="SECDU">DES</BugCode>
 
-    <!-- TDES usage -->
+    <!-- TripleDES usage -->
     <Detector class="com.h3xstream.findsecbugs.crypto.cipher.TDesUsageDetector">
         <Details>DESede should be replace by AES</Details>
     </Detector>

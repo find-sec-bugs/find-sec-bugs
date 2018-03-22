@@ -10,6 +10,9 @@ test-output
 *.iws
 .idea/
 
+#Neo4j
+*.db/
+
 #Gradle
 .gradle
 

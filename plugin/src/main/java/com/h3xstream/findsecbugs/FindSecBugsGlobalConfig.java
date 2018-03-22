@@ -46,6 +46,7 @@ public class FindSecBugsGlobalConfig {
         customConfigFile = loadFromSystem("findsecbugs.taint.customconfigfile", null);
         taintedMainArgument = Boolean.parseBoolean(loadFromSystem("findsecbugs.taint.taintedmainargument", Boolean.TRUE.toString()));
         reportPotentialXssWrongContext = Boolean.parseBoolean(loadFromSystem("findsecbugs.taint.reportpotentialxsswrongcontext", Boolean.FALSE.toString()));
+        debugTaintState = Boolean.parseBoolean(loadFromSystem("findsecbugs.taint.debugtaintstate", Boolean.FALSE.toString()));
     }
 
     public String loadFromSystem(String key, String defaultValue) {

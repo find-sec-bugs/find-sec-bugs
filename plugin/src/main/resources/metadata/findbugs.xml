@@ -1,5 +1,5 @@
 <FindbugsPlugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xsi:noNamespaceSchemaLocation="https://findbugs.googlecode.com/svn-history/r13379/trunk/findbugs/etc/findbugsplugin.xsd"
+                xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/spotbugs/spotbugs/master/spotbugs/etc/findbugsplugin.xsd"
                 pluginid="com.h3xstream.findsecbugs"
                 provider="Find Security Bugs"
                 defaultenabled="true"
@@ -235,7 +235,7 @@
     <BugPattern type="ANDROID_WEB_VIEW_JAVASCRIPT_INTERFACE" abbrev="SECWVJI" category="SECURITY" cweid="285"/>
     <BugPattern type="OBJECT_DESERIALIZATION" abbrev="SECOBDES" category="SECURITY" cweid="502"/>
     <BugPattern type="JACKSON_UNSAFE_DESERIALIZATION" abbrev="SECUJDES" category="SECURITY" cweid="502"/>
-    <BugPattern type="DESERIALIZATION_GADGET" abbrev="SECDESGAD" category="SECURITY" cweid="502"  experimental="true"/>
+    <BugPattern type="DESERIALIZATION_GADGET" abbrev="SECDESGAD" category="SECURITY" cweid="502" experimental="true"/>
     <BugPattern type="TRUST_BOUNDARY_VIOLATION" abbrev="SECTBV" category="SECURITY" cweid="501"/>
     <BugPattern type="SCALA_SENSITIVE_DATA_EXPOSURE" abbrev="SECSDL" category="SECURITY" cweid="200"/>
     <BugPattern type="SCALA_PLAY_SSRF" abbrev="SECSSSRF" category="SECURITY" cweid="918"/>
@@ -245,5 +245,6 @@
     <BugPattern type="TEMPLATE_INJECTION_FREEMARKER" abbrev="SECFREEM" category="SECURITY" cweid="94"/>
     <BugPattern type="URLCONNECTION_SSRF_FD" abbrev="SECSSSRFUC" category="SECURITY" cweid="918"/>
     <BugPattern type="INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE" abbrev="ERRMSG" category="SECURITY" cweid="209"/>
+
 
 </FindbugsPlugin>

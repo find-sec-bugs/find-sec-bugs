@@ -138,4 +138,70 @@ public class OgnlInjectionDetectorTest  extends BaseDetectorTest {
                         .inClass("TextParserSample")
                         .build());
     }
+
+
+    @Test
+    public void detectValueStack() throws Exception {
+
+//        FindSecBugsGlobalConfig.getInstance().setDebugPrintInvocationVisited(true);
+
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/script/ognl/ValueStackSample")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        for(Integer line : Arrays.asList(8,16)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("OGNL_INJECTION")
+                            .inClass("ValueStackSample")
+                            .atLine(line)
+                            .build()
+            );
+        }
+
+        verify(reporter,times(9)).doReportBug(
+                bugDefinition()
+                        .bugType("OGNL_INJECTION")
+                        .inClass("ValueStackSample")
+                        .build());
+    }
+
+
+
+    @Test
+    public void detectTaintedAndInjection() throws Exception {
+//        FindSecBugsGlobalConfig.getInstance().setDebugTaintState(true);
+//        FindSecBugsGlobalConfig.getInstance().setDebugPrintInvocationVisited(true);
+
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/script/ognl/StrutsTaintedApi")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("OGNL_INJECTION")
+                        .inClass("StrutsTaintedApi")
+                        .withPriority("High")
+                        .atLine(10)
+                        .build()
+        );
+
+        //Only 1 bug expected
+        verify(reporter,times(1)).doReportBug(
+                bugDefinition()
+                        .bugType("OGNL_INJECTION")
+                        .inClass("StrutsTaintedApi")
+                        .build()
+        );
+    }
 }

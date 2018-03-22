@@ -18,6 +18,8 @@
 package com.h3xstream.findsecbugs.taintanalysis;
 
 import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
+import com.h3xstream.findsecbugs.taintanalysis.data.UnknownSource;
+import com.h3xstream.findsecbugs.taintanalysis.data.UnknownSourceType;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -123,6 +125,23 @@ public class TaintFrameTest {
         assertTrue(debugOutput.contains("12345678"));
         assertTrue(debugOutput.contains("PASSWORD_VARIABLE"));
         assertTrue(debugOutput.contains("H@rdC0deStr1ng"));
+    }
+
+    @Test
+    public void validateSimpleTaintFrameWithUnknownSources() {
+        Taint unknown = new Taint(Taint.State.UNKNOWN);
+        unknown.addSource(new UnknownSource(UnknownSourceType.FIELD, Taint.State.TAINTED).setSignatureField("taintedField"));
+        unknown.addSource(new UnknownSource(UnknownSourceType.RETURN, Taint.State.TAINTED).setSignatureMethod("returnFrom"));
+        unknown.addSource(new UnknownSource(UnknownSourceType.PARAMETER, Taint.State.TAINTED).setParameterIndex(2));
+
+        TaintFrame frame = new TaintFrame(0);
+        frame.pushValue(unknown);
+
+        String debugOutput = frame.toString();
+        System.out.println(debugOutput);
+        assertTrue(debugOutput.contains("field[taintedField]"));
+        assertTrue(debugOutput.contains("method[returnFrom]"));
+        assertTrue(debugOutput.contains("parameter[2]"));
     }
 
 

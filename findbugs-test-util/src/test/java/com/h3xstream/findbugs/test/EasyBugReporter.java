@@ -17,16 +17,13 @@
  */
 package com.h3xstream.findbugs.test;
 
-import edu.umd.cs.findbugs.AbstractBugReporter;
-import edu.umd.cs.findbugs.AnalysisError;
-import edu.umd.cs.findbugs.BugCollection;
-import edu.umd.cs.findbugs.BugInstance;
-import edu.umd.cs.findbugs.SortedBugCollection;
+import edu.umd.cs.findbugs.*;
 import edu.umd.cs.findbugs.classfile.ClassDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class EasyBugReporter extends AbstractBugReporter {
@@ -34,7 +31,6 @@ public class EasyBugReporter extends AbstractBugReporter {
     private BugCollection bugCollection = new SortedBugCollection();
 
     private int bugInstanceCount;
-    public static boolean runningFromMaven = false;
 
     private static final Logger log = LoggerFactory.getLogger(EasyBugReporter.class);
 
@@ -71,7 +67,7 @@ public class EasyBugReporter extends AbstractBugReporter {
             return;
         }
 
-        if(runningFromMaven) {
+        if(FbTestGlobalSettings.isRunningFromMaven()) {
             StringBuilder bugDetail = new StringBuilder();
             bugDetail.append("New bug ").append(bugInstance.getBugPattern().getType()).append(" ");
             if (bugInstance.getPrimaryClass() != null && bugInstance.getPrimaryMethod() != null && bugInstance.getPrimarySourceLineAnnotation() != null) {
@@ -115,10 +111,27 @@ public class EasyBugReporter extends AbstractBugReporter {
             if (bugInstance.getPrimarySourceLineAnnotation() != null) {
                 bugDetail.append("  line=" + bugInstance.getPrimarySourceLineAnnotation().getStartLine());
             }
+            List<String> bugs = getUnknownSources(bugInstance);
+            if(bugs.size() > 0) {
+                bugDetail.append("\n  sources=" + Arrays.asList(bugs));
+            }
             bugDetail.append("\n------------------------------------------------------");
             log.info(bugDetail.toString());
             //bugCollection.add(bugInstance);
         }
+    }
+
+    private List<String> getUnknownSources(BugInstance bugInstance) {
+        List<String> sources = new ArrayList<>();
+        for(BugAnnotation ann : bugInstance.getAnnotations()) {
+            if(ann instanceof StringAnnotation) {
+                StringAnnotation value = (StringAnnotation) ann;
+                if(value.getDescription().equals("Unknown source")) {
+                    sources.add(value.getValue());
+                }
+            }
+        }
+        return sources;
     }
 
     @Override

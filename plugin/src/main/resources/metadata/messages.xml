@@ -601,7 +601,7 @@ since the client will trust any certificate.
 <p>
 A TrustManager allowing specific certificates (based on a truststore for example) should be built.
 Detailed information for a proper implementation is available at:
-<a href="http://stackoverflow.com/a/6378872/89769">[1]</a> 
+<a href="http://stackoverflow.com/a/6378872/89769">[1]</a>
 <a href="http://stackoverflow.com/a/5493452/89769">[2]</a>
 </p>
 <br/>
@@ -904,7 +904,7 @@ mapped in this way are properly validated before they are used.</p>
 <a href="https://en.wikipedia.org/wiki/MD5">Wikipedia: MD5</a><br/>
 <a href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar1.pdf">NIST: Transitions: Recommendation for Transitioning the Use of Cryptographic Algorithms and Key Lengths</a><br/>
 <a href="http://csrc.nist.gov/publications/nistpubs/800-132/nist-sp800-132.pdf">NIST: Recommendation for Password-Based Key Derivation</a><br/>
-<a href="http://stackoverflow.com/questions/22580853/reliable-implementation-of-pbkdf2-hmac-sha256-for-java">Stackoverflow: Reliable implementation of PBKDF2-HMAC-SHA256 for Java</a><br/>
+<a href="https://stackoverflow.com/q/22580853/89769">Stackoverflow: Reliable implementation of PBKDF2-HMAC-SHA256 for Java</a><br/>
 <a href="http://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky Cryptographic Algorithm</a>
 </p>
 ]]>
@@ -972,7 +972,7 @@ uses. <b>PBKDF2</b> should be used to hash password for example.</p>
 <a href="https://googleonlinesecurity.blogspot.ca/2014/09/gradually-sunsetting-sha-1.html">Google Online Security Blog: Gradually sunsetting SHA-1</a><br/>
 <a href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar1.pdf">NIST: Transitions: Recommendation for Transitioning the Use of Cryptographic Algorithms and Key Lengths</a><br/>
 <a href="http://csrc.nist.gov/publications/nistpubs/800-132/nist-sp800-132.pdf">NIST: Recommendation for Password-Based Key Derivation</a><br/>
-<a href="http://stackoverflow.com/questions/22580853/reliable-implementation-of-pbkdf2-hmac-sha256-for-java">Stackoverflow: Reliable implementation of PBKDF2-HMAC-SHA256 for Java</a><br/>
+<a href="https://stackoverflow.com/q/22580853/89769">Stackoverflow: Reliable implementation of PBKDF2-HMAC-SHA256 for Java</a><br/>
 <a href="http://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky Cryptographic Algorithm</a>
 </p>
 ]]>
@@ -5699,4 +5699,51 @@ The sensitive information may be valuable information on its own (such as a pass
         </Details>
     </BugPattern>
     <BugCode abbrev="ERRMSG">Information Exposure Through An Error Message</BugCode>
+
+    <!-- SMTP Header Injection -->
+    <Detector class="com.h3xstream.findsecbugs.injection.smtp.SmtpHeaderInjectionDetector">
+        <Details>Detect possible injection in SMTP headers. (Email)</Details>
+    </Detector>
+
+    <BugPattern type="SMTP_HEADER_INJECTION">
+        <ShortDescription>SMTP Header Injection</ShortDescription>
+        <LongDescription>Possible injection that can lead to Source spoofing, header override and email body injection.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Simple Mail Transfer Protocol (SMTP) is a the text based protocol used for email delivery.
+Like with HTTP, headers are separate by new line separator.
+If user input is place in a header line, the application should remove
+or replace new line characters (CR / LF).
+You should use a safe wrapper such as <a href="https://commons.apache.org/proper/commons-email/userguide.html">Apache Common Email</a>
+and <a href="http://www.simplejavamail.org">Simple Java Mail</a> which filter special characters that can lead to header injection.
+
+</p>
+    <b>Vulnerable Code:</b><br/>
+<p>
+<pre>
+Message message = new MimeMessage(session);
+message.setFrom(new InternetAddress("noreply@your-organisation.com"));
+message.setRecipients(Message.RecipientType.TO, new InternetAddress[] {new InternetAddress("target@gmail.com")});
+message.setSubject(usernameDisplay + " has sent you notification"); //Injectable API
+message.setText("Visit your ACME Corp profile for more info.");
+Transport.send(message);
+</pre>
+</p>
+    <b>Solution</b><br/>
+<p>Use <a href="https://commons.apache.org/proper/commons-email/userguide.html">Apache Common Email</a> or <a href="http://www.simplejavamail.org">Simple Java Mail</a>.</p>
+
+<p>
+<b>References</b><br/>
+<a href="https://www.owasp.org/index.php/Testing_for_IMAP/SMTP_Injection_(OTG-INPVAL-011)">OWASP SMTP Injection</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/93.html">CWE-93: Improper Neutralization of CRLF Sequences ('CRLF Injection')</a><br/>
+<a href="https://commons.apache.org/proper/commons-email/userguide.html">Commons Email: User Guide</a><br/>
+<a href="http://www.simplejavamail.org">Simple Java Mail Website</a><br/>
+<a href="https://security.stackexchange.com/a/54100/24973">StackExchange InfoSec: What threats come from CRLF in email generation?</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSMTP">SMTP Header Injection</BugCode>
+
 </MessageCollection>

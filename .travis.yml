@@ -1,15 +1,22 @@
 language: java
 
+
+## Activate container based infra https://docs.travis-ci.com/user/workers/container-based-infrastructure/
+#sudo: false
+
+#The following specification are required to enable oraclejdk9
+sudo: required
+dist: precise
+group: edge
+
 jdk:
   - oraclejdk8
   - oraclejdk9
 
-matrix:
-  allow_failures:
-    - jdk: oraclejdk9
+#matrix:
+#  allow_failures:
+#    - jdk: oraclejdk9
 
-# Activate container based infra https://docs.travis-ci.com/user/workers/container-based-infrastructure/
-sudo: false
 install: mvn clean -B -V
 script: mvn verify -B -V -Ptravisci
 

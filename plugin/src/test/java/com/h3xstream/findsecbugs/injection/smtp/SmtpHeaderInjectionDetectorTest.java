@@ -42,7 +42,7 @@ public class SmtpHeaderInjectionDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        for(Integer line : range(37,41)) {
+        for(Integer line : range(38,42)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("SMTP_HEADER_INJECTION")
@@ -56,12 +56,22 @@ public class SmtpHeaderInjectionDetectorTest extends BaseDetectorTest {
                 bugDefinition()
                         .bugType("PATH_TRAVERSAL_IN")
                         .inClass("SmtpClient")
-                        .atLine(44)
+                        .atLine(45)
                         .build()
         );
 
-        //Out of the 6 calls, 3 are suspicious
-        verify(reporter,times(5)).doReportBug(
+
+        verify(reporter).doReportBug( //Test for tainted source
+                bugDefinition()
+                        .bugType("SMTP_HEADER_INJECTION")
+                        .inClass("SmtpClient")
+                        .withPriority("High")
+                        .atLine(52)
+                        .build()
+        );
+
+        //Out of the 5 unknown sources and 1 tainted
+        verify(reporter,times(6)).doReportBug(
                 bugDefinition()
                         .bugType("SMTP_HEADER_INJECTION")
                         .inClass("SmtpClient")

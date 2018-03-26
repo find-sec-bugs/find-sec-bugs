@@ -4,6 +4,7 @@ import javax.activation.FileDataSource;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 import java.net.URLEncoder;
 import java.util.Properties;
 
@@ -44,6 +45,11 @@ public class SmtpClient {
         new FileDataSource("/path/traversal/here/"+input6);
 
         System.out.println("Done");
+    }
+
+    public static void sendEmailTainted(Session session,HttpServletRequest req) throws MessagingException {
+        Message message = new MimeMessage(session);
+        message.setSubject(req.getParameter("user")+" is following you");
     }
 
     public static void sendEmailFP(Session session,String input) throws MessagingException {

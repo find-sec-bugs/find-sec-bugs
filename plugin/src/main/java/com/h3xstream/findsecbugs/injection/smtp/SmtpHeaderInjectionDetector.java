@@ -40,9 +40,9 @@ public class SmtpHeaderInjectionDetector extends BasicInjectionDetector {
             }
         }
         if (taint.isTainted()) {
-            return Priorities.NORMAL_PRIORITY;
+            return Priorities.HIGH_PRIORITY;
         } else if (!taint.isSafe()) {
-            return Priorities.LOW_PRIORITY;
+            return Priorities.NORMAL_PRIORITY;
         } else {
             return Priorities.IGNORE_PRIORITY;
         }

@@ -78,7 +78,7 @@ public class GoogleApiKeyDetector implements Detector {
         for (Method m : javaClass.getMethods()) {
             MethodGen methodGen = classContext.getMethodGen(m);
 
-            if (methodGen.getName().equals("signRequest")) {
+            if (methodGen != null && "signRequest".equals(methodGen.getName())) {
                 bugReporter.reportBug(new BugInstance(this, HARD_CODE_PASSWORD_TYPE, Priorities.NORMAL_PRIORITY) //
                         .addClass(javaClass).addField(new FieldVariable(javaClass.getClassName(), "keyString", "")));
             }

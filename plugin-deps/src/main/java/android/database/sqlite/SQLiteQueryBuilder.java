@@ -82,7 +82,7 @@ public class SQLiteQueryBuilder
         throw new RuntimeException("Stub!");
     }
 
-    @Deprecated
+
     public String buildQuery(String[] projectionIn, String selection, String[] selectionArgs, String groupBy, String having, String sortOrder, String limit)
     {
         throw new RuntimeException("Stub!");
@@ -93,7 +93,6 @@ public class SQLiteQueryBuilder
         throw new RuntimeException("Stub!");
     }
 
-    @Deprecated
     public String buildUnionSubQuery(String typeDiscriminatorColumn, String[] unionColumns, Set<String> columnsPresentInTable, int computedColumnsOffset, String typeDiscriminatorValue, String selection, String[] selectionArgs, String groupBy, String having)
     {
         throw new RuntimeException("Stub!");

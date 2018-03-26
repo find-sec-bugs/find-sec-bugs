@@ -1,0 +1,4 @@
+javax/mail/Message.setSubject(Ljava/lang/String;)V:0
+javax/mail/Message.addHeader(Ljava/lang/String;Ljava/lang/String;)V:0,1
+javax/mail/Message.setDescription(Ljava/lang/String;)V:0
+javax/mail/Message.setDisposition(Ljava/lang/String;)V:0

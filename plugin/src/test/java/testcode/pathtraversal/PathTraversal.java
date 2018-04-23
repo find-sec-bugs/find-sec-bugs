@@ -11,7 +11,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public class PathTraversal {
-
+    static final String safefinalString = "SAFE";
     public static void main(String[] args) throws IOException, URISyntaxException {
         String input = args.length > 0 ? args[0] : "../../../../etc/password\u0000";
         new File(input);
@@ -35,5 +35,6 @@ public class PathTraversal {
         File.createTempFile(input, "safe");
         File.createTempFile("safe", input);
         File.createTempFile("safe", input, new File("safeDir"));
+        new File(safefinalString);
     }
 }

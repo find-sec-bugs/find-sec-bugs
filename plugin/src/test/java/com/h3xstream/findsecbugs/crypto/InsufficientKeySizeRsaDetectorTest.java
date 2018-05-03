@@ -24,8 +24,8 @@ import org.testng.annotations.Test;
 import java.util.Arrays;
 
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 public class InsufficientKeySizeRsaDetectorTest extends BaseDetectorTest {
     @Test
@@ -48,14 +48,16 @@ public class InsufficientKeySizeRsaDetectorTest extends BaseDetectorTest {
             );
         }
 
-        verify(reporter).doReportBug(
-                bugDefinition()
-                        .bugType("RSA_KEY_SIZE")
-                        .inClass("InsufficientKeySizeRsa").inMethod("weakKeySize5Recommended").withPriority("Low").atLine(45)
-                        .build()
-        );
+        for (Integer line: Arrays.asList(45, 59, 66, 74)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("RSA_KEY_SIZE")
+                            .inClass("InsufficientKeySizeRsa").withPriority("Low").atLine(line)
+                            .build()
+            );
+        }
 
-        verify(reporter, times(5)).doReportBug(
+        verify(reporter, times(8)).doReportBug(
                 bugDefinition().bugType("RSA_KEY_SIZE").build());
     }
 }

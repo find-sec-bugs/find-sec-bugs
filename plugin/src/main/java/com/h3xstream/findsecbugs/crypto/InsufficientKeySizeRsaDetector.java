@@ -23,12 +23,14 @@ import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Detector;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.ba.*;
-import edu.umd.cs.findbugs.ba.constant.ConstantDataflow;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.*;
 
+import java.security.Provider;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Similar to the blowfish key size detector
@@ -50,11 +52,9 @@ public class InsufficientKeySizeRsaDetector implements Detector {
         Method[] methodList = javaClass.getMethods();
 
         for (Method m : methodList) {
-
             try {
                 analyzeMethod(m, classContext);
-            } catch (CFGBuilderException e) {
-            } catch (DataflowAnalysisException e) {
+            } catch (CFGBuilderException | DataflowAnalysisException e) {
             }
         }
     }
@@ -63,8 +63,6 @@ public class InsufficientKeySizeRsaDetector implements Detector {
 
         //Conditions that needs to fill to identify the vulnerability
         boolean createRsaKeyGen = false;
-        boolean initializeWeakKeyLength = false;
-        Location locationWeakness = null;
 
         ConstantPoolGen cpg = classContext.getConstantPoolGen();
         CFG cfg = classContext.getCFG(m);
@@ -77,7 +75,18 @@ public class InsufficientKeySizeRsaDetector implements Detector {
             if (inst instanceof INVOKESTATIC) { //KeyPairGenerator.getInstance is called
                 INVOKESTATIC invoke = (INVOKESTATIC) inst;
                 if ("java.security.KeyPairGenerator".equals(invoke.getClassName(cpg)) && "getInstance".equals(invoke.getMethodName(cpg))) {
-                    String value = ByteCode.getConstantLDC(location.getHandle().getPrev(), cpg, String.class);
+                    final List<Type> argumentTypes = Arrays.asList(invoke.getArgumentTypes(cpg));
+                    String value = null;
+                    if (argumentTypes.size() == 1 || argumentTypes.contains(Type.getType(Provider.class))) {
+                        // getInstance(String) or getInstance(String, Provider)
+                        final LDC prevInstruction = ByteCode.getPrevInstruction(location.getHandle(), LDC.class);
+                        if (prevInstruction != null && prevInstruction.getType(cpg) == Type.STRING) {
+                            value = (String) prevInstruction.getValue(cpg);
+                        }
+                    } else {
+                        // getInstance(String, String)
+                        value = ByteCode.getConstantLDC(location.getHandle().getPrev().getPrev(), cpg, String.class);
+                    }
                     if (value != null && value.toUpperCase().startsWith("RSA")) {
                         createRsaKeyGen = true;
                     }
@@ -123,7 +132,7 @@ public class InsufficientKeySizeRsaDetector implements Detector {
         }
     }
 
-    private void addToReport(Method m, ClassContext classContext, Location locationWeakness, Number n){
+    private void addToReport(Method m, ClassContext classContext, Location locationWeakness, Number n) {
         JavaClass clz = classContext.getJavaClass();
         int priority = (n.intValue() < 1024) ? Priorities.NORMAL_PRIORITY : Priorities.LOW_PRIORITY;
         bugReporter.reportBug(new BugInstance(this, RSA_KEY_SIZE_TYPE, priority) //

@@ -28,7 +28,9 @@ public class BaseConfigValidation {
 
     TaintConfigLoader loader = new TaintConfigLoader();
 
-    private List<String> java8classes = Arrays.asList("java.time.ZonedId");
+    private List<String> classesDeprecatedInJava8 = Arrays.asList("java.time.ZonedId");
+    private List<String> classesDeprecatedInJava9 = Arrays.asList("javax.activation.FileDataSource",
+            "javax.xml.bind.DatatypeConverter");
 
     /**
      * Validate if the class name exists.
@@ -38,7 +40,8 @@ public class BaseConfigValidation {
      * @param origfileName
      */
     public void validateClass(String className, String origfileName) {
-        if(java8classes.contains(className)) return;
+        if(classesDeprecatedInJava8.contains(className)) return;
+        if(classesDeprecatedInJava9.contains(className)) return;
 
         if(className.endsWith("$")) return; //Skipping Scala class
         if(className.startsWith("play.")) return; //Temporary skip Play

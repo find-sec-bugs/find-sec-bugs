@@ -50,8 +50,9 @@ public class BaseConfigValidation {
         try {
             Class.forName(className);
         } catch (ClassNotFoundException e) {
-            System.err.println(String.format("[!] Class not found %s (%s)",className,origfileName));
-            fail("Configurations were added for a class that does not exist. It is likely a typographical error or because the API was not tested.");
+            String classNotFound = String.format("[!] Class not found %s (%s)",className,origfileName);
+            //System.err.println(classNotFound);
+            fail("Configurations were added for a class that does not exist. It is likely a typographical error or because the API was not tested. "+classNotFound);
         }
     }
 }

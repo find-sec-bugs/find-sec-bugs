@@ -145,7 +145,7 @@ public class HashUnsafeEqualsDetector extends BasicInjectionDetector implements 
     }
 
     @Override
-    public void visitField(FieldInstruction put, MethodGen methodGen, TaintFrame frameType, int numProduced, ConstantPoolGen cpg) throws Exception {
+    public void visitField(FieldInstruction put, MethodGen methodGen, TaintFrame frameType, Taint taint, int numProduced, ConstantPoolGen cpg) throws Exception {
 
     }
 }

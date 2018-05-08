@@ -202,7 +202,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             int numProduced = getNumWordsProduced(obj);
             modelInstruction(obj, numConsumed, numProduced, taint);
 
-            notifyAdditionalVisitor(obj, methodGen, getFrame(), numProduced);
+            notifyAdditionalVisitorField(obj, methodGen, getFrame(), taint, numProduced);
         }
     }
 
@@ -242,13 +242,38 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         modelInstruction(obj, numConsumed, numProduced, taint);
 
 
-        notifyAdditionalVisitor(obj, methodGen, getFrame(), numProduced);
+        notifyAdditionalVisitorField(obj, methodGen, getFrame(), taint, numProduced);
     }
 
-    private void notifyAdditionalVisitor(FieldInstruction instruction, MethodGen methodGen, TaintFrame frame, int numProduced) {
+    @Override
+    public void visitPUTFIELD(PUTFIELD obj) {
+        visitPutFieldOp(obj);
+    }
+
+    @Override
+    public void visitPUTSTATIC(PUTSTATIC obj) {
+        visitPutFieldOp(obj);
+    }
+
+    public void visitPutFieldOp(FieldInstruction obj) {
+
+        int numConsumed = getNumWordsConsumed(obj);
+        int numProduced = getNumWordsProduced(obj);
+        try {
+            Taint t = getFrame().getTopValue();
+            handleNormalInstruction(obj);
+            notifyAdditionalVisitorField(obj, methodGen, getFrame(), t, numProduced);
+        } catch (DataflowAnalysisException e) {
+
+        }
+
+    }
+
+    private void notifyAdditionalVisitorField(FieldInstruction instruction, MethodGen methodGen, TaintFrame frame,
+                                              Taint taintValue, int numProduced) {
         for(TaintFrameAdditionalVisitor visitor : visitors) {
             try {
-                visitor.visitField(instruction, methodGen, frame, numProduced, cpg);
+                visitor.visitField(instruction, methodGen, frame, taintValue, numProduced, cpg);
             }
             catch (Throwable e) {
                 LOG.log(Level.SEVERE,"Error while executing "+visitor.getClass().getName(),e);

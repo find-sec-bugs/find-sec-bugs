@@ -41,9 +41,12 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
     private static GraphInstance graphDb;
 
     private static List<String> EXCLUDED_PACKAGES = Arrays.asList("java/", "javax/");
-    private static List<String> INCLUDE_JAVA_API = Arrays.asList("java/sql/Statement","java/lang/Runtime","java/lang/ProcessBuilder",
-            "java/io/File","java/io/RandomFile","java/io/FileReader","java/io/FileInputStream","java/nio/file/Paths","java/io/FileWriter",
-            "java/io/FileOutputStream","java/net/URL","java/io/PrintWriter","javax/servlet/http/");
+    private static List<String> INCLUDE_JAVA_API = Arrays.asList(
+            "java/sql/","javax/persistence/", //SQLi
+            "java/lang/Runtime","java/lang/ProcessBuilder", //CmdExec
+            "java/io/File","java/io/RandomFile","java/io/FileReader","java/io/FileInputStream","java/nio/file/Paths","java/io/FileWriter", "java/io/FileOutputStream","java/net/URL", //Path traversal
+            "java/io/PrintWriter", "javax/servlet/", //XSS
+            "javax/naming/directory/", "javax/naming/ldap"); //LDAP
 
     public GraphBuilder(BugReporter bugReporter) {
         super(bugReporter);
@@ -131,7 +134,7 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
                     Node destParamNode = createNode(GraphLabels.LABEL_VARIABLE,
                             "name", destParamKey,
                             //"state", returnValue.getState().name(),
-                            "type", "P");
+                            "type", "R");
 
                     //Source
                     for (UnknownSource source : returnValue.getSources()) {
@@ -149,15 +152,14 @@ public class GraphBuilder extends BasicInjectionDetector implements TaintFrameAd
     }
 
     @Override
-    public void visitField(FieldInstruction store, MethodGen methodGen, TaintFrame frameType, int numProduced, ConstantPoolGen cpg) throws Exception {
+    public void visitField(FieldInstruction store, MethodGen methodGen, TaintFrame frameType, Taint fieldValue, int numProduced, ConstantPoolGen cpg) throws Exception {
         GraphDatabaseService db = graphDb.getDb();
         try (Transaction tx = db.beginTx()) {
             //Source method
             String sourceClass = getSlashClassName(methodGen.getClassName());
             String sourceCall = sourceClass + "." + methodGen.getName() + methodGen.getSignature();
 
-            //Value load or store
-            Taint fieldValue = frameType.getStackValue(0);
+            //Value load or store (fieldValue)
             if(fieldValue.getSources().size() > 0) {
                 if(store instanceof PUTFIELD || store instanceof PUTSTATIC) {
                     //Destination

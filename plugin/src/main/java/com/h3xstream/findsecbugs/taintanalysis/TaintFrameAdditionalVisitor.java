@@ -59,10 +59,11 @@ public interface TaintFrameAdditionalVisitor {
      * @param put
      * @param methodGen
      * @param frameType
+     * @param taintFrame
      * @param numProduced
      * @param cpg
      */
-    void visitField(FieldInstruction put, MethodGen methodGen, TaintFrame frameType, int numProduced, ConstantPoolGen cpg) throws Exception;
+    void visitField(FieldInstruction put, MethodGen methodGen, TaintFrame frameType,Taint taintFrame, int numProduced, ConstantPoolGen cpg) throws Exception;
 
 
 }

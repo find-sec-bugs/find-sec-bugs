@@ -100,12 +100,14 @@ public class GraphInstance {
     }
 
     public void clearDatabase() {
-        nodesCache.clear();
-        relationshipCache.clear();
-        queryGraph("MATCH (n)\n" + //Ref : https://stackoverflow.com/a/33542193/89769
-                "WITH n LIMIT 1000000\n" +
-                "OPTIONAL MATCH (n)-[r]-()\n" +
-                "DELETE n,r",new HashMap<>(),db);
+        if(mustDeleteFileCreated) {
+            nodesCache.clear();
+            relationshipCache.clear();
+            queryGraph("MATCH (n)\n" + //Ref : https://stackoverflow.com/a/33542193/89769
+                    "WITH n LIMIT 1000000\n" +
+                    "OPTIONAL MATCH (n)-[r]-()\n" +
+                    "DELETE n,r", new HashMap<>(), db);
+        }
     }
 
 

@@ -21,7 +21,7 @@
 
     <build>
         <plugins>
-            <!-- Force the use the compatibility to Java 6 -->
+            <!-- Force the use the compatibility to Java 8 -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>

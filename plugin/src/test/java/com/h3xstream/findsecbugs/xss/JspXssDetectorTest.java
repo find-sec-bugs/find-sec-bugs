@@ -243,5 +243,28 @@ public class JspXssDetectorTest extends BaseDetectorTest {
         verify(reporter, times(2)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
     }
 
+    @Test
+    public void owaspTags() throws Exception {
+        //Locate test code
+        String[] files = {
+                getJspFilePath("xss/xss_9_owasp_taglib.jsp")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        for (Integer line : Arrays.asList(11)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("XSS_JSP_PRINT")
+                            .inJspFile("xss/xss_9_owasp_taglib.jsp")
+                            .atJspLine(line)
+                            .build()
+            );
+        }
+
+        verify(reporter, times(1)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
+    }
 }
 

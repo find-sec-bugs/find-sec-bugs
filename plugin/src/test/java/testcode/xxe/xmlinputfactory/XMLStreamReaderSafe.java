@@ -5,9 +5,9 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.InputStream;
 
-public class XmlInputFactorySafe {
+public class XMLStreamReaderSafe {
     public static void main(String[] args) throws Exception {
-        new XmlInputFactorySafe().loadXml();
+        new XMLStreamReaderSafe().loadXml();
     }
 
     public void loadXml() throws XMLStreamException {

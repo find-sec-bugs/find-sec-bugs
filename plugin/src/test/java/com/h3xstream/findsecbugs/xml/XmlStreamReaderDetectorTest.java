@@ -32,11 +32,11 @@ import static org.mockito.Mockito.verify;
 public class XmlStreamReaderDetectorTest extends BaseDetectorTest {
 
     @Test
-    public void detectXxe() throws Exception {
+    public void detectXxeWithXMLStreamReader() throws Exception {
 
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/xxe/xmlinputfactory/XmlInputFactoryVulnerable")
+                getClassFilePath("testcode/xxe/xmlinputfactory/XMLStreamReaderVulnerable")
         };
 
         //Run the analysis
@@ -46,7 +46,7 @@ public class XmlStreamReaderDetectorTest extends BaseDetectorTest {
         verify(reporter, times(1)).doReportBug(
                 bugDefinition()
                         .bugType("XXE_XMLSTREAMREADER")
-                        .inClass("XmlInputFactoryVulnerable")
+                        .inClass("XMLStreamReaderVulnerable")
                         .inMethod("parseXMLdefaultValue")
                         .build()
         );
@@ -54,7 +54,7 @@ public class XmlStreamReaderDetectorTest extends BaseDetectorTest {
         verify(reporter, times(1)).doReportBug(
                 bugDefinition()
                         .bugType("XXE_XMLSTREAMREADER")
-                        .inClass("XmlInputFactoryVulnerable")
+                        .inClass("XMLStreamReaderVulnerable")
                         .inMethod("parseXMLwithWrongFlag")
                         .build()
         );
@@ -63,11 +63,11 @@ public class XmlStreamReaderDetectorTest extends BaseDetectorTest {
 
 
     @Test
-    public void avoidFP() throws Exception {
+    public void avoidFPWithXMLStreamReader() throws Exception {
 
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/xxe/xmlinputfactory/XmlInputFactorySafe")
+                getClassFilePath("testcode/xxe/xmlinputfactory/XMLStreamReaderSafe")
         };
 
         //Run the analysis
@@ -77,6 +77,111 @@ public class XmlStreamReaderDetectorTest extends BaseDetectorTest {
         verify(reporter, never()).doReportBug(
                 bugDefinition()
                         .bugType("XXE_XMLSTREAMREADER")
+                        .build()
+        );
+    }
+
+
+
+    @Test
+    public void detectXxeWithXMLEventReader() throws Exception {
+
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/xxe/xmlinputfactory/XMLEventReaderVulnerable")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter, times(1)).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_XMLSTREAMREADER")
+                        .inClass("XMLEventReaderVulnerable")
+                        .inMethod("parseFile")
+                        .build()
+        );
+
+        verify(reporter, times(1)).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_XMLSTREAMREADER")
+                        .inClass("XMLEventReaderVulnerable")
+                        .build()
+        );
+    }
+
+
+
+    @Test
+    public void avoidFPWithXMLEventReader() throws Exception {
+
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/xxe/xmlinputfactory/XMLEventReaderSafe")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_XMLSTREAMREADER")
+                        .inClass("XMLEventReaderSafe")
+                        .build()
+        );
+    }
+
+
+
+
+    @Test
+    public void detectXxeWithFilteredReader() throws Exception {
+
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/xxe/xmlinputfactory/FilteredReaderVulnerable")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter, times(1)).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_XMLSTREAMREADER")
+                        .inClass("FilteredReaderVulnerable")
+                        .inMethod("parseFile")
+                        .build()
+        );
+
+        verify(reporter, times(1)).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_XMLSTREAMREADER")
+                        .inClass("FilteredReaderVulnerable")
+                        .build()
+        );
+    }
+
+
+
+    @Test
+    public void avoidFPWithFilteredReader() throws Exception {
+
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/xxe/xmlinputfactory/FilteredReaderSafe")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_XMLSTREAMREADER")
+                        .inClass("FilteredReaderSafe")
                         .build()
         );
     }

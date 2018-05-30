@@ -5,11 +5,11 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.InputStream;
 
-public class XmlInputFactoryVulnerable {
+public class XMLStreamReaderVulnerable {
 
 
     public static void main(String[] args) throws Exception {
-        new XmlInputFactoryVulnerable().loadXml();
+        new XMLStreamReaderVulnerable().loadXml();
     }
 
     public void loadXml() throws XMLStreamException {

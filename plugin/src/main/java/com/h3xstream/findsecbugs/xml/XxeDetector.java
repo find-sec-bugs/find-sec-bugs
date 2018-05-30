@@ -60,9 +60,12 @@ import org.apache.bcel.generic.LDC;
  * </ul>
  */
 public class XxeDetector extends OpcodeStackDetector {
+
     private static final String XXE_SAX_PARSER_TYPE = "XXE_SAXPARSER";
     private static final String XXE_XML_READER_TYPE = "XXE_XMLREADER";
     private static final String XXE_DOCUMENT_TYPE = "XXE_DOCUMENT";
+    private static final String XXE_XPATH_TYPE = "XXE_XPATH";
+
     private static final String FEATURE_DISALLOW_DTD = "http://apache.org/xml/features/disallow-doctype-decl";
     private static final String FEATURE_SECURE_PROCESSING = "http://javax.xml.XMLConstants/feature/secure-processing";
     private static final String FEATURE_GENERAL_ENTITIES = "http://xml.org/sax/features/external-general-entities";
@@ -81,6 +84,7 @@ public class XxeDetector extends OpcodeStackDetector {
         }
         String fullClassName = getClassConstantOperand();
         String method = getNameConstantOperand();
+        String sig = getSigConstantOperand();
         //The method call is doing XML parsing (see class javadoc)
         if ((seen == Constants.INVOKEVIRTUAL && fullClassName.equals("javax/xml/parsers/SAXParser")
                   && method.equals("parse"))
@@ -88,7 +92,14 @@ public class XxeDetector extends OpcodeStackDetector {
                   && method.equals("parse"))
                 || (seen == Constants.INVOKEVIRTUAL
                     && getClassConstantOperand().equals("javax/xml/parsers/DocumentBuilder")
-                  && method.equals("parse"))) {
+                  && method.equals("parse"))
+                || (seen == Constants.INVOKEINTERFACE
+                && getClassConstantOperand().equals("javax/xml/xpath/XPathExpression")
+                && method.equals("evaluate")
+                && (sig.equals("(Lorg/xml/sax/InputSource;Ljavax/xml/namespace/QName;)Ljava/lang/Object;")
+                    || sig.equals("(Lorg/xml/sax/InputSource;)Ljava/lang/String;"))
+                    )
+                ) {
             JavaClass javaClass = getThisClass();
             //(1rst solution for secure parsing proposed by the CERT) Sandbox in an action with limited privileges
             if (InterfaceUtils.isSubtype(javaClass, "java.security.PrivilegedExceptionAction")) {
@@ -171,6 +182,11 @@ public class XxeDetector extends OpcodeStackDetector {
                         .addString(simpleClassName + "." + method + "(...)"));
             } else if(fullClassName.equals("javax/xml/parsers/DocumentBuilder")) {
                 bugReporter.reportBug(new BugInstance(this, XXE_DOCUMENT_TYPE, Priorities.NORMAL_PRIORITY) //
+                        .addClass(this).addMethod(this).addSourceLine(this)
+                        .addString(simpleClassName + "." + method + "(...)"));
+            }
+            else if(fullClassName.equals("javax/xml/xpath/XPathExpression")) {
+                bugReporter.reportBug(new BugInstance(this, XXE_XPATH_TYPE, Priorities.NORMAL_PRIORITY) //
                         .addClass(this).addMethod(this).addSourceLine(this)
                         .addString(simpleClassName + "." + method + "(...)"));
             }

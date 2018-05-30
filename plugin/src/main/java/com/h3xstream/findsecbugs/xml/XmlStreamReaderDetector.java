@@ -65,7 +65,8 @@ public class XmlStreamReaderDetector extends OpcodeStackDetector {
 
         //The method call is doing XML parsing (see class javadoc)
         if (fullClassName.equals("javax/xml/stream/XMLInputFactory") &&
-                method.equals("createXMLStreamReader")) {
+                (method.equals("createXMLStreamReader") || method.equals("createXMLEventReader") ||
+                 method.equals("createFilteredReader"))) {
             ClassContext classCtx = getClassContext();
             ConstantPoolGen cpg = classCtx.getConstantPoolGen();
             CFG cfg;

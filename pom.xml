@@ -21,7 +21,7 @@
 
     <build>
         <plugins>
-            <!-- Force the use the compatibility to Java 6 -->
+            <!-- Force the use the compatibility to Java 8 -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
@@ -29,8 +29,8 @@
                     The current deployment process will fail.
                     (https://github.com/find-sec-bugs/find-sec-bugs/wiki/Compiling#release-process) -->
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
 
@@ -49,6 +49,8 @@
                     <excludes>
                         <exclude>**/SMAPSourceDebugExtension.java</exclude>
                         <exclude>**/testcode/**/**.java</exclude>
+                        <exclude>**/testcasesupport/**/**.java</exclude>
+                        <exclude>**/testcases/**/**.java</exclude>
                         <exclude>**/package-info.java</exclude>
                         <!-- Package that contains stub api -->
                         <exclude>**/java/android/**/**.java</exclude>
@@ -58,7 +60,10 @@
                         <exclude>**/org/apache/**/**.java</exclude>
                         <exclude>**/org/bouncycastle/**/**.java</exclude>
                         <exclude>**/org/hibernate/**/**.java</exclude>
+                        <exclude>**/org/eclipse/jetty/**/**.java</exclude>
+                        <exclude>**/org/sonarqube/**/**.java</exclude>
                         <exclude>**/org/owasp/**/**.java</exclude>
+                        <exclude>**/io/dropwizard/**/**.java</exclude>
                         <exclude>**/org/jboss/**/**.java</exclude>
                         <exclude>**/org/springframework/**/**.java</exclude>
                         <exclude>**/com/unboundid/ldap/**/**.java</exclude>
@@ -135,11 +140,9 @@
     </profiles>
 
 
-
-
-
     <modules>
         <module>plugin</module>
+        <module>plugin-graph</module>
         <module>findbugs-test-util</module>
         <module>plugin-deps</module>
     </modules>

@@ -1,5 +1,5 @@
 <FindbugsPlugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xsi:noNamespaceSchemaLocation="https://findbugs.googlecode.com/svn-history/r13379/trunk/findbugs/etc/findbugsplugin.xsd"
+                xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/spotbugs/spotbugs/master/spotbugs/etc/findbugsplugin.xsd"
                 pluginid="com.h3xstream.findsecbugs"
                 provider="Find Security Bugs"
                 defaultenabled="true"
@@ -115,10 +115,13 @@
     <Detector class="com.h3xstream.findsecbugs.injection.fileDisclosure.FileDisclosureDetector" reports="STRUTS_FILE_DISCLOSURE,SPRING_FILE_DISCLOSURE,REQUESTDISPATCHER_FILE_DISCLOSURE"/>
     <Detector class="com.h3xstream.findsecbugs.injection.formatter.FormatStringManipulationDetector" reports="FORMAT_STRING_MANIPULATION"/>
     <Detector class="com.h3xstream.findsecbugs.injection.http.HttpParameterPollutionDetector" reports="HTTP_PARAMETER_POLLUTION"/>
+    <Detector class="com.h3xstream.findsecbugs.injection.smtp.SmtpHeaderInjectionDetector" reports="SMTP_HEADER_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.spring.SpringUnvalidatedRedirectDetector" reports="SPRING_UNVALIDATED_REDIRECT"/>
     <Detector class="com.h3xstream.findsecbugs.PotentialValueDetector" reports="HARD_CODE_PASSWORD,DES_USAGE,WEAK_MESSAGE_DIGEST_MD5,WEAK_MESSAGE_DIGEST_SHA1"/>
+    <Detector class="com.h3xstream.findsecbugs.crypto.ErrorMessageExposureDetector" reports="INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE"/>
 
     <BugPattern type="HTTP_PARAMETER_POLLUTION" abbrev="SECHPP" category="SECURITY"/>
+    <BugPattern type="SMTP_HEADER_INJECTION" abbrev="SECSMTP" category="SECURITY"/>
     <BugPattern type="FORMAT_STRING_MANIPULATION" abbrev="SECFSM" category="SECURITY"/>
     <BugPattern type="SPRING_FILE_DISCLOSURE" abbrev="SECSF" category="SECURITY"/>
     <BugPattern type="STRUTS_FILE_DISCLOSURE" abbrev="SECSFD" category="SECURITY"/>
@@ -234,7 +237,7 @@
     <BugPattern type="ANDROID_WEB_VIEW_JAVASCRIPT_INTERFACE" abbrev="SECWVJI" category="SECURITY" cweid="285"/>
     <BugPattern type="OBJECT_DESERIALIZATION" abbrev="SECOBDES" category="SECURITY" cweid="502"/>
     <BugPattern type="JACKSON_UNSAFE_DESERIALIZATION" abbrev="SECUJDES" category="SECURITY" cweid="502"/>
-    <BugPattern type="DESERIALIZATION_GADGET" abbrev="SECDESGAD" category="SECURITY" cweid="502"  experimental="true"/>
+    <BugPattern type="DESERIALIZATION_GADGET" abbrev="SECDESGAD" category="SECURITY" cweid="502" experimental="true"/>
     <BugPattern type="TRUST_BOUNDARY_VIOLATION" abbrev="SECTBV" category="SECURITY" cweid="501"/>
     <BugPattern type="SCALA_SENSITIVE_DATA_EXPOSURE" abbrev="SECSDL" category="SECURITY" cweid="200"/>
     <BugPattern type="SCALA_PLAY_SSRF" abbrev="SECSSSRF" category="SECURITY" cweid="918"/>
@@ -243,5 +246,7 @@
     <BugPattern type="TEMPLATE_INJECTION_VELOCITY" abbrev="SECVELO" category="SECURITY" cweid="94"/>
     <BugPattern type="TEMPLATE_INJECTION_FREEMARKER" abbrev="SECFREEM" category="SECURITY" cweid="94"/>
     <BugPattern type="URLCONNECTION_SSRF_FD" abbrev="SECSSSRFUC" category="SECURITY" cweid="918"/>
+    <BugPattern type="INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE" abbrev="ERRMSG" category="SECURITY" cweid="209"/>
+
 
 </FindbugsPlugin>

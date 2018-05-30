@@ -23,6 +23,7 @@ import org.hamcrest.Description;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,6 +43,7 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
     private String priority;
     private String jspFile;
     private List<Integer> multipleChoicesLine;
+    private List<String> unknownSources;
 
     /**
      * All the parameters are optional. Only the non-null parameters are used.
@@ -55,8 +57,9 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
      * @param priority   Priority
      * @param jspFile JSP file name
      * @param multipleChoicesLine At least of the line (JSP samples specific)
+     * @param unknownSources
      */
-    public BugInstanceMatcher(String bugType, String className, String methodName, String fieldName, Integer lineNumber, Integer lineNumberApprox, String priority, String jspFile, List<Integer> multipleChoicesLine) {
+    public BugInstanceMatcher(String bugType, String className, String methodName, String fieldName, Integer lineNumber, Integer lineNumberApprox, String priority, String jspFile, List<Integer> multipleChoicesLine, List<String> unknownSources) {
         this.bugType = bugType;
         this.className = className;
         this.methodName = methodName;
@@ -66,6 +69,7 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
         this.priority = priority;
         this.jspFile = jspFile;
         this.multipleChoicesLine = multipleChoicesLine;
+        this.unknownSources = unknownSources;
     }
 
     @Override
@@ -97,13 +101,12 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
                 String fullClassName = classAnn.getClassName();
                 if (methodAnn == null) return false;
 
-                if(methodAnn.getMethodName().startsWith("apply") && fullClassName != null) {
+                if (methodAnn.getMethodName().startsWith("apply") && fullClassName != null) {
                     Matcher m = ANON_FUNCTION_SCALA_PATTERN.matcher(fullClassName);
-                    if(m.find()) { //Scala function enclose in
+                    if (m.find()) { //Scala function enclose in
                         criteriaMatches &= methodAnn.getMethodName().equals(methodName) || methodName.equals(m.group(1));
                     }
-                }
-                else { //
+                } else { //
                     criteriaMatches &= methodAnn.getMethodName().equals(methodName);
                 }
             }
@@ -120,11 +123,11 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
             if (lineNumberApprox != null) {
                 SourceLineAnnotation srcAnn = extractBugAnnotation(bugInstance, SourceLineAnnotation.class);
                 if (srcAnn == null) return false;
-                criteriaMatches &= srcAnn.getStartLine()-1 <= lineNumberApprox && lineNumberApprox <= srcAnn.getEndLine()+1;
+                criteriaMatches &= srcAnn.getStartLine() - 1 <= lineNumberApprox && lineNumberApprox <= srcAnn.getEndLine() + 1;
             }
-            if(jspFile != null) {
+            if (jspFile != null) {
                 ClassAnnotation classAnn = extractBugAnnotation(bugInstance, ClassAnnotation.class);
-                String fullName = classAnn.getClassName().replaceAll("\\.","/").replaceAll("_005f","_").replaceAll("_jsp", ".jsp");
+                String fullName = classAnn.getClassName().replaceAll("\\.", "/").replaceAll("_005f", "_").replaceAll("_jsp", ".jsp");
                 //String simpleName = fullName.substring(fullName.lastIndexOf("/") + 1);
                 criteriaMatches &= fullName.endsWith(jspFile);
             }
@@ -132,20 +135,49 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
                 SourceLineAnnotation srcAnn = extractBugAnnotation(bugInstance, SourceLineAnnotation.class);
                 if (srcAnn == null) return false;
                 boolean found = false;
-                for(Integer potentialMatch : multipleChoicesLine) {
-                    if(srcAnn.getStartLine()-1 <= potentialMatch && potentialMatch <= srcAnn.getEndLine()+1) {
+                for (Integer potentialMatch : multipleChoicesLine) {
+                    if (srcAnn.getStartLine() - 1 <= potentialMatch && potentialMatch <= srcAnn.getEndLine() + 1) {
                         found = true;
                     }
                 }
                 //if(!found) {
-                    //log.info("The bug was between lines "+srcAnn.getStartLine()+" and "+srcAnn.getEndLine());
+                //log.info("The bug was between lines "+srcAnn.getStartLine()+" and "+srcAnn.getEndLine());
                 //}
                 criteriaMatches &= found;
             }
+
+            if(unknownSources != null && unknownSources.size() > 0) {
+                List<StringAnnotation> srcAnn = extractBugAnnotations(bugInstance, StringAnnotation.class);
+                if (srcAnn == null) return false;
+                boolean found = false;
+                for (StringAnnotation strAnn : srcAnn) {
+                    //The key "Unknown source" can not be reference directly
+                    if (strAnn.getDescription().equals("Unknown source")) {
+                        if(unknownSources.contains(strAnn.getValue())) {
+                            found = true;
+                        }
+                    }
+                }
+
+                criteriaMatches &= found;
+            }
+
             return criteriaMatches;
-        } else {
+
+        }
+        else {
             return false;
         }
+    }
+
+    private <T> List<T> extractBugAnnotations(BugInstance bugInstance, Class<T> annotationType) {
+        List<T> annotations = new ArrayList<T>();
+        for (BugAnnotation annotation : bugInstance.getAnnotations()) {
+            if (annotation.getClass().equals(annotationType)) {
+                annotations.add((T) annotation);
+            }
+        }
+        return annotations;
     }
 
     private <T> T extractBugAnnotation(BugInstance bugInstance, Class<T> annotationType) {

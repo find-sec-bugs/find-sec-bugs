@@ -17,31 +17,53 @@
  */
 package com.h3xstream.findsecbugs.taintanalysis;
 
-import org.apache.bcel.generic.ConstantPoolGen;
-import org.apache.bcel.generic.InvokeInstruction;
-import org.apache.bcel.generic.LoadInstruction;
-import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.*;
 
 import java.util.List;
 
 public interface TaintFrameAdditionalVisitor {
 
     /**
+     * This method will be triggered for every method invocation (static, interface, special and virtual).
+     * The constant pool allowed the resolution of method name, field name, constant strings, etc.
+     *
+     * The taintframe
      * @param invoke
-     * @param cpg
      * @param methodGen Method
      * @param frameType Frame representation after the invoke (results)
      * @param parameters Stack representation just before the invoke
+     * @param cpg
      */
-    void visitInvoke(InvokeInstruction invoke, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType, List<Taint> parameters) throws Exception;
+    void visitInvoke(InvokeInstruction invoke, MethodGen methodGen, TaintFrame frameType, List<Taint> parameters, ConstantPoolGen cpg) throws Exception;
+
+    /**
+     *
+     * @param methodGen Method
+     * @param returnValue State of the returned value.
+     * @param cpg
+     */
+    void visitReturn(MethodGen methodGen, Taint returnValue, ConstantPoolGen cpg) throws Exception;
+
 
     /**
      * @param load
-     * @param cpg
      * @param methodGen
      * @param frameType
      * @param numProduced
+     * @param cpg
      */
-    void visitLoad(LoadInstruction load, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType, int numProduced) throws Exception;
+    void visitLoad(LoadInstruction load, MethodGen methodGen, TaintFrame frameType, int numProduced, ConstantPoolGen cpg) throws Exception;
+
+
+    /**
+     * @param put
+     * @param methodGen
+     * @param frameType
+     * @param taintFrame
+     * @param numProduced
+     * @param cpg
+     */
+    void visitField(FieldInstruction put, MethodGen methodGen, TaintFrame frameType,Taint taintFrame, int numProduced, ConstantPoolGen cpg) throws Exception;
+
 
 }

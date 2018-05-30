@@ -28,12 +28,7 @@ import com.h3xstream.findsecbugs.taintanalysis.TaintFrameAdditionalVisitor;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
-import org.apache.bcel.generic.ConstantPoolGen;
-import org.apache.bcel.generic.InstructionHandle;
-import org.apache.bcel.generic.InvokeInstruction;
-import org.apache.bcel.generic.LoadInstruction;
-import org.apache.bcel.generic.LocalVariableGen;
-import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.*;
 
 import java.util.List;
 
@@ -97,12 +92,17 @@ public class HardcodedPasswordEqualsDetector extends BasicInjectionDetector impl
     }
 
     @Override
-    public void visitInvoke(InvokeInstruction instruction, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType, List<Taint> parameters) {
+    public void visitInvoke(InvokeInstruction instruction, MethodGen methodGen, TaintFrame frameType, List<Taint> parameters, ConstantPoolGen cpg) {
         //ByteCode.printOpCode(instruction, cpg);
     }
 
     @Override
-    public void visitLoad(LoadInstruction instruction, ConstantPoolGen cpg, MethodGen methodGen, TaintFrame frameType, int numProduced) {
+    public void visitReturn(MethodGen methodGen, Taint returnValue, ConstantPoolGen cpg) throws Exception {
+
+    }
+
+    @Override
+    public void visitLoad(LoadInstruction instruction, MethodGen methodGen, TaintFrame frameType, int numProduced, ConstantPoolGen cpg) {
         //Extract the name of the variable
         int index = instruction.getIndex();
         LocalVariableGen var = StackUtils.getLocalVariable(methodGen, index);
@@ -141,5 +141,11 @@ public class HardcodedPasswordEqualsDetector extends BasicInjectionDetector impl
         }
 
     }
+
+    @Override
+    public void visitField(FieldInstruction put, MethodGen methodGen, TaintFrame frameType, Taint taint, int numProduced, ConstantPoolGen cpg) throws Exception {
+
+    }
+
 
 }

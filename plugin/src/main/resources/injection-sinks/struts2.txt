@@ -77,3 +77,14 @@ org/apache/struts2/util/StrutsUtil.translateVariables(Ljava/lang/String;)Ljava/l
 org/apache/struts2/util/StrutsUtil.makeSelectList(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lorg/apache/struts2/util/List;:0,1,2,3
 
 org/apache/struts2/views/jsp/ui/OgnlTool.findValue(Ljava/lang/String;Lorg/apache/struts2/views/jsp/ui/Object;)Lorg/apache/struts2/views/jsp/ui/Object;:1
+
+
+com/opensymphony/xwork2/util/ValueStack.findString(Ljava/lang/String;)Ljava/lang/String;:0
+com/opensymphony/xwork2/util/ValueStack.findString(Ljava/lang/String;Z)Ljava/lang/String;:1
+com/opensymphony/xwork2/util/ValueStack.findValue(Ljava/lang/String;)Ljava/lang/Object;:0
+com/opensymphony/xwork2/util/ValueStack.findValue(Ljava/lang/String;Z)Ljava/lang/Object;:1
+com/opensymphony/xwork2/util/ValueStack.findValue(Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/Object;:1
+com/opensymphony/xwork2/util/ValueStack.findValue(Ljava/lang/String;Ljava/lang/Class;Z)Ljava/lang/Object;:2
+com/opensymphony/xwork2/util/ValueStack.setValue(Ljava/lang/String;Ljava/lang/Object;)V:1
+com/opensymphony/xwork2/util/ValueStack.setValue(Ljava/lang/String;Ljava/lang/Object;Z)V:2
+com/opensymphony/xwork2/util/ValueStack.setParameter(Ljava/lang/String;Ljava/lang/Object;)V:1

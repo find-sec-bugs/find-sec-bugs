@@ -243,6 +243,8 @@ java/lang/Class.getResourceAsStream(Ljava/lang/String;)Ljava/io/InputStream;:0#1
 javax/xml/transform/stream/StreamSource.<init>(Ljava/io/InputStream;)V:0#2
 
 java/io/FileInputStream.<init>(Ljava/lang/String;)V:0#1,2
+java/io/ByteArrayInputStream.<init>([B)V:0#1,2
+java/lang/String.getBytes()[B:0#0
 
 --ResourceBundle is typically locale strings that are loaded from static files
 java/util/ResourceBundle.getString(Ljava/lang/String;)Ljava/lang/String;:SAFE

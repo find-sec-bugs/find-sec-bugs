@@ -17,7 +17,9 @@
  */
 package com.h3xstream.findsecbugs.injection;
 
-import com.h3xstream.findsecbugs.taintanalysis.TaintLocation;
+import com.h3xstream.findsecbugs.taintanalysis.data.TaintLocation;
+import com.h3xstream.findsecbugs.taintanalysis.data.UnknownSource;
+import com.h3xstream.findsecbugs.taintanalysis.data.UnknownSourceType;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.Detector;
 import edu.umd.cs.findbugs.Priorities;
@@ -25,17 +27,10 @@ import edu.umd.cs.findbugs.SourceLineAnnotation;
 import edu.umd.cs.findbugs.StringAnnotation;
 import edu.umd.cs.findbugs.ba.ClassContext;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
-import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.InstructionHandle;
-import org.apache.bcel.generic.InvokeInstruction;
 
 /**
  * Used to represent location of a taint sink
@@ -52,9 +47,20 @@ public class InjectionSink {
     private final InstructionHandle instructionHandle;
     private final String sinkMethod;
     private static final int UNKNOWN_SINK_PRIORITY = Integer.MAX_VALUE;
+
     private int sinkPriority = UNKNOWN_SINK_PRIORITY;
     private final List<SourceLineAnnotation> lines = new LinkedList<SourceLineAnnotation>();
-    private final List<TaintLocation> unknownSources = new LinkedList<TaintLocation>();
+    private final List<UnknownSource> sources = new LinkedList<>();
+    private final int parameterOffset;
+    private List<String> excludeSources = Arrays.asList(
+            "java/lang/StringBuilder.",
+            "java/lang/String.",
+            "java/util/HashMap.",
+            "java/util/List.",
+            "java/util/LinkedList.",
+            "java/util/ArrayList.",
+            "java/util/Vector.",
+            "java/util/Set.");
 
     /**
      * Constructs the instance and stores immutable values for reporting
@@ -66,11 +72,12 @@ public class InjectionSink {
      * @param method method with the sink
      * @param instructionHandle instruction with the sink
      * @param sinkMethod called method (sink)
+     * @param parameterOffset Parameter Offset
      * @throws NullPointerException if any argument is null
      */
     public InjectionSink(Detector detector, String bugType, int originalPriority,
             ClassContext classContext, Method method, InstructionHandle instructionHandle,
-            String sinkMethod) {
+            String sinkMethod, int parameterOffset) {
         Objects.requireNonNull(detector, "detector");
         Objects.requireNonNull(bugType, "bugType");
         Objects.requireNonNull(classContext, "classContext");
@@ -83,6 +90,7 @@ public class InjectionSink {
         this.method = method;
         this.instructionHandle = instructionHandle;
         this.sinkMethod = (sinkMethod == null) ? "unknown" : sinkMethod;
+        this.parameterOffset = parameterOffset;
     }
 
     /**
@@ -121,12 +129,6 @@ public class InjectionSink {
                 location.getMethodDescriptor(), location.getPosition()));
         }
     }
-
-    public void addUnknownSources(Collection<TaintLocation> sources) {
-        for(TaintLocation source : sources) {
-            unknownSources.add(source);
-        }
-    }
     
     /**
      * Uses immutable values, updated priority and added lines for reporting
@@ -139,9 +141,19 @@ public class InjectionSink {
         bug.addClassAndMethod(classContext.getJavaClass(), method);
         bug.addSourceLine(SourceLineAnnotation.fromVisitedInstruction(classContext, method, instructionHandle));
         addMessage(bug, "Sink method", sinkMethod);
+        addMessage(bug, "Sink parameter", String.valueOf(parameterOffset));
 
-        for(TaintLocation source : unknownSources) {
-            addMessage(bug, "Unknown source", source.getTaintSource());
+        for(UnknownSource source : sources) {
+            if(source.getSourceType() == UnknownSourceType.FIELD) {
+                addMessage(bug, "Unknown source", source.getSignatureField());
+            }
+            else if(source.getSourceType() == UnknownSourceType.RETURN) {
+                if(isExclude(source.getSignatureMethod())) continue;
+                addMessage(bug, "Unknown source", source.getSignatureMethod());
+            }
+
+//            if(isExclude(source.getTaintSource())) { continue; }
+//            addMessage(bug, "Unknown source", source.getTaintSource());
         }
 
         if (sinkPriority != UNKNOWN_SINK_PRIORITY) {
@@ -171,6 +183,15 @@ public class InjectionSink {
             bug.addSourceLine(sourceLine);
         }
         return bug;
+    }
+
+    private boolean isExclude(String method) {
+        for(String methodPrefix : excludeSources) {
+            if(method.startsWith(methodPrefix)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     private void addMessage(BugInstance bug, String role, String text) {
@@ -214,5 +235,9 @@ public class InjectionSink {
         hash = 67 * hash + instructionHandle.getInstruction().getOpcode();
         hash = 67 * hash + instructionHandle.getPosition();
         return hash;
+    }
+
+    public void addSources(Set<UnknownSource> sources) {
+        this.sources.addAll(sources);
     }
 }

@@ -1,0 +1,15 @@
+
+org/sonarqube/ws/client/Parameters.getValue(Ljava/lang/String;)Ljava/lang/String;:TAINTED
+org/sonarqube/ws/client/Parameters.getValues(Ljava/lang/String;)Ljava/util/List;:TAINTED
+org/sonarqube/ws/client/Parameters.getKeys()Ljava/util/Set;:TAINTED
+
+org/sonarqube/ws/client/Headers.getValue(Ljava/lang/String;)Ljava/util/Optional;:TAINTED
+org/sonarqube/ws/client/Headers.getNames()Ljava/util/Set;:TAINTED
+
+org/sonarqube/ws/client/BaseRequest.getPath()Ljava/lang/String;:TAINTED
+org/sonarqube/ws/client/BaseRequest.getMediaType()Ljava/lang/String;:TAINTED
+org/sonarqube/ws/client/BaseRequest.getParams()Ljava/util/Map;:TAINTED
+
+org/sonarqube/ws/client/WsRequest.getPath()Ljava/lang/String;:TAINTED
+org/sonarqube/ws/client/WsRequest.getMediaType()Ljava/lang/String;:TAINTED
+org/sonarqube/ws/client/WsRequest.getParams()Ljava/util/Map;:TAINTED

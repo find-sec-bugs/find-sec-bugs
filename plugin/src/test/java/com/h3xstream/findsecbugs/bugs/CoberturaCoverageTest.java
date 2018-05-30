@@ -21,6 +21,7 @@ import com.h3xstream.findsecbugs.common.ByteCode;
 import com.h3xstream.findsecbugs.common.InterfaceUtils;
 import com.h3xstream.findsecbugs.common.JspUtils;
 import com.h3xstream.findsecbugs.common.StackUtils;
+import com.h3xstream.findsecbugs.taintanalysis.InvalidStateException;
 import org.testng.annotations.Test;
 
 public class CoberturaCoverageTest {
@@ -31,5 +32,6 @@ public class CoberturaCoverageTest {
         new JspUtils();
         new InterfaceUtils();
         new ByteCode();
+        new InvalidStateException("");
     }
 }

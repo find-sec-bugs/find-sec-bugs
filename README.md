@@ -6,14 +6,14 @@ Website : http://find-sec-bugs.github.io/
 
 ## Main developers
 
- - [Philippe Arteau](https://github.com/h3xstream)
+ - [Philippe Arteau](https://github.com/h3xstream) from [GoSecure](https://github.com/gosecure)
  - [David Formánek](https://github.com/formanek)
 
 ## Notable contributions
 
  - [David Formánek](https://github.com/formanek)
    - Major improvements and refactoring on the taint analysis for injections.
-   - The creation of a detector for Hard coded passwords and cryptographic keys.
+   - The creation of a detector for hard coded passwords and cryptographic keys.
  - [Tomáš Polešovský](https://github.com/topolik)
    - Improvements and bug fixes related to the taint analysis.
  - [Maxime Nadeau](https://github.com/MaxNad)
@@ -23,6 +23,12 @@ Website : http://find-sec-bugs.github.io/
    - Translation of [messages in Japanese](http://h3xstream.github.io/find-sec-bugs/bugs_ja.htm)
  - [Dave Wichers](https://github.com/davewichers)
    - Improvement to vulnerability descriptions
+
+## Project Sponsors
+
+The development of Find Security Bugs is supported by [GoSecure](https://github.com/gosecure) since 2016. The support includes the development of new detectors and the research for new vulnerability classes.
+
+![GoSecure Logo](website/out_web/images/gosecure.png)
 
 ## Screenshots
 

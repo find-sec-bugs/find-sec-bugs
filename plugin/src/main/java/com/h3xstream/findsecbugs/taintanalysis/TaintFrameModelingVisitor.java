@@ -19,6 +19,9 @@ package com.h3xstream.findsecbugs.taintanalysis;
 
 import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import com.h3xstream.findsecbugs.common.ByteCode;
+import com.h3xstream.findsecbugs.taintanalysis.data.TaintLocation;
+import com.h3xstream.findsecbugs.taintanalysis.data.UnknownSource;
+import com.h3xstream.findsecbugs.taintanalysis.data.UnknownSourceType;
 import edu.umd.cs.findbugs.ba.AbstractFrameModelingVisitor;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
 import edu.umd.cs.findbugs.ba.InvalidBytecodeException;
@@ -115,6 +118,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         //Print the bytecode instruction if it is globally configured
         if (FindSecBugsGlobalConfig.getInstance().isDebugPrintInvocationVisited()
                 && ins instanceof InvokeInstruction) {
+            //System.out.println(getFrame().toString());
             ByteCode.printOpCode(ins, cpg);
         } else if (FindSecBugsGlobalConfig.getInstance().isDebugPrintInstructionVisited()) {
             ByteCode.printOpCode(ins, cpg);
@@ -184,7 +188,21 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                 getFrame().pushValue(new Taint(Taint.State.NULL));
             }
         } else {
-            super.visitGETSTATIC(obj);
+            //super.visitGETSTATIC(obj);
+            String fieldSig = obj.getClassName(cpg).replaceAll("\\.","/")+"."+obj.getName(cpg);
+            Taint.State state = taintConfig.getClassTaintState(fieldSig, Taint.State.UNKNOWN);
+            Taint taint = new Taint(state);
+
+            if (!state.equals(Taint.State.SAFE)){
+                taint.addLocation(getTaintLocation(), false);
+            }
+            taint.addSource(new UnknownSource(UnknownSourceType.FIELD,state).setSignatureField(fieldSig));
+
+            int numConsumed = getNumWordsConsumed(obj);
+            int numProduced = getNumWordsProduced(obj);
+            modelInstruction(obj, numConsumed, numProduced, taint);
+
+            notifyAdditionalVisitorField(obj, methodGen, getFrame(), taint, numProduced);
         }
     }
 
@@ -208,16 +226,59 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     @Override
     public void visitGETFIELD(GETFIELD obj) {
-        Taint.State state = taintConfig.getClassTaintState(obj.getSignature(cpg), Taint.State.UNKNOWN);
+        String fieldSig = obj.getClassName(cpg).replaceAll("\\.","/")+"."+obj.getName(cpg);
+        Taint.State state = taintConfig.getClassTaintState(fieldSig, Taint.State.UNKNOWN);
         Taint taint = new Taint(state);
 
         if (!state.equals(Taint.State.SAFE)){
             taint.addLocation(getTaintLocation(), false);
         }
+        taint.addSource(new UnknownSource(UnknownSourceType.FIELD,state).setSignatureField(fieldSig));
         if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             taint.setDebugInfo("." + obj.getFieldName(cpg));
         }
-        modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taint);
+        int numConsumed = getNumWordsConsumed(obj);
+        int numProduced = getNumWordsProduced(obj);
+        modelInstruction(obj, numConsumed, numProduced, taint);
+
+
+        notifyAdditionalVisitorField(obj, methodGen, getFrame(), taint, numProduced);
+    }
+
+    @Override
+    public void visitPUTFIELD(PUTFIELD obj) {
+        visitPutFieldOp(obj);
+    }
+
+    @Override
+    public void visitPUTSTATIC(PUTSTATIC obj) {
+        visitPutFieldOp(obj);
+    }
+
+    public void visitPutFieldOp(FieldInstruction obj) {
+
+        int numConsumed = getNumWordsConsumed(obj);
+        int numProduced = getNumWordsProduced(obj);
+        try {
+            Taint t = getFrame().getTopValue();
+            handleNormalInstruction(obj);
+            notifyAdditionalVisitorField(obj, methodGen, getFrame(), t, numProduced);
+        } catch (DataflowAnalysisException e) {
+
+        }
+
+    }
+
+    private void notifyAdditionalVisitorField(FieldInstruction instruction, MethodGen methodGen, TaintFrame frame,
+                                              Taint taintValue, int numProduced) {
+        for(TaintFrameAdditionalVisitor visitor : visitors) {
+            try {
+                visitor.visitField(instruction, methodGen, frame, taintValue, numProduced, cpg);
+            }
+            catch (Throwable e) {
+                LOG.log(Level.SEVERE,"Error while executing "+visitor.getClass().getName(),e);
+            }
+        }
     }
 
     @Override
@@ -271,7 +332,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
         for(TaintFrameAdditionalVisitor visitor : visitors) {
             try {
-                visitor.visitLoad(load, cpg, methodGen, getFrame(), numProducedOrig);
+                visitor.visitLoad(load, methodGen, getFrame(), numProducedOrig, cpg);
             }
             catch (Throwable e) {
                 LOG.log(Level.SEVERE,"Error while executing "+visitor.getClass().getName(),e);
@@ -371,14 +432,24 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     @Override
     public void visitARETURN(ARETURN obj) {
+        Taint returnTaint = null;
         try {
-            Taint returnTaint = getFrame().getTopValue();
+            returnTaint = getFrame().getTopValue();
             Taint currentTaint = analyzedMethodConfig.getOutputTaint();
             analyzedMethodConfig.setOuputTaint(Taint.merge(returnTaint, currentTaint));
         } catch (DataflowAnalysisException ex) {
             throw new InvalidBytecodeException("empty stack before reference return", ex);
         }
         handleNormalInstruction(obj);
+
+        for(TaintFrameAdditionalVisitor visitor : visitors) {
+            try {
+                visitor.visitReturn(methodGen, returnTaint, cpg);
+            }
+            catch (Throwable e) {
+                LOG.log(Level.SEVERE,"Error while executing "+visitor.getClass().getName(),e);
+            }
+        }
     }
 
     /**
@@ -396,8 +467,9 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             Taint taint = getMethodTaint(methodConfig);
             assert taint != null;
             if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
-                taint.setDebugInfo(obj.getMethodName(cpg) + "()");
+                taint.setDebugInfo(obj.getMethodName(cpg) + "()"); //TODO: Deprecated debug info
             }
+            taint.addSource(new UnknownSource(UnknownSourceType.RETURN,taint.getState()).setSignatureMethod(obj.getClassName(cpg).replace(".","/")+"."+obj.getMethodName(cpg)+obj.getSignature(cpg)));
             if (taint.isUnknown()) {
                 taint.addLocation(getTaintLocation(), false);
             }
@@ -413,14 +485,14 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             int nbParam = getNumWordsConsumed(obj);
             List<Taint> parameters = new ArrayList<>(nbParam);
             for(int i=0;i<Math.min(stackDepth,nbParam);i++) {
-                parameters.add(tf.getStackValue(i));
+                parameters.add(new Taint(tf.getStackValue(i)));
             }
 
             modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taintCopy);
 
             for(TaintFrameAdditionalVisitor visitor : visitors) {
                 try {
-                    visitor.visitInvoke(obj, cpg, methodGen, getFrame() , parameters);
+                    visitor.visitInvoke(obj, methodGen, getFrame() , parameters, cpg);
                 }
                 catch (Throwable e) {
                     LOG.log(Level.SEVERE,"Error while executing "+visitor.getClass().getName(),e);
@@ -651,13 +723,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     }
 
     private TaintLocation getTaintLocation() {
-        Instruction inst = getLocation().getHandle().getInstruction();
-        if(inst instanceof InvokeInstruction) {
-            InvokeInstruction invoke = (InvokeInstruction) inst;
-            String sig = invoke.getClassName(cpg).replaceAll("\\.","/") + "." + invoke.getMethodName(cpg) + invoke.getSignature(cpg);
-            return new TaintLocation(methodDescriptor, getLocation().getHandle().getPosition(), sig);
-        }
-        return new TaintLocation(methodDescriptor, getLocation().getHandle().getPosition(), "Oups!!");
+        return new TaintLocation(methodDescriptor, getLocation().getHandle().getPosition());
     }
 
     /**

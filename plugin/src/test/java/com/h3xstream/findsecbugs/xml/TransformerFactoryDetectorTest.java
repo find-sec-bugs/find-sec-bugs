@@ -39,7 +39,7 @@ public class TransformerFactoryDetectorTest extends BaseDetectorTest {
     }
 
     @Test
-    public void detectXxe() throws Exception {
+    public void detectXxe_TransformerFactory() throws Exception {
         //Locate test code
         String[] files = {
                 getClassFilePath("testcode/xxe/transformerfactory/TransformerFactoryVulnerable")
@@ -92,7 +92,7 @@ public class TransformerFactoryDetectorTest extends BaseDetectorTest {
     }
 
     @Test
-    public void avoidFalsePositive() throws Exception {
+    public void avoidFalsePositive_TransformerFactory() throws Exception {
         //Locate test code
         String[] files = {
                 getClassFilePath("testcode/xxe/transformerfactory/TransformerFactorySafe")
@@ -113,6 +113,45 @@ public class TransformerFactoryDetectorTest extends BaseDetectorTest {
                         .bugType("XXE_XSLT_TRANSFORM_FACTORY")
                         .build()
         );
+
+        // We do not want to spam users with multiple report of the "same" vulnerability
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_SAXPARSER")
+                        .build()
+        );
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_XMLREADER")
+                        .build()
+        );
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_DOCUMENT")
+                        .build()
+        );
+    }
+
+
+    @Test
+    public void detectVariation_SaxTransformerFactory() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/xxe/transformerfactory/SaxTransformerFactoryVulnerable")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        //Assertions
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_DTD_TRANSFORM_FACTORY")
+                        .inClass("SaxTransformerFactoryVulnerable").inMethod("parseXML")
+                        .build()
+        );
+
 
         // We do not want to spam users with multiple report of the "same" vulnerability
         verify(reporter, never()).doReportBug(

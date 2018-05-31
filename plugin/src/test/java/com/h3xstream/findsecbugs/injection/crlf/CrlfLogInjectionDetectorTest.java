@@ -43,4 +43,24 @@ public class CrlfLogInjectionDetectorTest extends BaseDetectorTest {
         }
         verify(reporter, times(49 - 20)).doReportBug(bugDefinition().bugType("CRLF_INJECTION_LOGS").build());
     }
+
+
+    @Test
+    public void detectSlf4jResponseSplitting() throws Exception {
+        String[] files = {
+                getClassFilePath("testcode/logging/Slf4jSample")
+        };
+        SecurityReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        for (int line = 10; line <= 19; line++) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("CRLF_INJECTION_LOGS")
+                            .inClass("Slf4jSample").inMethod("slf4j").atLine(line)
+                            .build()
+            );
+        }
+        verify(reporter, times(10)).doReportBug(bugDefinition().bugType("CRLF_INJECTION_LOGS").build());
+    }
 }

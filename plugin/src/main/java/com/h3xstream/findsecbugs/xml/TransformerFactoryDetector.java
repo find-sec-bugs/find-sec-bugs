@@ -70,7 +70,9 @@ public class TransformerFactoryDetector extends OpcodeStackDetector {
         String fullClassName = getClassConstantOperand();
         String method = getNameConstantOperand();
         //The method call is doing XML parsing (see class javadoc)
-        if (seen == Constants.INVOKESTATIC && fullClassName.equals("javax/xml/transform/TransformerFactory")
+        if (seen == Constants.INVOKESTATIC &&
+                (fullClassName.equals("javax/xml/transform/TransformerFactory") ||
+                fullClassName.equals("javax/xml/transform/sax/SAXTransformerFactory"))
                 && method.equals("newInstance")) {
             ClassContext classCtx = getClassContext();
             ConstantPoolGen cpg = classCtx.getConstantPoolGen();

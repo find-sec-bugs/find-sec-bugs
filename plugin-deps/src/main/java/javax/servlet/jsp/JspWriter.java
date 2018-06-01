@@ -1,4 +1,5 @@
 package javax.servlet.jsp;
 
-public abstract class JspWriter {
+abstract public class JspWriter extends java.io.Writer {
+    
 }

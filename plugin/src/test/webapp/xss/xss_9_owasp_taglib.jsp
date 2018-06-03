@@ -4,8 +4,5 @@
     String tainted = (String) request.getAttribute("input");
 %>
 
-<!-- safe -->
 <e:forHtml value="${tainted}" />
 
-<!-- currently a false positive -->
-${e:forHtml(tainted)}

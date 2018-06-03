@@ -254,7 +254,7 @@ public class JspXssDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        for (Integer line : Arrays.asList(11)) {
+        for (Integer line : Arrays.asList(7)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("XSS_JSP_PRINT")

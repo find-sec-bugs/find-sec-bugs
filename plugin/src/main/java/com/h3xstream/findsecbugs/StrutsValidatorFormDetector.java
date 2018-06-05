@@ -44,14 +44,7 @@ public class StrutsValidatorFormDetector implements Detector {
         boolean isValidatorForm = InterfaceUtils.isSubtype(javaClass, "org.apache.struts.validator.ValidatorForm");
         boolean isDynaValidatorForm = InterfaceUtils.isSubtype(javaClass, "org.apache.struts.validator.DynaValidatorForm");
 
-        if (isActionForm && !(isValidatorForm || isDynaValidatorForm)) {
-            bugReporter.reportBug(new BugInstance(this, STRUTS_FORM_VALIDATION_TYPE, Priorities.NORMAL_PRIORITY) //
-                    .addClass(javaClass) //
-                    .addString("ActionForm"));
-            return;
-        }
-
-        if (!isValidatorForm && !isDynaValidatorForm) return; //Not form implementation
+        if (!isActionForm && !isValidatorForm && !isDynaValidatorForm) return; //Not form implementation
 
         final String expectedSig = "(Lorg/apache/struts/action/ActionMapping;Ljavax/servlet/http/HttpServletRequest;)Lorg/apache/struts/action/ActionErrors;";
         boolean validateMethodFound = false;
@@ -64,9 +57,18 @@ public class StrutsValidatorFormDetector implements Detector {
 
         //ValidatorForm without a validate method is just like a regular ActionForm
         if (!validateMethodFound) {
-            bugReporter.reportBug(new BugInstance(this, STRUTS_FORM_VALIDATION_TYPE, Priorities.LOW_PRIORITY) //
-                    .addClass(javaClass) //
-                    .addString("ValidatorForm"));
+            BugInstance bug = new BugInstance(this, STRUTS_FORM_VALIDATION_TYPE, Priorities.LOW_PRIORITY) //
+                    .addClass(javaClass);
+            if(isActionForm) {
+                bug.addString("ActionForm");
+            }
+            else if(isValidatorForm) {
+                bug.addString("ValidatorForm");
+            }
+            else if(isDynaValidatorForm) {
+                bug.addString("DynaValidatorForm");
+            }
+            bugReporter.reportBug(bug);
         }
     }
 

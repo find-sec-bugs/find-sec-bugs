@@ -3,10 +3,11 @@ language: java
 jdk:
   - oraclejdk8
   - oraclejdk9
+  - oraclejdk10
 
 matrix:
   allow_failures:
-    - jdk: oraclejdk9
+    - jdk: oraclejdk10
 
 # Activate container based infra https://docs.travis-ci.com/user/workers/container-based-infrastructure/
 sudo: false

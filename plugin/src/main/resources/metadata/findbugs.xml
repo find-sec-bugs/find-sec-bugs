@@ -81,6 +81,7 @@
               reports="SCRIPT_ENGINE_INJECTION,SPEL_INJECTION,EL_INJECTION,SEAM_LOG_INJECTION,OGNL_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.injection.script.OgnlInjectionDetector"
               reports="OGNL_INJECTION"/>
+    <Detector class="com.h3xstream.findsecbugs.injection.script.SpelViewDetector" reports="SPEL_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.HttpResponseSplittingDetector" reports="HTTP_RESPONSE_SPLITTING"/>
     <Detector class="com.h3xstream.findsecbugs.injection.crlf.CrlfLogInjectionDetector" reports="CRLF_INJECTION_LOGS"/>
     <Detector class="com.h3xstream.findsecbugs.ExternalConfigurationControlDetector" reports="EXTERNAL_CONFIG_CONTROL"/>

@@ -2648,6 +2648,10 @@ public void runCustomTrigger(String script) {
     </BugPattern>
     <BugCode abbrev="SCRIPTE">Script Engine Injection</BugCode>
 
+    <Detector class="com.h3xstream.findsecbugs.injection.script.SpelViewDetector">
+        <Details>Identify SpelView patterns in Spring components.</Details>
+    </Detector>
+
     <!-- SPEL Code injection -->
     <BugPattern type="SPEL_INJECTION">
         <ShortDescription>Potential code injection when using Spring Expression</ShortDescription>
@@ -2680,6 +2684,8 @@ public void parseExpressionInterface(Person personObj,String property) {
     <a href="http://docs.spring.io/spring-framework/docs/3.2.x/spring-framework-reference/html/expressions.html">Spring Expression Language (SpEL) - Official Documentation</a><br/>
     <a href="https://www.mindedsecurity.com/fileshare/ExpressionLanguageInjection.pdf">Minded Security: Expression Language Injection</a><br/>
     <a href="http://blog.h3xstream.com/2014/11/remote-code-execution-by-design.html">Remote Code Execution .. by design</a>: Example of malicious payload. The samples given could be used to test sandboxing rules.<br/>
+    <a href="https://gosecure.net/2018/05/15/beware-of-the-magic-spell-part-1-cve-2018-1273/">Spring Data-Commons: (CVE-2018-1273)</a><br/>
+    <a href="http://gosecure.net/2018/05/17/beware-of-the-magic-spell-part-2-cve-2018-1260/">Spring OAuth2: CVE-2018-1260</a>
 </p>
 
 ]]>

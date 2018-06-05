@@ -10,6 +10,10 @@ public class ModelAndView {
 	public ModelAndView(String viewName) {
 	}
 
+	public ModelAndView(View view) {
+
+	}
+
 	public ModelAndView(String viewName, Map model) {
 	}
 
@@ -17,5 +21,14 @@ public class ModelAndView {
 	}
 
 	public void setViewName(String viewName) {
+	}
+
+
+	public ModelAndView addObject(Object attributeValue) {
+		return this;
+	}
+
+	public ModelAndView addObject(String attributeName, Object attributeValue) {
+		return this;
 	}
 }

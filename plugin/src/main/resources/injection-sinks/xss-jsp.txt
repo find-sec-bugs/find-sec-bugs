@@ -16,3 +16,5 @@ javax/servlet/jsp/JspWriter.println([C)V:0
 javax/servlet/jsp/JspWriter.println(Ljava/lang/String;)V:0
 javax/servlet/jsp/JspWriter.println(Ljava/lang/Object;)V:0
 javax/servlet/jsp/JspWriter.println(C)V:0
+
+org/owasp/encoder/tag/ForHtmlTag.doTag()V:0

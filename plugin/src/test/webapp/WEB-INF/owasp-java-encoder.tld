@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib version="2.1" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <display-name>OWASP Java Encoder Project</display-name>
+    <tlib-version>1.0</tlib-version>
+    <short-name>java-encoder</short-name>
+    <uri>https://www.owasp.org/index.php/OWASP_Java_Encoder_Project</uri>
+    <tag>
+        <description>
+            Encodes data for an XML CDATA section.  On the chance that the input
+            contains a terminating
+            &quot;]]&amp;gt;&quot;, it will be replaced by
+            &amp;quot;]]&amp;gt;]]&amp;lt;![CDATA[&amp;gt;&amp;quot;.
+            As with all XML contexts, characters that are invalid according to the
+            XML specification will be replaced by a space character.  Caller must
+            provide the CDATA section boundaries.
+        </description>
+        <display-name>forCDATA</display-name>
+        <name>forCDATA</name>
+        <tag-class>org.owasp.encoder.tag.ForCDATATag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>The value to be written out</description>
+            <name>value</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+    <tag>
+        <description>
+			This method encodes for HTML text content.  It does not escape
+			quotation characters and is thus unsafe for use with
+			HTML attributes.  Use either forHtml or forHtmlAttribute for those
+			methods.
+        </description>
+        <display-name>forHtmlContent</display-name>
+        <name>forHtmlContent</name>
+        <tag-class>org.owasp.encoder.tag.ForHtmlContentTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>value to be written out</description>
+            <name>value</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+    <tag>
+        <description>Encodes for XML and XHTML attribute content.</description>
+        <display-name>forXmlAttribute</display-name>
+        <name>forXmlAttribute</name>
+        <tag-class>org.owasp.encoder.tag.ForXmlAttributeTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>value to be written out</description>
+            <name>value</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+    <tag>
+        <description>Encodes for XML and XHTML.</description>
+        <display-name>forXml</display-name>
+        <name>forXml</name>
+        <tag-class>org.owasp.encoder.tag.ForXmlTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>value to be written out</description>
+            <name>value</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+    <tag>
+        <description>
+			Encodes for a JavaScript string.  It is safe for use in HTML
+			script attributes (such as onclick), script
+			blocks, JSON files, and JavaScript source.  The caller MUST
+			provide the surrounding quotation characters for the string.
+			Since this performs additional encoding so it can work in all
+			of the JavaScript contexts listed, it may be slightly less
+			efficient then using one of the methods targetted to a specific
+			JavaScript context: forJavaScriptAttribute,
+			forJavaScriptBlock, or forJavaScriptSource.
+
+			Unless you are interested in saving a few bytes of output or
+			are writing a framework on top of this library, it is recommend
+			that you use this method over the others.
+        </description>
+        <display-name>forJavaScript</display-name>
+        <name>forJavaScript</name>
+        <tag-class>org.owasp.encoder.tag.ForJavaScriptTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>value to be written out</description>
+            <name>value</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+    <tag>
+        <description>
+			Encodes for unquoted HTML attribute values. forHtml(String) or
+			forHtmlAttribute(String) should usually be preferred over this
+			method as quoted attributes are XHTML compliant.
+        </description>
+        <display-name>forHtmlUnquotedAttribute</display-name>
+        <name>forHtmlUnquotedAttribute</name>
+        <tag-class>org.owasp.encoder.tag.ForHtmlUnquotedAttributeTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>value to be written out</description>
+            <name>value</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+    <tag>
+        <description>
+			Performs percent-encoding of a URL according to RFC 3986.  The provided
+			URL is assumed to a valid URL.  This method does not do any checking on
+			the quality or safety of the URL itself.  In many applications it may
+			be better to use java.net.URI instead.  Note: this is a
+			particularly dangerous context to put untrusted content in, as for
+			example a "javascript:" URL provided by a malicious user would be
+			"properly" escaped, and still execute.
+        </description>
+        <display-name>forUri</display-name>
+        <name>forUri</name>
+        <tag-class>org.owasp.encoder.tag.ForUriTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>value to be written out</description>
+            <name>value</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+    <tag>
+        <description>
+			Encodes for CSS URL contexts. The context must be surrounded by "url()".  It
+			is safe for use in both style blocks and attributes in HTML. Note: this does
+			not do any checking on the quality or safety of the URL itself.  The caller
+			should insure that the URL is safe for embedding (e.g. input validation) by
+			other means.
+        </description>
+        <display-name>forCssUrl</display-name>
+        <name>forCssUrl</name>
+        <tag-class>org.owasp.encoder.tag.ForCssUrlTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>value to be written out</description>
+            <name>value</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+    <tag>
+        <description>Encodes for HTML text attributes.</description>
+        <display-name>forHtmlAttribute</display-name>
+        <name>forHtmlAttribute</name>
+        <tag-class>org.owasp.encoder.tag.ForHtmlAttributeTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>value to be written out</description>
+            <name>value</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+    <tag>
+        <description>
+			Encodes for (X)HTML text content and text attributes.
+        </description>
+        <display-name>forHtml</display-name>
+        <name>forHtml</name>
+        <tag-class>org.owasp.encoder.tag.ForHtmlTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>value to be written out</description>
+            <name>value</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+    <tag>
+        <description>
+			Encodes for HTML text content.  It does not escape
+			quotation characters and is thus unsafe for use with
+			HTML attributes.  Use either forHtml or forHtmlAttribute for those
+			methods.
+        </description>
+        <display-name>forXmlContent</display-name>
+        <name>forXmlContent</name>
+        <tag-class>org.owasp.encoder.tag.ForXmlContentTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>value to be written out</description>
+            <name>value</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+    <tag>
+        <description>
+			Performs percent-encoding for a component of a URI, such as a query
+			parameter name or value, path or query-string.  In particular this
+			method insures that special characters in the component do not get
+			interpreted as part of another component.
+        </description>
+        <display-name>forUriComponent</display-name>
+        <name>forUriComponent</name>
+        <tag-class>org.owasp.encoder.tag.ForUriComponentTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>value to be written out</description>
+            <name>value</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+    <tag>
+        <description>
+			Encodes for CSS strings. The context must be surrounded by quotation characters.
+			It is safe for use in both style blocks and attributes in HTML.
+        </description>
+        <display-name>forCssString</display-name>
+        <name>forCssString</name>
+        <tag-class>org.owasp.encoder.tag.ForCssStringTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>value to be written out</description>
+            <name>value</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+    <function>
+        <description>
+			Encodes for (X)HTML text content and text attributes.
+        </description>
+        <display-name>forHtml</display-name>
+        <name>forHtml</name>
+        <function-class>org.owasp.encoder.Encode</function-class>
+        <function-signature>java.lang.String forHtml(java.lang.String)</function-signature>
+        <example>forHtml(unsafeData)</example>
+    </function>
+    <function>
+        <description>
+			This method encodes for HTML text content.  It does not escape
+			quotation characters and is thus unsafe for use with
+			HTML attributes.  Use either forHtml or forHtmlAttribute for those
+			methods.
+        </description>
+        <display-name>forHtmlContent</display-name>
+        <name>forHtmlContent</name>
+        <function-class>org.owasp.encoder.Encode</function-class>
+        <function-signature>java.lang.String forHtmlContent(java.lang.String)</function-signature>
+        <example>forHtmlContent(unsafeData)</example>
+    </function>
+    <function>
+        <description>Encodes for HTML text attributes.</description>
+        <name>forHtmlAttribute</name>
+        <function-class>org.owasp.encoder.Encode</function-class>
+        <function-signature>java.lang.String forHtmlAttribute(java.lang.String)</function-signature>
+        <example>forHtmlAttribute(unsafeData)</example>
+    </function>
+    <function>
+        <description>
+			Encodes for unquoted HTML attribute values. forHtml(String) or
+			forHtmlAttribute(String) should usually be preferred over this
+			method as quoted attributes are XHTML compliant.
+        </description>
+        <display-name>forHtmlUnquotedAttribute</display-name>
+        <name>forHtmlUnquotedAttribute</name>
+        <function-class>org.owasp.encoder.Encode</function-class>
+        <function-signature>java.lang.String forHtmlUnquotedAttribute(java.lang.String)</function-signature>
+        <example>forHtmlUnquotedAttribute(unsafeData)</example>
+    </function>
+    <function>
+        <description>
+			Encodes for CSS strings. The context must be surrounded by quotation characters.
+			It is safe for use in both style blocks and attributes in HTML.
+        </description>
+        <display-name>forCssString</display-name>
+        <name>forCssString</name>
+        <function-class>org.owasp.encoder.Encode</function-class>
+        <function-signature>java.lang.String forCssString(java.lang.String)</function-signature>
+        <example>forCssString(unsafeData)</example>
+    </function>
+    <function>
+        <description>
+			Encodes for CSS URL contexts. The context must be surrounded by "url()".  It
+			is safe for use in both style blocks and attributes in HTML. Note: this does
+			not do any checking on the quality or safety of the URL itself.  The caller
+			should insure that the URL is safe for embedding (e.g. input validation) by
+			other means.
+        </description>
+        <display-name>forCssUrl</display-name>
+        <name>forCssUrl</name>
+        <function-class>org.owasp.encoder.Encode</function-class>
+        <function-signature>java.lang.String forCssUrl(java.lang.String)</function-signature>
+        <example>forCssUrl(unsafeData)</example>
+    </function>
+    <function>
+        <description>
+			Performs percent-encoding of a URL according to RFC 3986.  The provided
+			URL is assumed to a valid URL.  This method does not do any checking on
+			the quality or safety of the URL itself.  In many applications it may
+			be better to use java.net.URI instead.  Note: this is a
+			particularly dangerous context to put untrusted content in, as for
+			example a "javascript:" URL provided by a malicious user would be
+			"properly" escaped, and still execute.
+        </description>
+        <display-name>forUri</display-name>
+        <name>forUri</name>
+        <function-class>org.owasp.encoder.Encode</function-class>
+        <function-signature>java.lang.String forUri(java.lang.String)</function-signature>
+        <example>forUri(unsafeData)</example>
+    </function>
+    <function>
+        <description>
+			Performs percent-encoding for a component of a URI, such as a query
+			parameter name or value, path or query-string.  In particular this
+			method insures that special characters in the component do not get
+			interpreted as part of another component.
+        </description>
+        <display-name>forUriComponent</display-name>
+        <name>forUriComponent</name>
+        <function-class>org.owasp.encoder.Encode</function-class>
+        <function-signature>java.lang.String forUriComponent(java.lang.String)</function-signature>
+        <example>forUriComponent(unsafeData)</example>
+    </function>
+    <function>
+        <description>Encodes for XML and XHTML.</description>
+        <display-name>forXml</display-name>
+        <name>forXml</name>
+        <function-class>org.owasp.encoder.Encode</function-class>
+        <function-signature>java.lang.String forXml(java.lang.String)</function-signature>
+        <example>forXml(unsafeData)</example>
+    </function>
+    <function>
+        <description>
+			Encodes for HTML text content.  It does not escape
+			quotation characters and is thus unsafe for use with
+			HTML attributes.  Use either forHtml or forHtmlAttribute for those
+			methods.
+        </description>
+        <display-name>forXmlContent</display-name>
+        <name>forXmlContent</name>
+        <function-class>org.owasp.encoder.Encode</function-class>
+        <function-signature>java.lang.String forXmlContent(java.lang.String)</function-signature>
+        <example>forXmlContent(unsafeData)</example>
+    </function>
+    <function>
+        <description>Encodes for XML and XHTML attribute content.</description>
+        <display-name>forXmlAttribute</display-name>
+        <name>forXmlAttribute</name>
+        <function-class>org.owasp.encoder.Encode</function-class>
+        <function-signature>java.lang.String forXmlAttribute(java.lang.String)</function-signature>
+        <example>forXmlAttribute(unsafeData)</example>
+    </function>
+    <function>
+        <description>
+            Encodes data for an XML CDATA section.  On the chance that the input
+            contains a terminating
+            &quot;]]&amp;gt;&quot;, it will be replaced by
+            &amp;quot;]]&amp;gt;]]&amp;lt;![CDATA[&amp;gt;&amp;quot;.
+            As with all XML contexts, characters that are invalid according to the
+            XML specification will be replaced by a space character.  Caller must
+            provide the CDATA section boundaries.
+        </description>
+        <display-name>forCDATA</display-name>
+        <name>forCDATA</name>
+        <function-class>org.owasp.encoder.Encode</function-class>
+        <function-signature>java.lang.String forCDATA(java.lang.String)</function-signature>
+        <example>forCDATA(unsafeData)</example>
+    </function>
+    <function>
+        <description>
+			Encodes for a JavaScript string.  It is safe for use in HTML
+			script attributes (such as onclick), script
+			blocks, JSON files, and JavaScript source.  The caller MUST
+			provide the surrounding quotation characters for the string.
+        </description>
+        <display-name>forJavaScript</display-name>
+        <name>forJavaScript</name>
+        <function-class>org.owasp.encoder.Encode</function-class>
+        <function-signature>java.lang.String forJavaScript(java.lang.String)</function-signature>
+        <example>forJavaScript(unsafeData)</example>
+    </function>
+</taglib>

@@ -130,3 +130,6 @@ javax/servlet/jsp/JspWriter.println([C)V:UNKNOWN
 
 org/apache/commons/fileupload/FileItem.getName()Ljava/lang/String;:TAINTED
 javax/ws/rs/core/MultivaluedMap.getFirst(Ljava/lang/Object;)Ljava/lang/Object;:TAINTED
+
+-- The following return objects that are internal to the JSP container 
+javax/servlet/jsp/JspFactory.getPageContext(Ljavax/servlet/Servlet;Ljavax/servlet/ServletRequest;Ljavax/servlet/ServletResponse;Ljava/lang/String;ZIZ)Ljavax/servlet/jsp/PageContext;:SAFE

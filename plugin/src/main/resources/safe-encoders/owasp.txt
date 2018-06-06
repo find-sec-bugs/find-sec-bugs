@@ -24,6 +24,7 @@ org/owasp/encoder/Encode.forCDATA(Ljava/lang/String;)Ljava/lang/String;:0
 org/owasp/encoder/Encode.forCssString(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE
 org/owasp/encoder/Encode.forCssUrl(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE
 org/owasp/encoder/Encode.forHtml(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE
+org/owasp/encoder/Encode.forHtml(Ljava/io/Writer;Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE
 org/owasp/encoder/Encode.forHtmlAttribute(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE
 org/owasp/encoder/Encode.forHtmlContent(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE
 org/owasp/encoder/Encode.forHtmlUnquotedAttribute(Ljava/lang/String;)Ljava/lang/String;:0|+XSS_SAFE

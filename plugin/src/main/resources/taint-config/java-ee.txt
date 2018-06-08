@@ -133,3 +133,10 @@ javax/ws/rs/core/MultivaluedMap.getFirst(Ljava/lang/Object;)Ljava/lang/Object;:T
 
 -- The following return objects that are internal to the JSP container 
 javax/servlet/jsp/JspFactory.getPageContext(Ljavax/servlet/Servlet;Ljavax/servlet/ServletRequest;Ljavax/servlet/ServletResponse;Ljava/lang/String;ZIZ)Ljavax/servlet/jsp/PageContext;:SAFE
+javax/servlet/jsp/JspFactory.getJspApplicationContext(Ljavax/servlet/ServletContext;)Ljavax/servlet/jsp/JspApplicationContext;:SAFE
+javax/servlet/jsp/PageContext.getELContext()Ljavax/el/ELContext;:SAFE
+javax/servlet/jsp/JspApplicationContext.getExpressionFactory()Ljavax/el/ExpressionFactory;:SAFE
+
+
+-- The following methods return objects that are internal to JSTL Core
+org/apache/taglibs/standard/tag/rt/core/ForEachTag.getLoopStatus()Ljavax/servlet/jsp/jstl/core/LoopTagStatus;:SAFE

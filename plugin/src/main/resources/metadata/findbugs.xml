@@ -120,6 +120,7 @@
     <Detector class="com.h3xstream.findsecbugs.spring.SpringUnvalidatedRedirectDetector" reports="SPRING_UNVALIDATED_REDIRECT"/>
     <Detector class="com.h3xstream.findsecbugs.PotentialValueDetector" reports="HARD_CODE_PASSWORD,DES_USAGE,WEAK_MESSAGE_DIGEST_MD5,WEAK_MESSAGE_DIGEST_SHA1"/>
     <Detector class="com.h3xstream.findsecbugs.crypto.ErrorMessageExposureDetector" reports="INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE"/>
+    <Detector class="com.h3xstream.findsecbugs.kotlin.KotlinHardcodedPasswordEqualsDetector" reports="KOTLIN_HARD_CODE_PASSWORD"/>
 
     <BugPattern type="HTTP_PARAMETER_POLLUTION" abbrev="SECHPP" category="SECURITY"/>
     <BugPattern type="SMTP_HEADER_INJECTION" abbrev="SECSMTP" category="SECURITY"/>
@@ -249,6 +250,7 @@
     <BugPattern type="TEMPLATE_INJECTION_FREEMARKER" abbrev="SECFREEM" category="SECURITY" cweid="94"/>
     <BugPattern type="URLCONNECTION_SSRF_FD" abbrev="SECSSSRFUC" category="SECURITY" cweid="918"/>
     <BugPattern type="INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE" abbrev="ERRMSG" category="SECURITY" cweid="209"/>
+    <BugPattern type="KOTLIN_HARD_CODE_PASSWORD" abbrev="SECKHCP" category="SECURITY" cweid="259"/>
 
 
 </FindbugsPlugin>

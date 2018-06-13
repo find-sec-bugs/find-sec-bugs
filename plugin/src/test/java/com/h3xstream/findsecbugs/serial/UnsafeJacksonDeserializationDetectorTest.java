@@ -48,6 +48,34 @@ public class UnsafeJacksonDeserializationDetectorTest extends BaseDetectorTest {
     }
 
     @Test
+    public void avoidJacksonFalsePositiveInKotlin() throws Exception {
+        String className = "JacksonSerialisationFalsePositive";
+
+        //Locate test code
+        String[] files = {
+                getClassFilePath("bytecode_samples/kotlin_jackson_serialisation.jar"),
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter,never()).doReportBug(
+                bugDefinition()
+                        .bugType(BUG_TYPE)
+                        .inClass(className)
+                        .build()
+        );
+
+        verify(reporter,never()).doReportBug(
+                bugDefinition()
+                        .bugType(BUG_TYPE)
+                        .inClass(className + "$Bean")
+                        .build()
+        );
+    }
+
+    @Test
     public void testJacksonDeserialization() throws Exception {
         final String className = "UnsafeJacksonObjectDeserialization";
         final String classPath = "testcode/serial/" + className;
@@ -85,6 +113,46 @@ public class UnsafeJacksonDeserializationDetectorTest extends BaseDetectorTest {
                 bugDefinition()
                         .bugType(BUG_TYPE)
                         .inClass(className).inMethod("exampleTwo")
+                        .build()
+        );
+
+    }
+
+    @Test
+    public void testJacksonDeserializationKotlin() throws Exception {
+        String className = "UnsafeJacksonObjectDeserialization";
+
+        String[] files = {
+                getClassFilePath("bytecode_samples/kotlin_jackson_serialisation.jar"),
+        };
+
+        // Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType(BUG_TYPE)
+                        .inClass(className + "$AnotherBean").atField("obj")
+                        .build()
+        );
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType(BUG_TYPE)
+                        .inClass(className + "$YetAnotherBean").atField("obj")
+                        .build()
+        );
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType(BUG_TYPE)
+                        .inClass(className).inMethod("exampleOne").atLine(26)
+                        .build()
+        );
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType(BUG_TYPE)
+                        .inClass(className).inMethod("exampleTwo").atLine(33)
                         .build()
         );
 

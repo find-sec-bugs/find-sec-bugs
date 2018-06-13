@@ -80,6 +80,8 @@
                         <exclude>**/java/ognl/**/**.java</exclude>
                         <exclude>**/com/opensymphony/**/**.java</exclude>
                         <exclude>**/com/google/**/**.java</exclude>
+                        <exclude>**/java/kotlin/**</exclude>
+                        <exclude>**/org/jetbrains/**</exclude>
                     </excludes>
                     <properties>
                         <project>Find Security Bugs</project>

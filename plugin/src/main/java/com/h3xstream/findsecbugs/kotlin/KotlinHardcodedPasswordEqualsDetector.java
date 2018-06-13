@@ -15,10 +15,11 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.password;
+package com.h3xstream.findsecbugs.kotlin;
 
 import com.h3xstream.findsecbugs.common.matcher.InvokeMatcherBuilder;
 import com.h3xstream.findsecbugs.injection.InjectionPoint;
+import com.h3xstream.findsecbugs.password.AbstractHardcodedPasswordEqualsDetector;
 import edu.umd.cs.findbugs.BugReporter;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.InstructionHandle;
@@ -32,27 +33,27 @@ import static com.h3xstream.findsecbugs.common.matcher.InstructionDSL.invokeInst
  * </p>
  *
  * <pre>
- * if(password.equals("SuperSecr3t!1")) {
+ * if(password == "SuperSecr3t!1") {
  *     ....
  * }
  * </pre>
  */
-public class HardcodedPasswordEqualsDetector extends AbstractHardcodedPasswordEqualsDetector {
+public class KotlinHardcodedPasswordEqualsDetector extends AbstractHardcodedPasswordEqualsDetector {
 
-    private static final String HARD_CODE_PASSWORD_TYPE = "HARD_CODE_PASSWORD";
+    private static final String KOTLIN_HARD_CODE_PASSWORD_TYPE = "KOTLIN_HARD_CODE_PASSWORD";
 
-    private static final InvokeMatcherBuilder STRING_EQUALS_METHOD = invokeInstruction() //
-            .atClass("java/lang/String").atMethod("equals").withArgs("(Ljava/lang/Object;)Z");
+    private static final InvokeMatcherBuilder KOTLIN_INTRINSICS_ARE_EQUALS_METHOD = invokeInstruction() //
+            .atClass("kotlin/jvm/internal/Intrinsics").atMethod("areEqual").withArgs("(Ljava/lang/Object;Ljava/lang/Object;)Z");
 
-    public HardcodedPasswordEqualsDetector(BugReporter bugReporter) {
+    public KotlinHardcodedPasswordEqualsDetector(BugReporter bugReporter) {
         super(bugReporter);
     }
 
     @Override
     protected InjectionPoint getInjectionPoint(InvokeInstruction invoke, ConstantPoolGen cpg,
                                                InstructionHandle handle) {
-        if(STRING_EQUALS_METHOD.matches(invoke,cpg)) {
-            return new InjectionPoint(new int[]{0,1}, HARD_CODE_PASSWORD_TYPE);
+        if (KOTLIN_INTRINSICS_ARE_EQUALS_METHOD.matches(invoke, cpg)) {
+            return new InjectionPoint(new int[]{0, 1}, KOTLIN_HARD_CODE_PASSWORD_TYPE);
         }
         return InjectionPoint.NONE;
     }

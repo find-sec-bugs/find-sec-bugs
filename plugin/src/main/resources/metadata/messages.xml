@@ -5856,4 +5856,49 @@ Transport.send(message);
     </BugPattern>
     <BugCode abbrev="SECSMTP">SMTP Header Injection</BugCode>
 
+    <Detector class="com.h3xstream.findsecbugs.kotlin.KotlinHardcodedPasswordEqualsDetector">
+        <Details>Identify hardcoded credentials when variable named password are compared to a constant value.</Details>
+    </Detector>
+
+    <BugPattern type="KOTLIN_HARD_CODE_PASSWORD">
+        <ShortDescription>Hard Coded Password in Kotlin</ShortDescription>
+        <LongDescription>Hard coded password found in Kotlin</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Passwords should not be kept in the source code. The source code can be widely shared in an enterprise environment, and is
+certainly shared in open source. To be managed safely, passwords and secret keys should be stored in separate configuration files or keystores.
+(Hard coded keys are reported separately by <i>Hard Coded Key</i> pattern)
+</p>
+<p>
+<p><b>Vulnerable Code:</b><br/>
+
+<pre>val SECRET_PASSWORD = "letMeIn!";
+
+val props = Properties();
+props.put(Context.SECURITY_CREDENTIALS, "p@ssw0rd")</pre>
+</p>
+
+<p><b>Vulnerable Code:</b><br/>
+
+<pre>
+fun hardcodedLogin(username: String, password: String): Boolean {
+
+    return if ("adm1nL3ft" == password) {
+        true
+    } else validateDb(username, password)
+
+}
+</pre>
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="http://cwe.mitre.org/data/definitions/259.html">CWE-259: Use of Hard-coded Password</a>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECKHCP">Hard Coded Password</BugCode>
+
 </MessageCollection>

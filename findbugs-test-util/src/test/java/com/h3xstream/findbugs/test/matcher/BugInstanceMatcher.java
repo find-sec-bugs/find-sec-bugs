@@ -127,7 +127,9 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
             }
             if (jspFile != null) {
                 ClassAnnotation classAnn = extractBugAnnotation(bugInstance, ClassAnnotation.class);
-                String fullName = classAnn.getClassName().replaceAll("\\.", "/").replaceAll("_005f", "_").replaceAll("_jsp", ".jsp");
+                String fullName = classAnn.getClassName().replaceAll("\\.", "/").replaceAll("_005f", "_");
+                fullName = replaceLast("_jsp", ".jsp",fullName);
+                
                 //String simpleName = fullName.substring(fullName.lastIndexOf("/") + 1);
                 criteriaMatches &= fullName.endsWith(jspFile);
             }
@@ -170,6 +172,19 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
         }
     }
 
+    private String replaceLast(String find, String replace, String string) {
+        int lastIndex = string.lastIndexOf(find);
+        
+        if (lastIndex == -1) {
+            return string;
+        }
+        
+        String beginString = string.substring(0, lastIndex);
+        String endString = string.substring(lastIndex + find.length());
+        
+        return beginString + replace + endString;
+    }
+    
     private <T> List<T> extractBugAnnotations(BugInstance bugInstance, Class<T> annotationType) {
         List<T> annotations = new ArrayList<T>();
         for (BugAnnotation annotation : bugInstance.getAnnotations()) {

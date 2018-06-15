@@ -20,11 +20,15 @@ package com.h3xstream.findsecbugs.xss;
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
 import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
-import org.testng.annotations.*;
-
 import java.util.Arrays;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * Before running theses tests cases, jsp files need to be compiled.
@@ -143,7 +147,7 @@ public class JspXssDetectorTest extends BaseDetectorTest {
     }
 
     @Test
-    public void detectXssMultipleTransfertLocal() throws Exception {
+    public void detectXssMultipleTransferLocal() throws Exception {
         //Locate test code
         String[] files = {
                 getJspFilePath("xss/xss_5_multiple_transfer_local.jsp")
@@ -243,27 +247,12 @@ public class JspXssDetectorTest extends BaseDetectorTest {
         verify(reporter, times(2)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
     }
 
-    @Test
-    public void owaspEncoderTagsRemoveTaint() throws Exception {
-        //Locate test code
-        String[] files = {
-                getJspFilePath("xss/xss_9_owasp_taglib.jsp")
-        };
-
-        FindSecBugsGlobalConfig.getInstance().setDebugTaintState(true);   
-        
-        //Run the analysis
-        EasyBugReporter reporter = spy(new SecurityReporter());
-        analyze(files, reporter);
-
-        verify(reporter, times(0)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
-    }
     
     @Test
-    public void jspContainerObjectsAreSafe() throws Exception {
+    public void jspContainerReferencesAreSafeInExpressions() throws Exception {
         //Locate test code
         String[] files = {
-                getJspFilePath("xss/xss_10_jsp_container.jsp")
+                getJspFilePath("xss/xss_9_jsp_container.jsp")
         };
 
         //Run the analysis
@@ -272,25 +261,14 @@ public class JspXssDetectorTest extends BaseDetectorTest {
         FindSecBugsGlobalConfig.getInstance().setCustomConfigFile(path);
         analyze(files, reporter);
 
-        verify(reporter, times(0)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("XSS_JSP_PRINT")
+                        .inJspFile("xss/xss_9_jsp_container.jsp")
+                        .atJspLine(3)
+                        .build()
+        );
+        verify(reporter, times(1)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
     }
     
-    @Test
-    public void jstl_core_variablesAreSafe() throws Exception {
-        //Locate test code
-        String[] files = {
-                getJspFilePath("xss/xss_11_core_taglib.jsp")
-        };
-
-        //Run the analysis
-        EasyBugReporter reporter = spy(new SecurityReporter());
-        String path = this.getClass().getResource("/com/h3xstream/findsecbugs/xss/CustomConfig.txt").getPath();
-        FindSecBugsGlobalConfig.getInstance().setCustomConfigFile(path);
-        FindSecBugsGlobalConfig.getInstance().setDebugTaintState(true);  
-        FindSecBugsGlobalConfig.getInstance().setDebugOutputTaintConfigs(true);  
-        analyze(files, reporter);
-
-        verify(reporter, times(0)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
-    }
 }
-

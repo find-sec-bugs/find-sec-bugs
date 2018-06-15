@@ -49,10 +49,11 @@ import java.util.TreeSet;
 public class TaintConfig extends HashMap<String, TaintMethodConfig> {
     
     private static final long serialVersionUID = 1L;
-    private final Map<String, TaintClassConfig> taintClassConfigMap = new HashMap<String, TaintClassConfig>();
+    private final Map<String, TaintClassConfig> taintClassConfigMap = new HashMap<>();
     private final Map<String, TaintMethodConfigWithArgumentsAndLocation> taintMethodConfigWithArgumentsAndLocationMap =
-            new HashMap<String, TaintMethodConfigWithArgumentsAndLocation>();
-
+            new HashMap<>();
+    private final Map<String, TaintMethodConfigWithArguments> taintMethodConfigWithArgumentsMap =
+            new HashMap<>();
     /**
      * Dumps all the summaries for debugging
      * 
@@ -112,6 +113,16 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
                     return;
                 }
 
+                if (TaintMethodConfigWithArguments.accepts(typeSignature, config)) {
+                    if (checkRewrite && taintMethodConfigWithArgumentsMap.containsKey(typeSignature)) {
+                        throw new IllegalStateException("Config for " + typeSignature + " already loaded");
+                    }
+
+                    TaintMethodConfigWithArguments methodConfig = (TaintMethodConfigWithArguments) new TaintMethodConfigWithArguments().load(config);
+                    methodConfig.setTypeSignature(typeSignature);
+                    taintMethodConfigWithArgumentsMap.put(typeSignature, methodConfig);
+                    return;
+                }                
                 throw new IllegalArgumentException("Invalid full method name " + typeSignature + " configured");
             }
         });
@@ -180,6 +191,10 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
         TaintMethodConfig taintMethodConfig = getTaintMethodConfigWithArgumentsAndLocation(frame, methodDescriptor, className, methodId);
 
         if (taintMethodConfig == null) {
+            taintMethodConfig = getTaintMethodConfigWithArguments(frame, className, methodId);
+        }
+        
+        if (taintMethodConfig == null) {
             taintMethodConfig = get(className.concat(methodId));
         }
 
@@ -226,11 +241,11 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
             return null;
         }
 
-        String signature = methodId.substring(methodId.indexOf("("), methodId.length());
+        String signature = methodId.substring(methodId.indexOf('('), methodId.length());
         int parameters = new SignatureParser(signature).getNumParameters();
-        StringBuffer sb = null;
+        StringBuilder sb = null;
         if (parameters > 0 && frame.getStackDepth() >= parameters) {
-            sb = new StringBuffer(parameters);
+            sb = new StringBuilder(parameters);
             for (int i = parameters - 1; i >= 0; i--) {
                 try {
                     Taint taint = frame.getStackValue(i);
@@ -256,5 +271,41 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
         String methodDefinition = className + "." + methodName + "(" + arguments + ")";
         String key = methodDefinition + "@" + methodDescriptor.getSlashedClassName();
         return taintMethodConfigWithArgumentsAndLocationMap.get(key);
+    }
+    
+    private TaintMethodConfig getTaintMethodConfigWithArguments(TaintFrame frame, String className, String methodId) {
+        if (taintMethodConfigWithArgumentsMap.isEmpty()) {
+            return null;
+        }
+
+        String signature = methodId.substring(methodId.indexOf('('), methodId.length());
+        int parameters = new SignatureParser(signature).getNumParameters();
+        StringBuilder sb = null;
+        if (parameters > 0 && frame.getStackDepth() >= parameters) {
+            sb = new StringBuilder(parameters);
+            for (int i = parameters - 1; i >= 0; i--) {
+                try {
+                    Taint taint = frame.getStackValue(i);
+                    String value = taint.getConstantValue();
+                    if (value != null) {
+                        sb.append('"' + value + '"');
+                    }
+                    else {
+                        sb.append(taint.getState().name());
+                    }
+                    if (i > 0) {
+                        sb.append(',');
+                    }
+                }
+                catch (DataflowAnalysisException e) {
+                    assert false : e.getMessage();
+                }
+            }
+        }
+
+        String arguments = sb != null ? sb.toString() : "";
+        String methodName = methodId.substring(1, methodId.indexOf('('));
+        String methodDefinition = className + "." + methodName + "(" + arguments + ")";
+        return taintMethodConfigWithArgumentsMap.get(methodDefinition);
     }
 }

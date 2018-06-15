@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Enumeration;
 
 public class TagSupport implements IterationTag, Serializable {
-
+    protected PageContext pageContext;
     public TagSupport() {
     }
 

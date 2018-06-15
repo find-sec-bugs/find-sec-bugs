@@ -244,27 +244,53 @@ public class JspXssDetectorTest extends BaseDetectorTest {
     }
 
     @Test
-    public void owaspTags() throws Exception {
+    public void owaspEncoderTagsRemoveTaint() throws Exception {
         //Locate test code
         String[] files = {
                 getJspFilePath("xss/xss_9_owasp_taglib.jsp")
         };
 
+        FindSecBugsGlobalConfig.getInstance().setDebugTaintState(true);   
+        
         //Run the analysis
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        for (Integer line : Arrays.asList(7)) {
-            verify(reporter).doReportBug(
-                    bugDefinition()
-                            .bugType("XSS_JSP_PRINT")
-                            .inJspFile("xss/xss_9_owasp_taglib.jsp")
-                            .atJspLine(line)
-                            .build()
-            );
-        }
+        verify(reporter, times(0)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
+    }
+    
+    @Test
+    public void jspContainerObjectsAreSafe() throws Exception {
+        //Locate test code
+        String[] files = {
+                getJspFilePath("xss/xss_10_jsp_container.jsp")
+        };
 
-        verify(reporter, times(1)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        String path = this.getClass().getResource("/com/h3xstream/findsecbugs/xss/CustomConfig.txt").getPath();
+        FindSecBugsGlobalConfig.getInstance().setCustomConfigFile(path);
+        analyze(files, reporter);
+
+        verify(reporter, times(0)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
+    }
+    
+    @Test
+    public void jstl_core_variablesAreSafe() throws Exception {
+        //Locate test code
+        String[] files = {
+                getJspFilePath("xss/xss_11_core_taglib.jsp")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        String path = this.getClass().getResource("/com/h3xstream/findsecbugs/xss/CustomConfig.txt").getPath();
+        FindSecBugsGlobalConfig.getInstance().setCustomConfigFile(path);
+        FindSecBugsGlobalConfig.getInstance().setDebugTaintState(true);  
+        FindSecBugsGlobalConfig.getInstance().setDebugOutputTaintConfigs(true);  
+        analyze(files, reporter);
+
+        verify(reporter, times(0)).doReportBug(bugDefinition().bugType("XSS_JSP_PRINT").build());
     }
 }
 

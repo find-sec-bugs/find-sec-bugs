@@ -1,0 +1,1 @@
+<script type="text/javascript">var someURL = "${pageContext.request.contextPath}/app/foo"; </script>

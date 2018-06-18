@@ -90,4 +90,31 @@ public class DeserializationGadgetDetectorTest extends BaseDetectorTest {
                         .withPriority("Medium") //
                         .build());
     }
+
+
+    @Test
+    public void detectCommonsCollectionAndSpringGadgetInKotlin() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("bytecode_samples/kotlin_deserialisation-gadget.jar"),
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        //Assertions
+        verify(reporter, times(1)).doReportBug(
+                bugDefinition().bugType("DESERIALIZATION_GADGET") //
+                        .inClass("MethodInvokeTypeProvider") //
+                        .withPriority("Medium") //
+                        .build());
+
+        //Assertions
+        verify(reporter, times(1)).doReportBug(
+                bugDefinition().bugType("DESERIALIZATION_GADGET") //
+                        .inClass("InvokerTransformer") //
+                        .withPriority("Low") //
+                        .build());
+    }
 }

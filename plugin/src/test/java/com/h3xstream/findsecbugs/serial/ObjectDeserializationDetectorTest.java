@@ -59,6 +59,32 @@ public class ObjectDeserializationDetectorTest extends BaseDetectorTest {
     }
 
     @Test
+    public void detectObjectDeserializationInKotlin() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("bytecode_samples/kotlin_object_deserialisation.jar")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("OBJECT_DESERIALIZATION")
+                        .inClass("ObjectDeserialization").inMethod("deserializeObject").atLine(13)
+                        .build()
+        );
+
+        verify(reporter, times(1)).doReportBug(
+                bugDefinition()
+                        .bugType("OBJECT_DESERIALIZATION")
+                        .inClass("ObjectDeserialization").inMethod("deserializeObject")
+                        .build()
+        );
+    }
+
+    @Test
     public void detectObjectDeserializationClassLoaderObjectInputStream() throws Exception {
         //Locate test code
         String[] files = {
@@ -85,6 +111,32 @@ public class ObjectDeserializationDetectorTest extends BaseDetectorTest {
     }
 
     @Test
+    public void detectObjectDeserializationClassLoaderObjectInputStreamInKotlin() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("bytecode_samples/kotlin_object_deserialisation.jar")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("OBJECT_DESERIALIZATION")
+                        .inClass("ObjectDeserialization").inMethod("deserializeObjectWithInheritance").atLine(23)
+                        .build()
+        );
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("OBJECT_DESERIALIZATION")
+                        .inClass("ObjectDeserialization").inMethod("deserializeObjectWithInheritance")
+                        .build()
+        );
+    }
+
+    @Test
     public void avoidReadObjectFalsePositive() throws Exception {
         //Locate test code
         String[] files = {
@@ -98,6 +150,25 @@ public class ObjectDeserializationDetectorTest extends BaseDetectorTest {
         verify(reporter,never()).doReportBug(
                 bugDefinition()
                         .bugType("OBJECT_DESERIALIZATION")
+                        .build()
+        );
+    }
+
+    @Test
+    public void avoidReadObjectFalsePositiveInKotlin() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("bytecode_samples/kotlin_object_deserialisation.jar")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter,never()).doReportBug(
+                bugDefinition()
+                        .bugType("OBJECT_DESERIALIZATION")
+                        .inClass("SerialisationFalsePositive")
                         .build()
         );
     }

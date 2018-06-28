@@ -41,7 +41,7 @@ public class KotlinHardcodedPasswordEqualsDetectorTest extends BaseDetectorTest 
         for (Integer line : Arrays.asList(15, 24, 33)) {
             verify(reporter).doReportBug(
                     bugDefinition()
-                            .bugType("KOTLIN_HARD_CODE_PASSWORD")
+                            .bugType("HARD_CODE_PASSWORD")
                             .inClass("EqualsPasswordField").atLine(line)
                             .build()
             );
@@ -50,12 +50,12 @@ public class KotlinHardcodedPasswordEqualsDetectorTest extends BaseDetectorTest 
         for (Integer line : Arrays.asList(84, 93, 102)) {
             verify(reporter).doReportBug(
                     bugDefinition()
-                            .bugType("KOTLIN_HARD_CODE_PASSWORD")
+                            .bugType("HARD_CODE_PASSWORD")
                             .inClass("HardcodedPasswordKt").atLine(line)
                             .build()
             );
         }
 
-        verify(reporter, times(6)).doReportBug(bugDefinition().bugType("KOTLIN_HARD_CODE_PASSWORD").build());
+        verify(reporter, times(6)).doReportBug(bugDefinition().bugType("HARD_CODE_PASSWORD").build());
     }
 }

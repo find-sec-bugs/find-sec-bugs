@@ -8,12 +8,12 @@
                 <p>The SpotBugs plugin for security audits of Java web applications.</p>
 
                 <div class="actions">
-                    <a class="btn btn-default btn-lg" href="download.htm">
+                    <a class="btn btn-primary btn-lg" href="download.htm">
                         <i class="fa fa-download"></i>&nbsp;&nbsp;
                         Download version $latestVersion
                     </a>
                     &nbsp;&nbsp;
-                    <a class="btn btn-default btn-lg" href="$releaseNotesUrl">
+                    <a class="btn btn-secondary btn-lg" href="$releaseNotesUrl">
                         <i class="fa fa-bullhorn"></i>&nbsp;&nbsp;
                         View release notes
                     </a>
@@ -70,33 +70,33 @@
         <div class="row">
             <div class="col-md-4 col-sm-6">
                 <h4><i class="fa fa-crosshairs"></i> $nbPatterns bug patterns</h4>
-                It can detect <a href="bugs.htm">$nbPatterns different vulnerability types</a> with over $nbSignatures unique API signatures.
+                <p>It can detect <a href="bugs.htm">$nbPatterns different vulnerability types</a> with over $nbSignatures unique API signatures.</p>
             </div>
             <div class="col-md-4 col-sm-6">
                 <h4><i class="fa fa-code"></i> Support your frameworks and libraries</h4>
-                Cover popular frameworks including Spring-MVC, Struts, Tapestry and many more.
+                <p>Cover popular frameworks including Spring-MVC, Struts, Tapestry and many more.</p>
             </div>
             <div class="col-md-4 col-sm-6">
                 <h4><i class="fa fa-plug"></i> Integrate with your IDE</h4>
-                Plugins are available for <a target="_blank" href="http://findbugs.sourceforge.net/manual/eclipse.html">Eclipse</a>,
+                <p>Plugins are available for <a target="_blank" href="http://findbugs.sourceforge.net/manual/eclipse.html">Eclipse</a>,
                 <a target="_blank" href="https://plugins.jetbrains.com/plugin/3847?pr=idea">IntelliJ</a>,
                 <a href="https://plugins.jetbrains.com/plugin/3847?pr=idea">Android Studio</a> and
                 <a target="_blank" href="https://netbeans.org/kb/docs/java/code-inspect.html#fb">NetBeans</a>.
                 Command line integration is available with <a href="http://findbugs.sourceforge.net/manual/anttask.html">Ant</a>
-                and <a href="https://github.com/spotbugs/spotbugs-maven-plugin">Maven</a>.
+                and <a href="https://github.com/spotbugs/spotbugs-maven-plugin">Maven</a>.</p>
             </div>
             <div class="col-md-4 col-sm-6">
                 <h4><i class="fa fa-cogs"></i> Continuous integration</h4>
-                Can be used with systems such as <a target="_blank" href="https://plugins.jenkins.io/findbugs">Jenkins</a> and
-                <a target="_blank" href="https://github.com/spotbugs/sonar-findbugs">SonarQube</a>.
+                <p>Can be used with systems such as <a target="_blank" href="https://plugins.jenkins.io/findbugs">Jenkins</a> and
+                <a target="_blank" href="https://github.com/spotbugs/sonar-findbugs">SonarQube</a>.</p>
             </div>
             <div class="col-md-4 col-sm-6">
                 <h4><i class="fa fa-check"></i> OWASP TOP 10 and CWE coverage</h4>
-                Extensive references are given for each bug patterns with references to OWASP Top 10 and CWE.
+                <p>Extensive references are given for each bug patterns with references to OWASP Top 10 and CWE.</p>
             </div>
             <div class="col-md-4 col-sm-6">
                 <h4><i class="fa fa-github"></i> Open for contributions</h4>
-                The project is open-source and is <a target="_blank" href="https://github.com/find-sec-bugs/find-sec-bugs/graphs/contributors">open for contributions</a>.
+                <p>The project is open-source and is <a target="_blank" href="https://github.com/find-sec-bugs/find-sec-bugs/graphs/contributors">open for contributions</a>.</p>
             </div>
         </div>
     </div>
@@ -114,14 +114,14 @@
             <%
             screenshots.eachWithIndex {s,idx->
             print """
-            <div class="col-md-4 col-sm-6 portfolio-item">
+            <div class="col-md-4 col-sm-2 portfolio-item">
                 <a href="#screenshot${idx}" class="portfolio-link" data-toggle="modal">
                     <div class="portfolio-hover">
                         <div class="portfolio-hover-content">
                             <i class="fa fa-search-plus fa-3x"></i>
                         </div>
                     </div>
-                    <img src="${s.path}" class="img-responsive" alt="">
+                    <img src="${s.path}" class="img-responsive img-fluid" alt="Find Security Bugs ${s.title}">
                 </a>
                 <div class="portfolio-caption">
                     <h4>${s.title}</h4>
@@ -134,33 +134,32 @@
     </div>
 </section>
 
+
 <%
 screenshots.eachWithIndex {s,idx->
 print """
-
-<div class="portfolio-modal modal fade" id="screenshot${idx}" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-content">
-        <div class="close-modal" data-dismiss="modal">
-            <div class="lr">
-                <div class="rl">
-                </div>
+<!-- Modal -->
+<div class="modal fade" id="screenshot${idx}" tabindex="-1" role="dialog" aria-labelledby="screenshotLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="screenshotLabel${idx}">${s.title}</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-10 col-lg-offset-1">
-                    <div class="modal-body">
-                        <h2>${s.title}</h2>
-                        <p class="item-intro text-muted">${s.description}</p>
-                        <img class="img-responsive" src="${s.path}" alt="">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                    </div>
-                </div>
+            <div class="modal-body">
+                <p class="item-intro text-muted">${s.description}</p>
+                <img class="img-responsive img-fluid" src="${s.path}" alt="">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
-
 """
 }
 %>
+
+

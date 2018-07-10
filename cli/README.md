@@ -4,8 +4,16 @@ The latest package version is made available in the release section : https://gi
 
 ## Building the package
 
+1. Update the version of the latest release of Find Security Bugs and SpotBugs
+
+2. Run the following command
+
 ```
-gradle copyRuntimeLibs
+gradle packageCli
 ```
 
+This should produce a zip archive with a portable version of Find Security Bugs (`findsecbugs-cli-*.zip`).
+
+
 The spotbugs dependencies and the latest FindSecurityBugs plugin will be place in the lib directory.
+The lib directory need to be clear manually if the versions are changed from the gradle build file.

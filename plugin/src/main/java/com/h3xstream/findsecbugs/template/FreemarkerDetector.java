@@ -21,7 +21,7 @@ import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 /**
  * Equivalent to Velocity template detector.
@@ -42,7 +42,7 @@ public class FreemarkerDetector extends OpcodeStackDetector {
 
 //  FreemarkerDetector: [0113]  invokevirtual   freemarker/template/Template.process (Ljava/lang/Object;Ljava/io/Writer;)V
 
-        if (seen == Constants.INVOKEVIRTUAL && getClassConstantOperand().equals("freemarker/template/Template")
+        if (seen == Const.INVOKEVIRTUAL && getClassConstantOperand().equals("freemarker/template/Template")
                 && getNameConstantOperand().equals("process")) {
 
             bugReporter.reportBug(new BugInstance(this, FREEMARKER_TYPE, Priorities.NORMAL_PRIORITY) //

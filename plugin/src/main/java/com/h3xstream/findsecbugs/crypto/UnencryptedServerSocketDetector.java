@@ -22,7 +22,7 @@ import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.OpcodeStack;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 public class UnencryptedServerSocketDetector extends OpcodeStackDetector {
 
@@ -38,7 +38,7 @@ public class UnencryptedServerSocketDetector extends OpcodeStackDetector {
     public void sawOpcode(int seen) {
         //printOpCode(seen);
 
-        if (seen == Constants.INVOKESPECIAL && getClassConstantOperand().equals("java/net/ServerSocket") &&
+        if (seen == Const.INVOKESPECIAL && getClassConstantOperand().equals("java/net/ServerSocket") &&
                 getNameConstantOperand().equals("<init>")) {
             bugReporter.reportBug(new BugInstance(this, UNENCRYPTED_SERVER_SOCKET_TYPE, Priorities.NORMAL_PRIORITY) //
                     .addClass(this).addMethod(this).addSourceLine(this));

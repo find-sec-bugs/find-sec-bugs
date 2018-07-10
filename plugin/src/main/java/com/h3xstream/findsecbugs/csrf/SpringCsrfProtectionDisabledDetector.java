@@ -22,7 +22,7 @@ import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 import static com.h3xstream.findsecbugs.common.matcher.InstructionDSL.invokeInstruction;
 
@@ -48,7 +48,7 @@ public class SpringCsrfProtectionDisabledDetector extends OpcodeStackDetector {
     @Override
     public void sawOpcode(int seen) {
 
-        if (seen == Constants.INVOKEVIRTUAL && CSRF_CONFIGURER_DISABLE_METHOD.matches(this)) {
+        if (seen == Const.INVOKEVIRTUAL && CSRF_CONFIGURER_DISABLE_METHOD.matches(this)) {
             bugReporter.reportBug(new BugInstance(this, SPRING_CSRF_PROTECTION_DISABLED_TYPE, Priorities.HIGH_PRIORITY) //
                     .addClass(this).addMethod(this).addSourceLine(this));
         }

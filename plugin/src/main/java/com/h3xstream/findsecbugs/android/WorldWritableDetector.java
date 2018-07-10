@@ -23,7 +23,7 @@ import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.OpcodeStack;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 public class WorldWritableDetector extends OpcodeStackDetector {
 
@@ -38,7 +38,7 @@ public class WorldWritableDetector extends OpcodeStackDetector {
     public void sawOpcode(int seen) {
         //printOpCode(seen);
 
-        if (seen == Constants.INVOKEVIRTUAL && getNameConstantOperand().equals("openFileOutput")) {
+        if (seen == Const.INVOKEVIRTUAL && getNameConstantOperand().equals("openFileOutput")) {
             OpcodeStack.Item item = stack.getStackItem(0); //First item on the stack is the last
             if(StackUtils.isConstantInteger(item)) {
                 Integer value = (Integer) item.getConstant();

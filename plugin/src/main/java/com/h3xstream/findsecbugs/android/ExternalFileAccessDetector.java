@@ -21,7 +21,7 @@ import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 public class ExternalFileAccessDetector extends OpcodeStackDetector {
 
@@ -38,7 +38,7 @@ public class ExternalFileAccessDetector extends OpcodeStackDetector {
 
         // getClassConstantOperand().equals("java/net/Socket")
 
-        if (seen == Constants.INVOKEVIRTUAL && ( //List of method mark as external file access
+        if (seen == Const.INVOKEVIRTUAL && ( //List of method mark as external file access
                 getNameConstantOperand().equals("getExternalCacheDir") ||
                 getNameConstantOperand().equals("getExternalCacheDirs") ||
                 getNameConstantOperand().equals("getExternalFilesDir") ||
@@ -48,7 +48,7 @@ public class ExternalFileAccessDetector extends OpcodeStackDetector {
             bugReporter.reportBug(new BugInstance(this, ANDROID_EXTERNAL_FILE_ACCESS_TYPE, Priorities.NORMAL_PRIORITY) //
                     .addClass(this).addMethod(this).addSourceLine(this));
         }
-        else if(seen == Constants.INVOKESTATIC && getClassConstantOperand().equals("android/os/Environment") && (
+        else if(seen == Const.INVOKESTATIC && getClassConstantOperand().equals("android/os/Environment") && (
                 getNameConstantOperand().equals("getExternalStorageDirectory") ||
                 getNameConstantOperand().equals("getExternalStoragePublicDirectory")
             )) {

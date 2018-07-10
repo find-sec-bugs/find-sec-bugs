@@ -23,7 +23,7 @@ import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.OpcodeStack;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 public class WebViewJavascriptInterfaceDetector extends OpcodeStackDetector {
 
@@ -37,7 +37,7 @@ public class WebViewJavascriptInterfaceDetector extends OpcodeStackDetector {
     @Override
     public void sawOpcode(int seen) {
 
-        if (seen == Constants.INVOKEVIRTUAL && getClassConstantOperand().equals("android/webkit/WebView") &&
+        if (seen == Const.INVOKEVIRTUAL && getClassConstantOperand().equals("android/webkit/WebView") &&
                 getNameConstantOperand().equals("addJavascriptInterface")) {
 
             bugReporter.reportBug(new BugInstance(this, ANDROID_WEB_VIEW_INTERFACE_TYPE, Priorities.NORMAL_PRIORITY) //

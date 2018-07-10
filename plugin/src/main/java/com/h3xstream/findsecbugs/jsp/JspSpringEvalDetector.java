@@ -22,7 +22,7 @@ import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 public class JspSpringEvalDetector extends OpcodeStackDetector {
     private static final String JSP_SPRING_EVAL = "JSP_SPRING_EVAL";
@@ -45,7 +45,7 @@ public class JspSpringEvalDetector extends OpcodeStackDetector {
 //        JspSpringEvalDetector: [0048]  checkcast
 //        JspSpringEvalDetector: [0051]  invokevirtual   org/springframework/web/servlet/tags/EvalTag.setExpression (Ljava/lang/String;)V
 
-        if (seen == Constants.INVOKEVIRTUAL && getClassConstantOperand().equals("org/springframework/web/servlet/tags/EvalTag")
+        if (seen == Const.INVOKEVIRTUAL && getClassConstantOperand().equals("org/springframework/web/servlet/tags/EvalTag")
                 && getNameConstantOperand().equals("setExpression") && getSigConstantOperand().equals("(Ljava/lang/String;)V")) {
 
             if (StackUtils.isVariableString(stack.getStackItem(0))) {

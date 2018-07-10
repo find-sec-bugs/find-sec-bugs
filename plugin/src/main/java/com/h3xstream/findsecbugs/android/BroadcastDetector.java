@@ -22,7 +22,7 @@ import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 public class BroadcastDetector extends OpcodeStackDetector {
 
@@ -37,7 +37,7 @@ public class BroadcastDetector extends OpcodeStackDetector {
     public void sawOpcode(int seen) {
         //printOpCode(seen);
 
-        if (seen == Constants.INVOKEVIRTUAL &&
+        if (seen == Const.INVOKEVIRTUAL &&
                 (
                     getNameConstantOperand().equals("sendBroadcast") ||
                     getNameConstantOperand().equals("sendBroadcastAsUser") ||

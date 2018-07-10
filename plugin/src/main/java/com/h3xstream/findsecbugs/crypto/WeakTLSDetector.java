@@ -22,7 +22,7 @@ import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.OpcodeStack;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 public class WeakTLSDetector extends OpcodeStackDetector {
 
@@ -37,7 +37,7 @@ public class WeakTLSDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
-        if (seen == Constants.INVOKESPECIAL 
+        if (seen == Const.INVOKESPECIAL 
             && getClassConstantOperand().equals("org/apache/http/impl/client/DefaultHttpClient") 
             && getNameConstantOperand().equals("<init>") 
             && getSigConstantOperand().equals("()V")) {
@@ -47,7 +47,7 @@ public class WeakTLSDetector extends OpcodeStackDetector {
                     .addClass(this).addMethod(this).addSourceLine(this));
         }
         
-        if (seen == Constants.INVOKESTATIC 
+        if (seen == Const.INVOKESTATIC 
             && getClassConstantOperand().equals("javax/net/ssl/SSLContext") 
             && getNameConstantOperand().equals("getInstance")
             && getSigConstantOperand().equals("(Ljava/lang/String;)Ljavax/net/ssl/SSLContext;")) {

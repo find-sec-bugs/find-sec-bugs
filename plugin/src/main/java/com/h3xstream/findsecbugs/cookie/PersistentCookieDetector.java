@@ -21,7 +21,7 @@ import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 public class PersistentCookieDetector extends OpcodeStackDetector {
 
@@ -34,7 +34,7 @@ public class PersistentCookieDetector extends OpcodeStackDetector {
     @Override
     public void sawOpcode(int seen) {
 
-        if (seen == Constants.INVOKEVIRTUAL && getClassConstantOperand().equals("javax/servlet/http/Cookie")
+        if (seen == Const.INVOKEVIRTUAL && getClassConstantOperand().equals("javax/servlet/http/Cookie")
                 && getNameConstantOperand().equals("setMaxAge")) {
 
             Object maxAge = stack.getStackItem(0).getConstant();

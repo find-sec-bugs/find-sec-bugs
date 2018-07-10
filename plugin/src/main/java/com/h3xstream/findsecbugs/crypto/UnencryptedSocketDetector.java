@@ -22,7 +22,7 @@ import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.OpcodeStack;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 public class UnencryptedSocketDetector extends OpcodeStackDetector {
 
@@ -38,7 +38,7 @@ public class UnencryptedSocketDetector extends OpcodeStackDetector {
     public void sawOpcode(int seen) {
         //printOpCode(seen);
 
-        if (seen == Constants.INVOKESPECIAL && getClassConstantOperand().equals("java/net/Socket") &&
+        if (seen == Const.INVOKESPECIAL && getClassConstantOperand().equals("java/net/Socket") &&
                 getNameConstantOperand().equals("<init>")) {
 
             int depth = stack.getStackDepth();

@@ -21,7 +21,7 @@ import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 /**
  * This detector identify the usage of ESAPI cryptography components.
@@ -41,7 +41,7 @@ public class EsapiEncryptorDetector extends OpcodeStackDetector {
     @Override
     public void sawOpcode(int seen) {
         //printOpCode(seen);
-        if (seen == Constants.INVOKEINTERFACE && getClassConstantOperand().equals("org/owasp/esapi/Encryptor") &&
+        if (seen == Const.INVOKEINTERFACE && getClassConstantOperand().equals("org/owasp/esapi/Encryptor") &&
                 (getNameConstantOperand().equals("encrypt") || getNameConstantOperand().equals("decrypt"))) {
 
             bugReporter.reportBug(new BugInstance(this, ESAPI_ENCRYPTOR_TYPE, Priorities.NORMAL_PRIORITY) //

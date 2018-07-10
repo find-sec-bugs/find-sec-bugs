@@ -21,7 +21,7 @@ import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 public class UrlRewritingDetector extends OpcodeStackDetector {
     
@@ -36,7 +36,7 @@ public class UrlRewritingDetector extends OpcodeStackDetector {
     @Override
     public void sawOpcode(int seen) {
 
-        if (seen == Constants.INVOKEINTERFACE && getClassConstantOperand().equals("javax/servlet/http/HttpServletResponse")
+        if (seen == Const.INVOKEINTERFACE && getClassConstantOperand().equals("javax/servlet/http/HttpServletResponse")
                 && (getNameConstantOperand().equals("encodeURL") || getNameConstantOperand().equals("encodeUrl") ||
                 getNameConstantOperand().equals("encodeRedirectURL") || getNameConstantOperand().equals("encodeRedirectUrl"))) {
 

@@ -24,7 +24,7 @@ import edu.umd.cs.findbugs.OpcodeStack;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 import java.util.regex.Pattern;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 /**
  * This detector mark cipher usage that doesn't provide integrity.
@@ -73,7 +73,7 @@ public class CipherWithNoIntegrityDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
-        if ((seen != Constants.INVOKESTATIC
+        if ((seen != Const.INVOKESTATIC
                 || !getClassConstantOperand().equals("javax/crypto/Cipher"))
                 || !getNameConstantOperand().equals("getInstance")) {
             return;

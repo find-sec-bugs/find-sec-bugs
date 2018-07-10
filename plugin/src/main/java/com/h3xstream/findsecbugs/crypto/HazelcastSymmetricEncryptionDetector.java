@@ -21,7 +21,7 @@ import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 /**
  * http://code.google.com/p/hazelcast/wiki/Encryption
@@ -38,7 +38,7 @@ public class HazelcastSymmetricEncryptionDetector extends OpcodeStackDetector {
     @Override
     public void sawOpcode(int seen) {
         //printOpCode( seen );
-        if (seen == Constants.INVOKESPECIAL && getClassConstantOperand().equals("com/hazelcast/config/SymmetricEncryptionConfig") &&
+        if (seen == Const.INVOKESPECIAL && getClassConstantOperand().equals("com/hazelcast/config/SymmetricEncryptionConfig") &&
                 getNameConstantOperand().equals("<init>")) {
 
             bugReporter.reportBug(new BugInstance(this, HAZELCAST_SYMMETRIC_ENCRYPTION_TYPE, Priorities.NORMAL_PRIORITY) //

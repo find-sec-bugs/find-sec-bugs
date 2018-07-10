@@ -29,7 +29,7 @@ import edu.umd.cs.findbugs.ba.ClassContext;
 import edu.umd.cs.findbugs.ba.Location;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 import java.util.Iterator;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.ICONST;
@@ -79,21 +79,21 @@ public class XxeDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
-        if (seen != Constants.INVOKEVIRTUAL && seen != INVOKEINTERFACE) {
+        if (seen != Const.INVOKEVIRTUAL && seen != INVOKEINTERFACE) {
             return;
         }
         String fullClassName = getClassConstantOperand();
         String method = getNameConstantOperand();
         String sig = getSigConstantOperand();
         //The method call is doing XML parsing (see class javadoc)
-        if ((seen == Constants.INVOKEVIRTUAL && fullClassName.equals("javax/xml/parsers/SAXParser")
+        if ((seen == Const.INVOKEVIRTUAL && fullClassName.equals("javax/xml/parsers/SAXParser")
                   && method.equals("parse"))
-                || (seen == Constants.INVOKEINTERFACE && fullClassName.equals("org/xml/sax/XMLReader")
+                || (seen == Const.INVOKEINTERFACE && fullClassName.equals("org/xml/sax/XMLReader")
                   && method.equals("parse"))
-                || (seen == Constants.INVOKEVIRTUAL
+                || (seen == Const.INVOKEVIRTUAL
                     && getClassConstantOperand().equals("javax/xml/parsers/DocumentBuilder")
                   && method.equals("parse"))
-                || (seen == Constants.INVOKEINTERFACE
+                || (seen == Const.INVOKEINTERFACE
                 && getClassConstantOperand().equals("javax/xml/xpath/XPathExpression")
                 && method.equals("evaluate")
                 && (sig.equals("(Lorg/xml/sax/InputSource;Ljavax/xml/namespace/QName;)Ljava/lang/Object;")

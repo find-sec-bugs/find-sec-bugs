@@ -22,7 +22,7 @@ import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.OpcodeStack;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 /**
  * This detector cover the Servlet/HttpServlet API which give access to user input.
@@ -51,7 +51,7 @@ public class ServletEndpointDetector extends OpcodeStackDetector {
     public void sawOpcode(int seen) {
 
         //All call to ServletRequest
-        if (seen == Constants.INVOKEINTERFACE && (getClassConstantOperand().equals("javax/servlet/ServletRequest") ||
+        if (seen == Const.INVOKEINTERFACE && (getClassConstantOperand().equals("javax/servlet/ServletRequest") ||
                 getClassConstantOperand().equals("javax/servlet/http/HttpServletRequest"))) {
 
             //ServletRequest

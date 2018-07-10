@@ -26,7 +26,7 @@ import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 import edu.umd.cs.findbugs.classfile.FieldDescriptor;
 import edu.umd.cs.findbugs.classfile.MethodDescriptor;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 import static com.h3xstream.findsecbugs.common.matcher.InstructionDSL.invokeInstruction;
 
@@ -67,13 +67,13 @@ public class ReDosDetector extends OpcodeStackDetector {
     @Override
     public void sawOpcode(int seen) {
         //printOpCode(seen);
-        if (seen == Constants.INVOKESTATIC && PATTERN_COMPILE.matches(this)) {
+        if (seen == Const.INVOKESTATIC && PATTERN_COMPILE.matches(this)) {
             OpcodeStack.Item item = stack.getStackItem(0);
             if (!StackUtils.isVariableString(item)) {
                 String value = (String) item.getConstant();
                 analyseRegexString(value);
             }
-        } else if (seen == Constants.INVOKEVIRTUAL && STRING_MATCHES.matches(this)) {
+        } else if (seen == Const.INVOKEVIRTUAL && STRING_MATCHES.matches(this)) {
             OpcodeStack.Item item = stack.getStackItem(0);
             if (!StackUtils.isVariableString(item)) {
                 String value = (String) item.getConstant();

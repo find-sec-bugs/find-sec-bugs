@@ -27,7 +27,7 @@ import edu.umd.cs.findbugs.ba.ClassContext;
 import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.ba.CFGBuilderException;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.ICONST;
 import org.apache.bcel.generic.Instruction;
@@ -64,13 +64,13 @@ public class TransformerFactoryDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
-        if (seen != Constants.INVOKEVIRTUAL && seen != INVOKEINTERFACE && seen != INVOKESTATIC) {
+        if (seen != Const.INVOKEVIRTUAL && seen != INVOKEINTERFACE && seen != INVOKESTATIC) {
             return;
         }
         String fullClassName = getClassConstantOperand();
         String method = getNameConstantOperand();
         //The method call is doing XML parsing (see class javadoc)
-        if (seen == Constants.INVOKESTATIC &&
+        if (seen == Const.INVOKESTATIC &&
                 (fullClassName.equals("javax/xml/transform/TransformerFactory") ||
                 fullClassName.equals("javax/xml/transform/sax/SAXTransformerFactory"))
                 && method.equals("newInstance")) {

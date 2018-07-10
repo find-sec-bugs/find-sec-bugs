@@ -22,7 +22,7 @@ import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.OpcodeStack;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 /**
  * Identifies the use of MD2, MD5 and SHA1 hash function and recommends the
@@ -41,7 +41,7 @@ public class WeakMessageDigestDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
-        if (seen != Constants.INVOKESTATIC) {
+        if (seen != Const.INVOKESTATIC) {
             return;
         }
         String className = getClassConstantOperand();

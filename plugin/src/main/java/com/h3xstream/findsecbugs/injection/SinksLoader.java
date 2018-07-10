@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 /**
  * The sanity of the sinks file is crucial (a typo == missed API == missed vulnerability).
@@ -103,7 +103,7 @@ public class SinksLoader {
 //        String classAndMethodName = fullMethodName.substring(0, fullMethodName.indexOf('('));
 //        int slashIndex = classAndMethodName.lastIndexOf('/');
 //        String shortName = classAndMethodName.substring(slashIndex + 1);
-//        if (shortName.endsWith(Constants.CONSTRUCTOR_NAME)) {
+//        if (shortName.endsWith(Const.CONSTRUCTOR_NAME)) {
 //            shortName = shortName.substring(0, shortName.indexOf('.'));
 //        }
 //        injectionPoint.setInjectableMethod(shortName.concat("(...)"));

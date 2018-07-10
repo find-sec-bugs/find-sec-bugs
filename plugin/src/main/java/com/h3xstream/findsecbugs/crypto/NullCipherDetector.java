@@ -21,7 +21,7 @@ import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 public class NullCipherDetector extends OpcodeStackDetector {
 
@@ -36,7 +36,7 @@ public class NullCipherDetector extends OpcodeStackDetector {
     @Override
     public void sawOpcode(int seen) {
         //printOpCode( seen );
-        if (seen == Constants.INVOKESPECIAL && getClassConstantOperand().equals("javax/crypto/NullCipher") &&
+        if (seen == Const.INVOKESPECIAL && getClassConstantOperand().equals("javax/crypto/NullCipher") &&
                 getNameConstantOperand().equals("<init>")) {
 
             bugReporter.reportBug(new BugInstance(this, NULL_CIPHER_TYPE, Priorities.NORMAL_PRIORITY) //

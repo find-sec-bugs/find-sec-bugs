@@ -21,7 +21,7 @@ import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 /**
  * The filename given in FileUpload API is directly taken from the HTTP request.
@@ -40,7 +40,7 @@ public class FileUploadFilenameDetector extends OpcodeStackDetector {
     @Override
     public void sawOpcode(int seen) {
 
-        if (seen == Constants.INVOKEINTERFACE &&
+        if (seen == Const.INVOKEINTERFACE &&
                 (getClassConstantOperand().equals("org/apache/wicket/util/upload/FileItem") ||
                         getClassConstantOperand().equals("org/apache/commons/fileupload/FileItem")) &&
                 getNameConstantOperand().equals("getName")) {

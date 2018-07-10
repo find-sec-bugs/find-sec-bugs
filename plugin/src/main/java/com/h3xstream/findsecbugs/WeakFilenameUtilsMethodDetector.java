@@ -22,7 +22,7 @@ import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 import static com.h3xstream.findsecbugs.common.matcher.InstructionDSL.invokeInstruction;
 
@@ -58,7 +58,7 @@ public class WeakFilenameUtilsMethodDetector extends OpcodeStackDetector {
     @Override
     public void sawOpcode(int seen) {
 
-        if (seen == Constants.INVOKESTATIC && FILENAMEUTILS_NULL_METHOD.matches(this)) {
+        if (seen == Const.INVOKESTATIC && FILENAMEUTILS_NULL_METHOD.matches(this)) {
 
             bugReporter.reportBug(new BugInstance(this, WEAK_FILENAMEUTILS_TYPE, Priorities.LOW_PRIORITY) //
                     .addClass(this).addMethod(this).addSourceLine(this)

@@ -33,7 +33,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 import org.apache.bcel.generic.*;
 
 /**
@@ -296,7 +296,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     public void handleStoreInstruction(StoreInstruction obj) {
         try {
             int numConsumed = obj.consumeStack(cpg);
-            if (numConsumed == Constants.UNPREDICTABLE) {
+            if (numConsumed == Const.UNPREDICTABLE) {
                 throw new InvalidBytecodeException("Unpredictable stack consumption");
             }
             int index = obj.getIndex();
@@ -314,7 +314,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     public void handleLoadInstruction(LoadInstruction load) {
         int numProducedOrig = load.produceStack(cpg);
         int numProduced = numProducedOrig;
-        if (numProduced == Constants.UNPREDICTABLE) {
+        if (numProduced == Const.UNPREDICTABLE) {
             throw new InvalidBytecodeException("Unpredictable stack production");
         }
         int index = load.getIndex() + numProduced;
@@ -527,7 +527,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         if (config != null) {
             return config;
         }
-        if (Constants.CONSTRUCTOR_NAME.equals(methodName)
+        if (Const.CONSTRUCTOR_NAME.equals(methodName)
                 && !taintConfig.isClassTaintSafe("L" + className + ";")) {
             try {
                 int stackSize = getFrame().getNumArgumentsIncludingObjectInstance(obj, cpg);
@@ -674,8 +674,8 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             for (Integer mutableStackIndex : methodConfig.getMutableStackIndices()) {
                 assert mutableStackIndex >= 0;
                 if (mutableStackIndex >= stackDepth) {
-                    if (!Constants.CONSTRUCTOR_NAME.equals(methodDescriptor.getName())
-                            && !Constants.STATIC_INITIALIZER_NAME.equals(methodDescriptor.getName())) {
+                    if (!Const.CONSTRUCTOR_NAME.equals(methodDescriptor.getName())
+                            && !Const.STATIC_INITIALIZER_NAME.equals(methodDescriptor.getName())) {
                         assert false : "Out of bounds mutables in " + methodDescriptor + " Method Config: " + methodConfig.toString();
                     }
                     continue; // ignore if assertions disabled or if in constructor

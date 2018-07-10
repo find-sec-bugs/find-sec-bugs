@@ -23,7 +23,7 @@ import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.OpcodeStack;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 public class WebViewJavascriptEnabledDetector extends OpcodeStackDetector {
 
@@ -37,7 +37,7 @@ public class WebViewJavascriptEnabledDetector extends OpcodeStackDetector {
     @Override
     public void sawOpcode(int seen) {
         //printOpCode(seen);
-        if (seen == Constants.INVOKEVIRTUAL && getClassConstantOperand().equals("android/webkit/WebSettings") &&
+        if (seen == Const.INVOKEVIRTUAL && getClassConstantOperand().equals("android/webkit/WebSettings") &&
                 getNameConstantOperand().equals("setJavaScriptEnabled")) {
             OpcodeStack.Item item = stack.getStackItem(0); //First item on the stack is the last
             if(StackUtils.isConstantInteger(item)) {

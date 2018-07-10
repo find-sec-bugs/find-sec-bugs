@@ -22,7 +22,7 @@ import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.OpcodeStack;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 /**
  * Printing error messages to standard output may expose security-sensitive information,
@@ -44,7 +44,7 @@ public class ErrorMessageExposureDetector extends OpcodeStackDetector {
     @Override
     public void sawOpcode(int seen) {
 //        printOpCode(seen);
-        if (seen == Constants.INVOKEVIRTUAL ) {
+        if (seen == Const.INVOKEVIRTUAL) {
             String fullClassName = getClassConstantOperand();
             String method = getNameConstantOperand();
             if(isVulnerableClassToPrint(fullClassName) && method.equals("printStackTrace")) {

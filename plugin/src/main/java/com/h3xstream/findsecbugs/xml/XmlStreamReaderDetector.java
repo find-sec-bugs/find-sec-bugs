@@ -29,7 +29,7 @@ import edu.umd.cs.findbugs.ba.ClassContext;
 import edu.umd.cs.findbugs.ba.Location;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 import java.util.Iterator;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.ICONST;
 import org.apache.bcel.generic.Instruction;
@@ -57,7 +57,7 @@ public class XmlStreamReaderDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
-        if (seen != Constants.INVOKEVIRTUAL) {
+        if (seen != Const.INVOKEVIRTUAL) {
             return;
         }
         String fullClassName = getClassConstantOperand();

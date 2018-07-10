@@ -23,7 +23,7 @@ import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.OpcodeStack;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 /**
  * This detector does not use taint analysis because it does not make sense to use a template engine build from
@@ -43,7 +43,7 @@ public class VelocityDetector extends OpcodeStackDetector {
     public void sawOpcode(int seen) {
 //        printOpCode(seen);
 
-        if (seen == Constants.INVOKESTATIC && getClassConstantOperand().equals("org/apache/velocity/app/Velocity")
+        if (seen == Const.INVOKESTATIC && getClassConstantOperand().equals("org/apache/velocity/app/Velocity")
                 && getNameConstantOperand().equals("evaluate")) {
 
             OpcodeStack.Item item = stack.getStackItem(0);

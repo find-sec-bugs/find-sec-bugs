@@ -21,7 +21,7 @@ import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 
 public class JspIncludeDetector extends OpcodeStackDetector {
     private static final String JSP_INCLUDE_TYPE = "JSP_INCLUDE";
@@ -47,13 +47,13 @@ public class JspIncludeDetector extends OpcodeStackDetector {
         //  JspIncludeDetector: [0051]  invokevirtual   org/apache/taglibs/standard/tag/rt/core/ImportTag.setUrl (Ljava/lang/String;)V
 
 
-        if (seen == Constants.INVOKESTATIC && ("org/apache/jasper/runtime/JspRuntimeLibrary".equals(getClassConstantOperand()) || "org/apache/sling/scripting/jsp/jasper/runtime/JspRuntimeLibrary".equals(getClassConstantOperand()))
+        if (seen == Const.INVOKESTATIC && ("org/apache/jasper/runtime/JspRuntimeLibrary".equals(getClassConstantOperand()) || "org/apache/sling/scripting/jsp/jasper/runtime/JspRuntimeLibrary".equals(getClassConstantOperand()))
                 && getNameConstantOperand().equals("include") && getSigConstantOperand().equals("(Ljavax/servlet/ServletRequest;Ljavax/servlet/ServletResponse;Ljava/lang/String;Ljavax/servlet/jsp/JspWriter;Z)V")) {
 
             bugReporter.reportBug(new BugInstance(this, JSP_INCLUDE_TYPE, Priorities.HIGH_PRIORITY) //
                     .addClass(this).addMethod(this).addSourceLine(this));
         }
-        else if (seen == Constants.INVOKEVIRTUAL && getClassConstantOperand().equals("org/apache/taglibs/standard/tag/rt/core/ImportTag")
+        else if (seen == Const.INVOKEVIRTUAL && getClassConstantOperand().equals("org/apache/taglibs/standard/tag/rt/core/ImportTag")
                 && getNameConstantOperand().equals("setUrl") && getSigConstantOperand().equals("(Ljava/lang/String;)V")) {
 
             bugReporter.reportBug(new BugInstance(this, JSP_INCLUDE_TYPE, Priorities.HIGH_PRIORITY) //

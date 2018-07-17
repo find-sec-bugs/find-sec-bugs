@@ -19,11 +19,17 @@ package com.h3xstream.findbugs.test.service;
 
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.regex.Pattern;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.fail;
 
 public class ClassFileLocator {
+
+    private static final String TEST_JAR_REGEX = "\\/[\\w\\d\\.-]*-tests\\.jar\\!\\/";
+    private static final Pattern TEST_JAR_MATCHER = Pattern.compile(TEST_JAR_REGEX);
+    private static final String JAR_REGEX = "\\/[\\w\\d\\.-]*\\.jar\\!\\/";
+    private static final Pattern JAR_MATCHER = Pattern.compile(JAR_REGEX);
 
     /**
      * @param path
@@ -64,9 +70,10 @@ public class ClassFileLocator {
     private String getFilenameFromUrl(URL url) {
         String filename;
         try {
-            if (url.getPath().contains(".jar!")) {
-                String jarRegex = "findsecbugs-test-kotlin-[\\d\\.]{5,}-tests\\.jar!";
-                filename = url.getPath().replaceAll(jarRegex, "test-classes");
+            if (TEST_JAR_MATCHER.matcher(url.getPath()).find()) {
+                filename = url.getPath().replaceAll(TEST_JAR_REGEX, "/test-classes/");
+            } else if (JAR_MATCHER.matcher(url.getPath()).find()) {
+                filename = url.getPath().replaceAll(JAR_REGEX, "/classes/");
             } else {
                 filename = url.toURI().getPath();
             }

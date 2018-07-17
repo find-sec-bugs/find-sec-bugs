@@ -5860,5 +5860,8 @@ Transport.send(message);
         <Details>Identify hardcoded credentials when variable named password are compared to a constant value.</Details>
     </Detector>
 
+    <Detector class="com.h3xstream.findsecbugs.kotlin.KotlinHardcodePasswordInMapDetector">
+        <Details>Identify hardcoded credentials when variable named password supplied to a map</Details>
+    </Detector>
 
 </MessageCollection>

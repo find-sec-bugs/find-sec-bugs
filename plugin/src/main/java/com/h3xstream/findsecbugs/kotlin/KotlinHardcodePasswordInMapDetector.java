@@ -15,10 +15,11 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.password;
+package com.h3xstream.findsecbugs.kotlin;
 
 import com.h3xstream.findsecbugs.common.matcher.InvokeMatcherBuilder;
 import com.h3xstream.findsecbugs.injection.InjectionPoint;
+import com.h3xstream.findsecbugs.password.AbstractHardcodePasswordInMapDetector;
 import edu.umd.cs.findbugs.BugReporter;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.InstructionHandle;
@@ -29,18 +30,14 @@ import static com.h3xstream.findsecbugs.common.matcher.InstructionDSL.invokeInst
 /**
  * Detect hard-code password in settings map (key value configurations constructed at runtime)
  */
-public class HardcodePasswordInMapDetector extends AbstractHardcodePasswordInMapDetector {
+public class KotlinHardcodePasswordInMapDetector extends AbstractHardcodePasswordInMapDetector {
 
-    private static final String HARD_CODE_PASSWORD_TYPE = "HARD_CODE_PASSWORD";
+    private static final String KOTLIN_HARD_CODE_PASSWORD_IN_MAP_TYPE = "HARD_CODE_PASSWORD";
 
-    private static final InvokeMatcherBuilder MAP_PUT_METHOD = invokeInstruction().atMethod("put")
-            .withArgs("(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
-    private static final InvokeMatcherBuilder MAP_PUT_IF_ABSENT_METHOD = invokeInstruction().atMethod("putIfAbsent")
-            .withArgs("(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
-    private static final InvokeMatcherBuilder HASHTABLE_SET_PROPERTY = invokeInstruction().atMethod("setProperty")
-            .withArgs("(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;");
+    private static final InvokeMatcherBuilder TUPLEKT_TO = invokeInstruction().atMethod("to")
+            .withArgs("(Ljava/lang/Object;Ljava/lang/Object;)Lkotlin/Pair;");
 
-    public HardcodePasswordInMapDetector(BugReporter bugReporter) {
+    public KotlinHardcodePasswordInMapDetector(BugReporter bugReporter) {
         super(bugReporter);
     }
 
@@ -49,10 +46,8 @@ public class HardcodePasswordInMapDetector extends AbstractHardcodePasswordInMap
                                                InstructionHandle handle) {
         assert invoke != null && cpg != null;
 
-        if (MAP_PUT_METHOD.matches(invoke, cpg)
-                || MAP_PUT_IF_ABSENT_METHOD.matches(invoke, cpg)
-                || HASHTABLE_SET_PROPERTY.matches(invoke, cpg)) {
-            return new InjectionPoint(new int[]{0}, HARD_CODE_PASSWORD_TYPE);
+        if (TUPLEKT_TO.matches(invoke, cpg)) {
+            return new InjectionPoint(new int[]{0}, KOTLIN_HARD_CODE_PASSWORD_IN_MAP_TYPE);
         }
         return InjectionPoint.NONE;
     }

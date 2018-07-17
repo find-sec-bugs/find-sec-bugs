@@ -53,7 +53,7 @@ public class ClassFileLocator {
         assertNotNull(url, "No jsp file found for the path = " + path);
         return getFilenameFromUrl(url);
     }
-    
+
     public String getJarFilePath(String path) {
         ClassLoader cl = getClass().getClassLoader();
         URL url = cl.getResource(path);
@@ -63,12 +63,17 @@ public class ClassFileLocator {
 
     private String getFilenameFromUrl(URL url) {
         String filename;
-		try {
-			filename = url.toURI().getPath();
-		} catch (final URISyntaxException e) {
-			fail("Failed to get file path = " + url, e);
-			return null;
-		}
+        try {
+            if (url.getPath().contains(".jar!")) {
+                String jarRegex = "findsecbugs-test-kotlin-[\\d\\.]{5,}-tests\\.jar!";
+                filename = url.getPath().replaceAll(jarRegex, "test-classes");
+            } else {
+                filename = url.toURI().getPath();
+            }
+        } catch (final URISyntaxException e) {
+            fail("Failed to get file path = " + url, e);
+            return null;
+        }
 
         final String prefix = "file:";
         if (filename.startsWith(prefix)) {

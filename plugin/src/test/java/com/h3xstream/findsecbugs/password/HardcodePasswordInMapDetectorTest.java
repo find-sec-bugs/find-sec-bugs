@@ -43,7 +43,7 @@ public class HardcodePasswordInMapDetectorTest extends BaseDetectorTest {
         analyze(files, reporter);
 
         //Assertions
-        for (Integer line : Arrays.asList(14, 20, 26, 32)) {
+        for (Integer line : Arrays.asList(14, 20, 26, 32, 38)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("HARD_CODE_PASSWORD")
@@ -53,7 +53,7 @@ public class HardcodePasswordInMapDetectorTest extends BaseDetectorTest {
         }
 
         //More than two occurrence == false positive
-        verify(reporter, times(4)).doReportBug(
+        verify(reporter, times(5)).doReportBug(
                 bugDefinition().bugType("HARD_CODE_PASSWORD").build());
     }
 

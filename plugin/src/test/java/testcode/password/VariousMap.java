@@ -33,6 +33,10 @@ public abstract class VariousMap {
         init(map4);
     }
 
+    public void hardcode5() {
+        Map<String, String> map5 = new HashMap<>();
+        map5.putIfAbsent("password", "secret1234");
+    }
 
     public void safe(String input) {
         Map map1 = new HashMap<>();

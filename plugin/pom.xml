@@ -169,6 +169,12 @@
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.h3xstream.findsecbugs</groupId>
+            <artifactId>findsecbugs-test-kotlin</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
 
         <!-- Unit Testing libraries -->
 

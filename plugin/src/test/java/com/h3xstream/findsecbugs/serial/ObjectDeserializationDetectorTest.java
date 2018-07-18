@@ -62,7 +62,9 @@ public class ObjectDeserializationDetectorTest extends BaseDetectorTest {
     public void detectObjectDeserializationInKotlin() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("bytecode_samples/kotlin_object_deserialisation.jar")
+                getClassFilePath("com/h3xstream/findsecbugs/deserialisation/ObjectDeserialization"),
+                getClassFilePath("com/h3xstream/findsecbugs/deserialisation/SerialisationFalsePositive"),
+                getClassFilePath("com/h3xstream/findsecbugs/deserialisation/UserEntity")
         };
 
         //Run the analysis
@@ -114,7 +116,9 @@ public class ObjectDeserializationDetectorTest extends BaseDetectorTest {
     public void detectObjectDeserializationClassLoaderObjectInputStreamInKotlin() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("bytecode_samples/kotlin_object_deserialisation.jar")
+                getClassFilePath("com/h3xstream/findsecbugs/deserialisation/ObjectDeserialization"),
+                getClassFilePath("com/h3xstream/findsecbugs/deserialisation/SerialisationFalsePositive"),
+                getClassFilePath("com/h3xstream/findsecbugs/deserialisation/UserEntity")
         };
 
         //Run the analysis
@@ -158,7 +162,9 @@ public class ObjectDeserializationDetectorTest extends BaseDetectorTest {
     public void avoidReadObjectFalsePositiveInKotlin() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("bytecode_samples/kotlin_object_deserialisation.jar")
+                getClassFilePath("com/h3xstream/findsecbugs/deserialisation/ObjectDeserialization"),
+                getClassFilePath("com/h3xstream/findsecbugs/deserialisation/SerialisationFalsePositive"),
+                getClassFilePath("com/h3xstream/findsecbugs/deserialisation/UserEntity")
         };
 
         //Run the analysis

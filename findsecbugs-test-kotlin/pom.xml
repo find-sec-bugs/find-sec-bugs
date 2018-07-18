@@ -18,6 +18,14 @@
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.h3xstream.findsecbugs</groupId>
+            <artifactId>findsecbugs-plugin-deps</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+    
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>

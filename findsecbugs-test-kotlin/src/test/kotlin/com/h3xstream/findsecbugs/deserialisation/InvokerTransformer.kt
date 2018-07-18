@@ -1,4 +1,4 @@
-package org.vulnerable.kotlin
+package com.h3xstream.findsecbugs.deserialisation
 
 import org.apache.commons.collections4.Transformer
 import java.io.Serializable

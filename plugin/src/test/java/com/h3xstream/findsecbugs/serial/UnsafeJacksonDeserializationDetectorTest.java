@@ -53,7 +53,7 @@ public class UnsafeJacksonDeserializationDetectorTest extends BaseDetectorTest {
 
         //Locate test code
         String[] files = {
-                getClassFilePath("bytecode_samples/kotlin_jackson_serialisation.jar"),
+                getClassFilePath("com/h3xstream/findsecbugs/jackson/JacksonSerialisationFalsePositive"),
         };
 
         //Run the analysis
@@ -123,7 +123,9 @@ public class UnsafeJacksonDeserializationDetectorTest extends BaseDetectorTest {
         String className = "UnsafeJacksonObjectDeserialization";
 
         String[] files = {
-                getClassFilePath("bytecode_samples/kotlin_jackson_serialisation.jar"),
+                getClassFilePath("com/h3xstream/findsecbugs/jackson/UnsafeJacksonObjectDeserialization"),
+                getClassFilePath("com/h3xstream/findsecbugs/jackson/UnsafeJacksonObjectDeserialization$AnotherBean"),
+                getClassFilePath("com/h3xstream/findsecbugs/jackson/UnsafeJacksonObjectDeserialization$YetAnotherBean"),
         };
 
         // Run the analysis

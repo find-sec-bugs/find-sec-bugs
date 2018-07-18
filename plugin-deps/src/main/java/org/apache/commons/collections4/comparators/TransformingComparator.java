@@ -1,5 +1,7 @@
 package org.apache.commons.collections4.comparators;
 
+import org.apache.commons.collections4.Transformer;
+
 import java.io.Serializable;
 import java.util.Comparator;
 

@@ -1,6 +1,6 @@
 package testcode.serial.commonscollections4;
 
-import org.apache.commons.collections4.comparators.Transformer;
+import org.apache.commons.collections4.Transformer;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;

@@ -147,6 +147,7 @@
         <module>plugin-graph</module>
         <module>findbugs-test-util</module>
         <module>plugin-deps</module>
+        <module>findsecbugs-test-kotlin</module>
     </modules>
 
 
@@ -165,6 +166,12 @@
             <dependency>
                 <groupId>com.h3xstream.findsecbugs</groupId>
                 <artifactId>findbugs-test-util</artifactId>
+                <type>test-jar</type>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.h3xstream.findsecbugs</groupId>
+                <artifactId>findsecbugs-test-kotlin</artifactId>
                 <type>test-jar</type>
                 <version>${project.version}</version>
             </dependency>

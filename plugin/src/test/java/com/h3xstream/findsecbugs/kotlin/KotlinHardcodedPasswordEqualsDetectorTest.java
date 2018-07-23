@@ -32,7 +32,8 @@ public class KotlinHardcodedPasswordEqualsDetectorTest extends BaseDetectorTest 
     @Test
     public void detectHardCodePasswordsWithEquals() throws Exception {
         String[] files = {
-                getClassFilePath("bytecode_samples/kotlin_hardcoded_password_equals.jar"),
+                getClassFilePath("com/h3xstream/findsecbugs/password/EqualsPasswordField"),
+                getClassFilePath("com/h3xstream/findsecbugs/password/HardcodedPasswordKt")
         };
 
         EasyBugReporter reporter = spy(new BaseDetectorTest.SecurityReporter());

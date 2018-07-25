@@ -96,7 +96,9 @@ public class DeserializationGadgetDetectorTest extends BaseDetectorTest {
     public void detectCommonsCollectionAndSpringGadgetInKotlin() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("bytecode_samples/kotlin_deserialisation-gadget.jar"),
+                getClassFilePath("com/h3xstream/findsecbugs/deserialisation/TypeProvider"),
+                getClassFilePath("com/h3xstream/findsecbugs/deserialisation/InvokerTransformer"),
+                getClassFilePath("com/h3xstream/findsecbugs/deserialisation/MethodInvokeTypeProvider")
         };
 
         //Run the analysis

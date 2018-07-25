@@ -38,29 +38,29 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        // tained input executed after always true filter
-        verify(reporter).doReportBug(
-                bugDefinition()
-                        .bugType("COMMAND_INJECTION")
-                        .inClass("IdentityFunctionCommandInjection").atLine(26)
-                        .withPriority("Medium")
-                        .build()
-        );
+//        // tained input executed after always true filter
+//        verify(reporter).doReportBug(
+//                bugDefinition()
+//                        .bugType("COMMAND_INJECTION")
+//                        .inClass("IdentityFunctionCommandInjection").atLine(25)
+//                        .withPriority("Medium")
+//                        .build()
+//        );
 
-        // tained input executed after always false not filter
-        verify(reporter).doReportBug(
-                bugDefinition()
-                        .bugType("COMMAND_INJECTION")
-                        .inClass("IdentityFunctionCommandInjection").atLine(32)
-                        .withPriority("Medium")
-                        .build()
-        );
+//        // tained input executed after always false not filter
+//        verify(reporter).doReportBug(
+//                bugDefinition()
+//                        .bugType("COMMAND_INJECTION")
+//                        .inClass("IdentityFunctionCommandInjection").atLine(31)
+//                        .withPriority("Medium")
+//                        .build()
+//        );
 
         // tained input executed after identity function with run
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("IdentityFunctionCommandInjection").atLine(38)
+                        .inClass("IdentityFunctionCommandInjection").atLine(37)
                         .withPriority("Medium")
                         .build()
         );
@@ -69,7 +69,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("IdentityFunctionCommandInjection").atLine(44)
+                        .inClass("IdentityFunctionCommandInjection").atLine(43)
                         .withPriority("Medium")
                         .build()
         );
@@ -78,7 +78,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("IdentityFunctionCommandInjection").atLine(48)
+                        .inClass("IdentityFunctionCommandInjection").atLine(47)
                         .withPriority("Medium")
                         .build()
         );
@@ -87,7 +87,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("IdentityFunctionCommandInjection").atLine(54)
+                        .inClass("IdentityFunctionCommandInjection").atLine(53)
                         .withPriority("Medium")
                         .build()
         );
@@ -96,7 +96,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("IdentityFunctionCommandInjection").atLine(60)
+                        .inClass("IdentityFunctionCommandInjection").atLine(59)
                         .withPriority("Medium")
                         .build()
         );
@@ -105,7 +105,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("IdentityFunctionCommandInjection").atLine(66)
+                        .inClass("IdentityFunctionCommandInjection").atLine(65)
                         .withPriority("Medium")
                         .build()
         );
@@ -114,7 +114,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("IdentityFunctionCommandInjection").atLine(72)
+                        .inClass("IdentityFunctionCommandInjection").atLine(71)
                         .withPriority("Medium")
                         .build()
         );
@@ -123,7 +123,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("IdentityFunctionCommandInjection").atLine(78)
+                        .inClass("IdentityFunctionCommandInjection").atLine(77)
                         .withPriority("Medium")
                         .build()
         );
@@ -132,7 +132,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("IdentityFunctionCommandInjection").atLine(84)
+                        .inClass("IdentityFunctionCommandInjection").atLine(83)
                         .withPriority("Medium")
                         .build()
         );
@@ -141,7 +141,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("IdentityFunctionCommandInjection").atLine(90)
+                        .inClass("IdentityFunctionCommandInjection").atLine(89)
                         .withPriority("Medium")
                         .build()
         );
@@ -150,7 +150,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("IdentityFunctionCommandInjection").atLine(96)
+                        .inClass("IdentityFunctionCommandInjection").atLine(95)
                         .withPriority("Medium")
                         .build()
         );
@@ -159,7 +159,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("StringManipulationCommandInjection").atLine(26)
+                        .inClass("StringManipulationCommandInjection").atLine(25)
                         .withPriority("Medium")
                         .build()
         );
@@ -168,7 +168,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("StringManipulationCommandInjection").atLine(32)
+                        .inClass("StringManipulationCommandInjection").atLine(31)
                         .withPriority("Medium")
                         .build()
         );
@@ -177,7 +177,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("StringManipulationCommandInjection").atLine(38)
+                        .inClass("StringManipulationCommandInjection").atLine(37)
                         .withPriority("Medium")
                         .build()
         );
@@ -186,7 +186,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("StringManipulationCommandInjection").atLine(44)
+                        .inClass("StringManipulationCommandInjection").atLine(43)
                         .withPriority("Medium")
                         .build()
         );
@@ -195,7 +195,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("StringManipulationCommandInjection").atLine(50)
+                        .inClass("StringManipulationCommandInjection").atLine(49)
                         .withPriority("Medium")
                         .build()
         );
@@ -204,7 +204,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("StringManipulationCommandInjection").atLine(56)
+                        .inClass("StringManipulationCommandInjection").atLine(55)
                         .withPriority("Medium")
                         .build()
         );
@@ -213,7 +213,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("StringManipulationCommandInjection").atLine(62)
+                        .inClass("StringManipulationCommandInjection").atLine(61)
                         .withPriority("Medium")
                         .build()
         );
@@ -222,7 +222,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("StringManipulationCommandInjection").atLine(68)
+                        .inClass("StringManipulationCommandInjection").atLine(67)
                         .withPriority("Medium")
                         .build()
         );
@@ -231,7 +231,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("StringManipulationCommandInjection").atLine(74)
+                        .inClass("StringManipulationCommandInjection").atLine(73)
                         .withPriority("Medium")
                         .build()
         );
@@ -240,7 +240,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("StringManipulationCommandInjection").atLine(80)
+                        .inClass("StringManipulationCommandInjection").atLine(79)
                         .withPriority("Medium")
                         .build()
         );
@@ -249,7 +249,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("StringManipulationCommandInjection").atLine(86)
+                        .inClass("StringManipulationCommandInjection").atLine(85)
                         .withPriority("Medium")
                         .build()
         );
@@ -258,7 +258,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("StringManipulationCommandInjection").atLine(92)
+                        .inClass("StringManipulationCommandInjection").atLine(91)
                         .withPriority("Medium")
                         .build()
         );
@@ -267,7 +267,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("StringManipulationCommandInjection").atLine(98)
+                        .inClass("StringManipulationCommandInjection").atLine(97)
                         .withPriority("Medium")
                         .build()
         );
@@ -276,7 +276,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("StringManipulationCommandInjection").atLine(104)
+                        .inClass("StringManipulationCommandInjection").atLine(103)
                         .withPriority("Medium")
                         .build()
         );
@@ -285,7 +285,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("StringManipulationCommandInjection").atLine(110)
+                        .inClass("StringManipulationCommandInjection").atLine(109)
                         .withPriority("Medium")
                         .build()
         );
@@ -294,7 +294,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("StringManipulationCommandInjection").atLine(116)
+                        .inClass("StringManipulationCommandInjection").atLine(115)
                         .withPriority("Medium")
                         .build()
         );
@@ -303,7 +303,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("StringManipulationCommandInjection").atLine(122)
+                        .inClass("StringManipulationCommandInjection").atLine(121)
                         .withPriority("Medium")
                         .build()
         );
@@ -312,7 +312,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("StringManipulationCommandInjection").atLine(128)
+                        .inClass("StringManipulationCommandInjection").atLine(127)
                         .withPriority("Medium")
                         .build()
         );
@@ -321,7 +321,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("StringManipulationCommandInjection").atLine(134)
+                        .inClass("StringManipulationCommandInjection").atLine(133)
                         .withPriority("Medium")
                         .build()
         );
@@ -330,7 +330,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("StringManipulationCommandInjection").atLine(140)
+                        .inClass("StringManipulationCommandInjection").atLine(139)
                         .withPriority("Medium")
                         .build()
         );
@@ -339,7 +339,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("StringManipulationCommandInjection").atLine(146)
+                        .inClass("StringManipulationCommandInjection").atLine(145)
                         .withPriority("Medium")
                         .build()
         );
@@ -348,7 +348,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("StringManipulationCommandInjection").atLine(152)
+                        .inClass("StringManipulationCommandInjection").atLine(151)
                         .withPriority("Medium")
                         .build()
         );
@@ -357,7 +357,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("StringManipulationCommandInjection").atLine(158)
+                        .inClass("StringManipulationCommandInjection").atLine(157)
                         .withPriority("Medium")
                         .build()
         );
@@ -366,7 +366,7 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("COMMAND_INJECTION")
-                        .inClass("StringManipulationCommandInjection").atLine(164)
+                        .inClass("StringManipulationCommandInjection").atLine(163)
                         .withPriority("Medium")
                         .build()
         );

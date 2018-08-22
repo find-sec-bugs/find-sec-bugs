@@ -1,14 +1,8 @@
-<!--
-Thank you for reporting an issue.
+---
+name: Bug report
+about: The scanner is not working as expected
 
-If you have a question regarding existing features or if you need support,
-please ask the question on StackOverflow :
-Create a issue using the tag "find-sec-bugs" :
-https://stackoverflow.com/questions/ask?tags=find-sec-bugs,spotbugs,java
-
-GitHub issues are mainly used for tracking enhancements and bugs.
-
---><!-- Enter your issue details below this comment. -->
+---
 
 ## Environment
 

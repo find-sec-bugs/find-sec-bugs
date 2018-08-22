@@ -250,3 +250,9 @@ java/lang/String.getBytes()[B:0#0
 java/util/ResourceBundle.getString(Ljava/lang/String;)Ljava/lang/String;:SAFE
 java/util/ResourceBundle.getStringArray(Ljava/lang/String;)[Ljava/lang/String;:SAFE
 java/util/ResourceBundle.getObject(Ljava/lang/String;)Ljava/lang/Object;:SAFE
+
+--Kotlin code that adds methods to String class in Java
+kotlin/text/StringsKt.replace$default(Ljava/lang/String;CCZILjava/lang/Object;)Ljava/lang/String;:5
+kotlin/text/StringsKt.replace$default(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Ljava/lang/String;:5
+kotlin/text/Regex.replace(Ljava/lang/CharSequence;Ljava/lang/String;)Ljava/lang/String;:1
+kotlin/text/Regex.<init>(Ljava/lang/String;)V:SAFE

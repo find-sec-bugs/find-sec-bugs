@@ -52,6 +52,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     private final List<TaintFrameAdditionalVisitor> visitors;
     private final MethodGen methodGen;
+    private String regexValue;
 
     static {
         REPLACE_TAGS = new HashMap<String, Taint.Tag>();
@@ -539,36 +540,67 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         return null;
     }
 
-    private TaintMethodConfig getConfigWithReplaceTags(
-            TaintMethodConfig config, String className, String methodName) {
-        if (!"java/lang/String".equals(className)) {
+    private TaintMethodConfig getConfigWithReplaceTags(TaintMethodConfig config, String className, String methodName) {
+
+        ObjectConfiguration objectConfiguration = new ObjectConfiguration(className, methodName);
+
+        if (!objectConfiguration.isAClassThatCanReplaceString()) {
             return config;
         }
-        boolean isRegex = "replaceAll".equals(methodName);
-        if (!isRegex && !"replace".equals(methodName)) {
-            // not a replace method
+
+        /*
+          When Kotlin compiles the String replace method (when using regex values) Kotlin creates several instructions in its place.
+
+          One of the instructions is to create an instance of the Regex class (using the regex String as a parameter). The Regex instance is then used as a parameter to the replace method.
+          In order to have access to the regex value when the String replace method is called,
+          we need to store the value at the first pass (when the Regex instance is created) and then use it when the replace method is called.
+
+          The below if code is to identify when a Regex instance is being created and store the value, to retrieve on the next pass.
+
+         */
+        if (objectConfiguration.isKotlinRegexMethodAndConstructorMethod()) {
+            saveRegexValueForNextInstruction();
             return config;
         }
+
+        if (!objectConfiguration.isAReplaceMethod()) {
+            return config;
+        }
+
         try {
-            String toReplace = getFrame().getStackValue(1).getConstantValue();
+            String toReplace = objectConfiguration.getStringParameterForReplaceMethod();
+
             if (toReplace == null) {
                 // we don't know the exact value
                 return config;
             }
+
             Taint taint = config.getOutputTaint();
+
             for (Map.Entry<String, Taint.Tag> replaceTag : REPLACE_TAGS.entrySet()) {
                 String tagString = replaceTag.getKey();
-                if ((isRegex && toReplace.contains(tagString))
+                if ((objectConfiguration.isAReplaceMethodWithRegexParameter() && toReplace.contains(tagString))
                         || toReplace.equals(tagString)) {
                     taint.addTag(replaceTag.getValue());
                 }
             }
+
             TaintMethodConfig configCopy = new TaintMethodConfig(config);
             configCopy.setOuputTaint(taint);
             return configCopy;
         } catch (DataflowAnalysisException ex) {
             throw new InvalidBytecodeException(ex.getMessage(), ex);
         }
+    }
+
+    private String getRegexValueFromAPreviousInstruction() {
+        String tmp = regexValue;
+        regexValue = null; // clean up regex value so other instructions after the current one can't use it.
+        return tmp;
+    }
+
+    private void saveRegexValueForNextInstruction() {
+        regexValue = getFrame().getValue(getFrame().getNumSlots() - 1).getConstantValue();
     }
 
     private String getInstanceClassName(InvokeInstruction invoke) {
@@ -756,6 +788,81 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                 // prefer configured summaries to derived
                 taintConfig.put(fullMethodName, analyzedMethodConfig);
             }
+        }
+    }
+
+    private class ObjectConfiguration {
+
+        private static final int JAVA_STRING_PARAMETER_INDEX = 1;
+        private static final int KOTLIN_STRING_PARAMETER_INDEX = 4;
+
+        private final String className;
+        private final String methodName;
+
+        private ObjectConfiguration(String className, String methodName) {
+            this.className = className;
+            this.methodName = methodName;
+        }
+
+        private boolean isJavaString() {
+            return "java/lang/String".equals(className);
+        }
+
+        private boolean isKotlinString() {
+            return "kotlin/text/StringsKt".equals(className);
+        }
+
+        private boolean isKotlinRegex() {
+            return "kotlin/text/Regex".equals(className);
+        }
+
+        private boolean isConstructor() {
+            return Const.CONSTRUCTOR_NAME.equals(methodName);
+        }
+
+        private boolean isKotlinRegexMethodAndConstructorMethod() {
+            return isKotlinRegex() && isConstructor();
+        }
+
+        private boolean isJavaStringWithSimpleReplace() {
+            return isJavaString() && "replace".equals(methodName);
+        }
+
+        private boolean isKotlinStringWithSimpleReplace() {
+            return isKotlinString() && "replace$default".equals(methodName);
+        }
+
+        private boolean isJavaStringWithRegexReplace() {
+            return isJavaString() && "replaceAll".equals(methodName);
+        }
+
+        private boolean isKotlinRegexWithReplace() {
+            return isKotlinRegex() && "replace".equals(methodName);
+        }
+
+        private boolean isAClassThatCanReplaceString() {
+            return isJavaString() || isKotlinString() || isKotlinRegex();
+        }
+
+        private boolean isAReplaceMethod() {
+            return isJavaStringWithRegexReplace() || isKotlinRegexWithReplace() || isJavaStringWithSimpleReplace() || isKotlinStringWithSimpleReplace();
+        }
+
+        private boolean isAReplaceMethodWithRegexParameter() {
+            return isJavaStringWithRegexReplace() || isKotlinRegexWithReplace();
+        }
+
+        private String getStringParameterForReplaceMethod() throws DataflowAnalysisException {
+
+            if (isJavaString()) {
+                return getFrame().getStackValue(JAVA_STRING_PARAMETER_INDEX).getConstantValue();
+            } else if (isKotlinString()) {
+                return getFrame().getStackValue(KOTLIN_STRING_PARAMETER_INDEX).getConstantValue();
+            } else if (isKotlinRegexWithReplace()) {
+                return getRegexValueFromAPreviousInstruction();
+            }
+
+            return null;
         }
     }
 

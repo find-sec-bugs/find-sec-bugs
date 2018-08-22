@@ -34,6 +34,7 @@ public class PathTraversalDetector extends BasicInjectionDetector {
         loadConfiguredSinks("path-traversal-in.txt", PATH_TRAVERSAL_IN_TYPE);
         loadConfiguredSinks("path-traversal-out.txt", PATH_TRAVERSAL_OUT_TYPE);
         loadConfiguredSinks("scala-path-traversal-in.txt", SCALA_PATH_TRAVERSAL_IN_TYPE);
+        loadConfiguredSinks("kotlin-path-traversal-in.txt", PATH_TRAVERSAL_IN_TYPE);
 
         // We are not using a Scala-specific message because it doesn't have an embed code example
         loadConfiguredSinks("scala-path-traversal-out.txt", PATH_TRAVERSAL_OUT_TYPE);

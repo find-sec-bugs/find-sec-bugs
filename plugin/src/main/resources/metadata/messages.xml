@@ -4520,6 +4520,25 @@ function updateDescription(newDescription) {
     </BugPattern>
     <BugCode abbrev="SECWVJ">WebView with JavaScript Enabled (Android)</BugCode>
 
+      <!-- Android: Case-insensitive Package Name Comparison -->
+    <Detector class="com.h3xstream.findsecbugs.android.CaseInsensitivePackageNameComparisonDetector">
+        <Details>Identify use of case insensitive package name comparison.</Details>
+    </Detector>
+    <BugPattern type="ANDROID_CASE_INSENSITIVE_PACKAGE_NAME_COMPARISON">
+        <ShortDescription>Case insensitive package name comparison usage in android</ShortDescription>
+        <LongDescription>On Android, package names are case sensitive and thus should be compared in a case-sensitive way.</LongDescription>
+        <Details>
+	<p>
+            On Android, package names are case sensitive and thus should be compared in a case-sensitive way. A malicious application may share a similar package with different case letters allowing him to bypass the access control.
+	</p>
+	<p>
+    <b>References</b><br/>
+	Standards Mapping - Common Weakness Enumeration CWE ID 285
+	</p>	
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECCIPNC">Android case-insensitive package name comparison usage</BugCode>
+
 
     <!-- Android:  -->
     <Detector class="com.h3xstream.findsecbugs.android.WebViewJavascriptInterfaceDetector">

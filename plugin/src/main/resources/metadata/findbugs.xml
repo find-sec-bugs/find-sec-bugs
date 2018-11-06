@@ -92,6 +92,7 @@
     <Detector class="com.h3xstream.findsecbugs.android.GeolocationDetector" reports="ANDROID_GEOLOCATION"/>
     <Detector class="com.h3xstream.findsecbugs.android.WebViewJavascriptEnabledDetector" reports="ANDROID_WEB_VIEW_JAVASCRIPT"/>
     <Detector class="com.h3xstream.findsecbugs.android.WebViewJavascriptInterfaceDetector" reports="ANDROID_WEB_VIEW_JAVASCRIPT_INTERFACE"/>
+    <Detector class="com.h3xstream.findsecbugs.android.CaseInsensitivePackageNameComparisonDetector" reports="ANDROID_CASE_INSENSITIVE_PACKAGE_NAME_COMPARISON"/>
     <Detector class="com.h3xstream.findsecbugs.serial.ObjectDeserializationDetector" reports="OBJECT_DESERIALIZATION"/>
     <Detector class="com.h3xstream.findsecbugs.serial.UnsafeJacksonDeserializationDetector" reports="JACKSON_UNSAFE_DESERIALIZATION"/>
     <Detector class="com.h3xstream.findsecbugs.serial.DeserializationGadgetDetector" reports="DESERIALIZATION_GADGET"/>
@@ -239,6 +240,7 @@
     <BugPattern type="ANDROID_GEOLOCATION" abbrev="SECGEO" category="SECURITY" CWE="359"/>
     <BugPattern type="ANDROID_WEB_VIEW_JAVASCRIPT" abbrev="SECWVJ" category="SECURITY" cweid="79"/>
     <BugPattern type="ANDROID_WEB_VIEW_JAVASCRIPT_INTERFACE" abbrev="SECWVJI" category="SECURITY" cweid="285"/>
+    <BugPattern type="ANDROID_CASE_INSENSITIVE_PACKAGE_NAME_COMPARISON" abbrev="SECCIPNC" category="SECURITY" cweid="285"/>
     <BugPattern type="OBJECT_DESERIALIZATION" abbrev="SECOBDES" category="SECURITY" cweid="502"/>
     <BugPattern type="JACKSON_UNSAFE_DESERIALIZATION" abbrev="SECUJDES" category="SECURITY" cweid="502"/>
     <BugPattern type="DESERIALIZATION_GADGET" abbrev="SECDESGAD" category="SECURITY" cweid="502" experimental="true"/>

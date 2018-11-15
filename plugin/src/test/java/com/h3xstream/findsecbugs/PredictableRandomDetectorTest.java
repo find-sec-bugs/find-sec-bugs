@@ -40,31 +40,56 @@ public class PredictableRandomDetectorTest extends BaseDetectorTest {
 
         //Assertions
 
-        //1rst variation new Random()
+        //1st variation new JVMRandom()
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("PREDICTABLE_RANDOM")
-                        .inClass("InsecureRandom").inMethod("newRandomObj").atLine(10)
-                        .build()
-        );
-        //2nd variation Math.random()
-        verify(reporter).doReportBug(
-                bugDefinition()
-                        .bugType("PREDICTABLE_RANDOM")
-                        .inClass("InsecureRandom").inMethod("mathRandom").atLine(17)
+                        .inClass("InsecureRandom").inMethod("newRandomJVMObj").atLine(14)
                         .build()
         );
 
-        //3nd variation ThreadLocalRandom.current()
+        //2nd variation new RandomUtils()
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("PREDICTABLE_RANDOM")
-                        .inClass("InsecureRandom").inMethod("threadLocalRandom").atLine(22)
+                        .inClass("InsecureRandom").inMethod("newRandomUtilsObj").atLine(21)
+                        .build()
+        );
+
+        //3rd variation new RandomStringUtils()
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("PREDICTABLE_RANDOM")
+                        .inClass("InsecureRandom").inMethod("newRandomStrObj").atLine(27)
+                        .build()
+        );
+
+        //4th variation new Random()
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("PREDICTABLE_RANDOM")
+                        .inClass("InsecureRandom").inMethod("newRandomObj").atLine(32)
+                        .build()
+        );
+
+        //5th variation Math.random()
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("PREDICTABLE_RANDOM")
+                        .inClass("InsecureRandom").inMethod("mathRandom").atLine(39)
+                        .build()
+        );
+
+        //6th variation ThreadLocalRandom.current()
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("PREDICTABLE_RANDOM")
+                        .inClass("InsecureRandom").inMethod("threadLocalRandom").atLine(45)
                         .build()
         );
 
         //Scala random number generator (mirror of java.util.Random)
-        for(Integer line : Arrays.asList(36,37)) {
+        for(Integer line : Arrays.asList(61,62)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("PREDICTABLE_RANDOM_SCALA")
@@ -74,7 +99,7 @@ public class PredictableRandomDetectorTest extends BaseDetectorTest {
         }
 
 
-        verify(reporter, times(3)).doReportBug( //3 java api
+        verify(reporter, times(6)).doReportBug( //6 java api
                 bugDefinition()
                         .bugType("PREDICTABLE_RANDOM")
                         .build()

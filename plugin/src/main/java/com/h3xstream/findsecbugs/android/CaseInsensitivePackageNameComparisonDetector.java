@@ -40,7 +40,8 @@ public class CaseInsensitivePackageNameComparisonDetector extends OpcodeStackDet
 
 		if(seen == Const.INVOKEVIRTUAL &&
 		       (
-			   getNameConstantOperand().equals("getPackageName().equalsIgnoreCase")
+			   getNameConstantOperand().equals("getPackageName") &&
+			   getNameConstantOperand().equals("equalsIgnoreCase")
 		       )) {
 		       bugReporter.reportBug(new BugInstance(this,ANDROID_CASE_INSENSITIVE_PACKAGE_NAME_COMPARISON_TYPE,Priorities.NORMAL_PRIORITY) //
 			.addClass(this).addMethod(this).addSourceLine(this));

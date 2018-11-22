@@ -38,7 +38,7 @@ public class EnabledExtensionsInApacheXmlRpcTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new EasyBugReporter());
         analyze(files, reporter);
 
-        for (Integer line : Arrays.asList(12, 13, 16, 17, 30)) {
+        for (Integer line : Arrays.asList(14, 15, 17, 18, 29, 31)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("RPC_ENABLED_EXTENSIONS")
@@ -49,7 +49,7 @@ public class EnabledExtensionsInApacheXmlRpcTest extends BaseDetectorTest {
             );
         };
 
-        verify(reporter, times(5)).doReportBug(
+        verify(reporter, times(6)).doReportBug(
                 bugDefinition()
                         .bugType("RPC_ENABLED_EXTENSIONS")
                         .build()

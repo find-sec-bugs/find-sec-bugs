@@ -6,27 +6,29 @@ import org.apache.xmlrpc.server.XmlRpcServerConfigImpl;
 public class ApacheXmlRpc {
     public static void createClientAndServerConfigs() {
 
+        XmlRpcServerConfigImpl serverConfig = new XmlRpcServerConfigImpl();
+        XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
+
         boolean trueValue = true;
 
-        XmlRpcClientConfigImpl goodClientConfig = new XmlRpcClientConfigImpl();
-        goodClientConfig.setEnabledForExtensions(true); // BAD
-        goodClientConfig.setEnabledForExtensions(trueValue); // BAD
+        clientConfig.setEnabledForExtensions(true); // BAD
+        clientConfig.setEnabledForExtensions(trueValue); // BAD
 
-        XmlRpcServerConfigImpl goodServerConfig = new XmlRpcServerConfigImpl();
-        goodServerConfig.setEnabledForExtensions(true); // BAD
-        goodServerConfig.setEnabledForExtensions(trueValue); // BAD
+        serverConfig.setEnabledForExtensions(true); // BAD
+        serverConfig.setEnabledForExtensions(trueValue); // BAD
 
         boolean falseValue = false;
 
-        XmlRpcClientConfigImpl badClientConfig = new XmlRpcClientConfigImpl();
-        badClientConfig.setEnabledForExtensions(false); // GOOD
-        badClientConfig.setEnabledForExtensions(falseValue); // GOOD
+        clientConfig.setEnabledForExtensions(false); // GOOD
+        clientConfig.setEnabledForExtensions(falseValue); // GOOD
 
-        XmlRpcServerConfigImpl badServerConfig = new XmlRpcServerConfigImpl();
-        badServerConfig.setEnabledForExtensions(false); // GOOD
-        badServerConfig.setEnabledForExtensions(falseValue); // GOOD
+        serverConfig.setEnabledForExtensions(false); // GOOD
+        serverConfig.setEnabledForExtensions(falseValue); // GOOD
 
-        boolean randomed = Math.random() < 0.5;
-        badServerConfig.setEnabledForExtensions(randomed); // BAD
+        boolean randomFlagForServer = Math.random() < 0.5;
+        serverConfig.setEnabledForExtensions(randomFlagForServer); // BAD
+        boolean randomFlagForClient = Math.random() < 0.5;
+        clientConfig.setEnabledForExtensions(randomFlagForClient); // BAD
+
     }
 }

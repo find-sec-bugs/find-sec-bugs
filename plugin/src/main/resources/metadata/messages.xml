@@ -5864,7 +5864,7 @@ Transport.send(message);
         <Details>Identify hardcoded credentials when variable named password supplied to a map</Details>
     </Detector>
 
-    <!-- enabling Apache XML RPC server or client for extensions -->
+    <!-- enabling extensions in Apache XML RPC server or client -->
     <Detector class="com.h3xstream.findsecbugs.xml.EnabledExtensionsInApacheXmlRpcDetector">
         <Details>Identify enabling extensions in Apache XML RPC server or client.</Details>
     </Detector>
@@ -5874,12 +5874,13 @@ Transport.send(message);
         <Details>
             <![CDATA[
 <p>
-    Enabling extensions in Apache XML RPC server or client may lead to vurnelability of server for remote code
-     execution or other types of exploits. It's recommended not to call setEnabledForExtensions method of
-     org.apache.xmlrpc.client.XmlRpcClientConfigImpl or org.apache.xmlrpc.server.XmlRpcServerConfigImpl,
-     because extensions are disabled by defalut.
+Enabling extensions in Apache XML RPC server or client may lead to vurnelability of server for remote code execution or other types of exploits:
+<ul>
+<li><a href="https://0ang3el.blogspot.com/2016/07/beware-of-ws-xmlrpc-library-in-your.html">https://0ang3el.blogspot.com/2016/07/beware-of-ws-xmlrpc-library-in-your.html</a></li>
+<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2016-5003">https://nvd.nist.gov/vuln/detail/CVE-2016-5003</a></li>
+</ul>
+<br/>It's recommended not to use <b>setEnabledForExtensions</b> method of <b>org.apache.xmlrpc.client.XmlRpcClientConfigImpl</b> or <b>org.apache.xmlrpc.server.XmlRpcServerConfigImpl</b> at all, because extensions are disabled by defalut.
 </p>
-
             ]]>
         </Details>
     </BugPattern>

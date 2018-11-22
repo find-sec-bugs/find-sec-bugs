@@ -8,12 +8,25 @@ public class ApacheXmlRpc {
 
         boolean trueValue = true;
 
-        XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
-        clientConfig.setEnabledForExtensions(true);
-        clientConfig.setEnabledForExtensions(trueValue);
+        XmlRpcClientConfigImpl goodClientConfig = new XmlRpcClientConfigImpl();
+        goodClientConfig.setEnabledForExtensions(true); // BAD
+        goodClientConfig.setEnabledForExtensions(trueValue); // BAD
 
-        XmlRpcServerConfigImpl serverConfig = new XmlRpcServerConfigImpl();
-        serverConfig.setEnabledForExtensions(true);
-        serverConfig.setEnabledForExtensions(trueValue);
+        XmlRpcServerConfigImpl goodServerConfig = new XmlRpcServerConfigImpl();
+        goodServerConfig.setEnabledForExtensions(true); // BAD
+        goodServerConfig.setEnabledForExtensions(trueValue); // BAD
+
+        boolean falseValue = false;
+
+        XmlRpcClientConfigImpl badClientConfig = new XmlRpcClientConfigImpl();
+        badClientConfig.setEnabledForExtensions(false); // GOOD
+        badClientConfig.setEnabledForExtensions(falseValue); // GOOD
+
+        XmlRpcServerConfigImpl badServerConfig = new XmlRpcServerConfigImpl();
+        badServerConfig.setEnabledForExtensions(false); // GOOD
+        badServerConfig.setEnabledForExtensions(falseValue); // GOOD
+
+        boolean randomed = Math.random() < 0.5;
+        badServerConfig.setEnabledForExtensions(randomed); // BAD
     }
 }

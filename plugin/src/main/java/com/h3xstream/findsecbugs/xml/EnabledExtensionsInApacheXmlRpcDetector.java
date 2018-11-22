@@ -19,6 +19,7 @@ package com.h3xstream.findsecbugs.xml;
 
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
+import edu.umd.cs.findbugs.OpcodeStack;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 import org.apache.bcel.Const;
@@ -48,8 +49,13 @@ public class EnabledExtensionsInApacheXmlRpcDetector extends OpcodeStackDetector
     public void sawOpcode(int seen) {
 
         if (seen == Const.INVOKEVIRTUAL && ENABLE_EXTENSIONS.matches(this)) {
-            bugReporter.reportBug(new BugInstance(this, RPC_ENABLED_EXTENSIONS, Priorities.HIGH_PRIORITY) //
-                    .addClass(this).addMethod(this).addSourceLine(this));
+            final OpcodeStack.Item item = stack.getStackItem(0);
+            /* item has signature of Integer, check "instanceof" added to prevent cast from throwing exceptions */
+            if ((item.getConstant() == null)
+                    || ((item.getConstant() instanceof Integer) && (((Integer) item.getConstant()).intValue()  == 1))) {
+                bugReporter.reportBug(new BugInstance(this, RPC_ENABLED_EXTENSIONS, Priorities.HIGH_PRIORITY) //
+                        .addClass(this).addMethod(this).addSourceLine(this));
+            }
         }
     }
 }

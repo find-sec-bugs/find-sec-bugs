@@ -19,7 +19,6 @@ package com.h3xstream.findsecbugs.xml;
 
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
-import edu.umd.cs.findbugs.OpcodeStack;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 import org.apache.bcel.Const;

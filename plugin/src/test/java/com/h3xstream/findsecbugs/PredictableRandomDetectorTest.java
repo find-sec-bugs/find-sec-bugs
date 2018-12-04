@@ -98,8 +98,13 @@ public class PredictableRandomDetectorTest extends BaseDetectorTest {
             );
         }
 
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("PREDICTABLE_RANDOM")
+                        .inClass("InsecureRandom").inMethod("staticNextLong").atLine(67)
+        );
 
-        verify(reporter, times(6)).doReportBug( //6 java api
+        verify(reporter, times(7)).doReportBug( //7 java api
                 bugDefinition()
                         .bugType("PREDICTABLE_RANDOM")
                         .build()

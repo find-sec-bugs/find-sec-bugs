@@ -62,6 +62,11 @@ public class InsecureRandom {
         new scala.util.Random(new scala.Long());
     }
 
+    //True positive special static nextLong
+    public static void staticNextLong() {
+        System.out.println(JVMRandom.nextLong());
+    }
+    
     public static void main(String[] args) {
         newRandomJVMObj();
         newRandomUtilsObj();
@@ -71,5 +76,6 @@ public class InsecureRandom {
         threadLocalRandom();
         mathOther();
         scalaRandom();
+        staticNextLong();
     }
 }

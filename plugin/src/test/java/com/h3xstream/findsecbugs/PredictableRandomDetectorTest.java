@@ -102,6 +102,7 @@ public class PredictableRandomDetectorTest extends BaseDetectorTest {
                 bugDefinition()
                         .bugType("PREDICTABLE_RANDOM")
                         .inClass("InsecureRandom").inMethod("staticNextLong").atLine(67)
+                        .build()
         );
 
         verify(reporter, times(7)).doReportBug( //7 java api

@@ -47,49 +47,77 @@ public class PredictableRandomDetector extends OpcodeStackDetector {
             .atMethod("nextBoolean", "nextBytes", "nextDouble", "nextFloat", "nextGaussian", "nextInt", "nextLong", //
                     "nextString","nextPrintableChar");
 
+    private static final InvokeMatcherBuilder RANDOM_STRING_UTILS_METHODS = invokeInstruction()
+              .atClass("org/apache/commons/lang/RandomStringUtils") //
+              .atMethod("random", "randomAscii", "randomAlphabetic", "randomAlphanumeric", //
+                      "randomGraph", "randomNumeric", "randomPrint");
+    
+    private static final InvokeMatcherBuilder RANDOM_UTILS_METHODS = invokeInstruction() //
+              .atClass("org/apache/commons/lang/math/RandomUtils") //
+              .atMethod("nextBoolean", "nextDouble", "nextFloat", "nextInt", "nextLong");
+
     private BugReporter bugReporter;
 
     public PredictableRandomDetector(BugReporter bugReporter) {
         this.bugReporter = bugReporter;
     }
 
+    public void reportBug(String module, String error) {
+
+        bugReporter.reportBug(new BugInstance(this, error, Priorities.NORMAL_PRIORITY) //
+                    .addClass(this).addMethod(this).addSourceLine(this) //
+                    .addString(module));
+    }
+
     @Override
     public void sawOpcode(int seen) {
-        //printOpCode(seen);
+        // printOpCode(seen);
 
         if (seen == Const.INVOKESPECIAL && getClassConstantOperand().equals("java/util/Random")
                 && getNameConstantOperand().equals("<init>")) {
 
-            bugReporter.reportBug(new BugInstance(this, PREDICTABLE_RANDOM_TYPE, Priorities.NORMAL_PRIORITY) //
-                    .addClass(this).addMethod(this).addSourceLine(this) //
-                    .addString("java.util.Random"));
+            reportBug("java.util.Random", PREDICTABLE_RANDOM_TYPE);
 
         } else if (seen == Const.INVOKESTATIC && getClassConstantOperand().equals("java/lang/Math")
                 && getNameConstantOperand().equals("random")) {
 
-            bugReporter.reportBug(new BugInstance(this, PREDICTABLE_RANDOM_TYPE, Priorities.NORMAL_PRIORITY) //
-                    .addClass(this).addMethod(this).addSourceLine(this) //
-                    .addString("java.lang.Math.random()"));
+            reportBug("java.lang.Math.random()", PREDICTABLE_RANDOM_TYPE);
 
         } else if (seen == Const.INVOKESTATIC && getClassConstantOperand().equals("java/util/concurrent/ThreadLocalRandom")
                 && getNameConstantOperand().equals("current")) {
-            
-            bugReporter.reportBug(new BugInstance(this, PREDICTABLE_RANDOM_TYPE, Priorities.NORMAL_PRIORITY) //
-                    .addClass(this).addMethod(this).addSourceLine(this) //
-                    .addString("java.util.concurrent.ThreadLocalRandom"));
+
+            reportBug("java.util.concurrent.ThreadLocalRandom", PREDICTABLE_RANDOM_TYPE);
 
         } else if (seen == Const.INVOKESPECIAL && getClassConstantOperand().equals("scala/util/Random")
                 && getNameConstantOperand().equals("<init>")) {
 
-            bugReporter.reportBug(new BugInstance(this, PREDICTABLE_RANDOM_SCALA_TYPE, Priorities.NORMAL_PRIORITY) //
-                    .addClass(this).addMethod(this).addSourceLine(this) //
-                    .addString("scala.util.Random"));
+            reportBug("scala.util.Random", PREDICTABLE_RANDOM_SCALA_TYPE);
 
         } else if (seen == Const.INVOKEVIRTUAL && RANDOM_NEXT_METHODS.matches(this)) {
 
-            bugReporter.reportBug(new BugInstance(this, PREDICTABLE_RANDOM_SCALA_TYPE, Priorities.NORMAL_PRIORITY) //
-                    .addClass(this).addMethod(this).addSourceLine(this) //
-                    .addString("scala.util.Random."+getNameConstantOperand()+"()"));
+            reportBug("scala.util.Random." + getNameConstantOperand() + "()", PREDICTABLE_RANDOM_SCALA_TYPE);
+
+        } else if (seen == Const.INVOKESPECIAL && getClassConstantOperand().equals("org/apache/commons/lang/math/JVMRandom")
+                && getNameConstantOperand().equals("<init>")) {
+             
+             reportBug("org.apache.commons.lang.math.JVMRandom", PREDICTABLE_RANDOM_TYPE);
+    
+        // JVMRandom has specific static version of nextLong()
+        } else if (seen == Const.INVOKESTATIC && getClassConstantOperand().equals("org/apache/commons/lang/math/JVMRandom")
+                && getNameConstantOperand().equals("nextLong")) {
+
+            reportBug("org.apache.commons.lang.math.JVMRandom.nextLong()", PREDICTABLE_RANDOM_TYPE);
+
+        // RandomUtils has only static methods
+        } else if (seen == Const.INVOKESTATIC && RANDOM_UTILS_METHODS.matches(this)) {
+            
+            reportBug("org.apache.commons.lang.math.RandomUtils" + getNameConstantOperand() + "()", PREDICTABLE_RANDOM_TYPE);
+
+        // RandomStringUtils has only static methods
+        } else if (seen == Const.INVOKESTATIC && RANDOM_STRING_UTILS_METHODS.matches(this)) {
+           
+            reportBug("org.apache.commons.lang.RandomStringUtils" + getNameConstantOperand() + "()", PREDICTABLE_RANDOM_TYPE);
+
         }
     }
 

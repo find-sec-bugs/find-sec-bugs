@@ -64,7 +64,7 @@ public class InsecureRandom {
 
     //True positive special static nextLong
     public static void staticNextLong() {
-        System.out.println(JVMRandom.nextLong());
+        System.out.println(JVMRandom.nextLong(42));
     }
     
     public static void main(String[] args) {

@@ -122,6 +122,7 @@
     <Detector class="com.h3xstream.findsecbugs.PotentialValueDetector" reports="HARD_CODE_PASSWORD,DES_USAGE,WEAK_MESSAGE_DIGEST_MD5,WEAK_MESSAGE_DIGEST_SHA1"/> <!-- This detector is not reporting any issue -->
     <Detector class="com.h3xstream.findsecbugs.crypto.ErrorMessageExposureDetector" reports="INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE"/>
     <Detector class="com.h3xstream.findsecbugs.kotlin.KotlinHardcodePasswordInMapDetector" reports="HARD_CODE_PASSWORD"/>
+    <Detector class="com.h3xstream.findsecbugs.xml.EnabledExtensionsInApacheXmlRpcDetector" reports="RPC_ENABLED_EXTENSIONS"/>
 
     <BugPattern type="HTTP_PARAMETER_POLLUTION" abbrev="SECHPP" category="SECURITY"/>
     <BugPattern type="SMTP_HEADER_INJECTION" abbrev="SECSMTP" category="SECURITY"/>
@@ -251,6 +252,8 @@
     <BugPattern type="TEMPLATE_INJECTION_FREEMARKER" abbrev="SECFREEM" category="SECURITY" cweid="94"/>
     <BugPattern type="URLCONNECTION_SSRF_FD" abbrev="SECSSSRFUC" category="SECURITY" cweid="918"/>
     <BugPattern type="INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE" abbrev="ERRMSG" category="SECURITY" cweid="209"/>
+    <BugPattern type="RPC_ENABLED_EXTENSIONS" abbrev="RPCEXT" category="SECURITY"/>
+
 
 
 </FindbugsPlugin>

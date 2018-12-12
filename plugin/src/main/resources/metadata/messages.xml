@@ -4953,7 +4953,7 @@ Path traversal <sup>[3][4]</sup> are not possible.
 <p>
 <b>Code at risk:</b><br/>
 <pre>
-Source xslt = new StreamSource(new FileInputStream(inputUserFile)); //Dangerous source to validate
+Source xslt = new StreamSource(new FileInputStream(inputUserFile)); //Dangerous source
 
 Transformer transformer = TransformerFactory.newInstance().newTransformer(xslt);
 
@@ -4963,8 +4963,19 @@ transformer.transform(text, new StreamResult(...));
 </p>
 <p>
 <b>Solution:</b><br/>
+
+<p>The solution is to enable the secure processing mode which will block potential reference to Java classes such as <code>java.lang.Runtime</code>.</p>
+
+<pre>
+TransformerFactory factory = TransformerFactory.newInstance();
+factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+Source xslt  = new StreamSource(new FileInputStream(inputUserFile));
+
+Transformer transformer = factory.newTransformer(xslt);
+</pre>
+
 <p>
-The solution would be to make sure the stylesheet is loaded from a safe sources and make sure that vulnerabilities such as
+Alternatively, make sure the stylesheet is loaded from a safe sources and make sure that vulnerabilities such as
 Path traversal <sup>[3][4]</sup> are not possible.
 </p>
 <p>

@@ -17,6 +17,10 @@ public class Slf4jSample {
         log.info(safe,tainted2);
         log.info(safe,new Object[] {tainted2});
         log.info(safe,safe,tainted2);
+
+        // safe
+
+        log.info(safe,new Object[] {""});
     }
 
     class DataClass {

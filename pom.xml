@@ -61,6 +61,7 @@
                         <exclude>**/org/bouncycastle/**/**.java</exclude>
                         <exclude>**/org/hibernate/**/**.java</exclude>
                         <exclude>**/org/eclipse/jetty/**/**.java</exclude>
+                        <exclude>**/org/slf4j/**/**.java</exclude>
                         <exclude>**/org/sonarqube/**/**.java</exclude>
                         <exclude>**/org/owasp/**/**.java</exclude>
                         <exclude>**/io/dropwizard/**/**.java</exclude>

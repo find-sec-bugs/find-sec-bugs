@@ -19,6 +19,7 @@ package com.h3xstream.findsecbugs.kotlin;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
+import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.spy;
@@ -28,6 +29,10 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
 
     @Test
     public void detectCommandInjection() throws Exception {
+
+        FindSecBugsGlobalConfig.getInstance().setDebugPrintInstructionVisited(true);
+        FindSecBugsGlobalConfig.getInstance().setDebugTaintState(true);
+
         //Locate test code
         String[] files = {
                 getClassFilePath("com/h3xstream/findsecbugs/command/IdentityFunctionCommandInjection"),
@@ -38,23 +43,23 @@ public class KotlinCommandInjectionDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-//        // tained input executed after always true filter
-//        verify(reporter).doReportBug(
-//                bugDefinition()
-//                        .bugType("COMMAND_INJECTION")
-//                        .inClass("IdentityFunctionCommandInjection").atLine(25)
-//                        .withPriority("Medium")
-//                        .build()
-//        );
+        // tained input executed after always true filter
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("COMMAND_INJECTION")
+                        .inClass("IdentityFunctionCommandInjection").atLine(25)
+                        .withPriority("Medium")
+                        .build()
+        );
 
-//        // tained input executed after always false not filter
-//        verify(reporter).doReportBug(
-//                bugDefinition()
-//                        .bugType("COMMAND_INJECTION")
-//                        .inClass("IdentityFunctionCommandInjection").atLine(31)
-//                        .withPriority("Medium")
-//                        .build()
-//        );
+        // tained input executed after always false not filter
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("COMMAND_INJECTION")
+                        .inClass("IdentityFunctionCommandInjection").atLine(31)
+                        .withPriority("Medium")
+                        .build()
+        );
 
         // tained input executed after identity function with run
         verify(reporter).doReportBug(

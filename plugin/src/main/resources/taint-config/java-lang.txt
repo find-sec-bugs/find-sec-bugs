@@ -148,6 +148,7 @@ java/lang/StringBuffer.substring(II)Ljava/lang/String;:2
 java/lang/StringBuffer.subSequence(II)Ljava/lang/CharSequence;:2
 java/lang/StringBuffer.trimToSize()V:0#0
 
+java/lang/Appendable.append(C)Ljava/lang/Appendable;:0,1#1
 
 java/lang/String.<init>()V:SAFE
 java/lang/String.<init>(Ljava/lang/String;)V:0#1,2

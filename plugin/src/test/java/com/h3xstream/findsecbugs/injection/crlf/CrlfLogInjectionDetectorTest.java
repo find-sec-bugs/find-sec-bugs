@@ -44,6 +44,49 @@ public class CrlfLogInjectionDetectorTest extends BaseDetectorTest {
         verify(reporter, times(49 - 20)).doReportBug(bugDefinition().bugType("CRLF_INJECTION_LOGS").build());
     }
 
+    @Test
+    public void detectResponseSplittingKotlin() throws Exception {
+        String[] files = {
+            getClassFilePath("com/h3xstream/findsecbugs/injection/Logging")
+        };
+        SecurityReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        for (int line = 20; line < 49; line++) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                    .bugType("CRLF_INJECTION_LOGS")
+                    .inClass("Logging").inMethod("javaUtilLogging").atLine(line)
+                    .build()
+            );
+        }
+        verify(reporter, times(49 - 20)).doReportBug(bugDefinition().bugType("CRLF_INJECTION_LOGS").build());
+    }
+
+    @Test
+    public void detectSlf4jResponseSplittingKotlin() throws Exception {
+        String[] files = {
+                getClassFilePath("com/h3xstream/findsecbugs/injection/Slf4jSample")
+        };
+        SecurityReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        for (int line = 10; line <= 19; line++) {
+
+            // detector cannot recognise this line in Kotlin
+            if (line == 13) {
+                continue;
+            }
+
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("CRLF_INJECTION_LOGS")
+                            .inClass("Slf4jSample").inMethod("slf4j").atLine(line)
+                            .build()
+            );
+        }
+        verify(reporter, times(9)).doReportBug(bugDefinition().bugType("CRLF_INJECTION_LOGS").build());
+    }
 
     @Test
     public void detectSlf4jResponseSplitting() throws Exception {

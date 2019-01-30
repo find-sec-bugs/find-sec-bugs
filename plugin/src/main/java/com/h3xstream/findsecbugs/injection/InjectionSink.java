@@ -60,7 +60,9 @@ public class InjectionSink {
             "java/util/LinkedList.",
             "java/util/ArrayList.",
             "java/util/Vector.",
-            "java/util/Set.");
+            "java/util/Set.",
+            "kotlin/text/StringsKt.",
+            "kotlin/text/Regex.");
 
     /**
      * Constructs the instance and stores immutable values for reporting

@@ -145,7 +145,6 @@
 
     <modules>
         <module>plugin</module>
-        <module>plugin-graph</module>
         <module>findbugs-test-util</module>
         <module>plugin-deps</module>
         <module>findsecbugs-test-kotlin</module>

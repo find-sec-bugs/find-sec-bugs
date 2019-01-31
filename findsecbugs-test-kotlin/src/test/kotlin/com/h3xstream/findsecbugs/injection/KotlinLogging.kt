@@ -5,13 +5,13 @@ import java.util.ResourceBundle
 import java.util.function.Supplier
 import java.util.logging.*
 
-class Logging {
+class KotlinLogging {
 
 
     fun javaUtilLogging() {
         val tainted = req!!.getParameter("test")
         val safe = "safe"
-        val logger = Logger.getLogger(Logging::class.java.name)
+        val logger = Logger.getLogger(KotlinLogging::class.java.name)
         logger.level = Level.ALL
         val handler = ConsoleHandler()
         handler.level = Level.ALL

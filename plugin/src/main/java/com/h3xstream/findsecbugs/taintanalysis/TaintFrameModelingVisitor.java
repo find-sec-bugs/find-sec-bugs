@@ -378,9 +378,10 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     @Override
     public void visitAASTORE(AASTORE obj) {
         try {
-            Taint valueTaint = getFrame().popValue();
-            getFrame().popValue(); // array index
-            Taint arrayTaint = getFrame().popValue();
+            Taint valueTaint = getFrame().popValue(); //Value
+            getFrame().popValue(); //Array index
+            Taint arrayTaint = getFrame().popValue(); //Array ref
+
             Taint merge = Taint.merge(valueTaint, arrayTaint);
             setLocalVariableTaint(merge, arrayTaint);
             Taint stackTop = null;
@@ -388,7 +389,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                 stackTop = getFrame().getTopValue();
             }
             // varargs use duplicated values
-            if (stackTop == arrayTaint) {
+            if (arrayTaint.equals(stackTop)) {
                 getFrame().popValue();
                 getFrame().pushValue(new Taint(merge));
             }

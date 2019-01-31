@@ -2,7 +2,7 @@ package com.h3xstream.findsecbugs.injection
 
 import org.slf4j.Logger
 
-class Slf4jSample {
+class KotlinSlf4jSample {
 
     fun slf4j(log: Logger, tainted: DataClass, tainted2: String) {
         val safe = ""

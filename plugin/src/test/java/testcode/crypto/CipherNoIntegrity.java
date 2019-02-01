@@ -13,10 +13,10 @@ public class CipherNoIntegrity {
         Cipher.getInstance("RSA"); // ok
         Cipher.getInstance("RSA/ECB/PKCS1Padding"); // ok
         Cipher.getInstance(args[0]); // ok
+        Cipher.getInstance("ECIES"); // ok this is elliptic curve
     }
     
     private Cipher cipher;
-    
     public void x() throws Exception {
         cipher = Cipher.getInstance("AES/CTR/NoPadding");
     }

@@ -94,7 +94,8 @@ public class CipherWithNoIntegrityDetector extends OpcodeStackDetector {
 
         //Some cipher will not have mode specified (ie: "RSA" .. issue GitHub #24)
         if (!AUTHENTICATED_CIPHER_MODES.matcher(cipherValue).matches()
-                && !cipherValue.startsWith("RSA")) {
+                && !cipherValue.startsWith("RSA") && !cipherValue.equals("ECIES")  //Avoid non-block-cipher algo
+                ) {
             reportBug(CIPHER_INTEGRITY_TYPE);
         }
     }

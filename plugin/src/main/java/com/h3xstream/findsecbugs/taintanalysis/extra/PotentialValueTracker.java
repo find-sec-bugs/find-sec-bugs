@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs;
+package com.h3xstream.findsecbugs.taintanalysis.extra;
 
 import com.h3xstream.findsecbugs.common.matcher.InvokeMatcherBuilder;
 import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
@@ -30,7 +30,16 @@ import java.util.List;
 
 import static com.h3xstream.findsecbugs.common.matcher.InstructionDSL.invokeInstruction;
 
-public class PotentialValueDetector extends BasicInjectionDetector implements TaintFrameAdditionalVisitor {
+/**
+ * This class detect potential default value and set it to the Taint instance.
+ *
+ * For example in <code>props.getProperties("password","admin1234")</code>, the second parameter (admin1234) is the default value if the property is not set.
+ *
+ * This detector doesn't report bugs like the other detector it only enhances the taint analysis.
+ * Being a detector, the behavior can be deactivated easily.
+ *
+ */
+public class PotentialValueTracker extends BasicInjectionDetector implements TaintFrameAdditionalVisitor {
 
     private static final InvokeMatcherBuilder PROPERTIES_GET_WITH_DEFAULT = invokeInstruction()
             .atClass("java/util/Properties")
@@ -47,7 +56,7 @@ public class PotentialValueDetector extends BasicInjectionDetector implements Ta
             .atMethod("getOrDefault")
             .withArgs("(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
 
-    public PotentialValueDetector(BugReporter bugReporter) {
+    public PotentialValueTracker(BugReporter bugReporter) {
         super(bugReporter);
         registerVisitor(this);
     }

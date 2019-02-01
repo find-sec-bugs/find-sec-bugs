@@ -5786,8 +5786,12 @@ Sanitize user input before using it in HTTP parameters.
     <BugCode abbrev="SECHPP">HTTP Parameter Pollution</BugCode>
 
 
-    <Detector class="com.h3xstream.findsecbugs.PotentialValueDetector">
+    <Detector class="com.h3xstream.findsecbugs.taintanalysis.extra.PotentialValueTracker">
         <Details>Help other detector at finding hardcoded value used if a dynamic parameter is null.</Details>
+    </Detector>
+
+    <Detector class="com.h3xstream.findsecbugs.taintanalysis.extra.JstlExpressionWhiteLister">
+        <Details>Mark as safe expression that are commonly used in JSTL expression (JSP).</Details>
     </Detector>
 
     <!-- ErrorMessageDetector -->

@@ -119,7 +119,8 @@
     <Detector class="com.h3xstream.findsecbugs.injection.http.HttpParameterPollutionDetector" reports="HTTP_PARAMETER_POLLUTION"/>
     <Detector class="com.h3xstream.findsecbugs.injection.smtp.SmtpHeaderInjectionDetector" reports="SMTP_HEADER_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.spring.SpringUnvalidatedRedirectDetector" reports="SPRING_UNVALIDATED_REDIRECT"/>
-    <Detector class="com.h3xstream.findsecbugs.PotentialValueDetector" reports="HARD_CODE_PASSWORD,DES_USAGE,WEAK_MESSAGE_DIGEST_MD5,WEAK_MESSAGE_DIGEST_SHA1"/> <!-- This detector is not reporting any issue -->
+    <Detector class="com.h3xstream.findsecbugs.taintanalysis.extra.PotentialValueTracker" reports="HARD_CODE_PASSWORD,DES_USAGE,WEAK_MESSAGE_DIGEST_MD5,WEAK_MESSAGE_DIGEST_SHA1"/> <!-- This detector is not reporting any issue -->
+    <Detector class="com.h3xstream.findsecbugs.taintanalysis.extra.JstlExpressionWhiteLister" reports="XSS_JSP_PRINT"/> <!-- This detector is not reporting any issue -->
     <Detector class="com.h3xstream.findsecbugs.crypto.ErrorMessageExposureDetector" reports="INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE"/>
     <Detector class="com.h3xstream.findsecbugs.kotlin.KotlinHardcodePasswordInMapDetector" reports="HARD_CODE_PASSWORD"/>
     <Detector class="com.h3xstream.findsecbugs.xml.EnabledExtensionsInApacheXmlRpcDetector" reports="RPC_ENABLED_EXTENSIONS"/>

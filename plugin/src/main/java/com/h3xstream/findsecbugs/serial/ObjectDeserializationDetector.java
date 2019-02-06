@@ -104,6 +104,10 @@ public class ObjectDeserializationDetector implements Detector {
                 String className = invoke.getClassName(cpg);
                 if ("java.io.ObjectInputStream".equals(className) || className.contains("InputStream") || InterfaceUtils.isSubtype(className, "java.io.ObjectInputStream")) {
 
+                    if(className.equals("org.bouncycastle.asn1.ASN1InputStream")) { //This class has a readObject method
+                        continue;
+                    }
+
                     String methodName = invoke.getMethodName(cpg);
                     if (OBJECT_INPUTSTREAM_READ_METHODS.contains(methodName)) {
 

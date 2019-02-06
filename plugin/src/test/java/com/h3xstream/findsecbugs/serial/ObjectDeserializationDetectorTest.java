@@ -144,7 +144,7 @@ public class ObjectDeserializationDetectorTest extends BaseDetectorTest {
     public void avoidReadObjectFalsePositive() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/serial/SerialisationFalsePositive")
+                getClassFilePath("testcode/serial/ObjectDeserializationFalsePositive1")
         };
 
         //Run the analysis
@@ -175,6 +175,24 @@ public class ObjectDeserializationDetectorTest extends BaseDetectorTest {
                 bugDefinition()
                         .bugType("OBJECT_DESERIALIZATION")
                         .inClass("SerialisationFalsePositive")
+                        .build()
+        );
+    }
+
+    @Test
+    public void avoidReadObjectFalsePositiveASN1() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/serial/ObjectDeserializationFalsePositive2")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter,never()).doReportBug(
+                bugDefinition()
+                        .bugType("OBJECT_DESERIALIZATION")
                         .build()
         );
     }

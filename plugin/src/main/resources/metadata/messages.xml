@@ -5815,7 +5815,7 @@ The sensitive information may be valuable information on its own (such as a pass
 } catch (Exception e) {
   e.printStackTrace(out);
 }</pre>
-
+</p>
 <p>
 <b>References</b><br/>
 <a href="https://cwe.mitre.org/data/definitions/209.html">CWE-209: Information Exposure Through an Error Message</a>
@@ -5901,6 +5901,29 @@ Enabling extensions in Apache XML RPC server or client may lead to vurnelability
     </BugPattern>
     <BugCode abbrev="RPCEXT">Enabling extensions in Apache RPC XML server or client usage</BugCode>
 
+
+    <!-- Wicket XSS -->
+    <Detector class="com.h3xstream.findsecbugs.wicket.WicketXssComponentDetector">
+        <Details>Identify code disabling the HTML escaping in Wicket Web page.</Details>
+    </Detector>
+    <BugPattern type="WICKET_XSS1">
+        <ShortDescription>Disabling HTML escaping put the application at risk for XSS</ShortDescription>
+        <LongDescription>Disabling HTML escaping put the application at risk for XSS</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Disabling HTML escaping put the application at risk for Cross-Site Scripting (XSS).
+</p>
+<p>
+    <b>Vulnerable Code:</b><br/>
+<pre>
+add(new Label("someLabel").setEscapeModelStrings(false));
+</pre>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="WICXSS1">Enabling extensions in Apache RPC XML server or client usage</BugCode>
 
 
 </MessageCollection>

@@ -1,4 +1,6 @@
 package org.apache.wicket.markup.html;
 
-public class WebPage {
+import org.apache.wicket.Page;
+
+public class WebPage extends Page {
 }

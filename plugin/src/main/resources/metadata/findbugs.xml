@@ -124,6 +124,7 @@
     <Detector class="com.h3xstream.findsecbugs.crypto.ErrorMessageExposureDetector" reports="INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE"/>
     <Detector class="com.h3xstream.findsecbugs.kotlin.KotlinHardcodePasswordInMapDetector" reports="HARD_CODE_PASSWORD"/>
     <Detector class="com.h3xstream.findsecbugs.xml.EnabledExtensionsInApacheXmlRpcDetector" reports="RPC_ENABLED_EXTENSIONS"/>
+    <Detector class="com.h3xstream.findsecbugs.wicket.WicketXssComponentDetector" reports="WICKET_XSS1"/>
 
     <BugPattern type="HTTP_PARAMETER_POLLUTION" abbrev="SECHPP" category="SECURITY"/>
     <BugPattern type="SMTP_HEADER_INJECTION" abbrev="SECSMTP" category="SECURITY"/>
@@ -254,7 +255,7 @@
     <BugPattern type="URLCONNECTION_SSRF_FD" abbrev="SECSSSRFUC" category="SECURITY" cweid="918"/>
     <BugPattern type="INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE" abbrev="ERRMSG" category="SECURITY" cweid="209"/>
     <BugPattern type="RPC_ENABLED_EXTENSIONS" abbrev="RPCEXT" category="SECURITY"/>
-
+    <BugPattern type="WICKET_XSS1" abbrev="WICXSS1" category="SECURITY"/>
 
 
 </FindbugsPlugin>

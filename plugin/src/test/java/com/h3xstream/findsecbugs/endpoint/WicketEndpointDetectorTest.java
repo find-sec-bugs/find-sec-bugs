@@ -30,7 +30,7 @@ public class WicketEndpointDetectorTest extends BaseDetectorTest {
     public void detectWicketEndpoint() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/WicketWebPage")
+                getClassFilePath("testcode/wicket/WicketWebPage")
         };
 
         //Run the analysis

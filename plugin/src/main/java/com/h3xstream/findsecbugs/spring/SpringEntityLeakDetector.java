@@ -1,3 +1,20 @@
+/**
+ * Find Security Bugs
+ * Copyright (c) Philippe Arteau, All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.
+ */
 package com.h3xstream.findsecbugs.spring;
 
 import edu.umd.cs.findbugs.BugInstance;
@@ -15,6 +32,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Detects Persistent Objects leak and mass updation
+ *
+ * @author Karan Bansal (Github:karanb192)
+ */
 public class SpringEntityLeakDetector implements Detector {
 	private static final String SPRING_ENTITY_LEAK_TYPE = "SPRING_ENTITY_LEAK";
 	private static final List<String> REQUEST_MAPPING_ANNOTATION_TYPES = Arrays.asList(

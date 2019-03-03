@@ -3706,7 +3706,7 @@ public String redirect(@RequestParam("url") String url) {
 
     <!--Spring entity leak detector and bug pattern-->
     <Detector class="com.h3xstream.findsecbugs.spring.SpringEntityLeakDetector">
-        <Details>Identify entity leaks with Spring Framework</Details>
+        <Details>Identify persistent Objects leakage and mass updation in Spring</Details>
     </Detector>
 
     <BugPattern type="SPRING_ENTITY_LEAK">

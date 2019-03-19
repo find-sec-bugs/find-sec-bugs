@@ -3704,6 +3704,55 @@ public String redirect(@RequestParam("url") String url) {
     </BugPattern>
     <BugCode abbrev="SECSUR">Spring Unvalidated Redirect</BugCode>
 
+    <!--Spring entity leak detector and bug pattern-->
+    <Detector class="com.h3xstream.findsecbugs.spring.SpringEntityLeakDetector">
+        <Details>Identify persistent Objects leakage and mass updation in Spring</Details>
+    </Detector>
+
+    <BugPattern type="SPRING_ENTITY_LEAK">
+        <ShortDescription>Spring Entity Leak</ShortDescription>
+        <LongDescription>The presistent objects could be exploited by attacker to read/tamper sensitive information.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    Persistent objects should never be returned/accepted by APIs. They might lead to leaking business logic over the UI, unauthorized tampering of
+    persistent objects in database.
+</p>
+<p>
+    <b>Persistence Annotations</b><br/>
+    1. javax.persistence.Entity (JPA)<br>
+    2. javax.jdo.spi.PersistenceCapable (JDO)<br>
+    3. org.springframework.data.mongodb.core.mapping.Document (Document database)<br>
+    <br/>
+</p>
+<p>
+    <b>Vulnerable Code:</b></br/>
+<pre>@GetMapping("/sample/api")
+    public SampleEntityClass sampleMethod(Principal principal) {
+        Query query = getEntityManager().createQuery("select c from SampleTable c");
+        SampleEntityClass entityObject = query.getResultList().get(0);
+        return entityObject;
+    }</pre>
+<br>
+<pre>@GetMapping("/sampletwo/api")
+public void update(SampleEntityClass updateEntity) {
+  ...
+}
+</pre>
+</p>
+<p>
+    <b>Solution/Countermeasures:</b><br/>
+    <ul>
+        <li>Data transfer objects should be used instead including only the parameters needed as input/response to/from the API.</li>
+        <li>Sensitive parameters should be removed properly before transferring to UI.</li>
+        <li>Data should be persisted in database only after proper sanitisation checks.</li>
+    </ul>
+</p>
+<br/>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSEL">Spring Entity Leak</BugCode>
 
     <!-- JSP Include -->
     <Detector class="com.h3xstream.findsecbugs.jsp.JspIncludeDetector">

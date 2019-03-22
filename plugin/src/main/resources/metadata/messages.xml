@@ -5818,6 +5818,7 @@ The sensitive information may be valuable information on its own (such as a pass
 </p>
 <p>
 <b>References</b><br/>
+
 <a href="https://cwe.mitre.org/data/definitions/209.html">CWE-209: Information Exposure Through an Error Message</a>
 </p>
             ]]>
@@ -5889,12 +5890,18 @@ Transport.send(message);
         <Details>
             <![CDATA[
 <p>
-Enabling extensions in Apache XML RPC server or client may lead to vurnelability of server for remote code execution or other types of exploits:
-<ul>
-<li><a href="https://0ang3el.blogspot.com/2016/07/beware-of-ws-xmlrpc-library-in-your.html">https://0ang3el.blogspot.com/2016/07/beware-of-ws-xmlrpc-library-in-your.html</a></li>
-<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2016-5003">https://nvd.nist.gov/vuln/detail/CVE-2016-5003</a></li>
-</ul>
-<br/>It's recommended not to use <b>setEnabledForExtensions</b> method of <b>org.apache.xmlrpc.client.XmlRpcClientConfigImpl</b> or <b>org.apache.xmlrpc.server.XmlRpcServerConfigImpl</b> at all, because extensions are disabled by defalut.
+Enabling extensions in Apache XML RPC server or client can lead to deserialization vulnerability which would allow an
+attacker to execute arbitrary code.
+<br/>
+It's recommended not to use <code>setEnabledForExtensions</code> method of <code>org.apache.xmlrpc.client.XmlRpcClientConfigImpl</code> or <code>org.apache.xmlrpc.XmlRpcConfigImpl</code>.
+By default, extensions are disabled both on the client and the server.
+</p>
+
+<p>
+<b>References</b><br/>
+
+<a href="https://0ang3el.blogspot.com/2016/07/beware-of-ws-xmlrpc-library-in-your.html">0ang3el's Blog: Beware of ws-xmlrpc library in your Java App</a><br/>
+<a href="https://nvd.nist.gov/vuln/detail/CVE-2016-5003">CVE-2016-5003 vulnerability reference</a><br/>
 </p>
             ]]>
         </Details>
@@ -5915,11 +5922,23 @@ Enabling extensions in Apache XML RPC server or client may lead to vurnelability
 Disabling HTML escaping put the application at risk for Cross-Site Scripting (XSS).
 </p>
 <p>
-    <b>Vulnerable Code:</b><br/>
+<b>Vulnerable Code:</b><br/>
 <pre>
 add(new Label("someLabel").setEscapeModelStrings(false));
 </pre>
 </p>
+
+<p>
+<b>References</b><br/>
+
+<a href="https://ci.apache.org/projects/wicket/guide/6.x/guide/modelsforms.html">Wicket models and forms - Reference Documentation</a><br/>
+<a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site Scripting</a><br/>
+<a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet">OWASP: XSS Prevention Cheat Sheet</a><br/>
+<a href="https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_%28XSS%29">OWASP: Top 10 2013-A3: Cross-Site Scripting (XSS)</a><br/>
+<a href="http://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a>
+</p>
+
+
             ]]>
         </Details>
     </BugPattern>

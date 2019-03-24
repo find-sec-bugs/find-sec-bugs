@@ -9,7 +9,9 @@ h1, .navbar-brand { /** navbar-brand is the follow next to the navbar **/
     font-family: "Squada One", "Courier New", Courier, monospace;
 }
 
-
+h2 {
+    font-weight: bold;
+}
 
 .jumbotron h1 {
     font-size: 4em;
@@ -64,4 +66,24 @@ pre {
 
 .btn {
 border-radius: 0.25rem !important;
+}
+
+
+blockquote {
+  position: relative;
+  padding:15px;
+  padding-left:20px;
+  background-color:#F8FADC;
+  box-shadow: 5px 5px #D2D3BC;
+  border-radius: 4px;
+}
+blockquote:before {
+  font-family: "Squada One", serif;
+  content: '\201C';
+  position: absolute;
+  top: 0em;
+  left: -0.2em;
+  color: #D2D3BC;
+  font-size: 5em;
+  z-index: 2;
 }

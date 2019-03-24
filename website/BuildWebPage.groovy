@@ -1,61 +1,17 @@
 import groovy.text.SimpleTemplateEngine
-import groovy.io.FileType
+
+import static MetadataFileUtil.*;
 
 System.setProperty("file.encoding", "UTF-8")
 
-String metaDataDir = "../plugin/src/main/resources/metadata"
-
-//Contains the bug descriptions
-InputStream messagesStreamEn = new FileInputStream(new File(metaDataDir,"messages.xml"))
-InputStream messagesStreamJa = new FileInputStream(new File(metaDataDir,"messages_ja.xml"))
-
 //Html Template of the documentation page
 def getTemplateReader(String path) {
-     return new InputStreamReader(
-            new FileInputStream(new File("templates",path)), "UTF-8");
+    return new InputStreamReader(
+            new FileInputStream(new File("templates", path)), "UTF-8");
 }
 
 //Generated page will be place there
 outDir = "out_web/"
-
-def buildMapping(InputStream xmlStream) {
-    rootXml = new XmlParser().parse(new InputStreamReader(xmlStream,"UTF-8"))
-    println "Mapping the descriptions to the templates"
-    def bugsBinding = [:]
-    bugsBinding['bugPatterns'] = []
-
-    bugsBinding['nbPatterns'] = 0
-    bugsBinding['nbDetectors'] = 0
-
-    rootXml.BugPattern.each { pattern ->
-        bugsBinding['bugPatterns'].add(
-                ['title': pattern.ShortDescription.text().replaceAll(" in \\{1\\}",""),
-                 'description': pattern.Details.text(),
-                 'type':pattern.attribute("type")])
-        //println pattern.ShortDescription.text()
-        bugsBinding['nbPatterns']++
-    }
-
-    rootXml.Detector.each { detector ->
-        bugsBinding['nbDetectors']++
-    }
-    return bugsBinding
-}
-
-int countSignature(String folder) {
-    def dir = new File(folder)
-
-    int count = 0
-    dir.eachFileRecurse (FileType.FILES) { file ->
-        //println file.getName()
-        file.eachLine { line ->
-            String lineTrim = line.trim()
-            if(lineTrim == "" || lineTrim.startsWith("-")) return
-            count++
-        }
-    }
-    return count
-}
 
 //Loading detectors
 println "Importing message from messages.xml"

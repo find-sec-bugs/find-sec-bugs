@@ -23,11 +23,11 @@
 <p>The use of a predictable random value can lead to vulnerabilities when used in certain security critical contexts. For example, when the value is used as:</p>
 <ul>
 <li>a CSRF token: a predictable token can lead to a CSRF attack as an attacker will know the value of the token</li>
-<li>a password reset token (sent by email): a predictable password token can lead to an account takeover, since an attacker will guess the URL of the change password form</li>
+<li>a password reset token (sent by email): a predictable password token can lead to an account takeover, since an attacker will guess the URL of the "change password" form</li>
 <li>any other secret value</li>
 </ul>
 <p>
-A quick fix could be to replace the use of <b>java.util.Random</b> with something stronger, such as <b>java.security.SecureRandom</b>.
+A quick fix could be to replace the use of <code>java.util.Random</code> with something stronger, such as <code>java.security.SecureRandom</code>.
 </p>
 <p>
 <b>Vulnerable Code:</b><br/>
@@ -51,7 +51,7 @@ String generateSecretToken() {
 <br/>
 <p>
 <b>References</b><br/>
-<a href="http://jazzy.id.au/default/2010/09/20/cracking_random_number_generators_part_1.html">Cracking Random Number Generators - Part 1 (http://jazzy.id.au)</a><br/>
+<a href="http://jazzy.id.au/default/2010/09/20/cracking_random_number_generators_part_1.html">Cracking Random Number Generators - Part 1 (jazzy.id.au)</a><br/>
 <a href="https://www.securecoding.cert.org/confluence/display/java/MSC02-J.+Generate+strong+random+numbers">CERT: MSC02-J. Generate strong random numbers</a><br/>
 <a href="http://cwe.mitre.org/data/definitions/330.html">CWE-330: Use of Insufficiently Random Values</a><br/>
 <a href="http://blog.h3xstream.com/2014/12/predicting-struts-csrf-token-cve-2014.html">Predicting Struts CSRF Token (Example of real-life vulnerability and exploitation)</a>
@@ -69,11 +69,11 @@ String generateSecretToken() {
 <p>The use of a predictable random value can lead to vulnerabilities when used in certain security critical contexts. For example, when the value is used as:</p>
 <ul>
 <li>a CSRF token: a predictable token can lead to a CSRF attack as an attacker will know the value of the token</li>
-<li>a password reset token (sent by email): a predictable password token can lead to an account takeover, since an attacker will guess the URL of the change password form</li>
+<li>a password reset token (sent by email): a predictable password token can lead to an account takeover, since an attacker will guess the URL of the "change password" form</li>
 <li>any other secret value</li>
 </ul>
 <p>
-A quick fix could be to replace the use of <b>java.util.Random</b> with something stronger, such as <b>java.security.SecureRandom</b>.
+A quick fix could be to replace the use of <code>java.util.Random</code> with something stronger, such as <b>java.security.SecureRandom</b>.
 </p>
 <p>
 <b>Vulnerable Code:</b><br/>
@@ -133,8 +133,8 @@ def generateSecretToken() {
 <p>The Servlet can read GET and POST parameters from various methods. The value obtained should be considered unsafe.
 You may need to validate or sanitize those values before passing them to sensitive APIs such as:</p>
 <ul>
-<li>SQL query (May lead to SQL injection)</li>
-<li>File opening (May lead to path traversal)</li>
+<li>SQL query (May leads to SQL injection)</li>
+<li>File opening (May leads to path traversal)</li>
 <li>Command execution (Potential Command injection)</li>
 <li>HTML construction (Potential XSS)</li>
 <li>etc...</li>
@@ -285,7 +285,7 @@ not trust this value in any security decisions you make with respect to a reques
 Behavior:
 <ul>
 <li>Any value can be assigned to this header if the request is coming from a malicious user.</li>
-<li>The "Referer" will not be present if the request was initiated from another origin that is secure (https).</li>
+<li>The "Referer" will not be present if the request was initiated from another origin that is secure (HTTPS).</li>
 </ul>
 </p>
 <p>
@@ -335,7 +335,7 @@ crawler UA) is not recommended.</p>
         <Details>
             <![CDATA[
 <p>The information stored in a custom cookie should not be sensitive or related to the session. In most cases, sensitive data should only be stored in session
-and referenced by the user's session cookie. See HttpSession (HttpServletRequest.getSession())</p>
+and referenced by the user's session cookie. See HttpSession (<code>HttpServletRequest.getSession()</code>)</p>
 <p>Custom cookies can be used for information that needs to live longer than and is independent of a specific session.</p>
 <br/>
 <p>
@@ -553,16 +553,16 @@ r.exec("/bin/sh -c some_tool" + input);</pre>
         <LongDescription>FilenameUtils.{3} doesn't filter null bytes</LongDescription>
         <Details>
             <![CDATA[
-<p>Some FilenameUtils' methods don't filter NULL bytes (<code>0x00</code>).</p>
+<p>Some <code>FilenameUtils'</code> methods don't filter NULL bytes (<code>0x00</code>).</p>
 <p>If a null byte is injected into a filename, if this filename is passed to the underlying OS, the file retrieved will be the
 name of the file that is specified prior to the NULL byte, since at the OS level, all strings are terminated by a null byte even
 though Java itself doesn't care about null bytes or treat them special. This OS behavior can be used to bypass filename validation 
-that looks at the end of the filename (e.g., endswith ".log") to make sure its a safe file to access.</p>
+that looks at the end of the filename (e.g., ends with <code>".log"</code>) to make sure it's a safe file to access.</p>
 <p>To fix this, two things are recommended:
 <ul>
 <li>Upgrade to Java 7 update 40 or later, or Java 8+ since  
 <a href="http://bugs.java.com/bugdatabase/view_bug.do?bug_id=8014846">NULL byte injection in filenames is fixed in those versions</a>.</li>
-<li>Strongly validate any filenames provided by untrusted users to make sure they are valid (i.e., don't contain null, don't include path characters, etc.)</li>
+<li>Strongly validate any filenames provided by untrusted users to make sure they are valid (i.e., don't contain null, don't include path characters, etc).</li>
 </ul>
 <p>If you know you are using a modern version of Java immune to NULL byte injection, you can probably disable this rule.
 </p>
@@ -599,7 +599,7 @@ that looks at the end of the filename (e.g., endswith ".log") to make sure its a
 since the client will trust any certificate.
 </p>
 <p>
-A TrustManager allowing specific certificates (based on a truststore for example) should be built.
+A TrustManager allowing specific certificates (based on a TrustStore for example) should be built.
 Detailed information for a proper implementation is available at:
 <a href="http://stackoverflow.com/a/6378872/89769">[1]</a>
 <a href="http://stackoverflow.com/a/5493452/89769">[2]</a>
@@ -781,8 +781,8 @@ sc.init(kmf.getKeyManagers(), tmf.getTrustManagers(),null);
         <Details>
             <![CDATA[
 <p>A Tapestry endpoint was discovered at application startup. Tapestry apps are structured with a backing Java class and a corresponding 
-Tapestry Markup Language page (a .tml file) for each page. When a request is received, the GET/POST parameters are mapped to specific 
-inputs in the backing Java class. The mapping is either done with fieldName:</p>
+Tapestry Markup Language page (a <code>.tml</code> file) for each page. When a request is received, the GET/POST parameters are mapped to specific
+inputs in the backing Java class. The mapping is either done with field name:</p>
 <pre><code>
     [...]
     protected String input;
@@ -799,7 +799,7 @@ inputs in the backing Java class. The mapping is either done with fieldName:</p>
     private PasswordField passwordField;
     [...]
 </code></pre>
-<p>The page is mapped to the view <code>[/resources/package/PageName].tml.</code></p>
+<p>The page is mapped to the view <code>/resources/package/PageName.tml</code>.</p>
 <p>Each Tapestry page in this application should be researched to make sure all inputs that are automatically 
 mapped in this way are properly validated before they are used.</p>
 <br/>
@@ -824,7 +824,7 @@ mapped in this way are properly validated before they are used.</p>
         <Details>
             <![CDATA[
 <p>This class represents a Wicket WebPage. Input is automatically read from a PageParameters instance passed to the constructor. 
-The current page is mapped to the view [/package/WebPageName].html.</p>
+The current page is mapped to the view <code>/package/WebPageName.html</code>.</p>
 <p>Each Wicket page in this application should be researched to make sure all inputs that are automatically 
 mapped in this way are properly validated before they are used.</p>
 <br/>
@@ -993,39 +993,31 @@ uses. <b>PBKDF2</b> should be used to hash password for example.</p>
             <![CDATA[
 <p>
     <b>Vulnerable Code:</b><br/>
-<pre>
-    HttpClient client = new DefaultHttpClient();
-</pre>
+<pre>HttpClient client = new DefaultHttpClient();</pre>
 </p>
 <p>
 <p><b>Solution:</b><br/>
 
-Upgrade your implementation to use one of the recommended constructs and configure https.protocols JVM option to include TLSv1.2:</p>
+Upgrade your implementation to use one of the recommended constructs and configure <code>https.protocols</code> JVM option to include TLSv1.2:</p>
 
 <p>
 <ul>
   <li>Use <a href="http://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/client/SystemDefaultHttpClient.html">SystemDefaultHttpClient</a> instead</li>
 <p>
     <b>Sample Code:</b><br/>
-<pre>
-    HttpClient client = new SystemDefaultHttpClient();
-</pre>
+<pre>HttpClient client = new SystemDefaultHttpClient();</pre>
 </p>
-  <li>Create an HttpClient based on SSLSocketFactory - get an SSLScoketFactory instance with <a href="https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/conn/ssl/SSLSocketFactory.html#getSystemSocketFactory()">getSystemSocketFactory()</a> and use this instance for HttpClient creation</li>
-  <li>Create an HttpClient based on SSLConnectionSocketFactory - get an instance with <a href="https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/conn/ssl/SSLConnectionSocketFactory.html#getSystemSocketFactory()">getSystemSocketFactory()</a> and use this instance for HttpClient creation</li>
-  <li>Use HttpClientBuilder - call <a href="http://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/client/HttpClientBuilder.html#useSystemProperties()">useSystemProperties()</a> before calling build()</li>
+  <li>Create an HttpClient based on SSLSocketFactory - get an SSLScoketFactory instance with <a href="https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/conn/ssl/SSLSocketFactory.html#getSystemSocketFactory()"><code>getSystemSocketFactory()</code></a> and use this instance for HttpClient creation</li>
+  <li>Create an HttpClient based on SSLConnectionSocketFactory - get an instance with <a href="https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/conn/ssl/SSLConnectionSocketFactory.html#getSystemSocketFactory()"><code>getSystemSocketFactory()</code></a> and use this instance for HttpClient creation</li>
+  <li>Use HttpClientBuilder - call <a href="http://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/client/HttpClientBuilder.html#useSystemProperties()"><code>useSystemProperties()</code></a> before calling <code>build()</code></li>
 <p>
     <b>Sample Code:</b><br/>
-<pre>
-    HttpClient client = HttpClientBuilder.create().useSystemProperties().build();
-</pre>
+<pre>HttpClient client = HttpClientBuilder.create().useSystemProperties().build();</pre>
 </p>
-  <li>HttpClients - call <a href="https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/client/HttpClients.html#createSystem()">createSystem()</a> to create an instance</li>
+  <li>HttpClients - call <a href="https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/client/HttpClients.html#createSystem()"><code>createSystem()</code></a> to create an instance</li>
 <p>
     <b>Sample Code:</b><br/>
-<pre>
-    HttpClient client = HttpClients.createSystem();
-</pre>
+<pre>HttpClient client = HttpClients.createSystem();</pre>
 </p>
 </ul>
 </p>
@@ -1047,17 +1039,14 @@ Upgrade your implementation to use one of the recommended constructs and configu
             <![CDATA[
 <p>
     <b>Vulnerable Code:</b><br/>
-<pre>
-    SSLContext.getInstance("SSL");
-</pre>
+
+    <pre>SSLContext.getInstance("SSL");</pre>
 </p>
 <p>
 <p><b>Solution:</b><br/>
 
-Upgrade your implementation to the following, and configure https.protocols JVM option to include TLSv1.2:</p>
-<pre>
-    SSLContext.getInstance("TLS");
-</pre>
+Upgrade your implementation to the following, and configure <code>https.protocols</code> JVM option to include TLSv1.2:</p>
+<pre>SSLContext.getInstance("TLS");</pre>
 <p>
 </p>
 <br/>
@@ -1169,17 +1158,17 @@ contains no unauthorized path characters (e.g., / \), and refers to an authorize
         <Details>
             <![CDATA[
 <p>
-    Regular expressions (regexs) are frequently subject to Denial of Service (DOS) attacks (called ReDOS). This is due to the fact that regex engines 
+    Regular expressions (Regex) are frequently subject to Denial of Service (DOS) attacks (called ReDOS). This is due to the fact that regex engines
     may take a large amount of time when analyzing certain strings, depending on how the regex is defined.
 <p>
-    For example, for the regex: <b>^(a+)+$</b>, the input "<code>aaaaaaaaaaaaaaaaX</code>" will cause the regex engine to analyze 65536 
+    For example, for the regex: <code>^(a+)+$</code>, the input "<code>aaaaaaaaaaaaaaaaX</code>" will cause the regex engine to analyze 65536
 different paths.<sup>[1] Example taken from OWASP references</sup></p>
 <p>
 Therefore, it is possible that a single request may cause a large amount of computation on the server side. 
 The problem with this regex, and others like it, is that there are two different ways the same input character can be accepted by the 
-Regex due to the + (or a *) inside the parenthesis, and the + (or a *) outside the parenthesis. The way this is written, either + could 
+Regex due to the <code>+</code> (or a <code>*</code>) inside the parenthesis, and the <code>+</code> (or a <code>*</code>) outside the parenthesis. The way this is written, either <code>+</code> could
 consume the character 'a'. To fix this, the regex should be rewritten to eliminate the ambiguity. For example, this could simply be 
-rewritten as: <b>^a+$</b>, which is presumably what the author meant anyway (any number of a's). Assuming that's what the original 
+rewritten as: <code>^a+$</code>, which is presumably what the author meant anyway (any number of a's). Assuming that's what the original
 regex meant, this new regex can be evaluated quickly, and is not subject to ReDOS.
 </p>
 <br/>
@@ -1208,7 +1197,7 @@ regex meant, this new regex can be evaluated quickly, and is not subject to ReDO
 <h3>Attack</h3>
 <p>XML External Entity (XXE) attacks can occur when an XML parser supports XML entities while processing XML received
 from an untrusted source.</p>
-<p><b>Risk 1: Expose local file content (XXE: <u>X</u>ML e<u>X</u>ternal <u>E</u>ntity)</b></p>
+<p><b>Risk 1: Expose local file content (XXE: <u>X</u>ML E<u>x</u>ternal <u>E</u>ntity)</b></p>
 <p>
 <pre>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
@@ -1216,7 +1205,7 @@ from an untrusted source.</p>
    &lt;!ENTITY xxe SYSTEM &quot;file:///etc/passwd&quot; &gt; ]&gt;
 &lt;foo&gt;&amp;xxe;&lt;/foo&gt;</pre>
 </p>
-<b>Risk 2: Denial of service (XEE: <u>X</u>ml <u>E</u>ntity <u>E</u>xpansion)</b>
+<b>Risk 2: Denial of service (XEE: <u>X</u>ML <u>E</u>ntity <u>E</u>xpansion)</b>
 <p>
 <pre>
 &lt;?xml version=&quot;1.0&quot;?&gt;
@@ -1283,7 +1272,7 @@ The following snippets show two available solutions. You can set one property or
 <a href="http://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a><br/>
 <a href="http://www.ws-attacks.org/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a><br/>
 <a href="http://www.ws-attacks.org/index.php/XML_Entity_Reference_Attack">WS-Attacks.org: XML Entity Reference Attack</a><br/>
-<a href="http://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying Xml eXternal Entity vulnerability (XXE)</a><br/>
+<a href="http://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying XML External Entity vulnerability (XXE)</a><br/>
 <!--XXE_GENERIC_END-->
 <a href="http://openjdk.java.net/jeps/185">JEP 185: Restrict Fetching of External XML Resources</a>
 </p>
@@ -1306,7 +1295,7 @@ The following snippets show two available solutions. You can set one property or
 <h3>Attack</h3>
 <p>XML External Entity (XXE) attacks can occur when an XML parser supports XML entities while processing XML received
 from an untrusted source.</p>
-<p><b>Risk 1: Expose local file content (XXE: <u>X</u>ML e<u>X</u>ternal <u>E</u>ntity)</b></p>
+<p><b>Risk 1: Expose local file content (XXE: <u>X</u>ML E<u>x</u>ternal <u>E</u>ntity)</b></p>
 <p>
 <pre>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
@@ -1314,7 +1303,7 @@ from an untrusted source.</p>
    &lt;!ENTITY xxe SYSTEM &quot;file:///etc/passwd&quot; &gt; ]&gt;
 &lt;foo&gt;&amp;xxe;&lt;/foo&gt;</pre>
 </p>
-<b>Risk 2: Denial of service (XEE: <u>X</u>ml <u>E</u>ntity <u>E</u>xpansion)</b>
+<b>Risk 2: Denial of service (XEE: <u>X</u>ML <u>E</u>ntity <u>E</u>xpansion)</b>
 <p>
 <pre>
 &lt;?xml version=&quot;1.0&quot;?&gt;
@@ -1386,7 +1375,7 @@ xPathExpr.evaluate( builder.parse(inputStream) );</pre>
 <a href="http://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a><br/>
 <a href="http://www.ws-attacks.org/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a><br/>
 <a href="http://www.ws-attacks.org/index.php/XML_Entity_Reference_Attack">WS-Attacks.org: XML Entity Reference Attack</a><br/>
-<a href="http://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying Xml eXternal Entity vulnerability (XXE)</a><br/>
+<a href="http://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying XML External Entity vulnerability (XXE)</a><br/>
 <!--XXE_GENERIC_END-->
 <a href="https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Prevention_Cheat_Sheet#XPathExpression">XML External Entity (XXE) Prevention Cheat Sheet</a>
 </p>
@@ -1404,7 +1393,7 @@ xPathExpr.evaluate( builder.parse(inputStream) );</pre>
 <h3>Attack</h3>
 <p>XML External Entity (XXE) attacks can occur when an XML parser supports XML entities while processing XML received
 from an untrusted source.</p>
-<p><b>Risk 1: Expose local file content (XXE: <u>X</u>ML e<u>X</u>ternal <u>E</u>ntity)</b></p>
+<p><b>Risk 1: Expose local file content (XXE: <u>X</u>ML E<u>x</u>ternal <u>E</u>ntity)</b></p>
 <p>
 <pre>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
@@ -1412,7 +1401,7 @@ from an untrusted source.</p>
    &lt;!ENTITY xxe SYSTEM &quot;file:///etc/passwd&quot; &gt; ]&gt;
 &lt;foo&gt;&amp;xxe;&lt;/foo&gt;</pre>
 </p>
-<b>Risk 2: Denial of service (XEE: <u>X</u>ml <u>E</u>ntity <u>E</u>xpansion)</b>
+<b>Risk 2: Denial of service (XEE: <u>X</u>ML <u>E</u>ntity <u>E</u>xpansion)</b>
 <p>
 <pre>
 &lt;?xml version=&quot;1.0&quot;?&gt;
@@ -1477,7 +1466,7 @@ parser.parse(inputStream, customHandler);</pre>
 <a href="http://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a><br/>
 <a href="http://www.ws-attacks.org/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a><br/>
 <a href="http://www.ws-attacks.org/index.php/XML_Entity_Reference_Attack">WS-Attacks.org: XML Entity Reference Attack</a><br/>
-<a href="http://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying Xml eXternal Entity vulnerability (XXE)</a><br/>
+<a href="http://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying XML External Entity vulnerability (XXE)</a><br/>
 <!--XXE_GENERIC_END-->
 <a href="http://xerces.apache.org/xerces-j/features.html">Xerces complete features list</a>
 </p>
@@ -1495,7 +1484,7 @@ parser.parse(inputStream, customHandler);</pre>
 <h3>Attack</h3>
 <p>XML External Entity (XXE) attacks can occur when an XML parser supports XML entities while processing XML received
 from an untrusted source.</p>
-<p><b>Risk 1: Expose local file content (XXE: <u>X</u>ML e<u>X</u>ternal <u>E</u>ntity)</b></p>
+<p><b>Risk 1: Expose local file content (XXE: <u>X</u>ML E<u>x</u>ternal <u>E</u>ntity)</b></p>
 <p>
 <pre>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
@@ -1503,7 +1492,7 @@ from an untrusted source.</p>
    &lt;!ENTITY xxe SYSTEM &quot;file:///etc/passwd&quot; &gt; ]&gt;
 &lt;foo&gt;&amp;xxe;&lt;/foo&gt;</pre>
 </p>
-<b>Risk 2: Denial of service (XEE: <u>X</u>ml <u>E</u>ntity <u>E</u>xpansion)</b>
+<b>Risk 2: Denial of service (XEE: <u>X</u>ML <u>E</u>ntity <u>E</u>xpansion)</b>
 <p>
 <pre>
 &lt;?xml version=&quot;1.0&quot;?&gt;
@@ -1568,7 +1557,7 @@ reader.parse(new InputSource(inputStream));</pre>
 <a href="http://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a><br/>
 <a href="http://www.ws-attacks.org/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a><br/>
 <a href="http://www.ws-attacks.org/index.php/XML_Entity_Reference_Attack">WS-Attacks.org: XML Entity Reference Attack</a><br/>
-<a href="http://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying Xml eXternal Entity vulnerability (XXE)</a><br/>
+<a href="http://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying XML External Entity vulnerability (XXE)</a><br/>
 <!--XXE_GENERIC_END-->
 <a href="http://xerces.apache.org/xerces-j/features.html">Xerces complete features list</a>
 </p>
@@ -1586,7 +1575,7 @@ reader.parse(new InputSource(inputStream));</pre>
 <h3>Attack</h3>
 <p>XML External Entity (XXE) attacks can occur when an XML parser supports XML entities while processing XML received
 from an untrusted source.</p>
-<p><b>Risk 1: Expose local file content (XXE: <u>X</u>ML e<u>X</u>ternal <u>E</u>ntity)</b></p>
+<p><b>Risk 1: Expose local file content (XXE: <u>X</u>ML E<u>x</u>ternal <u>E</u>ntity)</b></p>
 <p>
 <pre>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
@@ -1594,7 +1583,7 @@ from an untrusted source.</p>
    &lt;!ENTITY xxe SYSTEM &quot;file:///etc/passwd&quot; &gt; ]&gt;
 &lt;foo&gt;&amp;xxe;&lt;/foo&gt;</pre>
 </p>
-<b>Risk 2: Denial of service (XEE: <u>X</u>ml <u>E</u>ntity <u>E</u>xpansion)</b>
+<b>Risk 2: Denial of service (XEE: <u>X</u>ML <u>E</u>ntity <u>E</u>xpansion)</b>
 <p>
 <pre>
 &lt;?xml version=&quot;1.0&quot;?&gt;
@@ -1659,7 +1648,7 @@ Document doc = db.parse(input);</pre>
 <a href="http://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a><br/>
 <a href="http://www.ws-attacks.org/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a><br/>
 <a href="http://www.ws-attacks.org/index.php/XML_Entity_Reference_Attack">WS-Attacks.org: XML Entity Reference Attack</a><br/>
-<a href="http://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying Xml eXternal Entity vulnerability (XXE)</a><br/>
+<a href="http://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying XML External Entity vulnerability (XXE)</a><br/>
 <!--XXE_GENERIC_END-->
 <a href="http://xerces.apache.org/xerces2-j/features.html">Xerces2 complete features list</a>
 </p>
@@ -1682,7 +1671,7 @@ Document doc = db.parse(input);</pre>
 <h3>Attack</h3>
 <p>XML External Entity (XXE) attacks can occur when an XML parser supports XML entities while processing XML received
 from an untrusted source.</p>
-<p><b>Risk 1: Expose local file content (XXE: <u>X</u>ML e<u>X</u>ternal <u>E</u>ntity)</b></p>
+<p><b>Risk 1: Expose local file content (XXE: <u>X</u>ML E<u>x</u>ternal <u>E</u>ntity)</b></p>
 <p>
 <pre>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
@@ -1690,7 +1679,7 @@ from an untrusted source.</p>
    &lt;!ENTITY xxe SYSTEM &quot;file:///etc/passwd&quot; &gt; ]&gt;
 &lt;foo&gt;&amp;xxe;&lt;/foo&gt;</pre>
 </p>
-<b>Risk 2: Denial of service (XEE: <u>X</u>ml <u>E</u>ntity <u>E</u>xpansion)</b>
+<b>Risk 2: Denial of service (XEE: <u>X</u>ML <u>E</u>ntity <u>E</u>xpansion)</b>
 <p>
 <pre>
 &lt;?xml version=&quot;1.0&quot;?&gt;
@@ -1759,7 +1748,7 @@ transformer.transform(input, result);</pre>
 <a href="http://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a><br/>
 <a href="http://www.ws-attacks.org/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a><br/>
 <a href="http://www.ws-attacks.org/index.php/XML_Entity_Reference_Attack">WS-Attacks.org: XML Entity Reference Attack</a><br/>
-<a href="http://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying Xml eXternal Entity vulnerability (XXE)</a><br/>
+<a href="http://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying XML External Entity vulnerability (XXE)</a><br/>
 <!--XXE_GENERIC_END-->
 </p>
 ]]>
@@ -1776,7 +1765,7 @@ transformer.transform(input, result);</pre>
 <h3>Attack</h3>
 <p>XSLT External Entity (XXE) attacks can occur when an XSLT parser supports external entities while processing XSLT received
 from an untrusted source.</p>
-<p><b>Risk: Expose local file content (XXE: <u>X</u>ML e<u>X</u>ternal <u>E</u>ntity)</b></p>
+<p><b>Risk: Expose local file content (XXE: <u>X</u>ML E<u>x</u>ternal <u>E</u>ntity)</b></p>
 <p>
 <pre>
 &lt;xsl:stylesheet version=&quot;1.0&quot; xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot;&gt;
@@ -1838,7 +1827,7 @@ transformer.transform(input, result);</pre>
 <a href="http://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a><br/>
 <a href="http://www.ws-attacks.org/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a><br/>
 <a href="http://www.ws-attacks.org/index.php/XML_Entity_Reference_Attack">WS-Attacks.org: XML Entity Reference Attack</a><br/>
-<a href="http://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying Xml eXternal Entity vulnerability (XXE)</a><br/>
+<a href="http://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying XML External Entity vulnerability (XXE)</a><br/>
 <!--XXE_GENERIC_END-->
 </p>
 ]]>
@@ -1857,7 +1846,7 @@ transformer.transform(input, result);</pre>
         <Details>
             <![CDATA[
 <p>
-XPath injection risks are similar to SQL injection. If the XPath query contains untrusted user input, the complete datasource
+XPath injection risks are similar to SQL injection. If the XPath query contains untrusted user input, the complete data source
 could be exposed. This could allow an attacker to access unauthorized data or maliciously modify the target XML.
 </p>
 <br/>
@@ -1902,7 +1891,7 @@ The use of these parameters should be reviewed to make sure they are used safely
         <LongDescription>{0} is a Struts 2 endpoint</LongDescription>
         <Details>
             <![CDATA[
-<p>In Struts 2, the endpoints are Plain Old Java Objects (POJOs) which means no Interface/Class needs to be implemented/extended.</p>
+<p>In Struts 2, the endpoints are Plain Old Java Objects (POJO) which means no Interface/Class needs to be implemented/extended.</p>
 <p>When a request is routed to its controller (like the selected class), the supplied HTTP parameters are automatically mapped to setters for
 the class. Therefore, all setters of this class should be considered as untrusted input even if the form doesn't include those values. 
 An attacker can simply provide additional values in the request, and they will be set in the object anyway, as long as that object has
@@ -2536,7 +2525,7 @@ Cursor cursor = this.getReadableDatabase().rawQuery(query,new String[] {userInpu
 <a href="http://www.informit.com/articles/article.aspx?p=2268753&seqNum=5">InformIT.com: Practical Advice for Building Secure Android Databases in SQLite</a><br/>
 <a href="https://www.packtpub.com/books/content/knowing-sql-injection-attacks-and-securing-our-android-applications-them">Packtpub.com: Knowing the SQL-injection attacks and securing our Android applications from them</a><br/>
 <a href="https://books.google.ca/books?id=SXlMAQAAQBAJ&lpg=PR1&pg=PA64#v=onepage&q&f=false">Android Database Support (Enterprise Android: Programming Android Database Applications for the Enterprise)</a><br/>
-<a href="https://stackoverflow.com/a/29797229/89769">Safe example of Insert, Select, Update and Delete queryies provided by Suragch</a><br/>
+<a href="https://stackoverflow.com/a/29797229/89769">Safe example of Insert, Select, Update and Delete queries provided by Suragch</a><br/>
 
 <b>References (SQL injection)</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-19: SQL Injection</a><br/>
@@ -2596,7 +2585,7 @@ Therefore, the primary defense against LDAP injection is strong input validation
         <Details>
             <![CDATA[
 <p>
-    Dymanic code is being evaluate. A careful analysis of the code construction should be made. Malicious code execution
+    Dynamic code is being evaluate. A careful analysis of the code construction should be made. Malicious code execution
     could lead to data leakage or operating system compromised.
 </p>
 <p>
@@ -2616,7 +2605,7 @@ public void runCustomTrigger(String script) {
 
 <p><b>Solution:</b></p>
 <p>
-Safe evaluation of Javascript code using "Cloudbees Rhino Sandbox" library.<br/>
+Safe evaluation of JavaScript code using "Cloudbees Rhino Sandbox" library.<br/>
 <pre>
 public void runCustomTrigger(String script) {
     SandboxContextFactory contextFactory = new SandboxContextFactory();
@@ -2700,7 +2689,7 @@ public void parseExpressionInterface(Person personObj,String property) {
         <Details>
             <![CDATA[
 <p>
-    A expression is built with a dynamic value. The source of the value(s) should be verified to avoid
+    An expression is built with a dynamic value. The source of the value(s) should be verified to avoid
     that unfiltered values fall into this risky code evaluation.
 </p>
 <p><b>Code at risk:</b></p>
@@ -2798,7 +2787,7 @@ public void getUserProperty(String property) {
 </p>
 <p><b>Solution:</b></p>
 <p>
-In general, method evaluating OGNL expression should not received user input. It is intented to be used in static configurations and JSP.
+In general, method evaluating OGNL expression should not receive user input. It is intented to be used in static configurations and JSP.
 </p>
 <br/>
 <p>
@@ -2825,14 +2814,13 @@ In general, method evaluating OGNL expression should not received user input. It
         <Details>
             <![CDATA[
 <p>
-    When an HTTP request contains unexpected CR and LF characters, the server may respond with an output stream
+    When an HTTP request contains unexpected <code>CR</code> and <code>LF</code> characters, the server may respond with an output stream
     that is interpreted as two different HTTP responses (instead of one).
     An attacker can control the second response and mount attacks such as cross-site scripting and cache poisoning attacks.
     According to OWASP, the issue has been fixed in virtually all modern Java EE application servers, but it is still better to validate the input.
     If you are concerned about this risk, you should test on the platform of concern to see
-    if the underlying platform allows for CR or LF characters to be injected into headers.
-    This weakness is reported with lower priority than SQL injection etc.,
-    if you are using a vulnerable platform, please check low-priority warnings too.
+    if the underlying platform allows for <code>CR</code> or <code>LF</code> characters to be injected into headers.
+    This weakness is reported with low priority because it requires the web container to be vulnerable.
 </p>
 <br/>
 <p>
@@ -2902,7 +2890,7 @@ log.info("User " + val.replaceAll("[\r\n]","") + " (" + userAgent.replaceAll("[\
 </p>
 
 <p>
-You can also configure your logger service to replace new line for all message events. Here is sample configuration for LogBack <a href="https://logback.qos.ch/manual/layouts.html#replace">using the replace function</a>.
+You can also configure your logger service to replace new line for all message events. Here is sample configuration for LogBack <a href="https://logback.qos.ch/manual/layouts.html#replace">using the <code>replace</code> function</a>.
 <pre>
 &lt;pattern&gt;%-5level - %replace(%msg){'[\r\n]', ''}%n&lt;/pattern&gt;
 </pre>
@@ -2970,7 +2958,7 @@ The project <a href="https://github.com/javabeanz/owasp-security-logging">OWASP 
         <Details>
             <![CDATA[
 <p>When converting a byte array containing a hash signature to a human readable string, a conversion mistake can be made if 
-the array is read byte by byte. The following sample illustrates the use of Integer.toHexString() which will trim any leading zeroes
+the array is read byte by byte. The following sample illustrates the use of the method <code>Integer.toHexString()</code> which will trim any leading zeroes
 from each byte of the computed hash value.
 <pre>
 MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -2989,7 +2977,7 @@ For example, the hash values "0x0679" and "0x6709" would both output as "679" fo
 </p>
 
 <p>
-In this situation, the use of toHexString() should be replaced with String.format() as follows:
+In this situation, the method <code>Integer.toHexString()</code> should be replaced with <code>String.format()</code> as follows:
 <pre>stringBuilder.append( String.format( "%02X", b ) );</pre>
 </p>
 <br/>
@@ -3012,7 +3000,7 @@ In this situation, the use of toHexString() should be replaced with String.forma
         <LongDescription>The network communication for Hazelcast are configured to use a symmetric cipher</LongDescription>
         <Details>
             <![CDATA[
-<p>The network communications for Hazelcast is configured to use a symmetric cipher (probably DES or blowfish).</p>
+<p>The network communications for Hazelcast is configured to use a symmetric cipher (probably DES or Blowfish).</p>
 <p>Those ciphers alone do not provide integrity or secure authentication. The use of asymmetric encryption is preferred.</p>
 <br/>
 <p>
@@ -3337,7 +3325,7 @@ return aesCipher.doFinal(secretData);</pre>
             <![CDATA[
 <p>
 An attacker might be able to detect the value of the secret hash due to the exposure of comparison timing. When the
-functions <code>Arrays.equals()</code> or <code>String.equals()</code> are called, they will exited earlier if less
+functions <code>Arrays.equals()</code> or <code>String.equals()</code> are called, they will exit earlier if fewer
 bytes are matched.
 </p>
 <p>
@@ -3383,7 +3371,7 @@ if(MessageDigest.isEqual(userInput.getBytes(),actualHash.getBytes())) {
 Form inputs should have minimal input validation. Preventive validation helps provide defense in depth against a variety of risks.
 </p>
 <p>
-Validation can be introduce by implementing a <code>validate</code> method.
+Validation can be introduced by implementing a <code>validate</code> method.
 <pre>
 public class RegistrationForm extends ValidatorForm {
 
@@ -3428,7 +3416,7 @@ various blog sites. <sup><a href="http://java.dzone.com/articles/stronger-anti-c
 The filtering is weak for a few reasons:
 <ul>
 <li>It covers only parameters not headers and side-channel inputs</li>
-<li>The replace chain can be bypassed easily (see example below)</li>
+<li>The chain of replace functions can be bypassed easily (see example below)</li>
 <li>It's a black list of very specific bad patterns (rather than a white list of good/valid input)</li>
 </ul>
 </p>
@@ -3441,7 +3429,7 @@ The previous input will be transformed into <b><code>"&lt;script&gt;alert(1)&lt;
 The removal of <code>"vbscript:"</code> is after the replacement of <code>"&lt;script&gt;.*&lt;/script&gt;"</code>.
 </p>
 <p>
-For stronger protection, choose a solution that encodes characters automatically in the <b><u>view</u></b> (template, jsp, ...) following
+For stronger protection, choose a solution that encodes characters automatically in the <b><u>view</u></b> (template or JSP) following
 the XSS protection rules defined in the OWASP XSS Prevention Cheat Sheet.
 </p>
 <br/>
@@ -3468,7 +3456,7 @@ the XSS protection rules defined in the OWASP XSS Prevention Cheat Sheet.
         <Details>
             <![CDATA[
 <p>
-The Blowfish cipher supports keysizes from 32 bits to 448 bits. A small key size makes the ciphertext vulnerable to brute force attacks.
+The Blowfish cipher supports key sizes from 32 bits to 448 bits. A small key size makes the ciphertext vulnerable to brute force attacks.
 At least 128 bits of entropy should be used when generating the key if use of Blowfish is required.
 </p>
 <p>
@@ -3509,8 +3497,8 @@ keyGen.init(128);</pre>
     The NIST recommends the use of <u>2048 bits and higher</u> keys for the RSA algorithm.
 </p>
 <blockquote>
-    "Digital Signature Verification | RSA: 1024 &le; len(n) &lt; 2048 | Legacy-use"<br/>
-    "Digital Signature Verification | RSA: len(n) &ge; 2048 | Acceptable"<br/>
+    "Digital Signature Verification | RSA: <code>1024 &le; len(n) &lt; 2048</code> | Legacy-use"<br/>
+    "Digital Signature Verification | RSA: <code>len(n) &ge; 2048</code> | Acceptable"<br/>
     - <a href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar1.pdf">NIST: Recommendation for Transitioning the Use of Cryptographic Algorithms and Key Lengths p.7</a>
 </blockquote>
 
@@ -3896,7 +3884,7 @@ The best defense against XSS is context sensitive output encoding like the examp
 HTML, JavaScript, CSS (styles), and URLs. Please follow the XSS protection rules defined in the OWASP XSS Prevention Cheat Sheet,
 which explains these defenses in significant detail.
 </p>
-<p>Note that this XSS in Servlet rule looks for similar issues, but looks for them in a different way than the existing 
+<p>Note that this XSS in Servlet rule looks for similar issues, but looks for them in a different way than the existing
 'XSS: Servlet reflected cross site scripting vulnerability' and 'XSS: Servlet reflected cross site scripting vulnerability in error page' rules in FindBugs.
 </p>
 <br/>
@@ -4029,7 +4017,7 @@ public void encrypt(String message) throws Exception {
         <LongDescription>The cipher uses ECB mode, which provides poor confidentiality for encrypted data</LongDescription>
         <Details>
             <![CDATA[
-<p>An authentication cipher mode which provides better confidentiality of the encrypted data should be used instead of Electronic Codebook (ECB) mode, 
+<p>An authentication cipher mode which provides better confidentiality of the encrypted data should be used instead of Electronic Code Book (ECB) mode,
 which does not provide good confidentiality. Specifically, ECB mode produces the same output for the same input each time. So, 
 for example, if a user is sending a password, the encrypted value is the same each time. This allows an attacker to intercept 
 and replay the data.</p>
@@ -4111,7 +4099,7 @@ byte[] cipherText = c.doFinal(plainText);</pre>
     data has been tampered with. If the ciphertext can be controlled by an attacker, it could be altered without detection.
 </p>
 <p>
-    The solution is to used a cipher that includes a Hash based Message Authentication Code (HMAC) to sign the data. Combining a HMAC function to the 
+    The solution is to use a cipher that includes a Hash based Message Authentication Code (HMAC) to sign the data. Combining a HMAC function to the
     existing cipher is prone to error <sup><a href="http://www.thoughtcrime.org/blog/the-cryptographic-doom-principle/">[1]</a></sup>. Specifically,
     it is always recommended that you be able to verify the HMAC first, and only if the data is unmodified, do you then perform any cryptographic
     functions on the data.
@@ -4387,7 +4375,7 @@ sendBroadcast(v1);
             <![CDATA[
 <p>
     The file written in this context is using the creation mode <code>MODE_WORLD_READABLE</code>. It might not be the
-    expected behavior to exposed the content being written.
+    expected behavior to expose the content being written.
 </p>
 <p>
     <b>Code at risk:</b><br/>
@@ -4498,7 +4486,7 @@ webSettings.setJavaScriptEnabled(true);
 <p>
     <b>Code at risk:</b><br/>
 Enabling JavaScript is not a bad practice. It just means that the backend code need to be audited for potential XSS.
-The XSS can also be introduce client-side with DOM XSS.
+The XSS can also be introduced client-side with DOM XSS.
 <pre>
 function updateDescription(newDescription) {
     $("#userDescription").html("&lt;p&gt;"+newDescription+"&lt;/p&gt;");
@@ -4508,7 +4496,7 @@ function updateDescription(newDescription) {
 <br/>
 <p>
     <b>References</b><br/>
-    <a href="http://www.technotalkative.com/issue-using-setjavascriptenabled-can-introduce-xss-vulnerabilities-application-review-carefully/">Issue: Using setJavaScriptEnabled can introduce XSS vulnerabilities</a><br/>
+    <a href="http://www.technotalkative.com/issue-using-setjavascriptenabled-can-introduce-xss-vulnerabilities-application-review-carefully/">Issue: Using <code>setJavaScriptEnabled</code> can introduce XSS vulnerabilities</a><br/>
     <a href="http://developer.android.com/guide/webapps/webview.html#UsingJavaScript">Android Official Doc: WebView</a><br/>
     <a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site Scripting</a><br/>
     <a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet">OWASP: XSS Prevention Cheat Sheet</a><br/>
@@ -4562,7 +4550,7 @@ class FileWriteUtil {
 <br/>
 <p>
     <b>References</b><br/>
-    <a href="http://developer.android.com/reference/android/webkit/WebView.html#addJavascriptInterface%28java.lang.Object,%20java.lang.String%29">Android Official Doc: WebView.addJavascriptInterface()</a><br/>
+    <a href="http://developer.android.com/reference/android/webkit/WebView.html#addJavascriptInterface%28java.lang.Object,%20java.lang.String%29">Android Official Doc: <code>WebView.addJavascriptInterface()</code></a><br/>
     <a href="https://cwe.mitre.org/data/definitions/749.html">CWE-749: Exposed Dangerous Method or Function</a>
 </p>
 ]]>
@@ -4734,7 +4722,7 @@ Avoid deserializing object provided by remote users.
 <a href="https://www.owasp.org/index.php/Deserialization_of_untrusted_data">Deserialization of untrusted data</a><br/>
 <a href="http://www.oracle.com/technetwork/java/seccodeguide-139067.html#8">Serialization and Deserialization </a><br/>
 <a href="https://github.com/frohoff/ysoserial">A tool for generating payloads that exploit unsafe Java object deserialization</a><br/>
-[1] <a href="https://gist.github.com/coekie/a27cc406fc9f3dc7a70d">Example of Denial of Service using the class java.util.HashSet</a><br/>
+[1] <a href="https://gist.github.com/coekie/a27cc406fc9f3dc7a70d">Example of Denial of Service using the class <code>java.util.HashSet</code></a><br/>
 [2] <a href="https://bugzilla.redhat.com/show_bug.cgi?id=CVE-2015-2590">OpenJDK: Deserialization issue in ObjectInputStream.readSerialData() (CVE-2015-2590)</a><br/>
 [3] <a href="https://www.rapid7.com/db/modules/exploit/multi/browser/java_calendar_deserialize">Rapid7: Sun Java Calendar Deserialization Privilege Escalation (CVE-2008-5353)</a>
 </p>
@@ -4759,7 +4747,7 @@ Avoid deserializing object provided by remote users.
 <b>Solutions:</b><br/>
 <p>
 Explicitly define what types and subtypes you want to be available when using polymorphism through JsonTypeInfo.Id.NAME.
-Also, never call ObjectMapper.<strong>enableDefaultTyping</strong> (and then readValue a type that holds a Object or Serializable or Comparable or a known deserialization type).
+Also, never call <code>ObjectMapper.enableDefaultTyping</code> (and then <code>readValue</code> a type that holds a Object or Serializable or Comparable or a known deserialization type).
 </p>
 
 <p>
@@ -4813,12 +4801,12 @@ public class Example {
             <![CDATA[
 <p>
 Deserialization gadget are class that could be used by an attacker to take advantage of a remote API using Native Serialization.
-This class is either adding custom behavior to deserialization with the readObject method (Serializable) or can be called
+This class is either adding custom behavior to deserialization with the <code>readObject</code> method (Serializable) or can be called
  from a serialized object (InvocationHandler).
 </p>
 <p>
 This detector is intended to be used mostly by researcher. The real issue is using deserialization for remote operation.
-Removing gadget is an hardening practice to reduce the risk of being exploited.
+Removing gadget is a hardening practice to reduce the risk of being exploited.
 </p>
 <p>
 <b>References</b><br/>
@@ -4826,7 +4814,7 @@ Removing gadget is an hardening practice to reduce the risk of being exploited.
 <a href="https://www.owasp.org/index.php/Deserialization_of_untrusted_data">Deserialization of untrusted data</a><br/>
 <a href="http://www.oracle.com/technetwork/java/seccodeguide-139067.html#8">Serialization and Deserialization </a><br/>
 <a href="https://github.com/frohoff/ysoserial">A tool for generating payloads that exploit unsafe Java object deserialization</a><br/>
-[1] <a href="https://gist.github.com/coekie/a27cc406fc9f3dc7a70d">Example of Denial of Service using the class java.util.HashSet</a><br/>
+[1] <a href="https://gist.github.com/coekie/a27cc406fc9f3dc7a70d">Example of Denial of Service using the class <code>java.util.HashSet</code></a><br/>
 [2] <a href="https://bugzilla.redhat.com/show_bug.cgi?id=CVE-2015-2590">OpenJDK: Deserialization issue in ObjectInputStream.readSerialData() (CVE-2015-2590)</a><br/>
 [3] <a href="https://www.rapid7.com/db/modules/exploit/multi/browser/java_calendar_deserialize">Rapid7: Sun Java Calendar Deserialization Privilege Escalation (CVE-2008-5353)</a>
 </p>
@@ -4905,8 +4893,8 @@ safe location rather than using direct user input.
             <![CDATA[
 <p>
     "XSLT (Extensible Stylesheet Language Transformations) is a language for transforming XML documents into other XML documents".<sup>[1]</sup><br/>
-    It is possible to attach malicious behavior to those stylesheets. Therefore, if an attacker can control the content or the source of the
-    stylesheet, he might be able to trigger remote code execution.<sup>[2]</sup>
+    It is possible to attach malicious behavior to those style sheets. Therefore, if an attacker can control the content or the source of the
+    style sheet, he might be able to trigger remote code execution.<sup>[2]</sup>
 </p>
 <p>
 <b>Code at risk:</b><br/>
@@ -4917,15 +4905,15 @@ safe location rather than using direct user input.
 <p>
 <b>Solution:</b><br/>
 <p>
-The solution would be to make sure the stylesheet is loaded from a safe sources and make sure that vulnerabilities such as
+The solution would be to make sure the style sheet is loaded from a safe sources and make sure that vulnerabilities such as
 Path traversal <sup>[3][4]</sup> are not possible.
 </p>
 <p>
 <b>References</b><br/>
 [1] <a href="https://en.wikipedia.org/wiki/XSLT">Wikipedia: XSLT (Extensible Stylesheet Language Transformations)</a><br/>
-<a href="https://prezi.com/y_fuybfudgnd/offensive-xslt/">Offensive XSLT</a> by Nicolas Gregoire<br/>
-[2] <a href="http://www.agarri.fr/kom/archives/2012/07/02/from_xslt_code_execution_to_meterpreter_shells/index.html">From XSLT code execution to Meterpreter shells</a> by Nicolas Gregoire<br/>
-<a href="http://xhe.myxwiki.org/xwiki/bin/view/Main/">XSLT Hacking Encyclopedia</a> by Nicolas Gregoire<br/>
+<a href="https://prezi.com/y_fuybfudgnd/offensive-xslt/">Offensive XSLT</a> by Nicolas Grégoire<br/>
+[2] <a href="http://www.agarri.fr/kom/archives/2012/07/02/from_xslt_code_execution_to_meterpreter_shells/index.html">From XSLT code execution to Meterpreter shells</a> by Nicolas Grégoire<br/>
+<a href="http://xhe.myxwiki.org/xwiki/bin/view/Main/">XSLT Hacking Encyclopedia</a> by Nicolas Grégoire<br/>
 <a href="http://www.acunetix.com/blog/articles/the-hidden-dangers-of-xsltprocessor-remote-xsl-injection/">Acunetix.com : The hidden dangers of XSLTProcessor - Remote XSL injection</a><br/>
 <a href="https://www.w3.org/TR/xslt">w3.org XSL Transformations (XSLT) Version 1.0</a> : w3c specification<br/>
 [3] <a href="http://projects.webappsec.org/w/page/13246952/Path%20Traversal">WASC: Path Traversal</a><br/>
@@ -4947,8 +4935,8 @@ Path traversal <sup>[3][4]</sup> are not possible.
             <![CDATA[
 <p>
     "XSLT (Extensible Stylesheet Language Transformations) is a language for transforming XML documents into other XML documents".<sup>[1]</sup><br/>
-    It is possible to attach malicious behavior to those stylesheets. Therefore, if an attacker can control the content or the source of the
-    stylesheet, he might be able to trigger remote code execution.<sup>[2]</sup>
+    It is possible to attach malicious behavior to those style sheets. Therefore, if an attacker can control the content or the source of the
+    style sheet, he might be able to trigger remote code execution.<sup>[2]</sup>
 </p>
 <p>
 <b>Code at risk:</b><br/>
@@ -4975,15 +4963,15 @@ Transformer transformer = factory.newTransformer(xslt);
 </pre>
 
 <p>
-Alternatively, make sure the stylesheet is loaded from a safe sources and make sure that vulnerabilities such as
+Alternatively, make sure the style sheet is loaded from a safe sources and make sure that vulnerabilities such as
 Path traversal <sup>[3][4]</sup> are not possible.
 </p>
 <p>
 <b>References</b><br/>
 [1] <a href="https://en.wikipedia.org/wiki/XSLT">Wikipedia: XSLT (Extensible Stylesheet Language Transformations)</a><br/>
-<a href="https://prezi.com/y_fuybfudgnd/offensive-xslt/">Offensive XSLT</a> by Nicolas Gregoire<br/>
-[2] <a href="http://www.agarri.fr/kom/archives/2012/07/02/from_xslt_code_execution_to_meterpreter_shells/index.html">From XSLT code execution to Meterpreter shells</a> by Nicolas Gregoire<br/>
-<a href="http://xhe.myxwiki.org/xwiki/bin/view/Main/">XSLT Hacking Encyclopedia</a> by Nicolas Gregoire<br/>
+<a href="https://prezi.com/y_fuybfudgnd/offensive-xslt/">Offensive XSLT</a> by Nicolas Grégoire<br/>
+[2] <a href="http://www.agarri.fr/kom/archives/2012/07/02/from_xslt_code_execution_to_meterpreter_shells/index.html">From XSLT code execution to Meterpreter shells</a> by Nicolas Grégoire<br/>
+<a href="http://xhe.myxwiki.org/xwiki/bin/view/Main/">XSLT Hacking Encyclopedia</a> by Nicolas Grégoire<br/>
 <a href="http://www.acunetix.com/blog/articles/the-hidden-dangers-of-xsltprocessor-remote-xsl-injection/">Acunetix.com : The hidden dangers of XSLTProcessor - Remote XSL injection</a><br/>
 <a href="https://www.w3.org/TR/xslt">w3.org XSL Transformations (XSLT) Version 1.0</a> : w3c specification<br/>
 [3] <a href="http://projects.webappsec.org/w/page/13246952/Path%20Traversal">WASC: Path Traversal</a><br/>
@@ -5497,7 +5485,9 @@ Avoid using those methods. If you are looking to encode a URL String or form par
         <Details>
             <![CDATA[
 <p>
-Server identity verification is disabled when making SSL connections. Some email libraries that enable SSL connections do not verify the server certificate by default. This is equivalent to trusting all certificates. When trying to connect to the server, this application would readily accept a certificate issued to "hackedserver.com". The application would now potentially leak sensitive user information on a broken SSL connection to the hacked server.
+Server identity verification is disabled when making SSL connections. Some email libraries that enable SSL connections do not verify the server certificate by default. This is equivalent to trusting all certificates.
+When trying to connect to the server, this application would readily accept a certificate issued to "victim.com".
+The application would now potentially leak sensitive user information on a broken SSL connection to the victim server.
 </p>
 <p>
     <b>Vulnerable Code:</b><br/>
@@ -5516,7 +5506,7 @@ email.send();
 </p>
 <p>
     <b>Solution:</b><br/>
-Please add the following check to verify the server cerfiticate:
+Please add the following check to verify the server certificate:
 <pre>email.setSSLCheckServerIdentity(true);</pre>
 </p>
 <br/>
@@ -5628,7 +5618,7 @@ Avoid using user controlled values to populate Bean property names.
             <![CDATA[
 <p>
 Constructing a server-side redirect path with user input could allow an attacker to download application binaries (including application classes or jar files) or view arbitrary files within protected directories.<br/>
-An attacker may be able to forge a request parameter to match sensitive file locations. For example, requesting "http://example.com/?returnURL=WEB-INF/applicationContext.xml" would display the application's applicationContext.xml file. The attacker would be able to locate and download the applicationContext.xml referenced in the other configuration files, and even class files or jar files, obtaining sensitive information and launching other types of attacks.
+An attacker may be able to forge a request parameter to match sensitive file locations. For example, requesting <code>"http://example.com/?returnURL=WEB-INF/applicationContext.xml"</code> would display the application's <code>applicationContext.xml</code> file. The attacker would be able to locate and download the <code>applicationContext.xml</code> referenced in the other configuration files, and even class files or jar files, obtaining sensitive information and launching other types of attacks.
 </p>
 <p>
     <b>Vulnerable Code:</b><br/>
@@ -5652,6 +5642,7 @@ Avoid constructing server-side redirects using user controlled input.
     <BugCode abbrev="SECSFD">Struts File Disclosure</BugCode>
 
     <!-- Spring File Disclosure -->
+    <!-- This is description should be kept mostly in sink with STRUTS_FILE_DISCLOSURE -->
     <BugPattern type="SPRING_FILE_DISCLOSURE">
         <ShortDescription>Spring File Disclosure</ShortDescription>
         <LongDescription>ModelAndView populated with user controlled parameters</LongDescription>
@@ -5659,7 +5650,7 @@ Avoid constructing server-side redirects using user controlled input.
             <![CDATA[
 <p>
 Constructing a server-side redirect path with user input could allow an attacker to download application binaries (including application classes or jar files) or view arbitrary files within protected directories.<br/>
-An attacker may be able to forge a request parameter to match sensitive file locations. For example, requesting "http://example.com/?returnURL=WEB-INF/applicationContext.xml" would display the application's applicationContext.xml file. The attacker would be able to locate and download the applicationContext.xml referenced in the other configuration files, and even class files or jar files, obtaining sensitive information and launching other types of attacks.
+An attacker may be able to forge a request parameter to match sensitive file locations. For example, requesting <code>"http://example.com/?returnURL=WEB-INF/applicationContext.xml"</code> would display the application's <code>applicationContext.xml</code> file. The attacker would be able to locate and download the <code>applicationContext.xml</code> referenced in the other configuration files, and even class files or jar files, obtaining sensitive information and launching other types of attacks.
 </p>
 <p>
     <b>Vulnerable Code:</b><br/>
@@ -5690,7 +5681,7 @@ Avoid constructing server-side redirects using user controlled input.
             <![CDATA[
 <p>
 Constructing a server-side redirect path with user input could allow an attacker to download application binaries (including application classes or jar files) or view arbitrary files within protected directories.<br/>
-An attacker may be able to forge a request parameter to match sensitive file locations. For example, requesting "http://example.com/?jspFile=../applicationContext.xml%3F" would display the application's applicationContext.xml file. The attacker would be able to locate and download the applicationContext.xml referenced in the other configuration files, and even class files or jar files, obtaining sensitive information and launching other types of attacks.
+An attacker may be able to forge a request parameter to match sensitive file locations. For example, requesting <code>"http://example.com/?jspFile=../applicationContext.xml%3F"</code> would display the application's <code>applicationContext.xml</code> file. The attacker would be able to locate and download the <code>applicationContext.xml</code> referenced in the other configuration files, and even class files or jar files, obtaining sensitive information and launching other types of attacks.
 </p>
 <p>
     <b>Vulnerable Code:</b><br/>
@@ -5727,7 +5718,7 @@ Avoid constructing server-side redirects using user controlled input.
 <p>
 Allowing user input to control format parameters could enable an attacker to cause exceptions to be thrown or leak information.<br/>
 Attackers may be able to modify the format string argument, such that an exception is thrown. If this exception is left uncaught, it may crash the application. Alternatively, if sensitive information is used within the unused arguments, attackers may change the format string to reveal this information.<br/>
-The example code below lets the user specify the decimal points to which it shows the balance. The user can in fact specify anything causing an exception to be thrown which could lead to application failure. Even more critical within this example, if an attacker can specify the user input "2f %3$s %4$.2", the format string would be "The customer: %s %s has the balance %4$.2f %3$s %4$.2". This would then lead to the sensitive accountNo to be included within the resulting string.
+The example code below lets the user specify the decimal points to which it shows the balance. The user can in fact specify anything causing an exception to be thrown which could lead to application failure. Even more critical within this example, if an attacker can specify the user input <code>"2f %3$s %4$.2"</code>, the format string would be <code>"The customer: %s %s has the balance %4$.2f %3$s %4$.2"</code>. This would then lead to the sensitive <code>accountNo</code> to be included within the resulting string.
 </p>
 <p>
     <b>Vulnerable Code:</b><br/>
@@ -5763,7 +5754,7 @@ Avoid using user controlled values in the format string argument.
             <![CDATA[
 <p>
 Concatenating unvalidated user input into a URL can allow an attacker to override the value of a request parameter. Attacker may be able to override existing parameter values, inject a new parameter or exploit variables out of a direct reach. HTTP Parameter Pollution (HPP) attacks consist of injecting encoded query string delimiters into other existing parameters. If a web application does not properly sanitize the user input, a malicious user may compromise the logic of the application to perform either client-side or server-side attacks.<br/>
-In the following example the programmer has not considered the possibility that an attacker could provide a lang such as en&user_id=1, which would enable him to change the user_id at will.
+In the following example the programmer has not considered the possibility that an attacker could provide a parameter <code>lang</code> such as <code>en&user_id=1</code>, which would enable him to change the <code>user_id</code> at will.
 </p>
 <p>
     <b>Vulnerable Code:</b><br/>
@@ -5840,7 +5831,7 @@ The sensitive information may be valuable information on its own (such as a pass
 Simple Mail Transfer Protocol (SMTP) is a the text based protocol used for email delivery.
 Like with HTTP, headers are separate by new line separator.
 If user input is place in a header line, the application should remove
-or replace new line characters (CR / LF).
+or replace new line characters (<code>CR</code> / <code>LF</code>).
 You should use a safe wrapper such as <a href="https://commons.apache.org/proper/commons-email/userguide.html">Apache Common Email</a>
 and <a href="http://www.simplejavamail.org">Simple Java Mail</a> which filter special characters that can lead to header injection.
 
@@ -5900,7 +5891,7 @@ By default, extensions are disabled both on the client and the server.
 <p>
 <b>References</b><br/>
 
-<a href="https://0ang3el.blogspot.com/2016/07/beware-of-ws-xmlrpc-library-in-your.html">0ang3el's Blog: Beware of ws-xmlrpc library in your Java App</a><br/>
+<a href="https://0ang3el.blogspot.com/2016/07/beware-of-ws-xmlrpc-library-in-your.html">0ang3el's Blog: Beware of WS-XMLRPC library in your Java App</a><br/>
 <a href="https://nvd.nist.gov/vuln/detail/CVE-2016-5003">CVE-2016-5003 vulnerability reference</a><br/>
 </p>
             ]]>

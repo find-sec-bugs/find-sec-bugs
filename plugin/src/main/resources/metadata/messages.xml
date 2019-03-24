@@ -51,7 +51,7 @@ String generateSecretToken() {
 <br/>
 <p>
 <b>References</b><br/>
-<a href="http://jazzy.id.au/default/2010/09/20/cracking_random_number_generators_part_1.html">Cracking Random Number Generators - Part 1 (jazzy.id.au)</a><br/>
+<a href="http://jazzy.id.au/default/2010/09/20/cracking_random_number_generators_part_1.html">Cracking Random Number Generators - Part 1 (http://jazzy.id.au)</a><br/>
 <a href="https://www.securecoding.cert.org/confluence/display/java/MSC02-J.+Generate+strong+random+numbers">CERT: MSC02-J. Generate strong random numbers</a><br/>
 <a href="http://cwe.mitre.org/data/definitions/330.html">CWE-330: Use of Insufficiently Random Values</a><br/>
 <a href="http://blog.h3xstream.com/2014/12/predicting-struts-csrf-token-cve-2014.html">Predicting Struts CSRF Token (Example of real-life vulnerability and exploitation)</a>
@@ -1857,7 +1857,7 @@ could be exposed. This could allow an attacker to access unauthorized data or ma
 <a href="http://cwe.mitre.org/data/definitions/643.html">CWE-643: Improper Neutralization of Data within XPath Expressions ('XPath Injection')</a><br/>
 <a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=61407250">CERT: IDS09-J. Prevent XPath Injection (archive)</a><br/>
 <a href="http://media.blackhat.com/bh-eu-12/Siddharth/bh-eu-12-Siddharth-Xpath-WP.pdf">Black Hat Europe 2012: Hacking XPath 2.0</a><br/>
-<a href="http://www.balisage.net/Proceedings/vol7/html/Vlist02/BalisageVol7-Vlist02.html">Balisage: XQuery Injection</a>
+<a href="http://www.balisage.net/Proceedings/vol7/html/Vlist02/BalisageVol7-Vlist02.html">Balisage.net: XQuery Injection</a>
 </p>
 ]]>
         </Details>
@@ -2787,7 +2787,7 @@ public void getUserProperty(String property) {
 </p>
 <p><b>Solution:</b></p>
 <p>
-In general, method evaluating OGNL expression should not receive user input. It is intented to be used in static configurations and JSP.
+In general, method evaluating OGNL expression should not receive user input. It is intended to be used in static configurations and JSP.
 </p>
 <br/>
 <p>
@@ -3949,7 +3949,7 @@ The solution is to avoid using XMLDecoder to parse content from an untrusted sou
 <br/>
 <p>
 <b>References</b><br/>
-<a href="http://blog.diniscruz.com/2013/08/using-xmldecoder-to-execute-server-side.html">Dinis Cruz Blog: Using XMLDecoder to execute server-side Java Code on an Restlet application</a><br/>
+<a href="http://blog.diniscruz.com/2013/08/using-xmldecoder-to-execute-server-side.html">Dinis Cruz Blog: Using XMLDecoder to execute server-side Java Code on a Restlet application</a><br/>
 <a href="https://securityblog.redhat.com/2014/01/23/java-deserialization-flaws-part-2-xml-deserialization/">RedHat blog : Java deserialization flaws: Part 2, XML deserialization</a><br/>
 <a href="http://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a>
 </p>
@@ -4290,7 +4290,7 @@ fos.write(string.getBytes());
         <Details>
             <![CDATA[
 <p>
-    Broadcast intents can be listen by any application with the appropriate permission. It is suggested to avoid transmitting
+    Broadcast intents can be listened by any application with the appropriate permission. It is suggested to avoid transmitting
     sensitive information when possible.
 </p>
 <p>
@@ -5308,7 +5308,9 @@ Avoid using * as the value of the Access-Control-Allow-Origin header, which indi
         <Details>
             <![CDATA[
 <p>
-Without proper access control, executing an LDAP statement that contains a user-controlled value can allow an attacker to abuse poorly configured LDAP environment. All LDAP queries executed against ctx will be performed without authentication and access control. An attacker may be able to manipulate one of these queries in an unexpected way to gain access to records that would otherwise be protected by the directory's access control mechanism.
+Without proper access control, executing an LDAP statement that contains a user-controlled value can allow an attacker to abuse poorly configured LDAP context.
+All LDAP queries executed against the context will be performed without authentication and access control.
+An attacker may be able to manipulate one of these queries in an unexpected way to gain access to records that would otherwise be protected by the directory's access control mechanism.
 </p>
 <p>
     <b>Vulnerable Code:</b>
@@ -5345,7 +5347,7 @@ Consider other modes of authentication to LDAP and ensure proper access control 
 <p>
 JNDI API support the binding of serialize object in LDAP directories. If certain attributes are presented, the deserialization
 of object will be made in the application querying the directory (See Black Hat USA 2016 white paper for details).
-Object deserialization should be threated as risky operation that can lead to remote code execution.
+Object deserialization should be consider a risky operation that can lead to remote code execution.
 </p>
 <p>
 The exploitation of the vulnerability will be possible if the attacker has an entry point in an LDAP base query, by adding
@@ -5398,7 +5400,7 @@ ctx.search(query, filter,
         <Details>
             <![CDATA[
 <p>
-Storing sensitive data in a persistent cookie for an extended period of time can lead to a breach of confidentiality or account compromise. 
+Storing sensitive data in a persistent cookie for an extended period can lead to a breach of confidentiality or account compromise.
 </p>
 <p>
     <b>Explanation:</b><br/>
@@ -5422,7 +5424,7 @@ cookie.setMaxAge(60*60*24*365);
 <br/>
 <p>
 <b>References</b><br/>
-<a href="https://tomcat.apache.org/tomcat-5.5-doc/servletapi/javax/servlet/http/Cookie.html#setMaxAge%28int%29">Class Cookie setMaxAge documentation</a><br/>
+<a href="https://tomcat.apache.org/tomcat-5.5-doc/servletapi/javax/servlet/http/Cookie.html#setMaxAge%28int%29">Class Cookie <code>setMaxAge</code> documentation</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/539.html">CWE-539: Information Exposure Through Persistent Cookies</a><br/>
 </p>
             ]]>
@@ -5533,7 +5535,7 @@ Please add the following check to verify the server certificate:
             <![CDATA[
 <p>
 Constructing SimpleDB queries containing user input can allow an attacker to view unauthorized records.<br/>
-The following example dynamically constructs and executes a SimpleDB select() query allowing the user to specify the productCategory. The attacker can modify the query, bypass the required authentication for customerID and view records matching any customer.
+The following example dynamically constructs and executes a SimpleDB SELECT query allowing the user to specify the productCategory. The attacker can modify the query, bypass the required authentication for customerID and view records matching any customer.
 </p>
 <p>
     <b>Vulnerable Code:</b><br/>
@@ -5576,7 +5578,9 @@ This issue is analogical to SQL Injection. Sanitize user input before using it i
         <Details>
             <![CDATA[
 <p>
-An attacker can set arbitrary bean properties that can compromise system integrity. Bean population functions allow to set a bean property or a nested property. An attacker can leverage this functionality to access special bean properties like class.classLoader that will allow him to override system properties and potentially execute arbitrary code.
+An attacker can set arbitrary bean properties that can compromise system integrity.
+Bean population functions allow to set a bean property or a nested property.
+An attacker can leverage this functionality to access special bean properties like <code>class.classLoader</code> that will allow him to override system properties and potentially execute arbitrary code.
 </p>
 <p>
     <b>Vulnerable Code:</b><br/>

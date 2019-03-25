@@ -44,6 +44,11 @@
 
 
     bugPatterns.each {b->
+
+            new_description = b.description
+            new_description = new_description.replace("<pre>\n","<pre>");
+            new_description = new_description.replace("<pre>","<pre class='keep-initial-line-feed'><code class='code.language-java keep-initial-line-feed'>")
+            new_description = new_description.replace("</pre>","</code></pre>")
     print """
     <section>
         <a class="anchor" name="${b.type}"></a>
@@ -53,7 +58,7 @@
         </h2>
         <p class="text-muted"><em><small>Bug Pattern: <tt>${b.type}</tt></small></em></p>
 
-        ${b.description}
+        ${new_description}
 
         <hr/>
         <br/>

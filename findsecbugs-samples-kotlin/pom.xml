@@ -5,11 +5,11 @@
     <parent>
         <artifactId>findsecbugs-root-pom</artifactId>
         <groupId>com.h3xstream.findsecbugs</groupId>
-        <version>1.8.0</version>
+        <version>1.9.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>findsecbugs-test-kotlin</artifactId>
+    <artifactId>findsecbugs-samples-kotlin</artifactId>
 
     <name>Find Security Bugs Test Kotlin</name>
 
@@ -21,7 +21,7 @@
 
         <dependency>
             <groupId>com.h3xstream.findsecbugs</groupId>
-            <artifactId>findsecbugs-plugin-deps</artifactId>
+            <artifactId>findsecbugs-samples-deps</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>

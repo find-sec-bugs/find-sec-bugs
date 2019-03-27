@@ -7,7 +7,7 @@
     <artifactId>findsecbugs-root-pom</artifactId>
 
     <packaging>pom</packaging>
-    <version>1.8.0</version>
+    <version>1.9.0-SNAPSHOT</version>
 
     <name>Find Security Bugs root</name>
 
@@ -144,10 +144,10 @@
 
 
     <modules>
-        <module>plugin</module>
         <module>findbugs-test-util</module>
-        <module>plugin-deps</module>
-        <module>findsecbugs-test-kotlin</module>
+        <module>findsecbugs-plugin</module>
+        <module>findsecbugs-samples-deps</module>
+        <module>findsecbugs-samples-kotlin</module>
     </modules>
 
 
@@ -171,7 +171,7 @@
             </dependency>
             <dependency>
                 <groupId>com.h3xstream.findsecbugs</groupId>
-                <artifactId>findsecbugs-test-kotlin</artifactId>
+                <artifactId>findsecbugs-samples-kotlin</artifactId>
                 <type>test-jar</type>
                 <version>${project.version}</version>
             </dependency>
@@ -184,7 +184,7 @@
 
             <dependency>
                 <groupId>com.h3xstream.findsecbugs</groupId>
-                <artifactId>findsecbugs-plugin-deps</artifactId>
+                <artifactId>findsecbugs-samples-deps</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

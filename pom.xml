@@ -177,6 +177,7 @@
         <module>findsecbugs-plugin</module>
         <module>findsecbugs-samples-deps</module>
         <module>findsecbugs-samples-kotlin</module>
+        <module>findsecbugs-samples-java</module>
     </modules>
 
 
@@ -204,16 +205,23 @@
                 <type>test-jar</type>
                 <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>com.h3xstream.findsecbugs</groupId>
-                <artifactId>findsecbugs-plugin</artifactId>
+                <artifactId>findsecbugs-samples-java</artifactId>
+                <type>test-jar</type>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.h3xstream.findsecbugs</groupId>
                 <artifactId>findsecbugs-samples-deps</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.h3xstream.findsecbugs</groupId>
+                <artifactId>findsecbugs-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

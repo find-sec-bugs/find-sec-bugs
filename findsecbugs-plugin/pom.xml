@@ -167,9 +167,17 @@
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
+
+        <!-- Test samples -->
         <dependency>
             <groupId>com.h3xstream.findsecbugs</groupId>
             <artifactId>findsecbugs-samples-kotlin</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h3xstream.findsecbugs</groupId>
+            <artifactId>findsecbugs-samples-java</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>

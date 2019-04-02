@@ -2,7 +2,7 @@ import groovy.io.FileType
 
 class MetadataFileUtil {
 
-    static String metaDataDir = "../plugin/src/main/resources/metadata"
+    static String metaDataDir = "../findsecbugs-plugin/src/main/resources/metadata"
 
     //Contains the bug descriptions
     static InputStream messagesStreamEn = new FileInputStream(new File(metaDataDir, "messages.xml"))

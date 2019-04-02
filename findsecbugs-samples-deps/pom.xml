@@ -7,10 +7,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.h3xstream.findsecbugs</groupId>
     <artifactId>findsecbugs-samples-deps</artifactId>
 
-    <name>Find Security Bugs stub dependencies</name>
+    <name>Find Security Bugs Samples Dependencies</name>
     <description>
         Find Security Bugs stub dependencies use for the samples.
 

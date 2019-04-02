@@ -20,16 +20,16 @@ bugsBindingEn['lang'] = 'en'
 bugsBindingJa = buildMapping(messagesStreamJa)
 bugsBindingJa['lang'] = 'ja'
 
-nbSignatures = countSignature("../plugin/src/main/resources/injection-sinks/") + countSignature("../plugin/src/main/resources/password-methods/")
+nbSignatures = countSignature("../findsecbugs-plugin/src/main/resources/injection-sinks/") + countSignature("../findsecbugs-plugin/src/main/resources/password-methods/")
 
 //Version and download links
 
 
-latestVersion = "1.8.0"
+latestVersion = "1.9.0"
 downloadUrl = "https://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/${latestVersion}/findsecbugs-plugin-${latestVersion}.jar"
 mavenCentralSearch = "https://search.maven.org/#search|gav|1|g:%22com.h3xstream.findsecbugs%22 AND a:%22findsecbugs-plugin%22"
 releaseNotesUrl = "https://github.com/find-sec-bugs/find-sec-bugs/releases/latest" //This link redirect to the latest release
-latestUpdateDate = "June 28th, 2018"
+latestUpdateDate = "March 27th, 2019"
 
 //Screenshots
 

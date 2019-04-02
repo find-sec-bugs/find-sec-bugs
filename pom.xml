@@ -208,6 +208,7 @@
             <dependency>
                 <groupId>com.h3xstream.findsecbugs</groupId>
                 <artifactId>findsecbugs-samples-java</artifactId>
+                <type>test-jar</type>
                 <version>${project.version}</version>
             </dependency>
 

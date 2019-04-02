@@ -70,35 +70,6 @@
                 </configuration>
             </plugin>
 
-
-            <!-- Compilation of the JSP test pages -->
-            <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-jspc-maven-plugin</artifactId>
-                <version>9.4.6.v20170531</version>
-                <executions>
-                    <execution>
-                        <id>jspc</id>
-                        <!-- Needed to make the bytecode available for the tests -->
-                        <phase>test-compile</phase>
-                        <goals>
-                            <goal>jspc</goal>
-                        </goals>
-                        <configuration>
-                            <jspc>
-                                <smapSuppressed>false</smapSuppressed>
-                                <smapDumped>true</smapDumped>
-                            </jspc>
-                            <keepSources>true</keepSources>
-                            <!-- Use the test folders to avoid polluting the resulting jar -->
-                            <generatedClasses>${project.build.directory}/test-classes</generatedClasses>
-                            <webAppSourceDirectory>${basedir}/src/test/webapp</webAppSourceDirectory>
-                            <useProvidedScope>true</useProvidedScope>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
             <!-- Cobertura configuration -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -178,6 +149,12 @@
         <dependency>
             <groupId>com.h3xstream.findsecbugs</groupId>
             <artifactId>findsecbugs-samples-java</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h3xstream.findsecbugs</groupId>
+            <artifactId>findsecbugs-samples-jsp</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>

@@ -40,8 +40,8 @@ public class WeakMessageDigest {
         apacheApiVariations();
     }
 
+    @SuppressWarnings("deprecation")
     public static void apacheApiVariations() {
-
         printHex(DigestUtils.getMd2Digest().digest("123".getBytes()));
         printHex(DigestUtils.getMd5Digest().digest("123".getBytes()));
         printHex(DigestUtils.getDigest("md2").digest("123".getBytes()));

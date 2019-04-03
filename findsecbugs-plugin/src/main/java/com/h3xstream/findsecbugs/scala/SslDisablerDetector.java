@@ -23,6 +23,9 @@ import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.ba.XField;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 
+import static org.apache.bcel.Const.GETSTATIC;
+import static org.apache.bcel.Const.INVOKEVIRTUAL;
+
 public class SslDisablerDetector extends OpcodeStackDetector {
 
     private static final String WEAK_TRUST_MANAGER_TYPE = "WEAK_TRUST_MANAGER";

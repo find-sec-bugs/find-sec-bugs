@@ -20,12 +20,6 @@
             <scope>provided</scope> <!-- Need to be picked up by JSP compiler -->
         </dependency>
 
-
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>

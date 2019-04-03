@@ -14,7 +14,7 @@
 
     <name>Find Security Bugs Plugin</name>
     <description>
-        Core module of the project. It include all the FindBugs detectors.
+        Core module of the project. It include all the SpotBugs detectors.
         The resulting jar is the published plugin.
     </description>
 

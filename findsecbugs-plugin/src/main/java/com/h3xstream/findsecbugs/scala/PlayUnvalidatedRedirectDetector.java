@@ -22,6 +22,7 @@ import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 import edu.umd.cs.findbugs.classfile.CheckedAnalysisException;
+import org.apache.bcel.Const;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,7 +44,7 @@ public class PlayUnvalidatedRedirectDetector extends OpcodeStackDetector {
     public void sawOpcode(int seen) {
 
         try {
-            if(seen == INVOKEVIRTUAL && REDIRECT_METHODS.contains(getNameConstantOperand())) {
+            if(seen == Const.INVOKEVIRTUAL && REDIRECT_METHODS.contains(getNameConstantOperand())) {
                 if("scala/runtime/AbstractFunction0".equals(getClassDescriptor().getXClass().getSuperclassDescriptor().getClassName())) {
                     bugReporter.reportBug(new BugInstance(this, PLAY_UNVALIDATED_REDIRECT_TYPE, Priorities.NORMAL_PRIORITY) //
                         .addClass(this).addMethod(this).addSourceLine(this).addString(getNameConstantOperand())); //

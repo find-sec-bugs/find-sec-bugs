@@ -22,6 +22,8 @@ import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 
+import static org.apache.bcel.Const.INVOKESPECIAL;
+
 /**
  * Detect a pattern that was found in multiple Spring components.
  *

@@ -33,6 +33,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+
+import org.apache.bcel.Const;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 
@@ -88,7 +90,7 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
         staticInitializerSeen = false;
         Method[] methods = javaClass.getMethods();
         for (Method method : methods) {
-            if (method.getName().equals(STATIC_INITIALIZER_NAME)) {
+            if (method.getName().equals(Const.STATIC_INITIALIZER_NAME)) {
                 // check field initialization before visiting methods
                 doVisitMethod(method);
                 staticInitializerSeen = true;
@@ -133,7 +135,7 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
             return;
         }
         markHardCodedItemsFromFlow();
-        if (seen == NEWARRAY) {
+        if (seen == Const.NEWARRAY) {
             isFirstArrayStore = true;
         }
         if (isStoringToArray(seen)) {
@@ -144,7 +146,7 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
             markTopItemHardCoded();
             wasToConstArrayConversion = false;
         }
-        if (seen == PUTFIELD || seen == PUTSTATIC) {
+        if (seen == Const.PUTFIELD || seen == Const.PUTSTATIC) {
             saveArrayFieldIfHardCoded();
         }
         if (isInvokeInstruction(seen)) {
@@ -156,7 +158,7 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
     }
 
     private boolean isAlreadyAnalyzed() {
-        return getMethodName().equals(STATIC_INITIALIZER_NAME) && staticInitializerSeen;
+        return getMethodName().equals(Const.STATIC_INITIALIZER_NAME) && staticInitializerSeen;
     }
 
     private void markHardCodedItemsFromFlow() {
@@ -191,7 +193,7 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
     }
 
     private static boolean isStoringToArray(int seen) {
-        return seen == CASTORE || seen == BASTORE || seen == SASTORE || seen == IASTORE;
+        return seen == Const.CASTORE || seen == Const.BASTORE || seen == Const.SASTORE || seen == Const.IASTORE;
     }
 
     private void markArraysHardCodedOrNot() {
@@ -220,7 +222,7 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
     }
 
     private static boolean isInvokeInstruction(int seen) {
-        return seen >= INVOKEVIRTUAL && seen <= INVOKEINTERFACE;
+        return seen >= Const.INVOKEVIRTUAL && seen <= Const.INVOKEINTERFACE;
     }
 
     private boolean isToConstArrayConversion() {

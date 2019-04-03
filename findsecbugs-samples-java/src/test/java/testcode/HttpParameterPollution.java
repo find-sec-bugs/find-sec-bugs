@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 
 public class HttpParameterPollution extends HttpServlet{
-
+   @SuppressWarnings( "deprecation" ) //URLEncoder.encode is deprecated but use to specially test this API.
    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
        try{
            String item = request.getParameter("item");

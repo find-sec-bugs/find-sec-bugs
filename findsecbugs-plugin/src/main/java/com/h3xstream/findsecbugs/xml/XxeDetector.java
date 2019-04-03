@@ -79,7 +79,7 @@ public class XxeDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
-        if (seen != Const.INVOKEVIRTUAL && seen != INVOKEINTERFACE) {
+        if (seen != Const.INVOKEVIRTUAL && seen != Const.INVOKEINTERFACE) {
             return;
         }
         String fullClassName = getClassConstantOperand();

@@ -26,6 +26,8 @@ import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 
 import static com.h3xstream.findsecbugs.common.matcher.InstructionDSL.invokeInstruction;
+import static org.apache.bcel.Const.INVOKESPECIAL;
+import static org.apache.bcel.Const.INVOKEVIRTUAL;
 
 public class LdapEntryPoisoningDetector extends OpcodeStackDetector {
 

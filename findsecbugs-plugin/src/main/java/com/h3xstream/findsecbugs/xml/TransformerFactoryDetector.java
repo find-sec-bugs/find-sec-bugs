@@ -28,11 +28,11 @@ import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.ba.CFGBuilderException;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 import org.apache.bcel.Const;
+import org.apache.bcel.generic.INVOKEINTERFACE;
 import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.ICONST;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.INVOKEVIRTUAL;
-import org.apache.bcel.generic.INVOKEINTERFACE;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.InvokeInstruction;
 
@@ -64,7 +64,7 @@ public class TransformerFactoryDetector extends OpcodeStackDetector {
 
     @Override
     public void sawOpcode(int seen) {
-        if (seen != Const.INVOKEVIRTUAL && seen != INVOKEINTERFACE && seen != INVOKESTATIC) {
+        if (seen != Const.INVOKEVIRTUAL && seen != Const.INVOKEINTERFACE && seen != Const.INVOKESTATIC) {
             return;
         }
         String fullClassName = getClassConstantOperand();

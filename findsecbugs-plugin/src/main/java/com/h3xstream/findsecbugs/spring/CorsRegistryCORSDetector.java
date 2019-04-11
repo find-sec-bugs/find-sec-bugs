@@ -35,6 +35,10 @@ import org.apache.bcel.Const;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InvokeInstruction;
+import sun.management.BaseOperatingSystemImpl;
+import sun.reflect.ConstantPool;
+
+import java.io.*;
 
 import static com.h3xstream.findsecbugs.common.matcher.InstructionDSL.invokeInstruction;
 
@@ -106,12 +110,13 @@ public class CorsRegistryCORSDetector extends OpcodeStackDetector {
         //printOpCode(seen);
         if (seen == Const.INVOKEVIRTUAL && getNameConstantOperand().equals("allowedOrigins")) {
             OpcodeStack.Item item = stack.getStackItem(0); //First item on the stack is the last
-            OpcodeStack.Item item2 = stack.getStackItem(1); //First item on the stack is the last
-            System.out.println(stack.toString());
-            System.out.println();
-            System.out.println(item.getXField());
-            System.out.println(item.getConstant());
-            System.out.println(item2);
+            int idx=getNextCodeByte(-5);
+            System.out.println(getNextCodeByte(-6)+":"+getNextCodeByte(-5)+":"+getNextCodeByte(4));
+            System.out.println(item.getPC());
+
+            System.out.println(getString(8));
+            System.out.println(getString(9));
+            System.out.println(getString(11));
 //            if(StackUtils.isConstantInteger(item)) {
 //                Integer value = (Integer) item.getConstant();
 //                if(value == null || value != 0) {
@@ -121,4 +126,14 @@ public class CorsRegistryCORSDetector extends OpcodeStackDetector {
 //            }
         }
     }
+     public String getString(int idx) {
+         ByteArrayOutputStream baos = new ByteArrayOutputStream();
+         DataOutputStream outputStream=new DataOutputStream(baos);
+         try {
+             getConstantPool().getConstant(idx).dump(outputStream);
+         } catch (IOException e) {
+             e.printStackTrace();
+         }
+         return baos.toString();
+     }
 }

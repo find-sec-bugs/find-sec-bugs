@@ -44,7 +44,7 @@ public class CorsRegistryCORSDetector extends OpcodeStackDetector {
             if ("org/springframework/web/servlet/config/annotation/CorsRegistration".equals(getClassConstantOperand())) {
                 OpcodeStack.Item item = stack.getStackItem(0); //First item on the stack is the last
                 if(item.isArray()) {
-                    String[] strings=getArray(item);
+                    String[] strings=getStringArray(item);
                     String pattern="*";
                     for (String s: strings) {
                         if (s.equals(pattern)) {
@@ -57,15 +57,15 @@ public class CorsRegistryCORSDetector extends OpcodeStackDetector {
             }
         }
     }
-    public String[] getArray(OpcodeStack.Item item){
+    public String[] getStringArray(OpcodeStack.Item item){
         Integer argumentsNum = (Integer) item.getConstant();
         String[] strings = new String[argumentsNum];
         for (int i=0; i<argumentsNum; i++) {
             int idx=-5-5*i;
             int stringIdx=getNextCodeByte(idx);
-            System.out.println(stringIdx);
+//            System.out.println(stringIdx);
             String s=getStringFromIdx(stringIdx);
-            System.out.println(Arrays.toString(s.toCharArray()));
+//            System.out.println(Arrays.toString(s.toCharArray()));
             strings[i]=s;
         }
         return strings;

@@ -1,4 +1,4 @@
-package testcode;
+package testcode.cors;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

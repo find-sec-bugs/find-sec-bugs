@@ -29,7 +29,7 @@ public class PermissiveCORSDetectorTest extends BaseDetectorTest {
     public void detectPermissiveCORS() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/PermissiveCORS")
+                getClassFilePath("testcode/cors/PermissiveCORS")
         };
 
         //Run the analysis

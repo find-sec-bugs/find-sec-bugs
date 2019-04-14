@@ -5347,6 +5347,11 @@ Avoid using * as the value of the Access-Control-Allow-Origin header, which indi
     </BugPattern>
     <BugCode abbrev="SECCORS">Overly permissive CORS policy</BugCode>
 
+    <!-- Overly permissive CORS policy -->
+    <Detector class="com.h3xstream.findsecbugs.spring.CorsRegistryCORSDetector">
+        <Details>Detect overly CorsRegistry CORS policy. </Details>
+    </Detector>
+
     <!-- LDAP anonymous bind detector -->
     <Detector class="com.h3xstream.findsecbugs.ldap.AnonymousLdapDetector">
         <Details>Identify use of anonymous LDAP bind</Details>

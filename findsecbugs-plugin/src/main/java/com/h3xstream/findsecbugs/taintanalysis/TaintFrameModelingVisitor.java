@@ -735,6 +735,11 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             assert false : "Out of bounds local variable index in " + methodDescriptor;
             return; // ignore if assertions disabled
         }
+
+        if (valueTaint.hasValidVariableIndex() && valueTaint.getVariableIndex() != index) {
+            valueTaint = new Taint(valueTaint);
+        }
+
         valueTaint.setVariableIndex(index);
         getFrame().setValue(index, valueTaint);
     }

@@ -83,6 +83,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         this.methodDescriptor = method;
         this.taintConfig = taintConfig;
         this.analyzedMethodConfig = new TaintMethodConfig(false);
+        analyzedMethodConfig.setTypeSignature(methodDescriptor.getClassDescriptor().getClassName() + "." + methodDescriptor.getName() + methodDescriptor.getSignature());
         this.visitors = visitors;
         this.methodGen = methodGen;
     }
@@ -529,11 +530,14 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         if (config != null) {
             return config;
         }
+        String classNameSignature = "L" + className + ";";
         if (Const.CONSTRUCTOR_NAME.equals(methodName)
-                && !taintConfig.isClassTaintSafe("L" + className + ";")) {
+                && !taintConfig.isClassTaintSafe(classNameSignature)) {
             try {
                 int stackSize = getFrame().getNumArgumentsIncludingObjectInstance(obj, cpg);
-                return TaintMethodConfig.getDefaultConstructorConfig(stackSize);
+                config = TaintMethodConfig.getDefaultConstructorConfig(stackSize);
+                config.setTypeSignature(className+"<init>()V");
+                return config;
             } catch (DataflowAnalysisException ex) {
                 throw new InvalidBytecodeException(ex.getMessage(), ex);
             }
@@ -634,7 +638,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         Taint taint = methodConfig.getOutputTaint();
         assert taint != null;
         assert taint != methodConfig.getOutputTaint() : "defensive copy not made";
-        Taint taintCopy = new Taint(taint); 
+        Taint taintCopy = new Taint(taint);
         if (taint.isUnknown() && taint.hasParameters()) {
             Taint merge = mergeTransferParameters(taint.getParameters());
             assert merge != null;

@@ -33,6 +33,7 @@ public class TaintClassConfig implements TaintTypeConfig {
     private static final String IMMUTABLE = "#IMMUTABLE";
     private Taint.State taintState = DEFAULT_TAINT_STATE;
     private boolean immutable;
+    private String typeSignature;
     private static final Pattern typePattern;
     private static final Pattern taintConfigPattern;
 
@@ -96,17 +97,16 @@ public class TaintClassConfig implements TaintTypeConfig {
         if (taintConfig.isEmpty()) {
             throw new IOException("No taint class config specified");
         }
-        TaintClassConfig taintClassConfig = new TaintClassConfig();
         if (taintConfig.endsWith(IMMUTABLE)) {
-            taintClassConfig.immutable = true;
+            immutable = true;
             taintConfig = taintConfig.substring(0, taintConfig.length() - IMMUTABLE.length());
         }
 
         if (!taintConfig.isEmpty()) {
-            taintClassConfig.taintState = Taint.State.valueOf(taintConfig);
+            taintState = Taint.State.valueOf(taintConfig);
         }
 
-        return taintClassConfig;
+        return this;
     }
 
     public Taint.State getTaintState() {
@@ -123,5 +123,23 @@ public class TaintClassConfig implements TaintTypeConfig {
         }
 
         return taintState;
+    }
+
+    /**
+     * Set full class and method signature for the analyzed method
+     *
+     * @param typeSignature method signature
+     */
+    public void setTypeSignature(String typeSignature) {
+        this.typeSignature = typeSignature;
+    }
+
+    /**
+     * Returns the analyzed method full signature
+     *
+     * @return signature of the method
+     */
+    public String getTypeSignature() {
+        return typeSignature;
     }
 }

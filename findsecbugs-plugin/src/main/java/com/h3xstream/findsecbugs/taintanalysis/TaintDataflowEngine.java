@@ -187,7 +187,7 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
             TaintMethodConfig derivedConfig = taintConfig.get(getSlashedMethodName(methodGen));
             if (derivedConfig != null) {
                 try {
-                    writer.append(getSlashedMethodName(methodGen) + ":" + derivedConfig + "\n");
+                    writer.append(derivedConfig + "\n");
                     writer.flush();
                 } catch (IOException ex) {
                     AnalysisContext.logError("Cannot write derived configs", ex);

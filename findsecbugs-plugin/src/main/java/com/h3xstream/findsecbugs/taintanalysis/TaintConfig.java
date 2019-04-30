@@ -93,6 +93,7 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
                         throw new IllegalStateException("Config for " + typeSignature + " already loaded");
                     }
                     TaintClassConfig taintClassConfig = new TaintClassConfig().load(config);
+                    taintClassConfig.setTypeSignature(typeSignature);
                     taintClassConfigMap.put(typeSignature, taintClassConfig);
                     return;
                 }

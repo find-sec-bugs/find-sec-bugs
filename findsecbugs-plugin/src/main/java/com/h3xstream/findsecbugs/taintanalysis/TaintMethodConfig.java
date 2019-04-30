@@ -74,7 +74,7 @@ public class TaintMethodConfig implements TaintTypeConfig {
 
     /**
      * Constructs an empty summary
-     * 
+     *
      * @param isConfigured true for configured summaries, false for derived
      */
     public TaintMethodConfig(boolean isConfigured) {
@@ -84,18 +84,19 @@ public class TaintMethodConfig implements TaintTypeConfig {
     }
 
     /**
-     * Creates a copy of the summary (output taint not copied)
-     * 
+     * Creates a copy of the summary (output taint and output parameters taint not copied)
+     *
      * @param config Original taint config to copy
      */
     public TaintMethodConfig(TaintMethodConfig config) {
         this.mutableStackIndices = config.mutableStackIndices;
         this.isConfigured = config.isConfigured;
+        this.typeSignature = config.typeSignature;
     }
-    
+
     /**
      * Returns all stack indices modified by method if there are any
-     * 
+     *
      * @return unmodifiable collection of indices
      * @throws IllegalStateException if there are not indices set
      */
@@ -108,7 +109,7 @@ public class TaintMethodConfig implements TaintTypeConfig {
 
     /**
      * Checks if there are any indices modified by method
-     * 
+     *
      * @return true if some index is set, false otherwise
      */
     public boolean hasMutableStackIndices() {
@@ -118,7 +119,7 @@ public class TaintMethodConfig implements TaintTypeConfig {
 
     /**
      * Adds a stack index modified by method
-     * 
+     *
      * @param mutableStackIndex index to add
      * @throws IllegalArgumentException if index is negative
      */
@@ -131,7 +132,7 @@ public class TaintMethodConfig implements TaintTypeConfig {
 
     /**
      * Returns the output taint of the method describing the taint transfer
-     * 
+     *
      * @return a copy of the output taint or null if not set
      */
     public Taint getOutputTaint() {
@@ -144,7 +145,7 @@ public class TaintMethodConfig implements TaintTypeConfig {
     /**
      * Sets the output taint of the method describing the taint transfer,
      * copy of the parameter is made and variable index is invalidated
-     * 
+     *
      * @param taint output taint to set
      */
     public void setOuputTaint(Taint taint) {
@@ -160,7 +161,7 @@ public class TaintMethodConfig implements TaintTypeConfig {
     /**
      * Constructs a default constructor summary
      * (modifies 2 stack items with UNKNOWN taint state)
-     * 
+     *
      * @param stackSize size of the parameter stack (including instance)
      * @return new instance of default summary
      * @throws IllegalArgumentException for stackSize &lt; 1
@@ -178,7 +179,7 @@ public class TaintMethodConfig implements TaintTypeConfig {
 
     /**
      * Checks if the summary needs to be saved or has no information value
-     * 
+     *
      * @return true if summary should be saved, false otherwise
      */
     public boolean isInformative() {
@@ -206,13 +207,13 @@ public class TaintMethodConfig implements TaintTypeConfig {
 
     /**
      * Checks if the summary is configured or derived
-     * 
+     *
      * @return true if configured, false if derived
      */
     public boolean isConfigured() {
         return isConfigured;
     }
-    
+
     @Override
     public String toString() {
         if (outputTaint == null) {
@@ -380,7 +381,7 @@ public class TaintMethodConfig implements TaintTypeConfig {
         }
         return str;
     }
-    
+
     private void loadStatesAndParameters(String str) throws IOException {
         if (str.isEmpty()) {
             throw new IOException("No taint information set");
@@ -432,7 +433,7 @@ public class TaintMethodConfig implements TaintTypeConfig {
             }
         }
     }
-    
+
     private boolean isTaintTagValue(String value) {
         assert value != null && !value.isEmpty();
         for (Taint.Tag tag : Taint.Tag.values()) {
@@ -442,7 +443,7 @@ public class TaintMethodConfig implements TaintTypeConfig {
         }
         return false;
     }
-    
+
     private boolean isTaintStateValue(String value) {
         assert value != null && !value.isEmpty();
         Taint.State[] states = Taint.State.values();
@@ -454,7 +455,21 @@ public class TaintMethodConfig implements TaintTypeConfig {
         return false;
     }
 
+    /**
+     * Set full class and method signature for the analyzed method
+     *
+     * @param typeSignature method signature
+     */
     public void setTypeSignature(String typeSignature) {
         this.typeSignature = typeSignature;
+    }
+
+    /**
+     * Returns the analyzed method full signature
+     *
+     * @return signature of the method
+     */
+    public String getTypeSignature() {
+        return typeSignature;
     }
 }

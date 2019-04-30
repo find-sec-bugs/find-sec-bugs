@@ -434,6 +434,57 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     }
 
     @Override
+    public void visitReturnInstruction(ReturnInstruction obj) {
+        List<Integer> parametersLocalValueIndexes = new ArrayList<>();
+
+        GenericSignatureParser genericSignatureParser = new GenericSignatureParser(methodDescriptor.getSignature());
+        int localValueIndex = 0;
+        //  non-static methods have the class instance as the first index
+        if (!methodDescriptor.isStatic()) {
+            localValueIndex++;
+        }
+        for (Iterator<String> it = genericSignatureParser.parameterSignatureIterator(); it.hasNext();) {
+            String parameter = it.next();
+            switch (parameter.charAt(0)) {
+                case 'D':
+                case 'J':
+                    // double and long occupy two slots
+                    localValueIndex++;
+                    break;
+                case '[':
+                    // back-propagate array taints
+                    parametersLocalValueIndexes.add(localValueIndex);
+                    break;
+                case 'L':
+                    // back-propagate mutable class taints
+                    if (!taintConfig.isClassImmutable(parameter)) {
+                        parametersLocalValueIndexes.add(localValueIndex);
+                        break;
+                    }
+
+                    // back-propage immutable taints only when they transfer tags
+                    Taint taint = getFrame().getValue(localValueIndex);
+                    if (taint.hasTags() || taint.isRemovingTags()) {
+                        parametersLocalValueIndexes.add(localValueIndex);
+                    }
+                    break;
+            }
+
+            localValueIndex++;
+        }
+
+        int parametersCount = localValueIndex;
+
+        for (int parameterLocalValueIndex : parametersLocalValueIndexes) {
+            Taint parameterTaint = getFrame().getValue(parameterLocalValueIndex);
+            int stackIndex = (parametersCount - 1) - parameterLocalValueIndex;
+            analyzedMethodConfig.setParameterOutputTaint(stackIndex, parameterTaint);
+        }
+
+        super.visitReturnInstruction(obj);
+    }
+
+    @Override
     public void visitARETURN(ARETURN obj) {
         Taint returnTaint = null;
         try {
@@ -465,8 +516,6 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         assert obj != null;
         try {
             TaintMethodConfig methodConfig = getMethodConfig(obj);
-            ObjectType realInstanceClass = (methodConfig == null) ?
-                    null : methodConfig.getOutputTaint().getRealInstanceClass();
             Taint taint = getMethodTaint(methodConfig);
             assert taint != null;
             if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
@@ -480,7 +529,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             transferTaintToMutables(methodConfig, taint); // adds variable index to taint too
             Taint taintCopy = new Taint(taint);
             // return type is not always the instance type
-            taintCopy.setRealInstanceClass(realInstanceClass);
+            taintCopy.setRealInstanceClass(methodConfig != null && methodConfig.getOutputTaint() != null ? methodConfig.getOutputTaint().getRealInstanceClass() : null);
 
             TaintFrame tf = getFrame();
 
@@ -632,12 +681,18 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     }
 
     private Taint getMethodTaint(TaintMethodConfig methodConfig) {
-        if (methodConfig == null) {
+        if (methodConfig == null || methodConfig.getOutputTaint() == null) {
             return getDefaultValue();
         }
         Taint taint = methodConfig.getOutputTaint();
         assert taint != null;
         assert taint != methodConfig.getOutputTaint() : "defensive copy not made";
+
+        return mergeTaintWithStack(taint);
+    }
+
+    private Taint mergeTaintWithStack(Taint taint) {
+        assert taint != null;
         Taint taintCopy = new Taint(taint);
         if (taint.isUnknown() && taint.hasParameters()) {
             Taint merge = mergeTransferParameters(taint.getParameters());
@@ -666,6 +721,36 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         if (methodConfig != null && methodConfig.isConfigured()) {
             return;
         }
+
+        if (methodConfig != null && !methodConfig.getParametersOutputTaints().isEmpty()) {
+            for (Map.Entry<Integer, Taint> entry : methodConfig.getParametersOutputTaints().entrySet()) {
+                int stackIndex = entry.getKey();
+                assert stackIndex >= 0 && stackIndex < getFrame().getStackDepth();
+
+                Taint parameterTaint = entry.getValue();
+                assert parameterTaint != null;
+
+                try {
+                    Taint taint = new Taint(parameterTaint);
+                    taint = mergeTaintWithStack(taint);
+
+                    Taint stackValue = getFrame().getStackValue(stackIndex);
+                    if (stackValue.hasValidVariableIndex()) {
+                        // set back the index removed during merging
+                        taint.setVariableIndex(stackValue.getVariableIndex());
+                    }
+                    taint.setRealInstanceClass(stackValue.getRealInstanceClass());
+                    getFrame().setValue(getFrame().getStackLocation(stackIndex), taint);
+                    setLocalVariableTaint(taint, stackValue);
+                }
+                catch (DataflowAnalysisException ex) {
+                    throw new InvalidBytecodeException("Not enough values on the stack", ex);
+                }
+            }
+
+            return;
+        }
+
         Collection<Integer> mutableStackIndices = getMutableStackIndices(obj.getSignature(cpg));
         for (Integer index : mutableStackIndices) {
             assert index >= 0 && index < getFrame().getStackDepth();
@@ -774,20 +859,14 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     public void finishAnalysis() {
         assert analyzedMethodConfig != null;
         Taint outputTaint = analyzedMethodConfig.getOutputTaint();
-        if (outputTaint == null) {
-            // void methods
-            return;
-        }
-        String returnType = getReturnType(methodDescriptor.getSignature());
-        if (taintConfig.isClassTaintSafe(returnType) && outputTaint.getState() != Taint.State.NULL) {
-            // we do not have to store summaries with safe output
-            return;
-        }
-        String realInstanceClassName = outputTaint.getRealInstanceClassName();
-        if (returnType.equals("L" + realInstanceClassName + ";")) {
-            // storing it in method summary is useless
-            outputTaint.setRealInstanceClass(null);
-            analyzedMethodConfig.setOuputTaint(outputTaint);
+        if (outputTaint != null) {
+            String returnType = getReturnType(methodDescriptor.getSignature());
+            String realInstanceClassName = outputTaint.getRealInstanceClassName();
+            if (returnType.equals("L" + realInstanceClassName + ";")) {
+                // storing it in method summary is useless
+                outputTaint.setRealInstanceClass(null);
+                analyzedMethodConfig.setOuputTaint(outputTaint);
+            }
         }
         String className = methodDescriptor.getSlashedClassName();
         String methodId = "." + methodDescriptor.getName() + methodDescriptor.getSignature();

@@ -20,7 +20,9 @@ package com.h3xstream.findsecbugs.taintanalysis;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -34,6 +36,7 @@ import java.util.regex.Pattern;
 public class TaintMethodConfig implements TaintTypeConfig {
 
     private Taint outputTaint = null;
+    private Map<Integer, Taint> parametersOutputTaints = new HashMap<>();
     private final Set<Integer> mutableStackIndices;
     private final boolean isConfigured;
     private String typeSignature;
@@ -187,21 +190,15 @@ public class TaintMethodConfig implements TaintTypeConfig {
             // these are loaded automatically, do not need to store them
             return false;
         }
-        if (outputTaint == null) {
-            return false;
-        }
-        if (!outputTaint.isUnknown()) {
+        if (outputTaint != null && outputTaint.isInformative()) {
             return true;
         }
-        if (outputTaint.hasParameters()) {
-            return true;
+        for (Taint taint : parametersOutputTaints.values()) {
+            if (taint.isInformative()) {
+                return true;
+            }
         }
-        if (outputTaint.getRealInstanceClass() != null) {
-            return true;
-        }
-        if (outputTaint.hasTags() || outputTaint.isRemovingTags()) {
-            return true;
-        }
+
         return false;
     }
 
@@ -471,5 +468,31 @@ public class TaintMethodConfig implements TaintTypeConfig {
      */
     public String getTypeSignature() {
         return typeSignature;
+    }
+
+    /**
+     * Stores output taint for method parameters to be used for back-propagation.<br />
+     * <br />
+     * Please note the stackIndex is in reverse order compared to the method parameters (and frame local variables),
+     * i.e. the last method parameter has index 0.
+     *
+     * @param stackIndex Index of the parameter on the stack
+     * @param taint Output taint of the parameter
+     */
+    public void setParameterOutputTaint(int stackIndex, Taint taint) {
+        parametersOutputTaints.compute(
+                stackIndex, (__, existingTaint) -> Taint.merge(existingTaint, taint));
+    }
+
+    /**
+     * Returns computed output taints for method parameters for back-propagation.<br />
+     * <br />
+     * Please note the stackIndex is in reverse order compared to the method parameters (and frame local variables),
+     * i.e. the last parameter has index 0.
+     *
+     * @return Unmodifiable copy of parameters' taints, indexed by parameter position on the stack
+     */
+    public Map<Integer, Taint> getParametersOutputTaints() {
+        return Collections.unmodifiableMap(parametersOutputTaints);
     }
 }

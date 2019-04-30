@@ -181,6 +181,28 @@ public class Taint {
     }
 
     /**
+     * Checks if there is any valuable information derived by the taint analysis.
+     *
+     * @return true if the Taint contains any useful information, false otherwise
+     */
+    public boolean isInformative() {
+        if (!isUnknown()) {
+            return true;
+        }
+        if (hasParameters()) {
+            return true;
+        }
+        if (getRealInstanceClass() != null) {
+            return true;
+        }
+        if (hasTags() || isRemovingTags()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Returns the taint state of this fact
      *
      * @return taint state

@@ -186,10 +186,11 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
         flow.execute();
         analysis.finishAnalysis();
         if (CONFIG.isDebugOutputTaintConfigs() && writer != null) {
-            TaintMethodConfig derivedConfig = taintConfig.get(getSlashedMethodName(methodGen));
+            String slashedMethodName = getSlashedMethodName(methodGen);
+            TaintMethodConfig derivedConfig = taintConfig.get(slashedMethodName);
             if (derivedConfig != null) {
                 try {
-                    writer.append(getSlashedMethodName(methodGen));
+                    writer.append(slashedMethodName);
 
                     Taint outputTaint = derivedConfig.getOutputTaint();
                     if (outputTaint != null) {

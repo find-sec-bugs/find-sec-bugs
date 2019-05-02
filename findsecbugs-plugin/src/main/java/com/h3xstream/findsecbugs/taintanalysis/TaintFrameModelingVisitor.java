@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.taintanalysis;
 
+import com.h3xstream.findsecbugs.BCELUtil;
 import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import com.h3xstream.findsecbugs.common.ByteCode;
 import com.h3xstream.findsecbugs.taintanalysis.data.TaintLocation;
@@ -191,7 +192,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             }
         } else {
             //super.visitGETSTATIC(obj);
-            String fieldSig = obj.getClassName(cpg).replaceAll("\\.","/")+"."+obj.getName(cpg);
+            String fieldSig = BCELUtil.getSlashedClassName(cpg, obj)+"."+obj.getName(cpg);
             Taint.State state = taintConfig.getClassTaintState(fieldSig, Taint.State.UNKNOWN);
             Taint taint = new Taint(state);
 
@@ -228,7 +229,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     @Override
     public void visitGETFIELD(GETFIELD obj) {
-        String fieldSig = obj.getClassName(cpg).replaceAll("\\.","/")+"."+obj.getName(cpg);
+        String fieldSig = BCELUtil.getSlashedClassName(cpg, obj)+"."+obj.getName(cpg);
         Taint.State state = taintConfig.getClassTaintState(fieldSig, Taint.State.UNKNOWN);
         Taint taint = new Taint(state);
 
@@ -304,6 +305,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             int index = obj.getIndex();
             while (numConsumed-- > 0) {
                 Taint value = new Taint(getFrame().popValue());
+//                Taint value = getFrame().popValue();
                 value.setVariableIndex(index);
                 getFrame().setValue(index++, value);
             }
@@ -329,7 +331,8 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             if(index != value.getVariableIndex()) {
                 throw new RuntimeException("bad index in " + methodDescriptor);
             }
-            getFrame().pushValue(new Taint(value));
+//            getFrame().pushValue(new Taint(value));
+            getFrame().pushValue(value);
         }
 
         for(TaintFrameAdditionalVisitor visitor : visitors) {
@@ -478,8 +481,22 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         for (int parameterLocalValueIndex : parametersLocalValueIndexes) {
             Taint parameterTaint = getFrame().getValue(parameterLocalValueIndex);
             int stackIndex = (parametersCount - 1) - parameterLocalValueIndex;
-            analyzedMethodConfig.setParameterOutputTaint(stackIndex, parameterTaint);
+
+            if (!parameterTaint.isUnknown()) {
+                analyzedMethodConfig.setParameterOutputTaint(stackIndex, parameterTaint);
+            }
+            else if (parameterTaint.getNonParametricState() != Taint.State.INVALID) {
+                analyzedMethodConfig.setParameterOutputTaint(stackIndex, parameterTaint);
+            }
+            else if (parameterTaint.hasTags() || parameterTaint.isRemovingTags()) {
+                analyzedMethodConfig.setParameterOutputTaint(stackIndex, parameterTaint);
+            }
+            else if (parameterTaint.getParameters().size() > 1) {
+                analyzedMethodConfig.setParameterOutputTaint(stackIndex, parameterTaint);
+            }
         }
+
+        analyzedMethodConfig.setParametersOutputTaintsProcessed(true);
 
         super.visitReturnInstruction(obj);
     }
@@ -521,13 +538,14 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
                 taint.setDebugInfo(obj.getMethodName(cpg) + "()"); //TODO: Deprecated debug info
             }
-            taint.addSource(new UnknownSource(UnknownSourceType.RETURN,taint.getState()).setSignatureMethod(obj.getClassName(cpg).replace(".","/")+"."+obj.getMethodName(cpg)+obj.getSignature(cpg)));
+            taint.addSource(new UnknownSource(UnknownSourceType.RETURN,taint.getState()).setSignatureMethod(BCELUtil.getSlashedClassName(cpg, obj)+"."+obj.getMethodName(cpg)+obj.getSignature(cpg)));
             if (taint.isUnknown()) {
                 taint.addLocation(getTaintLocation(), false);
             }
             taintMutableArguments(methodConfig, obj);
             transferTaintToMutables(methodConfig, taint); // adds variable index to taint too
-            Taint taintCopy = new Taint(taint);
+//            Taint taintCopy = new Taint(taint);
+            Taint taintCopy = taint;
             // return type is not always the instance type
             taintCopy.setRealInstanceClass(methodConfig != null && methodConfig.getOutputTaint() != null ? methodConfig.getOutputTaint().getRealInstanceClass() : null);
 
@@ -671,8 +689,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         } catch (DataflowAnalysisException ex) {
             assert false : ex.getMessage();
         }
-        String dottedClassName = invoke.getReferenceType(cpg).toString();
-        return ClassName.toSlashedClassName(dottedClassName);
+        return BCELUtil.getSlashedClassName(cpg, invoke);
     }
 
     private static String getReturnType(String signature) {
@@ -722,7 +739,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
             return;
         }
 
-        if (methodConfig != null && !methodConfig.getParametersOutputTaints().isEmpty()) {
+        if (methodConfig != null && methodConfig.isParametersOutputTaintsProcessed()) {
             for (Map.Entry<Integer, Taint> entry : methodConfig.getParametersOutputTaints().entrySet()) {
                 int stackIndex = entry.getKey();
                 assert stackIndex >= 0 && stackIndex < getFrame().getStackDepth();

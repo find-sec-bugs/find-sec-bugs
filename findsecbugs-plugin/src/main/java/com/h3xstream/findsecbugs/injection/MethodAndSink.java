@@ -20,27 +20,24 @@ package com.h3xstream.findsecbugs.injection;
 import java.util.Objects;
 
 /**
- * String and InjectionSink tuple
+ * ClassMethodSignature and InjectionSink tuple
  * 
  * @author David Formanek (Y Soft Corporation, a.s.)
  */
 public class MethodAndSink {
     
-    private final String method;
+    private final ClassMethodSignature classMethodSignature;
     private final InjectionSink sink;
 
-    public MethodAndSink(String method, InjectionSink sink) {
-        Objects.requireNonNull(method, "method");
-        if (method.isEmpty()) {
-            throw new IllegalArgumentException("empty method name");
-        }
+    public MethodAndSink(ClassMethodSignature classMethodSignature, InjectionSink sink) {
+        Objects.requireNonNull(classMethodSignature, "classMethodSignature");
         Objects.requireNonNull(sink, "sink");
-        this.method = method;
+        this.classMethodSignature = classMethodSignature;
         this.sink = sink;
     }
 
-    public String getMethod() {
-        return method;
+    public ClassMethodSignature getClassMethodSignature() {
+        return classMethodSignature;
     }
 
     public InjectionSink getSink() {
@@ -48,25 +45,16 @@ public class MethodAndSink {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof MethodAndSink)) {
-            return false;
-        }
-        final MethodAndSink other = (MethodAndSink) obj;
-        return this.method.equals(other.method) && this.sink.equals(other.sink);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MethodAndSink that = (MethodAndSink) o;
+        return Objects.equals(classMethodSignature, that.classMethodSignature) &&
+                Objects.equals(sink, that.sink);
     }
-    
+
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 71 * hash + method.hashCode();
-        hash = 71 * hash + sink.hashCode();
-        return hash;
+        return Objects.hash(classMethodSignature, sink);
     }
 }

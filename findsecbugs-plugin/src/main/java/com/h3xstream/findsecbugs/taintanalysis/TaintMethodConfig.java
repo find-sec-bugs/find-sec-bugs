@@ -75,6 +75,8 @@ public class TaintMethodConfig implements TaintTypeConfig {
         configPattern = Pattern.compile(configRegex);
     }
 
+    private boolean parametersOutputTaintsProcessed;
+
     /**
      * Constructs an empty summary
      *
@@ -193,10 +195,8 @@ public class TaintMethodConfig implements TaintTypeConfig {
         if (outputTaint != null && outputTaint.isInformative()) {
             return true;
         }
-        for (Taint taint : parametersOutputTaints.values()) {
-            if (taint.isInformative()) {
-                return true;
-            }
+        if (parametersOutputTaintsProcessed) {
+            return true;
         }
 
         return false;
@@ -494,5 +494,13 @@ public class TaintMethodConfig implements TaintTypeConfig {
      */
     public Map<Integer, Taint> getParametersOutputTaints() {
         return Collections.unmodifiableMap(parametersOutputTaints);
+    }
+
+    public void setParametersOutputTaintsProcessed(boolean parametersOutputTaintsProcessed) {
+        this.parametersOutputTaintsProcessed = parametersOutputTaintsProcessed;
+    }
+
+    public boolean isParametersOutputTaintsProcessed() {
+        return parametersOutputTaintsProcessed;
     }
 }

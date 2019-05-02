@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.taintanalysis;
 
+import com.h3xstream.findsecbugs.BCELUtil;
 import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
 import edu.umd.cs.findbugs.ba.SignatureParser;
@@ -29,6 +30,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
 
 /**
@@ -197,28 +199,23 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
                 // not a real class
                 return null;
             }
+
             JavaClass javaClass = Repository.lookupClass(className);
             assert javaClass != null;
-            TaintMethodConfig methodConfig = getSuperMethodConfig(javaClass.getSuperClasses(), methodId);
-            if (methodConfig != null) {
-                return methodConfig;
+
+            Set<String> parentClassNames = BCELUtil.getParentClassNames(javaClass);
+
+            for (String parentClassName : parentClassNames) {
+                TaintMethodConfig conf = get(parentClassName.concat(methodId));
+                if (conf != null) {
+                    return conf;
+                }
             }
-            return getSuperMethodConfig(javaClass.getAllInterfaces(), methodId);
+
         } catch (ClassNotFoundException ex) {
             AnalysisContext.reportMissingClass(ex);
-            return null;
         }
-    }
 
-    private TaintMethodConfig getSuperMethodConfig(JavaClass[] javaClasses, String method) {
-        assert javaClasses != null;
-        for (JavaClass classOrInterface : javaClasses) {
-            String fullMethodName = classOrInterface.getClassName().replace('.', '/').concat(method);
-            TaintMethodConfig conf = get(fullMethodName);
-            if (conf != null) {
-                return conf;
-            }
-        }
         return null;
     }
 

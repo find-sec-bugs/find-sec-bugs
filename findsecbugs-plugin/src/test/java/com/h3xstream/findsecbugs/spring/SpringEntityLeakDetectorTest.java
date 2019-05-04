@@ -19,8 +19,11 @@ package com.h3xstream.findsecbugs.spring;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
+import edu.umd.cs.findbugs.BugInstance;
 import org.testng.annotations.Test;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
@@ -63,5 +66,20 @@ public class SpringEntityLeakDetectorTest extends BaseDetectorTest {
 						.inMethod("api3")
 						.build()
 		);
+	}
+
+	@Test
+	public void skipDetectEntityLeakForInterface() throws Exception {
+		//Locate test code
+		String[] files = {
+			getClassFilePath("testcode/spring/feign/SpringOpenFeignClient")
+		};
+
+		//Run the analysis
+		EasyBugReporter reporter = spy(new SecurityReporter());
+		analyze(files, reporter);
+
+		//Assertions
+		verify(reporter, never()).doReportBug(any(BugInstance.class));
 	}
 }

@@ -44,6 +44,8 @@ public class SpringMvcEndpointDetector implements Detector {
             "Lorg/springframework/web/bind/annotation/DeleteMapping;", //
             "Lorg/springframework/web/bind/annotation/PatchMapping;");
 
+    private static final String SPRING_OPENFEIGN_ANNOTATION_TYPE = "Lorg/springframework/cloud/openfeign/FeignClient";
+
     private BugReporter bugReporter;
 
     public SpringMvcEndpointDetector(BugReporter bugReporter) {
@@ -53,6 +55,10 @@ public class SpringMvcEndpointDetector implements Detector {
     @Override
     public void visitClassContext(ClassContext classContext) {
         JavaClass javaClass = classContext.getJavaClass();
+        if (isSpringFeignClient(javaClass)) {
+            return;
+        }
+
         method : for (Method m : javaClass.getMethods()) {
 
             for (AnnotationEntry ae : m.getAnnotationEntries()) {
@@ -69,6 +75,17 @@ public class SpringMvcEndpointDetector implements Detector {
     @Override
     public void report() {
 
+    }
+
+    private boolean isSpringFeignClient(JavaClass javaClass) {
+        AnnotationEntry[] annotations = javaClass.getAnnotationEntries();
+        for (AnnotationEntry annotation : annotations) {
+            if (annotation.getAnnotationType().contains(SPRING_OPENFEIGN_ANNOTATION_TYPE)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

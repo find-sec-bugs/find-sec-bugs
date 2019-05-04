@@ -52,6 +52,8 @@ public class SpringEntityLeakDetector implements Detector {
 			"Ljavax/jdo/spi/PersistenceCapable;",
 			"Lorg/springframework/data/mongodb/core/mapping/Document;");
 
+	private static final String SPRING_OPENFEIGN_ANNOTATION_TYPE = "Lorg/springframework/cloud/openfeign/FeignClient";
+
 	private BugReporter reporter;
 
 	public SpringEntityLeakDetector(BugReporter bugReporter) {
@@ -101,6 +103,10 @@ public class SpringEntityLeakDetector implements Detector {
 	}
 	private void analyzeMethod(Method m, ClassContext classContext) {
 		JavaClass clazz = classContext.getJavaClass();
+		if (isSpringFeignClient(clazz)) {
+			return;
+		}
+
 		MethodGen methodGen = classContext.getMethodGen(m);
 
 		List<String> annotations = new ArrayList<>();
@@ -130,5 +136,16 @@ public class SpringEntityLeakDetector implements Detector {
 	@Override
 	public void report() {
 
+	}
+
+	private boolean isSpringFeignClient(JavaClass javaClass) {
+		AnnotationEntry[] annotations = javaClass.getAnnotationEntries();
+		for (AnnotationEntry annotation : annotations) {
+			if (annotation.getAnnotationType().contains(SPRING_OPENFEIGN_ANNOTATION_TYPE)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

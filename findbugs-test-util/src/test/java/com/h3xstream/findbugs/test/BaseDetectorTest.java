@@ -52,6 +52,11 @@ public class BaseDetectorTest {
         findBugsLauncher = new FindBugsLauncher();
     }
 
+    public BaseDetectorTest(String metadataFolder) {
+        classFileLocator = new ClassFileLocator();
+        findBugsLauncher = new FindBugsLauncher(metadataFolder);
+    }
+
     public String getClassFilePath(String path) {
         //Convert dot class name to path
         if(StringUtils.countMatches(path,".") > 1 && !path.endsWith(".jar")) {

@@ -26,7 +26,7 @@ import org.apache.bcel.Repository;
 import org.apache.bcel.classfile.AnnotationEntry;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
-import org.apache.bcel.generic.*;
+import org.apache.bcel.generic.Type;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,8 +51,6 @@ public class SpringEntityLeakDetector implements Detector {
 			"Ljavax/persistence/Entity;",
 			"Ljavax/jdo/spi/PersistenceCapable;",
 			"Lorg/springframework/data/mongodb/core/mapping/Document;");
-
-	private static final String SPRING_OPENFEIGN_ANNOTATION_TYPE = "Lorg/springframework/cloud/openfeign/FeignClient";
 
 	private BugReporter reporter;
 
@@ -103,15 +101,10 @@ public class SpringEntityLeakDetector implements Detector {
 	}
 	private void analyzeMethod(Method m, ClassContext classContext) {
 		JavaClass clazz = classContext.getJavaClass();
-		if (isSpringFeignClient(clazz)) {
-			return;
-		}
-
-		MethodGen methodGen = classContext.getMethodGen(m);
 
 		List<String> annotations = new ArrayList<>();
-		List<String> classesToInspect = new ArrayList<>(Arrays.asList(methodGen.getReturnType().toString()));
-		for (Type type: methodGen.getArgumentTypes())
+		List<String> classesToInspect = new ArrayList<>(Arrays.asList(m.getReturnType().toString()));
+		for (Type type: m.getArgumentTypes())
 			classesToInspect.add(type.toString());
 
 
@@ -138,14 +131,4 @@ public class SpringEntityLeakDetector implements Detector {
 
 	}
 
-	private boolean isSpringFeignClient(JavaClass javaClass) {
-		AnnotationEntry[] annotations = javaClass.getAnnotationEntries();
-		for (AnnotationEntry annotation : annotations) {
-			if (annotation.getAnnotationType().contains(SPRING_OPENFEIGN_ANNOTATION_TYPE)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
 }

@@ -44,7 +44,6 @@ public class SpringCsrfUnrestrictedRequestMappingDetector implements Detector {
     private static final String REQUEST_MAPPING_ANNOTATION_TYPE = "Lorg/springframework/web/bind/annotation/RequestMapping;";
     private static final String METHOD_ANNOTATION_ATTRIBUTE_KEY = "method";
     private static final List<String> UNPROTECTED_HTTP_REQUEST_METHODS = Arrays.asList("GET", "HEAD", "TRACE", "OPTIONS");
-    private static final String SPRING_OPENFEIGN_ANNOTATION_TYPE = "Lorg/springframework/cloud/openfeign/FeignClient";
 
     private BugReporter bugReporter;
 
@@ -55,9 +54,6 @@ public class SpringCsrfUnrestrictedRequestMappingDetector implements Detector {
     @Override
     public void visitClassContext(ClassContext classContext) {
         JavaClass javaClass = classContext.getJavaClass();
-        if (isSpringFeignClient(javaClass)) {
-            return;
-        }
 
         for (Method method : javaClass.getMethods()) {
             if (isVulnerable(method)) {
@@ -151,17 +147,6 @@ public class SpringCsrfUnrestrictedRequestMappingDetector implements Detector {
                 return true;
             }
         }
-        return false;
-    }
-
-    private boolean isSpringFeignClient(JavaClass javaClass) {
-        AnnotationEntry[] annotations = javaClass.getAnnotationEntries();
-        for (AnnotationEntry annotation : annotations) {
-            if (annotation.getAnnotationType().contains(SPRING_OPENFEIGN_ANNOTATION_TYPE)) {
-                return true;
-            }
-        }
-
         return false;
     }
 }

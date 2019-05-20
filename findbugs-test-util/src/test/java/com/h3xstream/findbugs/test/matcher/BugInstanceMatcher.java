@@ -152,7 +152,8 @@ public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
                 boolean found = false;
                 for (StringAnnotation strAnn : srcAnn) {
                     //The key "Unknown source" can not be reference directly
-                    if (strAnn.getDescription().equals("Unknown source")) {
+                    String description = strAnn.getDescription();
+                    if (description.equals("Unknown source") || description.equals("Null source") || description.equals("Tainted source") || description.equals("Safe source")) {
                         if(unknownSources.contains(strAnn.getValue())) {
                             found = true;
                         }

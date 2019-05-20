@@ -17,6 +17,8 @@
  */
 package com.h3xstream.findsecbugs.injection;
 
+import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
+import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import com.h3xstream.findsecbugs.taintanalysis.data.TaintLocation;
 import com.h3xstream.findsecbugs.taintanalysis.data.UnknownSource;
 import com.h3xstream.findsecbugs.taintanalysis.data.UnknownSourceType;
@@ -146,12 +148,34 @@ public class InjectionSink {
         addMessage(bug, "Sink parameter", String.valueOf(parameterOffset));
 
         for(UnknownSource source : sources) {
+            if (source.getState() == Taint.State.SAFE && !FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
+                continue;
+            }
+
+            String message;
+            switch(source.getState()) {
+                case NULL:
+                    message = "Null source";
+                    break;
+                case SAFE:
+                    message = "Safe source";
+                    break;
+                case TAINTED:
+                    message = "Tainted source";
+                    break;
+                default:
+                    message = "Unknown source";
+            }
+
             if(source.getSourceType() == UnknownSourceType.FIELD) {
-                addMessage(bug, "Unknown source", source.getSignatureField());
+                addMessage(bug, message, source.getSignatureField());
             }
             else if(source.getSourceType() == UnknownSourceType.RETURN) {
                 if(isExclude(source.getSignatureMethod())) continue;
-                addMessage(bug, "Unknown source", source.getSignatureMethod());
+                addMessage(bug, message, source.getSignatureMethod());
+            }
+            else if(source.getSourceType() == UnknownSourceType.PARAMETER) {
+                addMessage(bug, message, source.getSignatureMethod() + " parameter " + source.getParameterIndex());
             }
 
 //            if(isExclude(source.getTaintSource())) { continue; }

@@ -52,6 +52,7 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
     
     private static final long serialVersionUID = 1L;
     private final Map<String, TaintClassConfig> taintClassConfigMap = new HashMap<String, TaintClassConfig>();
+    private final Map<String, TaintFieldConfig> taintFieldConfigMap = new HashMap<String, TaintFieldConfig>();
     private final Map<String, TaintMethodConfigWithArgumentsAndLocation> taintMethodConfigWithArgumentsAndLocationMap =
             new HashMap<String, TaintMethodConfigWithArgumentsAndLocation>();
 
@@ -100,6 +101,16 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
                     return;
                 }
 
+                if (TaintFieldConfig.accepts(typeSignature, config)) {
+                    if (checkRewrite && taintFieldConfigMap.containsKey(typeSignature)) {
+                        throw new IllegalStateException("Config for " + typeSignature + " already loaded");
+                    }
+                    TaintFieldConfig taintFieldConfig = new TaintFieldConfig().load(config);
+                    taintFieldConfig.setTypeSignature(typeSignature);
+                    taintFieldConfigMap.put(typeSignature, taintFieldConfig);
+                    return;
+                }
+
                 if (TaintMethodConfigWithArgumentsAndLocation.accepts(typeSignature, config)) {
                     if (checkRewrite && taintMethodConfigWithArgumentsAndLocationMap.containsKey(typeSignature)) {
                         throw new IllegalStateException("Config for " + typeSignature + " already loaded");
@@ -115,7 +126,7 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
                     return;
                 }
 
-                throw new IllegalArgumentException("Invalid full method name " + typeSignature + " configured");
+                throw new IllegalArgumentException("Invalid signature " + typeSignature + " configured");
             }
         });
     }
@@ -167,6 +178,26 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
         return taintClassConfigState;
     }
 
+    public Taint.State getFieldTaintState(String fieldSignature, Taint.State defaultState) {
+        if (!isFieldType(fieldSignature)) {
+            return defaultState;
+        }
+
+        TaintFieldConfig taintFieldConfig = taintFieldConfigMap.get(fieldSignature);
+
+        if (taintFieldConfig == null) {
+            return defaultState;
+        }
+
+        Taint.State taintFieldConfigState = taintFieldConfig.getTaintState();
+
+        if (taintFieldConfigState.equals(TaintClassConfig.DEFAULT_TAINT_STATE)) {
+            return defaultState;
+        }
+
+        return taintFieldConfigState;
+    }
+
     public TaintClassConfig getTaintClassConfig(String typeSignature) {
         if (!isClassType(typeSignature)) {
             return null;
@@ -177,6 +208,10 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
 
     private boolean isClassType(String typeSignature) {
         return typeSignature != null && typeSignature.length() > 2 && typeSignature.charAt(0) == 'L';
+    }
+
+    private boolean isFieldType(String typeSignature) {
+        return typeSignature != null && typeSignature.length() > 2 && typeSignature.charAt(0) != 'L';
     }
 
     public TaintMethodConfig getMethodConfig(TaintFrame frame, MethodDescriptor methodDescriptor, String className, String methodId) {

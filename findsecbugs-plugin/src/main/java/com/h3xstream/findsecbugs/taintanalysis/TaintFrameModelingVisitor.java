@@ -191,9 +191,15 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                 getFrame().pushValue(new Taint(Taint.State.NULL));
             }
         } else {
-            //super.visitGETSTATIC(obj);
             String fieldSig = BCELUtil.getSlashedClassName(cpg, obj)+"."+obj.getName(cpg);
-            Taint.State state = taintConfig.getClassTaintState(fieldSig, Taint.State.UNKNOWN);
+            Taint.State state = taintConfig.getFieldTaintState(fieldSig, Taint.State.INVALID);
+            if (state == Taint.State.INVALID) {
+                state = taintConfig.getClassTaintState(obj.getSignature(cpg), Taint.State.INVALID);
+            }
+            if (state == Taint.State.INVALID) {
+                state = Taint.State.UNKNOWN;
+            }
+
             Taint taint = new Taint(state);
 
             if (!state.equals(Taint.State.SAFE)){
@@ -230,7 +236,14 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     @Override
     public void visitGETFIELD(GETFIELD obj) {
         String fieldSig = BCELUtil.getSlashedClassName(cpg, obj)+"."+obj.getName(cpg);
-        Taint.State state = taintConfig.getClassTaintState(fieldSig, Taint.State.UNKNOWN);
+        Taint.State state = taintConfig.getFieldTaintState(fieldSig, Taint.State.INVALID);
+        if (state == Taint.State.INVALID) {
+            state = taintConfig.getClassTaintState(obj.getSignature(cpg), Taint.State.INVALID);
+        }
+        if (state == Taint.State.INVALID) {
+            state = Taint.State.UNKNOWN;
+        }
+
         Taint taint = new Taint(state);
 
         if (!state.equals(Taint.State.SAFE)){

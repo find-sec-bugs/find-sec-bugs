@@ -1174,7 +1174,7 @@ regex meant, this new regex can be evaluated quickly, and is not subject to ReDO
 <br/>
 <p>
 <b>References</b><br/>
-<a href="http://www.jroller.com/sebastianKuebeck/entry/detecting_and_preventing_redos_vulnerabilities">Sebastian Kubeck's Weblog: Detecting and Preventing ReDoS Vulnerabilities</a><br/>
+<a href="https://sebastiankuebeck.wordpress.com/2011/03/01/detecting-and-preventing-redos-vulnerabilities/">Sebastian Kubeck's Weblog: Detecting and Preventing ReDoS Vulnerabilities</a><br/>
 <sup>[1]</sup> <a href="https://www.owasp.org/index.php/Regular_expression_Denial_of_Service_-_ReDoS">OWASP: Regular expression Denial of Service</a><br/>
 <a href="http://cwe.mitre.org/data/definitions/400.html">CWE-400: Uncontrolled Resource Consumption ('Resource Exhaustion')</a>
 </p>

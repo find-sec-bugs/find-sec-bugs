@@ -3699,7 +3699,7 @@ public String redirect(@RequestParam("url") String url) {
 
     <BugPattern type="SPRING_ENTITY_LEAK">
         <ShortDescription>Spring Entity Leak</ShortDescription>
-        <LongDescription>The presistent objects could be exploited by attacker to read/tamper sensitive information.</LongDescription>
+        <LongDescription>The persistent objects could be exploited by attacker to read/tamper sensitive information.</LongDescription>
         <Details>
             <![CDATA[
 <p>

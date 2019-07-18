@@ -49,12 +49,14 @@ import java.util.TreeSet;
  * @author David Formanek (Y Soft Corporation, a.s.)
  */
 public class TaintConfig extends HashMap<String, TaintMethodConfig> {
-    
+
     private static final long serialVersionUID = 1L;
     private final Map<String, TaintClassConfig> taintClassConfigMap = new HashMap<String, TaintClassConfig>();
     private final Map<String, TaintFieldConfig> taintFieldConfigMap = new HashMap<String, TaintFieldConfig>();
     private final Map<String, TaintMethodConfigWithArgumentsAndLocation> taintMethodConfigWithArgumentsAndLocationMap =
             new HashMap<String, TaintMethodConfigWithArgumentsAndLocation>();
+
+    private final Map<String, Taint> staticFieldsTaint = new HashMap<String, Taint>();
 
     /**
      * Dumps all the summaries for debugging
@@ -290,4 +292,22 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
         String key = methodDefinition + "@" + methodDescriptor.getSlashedClassName();
         return taintMethodConfigWithArgumentsAndLocationMap.get(key);
     }
+
+    public Taint getStaticFieldTaint(String fieldSignature, Taint defaultValue) {
+        if (!isFieldType(fieldSignature)) {
+            return defaultValue;
+        }
+
+        return staticFieldsTaint.getOrDefault(fieldSignature, defaultValue);
+    }
+
+    public void putStaticFieldTaint(String fieldSignature, Taint t) {
+        if (!isFieldType(fieldSignature)) {
+            return;
+        }
+
+        staticFieldsTaint.put(fieldSignature, t);
+    }
+
+
 }

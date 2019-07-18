@@ -191,16 +191,19 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                 getFrame().pushValue(new Taint(Taint.State.NULL));
             }
         } else {
+            Taint taint;
+
             String fieldSig = BCELUtil.getSlashedClassName(cpg, obj)+"."+obj.getName(cpg);
             Taint.State state = taintConfig.getFieldTaintState(fieldSig, Taint.State.INVALID);
             if (state == Taint.State.INVALID) {
                 state = taintConfig.getClassTaintState(obj.getSignature(cpg), Taint.State.INVALID);
             }
             if (state == Taint.State.INVALID) {
-                state = Taint.State.UNKNOWN;
+                taint = taintConfig.getStaticFieldTaint(fieldSig, getDefaultValue());
             }
-
-            Taint taint = new Taint(state);
+            else {
+                taint = new Taint(state);
+            }
 
             if (!state.equals(Taint.State.SAFE)){
                 taint.addLocation(getTaintLocation(), false);
@@ -268,6 +271,15 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     @Override
     public void visitPUTSTATIC(PUTSTATIC obj) {
+        try {
+            String fieldSig = BCELUtil.getSlashedClassName(cpg, obj)+"."+obj.getName(cpg);
+            Taint staticTaint = taintConfig.getStaticFieldTaint(fieldSig, null);
+            Taint t = getFrame().getTopValue();
+            t = Taint.merge(t, staticTaint);
+            taintConfig.putStaticFieldTaint(fieldSig, t);
+        } catch (DataflowAnalysisException e) {
+        }
+
         visitPutFieldOp(obj);
     }
 

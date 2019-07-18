@@ -72,6 +72,24 @@ public abstract class AbstractTaintDetector implements Detector {
             if (classContext.getMethodGen(method) == null) {
                 continue;
             }
+            if (!method.isStatic()) {
+                continue;
+            }
+            try {
+                analyzeMethod(classContext, method);
+            } catch (CheckedAnalysisException e) {
+                logException(classContext, method, e);
+            } catch (RuntimeException e) {
+                logException(classContext, method, e);
+            }
+        }
+        for (Method method : classContext.getMethodsInCallOrder()) {
+            if (classContext.getMethodGen(method) == null) {
+                continue;
+            }
+            if (method.isStatic()) {
+                continue;
+            }
             try {
                 analyzeMethod(classContext, method);
             } catch (CheckedAnalysisException e) {

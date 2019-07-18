@@ -825,15 +825,23 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     private Taint mergeTransferParameters(Collection<Integer> transferParameters) {
         assert transferParameters != null && !transferParameters.isEmpty();
         Taint taint = null;
+        Taint safeTaint = null;
         for (Integer transferParameter : transferParameters) {
             try {
                 Taint value = getFrame().getStackValue(transferParameter);
-                taint = Taint.merge(taint, value);
+                if (value.isSafe()) {
+                    safeTaint = Taint.merge(safeTaint, value);;
+                } else {
+                    taint = Taint.merge(taint, value);
+                }
             } catch (DataflowAnalysisException ex) {
                 throw new RuntimeException("Bad transfer parameter specification", ex);
             }
         }
-        assert taint != null;
+        assert taint != null || safeTaint != null;
+        if (taint == null) {
+            return safeTaint;
+        }
         return taint;
     }
 

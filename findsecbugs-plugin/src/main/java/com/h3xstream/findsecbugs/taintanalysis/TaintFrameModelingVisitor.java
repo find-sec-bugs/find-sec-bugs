@@ -552,9 +552,6 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                 taint.setDebugInfo(obj.getMethodName(cpg) + "()"); //TODO: Deprecated debug info
             }
             taint.addSource(new UnknownSource(UnknownSourceType.RETURN,taint.getState()).setSignatureMethod(BCELUtil.getSlashedClassName(cpg, obj)+"."+obj.getMethodName(cpg)+obj.getSignature(cpg)));
-            if (taint.isUnknown()) {
-                taint.addLocation(getTaintLocation(), false);
-            }
             taintMutableArguments(methodConfig, obj);
             transferTaintToMutables(methodConfig, taint); // adds variable index to taint too
 //            Taint taintCopy = new Taint(taint);
@@ -714,37 +711,61 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
         if (methodConfig == null || methodConfig.getOutputTaint() == null) {
             return getDefaultValue();
         }
-        Taint taint = methodConfig.getOutputTaint();
-        assert taint != null;
-        assert taint != methodConfig.getOutputTaint() : "defensive copy not made";
+        Taint outputTaint = methodConfig.getOutputTaint();
+        assert outputTaint != null;
+        assert outputTaint != methodConfig.getOutputTaint() : "defensive copy not made";
 
-        return mergeTaintWithStack(taint);
+        Taint taint = mergeTaintWithStack(outputTaint);
+
+        if (taint.isTainted()) {
+            taint.addLocation(getTaintLocation(), true);
+        }
+        else if (taint.isUnknown()) {
+            taint.addLocation(getTaintLocation(), false);
+        }
+
+        return taint;
     }
 
     private Taint mergeTaintWithStack(Taint taint) {
         assert taint != null;
-        Taint taintCopy = new Taint(taint);
+        Taint result = taint;
         if (taint.isUnknown() && taint.hasParameters()) {
-            Taint merge = mergeTransferParameters(taint.getParameters());
-            assert merge != null;
+            // taint consisting of merged parameters only
+            Taint transferParametersTaint = mergeTransferParameters(taint.getParameters());
+            assert transferParametersTaint != null;
+
+            if (taint.getNonParametricState() != Taint.State.INVALID) {
+                // if the method body has own inner state then merge with parameters
+                result = Taint.merge(Taint.valueOf(taint.getNonParametricState()), transferParametersTaint);
+            }
+            else {
+                result = transferParametersTaint;
+            }
+
+            result.addAllSources(taint.getSources());
+
             // merge removes tags so we made a taint copy before
-            taint = Taint.merge(Taint.valueOf(taint.getNonParametricState()), merge);
-        }
-        if (taint.isTainted()) {
-            taint.addLocation(getTaintLocation(), true);
-        }
-        // don't add tags to safe values
-        if (!taint.isSafe() && taintCopy.hasTags()) {
-            for (Taint.Tag tag : taintCopy.getTags()) {
-                taint.addTag(tag);
+            for (TaintLocation unknownLocation : taint.getUnknownLocations()) {
+                result.addLocation(unknownLocation, false);
+            }
+            for (TaintLocation taintLocation : taint.getTaintedLocations()) {
+                result.addLocation(taintLocation, true);
+            }
+
+            // don't add tags to safe values
+            if (!result.isSafe() && taint.hasTags()) {
+                for (Taint.Tag tag : taint.getTags()) {
+                    result.addTag(tag);
+                }
+            }
+            if (taint.isRemovingTags()) {
+                for (Taint.Tag tag : taint.getTagsToRemove()) {
+                    result.removeTag(tag);
+                }
             }
         }
-        if (taintCopy.isRemovingTags()) {
-            for (Taint.Tag tag : taintCopy.getTagsToRemove()) {
-                taint.removeTag(tag);
-            }
-        }
-        return taint;
+        return result;
     }
 
     private void taintMutableArguments(TaintMethodConfig methodConfig, InvokeInstruction obj) {

@@ -21,18 +21,16 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 /**
- * Summary of information about a class related to taint analysis,
- * allows to configure default behavior for return types and type casts.
+ * Summary of information about a class field related to taint analysis,
+ * allows to configure default behavior for class fields.
  *
  * Default configuration is mutable class with null taint state.
  *
  * @author Tomas Polesovsky (Liferay, Inc.)
  */
-public class TaintClassConfig implements TaintTypeConfig {
+public class TaintFieldConfig implements TaintTypeConfig {
     public static final Taint.State DEFAULT_TAINT_STATE = Taint.State.NULL;
-    private static final String IMMUTABLE = "#IMMUTABLE";
     private Taint.State taintState = DEFAULT_TAINT_STATE;
-    private boolean immutable;
     private String typeSignature;
     private static final Pattern typePattern;
     private static final Pattern taintConfigPattern;
@@ -40,10 +38,10 @@ public class TaintClassConfig implements TaintTypeConfig {
     static {
         String javaIdentifierRegex = "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";
         String classWithPackageRegex = javaIdentifierRegex+"(\\/"+javaIdentifierRegex+")*";
-        String typeRegex = "(\\[)*((L" + classWithPackageRegex + ";)|B|C|D|F|I|J|S|Z)";
+        String typeRegex = classWithPackageRegex + "\\." + javaIdentifierRegex;
         typePattern = Pattern.compile(typeRegex);
 
-        String taintConfigRegex = "([A-Z_]+|#IMMUTABLE|[A-Z_]+#IMMUTABLE)";
+        String taintConfigRegex = "([A-Z_]+)";
         taintConfigPattern = Pattern.compile(taintConfigRegex);
     }
 
@@ -52,7 +50,7 @@ public class TaintClassConfig implements TaintTypeConfig {
     }
 
     /**
-     * Loads class summary from String<br/>
+     * Loads class field summary from String<br/>
      * <br/>
      * The summary should have the following syntax:<br />
      * <code>defaultTaintState #IMMUTABLE</code>, where <ol>
@@ -85,21 +83,17 @@ public class TaintClassConfig implements TaintTypeConfig {
      *
      * @param taintConfig <code>state#IMMUTABLE</code>, where state is one of Taint.STATE or empty
      * @return initialized object with taint class summary
-     * @throws java.io.IOException for bad format of parameter
+     * @throws IOException for bad format of parameter
      * @throws NullPointerException if argument is null
      */
     @Override
-    public TaintClassConfig load(String taintConfig) throws IOException {
+    public TaintFieldConfig load(String taintConfig) throws IOException {
         if (taintConfig == null) {
             throw new NullPointerException("Taint config is null");
         }
         taintConfig = taintConfig.trim();
         if (taintConfig.isEmpty()) {
             throw new IOException("No taint class config specified");
-        }
-        if (taintConfig.endsWith(IMMUTABLE)) {
-            immutable = true;
-            taintConfig = taintConfig.substring(0, taintConfig.length() - IMMUTABLE.length());
         }
 
         if (!taintConfig.isEmpty()) {
@@ -111,10 +105,6 @@ public class TaintClassConfig implements TaintTypeConfig {
 
     public Taint.State getTaintState() {
         return taintState;
-    }
-
-    public boolean isImmutable() {
-        return immutable;
     }
 
     public Taint.State getTaintState(Taint.State defaultState) {

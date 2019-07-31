@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.injection;
 
+import com.h3xstream.findsecbugs.BCELUtil;
 import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import com.h3xstream.findsecbugs.taintanalysis.TaintFrame;
 import edu.umd.cs.findbugs.BugReporter;
@@ -25,12 +26,15 @@ import edu.umd.cs.findbugs.SourceLineAnnotation;
 import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.ba.ClassContext;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
-import edu.umd.cs.findbugs.util.ClassName;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+
 import org.apache.bcel.Repository;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
@@ -45,7 +49,7 @@ import org.apache.bcel.generic.InvokeInstruction;
  */
 public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
     
-    protected final Map<String, Set<InjectionSink>> injectionSinks = new HashMap<String, Set<InjectionSink>>();
+    protected final Map<ClassMethodSignature, Set<InjectionSink>> injectionSinks = new HashMap<>();
     private final Map<MethodAndSink, Taint> sinkTaints = new HashMap<MethodAndSink, Taint>();
     
     protected AbstractInjectionDetector(BugReporter bugReporter) {
@@ -71,10 +75,10 @@ public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
     
     @Override
     protected void analyzeLocation(ClassContext classContext, Method method, InstructionHandle handle,
-            ConstantPoolGen cpg, InvokeInstruction invoke, TaintFrame fact, String currentMethod)
+            ConstantPoolGen cpg, InvokeInstruction invoke, TaintFrame fact, ClassMethodSignature classMethodSignature)
             throws DataflowAnalysisException {
         SourceLineAnnotation sourceLine = SourceLineAnnotation.fromVisitedInstruction(classContext, method, handle);
-        checkSink(cpg, invoke, fact, sourceLine, currentMethod);
+        checkSink(cpg, invoke, fact, sourceLine, classMethodSignature);
         InjectionPoint injectionPoint = getInjectionPoint(invoke, cpg, handle);
         for (int offset : injectionPoint.getInjectableArguments()) {
             int priority = getPriorityFromTaintFrame(fact, offset);
@@ -91,14 +95,14 @@ public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
             injectionSink.addSources(parameterTaint.getSources());
             if (parameterTaint.hasParameters()) {
                 // add sink to multi map
-                Set<InjectionSink> sinkSet = injectionSinks.get(currentMethod);
+                Set<InjectionSink> sinkSet = injectionSinks.get(classMethodSignature);
                 if (sinkSet == null) {
                     sinkSet = new HashSet<InjectionSink>();
                 }
                 assert !sinkSet.contains(injectionSink) : "duplicate sink";
                 sinkSet.add(injectionSink);
-                injectionSinks.put(currentMethod, sinkSet);
-                sinkTaints.put(new MethodAndSink(currentMethod, injectionSink), parameterTaint);
+                injectionSinks.put(classMethodSignature, sinkSet);
+                sinkTaints.put(new MethodAndSink(classMethodSignature, injectionSink), parameterTaint);
             } else {
                 // sink cannot be influenced by other methods calls, so report it immediately
                 bugReporter.reportBug(injectionSink.generateBugInstance(true));
@@ -145,7 +149,7 @@ public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
     }
     
     private void checkSink(ConstantPoolGen cpg, InvokeInstruction invoke, TaintFrame fact,
-            SourceLineAnnotation line, String currentMethod) throws DataflowAnalysisException {
+                           SourceLineAnnotation line, ClassMethodSignature classMethodSignature) throws DataflowAnalysisException {
         for (MethodAndSink methodAndSink : getSinks(cpg, invoke, fact)) {
             Taint sinkTaint = sinkTaints.get(methodAndSink);
             assert sinkTaint != null : "sink taint not stored in advance";
@@ -170,13 +174,13 @@ public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
             }
             InjectionSink sink = methodAndSink.getSink();
             if (finalTaint.hasParameters()) {
-                Set<InjectionSink> sinkSet = injectionSinks.get(currentMethod);
+                Set<InjectionSink> sinkSet = injectionSinks.get(classMethodSignature);
                 if (sinkSet == null) {
                     sinkSet = new HashSet<InjectionSink>();
                 }
                 sinkSet.add(sink);
-                injectionSinks.put(currentMethod, sinkSet);
-                sinkTaints.put(new MethodAndSink(currentMethod, sink), finalTaint);
+                injectionSinks.put(classMethodSignature, sinkSet);
+                sinkTaints.put(new MethodAndSink(classMethodSignature, sink), finalTaint);
             } else {
                 // confirm sink to be tainted or called only with safe values
                 sink.updateSinkPriority(getPriority(finalTaint));
@@ -189,57 +193,53 @@ public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
     }
 
     private Set<MethodAndSink> getSinks(ConstantPoolGen cpg, InvokeInstruction invoke, TaintFrame frame) {
-        String className = getInstanceClassName(cpg, invoke, frame);
-        String methodName = "." + invoke.getMethodName(cpg) + invoke.getSignature(cpg);
-        String fullMethodName = className.concat(methodName);
-        Set<InjectionSink> sinks = injectionSinks.get(fullMethodName);
+        ClassMethodSignature classMethodSignature = new ClassMethodSignature(
+                getInstanceClassName(cpg, invoke, frame), invoke.getMethodName(cpg), invoke.getSignature(cpg));
+
+        Set<InjectionSink> sinks = injectionSinks.get(classMethodSignature);
         if (sinks != null) {
             assert !sinks.isEmpty() : "empty set of sinks";
-            return getMethodAndSinks(fullMethodName, sinks);
+            return getMethodAndSinks(classMethodSignature, sinks);
         }
         try {
-            if (className.endsWith("]")) {
+            if (classMethodSignature.getClassName().endsWith("]")) {
                 // not a real class
                 return Collections.emptySet();
             }
-            JavaClass javaClass = Repository.lookupClass(className);
+            JavaClass javaClass = Repository.lookupClass(classMethodSignature.getClassName());
             assert javaClass != null;
-            return getSuperSinks(javaClass, methodName);
+            return getSuperSinks(javaClass, classMethodSignature);
         } catch (ClassNotFoundException ex) {
             AnalysisContext.reportMissingClass(ex);
         }
         return Collections.emptySet();
     }
     
-    private Set<MethodAndSink> getMethodAndSinks(String method, Set<InjectionSink> sinks) {
+    private Set<MethodAndSink> getMethodAndSinks(ClassMethodSignature classMethodSignature, Set<InjectionSink> sinks) {
         Set<MethodAndSink> methodAndSinks = new HashSet<MethodAndSink>();
         for (InjectionSink sink : sinks) {
-            methodAndSinks.add(new MethodAndSink(method, sink));
+            methodAndSinks.add(new MethodAndSink(classMethodSignature, sink));
         }
         return methodAndSinks;
     }
-    
-    private Set<MethodAndSink> getSuperSinks(JavaClass javaClass, String method) throws ClassNotFoundException {
-        for (JavaClass superClass : javaClass.getSuperClasses()) {
-            String fullMethodName = superClass.getClassName().replace('.', '/').concat(method);
-            Set<InjectionSink> sinks = injectionSinks.get(fullMethodName);
+
+    private Set<MethodAndSink> getSuperSinks(JavaClass javaClass, ClassMethodSignature classMethodSignature) throws ClassNotFoundException {
+        Set<String> classNames = BCELUtil.getParentClassNames(javaClass);
+
+        for (String className : classNames) {
+            classMethodSignature.setClassName(className);
+            Set<InjectionSink> sinks = injectionSinks.get(classMethodSignature);
             if (sinks != null) {
-                return getMethodAndSinks(fullMethodName, sinks);
+                return getMethodAndSinks(classMethodSignature, sinks);
             }
         }
-        for (JavaClass interfaceClass : javaClass.getAllInterfaces()) {
-            String fullMethodName = interfaceClass.getClassName().replace('.', '/').concat(method);
-            Set<InjectionSink> sinks = injectionSinks.get(fullMethodName);
-            if (sinks != null) {
-                return getMethodAndSinks(fullMethodName, sinks);
-            }
-        }
+
         return Collections.emptySet();
     }
-    
+
     private static String getInstanceClassName(ConstantPoolGen cpg, InvokeInstruction invoke, TaintFrame frame) {
         try {
-            int instanceIndex = frame.getNumArgumentsIncludingObjectInstance(invoke, cpg) - 1;
+            int instanceIndex = BCELUtil.getNumArgumentsIncludingObjectInstance(invoke, cpg) - 1;
             if (instanceIndex != -1) {
                 assert instanceIndex < frame.getStackDepth();
                 Taint instanceTaint = frame.getStackValue(instanceIndex);
@@ -251,8 +251,8 @@ public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
         } catch (DataflowAnalysisException ex) {
             assert false : ex.getMessage();
         }
-        String dottedClassName = invoke.getReferenceType(cpg).toString();
-        return ClassName.toSlashedClassName(dottedClassName);
+
+        return BCELUtil.getSlashedClassName(cpg, invoke);
     }
 
     abstract protected InjectionPoint getInjectionPoint(

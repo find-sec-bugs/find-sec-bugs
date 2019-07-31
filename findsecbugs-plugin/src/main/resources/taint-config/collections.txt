@@ -1,7 +1,7 @@
 java/util/Collection.add(Ljava/lang/Object;)Z:0,1#1
 java/util/Collection.addAll(Ljava/util/Collection;)Z:0,1#1
-java/util/Collection.contains(Ljava/util/Object;)Z:UNKNOWN
-java/util/Collection.containsAll(Ljava/util/Collection;)Z:UNKNOWN
+java/util/Collection.contains(Ljava/lang/Object;)Z:0#0
+java/util/Collection.containsAll(Ljava/util/Collection;)Z:0#0
 java/util/Collection.clear()V:SAFE#0
 java/util/Collection.remove(Ljava/lang/Object;)Z:1
 java/util/Collection.removeAll(Ljava/util/Collection;)Z:1

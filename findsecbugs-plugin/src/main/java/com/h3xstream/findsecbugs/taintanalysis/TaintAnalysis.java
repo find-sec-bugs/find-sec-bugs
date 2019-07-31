@@ -103,6 +103,7 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
     public void initEntryFact(TaintFrame fact) {
         fact.setValid();
         fact.clearStack();
+        String methodFullSignature = methodDescriptor.getSlashedClassName() + "." + methodDescriptor.getName() + methodDescriptor.getSignature();
         boolean inMainMethod = isInMainMethod();
         int numSlots = fact.getNumSlots();
         int numLocals = fact.getNumLocals();
@@ -124,7 +125,7 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
                     } else {
                         value.addParameter(stackOffset);
                     }
-                    value.addSource(new UnknownSource(UnknownSourceType.PARAMETER,value.getState()).setParameterIndex(stackOffset));
+                    value.addSource(new UnknownSource(UnknownSourceType.PARAMETER,value.getState()).setSignatureMethod(methodFullSignature).setParameterIndex(stackOffset));
                 }
                 value.setVariableIndex(i);
             }

@@ -17,19 +17,21 @@
  */
 package com.h3xstream.findsecbugs.injection;
 
+import com.h3xstream.findsecbugs.BCELUtil;
 import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import com.h3xstream.findsecbugs.taintanalysis.TaintDataflowEngine;
 import com.h3xstream.findsecbugs.taintanalysis.TaintFrameAdditionalVisitor;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.io.IO;
-import edu.umd.cs.findbugs.util.ClassName;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 import org.apache.bcel.Repository;
 import org.apache.bcel.classfile.JavaClass;
@@ -45,7 +47,7 @@ import org.apache.bcel.generic.InvokeInstruction;
  */
 public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
 
-    private final Map<String, InjectionPoint> injectionMap = new HashMap<String, InjectionPoint>();
+    private final Map<ClassMethodSignature, InjectionPoint> injectionMap = new HashMap<>();
     private static final SinksLoader SINKS_LOADER = new SinksLoader();
 
     protected BasicInjectionDetector(BugReporter bugReporter) {
@@ -58,14 +60,16 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
             InstructionHandle handle) {
         assert invoke != null && cpg != null;
 
+        ClassMethodSignature classMethodSignature = new ClassMethodSignature(
+                BCELUtil.getSlashedClassName(cpg, invoke), invoke.getMethodName(cpg), invoke.getSignature(cpg));
+
         //1. Verify if the class used has a known sink
-        String fullMethodName = getFullMethodName(invoke, cpg);
         //This will skip the most common lookup
-        if ("java/lang/Object.<init>()V".equals(fullMethodName)) {
+        if (OBJECT.equals(classMethodSignature)) {
             return InjectionPoint.NONE;
         }
 
-        InjectionPoint injectionPoint = injectionMap.get(fullMethodName);
+        InjectionPoint injectionPoint = injectionMap.get(classMethodSignature);
         if (injectionPoint != null) {
             return injectionPoint;
         }
@@ -73,13 +77,10 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
         try {
             //2. Verify if the super classes match a known sink
             JavaClass classDef = Repository.lookupClass(invoke.getClassName(cpg));
-            for (JavaClass superClass : classDef.getSuperClasses()) {
-                if ("java.lang.Object".equals(superClass.getClassName())) {
-                    continue;
-                }
-                String superClassFullMethodName = superClass.getClassName().replace('.','/')
-                        + "." + invoke.getMethodName(cpg) + invoke.getSignature(cpg);
-                injectionPoint = injectionMap.get(superClassFullMethodName);
+            Set<String> parentClassNames = BCELUtil.getParentClassNames(classDef);
+            for (String parentClassName : parentClassNames) {
+                classMethodSignature.setClassName(parentClassName);
+                injectionPoint = injectionMap.get(classMethodSignature);
                 if (injectionPoint != null) {
                     return injectionPoint;
                 }
@@ -183,16 +184,14 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
     }
 
     protected void addParsedInjectionPoint(String fullMethodName, InjectionPoint injectionPoint) {
-        assert !injectionMap.containsKey(fullMethodName): "Duplicate method name loaded: "+fullMethodName;
-        injectionMap.put(fullMethodName, injectionPoint);
-    }
-    
-    private String getFullMethodName(InvokeInstruction invoke, ConstantPoolGen cpg) {
-        return ClassName.toSlashedClassName(invoke.getReferenceType(cpg).toString())
-                + "." + invoke.getMethodName(cpg) + invoke.getSignature(cpg);
+        ClassMethodSignature classMethodSignature = ClassMethodSignature.from(fullMethodName);
+        assert !injectionMap.containsKey(classMethodSignature): "Duplicate method name loaded: "+fullMethodName;
+        injectionMap.put(classMethodSignature, injectionPoint);
     }
 
     public void registerVisitor(TaintFrameAdditionalVisitor visitor) {
         TaintDataflowEngine.registerAdditionalVisitor(visitor);
     }
+
+    static ClassMethodSignature OBJECT = new ClassMethodSignature("java/lang/Object","<init>", "()V");
 }

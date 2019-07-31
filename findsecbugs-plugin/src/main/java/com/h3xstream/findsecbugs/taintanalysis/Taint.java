@@ -105,6 +105,7 @@ public class Taint {
         CUSTOM_INJECTION_SAFE,
         URL_ENCODED,
         PATH_TRAVERSAL_SAFE,
+        REDIRECT_SAFE,
 
         CREDIT_CARD_VARIABLE,
         PASSWORD_VARIABLE,
@@ -114,17 +115,18 @@ public class Taint {
     private State state;
     private static final int INVALID_INDEX = -1;
     private int variableIndex;
-    private final Set<TaintLocation> taintLocations;
-    private final Set<TaintLocation> unknownLocations;
-    private final Set<Integer> parameters;
+    private Set<TaintLocation> taintLocations;
+    private Set<TaintLocation> unknownLocations;
+    private Set<Integer> parameters;
     private State nonParametricState;
     private ObjectType realInstanceClass;
-    private final Set<Tag> tags;
-    private final Set<Tag> tagsToRemove;
+    private String realInstanceClassName;
+    private Set<Tag> tags;
+    private Set<Tag> tagsToRemove;
     private String constantValue;
     private String potentialValue;
     private String debugInfo = null;
-    private Set<UnknownSource> sources = new HashSet<>();
+    private Set<UnknownSource> sources;
 
     /**
      * Constructs a new empty instance of Taint with the specified state
@@ -140,13 +142,8 @@ public class Taint {
         }
         this.state = state;
         this.variableIndex = INVALID_INDEX;
-        this.unknownLocations = new HashSet<TaintLocation>();
-        this.taintLocations = new HashSet<TaintLocation>();
-        this.parameters = new HashSet<Integer>();
         this.nonParametricState = State.INVALID;
         this.realInstanceClass = null;
-        this.tags = EnumSet.noneOf(Tag.class);
-        this.tagsToRemove = EnumSet.noneOf(Tag.class);
         this.constantValue = null;
         if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             this.debugInfo = "?";
@@ -164,19 +161,53 @@ public class Taint {
         assert taint.state != null;
         this.state = taint.state;
         this.variableIndex = taint.variableIndex;
-        this.taintLocations = new HashSet<TaintLocation>(taint.taintLocations);
-        this.unknownLocations = new HashSet<TaintLocation>(taint.unknownLocations);
-        this.parameters = new HashSet<Integer>(taint.getParameters());
+        if (taint.taintLocations != null) {
+            this.taintLocations = new HashSet<>(taint.taintLocations);
+        }
+        if (taint.unknownLocations != null) {
+            this.unknownLocations = new HashSet<>(taint.unknownLocations);
+        }
+        if (taint.parameters != null) {
+            this.parameters = new HashSet<>(taint.parameters);
+        }
         this.nonParametricState = taint.nonParametricState;
         this.realInstanceClass = taint.realInstanceClass;
-        this.tags = EnumSet.copyOf(taint.tags);
-        this.tagsToRemove = EnumSet.copyOf(taint.tagsToRemove);
+        if (taint.hasTags()) {
+            this.tags = EnumSet.copyOf(taint.tags);
+        }
+        if (taint.isRemovingTags()) {
+            this.tagsToRemove = EnumSet.copyOf(taint.tagsToRemove);
+        }
         this.constantValue = taint.constantValue;
         this.potentialValue = taint.potentialValue;
         if (FindSecBugsGlobalConfig.getInstance().isDebugTaintState()) {
             this.debugInfo = taint.debugInfo;
         }
-        this.sources.addAll(taint.sources);
+        if (taint.sources != null) {
+            this.sources = new HashSet<>(taint.sources);
+        }
+    }
+
+    /**
+     * Checks if there is any valuable information derived by the taint analysis.
+     *
+     * @return true if the Taint contains any useful information, false otherwise
+     */
+    public boolean isInformative() {
+        if (!isUnknown()) {
+            return true;
+        }
+        if (hasParameters()) {
+            return true;
+        }
+        if (getRealInstanceClass() != null) {
+            return true;
+        }
+        if (hasTags() || isRemovingTags()) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -239,8 +270,15 @@ public class Taint {
     public void addLocation(TaintLocation location, boolean isKnownTaintSource) {
         Objects.requireNonNull(location, "location is null");
         if (isKnownTaintSource) {
+            if (taintLocations == null) {
+                taintLocations = new HashSet<>();
+            }
+
             taintLocations.add(location);
         } else {
+            if (unknownLocations == null) {
+                unknownLocations = new HashSet<>();
+            }
             unknownLocations.add(location);
         }
     }
@@ -253,6 +291,10 @@ public class Taint {
      * @return unmodifiable set of locations
      */
     public Set<TaintLocation> getTaintedLocations() {
+        if (taintLocations == null) {
+            return Collections.emptySet();
+        }
+
         return Collections.unmodifiableSet(taintLocations);
     }
 
@@ -260,6 +302,10 @@ public class Taint {
      * @return All the location of tainted and unknown locations.
      */
     public Collection<TaintLocation> getUnknownLocations() {
+        if (unknownLocations == null) {
+            return Collections.emptySet();
+        }
+
         return Collections.unmodifiableSet(unknownLocations);
     }
 
@@ -267,10 +313,18 @@ public class Taint {
      * @return All the location of tainted and unknown locations.
      */
     public Collection<TaintLocation> getAllLocations() {
-        List<TaintLocation> allLocations = new ArrayList<>();
-        allLocations.addAll(unknownLocations);
-        allLocations.addAll(taintLocations);
-        return allLocations;
+        if (unknownLocations != null && taintLocations != null) {
+            List<TaintLocation> allLocations = new ArrayList<>(unknownLocations.size() + taintLocations.size());
+            allLocations.addAll(unknownLocations);
+            allLocations.addAll(taintLocations);
+            return allLocations;
+        }
+        else if (unknownLocations != null) {
+            return getUnknownLocations();
+        }
+        else {
+            return getTaintedLocations();
+        }
     }
 
     /**
@@ -304,6 +358,9 @@ public class Taint {
         if (parameterIndex < 0) {
             throw new IllegalArgumentException("index cannot be negative");
         }
+        if (parameters == null) {
+            parameters = new HashSet<>();
+        }
         parameters.add(parameterIndex);
     }
 
@@ -313,7 +370,7 @@ public class Taint {
      * @return true if there is an influence, false otherwise
      */
     public boolean hasParameters() {
-        return !parameters.isEmpty();
+        return parameters != null && !parameters.isEmpty();
     }
 
     /**
@@ -322,6 +379,10 @@ public class Taint {
      * @return unmodifiable set of parameter indices
      */
     public Set<Integer> getParameters() {
+        if (parameters == null) {
+            return Collections.emptySet();
+        }
+
         return Collections.unmodifiableSet(parameters);
     }
 
@@ -366,7 +427,11 @@ public class Taint {
         if (realInstanceClass == null) {
             return null;
         }
-        return ClassName.toSlashedClassName(realInstanceClass.getClassName());
+        if (realInstanceClassName == null) {
+            realInstanceClassName = ClassName.toSlashedClassName(realInstanceClass.getClassName());
+        }
+
+        return realInstanceClassName;
     }
 
     /**
@@ -377,6 +442,10 @@ public class Taint {
      * @return true if this tag was not present before, false otherwise
      */
     public boolean addTag(Tag tag) {
+        if (tags == null) {
+            tags = EnumSet.noneOf(Tag.class);
+        }
+
         return tags.add(tag);
     }
     
@@ -387,7 +456,7 @@ public class Taint {
      * @return true if it is present, false otherwise
      */
     public boolean hasTag(Tag tag) {
-        return tags.contains(tag);
+        return tags != null && tags.contains(tag);
     }
 
     /**
@@ -397,6 +466,10 @@ public class Taint {
      * @return true if at least one is present, false otherwise
      */
     public boolean hasOneTag(Tag... tags) {
+        if (this.tags == null) {
+            return false;
+        }
+
         for(Tag t : tags) {
             if (this.tags.contains(t)) return true;
         }
@@ -409,7 +482,7 @@ public class Taint {
      * @return true if number of tags is &gt; 0, false otherwise
      */
     public boolean hasTags() {
-        return !tags.isEmpty();
+        return tags != null && !tags.isEmpty();
     }
     
     /**
@@ -418,6 +491,10 @@ public class Taint {
      * @return unmodifiable set of all present taint tags
      */
     public Set<Tag> getTags() {
+        if (tags == null) {
+            return Collections.emptySet();
+        }
+
         return Collections.unmodifiableSet(tags);
     }
     
@@ -429,8 +506,12 @@ public class Taint {
      * @return true if the tag was present, false otherwise
      */
     public boolean removeTag(Tag tag) {
+        if (tagsToRemove == null) {
+            tagsToRemove = EnumSet.noneOf(Tag.class);
+        }
         tagsToRemove.add(tag);
-        return tags.remove(tag);
+
+        return tags != null && tags.remove(tag);
     }
     
     /**
@@ -440,7 +521,7 @@ public class Taint {
      * @return true if there are some, false otherwise
      */
     public boolean isRemovingTags() {
-        return !tagsToRemove.isEmpty();
+        return tagsToRemove != null && !tagsToRemove.isEmpty();
     }
     
     /**
@@ -449,6 +530,10 @@ public class Taint {
      * @return unmodifiable set of tags
      */
     public Set<Tag> getTagsToRemove() {
+        if (tagsToRemove == null) {
+            return Collections.emptySet();
+        }
+
         return Collections.unmodifiableSet(tagsToRemove);
     }
     
@@ -531,10 +616,30 @@ public class Taint {
         if (a.variableIndex == b.variableIndex) {
             result.variableIndex = a.variableIndex;
         }
-        result.taintLocations.addAll(a.taintLocations);
-        result.taintLocations.addAll(b.taintLocations);
-        result.unknownLocations.addAll(a.unknownLocations);
-        result.unknownLocations.addAll(b.unknownLocations);
+        int taintLocationsSize =
+                (a.taintLocations != null ? a.taintLocations.size() : 0) +
+                    (b.taintLocations != null ? b.taintLocations.size() : 0);
+        if (taintLocationsSize > 0) {
+            result.taintLocations = new HashSet<>(taintLocationsSize);
+        }
+        if (a.taintLocations != null) {
+            result.taintLocations.addAll(a.taintLocations);
+        }
+        if (b.taintLocations != null) {
+            result.taintLocations.addAll(b.taintLocations);
+        }
+        int unknownLocationsSize =
+                (a.unknownLocations != null ? a.unknownLocations.size() : 0) +
+                    (b.unknownLocations != null ? b.unknownLocations.size() : 0);
+        if (unknownLocationsSize > 0) {
+            result.unknownLocations = new HashSet<>(unknownLocationsSize);
+        }
+        if (a.unknownLocations != null) {
+            result.unknownLocations.addAll(a.unknownLocations);
+        }
+        if (b.unknownLocations != null) {
+            result.unknownLocations.addAll(b.unknownLocations);
+        }
         if (!result.isTainted()) {
            mergeParameters(a, b, result); 
         }
@@ -553,14 +658,40 @@ public class Taint {
         else if(b.potentialValue != null) {
             result.potentialValue = b.potentialValue;
         }
-        result.addAllSources(a.sources);
-        result.addAllSources(b.sources);
+
+        int sourcesSize =
+                (a.sources != null ? a.sources.size() : 0) +
+                        (b.sources != null ? b.sources.size() : 0);
+        if (sourcesSize > 0) {
+            result.sources = new HashSet<>(sourcesSize);
+        }
+        if (a.sources != null) {
+            result.sources.addAll(a.sources);
+        }
+        if (b.sources != null) {
+            result.sources.addAll(b.sources);
+        }
+
         return result;
     }
 
     private static void mergeParameters(Taint a, Taint b, Taint result) {
-        result.parameters.addAll(a.parameters);
-        result.parameters.addAll(b.parameters);
+        int parametersSize =
+                (a.parameters != null ? a.parameters.size() : 0) +
+                        (b.parameters != null ? b.parameters.size() : 0);
+
+        if (parametersSize == 0) {
+            return;
+        }
+
+        result.parameters = new HashSet<>(parametersSize);
+        if (a.parameters != null) {
+            result.parameters.addAll(a.parameters);
+        }
+        if (b.parameters != null) {
+            result.parameters.addAll(b.parameters);
+        }
+
         if (a.hasParameters()) {
             if (b.hasParameters()) {
                 result.nonParametricState = State.merge(a.nonParametricState, b.nonParametricState);
@@ -590,16 +721,39 @@ public class Taint {
     }
     
     private static void mergeTags(Taint a, Taint b, Taint result) {
-        if (a.isSafe()) {
+        if (a.isSafe() && b.hasTags()) {
+            if (result.tags == null) {
+                result.tags = EnumSet.noneOf(Tag.class);
+            }
             result.tags.addAll(b.tags);
-        } else if (b.isSafe()) {
+        } else if (b.isSafe() && a.hasTags()) {
+            if (result.tags == null) {
+                result.tags = EnumSet.noneOf(Tag.class);
+            }
             result.tags.addAll(a.tags);
         } else {
-            result.tags.addAll(a.tags);
-            result.tags.retainAll(b.tags);
+            if (a.hasTags() && b.hasTags()) {
+                if (result.tags == null) {
+                    result.tags = EnumSet.noneOf(Tag.class);
+                }
+
+                result.tags.addAll(a.tags);
+                result.tags.retainAll(b.tags);
+            }
         }
-        result.tagsToRemove.addAll(a.tagsToRemove);
-        result.tagsToRemove.addAll(b.tagsToRemove);
+
+        if (a.isRemovingTags()) {
+            if (result.tagsToRemove == null) {
+                result.tagsToRemove = EnumSet.noneOf(Tag.class);
+            }
+            result.tagsToRemove.addAll(a.tagsToRemove);
+        }
+        if (b.isRemovingTags()) {
+            if (result.tagsToRemove == null) {
+                result.tagsToRemove = EnumSet.noneOf(Tag.class);
+            }
+            result.tagsToRemove.addAll(b.tagsToRemove);
+        }
     }
 
     @Override
@@ -616,9 +770,9 @@ public class Taint {
         Taint other = (Taint) obj;
         return this.state == other.state
                 && this.variableIndex == other.variableIndex
-                && this.taintLocations.equals(other.taintLocations)
-                && this.unknownLocations.equals(other.unknownLocations)
-                && this.parameters.equals(other.parameters)
+                && Objects.equals(this.taintLocations, other.taintLocations)
+                && Objects.equals(this.unknownLocations, other.unknownLocations)
+                && Objects.equals(this.parameters, other.parameters)
                 && this.nonParametricState == other.nonParametricState
                 && Objects.equals(this.realInstanceClass, other.realInstanceClass)
                 //&& this.tags.equals(other.tags)
@@ -653,14 +807,30 @@ public class Taint {
     }
 
     public Set<UnknownSource> getSources() {
+        if (sources == null) {
+            return Collections.emptySet();
+        }
+
         return sources;
     }
 
     public void addSource(UnknownSource source) {
+        if (this.sources == null) {
+            this.sources = new HashSet<>();
+        }
+
         this.sources.add(source);
     }
 
     protected void addAllSources(Set<UnknownSource> sources) {
+        if (sources == null) {
+            return;
+        }
+
+        if (this.sources == null) {
+            this.sources = new HashSet<>();
+        }
+
         this.sources.addAll(sources);
     }
 
@@ -671,7 +841,7 @@ public class Taint {
         if (hasValidVariableIndex()) {
             sb.append(variableIndex);
         }
-        if (!parameters.isEmpty()) {
+        if (parameters != null && !parameters.isEmpty()) {
             sb.append(parameters);
         }
         assert nonParametricState != null;
@@ -701,7 +871,7 @@ public class Taint {
         if (potentialValue != null) {
             sb.append(" potential=").append(potentialValue);
         }
-        if (tags.size() > 0) {
+        if (tags != null && tags.size() > 0) {
             sb.append(" tags=").append(Arrays.toString(tags.toArray()));
         }
         return sb.toString();

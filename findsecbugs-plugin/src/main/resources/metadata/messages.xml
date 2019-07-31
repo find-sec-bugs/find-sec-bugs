@@ -4671,7 +4671,7 @@ cookie.setHttpOnly(true);
 
     <BugPattern type="HTTPONLY_COOKIE">
         <ShortDescription>Cookie without the HttpOnly flag</ShortDescription>
-        <LongDescription>Cookie without the HttpOnly flag could be red by a malicious script in the browser</LongDescription>
+        <LongDescription>Cookie without the HttpOnly flag could be read by a malicious script in the browser</LongDescription>
         <Details>
             <![CDATA[
 <p>

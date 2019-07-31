@@ -19,7 +19,9 @@ package com.h3xstream.findsecbugs.injection.redirect;
 
 import com.h3xstream.findsecbugs.injection.InjectionSource;
 import com.h3xstream.findsecbugs.injection.LegacyInjectionDetector;
+import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import edu.umd.cs.findbugs.BugReporter;
+import edu.umd.cs.findbugs.Priorities;
 
 public class UnvalidatedRedirectDetector extends LegacyInjectionDetector {
 
@@ -31,4 +33,14 @@ public class UnvalidatedRedirectDetector extends LegacyInjectionDetector {
     public InjectionSource[] getInjectionSource() {
         return new InjectionSource[]{new RedirectionSource()};
     }
+
+    @Override
+    protected int getPriority(Taint taint) {
+        if (taint.hasTag(Taint.Tag.REDIRECT_SAFE)) {
+            return Priorities.IGNORE_PRIORITY;
+        } else {
+            return super.getPriority(taint);
+        }
+    }
+
 }

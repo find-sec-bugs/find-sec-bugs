@@ -72,6 +72,24 @@ public abstract class AbstractTaintDetector implements Detector {
             if (classContext.getMethodGen(method) == null) {
                 continue;
             }
+            if (!method.isStatic()) {
+                continue;
+            }
+            try {
+                analyzeMethod(classContext, method);
+            } catch (CheckedAnalysisException e) {
+                logException(classContext, method, e);
+            } catch (RuntimeException e) {
+                logException(classContext, method, e);
+            }
+        }
+        for (Method method : classContext.getMethodsInCallOrder()) {
+            if (classContext.getMethodGen(method) == null) {
+                continue;
+            }
+            if (method.isStatic()) {
+                continue;
+            }
             try {
                 analyzeMethod(classContext, method);
             } catch (CheckedAnalysisException e) {
@@ -90,7 +108,8 @@ public abstract class AbstractTaintDetector implements Detector {
             throws CheckedAnalysisException {
         TaintDataflow dataflow = getTaintDataFlow(classContext, method);
         ConstantPoolGen cpg = classContext.getConstantPoolGen();
-        String currentMethod = getFullMethodName(classContext.getMethodGen(method));
+        ClassMethodSignature classMethodSignature = new ClassMethodSignature(
+                com.h3xstream.findsecbugs.BCELUtil.getSlashedClassName(classContext.getJavaClass()), method.getName(), method.getSignature());
         for (Iterator<Location> i = getLocationIterator(classContext, method); i.hasNext();) {
             Location location = i.next();
             InstructionHandle handle = location.getHandle();
@@ -104,7 +123,7 @@ public abstract class AbstractTaintDetector implements Detector {
             if (!fact.isValid()) {
                 continue;
             }
-            analyzeLocation(classContext, method, handle, cpg, invoke, fact, currentMethod);
+            analyzeLocation(classContext, method, handle, cpg, invoke, fact, classMethodSignature);
         }
     }
     
@@ -122,12 +141,6 @@ public abstract class AbstractTaintDetector implements Detector {
         MethodDescriptor descriptor = BCELUtil.getMethodDescriptor(classContext.getJavaClass(), method);
         return Global.getAnalysisCache().getMethodAnalysis(TaintDataflow.class, descriptor);
     }
-
-    private static String getFullMethodName(MethodGen methodGen) {
-        String methodNameWithSignature = methodGen.getName() + methodGen.getSignature();
-        String slashedClassName = methodGen.getClassName().replace('.', '/');
-        return slashedClassName + "." + methodNameWithSignature;
-    }
     
     private void logException(ClassContext classContext, Method method, Exception ex) {
         bugReporter.logError("Exception while analyzing "
@@ -135,6 +148,6 @@ public abstract class AbstractTaintDetector implements Detector {
     }
     
     abstract protected void analyzeLocation(ClassContext classContext, Method method, InstructionHandle handle,
-            ConstantPoolGen cpg, InvokeInstruction invoke, TaintFrame fact, String currentMethod)
+            ConstantPoolGen cpg, InvokeInstruction invoke, TaintFrame fact, ClassMethodSignature classMethodSignature)
             throws DataflowAnalysisException;
 }

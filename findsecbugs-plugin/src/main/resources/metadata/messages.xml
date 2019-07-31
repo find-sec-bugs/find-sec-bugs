@@ -3701,7 +3701,7 @@ public String redirect(@RequestParam("url") String url) {
 
     <BugPattern type="SPRING_ENTITY_LEAK">
         <ShortDescription>Spring Entity Leak</ShortDescription>
-        <LongDescription>The presistent objects could be exploited by attacker to read/tamper sensitive information.</LongDescription>
+        <LongDescription>The persistent objects could be exploited by attacker to read/tamper sensitive information.</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -4673,7 +4673,7 @@ cookie.setHttpOnly(true);
 
     <BugPattern type="HTTPONLY_COOKIE">
         <ShortDescription>Cookie without the HttpOnly flag</ShortDescription>
-        <LongDescription>Cookie without the HttpOnly flag could be red by a malicious script in the browser</LongDescription>
+        <LongDescription>Cookie without the HttpOnly flag could be read by a malicious script in the browser</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -5348,6 +5348,11 @@ Avoid using * as the value of the Access-Control-Allow-Origin header, which indi
         </Details>
     </BugPattern>
     <BugCode abbrev="SECCORS">Overly permissive CORS policy</BugCode>
+
+    <!-- Overly permissive CORS policy -->
+    <Detector class="com.h3xstream.findsecbugs.spring.CorsRegistryCORSDetector">
+        <Details>Detect overly CorsRegistry CORS policy. </Details>
+    </Detector>
 
     <!-- LDAP anonymous bind detector -->
     <Detector class="com.h3xstream.findsecbugs.ldap.AnonymousLdapDetector">

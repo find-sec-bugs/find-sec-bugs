@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.taintanalysis;
 
+import com.h3xstream.findsecbugs.BCELUtil;
 import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
 import edu.umd.cs.findbugs.ba.SignatureParser;
@@ -29,6 +30,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
 
 /**
@@ -47,11 +49,14 @@ import java.util.TreeSet;
  * @author David Formanek (Y Soft Corporation, a.s.)
  */
 public class TaintConfig extends HashMap<String, TaintMethodConfig> {
-    
+
     private static final long serialVersionUID = 1L;
     private final Map<String, TaintClassConfig> taintClassConfigMap = new HashMap<String, TaintClassConfig>();
+    private final Map<String, TaintFieldConfig> taintFieldConfigMap = new HashMap<String, TaintFieldConfig>();
     private final Map<String, TaintMethodConfigWithArgumentsAndLocation> taintMethodConfigWithArgumentsAndLocationMap =
             new HashMap<String, TaintMethodConfigWithArgumentsAndLocation>();
+
+    private final Map<String, Taint> staticFieldsTaint = new HashMap<String, Taint>();
 
     /**
      * Dumps all the summaries for debugging
@@ -93,7 +98,18 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
                         throw new IllegalStateException("Config for " + typeSignature + " already loaded");
                     }
                     TaintClassConfig taintClassConfig = new TaintClassConfig().load(config);
+                    taintClassConfig.setTypeSignature(typeSignature);
                     taintClassConfigMap.put(typeSignature, taintClassConfig);
+                    return;
+                }
+
+                if (TaintFieldConfig.accepts(typeSignature, config)) {
+                    if (checkRewrite && taintFieldConfigMap.containsKey(typeSignature)) {
+                        throw new IllegalStateException("Config for " + typeSignature + " already loaded");
+                    }
+                    TaintFieldConfig taintFieldConfig = new TaintFieldConfig().load(config);
+                    taintFieldConfig.setTypeSignature(typeSignature);
+                    taintFieldConfigMap.put(typeSignature, taintFieldConfig);
                     return;
                 }
 
@@ -112,7 +128,7 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
                     return;
                 }
 
-                throw new IllegalArgumentException("Invalid full method name " + typeSignature + " configured");
+                throw new IllegalArgumentException("Invalid signature " + typeSignature + " configured");
             }
         });
     }
@@ -164,6 +180,26 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
         return taintClassConfigState;
     }
 
+    public Taint.State getFieldTaintState(String fieldSignature, Taint.State defaultState) {
+        if (!isFieldType(fieldSignature)) {
+            return defaultState;
+        }
+
+        TaintFieldConfig taintFieldConfig = taintFieldConfigMap.get(fieldSignature);
+
+        if (taintFieldConfig == null) {
+            return defaultState;
+        }
+
+        Taint.State taintFieldConfigState = taintFieldConfig.getTaintState();
+
+        if (taintFieldConfigState.equals(TaintClassConfig.DEFAULT_TAINT_STATE)) {
+            return defaultState;
+        }
+
+        return taintFieldConfigState;
+    }
+
     public TaintClassConfig getTaintClassConfig(String typeSignature) {
         if (!isClassType(typeSignature)) {
             return null;
@@ -174,6 +210,10 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
 
     private boolean isClassType(String typeSignature) {
         return typeSignature != null && typeSignature.length() > 2 && typeSignature.charAt(0) == 'L';
+    }
+
+    private boolean isFieldType(String typeSignature) {
+        return typeSignature != null && typeSignature.length() > 2 && typeSignature.charAt(0) != 'L';
     }
 
     public TaintMethodConfig getMethodConfig(TaintFrame frame, MethodDescriptor methodDescriptor, String className, String methodId) {
@@ -196,28 +236,23 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
                 // not a real class
                 return null;
             }
+
             JavaClass javaClass = Repository.lookupClass(className);
             assert javaClass != null;
-            TaintMethodConfig methodConfig = getSuperMethodConfig(javaClass.getSuperClasses(), methodId);
-            if (methodConfig != null) {
-                return methodConfig;
+
+            Set<String> parentClassNames = BCELUtil.getParentClassNames(javaClass);
+
+            for (String parentClassName : parentClassNames) {
+                TaintMethodConfig conf = get(parentClassName.concat(methodId));
+                if (conf != null) {
+                    return conf;
+                }
             }
-            return getSuperMethodConfig(javaClass.getAllInterfaces(), methodId);
+
         } catch (ClassNotFoundException ex) {
             AnalysisContext.reportMissingClass(ex);
-            return null;
         }
-    }
 
-    private TaintMethodConfig getSuperMethodConfig(JavaClass[] javaClasses, String method) {
-        assert javaClasses != null;
-        for (JavaClass classOrInterface : javaClasses) {
-            String fullMethodName = classOrInterface.getClassName().replace('.', '/').concat(method);
-            TaintMethodConfig conf = get(fullMethodName);
-            if (conf != null) {
-                return conf;
-            }
-        }
         return null;
     }
 
@@ -257,4 +292,22 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
         String key = methodDefinition + "@" + methodDescriptor.getSlashedClassName();
         return taintMethodConfigWithArgumentsAndLocationMap.get(key);
     }
+
+    public Taint getStaticFieldTaint(String fieldSignature, Taint defaultValue) {
+        if (!isFieldType(fieldSignature)) {
+            return defaultValue;
+        }
+
+        return staticFieldsTaint.getOrDefault(fieldSignature, defaultValue);
+    }
+
+    public void putStaticFieldTaint(String fieldSignature, Taint t) {
+        if (!isFieldType(fieldSignature)) {
+            return;
+        }
+
+        staticFieldsTaint.put(fieldSignature, t);
+    }
+
+
 }

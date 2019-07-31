@@ -40,8 +40,10 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.apache.bcel.generic.MethodGen;
 
@@ -184,10 +186,29 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
         flow.execute();
         analysis.finishAnalysis();
         if (CONFIG.isDebugOutputTaintConfigs() && writer != null) {
-            TaintMethodConfig derivedConfig = taintConfig.get(getSlashedMethodName(methodGen));
+            String slashedMethodName = getSlashedMethodName(methodGen);
+            TaintMethodConfig derivedConfig = taintConfig.get(slashedMethodName);
             if (derivedConfig != null) {
                 try {
-                    writer.append(getSlashedMethodName(methodGen) + ":" + derivedConfig + "\n");
+                    writer.append(slashedMethodName);
+
+                    Taint outputTaint = derivedConfig.getOutputTaint();
+                    if (outputTaint != null) {
+                        writer.append(':');
+                        writeTaint(outputTaint);
+                    }
+
+                    Map<Integer, Taint> parametersOutputTaints = derivedConfig.getParametersOutputTaints();
+                    if (!parametersOutputTaints.isEmpty()) {
+                        for (Map.Entry<Integer, Taint> parameterTaint : parametersOutputTaints.entrySet()) {
+                            writer.append('^');
+                            writer.append(Integer.toString(parameterTaint.getKey()));
+                            writer.append(':');
+                            writeTaint(parameterTaint.getValue());
+                        }
+                    }
+
+                    writer.append('\n');
                     writer.flush();
                 } catch (IOException ex) {
                     AnalysisContext.logError("Cannot write derived configs", ex);
@@ -195,6 +216,30 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
             }
         }
         return flow;
+    }
+
+    private void writeTaint(Taint taint) throws IOException {
+        if (taint.isUnknown() && taint.hasParameters()) {
+            writer.append(taint.getParameters().stream().map(String::valueOf).collect(Collectors.joining(",")));
+
+            Taint.State nonParametricState = taint.getNonParametricState();
+            if (nonParametricState != Taint.State.INVALID) {
+                writer.append(',');
+                writer.append(nonParametricState.name());
+            }
+        }
+        else {
+            writer.append(taint.getState().name());
+        }
+
+        if (taint.hasTags()) {
+            writer.append('|');
+            writer.append(taint.getTags().stream().map(Taint.Tag::name).collect(Collectors.joining(",", "+", "")));
+        }
+        if (taint.isRemovingTags()) {
+            writer.append('|');
+            writer.append(taint.getTagsToRemove().stream().map(Taint.Tag::name).collect(Collectors.joining(",", "-", "")));
+        }
     }
 
     private static String getSlashedMethodName(MethodGen methodGen) {

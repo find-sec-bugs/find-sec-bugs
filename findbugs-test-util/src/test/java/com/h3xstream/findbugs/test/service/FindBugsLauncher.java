@@ -46,9 +46,17 @@ import edu.umd.cs.findbugs.config.UserPreferences;
 
 @NotThreadSafe
 public class FindBugsLauncher {
-
     private static final Logger log = LoggerFactory.getLogger(FindBugsLauncher.class);
 
+    private final String metadataFolder;
+
+    public FindBugsLauncher(String metadataFolder) {
+        this.metadataFolder = metadataFolder;
+    }
+
+    public FindBugsLauncher() {
+        this.metadataFolder = "metadata";
+    }
 
     static Plugin loadedPlugin;
 
@@ -150,7 +158,7 @@ public class FindBugsLauncher {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         JarOutputStream jar = new JarOutputStream(buffer);
 
-        final URL metadata = cl.getResource("metadata");
+        final URL metadata = cl.getResource(metadataFolder);
         if (metadata != null) {
             final File dir = new File(metadata.toURI());
             
@@ -169,7 +177,7 @@ public class FindBugsLauncher {
             if (nextFile.isFile()) {
                 final String resource = path + nextFile.getName();
                 jar.putNextEntry(new ZipEntry(resource));
-                jar.write(IOUtils.toByteArray(cl.getResourceAsStream("metadata/" + resource)));
+                jar.write(IOUtils.toByteArray(cl.getResourceAsStream(metadataFolder + "/" + resource)));
             } else {
             	addFilesToStream(cl, jar, nextFile, path + nextFile.getName() + "/");
             }

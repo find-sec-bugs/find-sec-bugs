@@ -119,7 +119,7 @@
     <Detector class="com.h3xstream.findsecbugs.injection.http.HttpParameterPollutionDetector" reports="HTTP_PARAMETER_POLLUTION"/>
     <Detector class="com.h3xstream.findsecbugs.injection.smtp.SmtpHeaderInjectionDetector" reports="SMTP_HEADER_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.spring.SpringUnvalidatedRedirectDetector" reports="SPRING_UNVALIDATED_REDIRECT"/>
-    <Detector class="com.h3xstream.findsecbugs.spring.SpringEntityLeakDetector" reports="SPRING_ENTITY_LEAK"/>
+    <Detector class="com.h3xstream.findsecbugs.spring.SpringEntityLeakDetector" reports="ENTITY_LEAK,ENTITY_MASS_ASSIGNMENT"/>
     <Detector class="com.h3xstream.findsecbugs.spring.CorsRegistryCORSDetector" reports="PERMISSIVE_CORS"/>
     <Detector class="com.h3xstream.findsecbugs.taintanalysis.extra.PotentialValueTracker" reports="HARD_CODE_PASSWORD,DES_USAGE,WEAK_MESSAGE_DIGEST_MD5,WEAK_MESSAGE_DIGEST_SHA1"/> <!-- This detector is not reporting any issue -->
     <Detector class="com.h3xstream.findsecbugs.taintanalysis.extra.JstlExpressionWhiteLister" reports="XSS_JSP_PRINT"/> <!-- This detector is not reporting any issue -->
@@ -217,7 +217,8 @@
     <BugPattern type="UNVALIDATED_REDIRECT" abbrev="SECUR" category="SECURITY" cweid="601"/>
     <BugPattern type="PLAY_UNVALIDATED_REDIRECT" abbrev="SECPUR" category="SECURITY" cweid="601"/>
     <BugPattern type="SPRING_UNVALIDATED_REDIRECT" abbrev="SECSUR" category="SECURITY" cweid="601"/>
-    <BugPattern type="SPRING_ENTITY_LEAK" abbrev="SECSEL" category="SECURITY"/>
+    <BugPattern type="ENTITY_LEAK" abbrev="SECELEAK" category="SECURITY"/>
+    <BugPattern type="ENTITY_MASS_ASSIGNMENT" abbrev="SECEMA" category="SECURITY"/>
     <BugPattern type="XSS_JSP_PRINT" abbrev="SECXSS1" category="SECURITY" cweid="79"/>
     <BugPattern type="JSP_INCLUDE" abbrev="SECJSPINC" category="SECURITY" cweid="98"/>
     <BugPattern type="JSP_SPRING_EVAL" abbrev="SECJSPSPRING" category="SECURITY" cweid="917"/>

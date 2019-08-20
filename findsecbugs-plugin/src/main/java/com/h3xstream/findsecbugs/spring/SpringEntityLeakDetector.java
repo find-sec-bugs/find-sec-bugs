@@ -22,7 +22,6 @@ import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Detector;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.ba.ClassContext;
-import org.apache.bcel.Repository;
 import org.apache.bcel.classfile.AnnotationEntry;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
@@ -38,7 +37,9 @@ import java.util.List;
  * @author Karan Bansal (Github:karanb192)
  */
 public class SpringEntityLeakDetector implements Detector {
-	private static final String SPRING_ENTITY_LEAK_TYPE = "SPRING_ENTITY_LEAK";
+	private static final String ENTITY_LEAK_TYPE = "ENTITY_LEAK";
+    private static final String ENTITY_MASS_ASSIGNMENT_TYPE = "ENTITY_MASS_ASSIGNMENT";
+
 	private static final List<String> REQUEST_MAPPING_ANNOTATION_TYPES = Arrays.asList(
 			"Lorg/springframework/web/bind/annotation/RequestMapping;",
 			"Lorg/springframework/web/bind/annotation/GetMapping;",
@@ -62,26 +63,23 @@ public class SpringEntityLeakDetector implements Detector {
 	public void visitClassContext(ClassContext classContext) {
 		JavaClass clazz = classContext.getJavaClass();
 
-		if (hasRequestMapping(clazz)) {
-			Method[] methods = clazz.getMethods();
-			for (Method m: methods) {
-				analyzeMethod(m, classContext);
-			}
-		}
+        Method[] methods = clazz.getMethods();
+        for (Method m: methods) {
+            if (hasRequestMapping(m)) { //We only need to analyse method with the annotation @RequestMapping
+                analyzeMethod(m, classContext);
+            }
+        }
 	}
 
-	private boolean hasRequestMapping(JavaClass clazz) {
-		Method[] methods = clazz.getMethods();
-		for (Method m: methods) {
-			AnnotationEntry[] annotations = m.getAnnotationEntries();
-			m.getReturnType();
+	private boolean hasRequestMapping(Method m) {
+        AnnotationEntry[] annotations = m.getAnnotationEntries();
+        m.getReturnType();
 
-			for (AnnotationEntry ae: annotations) {
-				if (REQUEST_MAPPING_ANNOTATION_TYPES.contains(ae.getAnnotationType())) {
-					return true;
-				}
-			}
-		}
+        for (AnnotationEntry ae: annotations) {
+            if (REQUEST_MAPPING_ANNOTATION_TYPES.contains(ae.getAnnotationType())) {
+                return true;
+            }
+        }
 		return false;
 	}
 
@@ -99,36 +97,40 @@ public class SpringEntityLeakDetector implements Detector {
 
 		return annotations;
 	}
+
 	private void analyzeMethod(Method m, ClassContext classContext) {
 		JavaClass clazz = classContext.getJavaClass();
 		MethodGen methodGen = classContext.getMethodGen(m);
 
-		List<String> annotations = new ArrayList<>();
-		List<String> classesToInspect = new ArrayList<>(Arrays.asList(methodGen.getReturnType().toString()));
-		for (Type type: methodGen.getArgumentTypes())
-			classesToInspect.add(type.toString());
+        String signature = m.getGenericSignature() == null ? m.getSignature() : m.getGenericSignature();
+        SignatureParserWithGeneric sig = new SignatureParserWithGeneric(signature);
+
+        //Look for potential mass assignment
+        for(JavaClass[] argument : sig.getArgumentsClasses()) {
+            testClassesForEntityAnnotation(argument, ENTITY_MASS_ASSIGNMENT_TYPE, clazz, m);
+        }
+        //Look for potential leak
+        testClassesForEntityAnnotation(sig.getReturnClasses(), ENTITY_LEAK_TYPE, clazz,m);
 
 
-		for (String classToInspect : classesToInspect) {
-			try {
-				JavaClass javaClass = Repository.lookupClass(classToInspect);
-				annotations.addAll(getAnnotationList(javaClass));
-			} catch (Exception e) {
-			}
-		}
-
-		for (String annotation: annotations) {
-			if (ENTITY_ANNOTATION_TYPES.contains(annotation)) {
-				BugInstance bug = new BugInstance(this, SPRING_ENTITY_LEAK_TYPE, Priorities.NORMAL_PRIORITY);
-				bug.addClassAndMethod(clazz, m);
-				reporter.reportBug(bug);
-				break;
-			}
-		}
 	}
 
 	@Override
 	public void report() {
 
 	}
+
+	private void testClassesForEntityAnnotation(JavaClass[] javaClasses,String bugType, JavaClass reportedClass, Method reportedMethod) {
+	    for(JavaClass j : javaClasses) {
+
+            for (String annotation : getAnnotationList(j)) {
+                if (ENTITY_ANNOTATION_TYPES.contains(annotation)) {
+                    BugInstance bug = new BugInstance(this, bugType, Priorities.NORMAL_PRIORITY);
+                    bug.addClassAndMethod(reportedClass, reportedMethod);
+                    reporter.reportBug(bug);
+                    break;
+                }
+            }
+        }
+    }
 }

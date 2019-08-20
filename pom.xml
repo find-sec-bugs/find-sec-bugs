@@ -9,7 +9,7 @@
 
     <name>Find Security Bugs root</name>
 
-	<description>Root project file that aggregate the different modules of Find Security Bugs.</description>
+    <description>Root project file that aggregate the different modules of Find Security Bugs.</description>
 
     <properties>
         <!-- Encoding configuration -->

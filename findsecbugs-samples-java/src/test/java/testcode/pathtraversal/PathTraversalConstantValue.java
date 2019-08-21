@@ -2,7 +2,7 @@ package testcode.pathtraversal;
 
 import org.apache.commons.codec.binary.Hex;
 
-import javax.xml.bind.DatatypeConverter;
+
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -19,7 +19,7 @@ public class PathTraversalConstantValue {
     /**
      * All the call below should be consider safe because their inputs are the combination of :
      *  - Constant values
-     *  - SAFE api
+     *  - SAFE API
      *  - SAFE type (int or long)
      * @throws IOException
      */
@@ -48,7 +48,7 @@ public class PathTraversalConstantValue {
         //Typical bytes to hex #1 https://stackoverflow.com/a/41787842/89769
         new File("c:/" + String.format("%032x", new BigInteger(1, out)));
         //Typical bytes to hex #2
-        new File(DatatypeConverter.printHexBinary(out));
+        new File(Hex.encodeHexString(out));
         new File(String.valueOf(Hex.encodeHex(out)));
         new File(String.valueOf(Hex.encodeHex(out,true)));
         new File(Hex.encodeHexString(out));

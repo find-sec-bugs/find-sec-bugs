@@ -3696,37 +3696,43 @@ public String redirect(@RequestParam("url") String url) {
 
     <!--Spring entity leak detector and bug pattern-->
     <Detector class="com.h3xstream.findsecbugs.spring.SpringEntityLeakDetector">
-        <Details>Identify persistent Objects leakage and mass updation in Spring</Details>
+        <Details>Identify persistent Objects leakage in Spring REST endpoint</Details>
     </Detector>
 
-    <BugPattern type="SPRING_ENTITY_LEAK">
-        <ShortDescription>Spring Entity Leak</ShortDescription>
-        <LongDescription>The persistent objects could be exploited by attacker to read/tamper sensitive information.</LongDescription>
+    <BugPattern type="ENTITY_LEAK">
+        <ShortDescription>Unexpected Property Leak</ShortDescription>
+        <LongDescription>Unexpected property could be leaked because a persistence class is directly exposed to the client</LongDescription>
         <Details>
             <![CDATA[
 <p>
-    Persistent objects should never be returned/accepted by APIs. They might lead to leaking business logic over the UI, unauthorized tampering of
+    Persistent objects should never be returned by APIs. They might lead to leaking business logic over the UI, unauthorized tampering of
     persistent objects in database.
 </p>
 <p>
-    <b>Persistence Annotations</b><br/>
-    1. javax.persistence.Entity (JPA)<br>
-    2. javax.jdo.spi.PersistenceCapable (JDO)<br>
-    3. org.springframework.data.mongodb.core.mapping.Document (Document database)<br>
-    <br/>
-</p>
-<p>
     <b>Vulnerable Code:</b></br/>
-<pre>@GetMapping("/sample/api")
-    public SampleEntityClass sampleMethod(Principal principal) {
-        Query query = getEntityManager().createQuery("select c from SampleTable c");
-        SampleEntityClass entityObject = query.getResultList().get(0);
-        return entityObject;
-    }</pre>
-<br>
-<pre>@GetMapping("/sampletwo/api")
-public void update(SampleEntityClass updateEntity) {
-  ...
+<pre>
+@javax.persistence.Entity
+class UserEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String username;
+
+    private String password;
+}
+
+[...]
+@Controller
+class UserController {
+
+    @GetMapping("/user/{id}")
+    public UserEntity getUser(@PathVariable("id") String id) {
+
+        return userService.findById(id).get(); //Return the user entity with ALL fields.
+    }
+
 }
 </pre>
 </p>
@@ -3738,11 +3744,130 @@ public void update(SampleEntityClass updateEntity) {
         <li>Data should be persisted in database only after proper sanitisation checks.</li>
     </ul>
 </p>
-<br/>
+<p>
+    <b>Spring MVC Solution:</b><br/>
+    In Spring specifically, you can apply the following solution to allow or disallow specific fields.
+
+        <pre>
+@Controller
+class UserController {
+
+   @InitBinder
+   public void initBinder(WebDataBinder binder, WebRequest request)
+   {
+      binder.setAllowedFields(["username","firstname","lastname"]);
+   }
+
+}
+    </pre>
+</p>
+
+<p>
+<b>References</b><br/>
+<a href="https://www.owasp.org/index.php/Top_10-2017_A3-Sensitive_Data_Exposure">OWASP Top 10-2017 A3: Sensitive Data Exposure</a><br/>
+<a href="https://cheatsheetseries.owasp.org/cheatsheets/Mass_Assignment_Cheat_Sheet.html#spring-mvc">OWASP Cheat Sheet: Mass Assignment</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/212.html">CWE-212: Improper Cross-boundary Removal of Sensitive Data</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/213.html">CWE-213: Intentional Information Exposure</a><br/>
+
+
+</p>
+
             ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECSEL">Spring Entity Leak</BugCode>
+    <BugCode abbrev="SECELEAK">Spring Entity Leak</BugCode>
+
+
+    <BugPattern type="ENTITY_MASS_ASSIGNMENT">
+        <ShortDescription>Mass Assignment</ShortDescription>
+        <LongDescription>The persistent objects could be exploited by attacker to read sensitive information.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    Persistent objects should never be returned by APIs. They might lead to leaking business logic over the UI, unauthorized tampering of
+    persistent objects in database.
+</p>
+<p>
+    <b>Vulnerable Code:</b></br/>
+<pre>
+@javax.persistence.Entity
+class UserEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String username;
+
+    private String password;
+
+    private Long role;
+}
+
+[...]
+@Controller
+class UserController {
+
+    @PutMapping("/user/")
+    @ResponseStatus(value = HttpStatus.OK)
+    public void update(UserEntity user) {
+
+        userService.save(user); //ALL fields from the user can be altered
+    }
+
+}
+</pre>
+</p>
+<p>
+    <b>General Guidelines:</b><br/>
+    <ul>
+        <li>Data transfer objects should be used instead including only the parameters needed as input/response to/from the API.</li>
+        <li>Sensitive parameters should be removed properly before transferring to UI.</li>
+        <li>Data should be persisted in database only after proper sanitisation checks.</li>
+    </ul>
+</p>
+<p>
+    <b>Spring MVC Solution:</b><br/>
+    In Spring specifically, you can apply the following solution to allow or disallow specific fields.<br/>
+<br/>
+With whitelist:<br/>
+        <pre>
+@Controller
+class UserController {
+
+   @InitBinder
+   public void initBinder(WebDataBinder binder, WebRequest request)
+   {
+      binder.setAllowedFields(["username","password"]);
+   }
+
+}
+    </pre>
+<br/>
+With a blacklist:<br/>
+    <pre>
+@Controller
+class UserController {
+
+   @InitBinder
+   public void initBinder(WebDataBinder binder, WebRequest request)
+   {
+      binder.setDisallowedFields(["role"]);
+   }
+
+}
+    </pre>
+</p>
+
+<p>
+<b>References</b><br/>
+<a href="https://cheatsheetseries.owasp.org/cheatsheets/Mass_Assignment_Cheat_Sheet.html#spring-mvc">OWASP Cheat Sheet: Mass Assignment</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/915.html">CWE-915: Improperly Controlled Modification of Dynamically-Determined Object Attributes</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSEMA">Spring Entity Leak</BugCode>
 
     <!-- JSP Include -->
     <Detector class="com.h3xstream.findsecbugs.jsp.JspIncludeDetector">
@@ -5869,8 +5994,8 @@ The sensitive information may be valuable information on its own (such as a pass
 </p>
 <p>
 <b>References</b><br/>
-
-<a href="https://cwe.mitre.org/data/definitions/209.html">CWE-209: Information Exposure Through an Error Message</a>
+<a href="https://cwe.mitre.org/data/definitions/209.html">CWE-209: Information Exposure Through an Error Message</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/211.html">CWE-211: Information Exposure Through Externally-Generated Error Message</a><br/>
 </p>
             ]]>
         </Details>

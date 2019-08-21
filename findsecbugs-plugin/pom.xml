@@ -134,7 +134,7 @@
         <!-- Toolkit for easy detector testing -->
         <dependency>
             <groupId>com.h3xstream.findsecbugs</groupId>
-            <artifactId>findbugs-test-util</artifactId>
+            <artifactId>findsecbugs-test-util</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>

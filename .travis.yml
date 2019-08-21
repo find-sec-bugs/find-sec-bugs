@@ -5,11 +5,13 @@ jdk:
   - openjdk9
   - openjdk10
   - openjdk11
-  - openjdk-ea
+# It is unlikely that OpenJDK Early Access (openjdk-ea) it will work in the near future, the ASM library supports only bytecode from official release version.
+#  - openjdk-ea
 
-matrix:
-  allow_failures:
-    - jdk: openjdk-ea
+
+#matrix:
+#  allow_failures:
+#    - jdk: openjdk-ea
 
 # Activate container based infra https://docs.travis-ci.com/user/workers/container-based-infrastructure/
 sudo: false

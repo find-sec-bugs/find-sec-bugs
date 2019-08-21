@@ -8,13 +8,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.h3xstream.findsecbugs</groupId>
-    <artifactId>findbugs-test-util</artifactId>
-    <name>FindBugs Test Utility</name>
+    <artifactId>findsecbugs-test-util</artifactId>
+    <name>FindSecBugs Test Utility</name>
     <description>
         Utility that could be reuse for FindBugs plugin development.
         Include:
         - Loading of the plugin.
         - Hamcrest Matcher to do make precise assertion
+
+        Part of the code was imported to SpotBugs: (Those functions are supported by the SpotBugs project)
+        https://github.com/spotbugs/spotbugs/tree/master/test-harness
     </description>
 
     <build>

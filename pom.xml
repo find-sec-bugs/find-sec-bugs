@@ -173,7 +173,7 @@
 
 
     <modules>
-        <module>findbugs-test-util</module>
+        <module>findsecbugs-test-util</module>
         <module>findsecbugs-plugin</module>
         <module>findsecbugs-samples-deps</module>
         <module>findsecbugs-samples-kotlin</module>
@@ -196,7 +196,7 @@
 
             <dependency>
                 <groupId>com.h3xstream.findsecbugs</groupId>
-                <artifactId>findbugs-test-util</artifactId>
+                <artifactId>findsecbugs-test-util</artifactId>
                 <type>test-jar</type>
                 <version>${project.version}</version>
             </dependency>

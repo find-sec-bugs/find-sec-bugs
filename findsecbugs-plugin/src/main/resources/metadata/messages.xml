@@ -3700,7 +3700,7 @@ public String redirect(@RequestParam("url") String url) {
     </Detector>
 
     <BugPattern type="ENTITY_LEAK">
-        <ShortDescription>Unexpected property leak</ShortDescription>
+        <ShortDescription>Unexpected Property Leak</ShortDescription>
         <LongDescription>Unexpected property could be leaked because a persistence class is directly exposed to the client</LongDescription>
         <Details>
             <![CDATA[
@@ -3724,12 +3724,16 @@ class UserEntity {
 }
 
 [...]
+@Controller
+class UserController {
 
     @GetMapping("/user/{id}")
     public UserEntity getUser(@PathVariable("id") String id) {
 
         return userService.findById(id).get(); //Return the user entity with ALL fields.
     }
+
+}
 </pre>
 </p>
 <p>
@@ -3740,7 +3744,34 @@ class UserEntity {
         <li>Data should be persisted in database only after proper sanitisation checks.</li>
     </ul>
 </p>
-<br/>
+<p>
+    <b>Spring MVC Solution:</b><br/>
+    In Spring specifically, you can apply the following solution to allow or disallow specific fields.
+
+        <pre>
+@Controller
+class UserController {
+
+   @InitBinder
+   public void initBinder(WebDataBinder binder, WebRequest request)
+   {
+      binder.setAllowedFields(["username","firstname","lastname"]);
+   }
+
+}
+    </pre>
+</p>
+
+<p>
+<b>References</b><br/>
+<a href="https://www.owasp.org/index.php/Top_10-2017_A3-Sensitive_Data_Exposure">OWASP Top 10-2017 A3: Sensitive Data Exposure</a><br/>
+<a href="https://cheatsheetseries.owasp.org/cheatsheets/Mass_Assignment_Cheat_Sheet.html#spring-mvc">OWASP Cheat Sheet: Mass Assignment</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/212.html">CWE-212: Improper Cross-boundary Removal of Sensitive Data</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/213.html">CWE-213: Intentional Information Exposure</a><br/>
+
+
+</p>
+
             ]]>
         </Details>
     </BugPattern>
@@ -3748,7 +3779,7 @@ class UserEntity {
 
 
     <BugPattern type="ENTITY_MASS_ASSIGNMENT">
-        <ShortDescription>Mass assignment</ShortDescription>
+        <ShortDescription>Mass Assignment</ShortDescription>
         <LongDescription>The persistent objects could be exploited by attacker to read sensitive information.</LongDescription>
         <Details>
             <![CDATA[
@@ -3774,30 +3805,65 @@ class UserEntity {
 }
 
 [...]
+@Controller
+class UserController {
 
-    @UpdateMapping("/user/")
-    public Response update(UserEntity user) {
+    @PutMapping("/user/")
+    @ResponseStatus(value = HttpStatus.OK)
+    public void update(UserEntity user) {
 
-        return userService.save(user); //ALL fields from the user can be altered
-
+        userService.save(user); //ALL fields from the user can be altered
     }
-</pre>
-<br>
-<pre>@GetMapping("/sampletwo/api")
-public void update(SampleEntityClass updateEntity) {
-  ...
+
 }
 </pre>
 </p>
 <p>
-    <b>Solution/Countermeasures:</b><br/>
+    <b>General Guidelines:</b><br/>
     <ul>
         <li>Data transfer objects should be used instead including only the parameters needed as input/response to/from the API.</li>
         <li>Sensitive parameters should be removed properly before transferring to UI.</li>
         <li>Data should be persisted in database only after proper sanitisation checks.</li>
     </ul>
 </p>
+<p>
+    <b>Spring MVC Solution:</b><br/>
+    In Spring specifically, you can apply the following solution to allow or disallow specific fields.<br/>
 <br/>
+With whitelist:<br/>
+        <pre>
+@Controller
+class UserController {
+
+   @InitBinder
+   public void initBinder(WebDataBinder binder, WebRequest request)
+   {
+      binder.setAllowedFields(["username","password"]);
+   }
+
+}
+    </pre>
+<br/>
+With a blacklist:<br/>
+    <pre>
+@Controller
+class UserController {
+
+   @InitBinder
+   public void initBinder(WebDataBinder binder, WebRequest request)
+   {
+      binder.setDisallowedFields(["role"]);
+   }
+
+}
+    </pre>
+</p>
+
+<p>
+<b>References</b><br/>
+<a href="https://cheatsheetseries.owasp.org/cheatsheets/Mass_Assignment_Cheat_Sheet.html#spring-mvc">OWASP Cheat Sheet: Mass Assignment</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/915.html">CWE-915: Improperly Controlled Modification of Dynamically-Determined Object Attributes</a><br/>
+</p>
             ]]>
         </Details>
     </BugPattern>
@@ -5928,8 +5994,8 @@ The sensitive information may be valuable information on its own (such as a pass
 </p>
 <p>
 <b>References</b><br/>
-
-<a href="https://cwe.mitre.org/data/definitions/209.html">CWE-209: Information Exposure Through an Error Message</a>
+<a href="https://cwe.mitre.org/data/definitions/209.html">CWE-209: Information Exposure Through an Error Message</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/211.html">CWE-211: Information Exposure Through Externally-Generated Error Message</a><br/>
 </p>
             ]]>
         </Details>

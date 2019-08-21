@@ -217,8 +217,8 @@
     <BugPattern type="UNVALIDATED_REDIRECT" abbrev="SECUR" category="SECURITY" cweid="601"/>
     <BugPattern type="PLAY_UNVALIDATED_REDIRECT" abbrev="SECPUR" category="SECURITY" cweid="601"/>
     <BugPattern type="SPRING_UNVALIDATED_REDIRECT" abbrev="SECSUR" category="SECURITY" cweid="601"/>
-    <BugPattern type="ENTITY_LEAK" abbrev="SECELEAK" category="SECURITY"/>
-    <BugPattern type="ENTITY_MASS_ASSIGNMENT" abbrev="SECEMA" category="SECURITY"/>
+    <BugPattern type="ENTITY_LEAK" abbrev="SECELEAK" category="SECURITY" cweid="212"/>
+    <BugPattern type="ENTITY_MASS_ASSIGNMENT" abbrev="SECEMA" category="SECURITY" cweid="915"/>
     <BugPattern type="XSS_JSP_PRINT" abbrev="SECXSS1" category="SECURITY" cweid="79"/>
     <BugPattern type="JSP_INCLUDE" abbrev="SECJSPINC" category="SECURITY" cweid="98"/>
     <BugPattern type="JSP_SPRING_EVAL" abbrev="SECJSPSPRING" category="SECURITY" cweid="917"/>

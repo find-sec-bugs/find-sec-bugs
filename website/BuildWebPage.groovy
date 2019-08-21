@@ -15,9 +15,9 @@ outDir = "out_web/"
 
 //Loading detectors
 println "Importing message from messages.xml"
-bugsBindingEn = buildMapping(messagesStreamEn)
+def bugsBindingEn = buildMapping(messagesStreamEn)
 bugsBindingEn['lang'] = 'en'
-bugsBindingJa = buildMapping(messagesStreamJa)
+def bugsBindingJa = buildMapping(messagesStreamJa)
 bugsBindingJa['lang'] = 'ja'
 
 nbSignatures = countSignature("../findsecbugs-plugin/src/main/resources/injection-sinks/") + countSignature("../findsecbugs-plugin/src/main/resources/password-methods/")

@@ -8,6 +8,13 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Similar to <code>edu.umd.cs.findbugs.ba.SignatureParser</code>
+ *
+ * It support the extraction of type in format such as:
+ *  - java/util/List&lt;java/lang/String&gt; => java.util.List & java.lang.String
+ *
+ */
 public class SignatureParserWithGeneric {
 
     private String[] argumentsTypes;
@@ -43,13 +50,13 @@ public class SignatureParserWithGeneric {
             try {
                 types.add(Repository.lookupClass(cleanClassName(m.group(1))));
             } catch (ClassNotFoundException e) {
-                System.out.println(e.getMessage());
+                //System.out.println(e.getMessage());
             }
             if(m.groupCount() == 3 && m.group(3) != null) {
                 try {
                     types.add(Repository.lookupClass(cleanClassName(m.group(3))));
                 } catch (ClassNotFoundException e) {
-                    System.out.println(e.getMessage());
+                    //System.out.println(e.getMessage());
                 }
             }
 

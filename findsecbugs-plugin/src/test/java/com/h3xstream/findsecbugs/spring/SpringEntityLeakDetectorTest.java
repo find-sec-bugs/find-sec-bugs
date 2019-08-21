@@ -113,4 +113,30 @@ public class SpringEntityLeakDetectorTest extends BaseDetectorTest {
 						.build()
 		);
 	}
+
+	/**
+	 * The detector should identify entity class also on interface contracts.
+	 * @throws Exception
+	 */
+	@Test
+	public void detectEntityBugFix477() throws Exception {
+		//Locate test code
+		String[] files = {
+				getClassFilePath("testcode/spring/SpringEntityLeakControllerInterface"),
+				getClassFilePath("testcode/spring/SampleEntity"),
+				getClassFilePath("testcode/spring/SampleEntityTwo")
+		};
+
+		//Run the analysis
+		EasyBugReporter reporter = spy(new SecurityReporter());
+		analyze(files, reporter);
+
+		verify(reporter).doReportBug(
+				bugDefinition()
+						.bugType("ENTITY_LEAK")
+						.inClass("SpringEntityLeakControllerInterface")
+						.inMethod("api1")
+						.build()
+		);
+	}
 }

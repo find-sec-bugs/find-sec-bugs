@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.jsp;
 
+import com.h3xstream.findsecbugs.common.StackUtils;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
@@ -50,8 +51,10 @@ public class JspIncludeDetector extends OpcodeStackDetector {
         if (seen == Const.INVOKESTATIC && ("org/apache/jasper/runtime/JspRuntimeLibrary".equals(getClassConstantOperand()) || "org/apache/sling/scripting/jsp/jasper/runtime/JspRuntimeLibrary".equals(getClassConstantOperand()))
                 && getNameConstantOperand().equals("include") && getSigConstantOperand().equals("(Ljavax/servlet/ServletRequest;Ljavax/servlet/ServletResponse;Ljava/lang/String;Ljavax/servlet/jsp/JspWriter;Z)V")) {
 
-            bugReporter.reportBug(new BugInstance(this, JSP_INCLUDE_TYPE, Priorities.HIGH_PRIORITY) //
-                    .addClass(this).addMethod(this).addSourceLine(this));
+            if (StackUtils.isVariableString(stack.getStackItem(2))) {
+                bugReporter.reportBug(new BugInstance(this, JSP_INCLUDE_TYPE, Priorities.HIGH_PRIORITY) //
+                        .addClass(this).addMethod(this).addSourceLine(this));
+            }
         }
         else if (seen == Const.INVOKEVIRTUAL && getClassConstantOperand().equals("org/apache/taglibs/standard/tag/rt/core/ImportTag")
                 && getNameConstantOperand().equals("setUrl") && getSigConstantOperand().equals("(Ljava/lang/String;)V")) {

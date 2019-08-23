@@ -40,6 +40,11 @@ import java.util.WeakHashMap;
 public class BCELUtil {
     public static final String INVOKEDYNAMIC_GENERIC_CLASSNAME = Object.class.getName();
 
+    /**
+     * Caching class inheritance.
+     */
+    private static Map<String, Set<String>> superMap = new WeakHashMap<>();
+
     public static String getSlashedClassName(ConstantPoolGen cpg, FieldOrMethod obj) {
         if (Const.INVOKEDYNAMIC == obj.getOpcode()) {
             return INVOKEDYNAMIC_GENERIC_CLASSNAME;
@@ -98,8 +103,6 @@ public class BCELUtil {
 
         return classNames;
     }
-
-    private static Map<String, Set<String>> superMap = new WeakHashMap<>();
 
     public static int getNumArgumentsIncludingObjectInstance(InvokeInstruction obj, ConstantPoolGen cpg) {
         String signature = obj.getSignature(cpg);

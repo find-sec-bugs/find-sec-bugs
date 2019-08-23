@@ -24,6 +24,7 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 public class SpringJdbcWithMessageFormatTest  extends BaseDetectorTest {
 
@@ -57,7 +58,7 @@ public class SpringJdbcWithMessageFormatTest  extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        verify(reporter).doReportBug(
+        verify(reporter,times(2)).doReportBug(
                 bugDefinition()
                         .bugType("SQL_INJECTION_SPRING_JDBC")
                         .build()

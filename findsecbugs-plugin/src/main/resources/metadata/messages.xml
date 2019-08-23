@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MessageCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:noNamespaceSchemaLocation="http://findsecbugs.h3xstream.com/messagecollection.xsd">
+                   xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/spotbugs/spotbugs/master/spotbugs/etc/messagecollection.xsd">
 
     <Plugin>
         <ShortDescription>Find Security Bugs</ShortDescription>
@@ -6126,13 +6126,13 @@ add(new Label("someLabel").setEscapeModelStrings(false));
         <Details>Identify the weak SAML configuration ignore comments in SAML.</Details>
     </Detector>
     <BugPattern type="SAML_IGNORE_COMMENTS">
-        <ShortDescription>Ignoring XML comments in SAML may lead to to authentication bypass</ShortDescription>
-        <LongDescription>Ignoring XML comments in Security Assertion Markup Language (SAML) may lead to to authentication bypass</LongDescription>
+        <ShortDescription>Ignoring XML comments in SAML may lead to authentication bypass</ShortDescription>
+        <LongDescription>Ignoring XML comments in Security Assertion Markup Language (SAML) may lead to authentication bypass</LongDescription>
         <Details>
             <![CDATA[
 <p>
 Security Assertion Markup Language (SAML) is a single sign-on protocol that that used XML.
-The SAMLResponse message include statements that described the authenticated identity.
+The SAMLResponse message include statements that describe the authenticated user.
 If a user manage to place XML comments (<code>&lt;!-- --&gt;</code>), it may caused issue in the way the parser extract literal value.
 </p>
 
@@ -6140,7 +6140,7 @@ If a user manage to place XML comments (<code>&lt;!-- --&gt;</code>), it may cau
     For example, let's take the following XML section:
     <pre>&lt;saml:Subject&gt;&lt;saml:NameID&gt;admin@domain.com&lt;!----&gt;.evil.com&lt;/saml:NameID&gt;&lt;/saml:Subject&gt;</pre>
 
-    The user identity is <code>"admin@domain.com<!---->.evil.com"</code> but it is in fact a text node <code>"admin@domain.com"</code>, a comment <code>""</code> and a text node <code>""</code>.
+    The user identity is <code>"admin@domain.com&lt;!----&gt;.evil.com"</code> but it is in fact a text node <code>"admin@domain.com"</code>, a comment <code>""</code> and a text node <code>".evil.com"</code>.
     When extracting the NameID, the service provider implementation might take first text node or the last one.
 </p>
 

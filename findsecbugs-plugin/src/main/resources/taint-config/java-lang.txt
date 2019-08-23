@@ -43,6 +43,7 @@ Ljava/text/NumberFormat;:SAFE#IMMUTABLE
 Ljava/text/ChoiceFormat;:SAFE#IMMUTABLE
 Ljava/text/DecimalFormat;:SAFE#IMMUTABLE
 
+java/text/MessageFormat.format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;:0,1
 
 java/lang/Object.clone()Ljava/lang/Object;:0
 java/lang/Object.equals(Ljava/lang/Object;)Z:UNKNOWN

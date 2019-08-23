@@ -6121,4 +6121,66 @@ add(new Label("someLabel").setEscapeModelStrings(false));
     <BugCode abbrev="WICXSS1">Enabling extensions in Apache RPC XML server or client usage</BugCode>
 
 
+    <!-- SAML Ignore Comments -->
+    <Detector class="com.h3xstream.findsecbugs.saml.SamlIgnoreCommentsDetector">
+        <Details>Identify the weak SAML configuration ignore comments in SAML.</Details>
+    </Detector>
+    <BugPattern type="SAML_IGNORE_COMMENTS">
+        <ShortDescription>Ignoring XML comments in SAML may lead to to authentication bypass</ShortDescription>
+        <LongDescription>Ignoring XML comments in Security Assertion Markup Language (SAML) may lead to to authentication bypass</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Security Assertion Markup Language (SAML) is a single sign-on protocol that that used XML.
+The SAMLResponse message include statements that described the authenticated identity.
+If a user manage to place XML comments (<code>&lt;!-- --&gt;</code>), it may caused issue in the way the parser extract literal value.
+</p>
+
+<p>
+    For example, let's take the following XML section:
+    <pre>&lt;saml:Subject&gt;&lt;saml:NameID&gt;admin@domain.com&lt;!----&gt;.evil.com&lt;/saml:NameID&gt;&lt;/saml:Subject&gt;</pre>
+
+    The user identity is <code>"admin@domain.com<!---->.evil.com"</code> but it is in fact a text node <code>"admin@domain.com"</code>, a comment <code>""</code> and a text node <code>""</code>.
+    When extracting the NameID, the service provider implementation might take first text node or the last one.
+</p>
+
+<p>
+<b>Vulnerable Code:</b><br/>
+<pre>
+@Bean
+ParserPool parserPool1() {
+    BasicParserPool pool = new BasicParserPool();
+    pool.setIgnoreComments(false);
+    return pool;
+}
+</pre>
+</p>
+
+<p>
+<b>Solution:</b><br/>
+<pre>
+@Bean
+ParserPool parserPool1() {
+    BasicParserPool pool = new BasicParserPool();
+    pool.setIgnoreComments(true);
+    return pool;
+}
+</pre>
+</p>
+
+
+<p>
+<b>References</b><br/>
+
+<a href="https://duo.com/blog/duo-finds-saml-vulnerabilities-affecting-multiple-implementations">Duo Finds SAML Vulnerabilities Affecting Multiple Implementations</a><br/>
+<a href="https://spring.io/blog/2018/03/01/spring-security-saml-and-this-week-s-saml-vulnerability">Spring Security SAML and this week's SAML Vulnerability</a><br/>
+
+</p>
+
+
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECSAMLC">Ignoring XML comments in SAML may lead to to authentication bypass</BugCode>
+
 </MessageCollection>

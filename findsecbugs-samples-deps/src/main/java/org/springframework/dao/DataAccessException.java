@@ -1,5 +1,5 @@
 package org.springframework.dao;
 
-public abstract class DataAccessException extends Exception {
+public abstract class DataAccessException extends RuntimeException {
 
 }

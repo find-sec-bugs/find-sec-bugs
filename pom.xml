@@ -7,7 +7,7 @@
     <packaging>pom</packaging>
     <version>1.10.0-SNAPSHOT</version>
 
-    <name>Find Security Bugs root</name>
+    <name>OWASP Find Security Bugs root</name>
 
     <description>Root project file that aggregate the different modules of Find Security Bugs.</description>
 
@@ -54,6 +54,7 @@
                         <exclude>**/java/android/**/**.java</exclude>
                         <exclude>**/com/hazelcast/**/**.java</exclude>
                         <exclude>**/javax/**/**.java</exclude>
+                        <exclude>**/org/opensaml/xml/**/**.java</exclude>
                         <exclude>**/org/acegisecurity/**/**.java</exclude>
                         <exclude>**/org/apache/**/**.java</exclude>
                         <exclude>**/org/bouncycastle/**/**.java</exclude>

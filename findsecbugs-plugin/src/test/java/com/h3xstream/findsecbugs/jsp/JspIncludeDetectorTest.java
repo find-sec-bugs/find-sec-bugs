@@ -90,4 +90,25 @@ public class JspIncludeDetectorTest extends BaseDetectorTest {
         //Only one
         verify(reporter).doReportBug(bugDefinition().bugType("JSP_INCLUDE").build());
     }
+
+
+
+    @Test
+    public void jspInclude4_safe() throws Exception {
+        //Locate test code
+        String[] files = {
+                getJspFilePath("includes/jsp_include_4_safe.jsp")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        //Assertions
+        verify(reporter,never()).doReportBug(
+                bugDefinition()
+                        .bugType("JSP_INCLUDE")
+                        .build()
+        );
+    }
 }

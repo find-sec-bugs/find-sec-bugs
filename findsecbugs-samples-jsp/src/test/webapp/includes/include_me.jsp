@@ -1,0 +1,1 @@
+The most secure code in the world is code which is never written.

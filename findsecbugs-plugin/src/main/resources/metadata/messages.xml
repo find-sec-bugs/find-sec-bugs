@@ -6171,7 +6171,6 @@ ParserPool parserPool1() {
 
 <p>
 <b>References</b><br/>
-
 <a href="https://duo.com/blog/duo-finds-saml-vulnerabilities-affecting-multiple-implementations">Duo Finds SAML Vulnerabilities Affecting Multiple Implementations</a><br/>
 <a href="https://spring.io/blog/2018/03/01/spring-security-saml-and-this-week-s-saml-vulnerability">Spring Security SAML and this week's SAML Vulnerability</a><br/>
 
@@ -6182,5 +6181,88 @@ ParserPool parserPool1() {
         </Details>
     </BugPattern>
     <BugCode abbrev="SECSAMLC">Ignoring XML comments in SAML may lead to to authentication bypass</BugCode>
+
+
+    <Detector class="com.h3xstream.findsecbugs.file.SuspiciousCommandDetector">
+        <Details>Analyze hardcoded command and flagged suspicious ones.</Details>
+    </Detector>
+
+    <!-- File permissions -->
+    <Detector class="com.h3xstream.findsecbugs.file.OverlyPermissiveFilePermissionDetector">
+        <Details>Identify overly permissive file permission applied to local files.</Details>
+    </Detector>
+    <BugPattern type="OVERLY_PERMISSIVE_FILE_PERMISSION">
+        <ShortDescription>Overly permissive file permission</ShortDescription>
+        <LongDescription>Overly permissive file permission can lead to privilege escalation or information leakage.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+It is generally a bad practices to set overly permissive file permission such as read+write+exec for all users.
+If the file affected is a configuration, a binary, a script or sensitive data, it can lead to privilege escalation or information leakage.
+</p>
+<p>
+It is possible that another service, running on the same host as your application, gets compromised.
+Services typically run under a different user. A compromised service account could be use to read your configuration, add execution instruction to scripts or alter the data file.
+To limite the damage from other services or local users, you should limited to permission of your application files.
+</p>
+
+<p>
+<b>Vulnerable Code 1 (symbolic notation):</b><br/>
+<pre>
+Files.setPosixFilePermissions(configPath, PosixFilePermissions.fromString("rw-rw-rw-"));
+</pre>
+</p>
+
+<p>
+<b>Solution 1 (symbolic notation):</b><br/>
+<pre>
+Files.setPosixFilePermissions(configPath, PosixFilePermissions.fromString("rw-rw----"));
+</pre>
+</p>
+
+
+<p>
+<b>Vulnerable Code 2 (Object-oriented implementation):</b><br/>
+<pre>
+Set&lt;PosixFilePermission&gt; perms = new HashSet&lt;&gt;();
+perms.add(PosixFilePermission.OWNER_READ);
+perms.add(PosixFilePermission.OWNER_WRITE);
+perms.add(PosixFilePermission.OWNER_EXECUTE);
+
+perms.add(PosixFilePermission.GROUP_READ);
+perms.add(PosixFilePermission.GROUP_WRITE);
+perms.add(PosixFilePermission.GROUP_EXECUTE);
+
+perms.add(PosixFilePermission.OTHERS_READ);
+perms.add(PosixFilePermission.OTHERS_WRITE);
+perms.add(PosixFilePermission.OTHERS_EXECUTE);
+</pre>
+</p>
+
+<p>
+<b>Solution 2 (Object-oriented implementation):</b><br/>
+<pre>
+Set&lt;PosixFilePermission&gt; perms = new HashSet&lt;&gt;();
+perms.add(PosixFilePermission.OWNER_READ);
+perms.add(PosixFilePermission.OWNER_WRITE);
+perms.add(PosixFilePermission.OWNER_EXECUTE);
+
+perms.add(PosixFilePermission.GROUP_READ);
+perms.add(PosixFilePermission.GROUP_WRITE);
+perms.add(PosixFilePermission.GROUP_EXECUTE);
+</pre>
+</p>
+
+<p>
+<b>References</b><br/>
+<a href="https://cwe.mitre.org/data/definitions/732.html">CWE-732: Incorrect Permission Assignment for Critical Resource</a><br/>
+<a href="https://payatu.com/guide-linux-privilege-escalation/">A guide to Linux Privilege Escalation</a><br/>
+<a href="https://en.wikipedia.org/wiki/File_system_permissions">File system permissions</a><br/>
+</p>
+
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECOPFP">Overly permissive file permission</BugCode>
 
 </MessageCollection>

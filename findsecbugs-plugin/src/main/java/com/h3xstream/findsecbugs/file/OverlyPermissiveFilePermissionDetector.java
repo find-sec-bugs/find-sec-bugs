@@ -79,7 +79,7 @@ public class OverlyPermissiveFilePermissionDetector implements Detector {
         for (Iterator<Location> i = cfg.locationIterator(); i.hasNext(); ) {
             Location location = nextLocation(i, cpg);
             Instruction inst = location.getHandle().getInstruction();
-            ByteCode.printOpCode(inst,cpg);
+//            ByteCode.printOpCode(inst,cpg);
 
             if (inst instanceof GETSTATIC) {
                 GETSTATIC getstatic = (GETSTATIC) inst;

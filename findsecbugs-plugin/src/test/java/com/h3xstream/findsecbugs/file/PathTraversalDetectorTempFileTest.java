@@ -18,13 +18,43 @@
 package com.h3xstream.findsecbugs.file;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
+import com.h3xstream.findbugs.test.EasyBugReporter;
+import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import org.testng.annotations.Test;
+
+import java.util.Arrays;
+
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 public class PathTraversalDetectorTempFileTest  extends BaseDetectorTest {
 
     @Test
     public void detectInjectionInTempFileCreation() throws Exception {
-        
+
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/pathtraversal/PathTraversalTempDirectory.java")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        for(Integer line : Arrays.asList(12,13,14,15, 17,18)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("PATH_TRAVERSAL_IN")
+                            .inClass("PathTraversalTempDirectory").inMethod("main").atLine(line)
+                            .build()
+            );
+        }
+        //Only 3 instances
+        verify(reporter,times(6)).doReportBug(bugDefinition().bugType("PATH_TRAVERSAL_IN")
+                .inClass("PathTraversalTempDirectory").inMethod("main").build());
+
     }
 
 }

@@ -53,7 +53,7 @@ public class PathTraversalDetectorSeparatorFalsePositiveTest  extends BaseDetect
         );
 
 
-        for(Integer line : Arrays.asList(35,40,45)) {
+        for(Integer line : Arrays.asList(33,38,43)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("PATH_TRAVERSAL_IN")

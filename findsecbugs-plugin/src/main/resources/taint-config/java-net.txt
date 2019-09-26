@@ -52,3 +52,6 @@ java/net/URL.toURI()Ljava/net/URI;:0
 java/io/File.createTempFile(Ljava/lang/String;Ljava/lang/String;)Ljava/io/File;:0,1
 java/io/File.createTempFile(Ljava/lang/String;Ljava/lang/String;Ljava/io/File;)Ljava/io/File;:0,1,2
 java/io/File.getCanonicalPath()Ljava/lang/String;:0
+
+java/io/File.separator:SAFE
+java/nio/file/FileSystem.getSeparator()Ljava/lang/String;:SAFE

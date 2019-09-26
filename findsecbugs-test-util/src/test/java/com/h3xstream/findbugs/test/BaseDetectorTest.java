@@ -58,6 +58,11 @@ public class BaseDetectorTest {
     }
 
     public String getClassFilePath(String path) {
+
+        if(path.endsWith(".java")) {
+            path = path.replaceAll(".java$","");
+        }
+
         //Convert dot class name to path
         if(StringUtils.countMatches(path,".") > 1 && !path.endsWith(".jar")) {
             path = path.replaceAll("\\.","/");

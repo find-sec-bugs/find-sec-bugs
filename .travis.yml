@@ -22,4 +22,4 @@ script: mvn verify -B -V -Ptravisci
 after_success:
 # Coveralls
 # Report available here : https://coveralls.io/github/find-sec-bugs/find-sec-bugs
-  - mvn clean cobertura:cobertura coveralls:report
+  - mvn clean test -Pjacoco && bash <(curl -s https://codecov.io/bash)

@@ -15,13 +15,10 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package com.h3xstream.findsecbugs.scala;
+package com.h3xstream.findsecbugs.injection.ssrf;
 
-import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
-import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import edu.umd.cs.findbugs.BugReporter;
-import edu.umd.cs.findbugs.Priorities;
 
 public class SSRFDetector extends BasicInjectionDetector {
 

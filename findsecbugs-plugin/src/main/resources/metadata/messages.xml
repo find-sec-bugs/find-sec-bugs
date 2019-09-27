@@ -5200,7 +5200,7 @@ Path traversal <sup>[3][4]</sup> are not possible.
     <BugCode abbrev="SECSDL">Configuration or system information leakage</BugCode>
 
     <!-- Scala Play Server Side Request Forgery -->
-    <Detector class="com.h3xstream.findsecbugs.scala.SSRFDetector">
+    <Detector class="com.h3xstream.findsecbugs.injection.ssrf.SSRFDetector">
         <Details>Identify potential Scala Play Server-Side Request Forgery (SSRF)</Details>
     </Detector>
     <BugPattern type="SCALA_PLAY_SSRF">
@@ -5255,7 +5255,13 @@ Path traversal <sup>[3][4]</sup> are not possible.
     <b>Vulnerable Code:</b>
 <pre>
 new URL(String url).openConnection()
+</pre>
+
+<pre>
 new URL(String url).openStream()
+</pre>
+
+<pre>
 new URL(String url).getContent()
 </pre>
 </p>
@@ -5263,7 +5269,7 @@ new URL(String url).getContent()
     <b>Solution/Countermeasures:</b><br/>
     <ul>
         <li>Don't accept URL destinations from users</li>
-        <li>Accept a destination key, and use it to look up the target (legal) destination</li>
+        <li>Accept a destination key, and use it to look up the target destination associate with the key</li>
         <li>White list URLs (if possible)</li>
         <li>Validate that the beginning of the URL is part of a white list</li>
     </ul>

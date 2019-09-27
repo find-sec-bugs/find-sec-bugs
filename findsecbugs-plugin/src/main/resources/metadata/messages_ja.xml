@@ -4633,7 +4633,7 @@ transformer.transform(text, new StreamResult(...));
     <BugCode abbrev="SECSDL">構成情報またはシステム情報の漏洩</BugCode>
 
     <!-- Scala Play Server Side Request Forgery -->
-    <Detector class="com.h3xstream.findsecbugs.scala.SSRFDetector">
+    <Detector class="com.h3xstream.findsecbugs.injection.ssrf.SSRFDetector">
         <Details>潜在的な Scala Play Server Side Request Forgery (SSRF) を特定します。</Details>
     </Detector>
     <BugPattern type="SCALA_PLAY_SSRF">

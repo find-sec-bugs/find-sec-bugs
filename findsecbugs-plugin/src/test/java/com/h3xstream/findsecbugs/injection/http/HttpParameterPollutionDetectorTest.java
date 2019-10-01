@@ -38,7 +38,7 @@ public class HttpParameterPollutionDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        for (Integer line : Arrays.asList(19, 21, 22)) {
+        for (Integer line : Arrays.asList(21, 24, 25)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("HTTP_PARAMETER_POLLUTION")
@@ -47,7 +47,7 @@ public class HttpParameterPollutionDetectorTest extends BaseDetectorTest {
             );
         }
 
-        //Out of 4 calls, 3 are suspicious
+        //Out of 5 calls, 3 are suspicious
         verify(reporter, times(3)).doReportBug(
                 bugDefinition().bugType("HTTP_PARAMETER_POLLUTION").build()
         );

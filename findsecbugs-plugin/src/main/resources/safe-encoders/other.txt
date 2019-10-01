@@ -30,3 +30,6 @@ org/apache/commons/codec/binary/Hex.encodeHex([B)[C:SAFE
 org/apache/commons/codec/binary/Hex.encodeHex([BZ)[C:SAFE
 org/apache/commons/codec/binary/Hex.encodeHexString([B)Ljava/lang/String;:SAFE
 org/apache/commons/codec/binary/Hex.encodeHexString([BZ)Ljava/lang/String;:SAFE
+
+--Google Guava
+com/google/common/escape/Escaper.escape(Ljava/lang/String;)Ljava/lang/String;:0|+URL_ENCODED,+XSS_SAFE

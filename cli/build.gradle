@@ -5,7 +5,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.spotbugs:spotbugs:3.1.5'
+    compile 'com.github.spotbugs:spotbugs:3.1.12'
     compile 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.9.0'
 }
 

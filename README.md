@@ -36,15 +36,15 @@ The development of Find Security Bugs is supported by [GoSecure](https://github.
 
 ### Eclipse
 
-![Eclipse](http://find-sec-bugs.github.io/images/screens/eclipse.png)
+![Eclipse](https://find-sec-bugs.github.io/images/screens/eclipse.png)
 
 ### IntelliJ / Android Studio
 
-![IntelliJ](http://find-sec-bugs.github.io/images/screens/intellij.png)
+![IntelliJ](https://find-sec-bugs.github.io/images/screens/intellij.png)
 
 ### SonarQube
 
-![SonarQube](http://find-sec-bugs.github.io/images/screens/sonar.png)
+![SonarQube](https://find-sec-bugs.github.io/images/screens/sonar.png)
 
 ## License
 

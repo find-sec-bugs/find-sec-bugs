@@ -24,7 +24,7 @@ import edu.umd.cs.findbugs.classfile.MethodDescriptor;
  * 
  * @author David Formanek (Y Soft Corporation, a.s.)
  */
-public class TaintLocation implements Comparable<TaintLocation> {
+public class TaintLocation {
 
     private final MethodDescriptor methodDescriptor;
     private final int position;
@@ -88,21 +88,4 @@ public class TaintLocation implements Comparable<TaintLocation> {
         return methodDescriptor.toString() + " " + position;
     }
 
-    @Override
-    public int compareTo(TaintLocation other) {
-        if (other == null) {
-            throw new NullPointerException();
-        }
-        int comparison = this.methodDescriptor.compareTo(other.methodDescriptor);
-        if (comparison != 0) {
-            return comparison;
-        }
-        if (this.position < other.position) {
-            return -1;
-        }
-        if (this.position > other.position) {
-            return 1;
-        }
-        return 0;
-    }
 }

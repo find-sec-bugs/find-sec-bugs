@@ -23,10 +23,10 @@ import org.apache.bcel.generic.*;
 public class ByteCode {
 
 
-    public static void printOpCode(InstructionHandle insHandle, ConstantPoolGen cpg) {
-        System.out.print("[" + String.format("%02d", insHandle.getPosition()) + "] ");
-        printOpCode(insHandle.getInstruction(),cpg);
-    }
+//    public static void printOpCode(InstructionHandle insHandle, ConstantPoolGen cpg) {
+//        System.out.print("[" + String.format("%02d", insHandle.getPosition()) + "] ");
+//        printOpCode(insHandle.getInstruction(),cpg);
+//    }
 
     /**
      * Print the the detail of the given instruction (class, method, etc.)
@@ -116,6 +116,11 @@ public class ByteCode {
         return null;
     }
 
+    /**
+     * Extract the integer value from the Instruction ICONST.
+     * @param h Instruction Handle
+     * @return
+     */
     public static Integer getConstantInt(InstructionHandle h) {
         Instruction prevIns = h.getInstruction();
         if (prevIns instanceof ICONST) {

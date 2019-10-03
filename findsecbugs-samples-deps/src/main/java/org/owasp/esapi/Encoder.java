@@ -7,4 +7,5 @@ public interface Encoder {
     String decodeForHTML(String input);
     String encodeForURL(String input);
     String decodeFromURL(String input);
+    String encodeForXPath(String input);
 }

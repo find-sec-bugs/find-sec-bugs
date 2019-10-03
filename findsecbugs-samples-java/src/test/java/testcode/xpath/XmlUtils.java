@@ -18,7 +18,7 @@ public class XmlUtils {
         DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = domFactory.newDocumentBuilder();
 
-        InputStream in = XPathJavax.class.getResourceAsStream(path);
+        InputStream in = XmlUtils.class.getResourceAsStream(path);
         return builder.parse(in);
     }
 

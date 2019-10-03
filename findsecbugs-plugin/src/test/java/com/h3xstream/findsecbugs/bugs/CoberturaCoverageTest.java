@@ -21,6 +21,8 @@ import com.h3xstream.findsecbugs.common.ByteCode;
 import com.h3xstream.findsecbugs.common.InterfaceUtils;
 import com.h3xstream.findsecbugs.common.JspUtils;
 import com.h3xstream.findsecbugs.common.StackUtils;
+import com.h3xstream.findsecbugs.common.TaintUtil;
+import com.h3xstream.findsecbugs.common.matcher.InstructionDSL;
 import com.h3xstream.findsecbugs.taintanalysis.InvalidStateException;
 import org.testng.annotations.Test;
 
@@ -28,10 +30,14 @@ public class CoberturaCoverageTest {
 
     @Test
     public void coverStaticClasses() {
+
+        //Static class that have empty constructor
         new StackUtils();
         new JspUtils();
         new InterfaceUtils();
         new ByteCode();
         new InvalidStateException("");
+        new TaintUtil();
+        new InstructionDSL();
     }
 }

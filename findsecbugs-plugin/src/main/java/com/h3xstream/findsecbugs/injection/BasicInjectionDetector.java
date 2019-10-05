@@ -52,7 +52,7 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
 
     protected BasicInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
-        loadCustomConfigFiles();
+        loadCustomSinksConfigFiles();
     }
 
     @Override
@@ -127,8 +127,8 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
      *     <li>-Dfindsecbugs.injection.customconfigfile.ScriptInjectionDetector="C:\Temp\script-engine-custom.txt|SCRIPT_ENGINE_INJECTION;C:\Temp\el-custom.txt|EL_INJECTION"</li>
      * </ul>
      */
-    protected void loadCustomConfigFiles() {
-        String customConfigFile = FindSecBugsGlobalConfig.getInstance().getCustomConfigFile(getClass().getSimpleName());
+    protected void loadCustomSinksConfigFiles() {
+        String customConfigFile = FindSecBugsGlobalConfig.getInstance().getCustomSinksConfigFile(getClass().getSimpleName());
         if (customConfigFile != null && !customConfigFile.isEmpty()) {
             for (String configFile : customConfigFile.split(File.pathSeparator)) {
                 String[] injectionDefinition = configFile.split(Pattern.quote("|"));

@@ -1,0 +1,1 @@
+testcode/xpath/XPathBadApi.query(Ljava/lang/String;)Ljava/lang/String;:0

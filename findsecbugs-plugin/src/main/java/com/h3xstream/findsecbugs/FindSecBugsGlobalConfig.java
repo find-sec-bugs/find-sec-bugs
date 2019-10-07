@@ -65,7 +65,14 @@ public class FindSecBugsGlobalConfig {
         return value;
     }
 
-    public String getCustomConfigFile(String suffix) {
+    /**
+     * This getter will load sink injections.
+     *
+     * TODO: Load dynamically all system variable with the prefix in the constructor.
+     * @param suffix
+     * @return
+     */
+    public String getCustomSinksConfigFile(String suffix) {
         return loadFromSystem("findsecbugs.injection.customconfigfile." + suffix, null);
     }
 

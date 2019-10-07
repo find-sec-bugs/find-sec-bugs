@@ -1,4 +1,5 @@
-# OWASP Find Security Bugs [![Build Status](https://secure.travis-ci.org/find-sec-bugs/find-sec-bugs.png?branch=master)](http://travis-ci.org/find-sec-bugs/find-sec-bugs) [![Coverage Status](https://img.shields.io/coveralls/find-sec-bugs/find-sec-bugs/shields)](https://coveralls.io/r/find-sec-bugs/find-sec-bugs?branch=master) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.h3xstream.findsecbugs/findsecbugs-plugin/badge.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.h3xstream.findsecbugs%22%20a%3A%22findsecbugs-plugin%22)
+# OWASP Find Security Bugs [![Build Status](https://secure.travis-ci.org/find-sec-bugs/find-sec-bugs.png?branch=master)](http://travis-ci.org/find-sec-bugs/find-sec-bugs) [![codecov](https://codecov.io/gh/find-sec-bugs/find-sec-bugs/branch/master/graph/badge.svg)](https://codecov.io/gh/find-sec-bugs/find-sec-bugs) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.h3xstream.findsecbugs/findsecbugs-plugin/badge.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.h3xstream.findsecbugs%22%20a%3A%22findsecbugs-plugin%22) [![Slack Channel](https://img.shields.io/badge/slack-OWASP%2ffind--sec--bugs-orange?logo=slack)](https://app.slack.com/client/T04T40NHX/CN8G79Y6P)
+
 
 Find Security Bugs is the [SpotBugs](https://spotbugs.github.io/) plugin for security audits of Java web applications.
 
@@ -8,6 +9,7 @@ Website : http://find-sec-bugs.github.io/
 
  - [Philippe Arteau](https://github.com/h3xstream) from [GoSecure](https://github.com/gosecure)
  - [David Formánek](https://github.com/formanek)
+ - [Tomáš Polešovský](https://github.com/topolik) from [Liferay](https://github.com/liferay)
 
 ## Notable contributions
 
@@ -34,15 +36,15 @@ The development of Find Security Bugs is supported by [GoSecure](https://github.
 
 ### Eclipse
 
-![Eclipse](http://find-sec-bugs.github.io/images/screens/eclipse.png)
+![Eclipse](https://find-sec-bugs.github.io/images/screens/eclipse.png)
 
 ### IntelliJ / Android Studio
 
-![IntelliJ](http://find-sec-bugs.github.io/images/screens/intellij.png)
+![IntelliJ](https://find-sec-bugs.github.io/images/screens/intellij.png)
 
 ### SonarQube
 
-![SonarQube](http://find-sec-bugs.github.io/images/screens/sonar.png)
+![SonarQube](https://find-sec-bugs.github.io/images/screens/sonar.png)
 
 ## License
 

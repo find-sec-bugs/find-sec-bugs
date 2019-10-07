@@ -51,4 +51,25 @@ public class XPathInjectionJavaxDetectorTest extends BaseDetectorTest {
         verify(reporter, times(2)).doReportBug(
                 bugDefinition().bugType("XPATH_INJECTION").build());
     }
+
+
+    @Test
+    public void avoidFPXPathInjectionJavax() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/xpath/XPathJavaxSafe")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        //Assertions
+        verify(reporter,never()).doReportBug(
+                bugDefinition().bugType("XPATH_INJECTION")
+                        .inClass("XPathJavaxSafe").inMethod("main")
+                        .build()
+        );
+
+    }
 }

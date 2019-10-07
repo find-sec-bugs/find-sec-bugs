@@ -1,1 +1,2 @@
 java/lang/Long.parseLong(Ljava/lang/String;)J:0|+SQL_INJECTION_SAFE#0
+testcode/xpath/XPathSuperSecureUtil.encodeForXPath(Ljava/lang/String;)Ljava/lang/String;:0|+XPATH_INJECTION_SAFE

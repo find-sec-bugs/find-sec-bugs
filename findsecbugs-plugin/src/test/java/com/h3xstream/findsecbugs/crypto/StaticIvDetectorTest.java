@@ -115,6 +115,25 @@ public class StaticIvDetectorTest extends BaseDetectorTest {
 
 
     @Test
+    public void avoidFalsePositiveUnwrap() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/crypto/iv/StaticIvUnwrap")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        //Assertions
+
+        // Bug should not be detected
+        verify(reporter,never()).doReportBug( //
+                bugDefinition().bugType("STATIC_IV").inClass("StaticIvUnwrap").build()
+        );
+    }
+
+    @Test
     public void avoidFalsePositiveGenerateWithKeyGenerator() throws Exception {
         //Locate test code
         String[] files = {

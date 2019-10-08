@@ -78,7 +78,7 @@ public class StaticIvDetector implements Detector {
         CFG cfg = classContext.getCFG(m);
 
         boolean foundSafeIvGeneration = false;
-        //Detect if the method is doing decryption only. If it is the case, IV should not be generated from this point
+        //Detect if the method is doing decryption/unwrapping only. If it is the case, IV should not be generated from this point
         //therefore it is a false positive
         boolean atLeastOneDecryptCipher = false;
         boolean atLeastOneEncryptCipher = false;
@@ -104,6 +104,13 @@ public class StaticIvDetector implements Detector {
                                 atLeastOneEncryptCipher = true;
                                 break;
                             case Cipher.DECRYPT_MODE:
+                                atLeastOneDecryptCipher = true;
+                                break;
+                                // Wrapping and unwrapping are equivalent to encryption and decryption.
+                            case Cipher.WRAP_MODE:
+                                atLeastOneEncryptCipher = true;
+                                break;
+                            case Cipher.UNWRAP_MODE:
                                 atLeastOneDecryptCipher = true;
                                 break;
                         }

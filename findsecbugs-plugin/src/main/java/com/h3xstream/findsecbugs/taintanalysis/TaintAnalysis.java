@@ -262,10 +262,9 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
     }
 
     private static List<String> loadFileContent(String path) {
-        BufferedReader stream = null;
-        try {
-            InputStream in = TaintAnalysis.class.getClassLoader().getResourceAsStream(path);
-            stream = new BufferedReader(new InputStreamReader(in, "utf-8"));
+        try (InputStream in = TaintAnalysis.class.getClassLoader().getResourceAsStream(path);
+             BufferedReader stream = new BufferedReader(new InputStreamReader(in, "utf-8"))) {
+            
             String line;
             List<String> content = new ArrayList<String>();
             while ((line = stream.readLine()) != null) {
@@ -274,8 +273,6 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
             return content;
         } catch (IOException ex) {
             assert false : ex.getMessage();
-        } finally {
-            IO.close(stream);
         }
         return new ArrayList<String>();
     }

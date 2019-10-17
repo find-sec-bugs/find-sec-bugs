@@ -28,7 +28,7 @@ import org.apache.bcel.Const;
  * The sanity of the sinks file is crucial (a typo == missed API == missed vulnerability).
  * The loader was extracted from the BasicInjectionDetector class in order to reuse the parsing logic.
  *
- * @see SinkFilesValidationTest
+ * @see com.h3xstream.findsecbugs.injection.SinkFilesValidationTest
  */
 public class SinksLoader {
 
@@ -38,21 +38,11 @@ public class SinksLoader {
 
     protected void loadConfiguredSinks(String filename, String bugType, InjectionPointReceiver receiver) {
         assert filename != null && bugType != null && !bugType.isEmpty();
-        InputStream stream = null;
-        try {
-            stream = getClass().getClassLoader()
-                    .getResourceAsStream(SINK_CONFIG_PATH.concat(filename));
+
+        try (InputStream stream = getClass().getClassLoader().getResourceAsStream(SINK_CONFIG_PATH.concat(filename))) {
             loadSinks(stream, bugType, receiver);
         } catch (IOException ex) {
             throw new RuntimeException("cannot load resources", ex);
-        } finally {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (IOException ex) {
-                    throw new RuntimeException("cannot close stream", ex);
-                }
-            }
         }
     }
 

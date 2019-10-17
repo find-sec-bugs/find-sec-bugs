@@ -151,20 +151,12 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
      * @param bugType type of an injection bug
      */
     protected void loadCustomSinks(String fileName, String bugType) {
-        InputStream stream = null;
-        try {
-            File file = new File(fileName);
-            if (file.exists()) {
-                stream = new FileInputStream(file);
-                loadConfiguredSinks(stream, bugType);
-            } else {
-                stream = getClass().getClassLoader().getResourceAsStream(fileName);
-                loadConfiguredSinks(stream, bugType);
-            }
+
+        File file = new File(fileName);
+        try (InputStream stream = file.exists() ? new FileInputStream(file) : getClass().getClassLoader().getResourceAsStream(fileName)) {
+            loadConfiguredSinks(stream, bugType);
         } catch (Exception ex) {
             throw new RuntimeException("Cannot load custom injection sinks from " + fileName, ex);
-        } finally {
-            IO.close(stream);
         }
     }
 

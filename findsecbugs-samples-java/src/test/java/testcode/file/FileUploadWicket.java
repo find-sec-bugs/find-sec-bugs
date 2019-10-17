@@ -1,4 +1,4 @@
-package testcode;
+package testcode.file;
 
 import org.apache.wicket.util.upload.FileItem;
 import org.apache.wicket.util.upload.FileUploadException;

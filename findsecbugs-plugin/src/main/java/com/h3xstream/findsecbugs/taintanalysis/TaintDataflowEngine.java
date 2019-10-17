@@ -137,14 +137,11 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
 
     private void loadTaintConfig(String path, boolean checkRewrite) {
         assert path != null && !path.isEmpty();
-        InputStream stream = null;
-        try {
-            stream = getClass().getClassLoader().getResourceAsStream(path);
+
+        try (InputStream stream = getClass().getClassLoader().getResourceAsStream(path)) {
             taintConfig.load(stream, checkRewrite);
         } catch (IOException ex) {
             assert false : ex.getMessage();
-        } finally {
-            IO.close(stream);
         }
     }
     

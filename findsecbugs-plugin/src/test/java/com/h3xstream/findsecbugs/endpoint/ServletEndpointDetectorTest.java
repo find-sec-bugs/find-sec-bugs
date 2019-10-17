@@ -29,10 +29,10 @@ import static org.mockito.Mockito.verify;
 public class ServletEndpointDetectorTest extends BaseDetectorTest {
 
     @Test
-    public void detectServletVariousInputs() throws Exception {
+    public void detectHttpServletVariousInputs() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/BasicServlet")
+                getClassFilePath("testcode/endpoint/BasicHttpServlet")
         };
 
         //Run the analysis
@@ -45,28 +45,28 @@ public class ServletEndpointDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("SERVLET_CONTENT_TYPE")
-                        .inClass("BasicServlet").inMethod("doGet").atLine(16)
+                        .inClass("BasicHttpServlet").inMethod("doGet").atLine(16)
                         .build()
         );
 
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("SERVLET_SERVER_NAME")
-                        .inClass("BasicServlet").inMethod("doGet").atLine(17)
+                        .inClass("BasicHttpServlet").inMethod("doGet").atLine(17)
                         .build()
         );
 
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("SERVLET_SESSION_ID")
-                        .inClass("BasicServlet").inMethod("doGet").atLine(19)
+                        .inClass("BasicHttpServlet").inMethod("doGet").atLine(19)
                         .build()
         );
 
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("SERVLET_QUERY_STRING")
-                        .inClass("BasicServlet").inMethod("doGet").atLine(20)
+                        .inClass("BasicHttpServlet").inMethod("doGet").atLine(20)
                         .build()
         );
 
@@ -75,28 +75,28 @@ public class ServletEndpointDetectorTest extends BaseDetectorTest {
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("SERVLET_HEADER_REFERER")
-                        .inClass("BasicServlet").inMethod("doGet").atLine(22)
+                        .inClass("BasicHttpServlet").inMethod("doGet").atLine(22)
                         .build()
         );
 
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("SERVLET_SERVER_NAME")
-                        .inClass("BasicServlet").inMethod("doGet").atLine(24)
+                        .inClass("BasicHttpServlet").inMethod("doGet").atLine(24)
                         .build()
         );
 
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("SERVLET_HEADER_USER_AGENT")
-                        .inClass("BasicServlet").inMethod("doGet").atLine(25)
+                        .inClass("BasicHttpServlet").inMethod("doGet").atLine(25)
                         .build()
         );
 
         verify(reporter).doReportBug(
                 bugDefinition()
                         .bugType("SERVLET_HEADER")
-                        .inClass("BasicServlet").inMethod("doGet").atLine(26)
+                        .inClass("BasicHttpServlet").inMethod("doGet").atLine(26)
                         .build()
         );
 
@@ -104,7 +104,31 @@ public class ServletEndpointDetectorTest extends BaseDetectorTest {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("SERVLET_PARAMETER")
-                            .inClass("BasicServlet").inMethod("useParameters").atLine(line)
+                            .inClass("BasicHttpServlet").inMethod("useParameters").atLine(line)
+                            .build()
+            );
+        }
+    }
+
+    @Test
+    public void detectServletVariousInputs() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/endpoint/BasicServlet")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+
+        //Assertions
+
+        for (Integer line : Arrays.asList(24,25,26,27)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("SERVLET_PARAMETER")
+                            .inClass("BasicServlet").inMethod("service").atLine(line)
                             .build()
             );
         }

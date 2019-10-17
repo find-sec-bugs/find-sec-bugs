@@ -1,4 +1,4 @@
-package testcode;
+package testcode.file;
 
 import java.io.IOException;
 import org.apache.struts.action.ActionForward;

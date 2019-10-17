@@ -1,4 +1,4 @@
-package testcode;
+package testcode.file;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;

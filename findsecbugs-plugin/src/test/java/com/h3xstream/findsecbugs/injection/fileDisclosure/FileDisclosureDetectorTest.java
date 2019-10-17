@@ -31,7 +31,7 @@ public class FileDisclosureDetectorTest extends BaseDetectorTest {
     public void detectFileDisclosure() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/FileDisclosure")
+                getClassFilePath("testcode/file/FileDisclosure")
         };
 
         //Run the analysis
@@ -71,7 +71,7 @@ public class FileDisclosureDetectorTest extends BaseDetectorTest {
     public void detectFileDisclosureWithRequestDispatcher() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/FileDisclosure")
+                getClassFilePath("testcode/file/FileDisclosure")
         };
 
         //Run the analysis

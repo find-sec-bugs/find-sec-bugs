@@ -1,4 +1,4 @@
-package testcode;
+package testcode.endpoint;
 
 import javax.ws.rs.Path;
 

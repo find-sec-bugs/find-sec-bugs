@@ -40,12 +40,9 @@ public class WebViewJavascriptEnabledDetector extends OpcodeStackDetector {
         if (seen == Const.INVOKEVIRTUAL && getClassConstantOperand().equals("android/webkit/WebSettings") &&
                 getNameConstantOperand().equals("setJavaScriptEnabled")) {
             OpcodeStack.Item item = stack.getStackItem(0); //First item on the stack is the last
-            if(StackUtils.isConstantInteger(item)) {
-                Integer value = (Integer) item.getConstant();
-                if(value == null || value == 1) {
-                    bugReporter.reportBug(new BugInstance(this, ANDROID_WEB_VIEW_JAVASCRIPT_TYPE, Priorities.NORMAL_PRIORITY) //
-                            .addClass(this).addMethod(this).addSourceLine(this));
-                }
+            if(StackUtils.isConstantInteger(item) && (Integer) item.getConstant() == 1) {
+                bugReporter.reportBug(new BugInstance(this, ANDROID_WEB_VIEW_JAVASCRIPT_TYPE, Priorities.NORMAL_PRIORITY) //
+                        .addClass(this).addMethod(this).addSourceLine(this));
             }
         }
     }

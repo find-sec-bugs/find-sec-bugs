@@ -30,7 +30,7 @@ public class JaxRsEndpointDetectorTest extends BaseDetectorTest {
     public void detectJaxRsEndpoint() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/JaxRsService")
+                getClassFilePath("testcode/endpoint/JaxRsService")
         };
 
         //Run the analysis

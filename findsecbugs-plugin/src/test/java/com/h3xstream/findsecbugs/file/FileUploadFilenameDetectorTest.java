@@ -30,8 +30,8 @@ public class FileUploadFilenameDetectorTest extends BaseDetectorTest {
     public void detectTaintedFilename() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/FileUploadCommon"),
-                getClassFilePath("testcode/FileUploadWicket")
+                getClassFilePath("testcode/file/FileUploadCommon"),
+                getClassFilePath("testcode/file/FileUploadWicket")
         };
 
         //Run the analysis

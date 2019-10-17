@@ -83,8 +83,8 @@ public class TapestryEndpointDetectorTest extends BaseDetectorTest {
     public void noFalsePositiveOnOtherClass() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/JaxRsService"),
-                getClassFilePath("testcode/JaxWsService")
+                getClassFilePath("testcode/endpoint/JaxRsService"),
+                getClassFilePath("testcode/endpoint/JaxWsService")
         };
 
         //Run the analysis

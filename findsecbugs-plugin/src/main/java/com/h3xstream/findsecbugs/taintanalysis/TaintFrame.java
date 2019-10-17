@@ -69,7 +69,7 @@ public class TaintFrame extends Frame<Taint> {
             int stackDepth = getStackDepth();
             for (int i = 0; i < stackDepth; i++) {
                 Taint taintValue = getStackValue(i);
-                str.append(String.format("| %s. %s {%s}\n",
+                str.append(String.format("| %s. %s {%s}%n",
                         i, taintValue.getState().toString(), taintValue.toString()));
             }
             if (stackDepth == 0) {

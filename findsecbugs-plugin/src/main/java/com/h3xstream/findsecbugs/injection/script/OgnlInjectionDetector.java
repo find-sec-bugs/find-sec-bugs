@@ -27,7 +27,7 @@ public class OgnlInjectionDetector extends BasicInjectionDetector {
     /**
      * The utility class from Struts2 are skip to avoid false positive.
      */
-    public static final String[] STRUTS_UTILITY_CLASSES = {
+    private static final String[] STRUTS_UTILITY_CLASSES = {
             "com.opensymphony.xwork2.util.TextParseUtil",
             "com.opensymphony.xwork2.util.TextParser",
             "com.opensymphony.xwork2.util.OgnlTextParser",

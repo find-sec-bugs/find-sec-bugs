@@ -29,7 +29,7 @@ public class XssJspDetector extends BasicInjectionDetector {
 
     private static final String XSS_JSP_PRINT_TYPE = "XSS_JSP_PRINT";
 
-    public static final String[] JSP_PARENT_CLASSES = {
+    protected static final String[] JSP_PARENT_CLASSES = {
         "org.apache.jasper.runtime.HttpJspBase",
         "weblogic.servlet.jsp.JspBase"
     };

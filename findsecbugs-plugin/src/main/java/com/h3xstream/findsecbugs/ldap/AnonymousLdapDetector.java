@@ -72,16 +72,14 @@ public class AnonymousLdapDetector implements Detector {
             
             if (inst instanceof LDC) {
                 LDC ldc = (LDC) inst;
-                if (ldc != null) {
-                    if("java.naming.security.authentication".equals(ldc.getValue(cpg)) &&
-                       "none".equals(ByteCode.getConstantLDC(location.getHandle().getNext(), cpg, String.class))){
-                        JavaClass clz = classContext.getJavaClass();
-                        bugReporter.reportBug(new BugInstance(this, LDAP_ANONYMOUS, Priorities.LOW_PRIORITY) //
-                        .addClass(clz)
-                        .addMethod(clz, m)
-                        .addSourceLine(classContext, m, location));
-                        break;
-                    }
+                if("java.naming.security.authentication".equals(ldc.getValue(cpg)) &&
+                   "none".equals(ByteCode.getConstantLDC(location.getHandle().getNext(), cpg, String.class))){
+                    JavaClass clz = classContext.getJavaClass();
+                    bugReporter.reportBug(new BugInstance(this, LDAP_ANONYMOUS, Priorities.LOW_PRIORITY) //
+                    .addClass(clz)
+                    .addMethod(clz, m)
+                    .addSourceLine(classContext, m, location));
+                    break;
                 }
             }            
         }

@@ -285,7 +285,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
     public void visitPutFieldOp(FieldInstruction obj) {
 
-        int numConsumed = getNumWordsConsumed(obj);
+        //int numConsumed = getNumWordsConsumed(obj);
         int numProduced = getNumWordsProduced(obj);
         try {
             Taint t = getFrame().getTopValue();
@@ -487,13 +487,13 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                     // back-propagate mutable class taints
                     if (!taintConfig.isClassImmutable(parameter)) {
                         parametersLocalValueIndexes.add(localValueIndex);
-                        break;
                     }
-
-                    // back-propage immutable taints only when they transfer tags
-                    Taint taint = getFrame().getValue(localValueIndex);
-                    if (taint.hasTags() || taint.isRemovingTags()) {
-                        parametersLocalValueIndexes.add(localValueIndex);
+                    else {
+                        // back-propage immutable taints only when they transfer tags
+                        Taint taint = getFrame().getValue(localValueIndex);
+                        if (taint.hasTags() || taint.isRemovingTags()) {
+                            parametersLocalValueIndexes.add(localValueIndex);
+                        }
                     }
                     break;
             }

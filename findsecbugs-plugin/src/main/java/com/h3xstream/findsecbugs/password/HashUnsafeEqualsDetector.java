@@ -57,7 +57,7 @@ public class HashUnsafeEqualsDetector extends BasicInjectionDetector implements 
     private static final boolean DEBUG = false;
 
 
-    public static List<String> HASH_WORDS = new ArrayList<String>();
+    public static final List<String> HASH_WORDS = new ArrayList<String>();
     static {
         HASH_WORDS.add("hash");
         HASH_WORDS.add("md5");

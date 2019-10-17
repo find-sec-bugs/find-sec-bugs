@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.saml;
 
+import com.h3xstream.findsecbugs.common.StackUtils;
 import com.h3xstream.findsecbugs.common.matcher.InvokeMatcherBuilder;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
@@ -55,8 +56,8 @@ public class SamlIgnoreCommentsDetector extends OpcodeStackDetector {
         if (seen == Const.INVOKEVIRTUAL && SET_IGNORE_COMMENTS.matches(this)) {
             final OpcodeStack.Item item = stack.getStackItem(0);
             /* item has signature of Integer, check "instanceof" added to prevent cast from throwing exceptions */
-            if ((item.getConstant() == null)
-                    || ((item.getConstant() instanceof Integer) && (((Integer) item.getConstant()).intValue()  == 0))) {
+
+            if (StackUtils.isConstantInteger(item) && (Integer) item.getConstant()  == 0) {
                 bugReporter.reportBug(new BugInstance(this, SAML_IGNORE_COMMENTS, Priorities.HIGH_PRIORITY) //
                         .addClass(this).addMethod(this).addSourceLine(this));
             }

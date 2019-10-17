@@ -41,8 +41,7 @@ public class WorldWritableDetector extends OpcodeStackDetector {
         if (seen == Const.INVOKEVIRTUAL && getNameConstantOperand().equals("openFileOutput")) {
             OpcodeStack.Item item = stack.getStackItem(0); //First item on the stack is the last
             if(StackUtils.isConstantInteger(item)) {
-                Integer value = (Integer) item.getConstant();
-                if(value == null || value != 0) {
+                if((Integer) item.getConstant() != 0) {
                     bugReporter.reportBug(new BugInstance(this, ANDROID_WORLD_WRITABLE_TYPE, Priorities.NORMAL_PRIORITY) //
                             .addClass(this).addMethod(this).addSourceLine(this));
                 }

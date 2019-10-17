@@ -29,7 +29,7 @@ import static org.mockito.Mockito.verify;
 public class ServletEndpointDetectorTest extends BaseDetectorTest {
 
     @Test
-    public void detectServletVariousInputs() throws Exception {
+    public void detectHttpServletVariousInputs() throws Exception {
         //Locate test code
         String[] files = {
                 getClassFilePath("testcode/endpoint/BasicHttpServlet")
@@ -105,6 +105,30 @@ public class ServletEndpointDetectorTest extends BaseDetectorTest {
                     bugDefinition()
                             .bugType("SERVLET_PARAMETER")
                             .inClass("BasicHttpServlet").inMethod("useParameters").atLine(line)
+                            .build()
+            );
+        }
+    }
+
+    @Test
+    public void detectServletVariousInputs() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/endpoint/BasicServlet")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+
+        //Assertions
+
+        for (Integer line : Arrays.asList(24,25,26,27)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("SERVLET_PARAMETER")
+                            .inClass("BasicServlet").inMethod("service").atLine(line)
                             .build()
             );
         }

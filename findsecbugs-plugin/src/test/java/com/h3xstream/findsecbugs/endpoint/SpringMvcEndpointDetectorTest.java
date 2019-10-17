@@ -31,7 +31,7 @@ public class SpringMvcEndpointDetectorTest extends BaseDetectorTest {
     public void detectSpringController() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/SpringTestController")
+                getClassFilePath("testcode/endpoint/SpringTestController")
         };
 
         //Run the analysis

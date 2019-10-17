@@ -30,7 +30,7 @@ public class JaxWsEndpointDetectorTest extends BaseDetectorTest {
     public void detectJaxWsEndpoint() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/JaxWsService")
+                getClassFilePath("testcode/endpoint/JaxWsService")
         };
 
         //Run the analysis

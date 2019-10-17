@@ -85,12 +85,6 @@
                 </configuration>
             </plugin>
 
-            <!-- Coveralls -->
-            <plugin>
-                <groupId>org.eluder.coveralls</groupId>
-                <artifactId>coveralls-maven-plugin</artifactId>
-            </plugin>
-
             <!--
               Verify that the sources of this module are API compatible
               with the Java version officially used by FindBugs.

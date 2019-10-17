@@ -100,17 +100,12 @@ public class StaticIvDetector implements Detector {
                     if (iconst != null) {
                         int mode = iconst.getValue().intValue();
                         switch (mode) {
-                            case Cipher.ENCRYPT_MODE:
+                            // Wrapping and unwrapping are equivalent to encryption and decryption.
+
+                            case Cipher.ENCRYPT_MODE: case Cipher.WRAP_MODE:
                                 atLeastOneEncryptCipher = true;
                                 break;
-                            case Cipher.DECRYPT_MODE:
-                                atLeastOneDecryptCipher = true;
-                                break;
-                                // Wrapping and unwrapping are equivalent to encryption and decryption.
-                            case Cipher.WRAP_MODE:
-                                atLeastOneEncryptCipher = true;
-                                break;
-                            case Cipher.UNWRAP_MODE:
+                            case Cipher.DECRYPT_MODE: case Cipher.UNWRAP_MODE:
                                 atLeastOneDecryptCipher = true;
                                 break;
                         }

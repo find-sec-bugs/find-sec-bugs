@@ -611,7 +611,7 @@ public class Taint {
         } else if (b == null) {
             return new Taint(a);
         }
-        assert a != null && b != null;
+
         Taint result = new Taint(State.merge(a.getState(), b.getState()));
         if (a.variableIndex == b.variableIndex) {
             result.variableIndex = a.variableIndex;

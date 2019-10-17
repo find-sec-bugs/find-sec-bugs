@@ -100,7 +100,6 @@ public class SpringEntityLeakDetector implements Detector {
 
 	private void analyzeMethod(Method m, ClassContext classContext) {
 		JavaClass clazz = classContext.getJavaClass();
-		MethodGen methodGen = classContext.getMethodGen(m);
 
         String signature = m.getGenericSignature() == null ? m.getSignature() : m.getGenericSignature();
         SignatureParserWithGeneric sig = new SignatureParserWithGeneric(signature);

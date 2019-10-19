@@ -5446,6 +5446,43 @@ prefer logic-less template engines such as Handlebars or Moustache (See referenc
     </BugPattern>
     <BugCode abbrev="SECFREEM">Potential template injection with Freemarker</BugCode>
 
+    <!-- Potential template injection with Pebble -->
+    <Detector class="com.h3xstream.findsecbugs.template.PebbleDetector">
+        <Details>Identify usage of the Pebble template engine.</Details>
+    </Detector>
+    <BugPattern type="TEMPLATE_INJECTION_PEBBLE">
+        <ShortDescription>Potential template injection with Pebble</ShortDescription>
+        <LongDescription>Potential template injection with Pebble template</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Freemarker template engine is powerful. It is possible to add logic including condition statements, loops and external calls.
+It is not design to be sandbox to templating operations. A malicious user in control of a template can run malicious code
+on the server-side. Freemarker templates should be seen as scripts.
+</p>
+<p>
+    <b>Vulnerable Code:</b>
+<pre>PebbleTemplate compiledTemplate = engine.getLiteralTemplate(inputFile);
+[...]
+compiledTemplate.evaluate(writer, context);</pre>
+</p>
+<p>
+    <b>Solution:</b>
+<br/>
+Avoid letting end users manipulate templates with Pebble. If you need to expose template editing to your users,
+prefer logic-less template engines such as Handlebars or Moustache (See references).
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="http://blog.portswigger.net/2015/08/server-side-template-injection.html">PortSwigger: Server-Side Template Injection </a><br/>
+<a href="https://jknack.github.io/handlebars.java/">Handlebars.java</a><br/>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECPEBLE">Potential template injection with Pebble</BugCode>
+
 
     <!-- Overly permissive CORS policy -->
     <Detector class="com.h3xstream.findsecbugs.PermissiveCORSDetector">

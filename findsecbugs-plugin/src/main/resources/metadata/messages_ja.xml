@@ -4869,6 +4869,42 @@ template.process(data, swOut);</pre>
     </BugPattern>
     <BugCode abbrev="SECFREEM">Freemarker の潜在的なテンプレートインジェクション</BugCode>
 
+    <!-- Potential template injection with Pebble -->
+    <Detector class="com.h3xstream.findsecbugs.template.PebbleDetector">
+        <Details>Pebble テンプレートエンジンの使用を特定します。</Details>
+    </Detector>
+    <BugPattern type="TEMPLATE_INJECTION_PEBBLE">
+        <ShortDescription>Pebble の潜在的なテンプレートインジェクション</ShortDescription>
+        <LongDescription>Pebble テンプレートの潜在的なテンプレートインジェクションです。</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Pebble テンプレートエンジンは強力です。条件文，ループ，外部呼び出しなどのロジックを追加することができます。
+テンプレート操作をサンドボックスにすることは設計されていません。テンプレートを制御する悪意のあるユーザーは，サーバー側で悪意のあるコードを実行する可能性があります。
+Pebble テンプレートはスクリプトとして見なすべきです。
+</p>
+<p>
+    <b>脆弱なコード:</b>
+<pre>PebbleTemplate compiledTemplate = engine.getLiteralTemplate(inputFile);
+[...]
+compiledTemplate.evaluate(writer, context);</pre>
+</p>
+<p>
+    <b>解決策:</b>
+<br>
+エンドユーザーが Pebble を使用してテンプレートを操作できないようにします。
+テンプレート編集をユーザーに公開する必要があるときは，Handlebars や Mustache などのロジックレステンプレートエンジンを使用することをお勧めします。(参考文献を参照)
+</p>
+<br>
+<p>
+<b>参考文献</b><br>
+<a href="http://blog.portswigger.net/2015/08/server-side-template-injection.html">PortSwigger: Server-Side Template Injection </a><br>
+<a href="https://jknack.github.io/handlebars.java/">Handlebars.java</a><br>
+</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECPEBLE">Freemarker の潜在的なテンプレートインジェクション</BugCode>
 
     <!-- Overly permissive CORS policy -->
     <Detector class="com.h3xstream.findsecbugs.PermissiveCORSDetector">

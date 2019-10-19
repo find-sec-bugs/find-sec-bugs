@@ -73,6 +73,7 @@
                         <exclude>**/scala/**/**.java</exclude>
                         <exclude>**/**/ReadMe.java</exclude>
                         <exclude>**/freemarker/template/**/**.java</exclude>
+                        <exclude>**/pebble/**/**/**.java</exclude>
                         <exclude>**/PluginDepsClassPathFinder.java</exclude>
                         <exclude>**/java/flexjson/**.java</exclude>
                         <exclude>**/java/com/typesafe/**/**.java</exclude>

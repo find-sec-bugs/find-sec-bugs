@@ -3867,7 +3867,7 @@ class UserController {
             ]]>
         </Details>
     </BugPattern>
-    <BugCode abbrev="SECSEMA">Mass assignment</BugCode>
+    <BugCode abbrev="SECEMA">Mass assignment</BugCode>
 
     <!-- JSP Include -->
     <Detector class="com.h3xstream.findsecbugs.jsp.JspIncludeDetector">

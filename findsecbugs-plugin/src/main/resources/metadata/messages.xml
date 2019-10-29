@@ -5438,7 +5438,7 @@ prefer logic-less template engines such as Handlebars or Moustache (See referenc
 <br/>
 <p>
 <b>References</b><br/>
-<a href="https://portswigger.net/research/server-side-template-injection">PortSwigger: Server-Side Template Injection </a><br/>
+<a href="https://portswigger.net/research/server-side-template-injection">PortSwigger: Server-Side Template Injection</a><br/>
 <a href="https://jknack.github.io/handlebars.java/">Handlebars.java</a><br/>
 </p>
             ]]>
@@ -5456,9 +5456,9 @@ prefer logic-less template engines such as Handlebars or Moustache (See referenc
         <Details>
             <![CDATA[
 <p>
-Freemarker template engine is powerful. It is possible to add logic including condition statements, loops and external calls.
+Pebble template engine is powerful. It is possible to add logic including condition statements, loops and external calls.
 It is not design to be sandbox to templating operations. A malicious user in control of a template can run malicious code
-on the server-side. Freemarker templates should be seen as scripts.
+on the server-side. Pebble templates should be seen as scripts.
 </p>
 <p>
     <b>Vulnerable Code:</b>
@@ -5475,7 +5475,8 @@ prefer logic-less template engines such as Handlebars or Moustache (See referenc
 <br/>
 <p>
 <b>References</b><br/>
-<a href="https://portswigger.net/research/server-side-template-injection">PortSwigger: Server-Side Template Injection </a><br/>
+<a href="https://research.securitum.com/server-side-template-injection-on-the-example-of-pebble/">Server Side Template Injection – on the example of Pebble</a> by Michał Bentkowski<br/>
+<a href="https://portswigger.net/research/server-side-template-injection">PortSwigger: Server-Side Template Injection</a><br/>
 <a href="https://jknack.github.io/handlebars.java/">Handlebars.java</a><br/>
 </p>
             ]]>

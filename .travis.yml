@@ -16,10 +16,12 @@ jdk:
 # Activate container based infra https://docs.travis-ci.com/user/workers/container-based-infrastructure/
 sudo: false
 install: mvn clean -B -V
-script: mvn verify -B -V -Ptravisci
+script: mvn clean test -Pjacoco -Ptravisci -B -V
 
 
 after_success:
-# Coveralls
-# Report available here : https://coveralls.io/github/find-sec-bugs/find-sec-bugs
-  - mvn clean test -Pjacoco && bash <(curl -s https://codecov.io/bash)
+# Codecov.io
+# Report available here : https://codecov.io/gh/find-sec-bugs/find-sec-bugs
+# The tests are runned with the script command (mvn clean test...)
+# Docs: https://docs.codecov.io/v1.0/docs/about-the-codecov-bash-uploader
+  - bash <(curl -s https://codecov.io/bash)

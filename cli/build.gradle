@@ -5,8 +5,8 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.spotbugs:spotbugs:3.1.12'
-    compile 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.9.0'
+    compile 'com.github.spotbugs:spotbugs:'+spotbugsVersion
+    compile 'com.h3xstream.findsecbugs:findsecbugs-plugin:'+fsbVersion
 }
 
 task copyRuntimeLibs(type: Copy) {
@@ -21,7 +21,7 @@ task packageCli(type: Zip,dependsOn: 'copyRuntimeLibs') {
     include 'findsecbugs.bat'
     include 'findsecbugs.sh'
     include 'include.xml'
-    include 'lib/*' //to include contents of a folder present inside Reports directory
-    archiveName 'findsecbugs-cli-1.9.0.zip'
+    include 'lib/*' //Gather all SpotBugs dependencies jar + FSB jar
+    archiveName 'findsecbugs-cli-'+fsbVersion+'.zip'
     destinationDir(file('./'))
 }

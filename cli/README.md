@@ -4,7 +4,7 @@ The latest package version is made available in the release section : https://gi
 
 ## Building the package
 
-1. Update the version of the latest release of Find Security Bugs and SpotBugs
+1. Update the version of the latest release of Find Security Bugs and SpotBugs in `gradle.properties`
 
 2. Run the following command
 

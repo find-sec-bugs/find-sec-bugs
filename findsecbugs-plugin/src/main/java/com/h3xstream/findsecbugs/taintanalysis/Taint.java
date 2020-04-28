@@ -387,6 +387,15 @@ public class Taint {
     }
 
     /**
+     * Clear method the parameters that could influence the taint state
+     */
+    public void clearParameters() {
+        if (parameters != null) {
+            parameters.clear();
+        }
+    }
+
+    /**
      * Gets the state influencing the state of this fact if dependant on method
      * arguments, final state is given by merge of that state and arguments
      * 

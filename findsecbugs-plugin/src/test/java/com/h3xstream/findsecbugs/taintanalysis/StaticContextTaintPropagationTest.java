@@ -56,4 +56,17 @@ public class StaticContextTaintPropagationTest extends BaseDetectorTest {
                 .withPriority("High") // tainted value
                 .build());
     }
+
+    @Test
+    public void testIssue541() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/taint/StaticContextTaintPropagation$Issue541")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+    }
 }

@@ -61,5 +61,19 @@ public class StaticContextTaintPropagation {
         sessionFactory.openSession().createQuery("FROM comment WHERE userId like " + propagatingStaticVar);
     }
 
+    public static class Issue541 {
+        private static Issue541 INSTANCE;
 
+        public static Issue541 get() {
+            return INSTANCE;
+        }
+
+        public static void set(Issue541 issue541) {
+            INSTANCE = issue541;
+        }
+
+        static {
+            get();
+        }
+    }
 }

@@ -2600,7 +2600,7 @@ Therefore, the primary defense against LDAP injection is strong input validation
         <Details>
             <![CDATA[
 <p>
-    Dynamic code is being evaluate. A careful analysis of the code construction should be made. Malicious code execution
+    Dynamic code is being evaluated. A careful analysis of the code construction should be made. Malicious code execution
     could lead to data leakage or operating system compromised.
 </p>
 <p>
@@ -5396,7 +5396,7 @@ which explains these defenses in significant detail.
             <![CDATA[
 <p>
 Velocity template engine is powerful. It is possible to add logic including condition statements, loops and external calls.
-It is not design to be sandbox to templating operations. A malicious user in control of a template can run malicious code
+It is not designed to be a sandbox to templating operations. A malicious user in control of a template can run malicious code
 on the server-side. Velocity templates should be seen as scripts.
 </p>
 <p>

@@ -25,23 +25,23 @@ nbSignatures = countSignature("../findsecbugs-plugin/src/main/resources/injectio
 //Version and download links
 
 
-latestVersion = "1.9.0"
+latestVersion = "1.10.1"
 downloadUrl = "https://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/${latestVersion}/findsecbugs-plugin-${latestVersion}.jar"
 mavenCentralSearch = "https://search.maven.org/#search|gav|1|g:%22com.h3xstream.findsecbugs%22 AND a:%22findsecbugs-plugin%22"
 releaseNotesUrl = "https://github.com/find-sec-bugs/find-sec-bugs/releases/latest" //This link redirect to the latest release
-latestUpdateDate = "March 27th, 2019"
+latestUpdateDate = "October 17th, 2019"
 
 //Screenshots
 
 screenshots = []
 screenshots.add(['title':'Eclipse',
-                 'description':'<a href="http://marketplace.eclipse.org/content/findbugs-eclipse-plugin">Eclipse plugin</a> with FindSecurityBugs detectors.',
+                 'description':'<a target="_blank" href="http://marketplace.eclipse.org/content/findbugs-eclipse-plugin">Eclipse plugin</a> with FindSecurityBugs detectors.',
                  'path':'images/screens/eclipse.png'])
 screenshots.add(['title':'IntelliJ / Android Studio',
-                 'description':'<a href="https://plugins.jetbrains.com/plugin/3847?pr=idea">IntelliJ plugin</a> with FindSecurityBugs detectors.',
+                 'description':'<a target="_blank" href="https://plugins.jetbrains.com/plugin/3847?pr=idea">IntelliJ plugin</a> with FindSecurityBugs detectors.',
                  'path':'images/screens/intellij.png'])
 screenshots.add(['title':'Sonar Qube',
-                 'description':'<a href="http://docs.sonarqube.org/display/SONAR/Findbugs+Plugin">Sonar Qube</a> with FindBugs plugin (version 3.2+).',
+                 'description':'<a target="_blank" href="http://docs.sonarqube.org/display/SONAR/Findbugs+Plugin">Sonar Qube</a> with FindBugs plugin (version 3.2+).',
                  'path':'images/screens/sonar.png'])
 
 //Generate

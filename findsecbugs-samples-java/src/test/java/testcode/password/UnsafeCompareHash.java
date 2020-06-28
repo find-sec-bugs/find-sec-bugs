@@ -50,8 +50,20 @@ public abstract class UnsafeCompareHash {
         return false;
     }
 
+    /**
+     * Function that contains the keyword Share or Shared should not be confused as SHA hash functions.
+     */
+    public boolean fpKeyword1(String sharedProperty, String info) {
+
+        if(sharedProperty.equals(info)) {
+            return true;
+        }
+
+        return false;
+    }
+
     public abstract String getHash(String username);
     public abstract byte[] getHashBytes(String username);
-
+    public abstract byte[] getSharedProperty(String username);
 
 }

@@ -49,6 +49,12 @@ public class HashUnsafeEqualsDetectorTest extends BaseDetectorTest {
             );
         }
 
+        verify(reporter,never()).doReportBug(
+                bugDefinition()
+                        .bugType("UNSAFE_HASH_EQUALS")
+                        .inClass("UnsafeCompareHash").inMethod("fpKeyword1")
+                        .build()
+        );
         verify(reporter, times(4)).doReportBug(bugDefinition().bugType("UNSAFE_HASH_EQUALS").build());
     }
 }

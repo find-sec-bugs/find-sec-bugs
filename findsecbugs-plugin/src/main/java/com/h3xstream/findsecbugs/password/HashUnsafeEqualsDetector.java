@@ -63,7 +63,14 @@ public class HashUnsafeEqualsDetector extends BasicInjectionDetector implements 
         HASH_WORDS.add("md5");
         HASH_WORDS.add("sha");
         HASH_WORDS.add("digest");
-
+    }
+    public static final List<String> ALLOWED_WORDS = new ArrayList<String>();
+    static {
+        ALLOWED_WORDS.add("share"); //share shared
+        ALLOWED_WORDS.add("shall");
+        ALLOWED_WORDS.add("shad"); //shade shadow
+        ALLOWED_WORDS.add("sharp");
+        ALLOWED_WORDS.add("shap"); //shape
     }
 
     public HashUnsafeEqualsDetector(BugReporter bugReporter) {
@@ -120,8 +127,13 @@ public class HashUnsafeEqualsDetector extends BasicInjectionDetector implements 
 
         boolean isHashVariable = false;
         String fieldNameLower = fieldName.toLowerCase();
-        for (String password : HASH_WORDS) {
+        likelyHash : for (String password : HASH_WORDS) {
             if (fieldNameLower.contains(password)) {
+                for (String  allowedWord: ALLOWED_WORDS) {
+                    if (fieldNameLower.contains(allowedWord)) {
+                        break likelyHash;
+                    }
+                }
                 isHashVariable = true;
             }
         }

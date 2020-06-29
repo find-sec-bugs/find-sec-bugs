@@ -19,6 +19,7 @@ package com.h3xstream.findsecbugs.serial;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
+import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.never;
@@ -196,4 +197,41 @@ public class ObjectDeserializationDetectorTest extends BaseDetectorTest {
                         .build()
         );
     }
+
+
+    @Test
+    public void detectObjectInputSignature() throws Exception {
+        FindSecBugsGlobalConfig.getInstance().setDebugPrintInvocationVisited(true);
+
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/serial/ObjectInputSig")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("OBJECT_DESERIALIZATION")
+                        .inClass("ObjectInputSig").inMethod("deserialize1")
+                        .build()
+        );
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("OBJECT_DESERIALIZATION")
+                        .inClass("ObjectInputSig").inMethod("deserialize2")
+                        .build()
+        );
+
+        verify(reporter,times(2)).doReportBug(
+                bugDefinition()
+                        .bugType("OBJECT_DESERIALIZATION")
+                        .build()
+        );
+    }
+
+
+
 }

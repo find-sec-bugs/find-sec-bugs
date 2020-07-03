@@ -1,7 +1,5 @@
 package testcode.serial;
 
-import com.sun.istack.internal.Nullable;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -12,7 +10,7 @@ import java.io.ObjectInputStream;
  */
 public class ObjectInputSig {
 
-    public static Object deserialize1(@Nullable String testString) {
+    public static Object deserialize1(String testString) {
         ByteArrayInputStream byteStream =  new ByteArrayInputStream(testString.getBytes());
         try {
             ObjectInput input = new ObjectInputStream(byteStream);
@@ -22,7 +20,7 @@ public class ObjectInputSig {
         }
     }
 
-    public static Object deserialize2(@Nullable String testString) {
+    public static Object deserialize2(String testString) {
         ByteArrayInputStream byteStream =  new ByteArrayInputStream(testString.getBytes());
         try {
             ObjectInputStream input = new ObjectInputStream(byteStream);

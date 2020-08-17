@@ -131,6 +131,7 @@
     <Detector class="com.h3xstream.findsecbugs.wicket.WicketXssComponentDetector" reports="WICKET_XSS1"/>
     <Detector class="com.h3xstream.findsecbugs.file.OverlyPermissiveFilePermissionDetector" reports="OVERLY_PERMISSIVE_FILE_PERMISSION"/>
     <Detector class="com.h3xstream.findsecbugs.file.SuspiciousCommandDetector" reports="OVERLY_PERMISSIVE_FILE_PERMISSION"/>
+    <Detector class="com.h3xstream.findsecbugs.password.JschPasswordDetector" reports="HARD_CODE_PASSWORD"/>
 
     <BugPattern type="HTTP_PARAMETER_POLLUTION" abbrev="SECHPP" category="SECURITY"/>
     <BugPattern type="SMTP_HEADER_INJECTION" abbrev="SECSMTP" category="SECURITY"/>

@@ -3271,6 +3271,10 @@ The code should be replaced with:<br/>
         <Details>Identify hardcoded credentials when variable named password are compared to a constant value.</Details>
     </Detector>
 
+    <Detector class="com.h3xstream.findsecbugs.password.JschPasswordDetector">
+        <Details>Identify hardcoded credentials with Jsch API.</Details>
+    </Detector>
+
     <BugPattern type="HARD_CODE_PASSWORD">
         <ShortDescription>Hard coded password</ShortDescription>
         <LongDescription>Hard coded password found</LongDescription>

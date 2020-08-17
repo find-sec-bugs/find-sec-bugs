@@ -7,7 +7,7 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
   [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
-FINDBUGS_PLUGIN="$(find "$DIR"/lib/findsecbugs-plugin-* | sort --version-sort | tail -n1)"
+FINDBUGS_PLUGIN="$(find "$DIR"/lib/findsecbugs-plugin-* | sort -V | tail -n1)"
 
 for LIB in "$DIR"/lib/*.jar; do
   if [[ -z "${LIBS// }" ]]; then

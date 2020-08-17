@@ -2802,7 +2802,7 @@ public void getUserProperty(String property) {
 </p>
 <p><b>Solution:</b></p>
 <p>
-In general, method evaluating OGNL expression should not receive user input. It is intended to be used in static configurations and JSP.
+In general, method evaluating OGNL expression should not receive user input. It is intended to be used in static configurations.
 </p>
 <br/>
 <p>
@@ -2817,6 +2817,45 @@ In general, method evaluating OGNL expression should not receive user input. It 
     </BugPattern>
     <BugCode abbrev="SECOGNL">OGNL expression injection</BugCode>
 
+    <!-- Groovy Shell injection -->
+    <Detector class="com.h3xstream.findsecbugs.groovy.GroovyShellDetector">
+        <Details>Identify GroovyShell injection</Details>
+    </Detector>
+
+    <BugPattern type="GROOVY_SHELL">
+        <ShortDescription>Potential code injection when using GroovyShell</ShortDescription>
+        <LongDescription>Potential code injection when using GroovyShell</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    A expression is built with a dynamic value. The source of the value(s) should be verified to avoid
+    that unfiltered values fall into this risky code evaluation.
+</p>
+<p><b>Code at risk:</b></p>
+<p>
+<pre>
+public void evaluateScript(String script) {
+  GroovyShell shell = new GroovyShell();
+  shell.evaluate(script);
+}
+</pre>
+</p>
+<p><b>Solution:</b></p>
+<p>
+In general, method evaluating Groovy expression should not receive user input from low privilege users.
+</p>
+<br/>
+<p>
+    <b>References</b><br/>
+    <a href="https://blog.orange.tw/2019/02/abusing-meta-programming-for-unauthenticated-rce.html">Hacking Jenkins Part 2 - Abusing Meta Programming for Unauthenticated RCE!</a> by Orange Tsai<br/>
+    <a href="https://github.com/orangetw/awesome-jenkins-rce-2019">Jenkins RCE payloads</a> by Orange Tsai<br/>
+    <a href="https://github.com/adamyordan/cve-2019-1003000-jenkins-rce-poc">POC for CVE-2019-1003001</a> by Adam Jordan<br/>
+    <a href="https://github.com/welk1n/exploiting-groovy-in-Java/">Various payloads of exploiting Groovy code evaluation</a><br/>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECGROSH">GroovyShell expression injection</BugCode>
 
     <!-- HTTP Response Splitting -->
     <Detector class="com.h3xstream.findsecbugs.HttpResponseSplittingDetector">

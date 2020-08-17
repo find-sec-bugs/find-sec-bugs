@@ -83,6 +83,7 @@
     <Detector class="com.h3xstream.findsecbugs.injection.script.OgnlInjectionDetector"
               reports="OGNL_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.injection.script.SpelViewDetector" reports="SPEL_INJECTION"/>
+    <Detector class="com.h3xstream.findsecbugs.groovy.GroovyShellDetector" reports="GROOVY_SHELL"/>
     <Detector class="com.h3xstream.findsecbugs.HttpResponseSplittingDetector" reports="HTTP_RESPONSE_SPLITTING"/>
     <Detector class="com.h3xstream.findsecbugs.injection.crlf.CrlfLogInjectionDetector" reports="CRLF_INJECTION_LOGS"/>
     <Detector class="com.h3xstream.findsecbugs.ExternalConfigurationControlDetector" reports="EXTERNAL_CONFIG_CONTROL"/>
@@ -243,6 +244,7 @@
     <BugPattern type="EL_INJECTION" abbrev="SECEL" category="SECURITY" cweid="94"/>
     <BugPattern type="SEAM_LOG_INJECTION" abbrev="SECSEAM" category="SECURITY" cweid="94"/>
     <BugPattern type="OGNL_INJECTION" abbrev="SECOGNL" category="SECURITY" cweid="94"/>
+    <BugPattern type="GROOVY_SHELL" abbrev="SECGROSH" category="SECURITY" cweid="94"/>
     <BugPattern type="HTTP_RESPONSE_SPLITTING" abbrev="SECHRS" category="SECURITY" cweid="113"/>
     <BugPattern type="CRLF_INJECTION_LOGS" abbrev="SECCRLFLOG" category="SECURITY" cweid="117"/>
     <BugPattern type="EXTERNAL_CONFIG_CONTROL" abbrev="SECCONFCTRL" category="SECURITY" cweid="15"/>

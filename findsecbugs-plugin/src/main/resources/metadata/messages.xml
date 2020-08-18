@@ -6365,4 +6365,53 @@ perms.add(PosixFilePermission.GROUP_EXECUTE);
     </BugPattern>
     <BugCode abbrev="SECOPFP">Overly permissive file permission</BugCode>
 
+    <!-- Improper handling of Unicode transformation -->
+    <Detector class="com.h3xstream.findsecbugs.ImproperHandlingUnicodeDetector">
+        <Details>Identify improper handling of Unicode transformations (case mapping and normalization).</Details>
+    </Detector>
+    <BugPattern type="IMPROPER_UNICODE">
+        <ShortDescription>Improper handling of Unicode transformations</ShortDescription>
+        <LongDescription>Improper handling of Unicode transformations such as case mapping and normalization.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Unexpected behavior in unicode transformations can sometimes lead to bugs, some of them affecting software security.
+A code that applies the uppercase transformation to two strings could mistakenly interpret both strings as being equal.
+</p>
+
+<p>
+In the code bellow, the string <code>"ADM\u0131N"</code> would cause the condition to be true.
+When the uppercase transformation is applied, the character `\u0131` will becomme '\u0049' (I).
+It can be an issue if the developer only one user to be <code>"ADMIN"</code>.<br/>
+<pre>
+if(username.toUpperCase().equals("ADMIN")) {
+  //...
+}
+</pre>
+</p>
+
+<p>
+Similar characters transformations can occurs with normalization functions.
+In the code bellow, the string <code>"BAC\u212AUP"</code> would cause the condition to be true.
+When the normalization transformation is applied, the character `\u212A` will becomme '\u0048' (K).<br/>
+<pre>
+if(Normalizer.normalize(input, Normalizer.Form.NFC) == "BACKUP") {
+  //...
+}
+</pre>
+</p>
+
+<p>
+<b>References</b><br/>
+<a href="https://www.gosecure.net/blog/2020/08/04/unicode-for-security-professionals/">Unicode for Security Professionals</a><br/>
+<a href="http://websec.github.io/unicode-security-guide/character-transformations/">Unicode Security Guide: Character Transformations</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/176.html">CWE-176: Improper Handling of Unicode Encoding</a><br/>
+<a href="http://unicode.org/reports/tr36/">Unicode: Unicode Security Considerations</a><br/>
+</p>
+
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECUNI">Improper handling of Unicode transformations</BugCode>
+
 </MessageCollection>

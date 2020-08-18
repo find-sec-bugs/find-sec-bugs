@@ -34,6 +34,7 @@ public class SqlInjectionDetector extends BasicInjectionDetector {
         loadConfiguredSinks("sql-scala-slick.txt", "SCALA_SQL_INJECTION_SLICK");
         loadConfiguredSinks("sql-scala-anorm.txt", "SCALA_SQL_INJECTION_ANORM");
         loadConfiguredSinks("sql-turbine.txt", "SQL_INJECTION_TURBINE");
+        loadConfiguredSinks("sql-vertx-sql-client.txt", "SQL_INJECTION_VERTX");
         //TODO : Add org.springframework.jdbc.core.simple.SimpleJdbcTemplate (Spring < 3.2.1)
     }
     

@@ -71,7 +71,6 @@ public class JschPasswordDetector extends BasicInjectionDetector {
         if(className.equals("com.jcraft.jsch.JSch") &&
             method.equals("addIdentity")) {
 
-            System.out.println(sig);
             if(sig.equals("(Ljava/lang/String;Ljava/lang/String;)V") ||
                     sig.equals("(Ljava/lang/String;[B)V") ||
                     sig.equals("(Ljava/lang/String;Ljava/lang/String;[B)V") ||

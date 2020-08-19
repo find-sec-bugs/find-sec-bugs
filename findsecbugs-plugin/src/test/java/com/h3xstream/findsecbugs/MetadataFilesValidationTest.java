@@ -17,9 +17,9 @@
  */
 package com.h3xstream.findsecbugs;
 
-import com.sun.org.apache.xerces.internal.dom.DeferredElementImpl;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -54,8 +54,8 @@ public class MetadataFilesValidationTest {
             //BugPattern node checks
             if(n.getNodeName().equals("BugPattern")) {
 
-                if(n instanceof DeferredElementImpl) {
-                    DeferredElementImpl dNode = (DeferredElementImpl) n;
+                if(n instanceof Element) {
+                    Element dNode = (Element) n;
 
                     String type = dNode.getAttribute("type");
 //                    System.out.println(type);
@@ -98,8 +98,8 @@ public class MetadataFilesValidationTest {
             //BugCode
             if(n.getNodeName().equals("BugCode")) {
 
-                if(n instanceof DeferredElementImpl) {
-                    DeferredElementImpl dNode = (DeferredElementImpl) n;
+                if(n instanceof Element) {
+                    Element dNode = (Element) n;
 
                     String abbrev = dNode.getAttribute("abbrev");
 //                    System.out.println(abbrev);

@@ -1,0 +1,14 @@
+<data>
+    <user>
+        <name>Philippe</name>
+        <email>philippe@phil<![CDATA[]]>ppe.com</email>
+    </user>
+    <user>
+        <name>Evil</name>
+        <email>test@company.com<!--aaaaabbbbb-->.evil.com</email>
+    </user>
+    <user>
+        <name>Evil2</name>
+        <email>test@company.com＜!----＞.evil.com</email>
+    </user>
+</data>

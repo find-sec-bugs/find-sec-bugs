@@ -3211,6 +3211,10 @@ byte[] cipherText = c.doFinal(plainText);</pre>
         <Details>password という名前の変数を定数値と比較しているハードコードされた認証情報を特定します。</Details>
     </Detector>
 
+    <Detector class="com.h3xstream.findsecbugs.password.JschPasswordDetector">
+        <Details>JSCH API でハードコードされた認証情報を特定します。</Details>
+    </Detector>
+
     <BugPattern type="HARD_CODE_PASSWORD">
         <ShortDescription>ハードコードされたパスワード</ShortDescription>
         <LongDescription>ハードコードされたパスワードを発見</LongDescription>

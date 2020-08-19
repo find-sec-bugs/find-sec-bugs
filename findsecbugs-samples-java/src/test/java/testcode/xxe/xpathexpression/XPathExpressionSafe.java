@@ -1,6 +1,6 @@
 package testcode.xxe.xpathexpression;
 
-import com.sun.org.apache.xpath.internal.jaxp.XPathExpressionImpl;
+
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;

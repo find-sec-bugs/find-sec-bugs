@@ -2846,7 +2846,7 @@ public void getUserProperty(String property) {
 </p>
 <p><b>Solution:</b></p>
 <p>
-In general, method evaluating OGNL expression should not receive user input. It is intended to be used in static configurations and JSP.
+In general, method evaluating OGNL expression should not receive user input. It is intended to be used in static configurations.
 </p>
 <br/>
 <p>
@@ -2861,6 +2861,45 @@ In general, method evaluating OGNL expression should not receive user input. It 
     </BugPattern>
     <BugCode abbrev="SECOGNL">OGNL expression injection</BugCode>
 
+    <!-- Groovy Shell injection -->
+    <Detector class="com.h3xstream.findsecbugs.groovy.GroovyShellDetector">
+        <Details>Identify GroovyShell injection</Details>
+    </Detector>
+
+    <BugPattern type="GROOVY_SHELL">
+        <ShortDescription>Potential code injection when using GroovyShell</ShortDescription>
+        <LongDescription>Potential code injection when using GroovyShell</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+    A expression is built with a dynamic value. The source of the value(s) should be verified to avoid
+    that unfiltered values fall into this risky code evaluation.
+</p>
+<p><b>Code at risk:</b></p>
+<p>
+<pre>
+public void evaluateScript(String script) {
+  GroovyShell shell = new GroovyShell();
+  shell.evaluate(script);
+}
+</pre>
+</p>
+<p><b>Solution:</b></p>
+<p>
+In general, method evaluating Groovy expression should not receive user input from low privilege users.
+</p>
+<br/>
+<p>
+    <b>References</b><br/>
+    <a href="https://blog.orange.tw/2019/02/abusing-meta-programming-for-unauthenticated-rce.html">Hacking Jenkins Part 2 - Abusing Meta Programming for Unauthenticated RCE!</a> by Orange Tsai<br/>
+    <a href="https://github.com/orangetw/awesome-jenkins-rce-2019">Jenkins RCE payloads</a> by Orange Tsai<br/>
+    <a href="https://github.com/adamyordan/cve-2019-1003000-jenkins-rce-poc">POC for CVE-2019-1003001</a> by Adam Jordan<br/>
+    <a href="https://github.com/welk1n/exploiting-groovy-in-Java/">Various payloads of exploiting Groovy code evaluation</a><br/>
+</p>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECGROSH">GroovyShell expression injection</BugCode>
 
     <!-- HTTP Response Splitting -->
     <Detector class="com.h3xstream.findsecbugs.HttpResponseSplittingDetector">
@@ -6369,5 +6408,54 @@ perms.add(PosixFilePermission.GROUP_EXECUTE);
         </Details>
     </BugPattern>
     <BugCode abbrev="SECOPFP">Overly permissive file permission</BugCode>
+
+    <!-- Improper handling of Unicode transformation -->
+    <Detector class="com.h3xstream.findsecbugs.ImproperHandlingUnicodeDetector">
+        <Details>Identify improper handling of Unicode transformations (case mapping and normalization).</Details>
+    </Detector>
+    <BugPattern type="IMPROPER_UNICODE">
+        <ShortDescription>Improper handling of Unicode transformations</ShortDescription>
+        <LongDescription>Improper handling of Unicode transformations such as case mapping and normalization.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Unexpected behavior in unicode transformations can sometimes lead to bugs, some of them affecting software security.
+A code that applies the uppercase transformation to two strings could mistakenly interpret both strings as being equal.
+</p>
+
+<p>
+In the code bellow, the string <code>"ADM\u0131N"</code> would cause the condition to be true.
+When the uppercase transformation is applied, the character `\u0131` will becomme '\u0049' (I).
+It can be an issue if the developer only one user to be <code>"ADMIN"</code>.<br/>
+<pre>
+if(username.toUpperCase().equals("ADMIN")) {
+  //...
+}
+</pre>
+</p>
+
+<p>
+Similar characters transformations can occurs with normalization functions.
+In the code bellow, the string <code>"BAC\u212AUP"</code> would cause the condition to be true.
+When the normalization transformation is applied, the character `\u212A` will becomme '\u0048' (K).<br/>
+<pre>
+if(Normalizer.normalize(input, Normalizer.Form.NFC) == "BACKUP") {
+  //...
+}
+</pre>
+</p>
+
+<p>
+<b>References</b><br/>
+<a href="https://www.gosecure.net/blog/2020/08/04/unicode-for-security-professionals/">Unicode for Security Professionals</a><br/>
+<a href="http://websec.github.io/unicode-security-guide/character-transformations/">Unicode Security Guide: Character Transformations</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/176.html">CWE-176: Improper Handling of Unicode Encoding</a><br/>
+<a href="http://unicode.org/reports/tr36/">Unicode: Unicode Security Considerations</a><br/>
+</p>
+
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECUNI">Improper handling of Unicode transformations</BugCode>
 
 </MessageCollection>

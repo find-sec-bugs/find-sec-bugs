@@ -2534,16 +2534,6 @@ client
     .onSuccess(rows -> ...)
     .onFailure(err -> ...);
 </pre>
-
-    <b>Solution (using OWASP Encoder):</b><br/>
-
-    <pre>
-import org.owasp.esapi.Encoder;
-
-SqlClient
-    .query( "select * from Customer where id=" + Encoder.encodeForSQL(inputId) )
-    .execute(ar -> ...);
-</pre>
 </p>
 <br/>
 <p>

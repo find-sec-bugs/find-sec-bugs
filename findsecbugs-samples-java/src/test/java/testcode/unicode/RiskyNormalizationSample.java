@@ -7,11 +7,11 @@ import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-public class ImproperUnicodeSample {
+public class RiskyNormalizationSample {
 
     public static void main(String[] args) throws URISyntaxException {
         stringNormalizationSuite();
-        caseMappingSuite();
+
     }
 
     public static void stringNormalizationSuite() throws URISyntaxException {
@@ -38,19 +38,6 @@ public class ImproperUnicodeSample {
             System.out.println("Utils.encode(): "+Utils.encode(h)); //RISKY! (not covered yet..)
             System.out.println("IDN.toASCII(): "+ IDN.toASCII(h)); //RISKY!
         }
-    }
-
-    public static void caseMappingSuite() {
-        System.out.println("Case Mapping 1: "+("hac\u212A".matches("(?i:.*hack.*)"))); //OK
-        System.out.println("Case Mapping 2: "+(Pattern.compile("hack", Pattern.CASE_INSENSITIVE).matcher("hac\u212A").find())); //OK
-
-        System.out.println("Case Mapping 1: "+("ADM\u0131N".matches("(?i:.*ADMIN.*)"))); //OK
-        System.out.println("Case Mapping 2: "+(Pattern.compile("ADMIN", Pattern.CASE_INSENSITIVE).matcher("ADM\u0131N").find())); //OK
-
-        System.out.println("Case Mapping 3: "+("HACK".equalsIgnoreCase("HAC\u212A"))); //RISKY!
-        System.out.println("Case Mapping 4: "+("ADM\u0131N".toUpperCase().equals("ADMIN"))); //RISKY!
-        System.out.println("Case Mapping 5: "+("hac\u212A".toLowerCase().equals("hack"))); //RISKY!
-
     }
 
 }

@@ -31,7 +31,7 @@ public class ImproperHandlingUnicodeDetectorTest extends BaseDetectorTest {
     public void detectImproperStringNormalization() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/unicode/ImproperUnicodeSample.java")
+                getClassFilePath("testcode/unicode/RiskyNormalizationSample.java")
         };
 
         //Run the analysis
@@ -42,7 +42,7 @@ public class ImproperHandlingUnicodeDetectorTest extends BaseDetectorTest {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("IMPROPER_UNICODE")
-                            .inClass("ImproperUnicodeSample")
+                            .inClass("RiskyNormalizationSample")
                             .inMethod("stringNormalizationSuite")
                             .withPriority("Low")
                             .atLine(line)
@@ -53,7 +53,7 @@ public class ImproperHandlingUnicodeDetectorTest extends BaseDetectorTest {
         verify(reporter, times(6)).doReportBug(
                 bugDefinition()
                         .bugType("IMPROPER_UNICODE")
-                        .inClass("ImproperUnicodeSample")
+                        .inClass("RiskyNormalizationSample")
                         .inMethod("stringNormalizationSuite").build()
         );
     }
@@ -62,18 +62,18 @@ public class ImproperHandlingUnicodeDetectorTest extends BaseDetectorTest {
     public void detectImproperCaseMapping() throws Exception {
         //Locate test code
         String[] files = {
-                getClassFilePath("testcode/unicode/ImproperUnicodeSample.java")
+                getClassFilePath("testcode/unicode/RiskyCaseMappingSample.java")
         };
 
         //Run the analysis
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        for(Integer line : Arrays.asList(50,51,52)) {
+        for(Integer line : Arrays.asList(21,22,23)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("IMPROPER_UNICODE")
-                            .inClass("ImproperUnicodeSample")
+                            .inClass("RiskyCaseMappingSample")
                             .inMethod("caseMappingSuite")
                             .withPriority("Low")
                             .atLine(line)
@@ -84,8 +84,28 @@ public class ImproperHandlingUnicodeDetectorTest extends BaseDetectorTest {
         verify(reporter, times(3)).doReportBug(
                 bugDefinition()
                         .bugType("IMPROPER_UNICODE")
-                        .inClass("ImproperUnicodeSample")
+                        .inClass("RiskyCaseMappingSample")
                         .inMethod("caseMappingSuite").build()
+        );
+    }
+
+
+    @Test
+    public void detectImproperCaseMappingAvoidFP() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/unicode/RiskyCaseMappingSample.java")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("IMPROPER_UNICODE")
+                        .inClass("RiskyCaseMappingSample")
+                        .inMethod("caseMappingFalsePositive").build()
         );
     }
 }

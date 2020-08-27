@@ -190,6 +190,17 @@
                             </execution>
                         </executions>
                     </plugin>
+
+                    <!-- SpotBugs for general static code analysis -->
+                    <plugin>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs-maven-plugin</artifactId>
+                        <version>4.0.4</version>
+                        <configuration>
+                            <xmlOutput>true</xmlOutput>
+                            <failOnError>false</failOnError>
+                        </configuration>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
@@ -214,7 +225,7 @@
             <dependency>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs</artifactId>
-                <version>3.1.12</version>
+                <version>4.0.4</version>
             </dependency>
 
             <!-- Artefact definition of the module -->

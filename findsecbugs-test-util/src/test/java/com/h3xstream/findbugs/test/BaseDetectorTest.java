@@ -64,7 +64,7 @@ public class BaseDetectorTest {
         }
 
         //Convert dot class name to path
-        if(StringUtils.countMatches(path,".") > 1 && !path.endsWith(".jar")) {
+        if(countMatches(path,'.') > 1 && !path.endsWith(".jar")) {
             path = path.replaceAll("\\.","/");
         }
         return classFileLocator.getClassFilePath(path);
@@ -172,5 +172,25 @@ public class BaseDetectorTest {
             getIncludeCategories().add("S");
         }
 
+    }
+
+
+    /**
+     * Simplify version of StringUtils.countMatches()
+     * The method was extracted because common-lang is no longer used by SpotBugs.
+     *
+     * @param str
+     * @param ch
+     * @return
+     */
+    public static int countMatches(final CharSequence str, final char ch) {
+        int count = 0;
+        // We could also call str.toCharArray() for faster look ups but that would generate more garbage.
+        for (int i = 0; i < str.length(); i++) {
+            if (ch == str.charAt(i)) {
+                count++;
+            }
+        }
+        return count;
     }
 }

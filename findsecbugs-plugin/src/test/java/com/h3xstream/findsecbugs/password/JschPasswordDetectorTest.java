@@ -31,7 +31,7 @@ public class JschPasswordDetectorTest extends BaseDetectorTest{
 
     @Test
     public void detectHardCodeSshPasswords() throws Exception {
-        FindSecBugsGlobalConfig.getInstance().setDebugPrintInvocationVisited(true);
+//        FindSecBugsGlobalConfig.getInstance().setDebugPrintInvocationVisited(true);
 //        FindSecBugsGlobalConfig.getInstance().setDebugTaintState(false);
 
 

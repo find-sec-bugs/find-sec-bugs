@@ -22,7 +22,6 @@ import edu.umd.cs.findbugs.BugReporter;
 import com.h3xstream.findbugs.test.matcher.BugInstanceMatcherBuilder;
 import com.h3xstream.findbugs.test.service.ClassFileLocator;
 import com.h3xstream.findbugs.test.service.FindBugsLauncher;
-import org.apache.commons.lang.StringUtils;
 import org.mockito.Matchers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,12 +29,9 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
 import java.lang.management.ManagementFactory;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.mockito.Mockito.reset;
 
 /**
  * Aggregate useful utilities for unit tests on detector.

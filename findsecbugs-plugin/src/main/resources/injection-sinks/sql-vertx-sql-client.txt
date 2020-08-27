@@ -1,0 +1,5 @@
+io/vertx/sqlclient/SqlClient.query(Ljava/lang/String;)Lio/vertx/sqlclient/Query;:0
+io/vertx/sqlclient/SqlClient.preparedQuery(Ljava/lang/String;)Lio/vertx/sqlclient/PreparedQuery;:0
+
+io/vertx/sqlclient/SqlConnection.prepare(Ljava/lang/String;Lio/vertx/core/Handler;)Lio/vertx/sqlclient/SqlConnection;:1
+io/vertx/sqlclient/SqlConnection.prepare(Ljava/lang/String;)Lio/vertx/core/Future;:0

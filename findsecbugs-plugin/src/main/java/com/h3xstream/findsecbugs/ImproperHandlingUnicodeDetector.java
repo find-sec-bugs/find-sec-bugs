@@ -17,11 +17,8 @@
  */
 package com.h3xstream.findsecbugs;
 
-import com.h3xstream.findsecbugs.common.ByteCode;
-import com.h3xstream.findsecbugs.common.matcher.InvokeMatcherBuilder;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
-import edu.umd.cs.findbugs.OpcodeStack;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.ba.CFG;
@@ -35,9 +32,6 @@ import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.Instruction;
 
 import java.util.Iterator;
-
-import static com.h3xstream.findsecbugs.common.matcher.InstructionDSL.invokeInstruction;
-
 
 public class ImproperHandlingUnicodeDetector extends OpcodeStackDetector {
 

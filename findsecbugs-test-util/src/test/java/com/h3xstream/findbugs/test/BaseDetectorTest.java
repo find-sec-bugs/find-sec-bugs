@@ -22,7 +22,6 @@ import edu.umd.cs.findbugs.BugReporter;
 import com.h3xstream.findbugs.test.matcher.BugInstanceMatcherBuilder;
 import com.h3xstream.findbugs.test.service.ClassFileLocator;
 import com.h3xstream.findbugs.test.service.FindBugsLauncher;
-import org.apache.commons.lang.StringUtils;
 import org.mockito.Matchers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,12 +29,9 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
 import java.lang.management.ManagementFactory;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.mockito.Mockito.reset;
 
 /**
  * Aggregate useful utilities for unit tests on detector.
@@ -64,7 +60,7 @@ public class BaseDetectorTest {
         }
 
         //Convert dot class name to path
-        if(StringUtils.countMatches(path,".") > 1 && !path.endsWith(".jar")) {
+        if(countMatches(path,'.') > 1 && !path.endsWith(".jar")) {
             path = path.replaceAll("\\.","/");
         }
         return classFileLocator.getClassFilePath(path);
@@ -172,5 +168,25 @@ public class BaseDetectorTest {
             getIncludeCategories().add("S");
         }
 
+    }
+
+
+    /**
+     * Simplify version of StringUtils.countMatches()
+     * The method was extracted because common-lang is no longer used by SpotBugs.
+     *
+     * @param str
+     * @param ch
+     * @return
+     */
+    public static int countMatches(final CharSequence str, final char ch) {
+        int count = 0;
+        // We could also call str.toCharArray() for faster look ups but that would generate more garbage.
+        for (int i = 0; i < str.length(); i++) {
+            if (ch == str.charAt(i)) {
+                count++;
+            }
+        }
+        return count;
     }
 }

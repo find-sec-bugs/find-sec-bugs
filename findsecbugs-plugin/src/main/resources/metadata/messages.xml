@@ -6087,13 +6087,22 @@ In the following example the programmer has not considered the possibility that 
 </p>
 <p>
     <b>Vulnerable Code:</b><br/>
-<pre>String lang = request.getParameter("lang");
-GetMethod get = new GetMethod("http://www.host.com");
-get.setQueryString("lang=" + lang + "&user_id=" + user_id);
+<pre>String input = request.getParameter("lang");
+GetMethod get = new GetMethod("http://www.host.com/viewDetails");
+get.setQueryString("lang=" + input + "&user_id=" + userId);
 get.execute();</pre>
 <p>
     <b>Solution:</b><br/>
-Sanitize user input before using it in HTTP parameters.
+You can either encode user input before placing it in HTTP parameters or use the
+<a href="https://hc.apache.org/httpcomponents-client-4.3.x/httpclient/apidocs/org/apache/http/client/utils/URIBuilder.html">UriBuilder class</a>
+from <a href="https://hc.apache.org/httpcomponents-client-ga/">Apache HttpClient</a>.
+<pre>
+URIBuilder uriBuilder = new URIBuilder("http://www.host.com/viewDetails");
+uriBuilder.addParameter("lang", input);
+uriBuilder.addParameter("user_id", userId);
+
+HttpGet httpget = new HttpGet(uriBuilder.build().toString()); //OK
+</pre>
 </p>
 <br/>
 <p>
@@ -6439,7 +6448,7 @@ Similar characters transformations can occurs with normalization functions.
 In the code bellow, the string <code>"BAC\u212AUP"</code> would cause the condition to be true.
 When the normalization transformation is applied, the character `\u212A` will becomme '\u0048' (K).<br/>
 <pre>
-if(Normalizer.normalize(input, Normalizer.Form.NFC) == "BACKUP") {
+if(Normalizer.normalize(input, Normalizer.Form.NFC).equals("BACKUP")) {
   //...
 }
 </pre>

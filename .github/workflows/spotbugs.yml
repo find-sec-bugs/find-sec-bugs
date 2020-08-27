@@ -1,6 +1,6 @@
 # CI Task using https://github.com/jwgmeligmeyling/spotbugs-github-action
 
-name: Java CI
+name: Java CI with SpotBugs
 
 on: [push]
 
@@ -20,7 +20,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-maven-
     - name: Build with Maven
-      run: mvn -B verify spotbugs:spotbugs
+      run: mvn -B verify com.github.spotbugs:spotbugs-maven-plugin:3.1.12:spotbugs
     - uses: jwgmeligmeyling/spotbugs-github-action@master
       with:
         path: '**/spotbugsXml.xml'

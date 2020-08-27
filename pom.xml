@@ -84,6 +84,7 @@
                         <exclude>**/com/opensymphony/**/**.java</exclude>
                         <exclude>**/com/google/**/**.java</exclude>
                         <exclude>**/com/jcraft/**/**.java</exclude>
+                        <exclude>**/io/vertx/**/**.java</exclude>
                         <exclude>**/java/kotlin/**</exclude>
                         <exclude>**/org/jetbrains/**</exclude>
                     </excludes>

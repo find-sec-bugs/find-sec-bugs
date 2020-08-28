@@ -13,6 +13,7 @@
 
     <properties>
         <kotlin.version>1.2.51</kotlin.version>
+        <spotbugs.skip>true</spotbugs.skip>
     </properties>
 
     <dependencies>

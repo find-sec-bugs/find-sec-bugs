@@ -18,6 +18,9 @@
         all the framework supported by the static analyzer.
     </description>
 
+    <properties>
+        <spotbugs.skip>true</spotbugs.skip>
+    </properties>
 
     <dependencies>
         <dependency>

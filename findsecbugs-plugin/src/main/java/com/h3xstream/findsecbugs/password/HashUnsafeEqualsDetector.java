@@ -57,14 +57,14 @@ public class HashUnsafeEqualsDetector extends BasicInjectionDetector implements 
     private static final boolean DEBUG = false;
 
 
-    public static final List<String> HASH_WORDS = new ArrayList<String>();
+    protected static final List<String> HASH_WORDS = new ArrayList<String>();
     static {
         HASH_WORDS.add("hash");
         HASH_WORDS.add("md5");
         HASH_WORDS.add("sha");
         HASH_WORDS.add("digest");
     }
-    public static final List<String> ALLOWED_WORDS = new ArrayList<String>();
+    protected static final List<String> ALLOWED_WORDS = new ArrayList<String>();
     static {
         ALLOWED_WORDS.add("share"); //share shared
         ALLOWED_WORDS.add("shall");

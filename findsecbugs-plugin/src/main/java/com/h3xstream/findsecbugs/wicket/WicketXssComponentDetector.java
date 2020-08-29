@@ -82,16 +82,12 @@ public class WicketXssComponentDetector implements Detector {
         ConstantPoolGen cpg = classContext.getConstantPoolGen();
         CFG cfg = classContext.getCFG(m);
 
-        LinkedList<Instruction> instructionVisited = new LinkedList<Instruction>();
-
         for (Iterator<Location> i = cfg.locationIterator(); i.hasNext(); ) {
             Location location = i.next();
 
             Instruction inst = location.getHandle().getInstruction();
 
             //ByteCode.printOpCode(location.getHandle(),classContext.getConstantPoolGen());
-
-            instructionVisited.add(inst);
 
             if (inst instanceof InvokeInstruction) {
                 InvokeInstruction invoke = (InvokeInstruction) inst;

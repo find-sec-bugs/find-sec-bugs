@@ -47,7 +47,7 @@ public class IntuitiveHardcodePasswordDetector extends BasicInjectionDetector {
 
     private static final String HARD_CODE_PASSWORD_TYPE = "HARD_CODE_PASSWORD";
 
-    public static final List<String> PASSWORD_WORDS = new ArrayList<String>();
+    protected static final List<String> PASSWORD_WORDS = new ArrayList<String>();
     static {
         //Passwords in various language
         //http://www.indifferentlanguages.com/words/password

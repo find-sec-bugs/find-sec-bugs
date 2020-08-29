@@ -599,7 +599,7 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                 }
             }
 
-        } catch (Exception e) {
+        } catch (RuntimeException | DataflowAnalysisException e) {
             String className = ClassName.toSlashedClassName(obj.getReferenceType(cpg).toString());
             String methodName = obj.getMethodName(cpg);
             String signature = obj.getSignature(cpg);

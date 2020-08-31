@@ -40,6 +40,9 @@ import org.apache.bcel.generic.MethodGen;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Finds hardcoded passwords with the Jsch library (SSH client)
+ */
 public class JschPasswordDetector extends BasicInjectionDetector {
 
     private static final String HARD_CODE_PASSWORD_TYPE = "HARD_CODE_PASSWORD";

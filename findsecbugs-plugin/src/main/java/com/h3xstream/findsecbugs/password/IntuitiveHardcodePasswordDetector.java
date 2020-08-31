@@ -24,6 +24,7 @@ import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import com.h3xstream.findsecbugs.taintanalysis.TaintFrame;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.InstructionHandle;
@@ -47,10 +48,16 @@ public class IntuitiveHardcodePasswordDetector extends BasicInjectionDetector {
 
     private static final String HARD_CODE_PASSWORD_TYPE = "HARD_CODE_PASSWORD";
 
-    public static final List<String> PASSWORD_WORDS = new ArrayList<String>();
+    /**
+     * Passwords in various language
+     * http://www.indifferentlanguages.com/words/password
+     *
+     * The keyword is also used to detect variable name that are likely to be password (reused in AbstractHardcodedPassword).
+     */
+    @SuppressFBWarnings(value = "MS_MUTABLE_COLLECTION_PKGPROTECT",
+            justification = "It is intended to be shared with AbstractHardcodedPassword. Accidental modification of this list is unlikely.")
+    protected static final List<String> PASSWORD_WORDS = new ArrayList<String>();
     static {
-        //Passwords in various language
-        //http://www.indifferentlanguages.com/words/password
         PASSWORD_WORDS.add("password");
         PASSWORD_WORDS.add("motdepasse");
         PASSWORD_WORDS.add("heslo");

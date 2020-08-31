@@ -37,6 +37,7 @@ import java.util.regex.Pattern;
 import org.apache.bcel.Const;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
+import org.apache.commons.codec.Charsets;
 
 /**
  * General detector for hard coded passwords and cryptographic keys
@@ -383,6 +384,6 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
         String path = CONFIG_DIR + "/" + filename;
         return new BufferedReader(new InputStreamReader(
                 getClass().getClassLoader().getResourceAsStream(path)
-        ));
+        , Charsets.UTF_8));
     }
 }

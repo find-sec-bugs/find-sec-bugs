@@ -2615,17 +2615,25 @@ Just like SQL, all inputs passed to an LDAP query need to be passed in safely. U
 Therefore, the primary defense against LDAP injection is strong input validation of any untrusted data before including it in an LDAP query.
 </p>
 <p>
-    <b>Code at risk:</b><br/>
+    <strong>Code at risk:</strong><br/>
     <pre>NamingEnumeration&lt;SearchResult&gt; answers = context.search("dc=People,dc=example,dc=com",
         "(uid=" + username + ")", ctrls);</pre>
 </p>
 <br/>
+<p><strong>Solution:</strong></p>
 <p>
-<b>References</b><br/>
+Safe evaluation of Java code using "StringUtils" library.<br/>
+<pre>if(StringUtils.isAlphanumeric(username)) {
+    NamingEnumeration&lt;SearchResult&gt; answers = context.search("dc=People,dc=example,dc=com",
+        "(uid=" + username + ")", ctrls);
+}</pre>
+</p>
+<br/><p>
+<strong>References</strong><br/>
+<a href="https://cheatsheetseries.owasp.org/cheatsheets/LDAP_Injection_Prevention_Cheat_Sheet.html">LDAP Injection Prevention Cheat Sheet</a><br/>
+<a href="https://owasp.org/www-project-top-ten/OWASP_Top_Ten_2017/Top_10-2017_A1-Injection">OWASP: Top 10 A1:2017-Injection</a><br/>
 <a href="http://projects.webappsec.org/w/page/13246947/LDAP%20Injection">WASC-29: LDAP Injection</a><br/>
-<a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/90.html">CWE-90: Improper Neutralization of Special Elements used in an LDAP Query ('LDAP Injection')</a><br/>
-<a href="https://www.veracode.com/security/ldap-injection">LDAP Injection Guide: Learn How to Detect LDAP Injections and Improve LDAP Security</a>
 </p>
 ]]>
         </Details>

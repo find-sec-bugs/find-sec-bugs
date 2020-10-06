@@ -2,7 +2,7 @@
 
 name: Java CI with SpotBugs
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   build:

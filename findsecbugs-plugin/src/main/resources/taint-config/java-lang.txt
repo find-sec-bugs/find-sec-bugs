@@ -184,6 +184,7 @@ java/lang/String.valueOf(I)Ljava/lang/String;:SAFE
 java/lang/String.valueOf(J)Ljava/lang/String;:SAFE
 java/lang/String.valueOf(Ljava/lang/Object;)Ljava/lang/String;:0
 java/lang/String.valueOf([C)Ljava/lang/String;:0
+java/lang/String.toCharArray()[C:0
 
 java/util/Arrays.toString([Ljava/lang/Object;)Ljava/lang/String;:0
 

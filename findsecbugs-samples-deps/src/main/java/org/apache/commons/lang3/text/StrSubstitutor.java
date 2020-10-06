@@ -1,37 +1,37 @@
-package org.apache.commons.text;
+package org.apache.commons.lang3.text;
 
 import java.util.Map;
 
 /**
- * Changes might needs synchronisation with org.apache.commons.lang3.text.StringSubstitutor
+ * Changes might needs synchronisation with org.apache.commons.text.StringSubstitutor
  */
-public class StringSubstitutor {
+public class StrSubstitutor {
 
-    public StringSubstitutor() {
-
-    }
-
-    public <V> StringSubstitutor(final Map<String, V> valueMap) {
+    public StrSubstitutor() {
 
     }
 
-    public <V> StringSubstitutor(Map<String, V> valueMap, String prefix, String suffix) {
+    public <V> StrSubstitutor(final Map<String, V> valueMap) {
 
     }
 
-    public <V> StringSubstitutor(final Map<String, V> valueMap, final String prefix, final String suffix,
+    public <V> StrSubstitutor(Map<String, V> valueMap, String prefix, String suffix) {
+
+    }
+
+    public <V> StrSubstitutor(final Map<String, V> valueMap, final String prefix, final String suffix,
                                  final char escape) {
     }
 
 
-    public <V> StringSubstitutor(final Map<String, V> valueMap, final String prefix, final String suffix,
+    public <V> StrSubstitutor(final Map<String, V> valueMap, final String prefix, final String suffix,
                                  final char escape, final String valueDelimiter) {
 
     }
 
 
     public static <V> String replace(final Object source, final Map<String, V> valueMap) {
-return null;
+        return null;
     }
 
 

@@ -24,6 +24,7 @@ import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 import org.apache.bcel.Const;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantString;
+import org.apache.commons.codec.Charsets;
 
 import java.io.*;
 import java.util.Arrays;

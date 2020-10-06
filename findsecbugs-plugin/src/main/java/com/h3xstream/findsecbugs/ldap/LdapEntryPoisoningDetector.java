@@ -29,6 +29,12 @@ import static com.h3xstream.findsecbugs.common.matcher.InstructionDSL.invokeInst
 import static org.apache.bcel.Const.INVOKESPECIAL;
 import static org.apache.bcel.Const.INVOKEVIRTUAL;
 
+/**
+ * LDAP Entry Poisoning
+ *
+ * For more information:
+ * https://www.blackhat.com/docs/us-16/materials/us-16-Munoz-A-Journey-From-JNDI-LDAP-Manipulation-To-RCE-wp.pdf
+ */
 public class LdapEntryPoisoningDetector extends OpcodeStackDetector {
 
     private String LDAP_ENTRY_POISONING = "LDAP_ENTRY_POISONING";

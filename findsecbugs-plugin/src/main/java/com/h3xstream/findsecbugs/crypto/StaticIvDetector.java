@@ -108,6 +108,9 @@ public class StaticIvDetector implements Detector {
                             case Cipher.DECRYPT_MODE: case Cipher.UNWRAP_MODE:
                                 atLeastOneDecryptCipher = true;
                                 break;
+                            default:
+                                //Unknown mode. Statement will be ignored.
+                                break;
                         }
                     }
                 }

@@ -26,6 +26,7 @@ import com.h3xstream.findsecbugs.taintanalysis.TaintFrame;
 import com.h3xstream.findsecbugs.taintanalysis.TaintFrameAdditionalVisitor;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
 import org.apache.bcel.generic.*;
 
@@ -36,7 +37,9 @@ import static com.h3xstream.findsecbugs.common.matcher.InstructionDSL.invokeInst
 
 /**
  * <p>
- *     Detect:
+ *     Detect hash value that are compare with the equals method.
+ *     The equals implementation is stopping the comparison of both value once a first difference is found.
+ *     This comparison is susceptible to timing attack.
  * </p>
  *
  * <pre>
@@ -56,15 +59,22 @@ public class HashUnsafeEqualsDetector extends BasicInjectionDetector implements 
             .atClass("java/util/Arrays").atMethod("equals").withArgs("([B[B)Z");
     private static final boolean DEBUG = false;
 
-
-    public static final List<String> HASH_WORDS = new ArrayList<String>();
+    /**
+     * Keyword that describe variable that are likely to be hashed value.
+     */
+    private static final List<String> HASH_WORDS = new ArrayList<String>();
     static {
         HASH_WORDS.add("hash");
         HASH_WORDS.add("md5");
         HASH_WORDS.add("sha");
         HASH_WORDS.add("digest");
     }
-    public static final List<String> ALLOWED_WORDS = new ArrayList<String>();
+    /**
+     * The keyword "SHA" will catch many word that are unrelated to hashing.
+     * For example: sharedLink, shallBeRemoved, ...
+     * When new false positive are encounter, this list can be extended.
+     */
+    private static final List<String> ALLOWED_WORDS = new ArrayList<String>();
     static {
         ALLOWED_WORDS.add("share"); //share shared
         ALLOWED_WORDS.add("shall");

@@ -23,12 +23,15 @@ import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
 import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import edu.umd.cs.findbugs.ba.ClassContext;
 
 public class XssJspDetector extends BasicInjectionDetector {
 
     private static final String XSS_JSP_PRINT_TYPE = "XSS_JSP_PRINT";
 
+    @SuppressFBWarnings(value = "MS_MUTABLE_COLLECTION_PKGPROTECT",
+            justification = "It is intended to be shared with XssServletDetector. Accidental modification of this list is unlikely.")
     protected static final String[] JSP_PARENT_CLASSES = {
         "org.apache.jasper.runtime.HttpJspBase",
         "weblogic.servlet.jsp.JspBase"

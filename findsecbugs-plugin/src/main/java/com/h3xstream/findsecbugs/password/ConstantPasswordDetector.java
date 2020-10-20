@@ -26,6 +26,7 @@ import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -37,7 +38,6 @@ import java.util.regex.Pattern;
 import org.apache.bcel.Const;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
-import org.apache.commons.codec.Charsets;
 
 /**
  * General detector for hard coded passwords and cryptographic keys
@@ -384,6 +384,6 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
         String path = CONFIG_DIR + "/" + filename;
         return new BufferedReader(new InputStreamReader(
                 getClass().getClassLoader().getResourceAsStream(path)
-        , Charsets.UTF_8));
+        , Charset.forName("UTF-8")));
     }
 }

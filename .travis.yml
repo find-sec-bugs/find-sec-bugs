@@ -16,7 +16,7 @@ jdk:
 # Activate container based infra https://docs.travis-ci.com/user/workers/container-based-infrastructure/
 sudo: false
 install: mvn clean -B -V
-script: mvn clean test -Pjacoco -Ptravisci -B -V
+script: mvn clean test jacoco:report -Pjacoco -Ptravisci -B -V
 
 
 after_success:

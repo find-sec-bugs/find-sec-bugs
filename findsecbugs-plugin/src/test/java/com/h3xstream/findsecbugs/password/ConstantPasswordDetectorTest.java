@@ -31,7 +31,8 @@ public class ConstantPasswordDetectorTest extends BaseDetectorTest {
     public void detectHardCodePasswordsAndKeys() throws Exception {
         String[] files = {
                 getClassFilePath("testcode/password/ConstantPasswords"),
-                getClassFilePath("testcode/oauth/SpringServerConfig")
+                getClassFilePath("testcode/oauth/SpringServerConfig"),
+                getClassFilePath("testcode/oauth/VertxOauth2Config")
         };
 
         EasyBugReporter reporter = spy(new SecurityReporter());
@@ -39,7 +40,7 @@ public class ConstantPasswordDetectorTest extends BaseDetectorTest {
 
         List<Integer> linesPasswords = Arrays.asList(
                 44, 52, 57, 62, 67, 72, 80, 86, 87, 88, 89, 91, 92, 93, 94,
-                121, 123, 159, 171
+                121, 123, 159, 171, 181
         );
         List<Integer> linesKeys = Arrays.asList(
                 100, 101, 102, 104, 105, 106, 107, 108, 109, 110, 116, 129,
@@ -68,9 +69,16 @@ public class ConstantPasswordDetectorTest extends BaseDetectorTest {
                         .inClass("SpringServerConfig").atLine(22)
                         .build()
         );
-        
-        // +1 for OAuth and +1 for hard coded public key field
-        verify(reporter, times(linesPasswords.size() + 1)).doReportBug(
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("HARD_CODE_PASSWORD")
+                        .inClass("VertxOauth2Config").atLine(13)
+                        .build()
+        );
+
+        // +2 for OAuth and +1 for hard coded public key field
+        verify(reporter, times(linesPasswords.size() + 2)).doReportBug(
                 bugDefinition().bugType("HARD_CODE_PASSWORD").build());
         verify(reporter, times(linesKeys.size() + 1)).doReportBug(
                 bugDefinition().bugType("HARD_CODE_KEY").build());

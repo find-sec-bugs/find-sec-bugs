@@ -170,7 +170,17 @@ public class ConstantPasswords {
         }
         return DriverManager.getConnection("url", "user", pwd);
     }
-    
+
+    public void bad15(io.vertx.core.Vertx vertx) throws Exception {
+        String pwd;
+        if (PWD2[2] % 2 == 1) { // non-trivial condition
+            pwd = "hardcoded1";
+        } else { // different constant but still hard coded
+            pwd = "hardcoded2";
+        }
+        io.vertx.ext.web.handler.CSRFHandler.create(vertx, pwd);
+    }
+
     private byte[] pwd4; // not considered hard coded
     private char[] pwd5 = null;
     private char[] pwd6 = new char[7];

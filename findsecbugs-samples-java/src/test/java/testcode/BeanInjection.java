@@ -26,6 +26,8 @@ public class BeanInjection extends HttpServlet{
 
             BeanUtils.copyProperties(user, originUser); //BAD
 
+            org.springframework.beans.BeanUtils.copyProperties(originUser, user); //BAD
+
             BeanUtilsBean beanUtl = BeanUtilsBean.getInstance();
             beanUtl.populate(user, map); //BAD
         }catch(Exception e){

@@ -6475,4 +6475,51 @@ if(Normalizer.normalize(input, Normalizer.Form.NFC).equals("BACKUP")) {
     </BugPattern>
     <BugCode abbrev="SECUNI">Improper handling of Unicode transformations</BugCode>
 
+    <!--Detect if the EntityResolver is used in dangerous way-->
+    <Detector class="com.h3xstream.findsecbugs.xml.EntityResolverUnsafeUsageDetector">
+        <Details>Detect if the EntityResolver is used in dangerous way</Details>
+    </Detector>
+    <BugPattern type="ENTITY_RESOLVER_UNSAFE_USAGE">
+        <ShortDescription>Usage of non-final EntityResolver implementation</ShortDescription>
+        <LongDescription>Usage of non-final EntityResolver implementation as a method parameter, by passing this reference or by invoking resolveEntity method inside class
+        </LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Using a non-final EntityResolver implementation in such cases allows to pass an object of the class overriding resolveEntity method with the malicious code.
+Example of vulnerable code:
+<pre>
+class UnsafeEntityResolver implements EntityResolver {
+
+    //...
+
+    void foo(EntityResolverConsumer consumer) {
+        consumer.accept(this);
+    }
+}
+
+class MaliciousEntityResolver extends UnsafeEntityResolver {
+
+    @Override
+    public InputSource resolveEntity(String publicId, String systemId) {
+        // malicious code
+    }
+}
+
+class EntityResolverClient {
+
+    void bar() {
+        UnsafeEntityResolver resolver = new MaliciousEntityResolver();
+        EntityResolverConsumer consumer = new EntityResolverConsumer();
+        resolver.foo(consumer);
+    }
+}
+</pre>
+</p>
+]]>
+
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="ERUU">Usage of non-final EntityResolver implementation</BugCode>
+
 </MessageCollection>

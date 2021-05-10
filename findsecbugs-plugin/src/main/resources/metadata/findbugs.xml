@@ -7,7 +7,7 @@
 
     <!-- Registers engine for taint analysis dataflow -->
     <EngineRegistrar class="com.h3xstream.findsecbugs.taintanalysis.EngineRegistrar"/>
-    
+
     <!--
     Detector : Java class that analyzes the bytecode
     Bug Pattern : Vulnerability/Code at risk*. All bug patterns are describe in messages.xml.
@@ -134,6 +134,8 @@
     <Detector class="com.h3xstream.findsecbugs.file.SuspiciousCommandDetector" reports="OVERLY_PERMISSIVE_FILE_PERMISSION"/>
     <Detector class="com.h3xstream.findsecbugs.password.JschPasswordDetector" reports="HARD_CODE_PASSWORD"/>
     <Detector class="com.h3xstream.findsecbugs.ImproperHandlingUnicodeDetector" reports="IMPROPER_UNICODE"/>
+    <Detector class="com.h3xstream.findsecbugs.xml.EntityResolverUnsafeUsageDetector"
+              reports="ENTITY_RESOLVER_UNSAFE_USAGE"/>
 
     <BugPattern type="HTTP_PARAMETER_POLLUTION" abbrev="SECHPP" category="SECURITY"/>
     <BugPattern type="SMTP_HEADER_INJECTION" abbrev="SECSMTP" category="SECURITY"/>
@@ -273,5 +275,6 @@
     <BugPattern type="WICKET_XSS1" abbrev="WICXSS1" category="SECURITY"/>
     <BugPattern type="OVERLY_PERMISSIVE_FILE_PERMISSION" abbrev="SECOPFP" category="SECURITY"/>
     <BugPattern type="IMPROPER_UNICODE" abbrev="SECUNI" category="SECURITY"/>
+    <BugPattern type="ENTITY_RESOLVER_UNSAFE_USAGE" abbrev="ERUU" category="SECURITY"/>
 
 </FindbugsPlugin>

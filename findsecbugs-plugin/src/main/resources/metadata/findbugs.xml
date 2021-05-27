@@ -134,6 +134,7 @@
     <Detector class="com.h3xstream.findsecbugs.file.SuspiciousCommandDetector" reports="OVERLY_PERMISSIVE_FILE_PERMISSION"/>
     <Detector class="com.h3xstream.findsecbugs.password.JschPasswordDetector" reports="HARD_CODE_PASSWORD"/>
     <Detector class="com.h3xstream.findsecbugs.ImproperHandlingUnicodeDetector" reports="IMPROPER_UNICODE"/>
+    <Detector class="com.h3xstream.findsecbugs.ModifyBeforeValidationDetector" reports="MODIFY_BEFORE_VALIDATION"/>
 
     <BugPattern type="HTTP_PARAMETER_POLLUTION" abbrev="SECHPP" category="SECURITY"/>
     <BugPattern type="SMTP_HEADER_INJECTION" abbrev="SECSMTP" category="SECURITY"/>
@@ -273,5 +274,6 @@
     <BugPattern type="WICKET_XSS1" abbrev="WICXSS1" category="SECURITY"/>
     <BugPattern type="OVERLY_PERMISSIVE_FILE_PERMISSION" abbrev="SECOPFP" category="SECURITY"/>
     <BugPattern type="IMPROPER_UNICODE" abbrev="SECUNI" category="SECURITY"/>
+    <BugPattern type="MODIFY_BEFORE_VALIDATION" abbrev="SECMOD" category="SECURITY"/>
 
 </FindbugsPlugin>

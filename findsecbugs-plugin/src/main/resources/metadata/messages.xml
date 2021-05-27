@@ -6475,4 +6475,27 @@ if(Normalizer.normalize(input, Normalizer.Form.NFC).equals("BACKUP")) {
     </BugPattern>
     <BugCode abbrev="SECUNI">Improper handling of Unicode transformations</BugCode>
 
+    <!-- Perform any string modifications before validation -->
+    <Detector class="com.h3xstream.findsecbugs.ModifyBeforeValidationDetector">
+        <Details>Perform any string modifications before validation.</Details>
+    </Detector>
+    <BugPattern type="MODIFY_BEFORE_VALIDATION">
+        <ShortDescription>Perform any string modifications before validation</ShortDescription>
+        <LongDescription>TBD.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+TBD
+</p>
+
+<p>
+<b>References</b><br/>
+<a href="https://wiki.sei.cmu.edu/confluence/display/java/IDS11-J.+Perform+any+string+modifications+before+validation">CERT: IDS11-J. Perform any string modifications before validation</a><br/>
+</p>
+
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECMOD">Perform any string modifications before validation</BugCode>
+
 </MessageCollection>

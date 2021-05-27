@@ -6475,4 +6475,54 @@ if(Normalizer.normalize(input, Normalizer.Form.NFC).equals("BACKUP")) {
     </BugPattern>
     <BugCode abbrev="SECUNI">Improper handling of Unicode transformations</BugCode>
 
+    <!-- Perform any string modifications before validation -->
+    <Detector class="com.h3xstream.findsecbugs.ModificationAfterValidationDetector">
+        <Details>Identify string modifications after validation and not before it.</Details>
+    </Detector>
+    <BugPattern type="MODIFICATION_AFTER_VALIDATION">
+        <ShortDescription>String is modified after validation and not before it</ShortDescription>
+        <LongDescription>String is modified after validation and not before it. Tricky attackers may pass malicious strings which bypass validation.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+A string must not be modified after validation because it may allow an attacker to bypass validation using a tricky
+string which becomes malicious after the modification. For example, a program may filter out the &langle;script&rangle; tags from
+HTML input to avoid cross-site scripting (XSS) and other vulnerabilities. If non-character code points  are deleted
+from the input following validation, an attacker may pass the string "&langle;scr"+"\uFDEF"+"ipt&rangle;" so that the validation
+check fails to detect the &langle;script&rangle; tag, but the subsequent removal of the non-character code pont creates a &langle;script&rangle;
+tag in the input:
+<pre>
+Pattern pattern = Pattern.compile("<script>");
+Matcher matcher = pattern.matcher(s);
+if (matcher.find()) {
+  throw new IllegalArgumentException("Invalid input");
+}
+
+s = s.replaceAll("[\\p{Cn}]", "");
+</pre>
+</p>
+
+<p>
+The proper way is to perform the modification before the validation so the passed string is first changed to &langle;script&rangle;
+which fails to be validated:
+<pre>
+s = s.replaceAll("[\\p{Cn}]", "\uFFFD");
+Pattern pattern = Pattern.compile("<script>");
+Matcher matcher = pattern.matcher(s);
+if (matcher.find()) {
+  throw new IllegalArgumentException("Invalid input");
+}
+</pre>
+</p>
+
+<p>
+<b>References</b><br/>
+<a href="https://wiki.sei.cmu.edu/confluence/display/java/IDS11-J.+Perform+any+string+modifications+before+validation">CERT: IDS11-J. Perform any string modifications before validation</a><br/>
+</p>
+
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECMOD">String if modified after validation and not before it</BugCode>
+
 </MessageCollection>

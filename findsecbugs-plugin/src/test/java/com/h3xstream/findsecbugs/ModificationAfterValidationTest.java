@@ -25,10 +25,10 @@ import java.util.Arrays;
 
 import static org.mockito.Mockito.*;
 
-public class ModifyBeforeValidationTest extends BaseDetectorTest {
+public class ModificationAfterValidationTest extends BaseDetectorTest {
 
     @Test
-    public void detectNormalizationAfterValidation() throws Exception {
+    public void detectModificationAfterValidation() throws Exception {
         //Locate test code
         String[] files = {
                 getClassFilePath("testcode/modify_validate/ModifyAfter.java")
@@ -40,7 +40,7 @@ public class ModifyBeforeValidationTest extends BaseDetectorTest {
 
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("MODIFY_BEFORE_VALIDATION")
+                        .bugType("MODIFICATION_AFTER_VALIDATION")
                         .inClass("ModifyAfter")
                         .inMethod("validate")
                         .withPriority("Low")
@@ -51,7 +51,7 @@ public class ModifyBeforeValidationTest extends BaseDetectorTest {
     }
 
     @Test
-    public void detectNormalizationBeforeValidationAvoidFP() throws Exception {
+    public void detectModificationBeforeValidationAvoidFP() throws Exception {
         //Locate test code
         String[] files = {
                 getClassFilePath("testcode/modify_validate/ModifyBefore.java")

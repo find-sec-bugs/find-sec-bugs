@@ -29,13 +29,13 @@ import org.apache.bcel.classfile.Method;
 import java.util.Set;
 import java.util.HashSet;
 
-public class ModifyBeforeValidationDetector extends OpcodeStackDetector {
+public class ModificationAfterValidationDetector extends OpcodeStackDetector {
 
     Set<OpcodeStack.Item> validated = new HashSet<OpcodeStack.Item>();
 
     private BugReporter bugReporter;
 
-    public ModifyBeforeValidationDetector(BugReporter bugReporter) {
+    public ModificationAfterValidationDetector(BugReporter bugReporter) {
         this.bugReporter = bugReporter;
     }
 
@@ -46,7 +46,7 @@ public class ModifyBeforeValidationDetector extends OpcodeStackDetector {
     }
 
     private void reportBug() {
-        BugInstance bug = new BugInstance(this, "MODIFY_BEFORE_VALIDATION", Priorities.LOW_PRIORITY)
+        BugInstance bug = new BugInstance(this, "MODIFICATION_AFTER_VALIDATION", Priorities.LOW_PRIORITY)
                 .addClass(this).addMethod(this).addSourceLine(this);
         bugReporter.reportBug(bug);
     }

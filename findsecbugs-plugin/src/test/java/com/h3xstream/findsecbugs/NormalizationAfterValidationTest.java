@@ -25,7 +25,7 @@ import java.util.Arrays;
 
 import static org.mockito.Mockito.*;
 
-public class NormalizeBeforeValidationTest extends BaseDetectorTest {
+public class NormalizationAfterValidationTest extends BaseDetectorTest {
 
     @Test
     public void detectNormalizationAfterValidation() throws Exception {
@@ -40,7 +40,7 @@ public class NormalizeBeforeValidationTest extends BaseDetectorTest {
 
         verify(reporter).doReportBug(
                 bugDefinition()
-                        .bugType("NORMALIZE_BEFORE_VALIDATION")
+                        .bugType("NORMALIZATION_AFTER_VALIDATION")
                         .inClass("NormalizeAfter")
                         .inMethod("validate")
                         .withPriority("Low")
@@ -63,7 +63,7 @@ public class NormalizeBeforeValidationTest extends BaseDetectorTest {
 
         verify(reporter, never()).doReportBug(
                 bugDefinition()
-                        .bugType("NORMALIZE_BEFORE_VALIDATION")
+                        .bugType("NORMALIZATION_AFTER_VALIDATION")
                         .inClass("NormalizeBefore")
                         .inMethod("validate")
                         .withPriority("Low")

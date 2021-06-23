@@ -33,7 +33,7 @@ public class EnumUseInSql491Test extends BaseDetectorTest {
     @Test
     public void avoidSqlInjectionWithArrayUsage() throws Exception {
 
-        FindSecBugsGlobalConfig.getInstance().setDebugPrintInvocationVisited(true);
+        //FindSecBugsGlobalConfig.getInstance().setDebugPrintInvocationVisited(true);
 
         //Locate test code
         String[] files = {

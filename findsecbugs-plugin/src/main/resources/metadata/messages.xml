@@ -1712,13 +1712,13 @@ transformer.transform(input, result);</pre>
 The following snippets show two available solutions. You can set one feature or both.
 </p>
 
-<p><b>Solution using "Secure processing" mode:</b></p>
+<p><b>Solution disabling DTD:</b></p>
 <p>
 This setting will protect you against remote file access but not denial of service.
 <pre>
 TransformerFactory factory = TransformerFactory.newInstance();
-factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "all");
-factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "all");
+factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
 
 Transformer transformer = factory.newTransformer();
 transformer.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -1726,7 +1726,9 @@ transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 transformer.transform(input, result);</pre>
 </p>
 
-<p><b>Solution disabling DTD:</b></p>
+<p>An empty string denies all access to external references for both attributes.</p>
+
+<p><b>Solution using "Secure processing" mode:</b></p>
 <p>
 This setting will protect you against remote file access but not denial of service.
 <pre>
@@ -1791,13 +1793,13 @@ transformer.transform(input, result);</pre>
 <p>
 The following snippets show two available solutions. You can set one feature or both.
 </p>
-<p><b>Solution using "Secure processing" mode:</b></p>
+<p><b>Solution disabling DTD:</b></p>
 <p>
 This setting will protect you against remote file access but not denial of service.
 <pre>
 TransformerFactory factory = TransformerFactory.newInstance();
-factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "all");
-factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "all");
+factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
 
 Transformer transformer = factory.newTransformer();
 transformer.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -1805,7 +1807,9 @@ transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 transformer.transform(input, result);</pre>
 </p>
 
-<p><b>Solution disabling DTD:</b></p>
+<p>An empty string denies all access to external references for both attributes.</p>
+
+<p><b>Solution using "Secure processing" mode:</b></p>
 <p>
 This setting will protect you against remote file access but not denial of service.
 <pre>
@@ -6475,4 +6479,102 @@ if(Normalizer.normalize(input, Normalizer.Form.NFC).equals("BACKUP")) {
     </BugPattern>
     <BugCode abbrev="SECUNI">Improper handling of Unicode transformations</BugCode>
 
+    <!-- Perform any string modifications before validation -->
+    <Detector class="com.h3xstream.findsecbugs.ModificationAfterValidationDetector">
+        <Details>Identify string modifications after validation and not before it.</Details>
+    </Detector>
+    <BugPattern type="MODIFICATION_AFTER_VALIDATION">
+        <ShortDescription>String is modified after validation and not before it</ShortDescription>
+        <LongDescription>String is modified after validation and not before it. Tricky attackers may pass malicious strings which bypass validation.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+A string must not be modified after validation because it may allow an attacker to bypass validation using a tricky
+string which becomes malicious after the modification. For example, a program may filter out the &langle;script&rangle; tags from
+HTML input to avoid cross-site scripting (XSS) and other vulnerabilities. If non-character code points  are deleted
+from the input following validation, an attacker may pass the string "&langle;scr"+"\uFDEF"+"ipt&rangle;" so that the validation
+check fails to detect the &langle;script&rangle; tag, but the subsequent removal of the non-character code pont creates a &langle;script&rangle;
+tag in the input:
+<pre>
+Pattern pattern = Pattern.compile("<script>");
+Matcher matcher = pattern.matcher(s);
+if (matcher.find()) {
+  throw new IllegalArgumentException("Invalid input");
+}
+
+s = s.replaceAll("[\\p{Cn}]", "");
+</pre>
+</p>
+
+<p>
+The proper way is to perform the modification before the validation so the passed string is first changed to &langle;script&rangle;
+which fails to be validated:
+<pre>
+s = s.replaceAll("[\\p{Cn}]", "\uFFFD");
+Pattern pattern = Pattern.compile("<script>");
+Matcher matcher = pattern.matcher(s);
+if (matcher.find()) {
+  throw new IllegalArgumentException("Invalid input");
+}
+</pre>
+</p>
+
+<p>
+<b>References</b><br/>
+<a href="https://wiki.sei.cmu.edu/confluence/display/java/IDS11-J.+Perform+any+string+modifications+before+validation">CERT: IDS11-J. Perform any string modifications before validation</a><br/>
+</p>
+
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECMOD">String if modified after validation and not before it</BugCode>
+
+    <!-- Normalize strings before validating them -->
+    <Detector class="com.h3xstream.findsecbugs.NormalizationAfterValidationDetector">
+        <Details>Identify string normalization after validation and not before it.</Details>
+    </Detector>
+    <BugPattern type="NORMALIZATION_AFTER_VALIDATION">
+        <ShortDescription>String is normalzied after validation and not before it</ShortDescription>
+        <LongDescription>String is normalzied after validation and not before it. Tricky attackers may pass malicious strings which bypass validation.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+A string must not be normalized after validation because it may allow an attacker to bypass validation using a tricky
+string which becomes malicious after the normalization. For example, a program may filter out the &langle;script&rangle; tags from
+HTML input to avoid cross-site scripting (XSS) and other vulnerabilities. However, in unicode, the same string can have
+many different representations. For example, \uFE64 is normalized to &langle; and \uFE65 is normalized to &rangle;. Thus the
+if an attacker passes the string "\uFE64" + "script" + "\uFE65" the validation check fails to detect the &langle;script&rangle; tag,
+but thereafter the string is normalized to the &langle;script&rangle; tag in the input:
+<pre>
+Pattern pattern = Pattern.compile("[<>]"); // Check for angle brackets
+Matcher matcher = pattern.matcher(s);
+if (matcher.find()) {
+  throw new IllegalStateException();
+}
+s = Normalizer.normalize(s, Form.NFKC);
+</pre>
+</p>
+
+<p>
+The proper way is to do the normalization before the validation so the passed string is first changed to &langle;script&rangle;
+which fails to be validated:
+<pre>
+s = Normalizer.normalize(s, Form.NFKC);
+Pattern pattern = Pattern.compile("[<>]");
+Matcher matcher = pattern.matcher(s);
+if (matcher.find()) {
+  throw new IllegalStateException();
+}
+</pre>
+</p>
+
+<p>
+<b>References</b><br/>
+<a href="https://wiki.sei.cmu.edu/confluence/display/java/IDS01-J.+Normalize+strings+before+validating+them">CERT: IDS01-J. Normalize strings before validating them</a><br/>
+</p>
+
+            ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECNORM">Normalize strings before validating them</BugCode>
 </MessageCollection>

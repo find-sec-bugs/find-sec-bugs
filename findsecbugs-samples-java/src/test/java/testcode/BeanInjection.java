@@ -13,6 +13,8 @@ public class BeanInjection extends HttpServlet{
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
         User user = new User();
+        User originUser = new User();
+        originUser.setName("test");
         HashMap map = new HashMap();
         Enumeration names = request.getParameterNames();
         while (names.hasMoreElements()) {
@@ -21,6 +23,10 @@ public class BeanInjection extends HttpServlet{
         }
         try{
             BeanUtils.populate(user, map); //BAD
+
+            BeanUtils.copyProperties(user, originUser); //BAD
+
+            org.springframework.beans.BeanUtils.copyProperties(originUser, user); //BAD
 
             BeanUtilsBean beanUtl = BeanUtilsBean.getInstance();
             beanUtl.populate(user, map); //BAD
@@ -36,7 +42,7 @@ public class BeanInjection extends HttpServlet{
         public String getName(){
             return this.name;
         }
-        
+
         public void setName(String name){
             this.name = name;
         }

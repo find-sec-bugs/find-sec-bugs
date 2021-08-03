@@ -24,7 +24,7 @@ about: The scanner is not working as expected
      - Maven/Gradle/Ant output
 -->
 
-## Code (If needed)
+## Code
 
 <!-- Include the Java code samples or ZIP files of a sample project that reproduce the given bug. -->
 

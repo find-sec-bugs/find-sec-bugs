@@ -1,11 +1,8 @@
 name: "CodeQL config"
-queries:
-  - uses: security-extended
-  - uses: security-and-quality
 paths-ignore:
-  - '**/findsecbugs-samples-deps/**'
-  - '**/findsecbugs-samples-java/**'
-  - '**/findsecbugs-samples-jsp/**'
-  - '**/findsecbugs-samples-kotlin/**'
-  - '**/findsecbugs-test-util/**'
+  - 'findsecbugs-samples-deps'
+  - 'findsecbugs-samples-java'
+  - 'findsecbugs-samples-jsp'
+  - 'findsecbugs-samples-kotlin'
+  - 'findsecbugs-test-util'
   

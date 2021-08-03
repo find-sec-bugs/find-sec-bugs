@@ -43,7 +43,7 @@ public class NioPathTraversalTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        for (Integer line : Arrays.asList(8,9,10,11,12)) {
+        for (Integer line : Arrays.asList(10,11,12,13,14,16,17)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("PATH_TRAVERSAL_IN")
@@ -52,6 +52,6 @@ public class NioPathTraversalTest extends BaseDetectorTest {
             );
         }
 
-        verify(reporter, times(5)).doReportBug(bugDefinition().bugType("PATH_TRAVERSAL_IN").build());
+        verify(reporter, times(7)).doReportBug(bugDefinition().bugType("PATH_TRAVERSAL_IN").build());
     }
 }

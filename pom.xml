@@ -1,4 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.h3xstream.findsecbugs</groupId>
@@ -12,7 +12,9 @@
     <description>Root project file that aggregate the different modules of Find Security Bugs.</description>
 
     <properties>
-        <!-- Encoding configuration -->
+        
+<!-- Encoding configuration -->
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
@@ -133,7 +135,7 @@
                             <argLine>@{argLine} -Xmx3000m -Dbcel.dontCache=true</argLine>
 		           <enableAssertions>true</enableAssertions>
                         </configuration>
-                    </plugin>
+                    <configuration><parallel>all</parallel></configuration></plugin>
                 </plugins>
             </build>
         </profile>
@@ -339,7 +341,7 @@
             <name>GNU Lesser General Public License</name>
             <url>http://www.gnu.org/copyleft/lesser.html</url>
             <distribution>repo</distribution>
-            <comments />
+            <comments/>
         </license>
     </licenses>
 

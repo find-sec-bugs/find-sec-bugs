@@ -147,7 +147,7 @@
     <BugPattern type="AWS_QUERY_INJECTION" abbrev="SECAQI" category="SECURITY"/>
     <BugPattern type="INSECURE_SMTP_SSL" abbrev="SECISC" category="SECURITY"/>
     <BugPattern type="URL_REWRITING" abbrev="SECURLR" category="SECURITY"/>
-    <BugPattern type="COOKIE_PERSISTENT" abbrev="SECCP" category="SECURITY"/>
+    <BugPattern type="COOKIE_PERSISTENT" abbrev="SECCP" category="SECURITY" cweid="539"/>
     <BugPattern type="PERMISSIVE_CORS" abbrev="SECCORS" category="SECURITY"/>
     <BugPattern type="PREDICTABLE_RANDOM" abbrev="SECPR" category="SECURITY" cweid="330"/>
     <BugPattern type="PREDICTABLE_RANDOM_SCALA" abbrev="SECPRS" category="SECURITY" cweid="330"/>
@@ -161,7 +161,7 @@
     <BugPattern type="SERVLET_HEADER_USER_AGENT" abbrev="SECSHUA" category="SECURITY"/>
     <BugPattern type="COOKIE_USAGE" abbrev="SECCU" category="SECURITY"/>
     <BugPattern type="INSECURE_COOKIE" abbrev="SECIC" category="SECURITY" cweid="614"/>
-    <BugPattern type="HTTPONLY_COOKIE" abbrev="SECHOC" category="SECURITY"/>
+    <BugPattern type="HTTPONLY_COOKIE" abbrev="SECHOC" category="SECURITY" cweid="1004"/>
     <BugPattern type="PATH_TRAVERSAL_IN" abbrev="SECPTI" category="SECURITY" cweid="22"/>
     <BugPattern type="PATH_TRAVERSAL_OUT" abbrev="SECPTO" category="SECURITY" cweid="22"/>
     <BugPattern type="SCALA_PATH_TRAVERSAL_IN" abbrev="SSECPTI" category="SECURITY" cweid="22"/>
@@ -237,7 +237,7 @@
     <BugPattern type="JSP_XSLT" abbrev="SECJSPXSLT" category="SECURITY" cweid="94"/>
     <BugPattern type="MALICIOUS_XSLT" abbrev="SECXSLT" category="SECURITY" cweid="94"/>
     <BugPattern type="XSS_SERVLET" abbrev="SECXSS2" category="SECURITY" cweid="79"/>
-    <BugPattern type="XML_DECODER" abbrev="XMLDEC" category="SECURITY"/>
+    <BugPattern type="XML_DECODER" abbrev="XMLDEC" category="SECURITY" cweid="502"/>
     <BugPattern type="STATIC_IV" abbrev="STAIV" category="SECURITY" cweid="329"/>
     <BugPattern type="ECB_MODE" abbrev="SECECB" category="SECURITY" cweid="327"/>
     <BugPattern type="PADDING_ORACLE" abbrev="PADORA" category="SECURITY" cweid="326"/>
@@ -255,7 +255,7 @@
     <BugPattern type="ANDROID_EXTERNAL_FILE_ACCESS" abbrev="SECEFA" category="SECURITY" cweid="276"/>
     <BugPattern type="ANDROID_BROADCAST" abbrev="SECBROAD" category="SECURITY" cweid="276"/>
     <BugPattern type="ANDROID_WORLD_WRITABLE" abbrev="SECWW" category="SECURITY" cweid="276"/>
-    <BugPattern type="ANDROID_GEOLOCATION" abbrev="SECGEO" category="SECURITY" CWE="359"/>
+    <BugPattern type="ANDROID_GEOLOCATION" abbrev="SECGEO" category="SECURITY" cweid="359"/>
     <BugPattern type="ANDROID_WEB_VIEW_JAVASCRIPT" abbrev="SECWVJ" category="SECURITY" cweid="79"/>
     <BugPattern type="ANDROID_WEB_VIEW_JAVASCRIPT_INTERFACE" abbrev="SECWVJI" category="SECURITY" cweid="285"/>
     <BugPattern type="OBJECT_DESERIALIZATION" abbrev="SECOBDES" category="SECURITY" cweid="502"/>
@@ -272,9 +272,9 @@
     <BugPattern type="URLCONNECTION_SSRF_FD" abbrev="SECSSSRFUC" category="SECURITY" cweid="918"/>
     <BugPattern type="INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE" abbrev="ERRMSG" category="SECURITY" cweid="209"/>
     <BugPattern type="RPC_ENABLED_EXTENSIONS" abbrev="RPCEXT" category="SECURITY"/>
-    <BugPattern type="WICKET_XSS1" abbrev="WICXSS1" category="SECURITY"/>
+    <BugPattern type="WICKET_XSS1" abbrev="WICXSS1" category="SECURITY" cweid="79"/>
     <BugPattern type="OVERLY_PERMISSIVE_FILE_PERMISSION" abbrev="SECOPFP" category="SECURITY"/>
-    <BugPattern type="IMPROPER_UNICODE" abbrev="SECUNI" category="SECURITY"/>
-    <BugPattern type="MODIFICATION_AFTER_VALIDATION" abbrev="SECMOD" category="SECURITY"/>
-    <BugPattern type="NORMALIZATION_AFTER_VALIDATION" abbrev="SECNORM" category="SECURITY"/>
+    <BugPattern type="IMPROPER_UNICODE" abbrev="SECUNI" category="SECURITY" cweid="176"/>
+    <BugPattern type="MODIFICATION_AFTER_VALIDATION" abbrev="SECMOD" category="SECURITY" cweid="176"/>
+    <BugPattern type="NORMALIZATION_AFTER_VALIDATION" abbrev="SECNORM" category="SECURITY" cweid="176"/>
 </FindbugsPlugin>

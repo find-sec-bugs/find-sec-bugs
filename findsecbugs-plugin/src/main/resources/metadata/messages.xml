@@ -6591,8 +6591,8 @@ Certain combinations of permissions can produce significant capability increases
 ReflectPermission on the target suppressAccessChecks is dangerous in that information (possibly confidential) and
 methods normally unavailable would be accessible to malicious code. Similarly, the permission
 java.lang.RuntimePermission applied to target createClassLoader grants code the permission to create a ClassLoader
-object. This is an extremely dangerous, because malicious applications that can instantiate their own class loaders
-could then load their own rogue classes into the system. These newly loaded classes could be placed into any protection
+object. This is extremely dangerous, because malicious applications that can instantiate their own class loaders could
+then load their own rogue classes into the system. These newly loaded classes could be placed into any protection
 domain by the class loader, thereby automatically granting the classes the permissions for that domain.
 </p>
 

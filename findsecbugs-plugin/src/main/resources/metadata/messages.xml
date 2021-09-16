@@ -6577,4 +6577,61 @@ if (matcher.find()) {
         </Details>
     </BugPattern>
     <BugCode abbrev="SECNORM">Normalize strings before validating them</BugCode>
+
+    <Detector class="com.h3xstream.findsecbugs.DangerousPermissionCombination">
+        <Details>Detector for patterns where combination of dangerous permissions are granted.</Details>
+    </Detector>
+    <BugPattern type="DANGEROUS_PERMISSION_COMBINATION">
+        <ShortDescription>Dangerous combination of permissions granted</ShortDescription>
+        <LongDescription>Granting permission {2} on the target {3} in method {1} is dangerous.</LongDescription>
+        <Details>
+            <![CDATA[
+<p>
+Certain combinations of permissions can produce significant capability increases and should not be granted. Granting
+ReflectPermission on the target suppressAccessChecks is dangerous in that information (possibly confidential) and
+methods normally unavailable would be accessible to malicious code. Similarly, the permission
+<code>java.lang.RuntimePermission</code> applied to target createClassLoader grants code the permission to create a
+<code>ClassLoader</code> object.
+This is extremely dangerous, because malicious applications that can instantiate their own class loaders could
+then load their own rogue classes into the system. These newly loaded classes could be placed into any protection
+domain by the class loader, thereby automatically granting the classes the permissions for that domain.
+</p>
+
+
+<p>
+<b>Dangerous permissions:</b><br/>
+
+<pre>
+PermissionCollection pc = super.getPermissions(cs);
+pc.add(new RuntimePermission("getClassLoader"));
+</pre>
+<br/>
+
+<pre>
+PermissionCollection pc = super.getPermissions(cs);
+pc.add(new RuntimePermission("createClassLoader"));
+</pre>
+<br/>
+
+<pre>
+PermissionCollection pc = super.getPermissions(cs);
+pc.add(new ReflectPermission("newProxyInPackage.*"));
+</pre>
+<br/>
+
+<pre>
+PermissionCollection pc = super.getPermissions(cs);
+pc.add(new ReflectPermission("suppressAccessChecks"));
+</pre>
+</p>
+
+
+<p>References</b><br>
+<a href="https://wiki.sei.cmu.edu/confluence/display/java/ENV03-J.+Do+not+grant+dangerous+combinations+of+permissions">CERT: ENV03-J. Do not grant dangerous combinations of permissions</a><br/>
+</p>
+            ]]>
+    </Details>
+  </BugPattern>
+  <BugCode abbrev="SECPERM">Dangerous Permission Combination</BugCode>
+
 </MessageCollection>

@@ -9,7 +9,7 @@ public class ReflectPermissionNewProxyInPackage extends SecureClassLoader {
     @Override
     protected PermissionCollection getPermissions(CodeSource cs) {
         PermissionCollection pc = super.getPermissions(cs);
-        pc.add(new ReflectPermission("newProxyInPacakge.*"));
+        pc.add(new ReflectPermission("newProxyInPackage.*"));
         // Other permissions
         return pc;
     }

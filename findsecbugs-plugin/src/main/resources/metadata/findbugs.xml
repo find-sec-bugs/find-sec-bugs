@@ -279,5 +279,5 @@
     <BugPattern type="IMPROPER_UNICODE" abbrev="SECUNI" category="SECURITY" cweid="176"/>
     <BugPattern type="MODIFICATION_AFTER_VALIDATION" abbrev="SECMOD" category="SECURITY" cweid="176"/>
     <BugPattern type="NORMALIZATION_AFTER_VALIDATION" abbrev="SECNORM" category="SECURITY" cweid="176"/>
-    <BugPattern type="DANGEROUS_PERMISSION_COMBINATION" abbrev="SECPERM" category="SECURITY"/>
+    <BugPattern type="DANGEROUS_PERMISSION_COMBINATION" abbrev="SECPERM" category="SECURITY" cweid="732"/>
 </FindbugsPlugin>

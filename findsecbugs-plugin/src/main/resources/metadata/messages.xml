@@ -6634,4 +6634,70 @@ pc.add(new ReflectPermission("suppressAccessChecks"));
   </BugPattern>
   <BugCode abbrev="SECPERM">Dangerous Permission Combination</BugCode>
 
+  <Detector class="com.h3xstream.findsecbugs.PossibleUntrustedObjectInjection" reports="POSSIBLE_UNTRUSTED_OBJECT_INJECTION">
+    <Details>Find invocations of the same non-final method of a non-final class before and inside of a privileged action.</Details>
+  </Detector>
+  <BugPattern type="POSSIBLE_UNTRUSTED_OBJECT_INJECTION">
+    <ShortDescription>Non-final method was called on a non-final instance of the class, both before and inside of a privileged action</ShortDescription>
+      <LongDescription>Non-final method {4} was called at {5} before execution of privileged action and also inside privileged action at {6} on a non-final class instance of {3} which might be speicified by user input. It may happen that a malicious descendant of the class has overridden this method to behave differently than expected.</LongDescription>
+    <Details>
+            <![CDATA[
+<p>
+Untrusted code provided by the user may bypass security checks. Therefore, it must be defensively copied before the
+security check is performed. Using the clone() method is not enough because it does only a shallow copy. Furthermore,
+the attacker can also override this method.
+</p>
+
+<p>
+The class java.io.File is not final, therefore we can extend it and override its methods:<br/>
+
+<pre>
+public class HackerFile extends File {
+    private int count;
+    public String getPath() {
+        return (count++ == 0) ? "/tmp/foo" : "/etc/passwd";
+    }
+}
+</pre>
+<br/>
+
+The following method may execute a privileged action on /etc/passwd file without permission, if this method is part
+of an API, i.e. it is in a public class in a system where user code may invoke it:<br/>
+
+<pre>
+public RandomAccessFile openFile(final File f) {
+  askPermission(f.getPath());                        // Asks permission for /tmp/foo
+
+  return (RandomAccessFile)AccessController.doPrivileged(new PrivilegedAction <Object>() {
+    public Object run() {
+      return new RandomAccessFile(f, f.getPath());   // Opens /etc/passwd
+    }
+  });
+}
+</pre>
+<br/>
+
+To prevent this, we have to work on a copy of the file:<br/>
+
+<pre>
+public RandomAccessFile openFile(File f) {
+  final File copy = new File(f.getPath());                 // Creates a copy of java.io.File("/tmp/foo")
+  askPermission(copy.getPath());                           // Asks permission for /tmp/foo
+
+  return (RandomAccessFile)AccessController.doPrivileged(new PrivilegedAction <Object>() {
+    public Object run() {
+      return new RandomAccessFile(copy, copy.getPath());   // Opens /tmp/foo
+    }
+  });
+}
+</pre>
+</p>
+
+<p>References</b><br>
+<a href="https://wiki.sei.cmu.edu/confluence/display/java/SEC02-J.+Do+not+base+security+checks+on+untrusted+sources">CERT: https://wiki.sei.cmu.edu/confluence/display/java/SEC02-J.+Do+not+base+security+checks+on+untrusted+sources</a><br/>
+</p>
+            ]]>
+    </Details>
+  </BugPattern>
+  <BugCode abbrev="SECOBJ">Possible Untrusted Object Injection</BugCode>
 </MessageCollection>

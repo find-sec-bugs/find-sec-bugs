@@ -36,6 +36,7 @@ public class FindSecBugsGlobalConfig {
     // set through SystemProperties
     private boolean debugOutputTaintConfigs;
     private boolean taintedSystemVariables;
+    private boolean taintedPublicMethodParameters;
     private String customConfigFile;
     private boolean taintedMainArgument;
     private boolean reportPotentialXssWrongContext;
@@ -43,6 +44,7 @@ public class FindSecBugsGlobalConfig {
     protected FindSecBugsGlobalConfig() {
         debugOutputTaintConfigs = Boolean.parseBoolean(loadFromSystem("findsecbugs.taint.outputconfigs", Boolean.FALSE.toString()));
         taintedSystemVariables = Boolean.parseBoolean(loadFromSystem("findsecbugs.taint.taintedsystemvariables", Boolean.FALSE.toString()));
+        taintedPublicMethodParameters = Boolean.parseBoolean(loadFromSystem("findsecbugs.taint.taintedpublicmethodparameters", Boolean.FALSE.toString()));
         customConfigFile = loadFromSystem("findsecbugs.taint.customconfigfile", null);
         taintedMainArgument = Boolean.parseBoolean(loadFromSystem("findsecbugs.taint.taintedmainargument", Boolean.TRUE.toString()));
         reportPotentialXssWrongContext = Boolean.parseBoolean(loadFromSystem("findsecbugs.taint.reportpotentialxsswrongcontext", Boolean.FALSE.toString()));
@@ -128,6 +130,14 @@ public class FindSecBugsGlobalConfig {
 
     public void setTaintedSystemVariables(boolean taintedSystemVariables) {
         this.taintedSystemVariables = taintedSystemVariables;
+    }
+
+    public boolean isTaintedPublicMethodParameters() {
+        return taintedPublicMethodParameters;
+    }
+
+    public void setTaintedPublicMethodParameters(boolean taintedPublicMethodParameters) {
+        this.taintedPublicMethodParameters = taintedPublicMethodParameters;
     }
 
     public String getCustomConfigFile() {

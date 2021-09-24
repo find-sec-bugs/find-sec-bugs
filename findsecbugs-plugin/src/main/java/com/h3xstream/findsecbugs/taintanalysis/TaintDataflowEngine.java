@@ -122,6 +122,9 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
             loadTaintConfig(TAINT_CONFIG_PATH.concat("tainted-system-variables.txt"), false);
             LOGGER.info("System variables are considered to be tainted");
         }
+        if (CONFIG.isTaintedPublicMethodParameters()) {
+            LOGGER.info("Parameters of public methods are considered to be tainted");
+        }
         String customConfigFile = CONFIG.getCustomConfigFile();
         if (customConfigFile != null && !customConfigFile.isEmpty()) {
             for (String configFile : customConfigFile.split(File.pathSeparator)) {

@@ -50,4 +50,50 @@ public class TaintDataflowEngineTest extends BaseDetectorTest {
 
         FindSecBugsGlobalConfig.getInstance().setDebugOutputTaintConfigs(false);
     }
+
+    @Test
+    public void testTaintedPublicMethodParametersOff() throws Exception {
+        TaintDataflowEngine.writer = mock(Writer.class);
+
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/command/CommandInjection"),
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new BaseDetectorTest.SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("COMMAND_INJECTION")
+                            .inClass("CommandInjection").atLine(44)
+                            .withPriority("Medium")
+                            .build());
+    }
+
+    @Test
+    public void testTaintedPublicMethodParametersOn() throws Exception {
+        FindSecBugsGlobalConfig.getInstance().setTaintedPublicMethodParameters(true);
+
+        TaintDataflowEngine.writer = mock(Writer.class);
+
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/command/CommandInjection"),
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new BaseDetectorTest.SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("COMMAND_INJECTION")
+                            .inClass("CommandInjection").atLine(44)
+                            .withPriority("High")
+                            .build());
+
+        FindSecBugsGlobalConfig.getInstance().setTaintedPublicMethodParameters(false);
+    }
 }

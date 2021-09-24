@@ -20,13 +20,17 @@ package com.h3xstream.findsecbugs.taintanalysis;
 import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import com.h3xstream.findsecbugs.taintanalysis.data.UnknownSource;
 import com.h3xstream.findsecbugs.taintanalysis.data.UnknownSourceType;
+
+import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.ba.BasicBlock;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
 import edu.umd.cs.findbugs.ba.DepthFirstSearch;
 import edu.umd.cs.findbugs.ba.Edge;
 import edu.umd.cs.findbugs.ba.FrameDataflowAnalysis;
 import edu.umd.cs.findbugs.ba.Location;
+import edu.umd.cs.findbugs.ba.XClass;
 import edu.umd.cs.findbugs.ba.generic.GenericSignatureParser;
+import edu.umd.cs.findbugs.classfile.CheckedAnalysisException;
 import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 import edu.umd.cs.findbugs.classfile.analysis.AnnotationValue;
 import edu.umd.cs.findbugs.classfile.analysis.MethodInfo;
@@ -105,6 +109,7 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
         fact.clearStack();
         String methodFullSignature = methodDescriptor.getSlashedClassName() + "." + methodDescriptor.getName() + methodDescriptor.getSignature();
         boolean inMainMethod = isInMainMethod();
+        boolean inPublicMethod = isInPublicMethod();
         int numSlots = fact.getNumSlots();
         int numLocals = fact.getNumLocals();
         for (int i = 0; i < numSlots; ++i) {
@@ -122,6 +127,9 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
                         } else {
                             value = new Taint(Taint.State.SAFE);
                         }
+                    } else if (FindSecBugsGlobalConfig.getInstance().isTaintedPublicMethodParameters()
+                            && inPublicMethod) {
+                        value = new Taint(Taint.State.TAINTED);
                     } else {
                         value.addParameter(stackOffset);
                     }
@@ -142,6 +150,19 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
                 && "main".equals(methodDescriptor.getName())
                 && "([Ljava/lang/String;)V".equals(methodDescriptor.getSignature())
                 && methodGen.getMethod().isPublic();
+    }
+
+    /**
+     * @return true if the method is public in a public class, false otherwise
+     */
+    private boolean isInPublicMethod() {
+        try {
+            XClass cls = methodDescriptor.getClassDescriptor().getXClass();
+            return cls.isPublic() && methodDescriptor.isPublic();
+        } catch (CheckedAnalysisException e) {
+            AnalysisContext.logError("No XClass object found for class " + methodDescriptor.getClassName());
+            return false;
+        }
     }
 
     /**

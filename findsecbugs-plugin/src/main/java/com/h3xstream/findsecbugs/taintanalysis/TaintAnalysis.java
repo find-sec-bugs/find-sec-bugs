@@ -128,7 +128,7 @@ public class TaintAnalysis extends FrameDataflowAnalysis<Taint, TaintFrame> {
                             value = new Taint(Taint.State.SAFE);
                         }
                     } else if (FindSecBugsGlobalConfig.getInstance().isTaintedPublicMethodParameters()
-                            && inPublicMethod) {
+                            && i > 0 && inPublicMethod) {
                         value = new Taint(Taint.State.TAINTED);
                     } else {
                         value.addParameter(stackOffset);

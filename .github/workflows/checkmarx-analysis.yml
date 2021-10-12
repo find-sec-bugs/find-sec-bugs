@@ -39,7 +39,7 @@ jobs:
         break_build: false
         scanners: sast
         bug_tracker: Sarif
-        params: --namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }} --branch=${{ github.ref }} --http-read-timeout=600000 --Dhttps.proxyHost=1.1.1.1 --Dhttps.proxyPort=8088
+        params: --namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }} --branch=${{ github.ref }} --http-read-timeout=600000 -Dhttps.proxyHost=1.1.1.1 -Dhttps.proxyPort=8088
     # Upload the Report for CodeQL/Security Alerts
     - name: Upload SARIF file
       uses: github/codeql-action/upload-sarif@v1

@@ -27,7 +27,7 @@ jobs:
     # Runs the Checkmarx Scan leveraging the latest version of CxFlow - REFER to Action README for list of inputs
     - name: Checkmarx CxFlow Action
       env:
-        _JAVA_OPTIONS: '-Dhttps.proxyHost=1.1.1.1 -Dhttps.proxyPort=1234'
+        JAVA_TOOL_OPTIONS: '-Dhttps.proxyHost=1.1.1.1 -Dhttps.proxyPort=1234'
       uses: checkmarx-ts/checkmarx-cxflow-github-action@v1.1
       with:
         project: GitHub-find-sec-bugs-${{ steps.get-branch.outputs.branch }}

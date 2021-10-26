@@ -32,7 +32,7 @@ jobs:
       uses: checkmarx-ts/checkmarx-cxflow-github-action@v1.1
       with:
         project: GitHub-find-sec-bugs-${{ steps.get-branch.outputs.branch }}
-        team: '/CxServer/SP/ANZ'
+        team: '/CxServer/SP/ANZ/CBA-GH-POC'
         checkmarx_url: ${{ secrets.CHECKMARX_URL }}
         checkmarx_username: ${{ secrets.CHECKMARX_USERNAME }}
         checkmarx_password: ${{ secrets.CHECKMARX_PASSWORD }}

@@ -6599,29 +6599,17 @@ domain by the class loader, thereby automatically granting the classes the permi
 
 
 <p>
-<b>Dangerous permissions:</b><br/>
+<b>Dangerous permission combinations:</b><br/>
 
 <pre>
 PermissionCollection pc = super.getPermissions(cs);
-pc.add(new RuntimePermission("getClassLoader"));
+pc.add(new ReflectPermission("suppressAccessChecks"));
 </pre>
 <br/>
 
 <pre>
 PermissionCollection pc = super.getPermissions(cs);
 pc.add(new RuntimePermission("createClassLoader"));
-</pre>
-<br/>
-
-<pre>
-PermissionCollection pc = super.getPermissions(cs);
-pc.add(new ReflectPermission("newProxyInPackage.*"));
-</pre>
-<br/>
-
-<pre>
-PermissionCollection pc = super.getPermissions(cs);
-pc.add(new ReflectPermission("suppressAccessChecks"));
 </pre>
 </p>
 

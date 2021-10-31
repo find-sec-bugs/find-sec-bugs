@@ -119,9 +119,15 @@ public class ConstantPasswordDetector extends OpcodeStackDetector {
 
     private static boolean isSuspiciousName(String fullFieldName, JavaClass obj) {
         int classNameLength = obj.getClassName().length();
-        // do not search pattern in class name (signature not important)
-        String fieldName = fullFieldName.substring(classNameLength);
-        return PASSWORD_PATTERN.matcher(fieldName).matches();
+        // do not search pattern in class name (only the field name matter)
+        if(classNameLength <= fullFieldName.length()) {
+            String fieldName = fullFieldName.substring(classNameLength);
+            return PASSWORD_PATTERN.matcher(fieldName).matches();
+        }
+        else { //Fallback to cover https://github.com/find-sec-bugs/find-sec-bugs/issues/651
+            String fieldName = fullFieldName.substring(Math.max(fullFieldName.lastIndexOf('.'),0));
+            return PASSWORD_PATTERN.matcher(fieldName).matches();
+        }
     }
 
     @Override

@@ -25,11 +25,11 @@ nbSignatures = countSignature("../findsecbugs-plugin/src/main/resources/injectio
 //Version and download links
 
 
-latestVersion = "1.10.1"
+latestVersion = "1.11.0"
 downloadUrl = "https://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/${latestVersion}/findsecbugs-plugin-${latestVersion}.jar"
 mavenCentralSearch = "https://search.maven.org/#search|gav|1|g:%22com.h3xstream.findsecbugs%22 AND a:%22findsecbugs-plugin%22"
 releaseNotesUrl = "https://github.com/find-sec-bugs/find-sec-bugs/releases/latest" //This link redirect to the latest release
-latestUpdateDate = "October 17th, 2019"
+latestUpdateDate = "October 29th, 2020"
 
 //Screenshots
 

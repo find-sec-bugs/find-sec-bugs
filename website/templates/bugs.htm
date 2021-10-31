@@ -46,6 +46,7 @@
     bugPatterns.each {b->
 
             new_description = b.description
+			new_description = new_description.replace('<a href="http','<a target="_blank" href="http')
             new_description = new_description.replace("<pre>\n","<pre>");
             new_description = new_description.replace("<pre>","<pre class='keep-initial-line-feed'><code class='code.language-java keep-initial-line-feed'>")
             new_description = new_description.replace("</pre>","</code></pre>")

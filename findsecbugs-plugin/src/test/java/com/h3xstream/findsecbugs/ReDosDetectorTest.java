@@ -24,12 +24,16 @@ import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 import org.mockito.Matchers;
+import org.testng.Assert;
 import org.testng.annotations.Test;
+import testcode.android.R;
 
 import java.util.Arrays;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 public class ReDosDetectorTest extends BaseDetectorTest {
 
@@ -37,30 +41,24 @@ public class ReDosDetectorTest extends BaseDetectorTest {
 
     @Test
     public void analyseSafePattern() {
-        BugReporter reporter = mock(BugReporter.class);
-        ReDosDetector detector = new ReDosDetector(reporter);
 
-        detector.analyseRegexString("");
-        detector.analyseRegexString("[a-zA-Z]+[0-9]*");
-        detector.analyseRegexString("(id-[0-9]+)-([0-9A-F]*)");
+        RegexRedosAnalyzer analyzer = new RegexRedosAnalyzer();
+        analyzer.analyseRegexString("");
+        analyzer.analyseRegexString("[a-zA-Z]+[0-9]*");
+        analyzer.analyseRegexString("(id-[0-9]+)-([0-9A-F]*)");
 
-        verify(reporter, never()).reportBug(bugDefinition().bugType("REDOS").build());
+        assertFalse(analyzer.isVulnerable(),"False positive detected!");
     }
 
     @Test
     public void analyseSuspectPattern() {
+        RegexRedosAnalyzer analyzer = new RegexRedosAnalyzer();
+        analyzer.analyseRegexString("((a)+)+");
+        assertTrue(analyzer.isVulnerable(),"((a)+)+ should be detect as REDOS");
 
-        BugReporter reporter = mock(BugReporter.class);
-        ReDosDetector detector = new ReDosDetector(reporter);
-
-
-        detector.analyseRegexString("((a)+)+");
-        verify(reporter).reportBug(bugDefinition().bugType("REDOS").build());
-
-        reset(reporter);
-
-        detector.analyseRegexString("([b-d])(([a]*))+(0-9)");
-        verify(reporter).reportBug(bugDefinition().bugType("REDOS").build());
+        analyzer = new RegexRedosAnalyzer();
+        analyzer.analyseRegexString("([b-d])(([a]*))+(0-9)");
+        assertTrue(analyzer.isVulnerable(),"([b-d])(([a]*))+(0-9) should be detect as REDOS");
     }
 
     /**
@@ -98,4 +96,28 @@ public class ReDosDetectorTest extends BaseDetectorTest {
             );
         }
     }
+
+
+    @Test
+    public void detectRedosInAnnotation() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/RedosInPatternAnnotation.java")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        //Field with a Pattern initialize on instantiation
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("REDOS")
+                        .inClass("RedosInPatternAnnotation")
+                        .atField("email")
+                        .build()
+        );
+    }
+
 }

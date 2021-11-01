@@ -1149,7 +1149,10 @@ contains no unauthorized path characters (e.g., / \), and refers to an authorize
 
     <!-- ReDOS -->
     <Detector class="com.h3xstream.findsecbugs.ReDosDetector">
-        <Details>The regular expression can grow exponentially with some input.</Details>
+        <Details>Detect regular expression can grow exponentially with some input.</Details>
+    </Detector>
+    <Detector class="com.h3xstream.findsecbugs.RedosAnnotationDetector">
+        <Details>Detect regular expression can grow exponentially with some input in Pattern annotation.</Details>
     </Detector>
 
     <BugPattern type="REDOS">

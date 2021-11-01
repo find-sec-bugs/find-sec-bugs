@@ -6499,7 +6499,7 @@ from the input following validation, an attacker may pass the string "&langle;sc
 check fails to detect the &langle;script&rangle; tag, but the subsequent removal of the non-character code pont creates a &langle;script&rangle;
 tag in the input:
 <pre>
-Pattern pattern = Pattern.compile("<script>");
+Pattern pattern = Pattern.compile("&lt;script&gt;");
 Matcher matcher = pattern.matcher(s);
 if (matcher.find()) {
   throw new IllegalArgumentException("Invalid input");
@@ -6514,7 +6514,7 @@ The proper way is to perform the modification before the validation so the passe
 which fails to be validated:
 <pre>
 s = s.replaceAll("[\\p{Cn}]", "\uFFFD");
-Pattern pattern = Pattern.compile("<script>");
+Pattern pattern = Pattern.compile("&lt;script&gt;");
 Matcher matcher = pattern.matcher(s);
 if (matcher.find()) {
   throw new IllegalArgumentException("Invalid input");

@@ -1,4 +1,4 @@
-# OWASP Find Security Bugs  
+# OWASP Find Security Bugs
 [![Build Status](https://secure.travis-ci.org/find-sec-bugs/find-sec-bugs.png?branch=master)](http://travis-ci.org/find-sec-bugs/find-sec-bugs) [![codecov](https://codecov.io/gh/find-sec-bugs/find-sec-bugs/branch/master/graph/badge.svg)](https://codecov.io/gh/find-sec-bugs/find-sec-bugs) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.h3xstream.findsecbugs/findsecbugs-plugin/badge.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.h3xstream.findsecbugs%22%20a%3A%22findsecbugs-plugin%22) [![Slack Channel](https://img.shields.io/badge/slack-OWASP%2ffind--sec--bugs-orange?logo=slack)](https://app.slack.com/client/T04T40NHX/CN8G79Y6P)
 
 

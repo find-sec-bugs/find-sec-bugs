@@ -5,7 +5,7 @@ def branch = request.getBranch()
 def env = System.getenv()
 def commitId = env['GITHUB_SHA']
 def repoUrl = env['GITHUB_REPOSITORY']
-String scanComment = "Repo: repoUrl | Branch: $branch | Commit ID: $commitId"
+String scanComment = "Repo: $repoUrl | Branch: $branch | Commit ID: $commitId"
 
 println "INFO : Scanning code from $scanComment"
 

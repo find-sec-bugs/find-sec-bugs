@@ -4,10 +4,8 @@ import groovyx.net.http.HTTPBuilder
 def branch = request.getBranch()
 def env = System.getenv()
 def commitId = env['GITHUB_SHA']
-env.each{
-println it
-} 
-String scanComment = "Repo: aaa | Branch: $branch | Commit ID: $commitId"
+def repoUrl = env['GITHUB_REPOSITORY']
+String scanComment = "Repo: repoUrl | Branch: $branch | Commit ID: $commitId"
 
 println "INFO : Scanning code from $scanComment"
 

@@ -138,6 +138,7 @@
     <Detector class="com.h3xstream.findsecbugs.ModificationAfterValidationDetector" reports="MODIFICATION_AFTER_VALIDATION"/>
     <Detector class="com.h3xstream.findsecbugs.NormalizationAfterValidationDetector" reports="NORMALIZATION_AFTER_VALIDATION"/>
     <Detector class="com.h3xstream.findsecbugs.DangerousPermissionCombination" reports="DANGEROUS_PERMISSION_COMBINATION"/>
+    <Detector class="com.h3xstream.findsecbugs.injection.xml.XmlInjectionDetector" reports="POTENTIAL_XML_INJECTION"/>
 
 
     <BugPattern type="HTTP_PARAMETER_POLLUTION" abbrev="SECHPP" category="SECURITY"/>
@@ -281,4 +282,5 @@
     <BugPattern type="MODIFICATION_AFTER_VALIDATION" abbrev="SECMOD" category="SECURITY" cweid="176"/>
     <BugPattern type="NORMALIZATION_AFTER_VALIDATION" abbrev="SECNORM" category="SECURITY" cweid="176"/>
     <BugPattern type="DANGEROUS_PERMISSION_COMBINATION" abbrev="SECPERM" category="SECURITY" cweid="732"/>
+    <BugPattern type="POTENTIAL_XML_INJECTION" abbrev="SECXML" category="SECURITY"/>
 </FindbugsPlugin>

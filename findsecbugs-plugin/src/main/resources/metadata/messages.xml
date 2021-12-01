@@ -6621,8 +6621,54 @@ pc.add(new RuntimePermission("createClassLoader"));
 <a href="https://wiki.sei.cmu.edu/confluence/display/java/ENV03-J.+Do+not+grant+dangerous+combinations+of+permissions">CERT: ENV03-J. Do not grant dangerous combinations of permissions</a><br/>
 </p>
             ]]>
-    </Details>
-  </BugPattern>
-  <BugCode abbrev="SECPERM">Dangerous Permission Combination</BugCode>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECPERM">Dangerous Permission Combination</BugCode>
 
+    <Detector class="com.h3xstream.findsecbugs.injection.xml.XmlInjectionDetector">
+        <Details>Detector for unsafe strings potentially inserted into an XML string.</Details>
+    </Detector>
+    <BugPattern type="POTENTIAL_XML_INJECTION">
+        <ShortDescription>An unsafe string is potentially injected into an XML string</ShortDescription>
+        <LongDescription>{3} is potentially injected into an XML string in method {1}.</LongDescription>
+        <Details>
+        <![CDATA[
+<p>
+Unsafe strings (e.g. from a user input) may contain XML tags. If such a string is inserted into an XML document then it
+may change its structure to a valid but semanticallly different document. To prevent this unsafe strings must b
+sanitized first.
+</p>
+
+<p>
+<b>Example:</b><br/>
+
+An XML document may look like this:<br/>
+
+<pre>
+&langle;product&rangle;
+    &langle;name&rangle;Cell Phone&langle;/name&rangle;
+    &langle;price&rangle;800&langle;/price&rangle;
+    &langle;amount&rangle;1&langle;/amount&rangle;
+&langle;/product&rangle;
+</pre>
+<br/>
+
+An attacker may put the following string to the field "amount":<br/>
+
+<pre>
+1&langle;/amount&rangle;&langle;price&rangle;1&langle;/price&rangle;&langle;amount&rangle;1
+</pre>
+<br/>
+
+If the XML parser works in a way that the second price overwrites the first one then the attacker may buy the cell
+phone for 1 singe dollar.
+</p>
+
+<p>References</b><br>
+<a href="https://wiki.sei.cmu.edu/confluence/display/java/IDS16-J.+Prevent+XML+Injection">IDS16-J. Prevent XML Injection</a><br/>
+</p>
+        ]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECXML">Potential XML Injection</BugCode>
 </MessageCollection>

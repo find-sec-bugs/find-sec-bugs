@@ -1,0 +1,1 @@
+testcode/xml/XmlInjection.sanitize(Ljava/lang/String;)Ljava/lang/String;:SAFE

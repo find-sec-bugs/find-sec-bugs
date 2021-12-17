@@ -29,7 +29,7 @@ jobs:
     - name: Checkmarx CxFlow Action
       #env:
         #JAVA_TOOL_OPTIONS: '-Dhttps.proxyHost=1.1.1.1 -Dhttps.proxyPort=1234'
-      uses: checkmarx-ts/checkmarx-cxflow-github-action@v1.1
+      uses: checkmarx-ts/checkmarx-cxflow-github-action@v1.3
       with:
         project: GitHub-find-sec-bugs-${{ steps.get-branch.outputs.branch }}
         team: '/CxServer/SP/ANZ/CBA-GH-POC'
@@ -42,9 +42,7 @@ jobs:
         break_build: false
         scanners: sast
         bug_tracker: Sarif
-        #comment-script: ..\CxComment.groovy
-        #params: --namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }} --branch=${{ github.ref }} --http-read-timeout=600000 --severity="High" --severity="Medium" --severity="Low" --severity="Informational"
-        params: --namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }} --branch=${{ github.ref }} --http-read-timeout=600000 --cx-flow.comment-script=CxComment.groovy
+        params: --namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }} --branch=${{ github.ref }} --http-read-timeout=600000 --cx-flow.comment-script=CxComment.groovy  --cx-flow.filterSeverity --cx-flow.filterCategory
     # Upload the Report for CodeQL/Security Alerts
     - name: Upload SARIF file
       uses: github/codeql-action/upload-sarif@v1

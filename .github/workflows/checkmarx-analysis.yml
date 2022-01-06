@@ -42,7 +42,8 @@ jobs:
         break_build: false
         scanners: sast
         bug_tracker: Sarif
-        params: --namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }} --branch=${{ github.ref }} --http-read-timeout=600000 --cx-flow.comment-script=CxComment.groovy  --cx-flow.filterSeverity --cx-flow.filterCategory
+        #params: --namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }} --branch=${{ github.ref }} --http-read-timeout=600000 --cx-flow.comment-script=CxComment.groovy  --cx-flow.filterSeverity --cx-flow.filterCategory
+        params: --namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }} --branch=${{ github.ref }} --cx-flow.comment-script=CxComment.groovy --cx-flow.filterSeverity=High --cx-flow.filterSeverity=Medium --cx-flow.filterSeverity=Low 
     # Upload the Report for CodeQL/Security Alerts
     - name: Upload SARIF file
       uses: github/codeql-action/upload-sarif@v1

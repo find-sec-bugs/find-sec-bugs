@@ -17,10 +17,12 @@
  */
 package com.h3xstream.findsecbugs.spring;
 
+import edu.umd.cs.findbugs.ba.generic.GenericSignatureParser;
 import org.apache.bcel.Repository;
 import org.apache.bcel.classfile.JavaClass;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,15 +35,15 @@ import java.util.regex.Pattern;
  */
 public class SignatureParserWithGeneric {
 
-    private String[] argumentsTypes;
-    private String returnType;
+    private final List<String> argumentsTypes;
+    private final String returnType;
 
     public SignatureParserWithGeneric(String signature) {
-        String sigOnlyArgs = signature.substring(signature.indexOf("(")+1);
-        String[] paramAndReturn = sigOnlyArgs.split("\\)");
-        argumentsTypes = paramAndReturn[0].split(",");
-
-        returnType = paramAndReturn[1];
+        GenericSignatureParser delegate = new GenericSignatureParser(signature);
+        List<String> arguments = new ArrayList<>();
+        delegate.parameterSignatureIterator().forEachRemaining(arguments::add);
+        this.argumentsTypes = Collections.unmodifiableList(arguments);
+        this.returnType = delegate.getReturnTypeSignature();
     }
 
     public List<JavaClass[]> getArgumentsClasses() {

@@ -105,8 +105,16 @@ public class SpringEntityLeakDetectorTest extends BaseDetectorTest {
 						.build()
 		);
 
-		//Make sure exactly 2 instances are found
-		verify(reporter, times(2)).doReportBug(
+		verify(reporter).doReportBug(
+				bugDefinition()
+						.bugType("ENTITY_MASS_ASSIGNMENT")
+						.inClass("SpringEntityLeakController")
+						.inMethod("api6")
+						.build()
+		);
+
+		//Make sure exactly 3 instances are found
+		verify(reporter, times(3)).doReportBug(
 				bugDefinition()
 						.bugType("ENTITY_MASS_ASSIGNMENT")
 						.inClass("SpringEntityLeakController")

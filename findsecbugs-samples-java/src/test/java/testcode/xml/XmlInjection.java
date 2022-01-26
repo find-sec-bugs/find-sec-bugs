@@ -1,49 +1,48 @@
 package testcode.xml;
 
-public class XmlInjection {
-    public static String badXmlStringParam(String amount) {
+import org.apache.commons.lang.StringEscapeUtils;
+import org.owasp.encoder.Encode;
+
+public abstract class XmlInjection {
+
+    public String badXmlStringParam(String amount) {
         String xmlString = "<product>\n<name>Cellphone</name>\n<price>800</price>\n<amount>" + amount
                 + "</amount></product>";
         return xmlString;
     }
 
-    public static String goodXmlStringParam(String amount) {
-        String xmlString = "<product>\n<name>Cellphone</name>\n<price>800</price>\n<amount>" + sanitize(amount)
-                + "</amount></product>";
+
+    public String goodXmlStringParam(String amount) {
+        String xmlString = "<b><a href=\"search?amount=" + Encode.forHtmlAttribute(amount) + "\">Click Me</a></b>";
         return xmlString;
     }
 
-    public static String badXmlStringUserInput() {
-        String amount = System.console().readLine();
 
-        String xmlString = "<product>\n<name>Cellphone</name>\n<price>800</price>\n<amount>" + amount
-                + "</amount></product>";
-        return xmlString;
-    }
-
-    public static String goodXmlStringUserInput() {
-        String amount = System.console().readLine();
-
-        String xmlString = "<product>\n<name>Cellphone</name>\n<price>800</price>\n<amount>" + sanitize(amount)
-                + "</amount></product>";
-        return xmlString;
-    }
-
-    private static String unreliableAmount = System.console().readLine();
-
-    public static String badXmlStringField() {
-        String xmlString = "<product>\n<name>Cellphone</name>\n<price>800</price>\n<amount>" + unreliableAmount
-                + "</amount></product>";
-        return xmlString;
-    }
-
-    public static String goodXmlStringField() {
+    public String badXmlStringFunction() {
         String xmlString = "<product>\n<name>Cellphone</name>\n<price>800</price>\n<amount>"
-                + sanitize(unreliableAmount) + "</amount></product>";
+                + unreliableAmount() + "</amount></product>";
         return xmlString;
     }
 
-    private static String sanitize(String s) {
-        return s.replaceAll("<", "&langle;").replaceAll(">", "&rangle;");
+    public String goodXmlStringFunction1() {
+        String xmlString = "<product>\n<name>Cellphone</name>\n<price>800</price>\n<amount>"
+                + StringEscapeUtils.escapeHtml(unreliableAmount()) + "</amount></product>";
+        return xmlString;
     }
+
+
+    public String goodXmlStringFunction2() {
+        String xmlString = "<product>\n<name>Cellphone</name>\n<price>800</price>\n<amount>"
+                + StringEscapeUtils.escapeXml(unreliableAmount()) + "</amount></product>";
+        return xmlString;
+    }
+
+    public String goodXmlStringFunction3() {
+        String xmlString = "<product>\n<name>Cellphone</name>\n<price>800</price>\n<amount>"
+                + Encode.forHtml(unreliableAmount()) + "</amount></product>";
+        return xmlString;
+    }
+
+    abstract String unreliableAmount();
+
 }

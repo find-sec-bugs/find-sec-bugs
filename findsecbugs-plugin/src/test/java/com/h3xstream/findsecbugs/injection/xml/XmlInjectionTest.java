@@ -21,6 +21,7 @@ import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Arrays;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
@@ -29,34 +30,9 @@ import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import org.testng.annotations.Test;
 
 public class XmlInjectionTest extends BaseDetectorTest {
-    @Test
-    public void testBadParameter() throws Exception {
-        verifySECXMLBug("badXmlStringParam", "Medium", true);
-    }
 
     @Test
-    public void testGoodParameter() throws Exception {
-        verifySECXMLBug("goodXmlStringParam", "Medium", false);
-    }
-
-    @Test
-    public void testBadMethod() throws Exception {
-        verifySECXMLBug("badXmlStringFunction", "Medium", true);
-    }
-
-    @Test
-    public void testGoodMethod() throws Exception {
-        verifySECXMLBug("goodXmlStringFunction1", "Medium", false);
-        verifySECXMLBug("goodXmlStringFunction2", "Medium", false);
-        verifySECXMLBug("goodXmlStringFunction3", "Medium", false);
-    }
-
-
-    private void verifySECXMLBug(String methodName, String priority, boolean isBug) throws Exception {
-//        URL configUrl = this.getClass().getResource("/com/h3xstream/findsecbugs/injection/xml/CustomConfig.txt");
-//        File configFile = new File(configUrl.toURI());
-//
-//        FindSecBugsGlobalConfig.getInstance().setCustomConfigFile(configFile.getCanonicalPath());
+    private void testingVariousXmlConcatenation() throws Exception {
 
         //Locate test code
         String[] files = {
@@ -67,15 +43,28 @@ public class XmlInjectionTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        verify(reporter, isBug ? times(1) : never()).doReportBug(
-            bugDefinition()
-                    .bugType("POTENTIAL_XML_INJECTION")
-                    .inClass("XmlInjection")
-                    .inMethod(methodName)
-                    //.withPriority(priority)
-                    .build()
-        );
 
-        FindSecBugsGlobalConfig.getInstance().setCustomConfigFile("");
+        for(String tpTest : Arrays.asList("badXmlStringParam", "badXmlStringFunction")) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("POTENTIAL_XML_INJECTION")
+                            .inClass("XmlInjection")
+                            .inMethod(tpTest)
+                            .build()
+            );
+        }
+
+        for(String tpTest : Arrays.asList("goodXmlStringParam", "goodXmlStringFunction1", "goodXmlStringFunction2",
+                "goodXmlStringFunction3")) {
+            verify(reporter, never()).doReportBug(
+                    bugDefinition()
+                            .bugType("POTENTIAL_XML_INJECTION")
+                            .inClass("XmlInjection")
+                            .inMethod(tpTest)
+                            .build()
+            );
+        }
+
+
     }
 }

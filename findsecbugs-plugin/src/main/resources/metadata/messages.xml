@@ -6625,7 +6625,7 @@ pc.add(new RuntimePermission("createClassLoader"));
     </BugPattern>
     <BugCode abbrev="SECPERM">Dangerous Permission Combination</BugCode>
 
-    <Detector class="com.h3xstream.findsecbugs.injection.xml.XmlInjectionDetector">
+    <Detector class="com.h3xstream.findsecbugs.injection.xml.NewXmlInjectionDetector">
         <Details>Detector for unsafe strings potentially inserted into an XML string.</Details>
     </Detector>
     <BugPattern type="POTENTIAL_XML_INJECTION">

@@ -77,14 +77,6 @@ public class NewXmlInjectionDetector extends BasicInjectionDetector implements T
         }
     }
 
-    @Override
-    protected InjectionPoint getInjectionPoint(InvokeInstruction invoke, ConstantPoolGen cpg,
-                                               InstructionHandle handle) {
-        if(STRINGBUILDER_APPEND.matches(invoke,cpg)) {
-            return new InjectionPoint(new int[]{0,1}, XML_INJECTION_TYPE);
-        }
-        return InjectionPoint.NONE;
-    }
 
     @Override
     public void visitInvoke(InvokeInstruction invoke, MethodGen methodGen, TaintFrame frameType, List<Taint> parameters, ConstantPoolGen cpg) throws DataflowAnalysisException {

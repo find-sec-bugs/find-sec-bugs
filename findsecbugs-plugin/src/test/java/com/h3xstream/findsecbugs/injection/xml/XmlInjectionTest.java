@@ -65,6 +65,13 @@ public class XmlInjectionTest extends BaseDetectorTest {
             );
         }
 
+        //Only to TP in total
+        verify(reporter,times(2)).doReportBug(
+                bugDefinition()
+                        .bugType("POTENTIAL_XML_INJECTION")
+                        .inClass("XmlInjection")
+                        .build()
+        );
 
     }
 }

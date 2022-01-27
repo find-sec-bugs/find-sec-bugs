@@ -19,7 +19,7 @@ package com.h3xstream.findsecbugs.common;
 
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.InvokeInstruction;
-import org.mockito.Matchers;
+import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
 import java.io.PrintStream;
@@ -44,9 +44,9 @@ public class ByteCodeTest {
             InvokeInstruction ins = mock(InvokeInstruction.class);
             ConstantPoolGen cpg = mock(ConstantPoolGen.class);
 
-            when(ins.getClassName(Matchers.<ConstantPoolGen>any())).thenReturn("ClassTest");
-            when(ins.getMethodName(Matchers.<ConstantPoolGen>any())).thenReturn("method");
-            when(ins.getSignature(Matchers.<ConstantPoolGen>any())).thenReturn("(Lsignature)Lblah");
+            when(ins.getClassName(Mockito.any(ConstantPoolGen.class))).thenReturn("ClassTest");
+            when(ins.getMethodName(Mockito.any(ConstantPoolGen.class))).thenReturn("method");
+            when(ins.getSignature(Mockito.any(ConstantPoolGen.class))).thenReturn("(Lsignature)Lblah");
 
             //Print invocation
             ByteCode.printOpCode(ins, cpg);

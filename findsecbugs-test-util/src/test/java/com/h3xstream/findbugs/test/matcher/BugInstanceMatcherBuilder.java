@@ -22,7 +22,7 @@ import com.h3xstream.findbugs.test.jsp.SmapParser;
 import com.h3xstream.findbugs.test.service.ClassFileLocator;
 import edu.umd.cs.findbugs.BugInstance;
 import org.apache.commons.io.IOUtils;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -129,7 +129,7 @@ public class BugInstanceMatcherBuilder {
             }
         }
 
-        return Matchers.argThat(new BugInstanceMatcher(bugType, className, methodName, fieldName, lineNumber, lineNumberApprox, priority, jspFile, multipleChoicesLine,unknownSources));
+        return (BugInstance) ArgumentMatchers.argThat(new BugInstanceMatcher(bugType, className, methodName, fieldName, lineNumber, lineNumberApprox, priority, jspFile, multipleChoicesLine,unknownSources));
     }
 
     private static List<Integer>  mapJspToJavaLine(String jspFile, Integer jspLine) {

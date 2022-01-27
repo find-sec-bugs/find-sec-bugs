@@ -20,6 +20,7 @@ package com.h3xstream.findbugs.test.matcher;
 import edu.umd.cs.findbugs.*;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
+import org.mockito.ArgumentMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,8 +29,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class BugInstanceMatcher extends BaseMatcher<BugInstance> {
-
+public class BugInstanceMatcher extends BaseMatcher<BugInstance> implements ArgumentMatcher
+{
     private static final Logger log = LoggerFactory.getLogger(BugInstanceMatcherBuilder.class);
 
     private static final Pattern ANON_FUNCTION_SCALA_PATTERN = Pattern.compile("\\$\\$anonfun\\$([^\\$]+)\\$");

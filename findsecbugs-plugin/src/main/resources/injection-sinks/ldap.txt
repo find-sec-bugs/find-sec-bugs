@@ -1,6 +1,6 @@
 javax/naming/ldap/LdapName.<init>(Ljava/lang/String;)V:0
 
-javax/naming/directory/Context.lookup(Ljava/lang/String;)Ljava/lang/Object;:0
+javax/naming/Context.lookup(Ljava/lang/String;)Ljava/lang/Object;:0
 
 javax/naming/directory/DirContext.lookup(Ljava/lang/String;)Ljava/lang/Object;:0
 javax/naming/directory/DirContext.search(Ljavax/naming/Name;Ljava/lang/String;Ljavax/naming/directory/SearchControls;)Ljavax/naming/NamingEnumeration;:1

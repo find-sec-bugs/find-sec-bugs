@@ -49,7 +49,6 @@ public class BaseConfigValidation {
         if(className.startsWith("slick")) return; //Skipping Scala slick library classes
         if(className.contains(".log")) return;
         if(className.contains(".Log")) return;
-        if(className.equals("javax.naming.directory.Context")) return; //FIXME: It seems to be a error in the LDAP configuration file
         try {
             Class.forName(className);
         } catch (ClassNotFoundException e) {

@@ -12,7 +12,7 @@
     <name>Find Security Bugs Samples Kotlin</name>
 
     <properties>
-        <kotlin.version>1.6.10</kotlin.version>
+        <kotlin.version>1.2.51</kotlin.version>
         <spotbugs.skip>true</spotbugs.skip>
     </properties>
 
@@ -27,7 +27,7 @@
 
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib</artifactId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
 

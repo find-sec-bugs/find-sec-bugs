@@ -3,13 +3,18 @@
 #
 # You may wish to alter this file to override the set of languages analyzed,
 # or to provide custom queries or build logic.
-name: "CodeQL Security Scan"
+name: "CodeQL Analysis"
 
 on:
   push:
     branches: [master]
   pull_request:
     branches: [master]
+    paths-ignore: 
+     - 'findsecbugs-samples-deps/**/*'
+     - 'findsecbugs-samples-java/**/*'
+     - 'findsecbugs-samples-jsp/**/*'
+     - 'findsecbugs-samples-kotlin/**/*'
 
 jobs:
   analyze:

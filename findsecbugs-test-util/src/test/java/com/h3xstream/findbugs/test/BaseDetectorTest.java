@@ -22,7 +22,7 @@ import edu.umd.cs.findbugs.BugReporter;
 import com.h3xstream.findbugs.test.matcher.BugInstanceMatcherBuilder;
 import com.h3xstream.findbugs.test.service.ClassFileLocator;
 import com.h3xstream.findbugs.test.service.FindBugsLauncher;
-import org.mockito.Matchers;
+import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
@@ -126,7 +126,7 @@ public class BaseDetectorTest {
     }
 
     public static BugInstance anyBugs() {
-        return Matchers.<BugInstance>any();
+        return Mockito.any(BugInstance.class);
     }
 
     public static List<Integer> range(int from, int to) {

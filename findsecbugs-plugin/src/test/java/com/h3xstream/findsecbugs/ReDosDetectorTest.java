@@ -19,18 +19,10 @@ package com.h3xstream.findsecbugs;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
-import com.h3xstream.findbugs.test.matcher.BugInstanceMatcher;
-import edu.umd.cs.findbugs.BugInstance;
-import edu.umd.cs.findbugs.BugReporter;
-import edu.umd.cs.findbugs.Priorities;
-import org.mockito.Matchers;
-import org.testng.Assert;
 import org.testng.annotations.Test;
-import testcode.android.R;
 
 import java.util.Arrays;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;

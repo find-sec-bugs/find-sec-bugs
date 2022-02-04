@@ -17,155 +17,133 @@
  */
 package com.h3xstream.findsecbugs.injection.xml;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.h3xstream.findsecbugs.injection.AbstractTaintDetector;
-import com.h3xstream.findsecbugs.injection.ClassMethodSignature;
+import com.h3xstream.findsecbugs.common.matcher.InvokeMatcherBuilder;
+import com.h3xstream.findsecbugs.injection.BasicInjectionDetector;
+import com.h3xstream.findsecbugs.injection.InjectionPoint;
 import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import com.h3xstream.findsecbugs.taintanalysis.TaintFrame;
-import com.h3xstream.findsecbugs.taintanalysis.data.UnknownSource;
-
-import org.apache.bcel.Const;
-import org.apache.bcel.classfile.Method;
-import org.apache.bcel.generic.ConstantPoolGen;
-import org.apache.bcel.generic.INVOKESPECIAL;
-import org.apache.bcel.generic.INVOKEVIRTUAL;
-import org.apache.bcel.generic.InstructionHandle;
-import org.apache.bcel.generic.InvokeInstruction;
-import org.apache.commons.lang.ObjectUtils.Null;
-
-import edu.umd.cs.findbugs.BugInstance;
+import com.h3xstream.findsecbugs.taintanalysis.TaintFrameAdditionalVisitor;
 import edu.umd.cs.findbugs.BugReporter;
-import edu.umd.cs.findbugs.StringAnnotation;
+import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.ba.ClassContext;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
-import edu.umd.cs.findbugs.ba.SignatureParser;
+import org.apache.bcel.classfile.Constant;
+import org.apache.bcel.classfile.ConstantUtf8;
+import org.apache.bcel.generic.*;
 
-public class XmlInjectionDetector extends AbstractTaintDetector {
+import java.util.List;
 
-    private static final Matcher ENDS_ON_XML_OPEN_TAG = Pattern.compile("(?s).*<(\\w+)\\s*>\\s*").matcher("");
-    private static final Matcher BEGINS_WITH_XML_CLOSE_TAG = Pattern.compile("(?s)\\s*</(\\w+)\\s*>.*").matcher("");
+import static com.h3xstream.findsecbugs.common.matcher.InstructionDSL.invokeInstruction;
+
+/**
+ * Detect string concatenation that appears to be constructing XML or HTML documents.
+ *
+ * @author baloghadamsoftware, h3xstream
+ */
+public class XmlInjectionDetector extends BasicInjectionDetector implements TaintFrameAdditionalVisitor {
+
+    private static final String XML_INJECTION_TYPE = "POTENTIAL_XML_INJECTION";
+    private static final String[] STRING_CONCAT_CLASS = new String[] {"java/lang/StringBuilder","java/lang/StringBuffer"};
+
+    private static final InvokeMatcherBuilder STRINGBUILDER_APPEND = invokeInstruction() //
+            .atClass(STRING_CONCAT_CLASS).atMethod("append");
+
+    private static final boolean DEBUG = false;
 
     public XmlInjectionDetector(BugReporter bugReporter) {
         super(bugReporter);
-    }
 
-    private String lastSignature = null;
-    private String firstMember = null;
-    private Taint secondMember = null;
-    private String tagName = null;
+        for(String variant: STRING_CONCAT_CLASS) { //Small hack to avoid loading a signature files for two functions.
+            addParsedInjectionPoint(variant+".append(Ljava/lang/String;)L"+variant+";",new InjectionPoint(new int[] {0}, XML_INJECTION_TYPE));
+        }
+        registerVisitor(this);
+    }
 
     @Override
-    protected void analyzeLocation(ClassContext classContext, Method method, InstructionHandle handle,
-            ConstantPoolGen cpg, InvokeInstruction invoke, TaintFrame fact, ClassMethodSignature classMethodSignature)
-            throws DataflowAnalysisException {
-        if (invoke instanceof INVOKESPECIAL && "java.lang.StringBuilder".equals(invoke.getClassName(cpg))
-                && Const.CONSTRUCTOR_NAME.equals(invoke.getMethodName(cpg))
-                && "(Ljava/lang/String;)V".equals(invoke.getSignature(cpg))) {
-            firstMember = null;
-            secondMember = null;
-        } else if (invoke instanceof INVOKEVIRTUAL && "java.lang.StringBuilder".equals(invoke.getClassName(cpg))
-                && "append".equals(invoke.getMethodName(cpg))
-                && "(Ljava/lang/String;)Ljava/lang/StringBuilder;".equals(invoke.getSignature(cpg))) {
-            Taint thisValue = fact.getStackValue(fact.getStackDepth() - 1);
-            if (lastSignature != null && !hasSource(thisValue, lastSignature)) {
-                firstMember = null;
-                secondMember = null;
-            }
-        } else {
-            return;
+    protected int getPriorityFromTaintFrame(TaintFrame taintFrame, int offset) throws DataflowAnalysisException {
+        Taint taint0 = taintFrame.getStackValue(0);
+        Taint taint1 = taintFrame.getStackValue(1);
+
+        /**
+         * If the value argument passed to append is unsafe (not constant)[1] and not sanitize for XML (XSS_SAFE) [2]
+         * and the StringBuilder to which the dynamic value is added is within XML tags [3]
+         * [1] && [2] && [3]
+         */
+        if (!taint0.isSafe() && !taint0.hasTag(Taint.Tag.XSS_SAFE) && taint1.hasTag(Taint.Tag.XML_VALUE)) {
+            return Priorities.NORMAL_PRIORITY;
         }
+        else {
+            return Priorities.IGNORE_PRIORITY;
+        }
+    }
 
-        lastSignature = invoke.getClassName(cpg).replace('.', '/') + "." + invoke.getMethodName(cpg)
-                + invoke.getSignature(cpg);
+    @Override
+    public void visitInvoke(InvokeInstruction invoke, MethodGen methodGen, TaintFrame frameType, List<Taint> parameters, ConstantPoolGen cpg) throws DataflowAnalysisException {
 
-        Taint argument = fact.getArgument(invoke, cpg, 0, new SignatureParser(invoke.getSignature(cpg)));
+        if(STRINGBUILDER_APPEND.matches(invoke,cpg)) {
 
-        String argConstVal = argument.getConstantOrPotentialValue();
-        if (firstMember == null) {
-            assert secondMember == null;
-            if (argConstVal != null) {
-                Matcher xmlTagMatcher = ENDS_ON_XML_OPEN_TAG.reset(argConstVal);
-                if (xmlTagMatcher.matches()) {
-                    firstMember = argConstVal;
-                    tagName = xmlTagMatcher.group(1);
+            Taint appendedTaint = parameters.get(0);
+            String appendedString = appendedTaint.getConstantValue();
+            if(appendedString!= null) {
+
+                //When the string with a tag is sent to the append function.
+                //The StringBuilder class will be tagged as XML_VALUE
+                if(appendedString.contains("<") && appendedString.contains(">")) {
+                    appendedTaint.addTag(Taint.Tag.XML_VALUE);
+                    frameType.getStackValue(0).addTag(Taint.Tag.XML_VALUE);
                 }
             }
-        } else if (secondMember == null) {
-            if (argConstVal == null && !argument.isSafe()) {
-                secondMember = argument;
-            } else {
-                firstMember = null;
+
+
+
+        }
+    }
+
+    @Override
+    public void visitReturn(MethodGen methodGen, Taint returnValue, ConstantPoolGen cpg) throws Exception {
+
+    }
+
+    @Override
+    public void visitLoad(LoadInstruction instruction, MethodGen methodGen, TaintFrame frameType, int numProduced, ConstantPoolGen cpg) {
+
+    }
+
+    @Override
+    public void visitField(FieldInstruction put, MethodGen methodGen, TaintFrame frameType, Taint taint, int numProduced, ConstantPoolGen cpg) throws Exception {
+
+    }
+
+    /**
+     * Before we added new tag to the taint analysis and add more effort, here is a linear search on the constant pool.
+     * Constant pool include all the constant use in the code of the class. It contains class references and string value.
+     *
+     * If there are no XML in string in the class, we are add not going to run this additional visitor.
+     *
+     * @param classContext Information about the class that is about to be analyzed
+     * @return
+     */
+    @Override
+    public boolean shouldAnalyzeClass(ClassContext classContext) {
+        ConstantPoolGen constantPoolGen = classContext.getConstantPoolGen();
+        boolean stringConcat = false;
+        boolean hasOpenTagInString = false;
+        for (String requiredClass : STRING_CONCAT_CLASS) {
+            if (constantPoolGen.lookupUtf8(requiredClass) != -1) {
+                stringConcat = true;
+                break;
             }
-        } else {
-            if (argConstVal != null) {
-                Matcher xmlTagMatcher = BEGINS_WITH_XML_CLOSE_TAG.reset(argConstVal);
-                if (xmlTagMatcher.matches() && tagName.equals(xmlTagMatcher.group(1))) {
-                    BugInstance bug = new BugInstance(this, "POTENTIAL_XML_INJECTION",
-                            secondMember.isTainted() ? NORMAL_PRIORITY : LOW_PRIORITY)
-                            .addClassAndMethod(classContext.getJavaClass(), method)
-                            .addSourceLine(classContext, method, handle);
-                    addSourceString(bug, secondMember, method);
-                    bugReporter.reportBug(bug);
-                } else {
-                    firstMember = null;
-                    secondMember = null;
+        }
+        for(int i=0;i<constantPoolGen.getSize();i++) {
+            Constant c = constantPoolGen.getConstant(i);
+            if(c instanceof ConstantUtf8) {
+                ConstantUtf8 utf8value = (ConstantUtf8) c;
+                if(utf8value.getBytes().contains("<")) {
+                    hasOpenTagInString = true;
+                    break;
                 }
-            } else {
-                firstMember = null;
-                secondMember = null;
             }
         }
-    }
-
-    private boolean hasSource(Taint value, String signature) {
-        for(UnknownSource source : value.getSources()) {
-            String sig = source.getSignatureMethod();
-            if (sig == null) {
-                continue;
-            }
-            if (signature.equals(sig)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void addSourceString(BugInstance bug, Taint value, Method method) {
-        for(UnknownSource source : value.getSources()) {
-            String role;
-            switch (source.getState()) {
-                case SAFE:
-                case NULL:
-                    continue;
-                case TAINTED:
-                    role = "tainted source";
-                    break;
-                default:
-                    role = "unknown source";
-            }
-
-            String text;
-            switch (source.getSourceType()) {
-                case FIELD:
-                    text = "Field " + source.getSignatureField();
-                    break;
-                case RETURN:
-                    text = "Return value of " + source.getSignatureMethod();
-                    break;
-                case PARAMETER:
-                    text = "Parameter '" + getParameterName(method, source.getParameterIndex()) + "'";
-                    break;
-                default:
-                    continue;
-            }
-
-            bug.add(new StringAnnotation(text + " of " + role));
-        }
-    }
-
-    private String getParameterName(Method method, int index) {
-        return method.getLocalVariableTable().getLocalVariableTable()[index].getName();
+        return stringConcat && hasOpenTagInString;
     }
 }

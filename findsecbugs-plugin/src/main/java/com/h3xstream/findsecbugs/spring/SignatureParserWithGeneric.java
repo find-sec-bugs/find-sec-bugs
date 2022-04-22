@@ -17,15 +17,20 @@
  */
 package com.h3xstream.findsecbugs.spring;
 
+import edu.umd.cs.findbugs.ba.AnalysisContext;
+import edu.umd.cs.findbugs.ba.generic.GenericObjectType;
 import edu.umd.cs.findbugs.ba.generic.GenericSignatureParser;
+import edu.umd.cs.findbugs.ba.generic.GenericUtilities;
+
 import org.apache.bcel.Repository;
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.generic.ArrayType;
+import org.apache.bcel.generic.ObjectType;
+import org.apache.bcel.generic.Type;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Similar to <code>edu.umd.cs.findbugs.ba.SignatureParser</code>
@@ -60,29 +65,50 @@ public class SignatureParserWithGeneric {
         return typeToJavaClass(returnType);
     }
 
-    private JavaClass[] typeToJavaClass(String type) {
-        Matcher m = Pattern.compile("([^<]+)(<([^>]+)>)?").matcher(type);
-
-        List<JavaClass> types = new ArrayList<>();
-        if(m.find()) {
-            try {
-                types.add(Repository.lookupClass(cleanClassName(m.group(1))));
-            } catch (ClassNotFoundException e) {
-                //System.out.println(e.getMessage());
-            }
-            if(m.groupCount() == 3 && m.group(3) != null) {
-                try {
-                    types.add(Repository.lookupClass(cleanClassName(m.group(3))));
-                } catch (ClassNotFoundException e) {
-                    //System.out.println(e.getMessage());
-                }
-            }
-
+    private JavaClass[] typeToJavaClass(String signature) {
+        if ("V".equals(signature)) {
+            // Special case for void
+            return new JavaClass[0];
         }
+        
+        Type type = GenericUtilities.getType(signature);
+        
+        List<JavaClass> types =  typeToJavaClass(type);
+        
         return types.toArray(new JavaClass[types.size()]);
     }
+    
+    private List<JavaClass> typeToJavaClass(Type type) {
+        List<JavaClass> types = new ArrayList<>();
+        
+        if (type instanceof ArrayType) {
+            ArrayType arrayType = (ArrayType) type;
+            
+            return typeToJavaClass(arrayType.getBasicType());
+        } else if (type instanceof GenericObjectType) {
+            GenericObjectType genericObjectType = (GenericObjectType) type;
+            
+            try {
+                types.add(Repository.lookupClass(genericObjectType.getClassName()));
+            } catch (ClassNotFoundException e) {
+                AnalysisContext.reportMissingClass(e);
+            }
+            
+            if (genericObjectType.getParameters() != null) {
+                for (Type parameterType : genericObjectType.getParameters()) {
+                    types.addAll(typeToJavaClass(parameterType));
+                }
+            }
+        } else if (type instanceof ObjectType) {
+            ObjectType objectType = (ObjectType) type;
 
-    private String cleanClassName(String classname) {
-        return classname.replaceAll("^L", "").replaceAll(";$","").replaceAll("/",".");
+            try {
+                types.add(Repository.lookupClass(objectType.getClassName()));
+            } catch (ClassNotFoundException e) {
+                AnalysisContext.reportMissingClass(e);
+            }
+        }
+        
+        return types;
     }
 }

@@ -37,6 +37,7 @@
     <Detector class="com.h3xstream.findsecbugs.xml.XxeDetector" reports="XXE_SAXPARSER,XXE_XMLREADER,XXE_DOCUMENT,XXE_XPATH"/>
     <Detector class="com.h3xstream.findsecbugs.xml.TransformerFactoryDetector" reports="XXE_DTD_TRANSFORM_FACTORY,XXE_XSLT_TRANSFORM_FACTORY"/>
     <Detector class="com.h3xstream.findsecbugs.xml.XmlStreamReaderDetector" reports="XXE_XMLSTREAMREADER"/>
+    <Detector class="com.h3xstream.findsecbugs.xml.ValidatorDetector" reports="XXE_VALIDATOR"/>
     <Detector class="com.h3xstream.findsecbugs.xpath.XPathInjectionDetector" reports="XPATH_INJECTION"/>
     <Detector class="com.h3xstream.findsecbugs.endpoint.Struts1EndpointDetector" reports="STRUTS1_ENDPOINT"/>
     <Detector class="com.h3xstream.findsecbugs.endpoint.Struts2EndpointDetector" reports="STRUTS2_ENDPOINT"/>
@@ -191,6 +192,7 @@
     <BugPattern type="XXE_XSLT_TRANSFORM_FACTORY" abbrev="SECXXETFXSLT" category="SECURITY" cweid="611"/>
     <BugPattern type="XXE_XMLSTREAMREADER" abbrev="SECXXESTR" category="SECURITY" cweid="611"/>
     <BugPattern type="XXE_XPATH" abbrev="SECXXEXPA" category="SECURITY" cweid="611"/>
+    <BugPattern type="XXE_VALIDATOR" abbrev="SECXXEVAL" category="SECURITY" cweid="611"/>
     <BugPattern type="XPATH_INJECTION" abbrev="SECXPI" category="SECURITY" cweid="643"/>
     <BugPattern type="STRUTS1_ENDPOINT" abbrev="SECSTR1" category="SECURITY"/>
     <BugPattern type="STRUTS2_ENDPOINT" abbrev="SECSTR2" category="SECURITY"/>

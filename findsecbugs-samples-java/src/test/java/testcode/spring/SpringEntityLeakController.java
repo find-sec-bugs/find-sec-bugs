@@ -39,6 +39,11 @@ public class SpringEntityLeakController {
     public void api6(SampleEntity sampleEntity, Object secondParameter) {
     }
 
+    @RequestMapping("/api7")
+    public String[] api7(Double[] firstParameter, List<SampleEntity>[] sampleEntities) {
+        return new String[0];
+    }
+
 	private List<SampleEntity> getData() { //FP (No request mapping annotation)
 	    return null;
     }

@@ -1842,6 +1842,114 @@ transformer.transform(input, result);</pre>
     </BugPattern>
     <BugCode abbrev="SECXXETFXSLT">XXE Vulnerability using XSLT in TransformerFactory</BugCode>
 
+    <!-- SchemaFactory XXE -->
+    <Detector class="com.h3xstream.findsecbugs.xml.SchemaFactoryDetector">
+        <Details>Identify SchemaFactory usage vulnerable to XXE</Details>
+    </Detector>
+
+    <BugPattern type="XXE_SCHEMA_FACTORY">
+        <ShortDescription>XML schema processing vulnerable to XXE</ShortDescription>
+        <LongDescription>XML schema processing is vulnerable to XML External Entity attacks</LongDescription>
+        <Details>
+            <![CDATA[
+
+<h4>Summary</h4>
+
+<p>
+XML External Entity attacks can occur when an XML SchemaFactory supports access to external entity references or external schema locations while parsing XML Schema Documents.
+</p>
+
+<h4>Sources</h4>
+
+<p>
+Malicious sources include XML Schema Documents containing entity definitions in the Document Type Declaration (DTD) that reference external locations.
+Documents can also include references to external schema locations using XML Schema include elements.
+</p>
+
+<h5>External Entity in Document Type Declaration</h5>
+
+<pre>
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;!DOCTYPE schema [
+  &lt;!ENTITY entity SYSTEM &quot;file:///etc/passwd&quot;&gt;
+]&gt;
+&lt;schema&gt;&amp;entity;&lt;/schema&gt;</pre>
+
+<h5>External Schema Location</h5>
+
+<pre>
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;schema xmlns="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;include schemaLocation="file:///etc/passwd"/&gt;
+&lt;/schema&gt;</pre>
+
+<h4>Vulnerabilities</h4>
+
+<p>
+Vulnerable instances of javax.xml.validation.SchemaFactory attempt to resolve XML External Entity references and External Schema Locations in the default configuration.
+</p>
+
+<pre>
+SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+
+Schema schema = schemaFactory.newSchema(source);
+</pre>
+
+<h4>Solutions</h4>
+
+<p>
+Protecting instances of java.xml.validation.SchemaFactory requires disabling external access or enabling secure processing.
+</p>
+
+<h5>Disabling External Access</h5>
+
+<p>
+The Java API for XML Processing (JAXP) version 1.5 implementing JEP 185 requires implementations to support properties for disabling external access.
+Java 7 Update 40 and Java 8 incorporated implementations of JAXP 1.5.
+Both <strong>ACCESS_EXTERNAL_DTD</strong> and <strong>ACCESS_EXTERNAL_SCHEMA</strong> must be disabled using an empty string to indicate
+that no external protocols are allowed.
+</p>
+
+<pre>
+SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+
+schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+
+Schema schema = schemaFactory.newSchema(source);
+</pre>
+
+<h5>Enabling Secure Processing</h5>
+
+<p>
+JAXP 1.5 and JEP 185 indicate that implementations supporting the secure processing feature flag must restrict external access.
+The <strong>FEATURE_SECURE_PROCESSING</strong> flag restricts external access in supported implementations of JAXP 1.5.
+</p>
+
+<pre>
+SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+
+schemaFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+
+Schema schema = schemaFactory.newSchema(source);
+</pre>
+
+<h4>References</h4>
+
+<ul>
+  <li><a href="https://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference</a></li>
+  <li><a href="https://owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing">OWASP: XML External Entity (XXE) Processing</a></li>
+  <li><a href="https://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a></li>
+  <li><a href="https://www.ws-attacks.org/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a></li>
+  <li><a href="https://www.ws-attacks.org/index.php/XML_Entity_Reference_Attack">WS-Attacks.org: XML Entity Reference Attack</a></li>
+  <li><a href="https://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying XML External Entity vulnerability (XXE)</a></li>
+  <li><a href="https://openjdk.java.net/jeps/185">JEP 185: Restrict Fetching of External XML Resources</a></li>
+</ul>
+]]>
+        </Details>
+    </BugPattern>
+    <BugCode abbrev="SECXXESF">XXE Vulnerability using schemas in SchemaFactory</BugCode>
+
     <!-- Validator XXE -->
     <Detector class="com.h3xstream.findsecbugs.xml.ValidatorDetector">
         <Details>Identify Validator usage vulnerable to XXE</Details>

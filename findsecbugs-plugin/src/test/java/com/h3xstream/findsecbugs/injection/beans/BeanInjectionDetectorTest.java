@@ -38,7 +38,7 @@ public class BeanInjectionDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        for (Integer line : Arrays.asList(23, 26)) {
+        for (Integer line : Arrays.asList(25, 27, 29, 32)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("BEAN_PROPERTY_INJECTION")
@@ -47,7 +47,7 @@ public class BeanInjectionDetectorTest extends BaseDetectorTest {
             );
         }
 
-        verify(reporter, times(2)).doReportBug(
+        verify(reporter, times(4)).doReportBug(
                 bugDefinition().bugType("BEAN_PROPERTY_INJECTION").build()
         );
     }

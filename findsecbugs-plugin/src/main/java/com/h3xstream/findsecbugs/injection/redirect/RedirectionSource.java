@@ -40,7 +40,7 @@ public class RedirectionSource implements InjectionSource {
                 if (methodName.equals("sendRedirect")) {
                     InjectionPoint ip = new InjectionPoint(new int[]{0}, UNVALIDATED_REDIRECT_TYPE);
                     //ip.setInjectableMethod(className.concat(".sendRedirect(...)"));
-                    ip.setInjectableMethod(ins.getSignature(cpg));
+//                    ip.setInjectableMethod(ins.getSignature(cpg));
                     return ip;
                 } else if (methodName.equals("addHeader") || methodName.equals("setHeader")) {
                     LDC ldc = ByteCode.getPrevInstruction(insHandle, LDC.class);
@@ -49,7 +49,7 @@ public class RedirectionSource implements InjectionSource {
                         if (value != null && "Location".equalsIgnoreCase((String) value)) {
                             InjectionPoint ip = new InjectionPoint(new int[]{0}, UNVALIDATED_REDIRECT_TYPE);
                             //ip.setInjectableMethod(className + "." + methodName + "(\"Location\", ...)");
-                            ip.setInjectableMethod(ins.getSignature(cpg));
+//                            ip.setInjectableMethod(ins.getSignature(cpg));
                             return ip;
                         }
                     }

@@ -106,10 +106,10 @@ public class Taint {
         URL_ENCODED,
         PATH_TRAVERSAL_SAFE,
         REDIRECT_SAFE,
-
         CREDIT_CARD_VARIABLE,
         PASSWORD_VARIABLE,
-        HASH_VARIABLE;
+        HASH_VARIABLE,
+        XML_VALUE;
     }
 
     private State state;

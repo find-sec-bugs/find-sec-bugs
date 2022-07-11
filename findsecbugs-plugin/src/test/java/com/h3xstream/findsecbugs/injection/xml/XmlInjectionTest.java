@@ -34,6 +34,8 @@ public class XmlInjectionTest extends BaseDetectorTest {
     @Test
     private void testingVariousXmlConcatenation() throws Exception {
 
+        //FindSecBugsGlobalConfig.getInstance().setDebugPrintInvocationVisited(true);
+
         //Locate test code
         String[] files = {
             getClassFilePath("testcode/xml/XmlInjection.java")
@@ -44,7 +46,7 @@ public class XmlInjectionTest extends BaseDetectorTest {
         analyze(files, reporter);
 
 
-        for(String tpTest : Arrays.asList("badXmlStringParam", "badXmlStringFunction")) {
+        for(String tpTest : Arrays.asList("badXmlStringParam", "badXmlStringFunction1", "badXmlStringFunction2", "badXmlStringFunction3")) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("POTENTIAL_XML_INJECTION")
@@ -54,8 +56,8 @@ public class XmlInjectionTest extends BaseDetectorTest {
             );
         }
 
-        for(String tpTest : Arrays.asList("goodXmlStringParam", "goodXmlStringFunction1", "goodXmlStringFunction2",
-                "goodXmlStringFunction3")) {
+        for(String tpTest : Arrays.asList("goodXmlStringParam", "goodXmlStringFunction1", "1goodXmlStringFunction2",
+                "goodXmlStringFunction3","goodXmlStringFunction4")) {
             verify(reporter, never()).doReportBug(
                     bugDefinition()
                             .bugType("POTENTIAL_XML_INJECTION")
@@ -66,7 +68,7 @@ public class XmlInjectionTest extends BaseDetectorTest {
         }
 
         //Only to TP in total
-        verify(reporter,times(2)).doReportBug(
+        verify(reporter,times(4)).doReportBug(
                 bugDefinition()
                         .bugType("POTENTIAL_XML_INJECTION")
                         .inClass("XmlInjection")

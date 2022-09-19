@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib version="2.1" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <display-name>Sample Java Encoder Project</display-name>
+    <tlib-version>1.0</tlib-version>
+    <short-name>sample-encoder</short-name>
+    <uri>https://www.example.com/jsp/jstl/whitelist</uri>
+
+    <function>
+        <description>JavaScript safe quoter and escaper</description>
+        <name>safeQuote</name>
+        <function-class>org.owasp.encoder.Encode</function-class>
+        <function-signature>java.lang.String forJavaScript(java.lang.String)</function-signature>
+        <example>safeQuote(unsafeData)</example>
+    </function>
+
+    <function>
+        <description>JavaScript safe quoter and escaper</description>
+        <name>toSafeJSON</name>
+        <function-class>org.owasp.encoder.Encode</function-class>
+        <function-signature>java.lang.String forJavaScript(java.lang.String)</function-signature>
+        <example>toSafeJSON(unsafeData)</example>
+    </function>
+
+    <function>
+        <description>Unsafe quoter</description>
+        <name>notSafeQuote</name>
+        <function-class>org.owasp.encoder.Encode</function-class>
+        <function-signature>java.lang.String forJavaScript(java.lang.String)</function-signature>
+        <example>notSafeQuote(unsafeData)</example>
+    </function>
+
+    <function>
+        <description>JavaScript unsafe quoter</description>
+        <name>toNotSafeJSON</name>
+        <function-class>org.owasp.encoder.Encode</function-class>
+        <function-signature>java.lang.String forJavaScript(java.lang.String)</function-signature>
+        <example>toNotSafeJSON(unsafeData)</example>
+    </function>
+</taglib>

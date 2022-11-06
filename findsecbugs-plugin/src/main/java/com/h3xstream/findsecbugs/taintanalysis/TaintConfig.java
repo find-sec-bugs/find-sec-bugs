@@ -216,6 +216,12 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
         return typeSignature != null && typeSignature.length() > 2 && typeSignature.charAt(0) != 'L';
     }
 
+    public int getMethodIdParamCount(String methodId) {
+        String signature = methodId.substring(methodId.indexOf("("), methodId.length());
+        SignatureParser p = new SignatureParser(signature);
+        return p.getNumParameters();
+    }
+
     public TaintMethodConfig getMethodConfig(TaintFrame frame, MethodDescriptor methodDescriptor, String className, String methodId) {
         TaintMethodConfig taintMethodConfig = getTaintMethodConfigWithArgumentsAndLocation(frame, methodDescriptor, className, methodId);
 
@@ -225,6 +231,17 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
 
         if (taintMethodConfig == null) {
             taintMethodConfig = getSuperMethodConfig(className, methodId);
+        }
+
+        if (taintMethodConfig == null && methodId.indexOf("makeConcatWithConstants") > 0) {
+            taintMethodConfig = new TaintMethodConfig(true);
+            Taint t = new Taint(Taint.State.UNKNOWN);
+            int paramCount = getMethodIdParamCount(methodId);
+            for(int i=0; i < paramCount; i++) {
+                t.addParameter(i);
+            }
+            taintMethodConfig.setOuputTaint(t);
+            taintMethodConfig.addMutableStackIndex(1);
         }
 
         return taintMethodConfig;

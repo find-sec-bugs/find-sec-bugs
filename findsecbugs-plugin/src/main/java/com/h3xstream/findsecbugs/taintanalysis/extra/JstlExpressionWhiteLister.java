@@ -65,6 +65,8 @@ public class JstlExpressionWhiteLister extends BasicInjectionDetector implements
     private static final String SYSTEM_PROPERTY = "findsecbugs.jstlsafe.customregexfile";
 
     private static final Pattern TAG_FOR_HTML_CONTENT_PATTERN = Pattern.compile("\\$\\{e:forHtmlContent\\([a-zA-Z0-9\\._]+\\)\\}");
+    private static final Pattern TAG_TO_SAFE_JSON_PATTERN = Pattern.compile("^\\$\\{\\s*[a-zA-Z]+:toSafeJSON\\([a-zA-Z0-9\\-#,\\\'\\\"\\&\\[\\]@\\\\ \\._\\(\\):]+\\)\\s*\\}$");
+    private static final Pattern TAG_SAFE_QUOTE_PATTERN = Pattern.compile("^\\$\\{\\s*[a-zA-Z]+:safeQuote\\([a-zA-Z0-9\\-#,\\\'\\\"\\&\\[\\]@\\\\ \\._\\(\\):]+\\)\\s*\\}$");
     private static final String CONTEXT_PATH_PATTERN = "${pageContext.request.contextPath}";
 
     private static final InvokeMatcherBuilder PROPRIETARY_EVALUATE = invokeInstruction()
@@ -91,7 +93,10 @@ public class JstlExpressionWhiteLister extends BasicInjectionDetector implements
             if(defaultVal.getConstantValue() != null) {
 
                 String expression = defaultVal.getConstantValue();
-                if(TAG_FOR_HTML_CONTENT_PATTERN.matcher(expression).find() || CONTEXT_PATH_PATTERN.equals(expression)) {
+                if(TAG_FOR_HTML_CONTENT_PATTERN.matcher(expression).find() ||
+                   TAG_TO_SAFE_JSON_PATTERN.matcher(expression).find() ||
+                   TAG_SAFE_QUOTE_PATTERN.matcher(expression).find() ||
+                   CONTEXT_PATH_PATTERN.equals(expression)) {
 
                     Taint value = frameType.getTopValue();
                     value.addTag(Taint.Tag.XSS_SAFE);

@@ -22,6 +22,22 @@
     </function>
 
     <function>
+        <description>Custom JavaScript safe quoter and escaper</description>
+        <name>customSafeQuote</name>
+        <function-class>org.owasp.encoder.Encode</function-class>
+        <function-signature>java.lang.String forJavaScript(java.lang.String)</function-signature>
+        <example>customSafeQuote(unsafeData)</example>
+    </function>
+
+    <function>
+        <description>Custom JavaScript safe quoter and escaper</description>
+        <name>customToSafeJSON</name>
+        <function-class>org.owasp.encoder.Encode</function-class>
+        <function-signature>java.lang.String forJavaScript(java.lang.String)</function-signature>
+        <example>customToSafeJSON(unsafeData)</example>
+    </function>
+
+    <function>
         <description>Unsafe quoter</description>
         <name>notSafeQuote</name>
         <function-class>org.owasp.encoder.Encode</function-class>

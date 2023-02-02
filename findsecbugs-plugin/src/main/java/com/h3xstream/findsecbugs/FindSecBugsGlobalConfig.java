@@ -32,6 +32,7 @@ public class FindSecBugsGlobalConfig {
     private boolean debugPrintInstructionVisited = false;
     private boolean debugPrintInvocationVisited = false;
     private boolean debugTaintState = false;
+    private boolean verboseLocationReport = false;
     
     // set through SystemProperties
     private boolean debugOutputTaintConfigs;
@@ -47,6 +48,7 @@ public class FindSecBugsGlobalConfig {
         taintedMainArgument = Boolean.parseBoolean(loadFromSystem("findsecbugs.taint.taintedmainargument", Boolean.TRUE.toString()));
         reportPotentialXssWrongContext = Boolean.parseBoolean(loadFromSystem("findsecbugs.taint.reportpotentialxsswrongcontext", Boolean.FALSE.toString()));
         debugTaintState = Boolean.parseBoolean(loadFromSystem("findsecbugs.taint.debugtaintstate", Boolean.FALSE.toString()));
+        verboseLocationReport = Boolean.parseBoolean(loadFromSystem("findsecbugs.taint.verboselocationreport", Boolean.FALSE.toString()));
     }
 
     public String loadFromSystem(String key, String defaultValue) {
@@ -92,6 +94,10 @@ public class FindSecBugsGlobalConfig {
 
     public boolean isDebugOutputTaintConfigs() {
         return debugOutputTaintConfigs;
+    }
+
+    public boolean isVerboseLocationReport() {
+        return verboseLocationReport;
     }
 
     public void setDebugOutputTaintConfigs(boolean debugOutputTaintConfigs) {

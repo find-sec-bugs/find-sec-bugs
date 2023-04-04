@@ -4120,8 +4120,12 @@ class UserController {
         <Details>
             <![CDATA[
 <p>
-    Persistent objects should never be returned by APIs. They might lead to leaking business logic over the UI, unauthorized tampering of
-    persistent objects in database.
+    Software frameworks sometime allow developers to automatically bind HTTP request parameters into program code variables or objects 
+    to make using that framework easier on developers. This can sometimes cause harm.
+</p>
+<p>
+    Attackers can sometimes use this methodology to create new parameters that the developer never intended which in turn creates or 
+    overwrites new variable or objects in program code that was not intended.
 </p>
 <p>
     <b>Vulnerable Code:</b></br/>

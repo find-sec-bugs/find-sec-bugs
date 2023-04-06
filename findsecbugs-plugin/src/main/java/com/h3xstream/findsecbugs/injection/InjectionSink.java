@@ -196,13 +196,15 @@ public class InjectionSink {
         }
         Collections.sort(lines);
         SourceLineAnnotation annotation = null;
-        for (Iterator<SourceLineAnnotation> it = lines.iterator(); it.hasNext();) {
-            SourceLineAnnotation prev = annotation;
-            annotation = it.next();
-            if (prev != null && prev.getClassName().equals(annotation.getClassName())
-                    && prev.getStartLine() == annotation.getStartLine()) {
-                // keep only one annotation per line
-                it.remove();
+        if(!FindSecBugsGlobalConfig.getInstance().isVerboseLocationReport()) {
+            for (Iterator<SourceLineAnnotation> it = lines.iterator(); it.hasNext(); ) {
+                SourceLineAnnotation prev = annotation;
+                annotation = it.next();
+                if (prev != null && prev.getClassName().equals(annotation.getClassName())
+                        && prev.getStartLine() == annotation.getStartLine()) {
+                    // keep only one annotation per line
+                    it.remove();
+                }
             }
         }
         for (SourceLineAnnotation sourceLine : lines) {

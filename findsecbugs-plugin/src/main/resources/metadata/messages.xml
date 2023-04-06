@@ -6671,7 +6671,7 @@ A code that applies the uppercase transformation to two strings could mistakenly
 
 <p>
 In the code bellow, the string <code>"ADM\u0131N"</code> would cause the condition to be true.
-When the uppercase transformation is applied, the character `\u0131` will becomme '\u0049' (I).
+When the uppercase transformation is applied, the character `\u0131` will become '\u0049' (I).
 It can be an issue if the developer only one user to be <code>"ADMIN"</code>.<br/>
 <pre>
 if(username.toUpperCase().equals("ADMIN")) {
@@ -6683,7 +6683,7 @@ if(username.toUpperCase().equals("ADMIN")) {
 <p>
 Similar characters transformations can occurs with normalization functions.
 In the code bellow, the string <code>"BAC\u212AUP"</code> would cause the condition to be true.
-When the normalization transformation is applied, the character `\u212A` will becomme '\u0048' (K).<br/>
+When the normalization transformation is applied, the character `\u212A` will become '\u0048' (K).<br/>
 <pre>
 if(Normalizer.normalize(input, Normalizer.Form.NFC).equals("BACKUP")) {
   //...

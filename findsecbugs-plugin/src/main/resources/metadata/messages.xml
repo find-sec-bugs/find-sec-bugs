@@ -4116,7 +4116,7 @@ class UserController {
 
     <BugPattern type="ENTITY_MASS_ASSIGNMENT">
         <ShortDescription>Mass assignment</ShortDescription>
-        <LongDescription>The persistent objects could be exploited by attacker to read sensitive information.</LongDescription>
+        <LongDescription>Persistent objects as MVC parameter could allow attacker to set fields that the developer never intended to be set via request parameters.</LongDescription>
         <Details>
             <![CDATA[
 <p>

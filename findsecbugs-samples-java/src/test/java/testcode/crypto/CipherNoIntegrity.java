@@ -14,6 +14,7 @@ public class CipherNoIntegrity {
         Cipher.getInstance("RSA/ECB/PKCS1Padding"); // ok
         Cipher.getInstance(args[0]); // ok
         Cipher.getInstance("ECIES"); // ok this is elliptic curve
+        Cipher.getInstance("AES/GCM-SIV/NoPadding"); // ok
     }
     
     private Cipher cipher;

@@ -61,7 +61,7 @@ public class CipherWithNoIntegrityDetectorTest extends BaseDetectorTest {
                 .build()
         );
 
-        List<Integer> linesNoIntegrity = Arrays.asList(9, 10, 11, 12, 21);
+        List<Integer> linesNoIntegrity = Arrays.asList(9, 10, 11, 12, 22);
         for (Integer line : linesNoIntegrity) {
             verify(reporter).doReportBug(
                     bugDefinition()

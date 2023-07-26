@@ -399,6 +399,14 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     }
 
     @Override
+    public void visitINVOKEDYNAMIC(INVOKEDYNAMIC obj) {
+        if(FindSecBugsGlobalConfig.getInstance().isWorkaroundVisitInvokeDynamic()) {
+            visitInvoke(obj);
+        } else {
+            handleNormalInstruction(obj);
+        }
+    }
+    @Override
     public void visitANEWARRAY(ANEWARRAY obj) {
         try {
             getFrame().popValue();

@@ -62,7 +62,7 @@ public class CipherWithNoIntegrityDetector extends OpcodeStackDetector {
     private static final String PADDING_ORACLE_TYPE = "PADDING_ORACLE";
     private static final String CIPHER_INTEGRITY_TYPE = "CIPHER_INTEGRITY";
 
-    private static final Pattern AUTHENTICATED_CIPHER_MODES = Pattern.compile(".*/(CCM|CWC|OCB|EAX|GCM)/.*");
+    private static final Pattern AUTHENTICATED_CIPHER_MODES = Pattern.compile(".*/(CCM|CWC|OCB|EAX|GCM(-SIV)?)/.*");
     private static final Pattern INSECURE_ECB_MODES = Pattern.compile("(AES|DES(ede)?)(/ECB/.*)?");
 
     private final BugReporter bugReporter;

@@ -6687,7 +6687,7 @@ if(username.toUpperCase().equals("ADMIN")) {
 <p>
 Similar characters transformations can occurs with normalization functions.
 In the code bellow, the string <code>"BAC\u212AUP"</code> would cause the condition to be true.
-When the normalization transformation is applied, the character `\u212A` will become '\u0048' (K).<br/>
+When the normalization transformation is applied, the character `\u212A` will become '\u004B' (K).<br/>
 <pre>
 if(Normalizer.normalize(input, Normalizer.Form.NFC).equals("BACKUP")) {
   //...

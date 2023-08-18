@@ -148,6 +148,12 @@
         </dependency>
         <dependency>
             <groupId>com.h3xstream.findsecbugs</groupId>
+            <artifactId>findsecbugs-samples-java11</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h3xstream.findsecbugs</groupId>
             <artifactId>findsecbugs-samples-jsp</artifactId>
             <type>test-jar</type>
             <scope>test</scope>

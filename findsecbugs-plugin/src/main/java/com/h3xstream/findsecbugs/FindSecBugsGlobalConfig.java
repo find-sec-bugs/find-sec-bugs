@@ -98,9 +98,12 @@ public class FindSecBugsGlobalConfig {
         return debugOutputTaintConfigs;
     }
 
-
     public boolean isWorkaroundVisitInvokeDynamic() {
         return workaroundVisitInvokeDynamic;
+    }
+
+    public void setWorkaroundVisitInvokeDynamic(boolean workaroundVisitInvokeDynamic) {
+        this.workaroundVisitInvokeDynamic = workaroundVisitInvokeDynamic;
     }
 
     public boolean isVerboseLocationReport() {

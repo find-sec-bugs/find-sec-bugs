@@ -28,6 +28,7 @@ import org.apache.bcel.classfile.JavaClass;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -216,10 +217,22 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
         return typeSignature != null && typeSignature.length() > 2 && typeSignature.charAt(0) != 'L';
     }
 
-    public int getMethodIdParamCount(String methodId) {
-        String signature = methodId.substring(methodId.indexOf("("), methodId.length());
-        SignatureParser p = new SignatureParser(signature);
-        return p.getNumParameters();
+    /**
+     * Ignores safe primitive parameters except for char, which is not
+     * inherently safe.
+     */
+    private static int[] getParameterSlots(SignatureParser p) {
+        String[] parameters = p.getArguments();
+        int[] pnums = new int[parameters.length];
+        int count = 0;
+        for (int i = 0; i < parameters.length; i++) {
+            String parameter = parameters[i];
+            if (SignatureParser.isReferenceType(parameter) || "C".equals(parameter)) {
+                pnums[count++] = p.getSlotsFromTopOfStackForParameter(i);
+            }
+        }
+
+        return (count == parameters.length) ? pnums : Arrays.copyOfRange(pnums, 0, count);
     }
 
     public TaintMethodConfig getMethodConfig(TaintFrame frame, MethodDescriptor methodDescriptor, String className, String methodId) {
@@ -233,15 +246,20 @@ public class TaintConfig extends HashMap<String, TaintMethodConfig> {
             taintMethodConfig = getSuperMethodConfig(className, methodId);
         }
 
+        // In Java 9+, string concatenation is done with invokedynamic
+        // that takes a String constant and substitues one or more
+        // values into placeholders. There is no StringBuilder on the
+        // stack with mutable taint state.
         if (taintMethodConfig == null && methodId.indexOf("makeConcatWithConstants") > 0) {
             taintMethodConfig = new TaintMethodConfig(true);
             Taint t = new Taint(Taint.State.UNKNOWN);
-            int paramCount = getMethodIdParamCount(methodId);
-            for(int i=0; i < paramCount; i++) {
-                t.addParameter(i);
+            String signature = methodId.substring(methodId.indexOf("("), methodId.length());
+            SignatureParser p = new SignatureParser(signature);
+            for (int paramNum : getParameterSlots(p)) {
+                t.addParameter(paramNum);
             }
-            taintMethodConfig.setOuputTaint(t);
-            taintMethodConfig.addMutableStackIndex(1);
+            // If we had only safe parameters (int, long, etc.), the combined String is SAFE.
+            taintMethodConfig.setOuputTaint(t.hasParameters() ? t : new Taint(Taint.State.SAFE));
         }
 
         return taintMethodConfig;

@@ -1,4 +1,5 @@
 -- Following classes are immutable
+Ljava/lang/Character;:#IMMUTABLE
 Ljava/lang/String;:#IMMUTABLE
 Ljava/io/File;:#IMMUTABLE
 Ljava/util/Locale;:#IMMUTABLE
@@ -10,7 +11,6 @@ Ljava/net/URL;:#IMMUTABLE
 
 -- Following classes are SAFE (and also immutable in sense of being tainted)
 Ljava/lang/Boolean;:SAFE#IMMUTABLE
-Ljava/lang/Character;:SAFE#IMMUTABLE
 Ljava/lang/Double;:SAFE#IMMUTABLE
 Ljava/lang/Float;:SAFE#IMMUTABLE
 Ljava/lang/Integer;:SAFE#IMMUTABLE
@@ -82,7 +82,7 @@ java/lang/StringBuilder.append(Ljava/lang/StringBuffer;)Ljava/lang/StringBuilder
 java/lang/StringBuilder.append(Ljava/lang/CharSequence;)Ljava/lang/StringBuilder;:0,1#1
 java/lang/StringBuilder.append(Ljava/lang/CharSequence;II)Ljava/lang/StringBuilder;:2,3#3
 java/lang/StringBuilder.append(Z)Ljava/lang/StringBuilder;:1
-java/lang/StringBuilder.append(C)Ljava/lang/StringBuilder;:1
+java/lang/StringBuilder.append(C)Ljava/lang/StringBuilder;:0,1
 java/lang/StringBuilder.append(D)Ljava/lang/StringBuilder;:2
 java/lang/StringBuilder.append(F)Ljava/lang/StringBuilder;:1
 java/lang/StringBuilder.append(I)Ljava/lang/StringBuilder;:1
@@ -121,7 +121,7 @@ java/lang/StringBuffer.append(Ljava/lang/StringBuffer;)Ljava/lang/StringBuffer;:
 java/lang/StringBuffer.append(Ljava/lang/CharSequence;)Ljava/lang/StringBuffer;:0,1#1
 java/lang/StringBuffer.append(Ljava/lang/CharSequence;II)Ljava/lang/StringBuffer;:2,3#3
 java/lang/StringBuffer.append(Z)Ljava/lang/StringBuffer;:1
-java/lang/StringBuffer.append(C)Ljava/lang/StringBuffer;:1
+java/lang/StringBuffer.append(C)Ljava/lang/StringBuffer;:0,1
 java/lang/StringBuffer.append(D)Ljava/lang/StringBuffer;:2
 java/lang/StringBuffer.append(F)Ljava/lang/StringBuffer;:1
 java/lang/StringBuffer.append(I)Ljava/lang/StringBuffer;:1
@@ -177,7 +177,7 @@ java/lang/String.toUpperCase()Ljava/lang/String;:0
 java/lang/String.toUpperCase(Ljava/util/Locale;)Ljava/lang/String;:1
 java/lang/String.trim()Ljava/lang/String;:0
 java/lang/String.valueOf(Z)Ljava/lang/String;:SAFE
-java/lang/String.valueOf(C)Ljava/lang/String;:SAFE
+java/lang/String.valueOf(C)Ljava/lang/String;:0
 java/lang/String.valueOf(D)Ljava/lang/String;:SAFE
 java/lang/String.valueOf(F)Ljava/lang/String;:SAFE
 java/lang/String.valueOf(I)Ljava/lang/String;:SAFE
@@ -193,9 +193,9 @@ java/lang/CharSequence.subSequence(II)Ljava/lang/CharSequence;:2
 
 java/lang/Boolean.toString()Ljava/lang/String;:SAFE
 java/lang/Boolean.toString(B)Ljava/lang/String;:SAFE
-java/lang/Character.getName(I)Ljava/lang/String;:SAFE
-java/lang/Character.toString()Ljava/lang/String;:SAFE
-java/lang/Character.toString(C)Ljava/lang/String;:SAFE
+java/lang/Character.getName(I)Ljava/lang/String;:0
+java/lang/Character.toString()Ljava/lang/String;:0
+java/lang/Character.toString(C)Ljava/lang/String;:0
 java/lang/Double.toString()Ljava/lang/String;:SAFE
 java/lang/Double.toString(D)Ljava/lang/String;:SAFE
 java/lang/Float.toHexString(F)Ljava/lang/String;:SAFE

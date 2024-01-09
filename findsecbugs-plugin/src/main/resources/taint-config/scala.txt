@@ -18,7 +18,7 @@ scala/collection/mutable/StringBuilder.<init>(Ljava/lang/String;)V:0#1,2
 
 scala/collection/mutable/StringBuilder.append(Ljava/lang/String;)Lscala/collection/mutable/StringBuilder;:0,1#1
 scala/collection/mutable/StringBuilder.append(Z)Lscala/collection/mutable/StringBuilder;:1
-scala/collection/mutable/StringBuilder.append(C)Lscala/collection/mutable/StringBuilder;:1
+scala/collection/mutable/StringBuilder.append(C)Lscala/collection/mutable/StringBuilder;:0,1
 scala/collection/mutable/StringBuilder.append(D)Lscala/collection/mutable/StringBuilder;:2
 scala/collection/mutable/StringBuilder.append(F)Lscala/collection/mutable/StringBuilder;:1
 scala/collection/mutable/StringBuilder.append(I)Lscala/collection/mutable/StringBuilder;:1

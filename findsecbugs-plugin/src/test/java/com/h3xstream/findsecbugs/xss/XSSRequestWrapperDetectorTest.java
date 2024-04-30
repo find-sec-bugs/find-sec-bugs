@@ -77,4 +77,23 @@ public class XSSRequestWrapperDetectorTest extends BaseDetectorTest {
         );
     }
 
+    @Test
+    public void detectJakartaXssWrapper() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/xss/JakartaXSSRequestWrapper")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        //Assertions
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("XSS_REQUEST_WRAPPER")
+                        .inClass("JakartaXSSRequestWrapper")
+                        .build()
+        );
+    }
 }

@@ -30,10 +30,14 @@ public class XssServletDetector extends BasicInjectionDetector {
 
     private static final String XSS_SERVLET_TYPE = "XSS_SERVLET";
     private static final String[] REQUIRED_CLASSES = {
-        "Ljavax/servlet/http/ServletResponse;",
-        "Ljavax/servlet/http/ServletResponseWrapper;",
+        "Ljavax/servlet/ServletResponse;",
+        "Ljakarta/servlet/ServletResponse;",
+        "Ljavax/servlet/ServletResponseWrapper;",
+        "Ljakarta/servlet/ServletResponseWrapper;",
         "Ljavax/servlet/http/HttpServletResponse;",
+        "Ljakarta/servlet/http/HttpServletResponse;",
         "Ljavax/servlet/http/HttpServletResponseWrapper;",
+        "Ljakarta/servlet/http/HttpServletResponseWrapper;",
         "Lorg/apache/jetspeed/portlet/PortletResponse;",
         "Lorg/apache/jetspeed/portlet/PortletResponseWrapper;",
         "Ljavax/portlet/RenderResponse;",

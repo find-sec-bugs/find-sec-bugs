@@ -48,13 +48,17 @@ public class JaxRsEndpointDetector implements Detector {
 
             for (AnnotationEntry ae : m.getAnnotationEntries()) {
 
-                //Every method mark with @javax.ws.rs.Path is mark as an Endpoint
-                if (ae.getAnnotationType().equals("Ljavax/ws/rs/Path;")) {
+                //Every method mark with @javax(or jakarta).ws.rs.Path is mark as an Endpoint
+                if (isRsEndpointAnnotation(ae)) {
                     bugReporter.reportBug(new BugInstance(this, JAXRS_ENDPOINT_TYPE, Priorities.LOW_PRIORITY) //
                             .addClassAndMethod(javaClass, m));
                 }
             }
         }
+    }
+
+    private boolean isRsEndpointAnnotation(AnnotationEntry ae) {
+        return ae.getAnnotationType().equals("Ljavax/ws/rs/Path;") || ae.getAnnotationType().equals("Ljakarta/ws/rs/Path;");
     }
 
     @Override

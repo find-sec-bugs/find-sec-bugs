@@ -93,4 +93,23 @@ public class PermissiveCORSDetectorTest extends BaseDetectorTest {
                         .build()
         );
     }
+
+    @Test
+    public void detectJakartaPermissiveCORS() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/cors/JakartaPermissiveCORS")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("PERMISSIVE_CORS")
+                        .inClass("JakartaPermissiveCORS").inMethod("addPermissiveCORS").atLine(19)
+                        .build()
+        );
+    }
 }

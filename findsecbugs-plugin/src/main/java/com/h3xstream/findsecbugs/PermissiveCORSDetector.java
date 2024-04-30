@@ -35,16 +35,21 @@ import static com.h3xstream.findsecbugs.common.matcher.InstructionDSL.invokeInst
 public class PermissiveCORSDetector extends BasicInjectionDetector {
 
     private static final String PERMISSIVE_CORS = "PERMISSIVE_CORS";
-    private static final String HTTP_SERVLET_RESPONSE_CLASS = "javax.servlet.http.HttpServletResponse";
+    private static final String JAVAX_HTTP_SERVLET_RESPONSE_CLASS = "javax.servlet.http.HttpServletResponse";
+    private static final String JAKARTA_HTTP_SERVLET_RESPONSE_CLASS = "jakarta.servlet.http.HttpServletResponse";
     private static final String HEADER_KEY = "Access-Control-Allow-Origin";
 
     private static final InvokeMatcherBuilder SERVLET_RESPONSE_ADD_HEADER_METHOD = invokeInstruction()
-            .atClass(HTTP_SERVLET_RESPONSE_CLASS).atMethod("addHeader")
+            .atMethod("addHeader")
             .withArgs("(Ljava/lang/String;Ljava/lang/String;)V");
+    private static final InvokeMatcherBuilder JAVAX_SERVLET_RESPONSE_ADD_HEADER_METHOD = SERVLET_RESPONSE_ADD_HEADER_METHOD.atClass(JAVAX_HTTP_SERVLET_RESPONSE_CLASS);
+    private static final InvokeMatcherBuilder JAKARTA_SERVLET_RESPONSE_ADD_HEADER_METHOD = SERVLET_RESPONSE_ADD_HEADER_METHOD.atClass(JAKARTA_HTTP_SERVLET_RESPONSE_CLASS);
 
     private static final InvokeMatcherBuilder SERVLET_RESPONSE_SET_HEADER_METHOD = invokeInstruction()
-            .atClass(HTTP_SERVLET_RESPONSE_CLASS).atMethod("setHeader")
+            .atMethod("setHeader")
             .withArgs("(Ljava/lang/String;Ljava/lang/String;)V");
+    private static final InvokeMatcherBuilder JAVAX_SERVLET_RESPONSE_SET_HEADER_METHOD = SERVLET_RESPONSE_SET_HEADER_METHOD.atClass(JAVAX_HTTP_SERVLET_RESPONSE_CLASS);
+    private static final InvokeMatcherBuilder JAKARTA_SERVLET_RESPONSE_SET_HEADER_METHOD = SERVLET_RESPONSE_SET_HEADER_METHOD.atClass(JAKARTA_HTTP_SERVLET_RESPONSE_CLASS);
 
     public PermissiveCORSDetector(BugReporter bugReporter) {
         super(bugReporter);
@@ -55,14 +60,22 @@ public class PermissiveCORSDetector extends BasicInjectionDetector {
             InstructionHandle handle) {
         assert invoke != null && cpg != null;
 
-        if (SERVLET_RESPONSE_ADD_HEADER_METHOD.matches(invoke, cpg)) {
+        if (isServletResponseAddHeaderMethod(invoke, cpg)) {
             return new InjectionPoint(new int[] { 0 }, PERMISSIVE_CORS);
         }
 
-        if (SERVLET_RESPONSE_SET_HEADER_METHOD.matches(invoke, cpg)) {
+        if (isServletResponseSetHeaderMethod(invoke, cpg)) {
             return new InjectionPoint(new int[] { 0 }, PERMISSIVE_CORS);
         }
         return InjectionPoint.NONE;
+    }
+
+    private boolean isServletResponseSetHeaderMethod(InvokeInstruction invoke, ConstantPoolGen cpg) {
+        return JAVAX_SERVLET_RESPONSE_SET_HEADER_METHOD.matches(invoke, cpg) || JAKARTA_SERVLET_RESPONSE_SET_HEADER_METHOD.matches(invoke, cpg);
+    }
+
+    private boolean isServletResponseAddHeaderMethod(InvokeInstruction invoke, ConstantPoolGen cpg) {
+        return JAVAX_SERVLET_RESPONSE_ADD_HEADER_METHOD.matches(invoke, cpg) || JAKARTA_SERVLET_RESPONSE_ADD_HEADER_METHOD.matches(invoke, cpg);
     }
 
     @Override

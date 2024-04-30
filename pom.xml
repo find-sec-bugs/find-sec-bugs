@@ -54,6 +54,7 @@
                         <exclude>**/java/android/**/**.java</exclude>
                         <exclude>**/com/hazelcast/**/**.java</exclude>
                         <exclude>**/javax/**/**.java</exclude>
+                        <exclude>**/jakarta/**/**.java</exclude>
                         <exclude>**/org/opensaml/xml/**/**.java</exclude>
                         <exclude>**/org/acegisecurity/**/**.java</exclude>
                         <exclude>**/org/apache/**/**.java</exclude>

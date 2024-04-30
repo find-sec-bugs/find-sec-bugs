@@ -48,4 +48,25 @@ public class CookieReadDetectorTest extends BaseDetectorTest {
             );
         }
     }
+
+    @Test
+    public void detectJakartaCookieUsage() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/cookie/JakartaCookieUsage")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        for (Integer line : Arrays.asList(15, 16, 17)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("COOKIE_USAGE")
+                            .inClass("JakartaCookieUsage").inMethod("doGet").atLine(line)
+                            .build()
+            );
+        }
+    }
 }

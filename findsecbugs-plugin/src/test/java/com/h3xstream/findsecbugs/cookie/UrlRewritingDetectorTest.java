@@ -73,4 +73,24 @@ public class UrlRewritingDetectorTest extends BaseDetectorTest {
                         .build()
         );
     }
+
+    @Test
+    public void detectJakartaUrlRewriting() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/cookie/JakartaUrlRewriting")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        //1rst variation encodeURL(req.getRequestURI())
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("URL_REWRITING")
+                        .inClass("JakartaUrlRewriting").inMethod("encodeURLRewrite").atLine(17)
+                        .build()
+        );
+    }
 }

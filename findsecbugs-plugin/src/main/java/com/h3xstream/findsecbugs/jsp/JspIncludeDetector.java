@@ -49,7 +49,7 @@ public class JspIncludeDetector extends OpcodeStackDetector {
 
 
         if (seen == Const.INVOKESTATIC && ("org/apache/jasper/runtime/JspRuntimeLibrary".equals(getClassConstantOperand()) || "org/apache/sling/scripting/jsp/jasper/runtime/JspRuntimeLibrary".equals(getClassConstantOperand()))
-                && getNameConstantOperand().equals("include") && getSigConstantOperand().equals("(Ljavax/servlet/ServletRequest;Ljavax/servlet/ServletResponse;Ljava/lang/String;Ljavax/servlet/jsp/JspWriter;Z)V")) {
+                && getNameConstantOperand().equals("include") && includeMethodSignatureMatches()) {
 
             if (StackUtils.isVariableString(stack.getStackItem(2))) {
                 bugReporter.reportBug(new BugInstance(this, JSP_INCLUDE_TYPE, Priorities.HIGH_PRIORITY) //
@@ -63,5 +63,10 @@ public class JspIncludeDetector extends OpcodeStackDetector {
                     .addClass(this).addMethod(this).addSourceLine(this));
         }
 
+    }
+
+    private boolean includeMethodSignatureMatches() {
+        return getSigConstantOperand().equals("(Ljavax/servlet/ServletRequest;Ljavax/servlet/ServletResponse;Ljava/lang/String;Ljavax/servlet/jsp/JspWriter;Z)V") ||
+                getSigConstantOperand().equals("(Ljakarta/servlet/ServletRequest;Ljakarta/servlet/ServletResponse;Ljava/lang/String;Ljakarta/servlet/jsp/JspWriter;Z)V");
     }
 }

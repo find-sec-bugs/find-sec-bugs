@@ -52,4 +52,31 @@ public class JaxWsEndpointDetectorTest extends BaseDetectorTest {
                         .build()
         );
     }
+
+    @Test
+    public void detectJakartaWsEndpoint() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/endpoint/JakartaWsService")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        //Assertions
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("JAXWS_ENDPOINT")
+                        .inClass("JakartaWsService").inMethod("ping")
+                        .build()
+        );
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("JAXWS_ENDPOINT")
+                        .inClass("JakartaWsService").inMethod("hello")
+                        .build()
+        );
+    }
 }

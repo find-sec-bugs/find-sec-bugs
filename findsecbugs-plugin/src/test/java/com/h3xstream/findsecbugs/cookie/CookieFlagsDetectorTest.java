@@ -154,4 +154,70 @@ public class CookieFlagsDetectorTest extends BaseDetectorTest {
                         .build()
         );
     }
+
+    @Test
+    public void detectSecureFlagJakartaCookie() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/cookie/JakartaInsecureCookieSamples")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("INSECURE_COOKIE")
+                        .inClass("JakartaInsecureCookieSamples").inMethod("unsafeJakartaCookie1")
+                        .build()
+        );
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("INSECURE_COOKIE")
+                        .inClass("JakartaInsecureCookieSamples").inMethod("unsafeJakartaCookie2")
+                        .build()
+        );
+
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("INSECURE_COOKIE")
+                        .inClass("JakartaInsecureCookieSamples").inMethod("safeJakartaCookie")
+                        .build()
+        );
+    }
+
+    @Test
+    public void detectHttpOnlyJakartaCookie() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/cookie/JakartaHttpOnlyCookieSamples")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("HTTPONLY_COOKIE")
+                        .inClass("JakartaHttpOnlyCookieSamples").inMethod("unsafeJakartaCookie1")
+                        .build()
+        );
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("HTTPONLY_COOKIE")
+                        .inClass("JakartaHttpOnlyCookieSamples").inMethod("unsafeJakartaCookie2")
+                        .build()
+        );
+
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("HTTPONLY_COOKIE")
+                        .inClass("JakartaHttpOnlyCookieSamples").inMethod("safeJakartaCookie")
+                        .build()
+        );
+    }
 }

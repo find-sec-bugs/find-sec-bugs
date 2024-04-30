@@ -46,4 +46,25 @@ public class JaxRsEndpointDetectorTest extends BaseDetectorTest {
                         .build()
         );
     }
+
+    @Test
+    public void detectJakartaRsEndpoint() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/endpoint/JakartaRsService")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        //Assertions
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("JAXRS_ENDPOINT")
+                        .inClass("JakartaRsService").inMethod("hello")
+                        .build()
+        );
+    }
 }

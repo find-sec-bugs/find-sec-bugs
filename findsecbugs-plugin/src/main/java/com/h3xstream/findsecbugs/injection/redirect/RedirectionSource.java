@@ -35,8 +35,7 @@ public class RedirectionSource implements InjectionSource {
         if (ins instanceof INVOKEINTERFACE) {
             String methodName = ins.getMethodName(cpg);
             String className = ins.getReferenceType(cpg).toString();
-            if (className.equals("javax.servlet.http.HttpServletResponse")
-                    || className.equals("javax.servlet.http.HttpServletResponseWrapper")) {
+            if (isHttpServletResponseOrResponseWrapperClass(className)) {
                 if (methodName.equals("sendRedirect")) {
                     InjectionPoint ip = new InjectionPoint(new int[]{0}, UNVALIDATED_REDIRECT_TYPE);
                     //ip.setInjectableMethod(className.concat(".sendRedirect(...)"));
@@ -57,5 +56,12 @@ public class RedirectionSource implements InjectionSource {
             }
         }
         return InjectionPoint.NONE;
+    }
+
+    private boolean isHttpServletResponseOrResponseWrapperClass(String className) {
+        return className.equals("javax.servlet.http.HttpServletResponse") ||
+                className.equals("jakarta.servlet.http.HttpServletResponse") ||
+                className.equals("javax.servlet.http.HttpServletResponseWrapper") ||
+                className.equals("jakarta.servlet.http.HttpServletResponseWrapper");
     }
 }

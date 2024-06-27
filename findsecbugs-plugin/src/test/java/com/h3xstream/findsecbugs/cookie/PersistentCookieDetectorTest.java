@@ -57,4 +57,36 @@ public class PersistentCookieDetectorTest extends BaseDetectorTest {
                         .build()
         );
     }
+
+    @Test
+    public void detectJakartaPersistentCookieUsage() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/cookie/JakartaPersistentCookie")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("COOKIE_PERSISTENT")
+                        .inClass("JakartaPersistentCookie").inMethod("setCookieFor1DayUnitConfusion").atLine(30)
+                        .build()
+        );
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("COOKIE_PERSISTENT")
+                        .inClass("JakartaPersistentCookie").inMethod("setCookieFor1Year").atLine(35)
+                        .build()
+        );
+
+        //Total bugs found
+        verify(reporter, times(2)).doReportBug(
+                bugDefinition()
+                        .bugType("COOKIE_PERSISTENT")
+                        .build()
+        );
+    }
 }

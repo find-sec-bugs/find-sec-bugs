@@ -36,12 +36,16 @@ public class UrlRewritingDetector extends OpcodeStackDetector {
     @Override
     public void sawOpcode(int seen) {
 
-        if (seen == Const.INVOKEINTERFACE && getClassConstantOperand().equals("javax/servlet/http/HttpServletResponse")
+        if (seen == Const.INVOKEINTERFACE && isHttpServletResponseClass()
                 && (getNameConstantOperand().equals("encodeURL") || getNameConstantOperand().equals("encodeUrl") ||
                 getNameConstantOperand().equals("encodeRedirectURL") || getNameConstantOperand().equals("encodeRedirectUrl"))) {
 
             bugReporter.reportBug(new BugInstance(this, URL_REWRITING, Priorities.HIGH_PRIORITY) //
                     .addClass(this).addMethod(this).addSourceLine(this));
         }
+    }
+
+    private boolean isHttpServletResponseClass() {
+        return getClassConstantOperand().equals("javax/servlet/http/HttpServletResponse") || getClassConstantOperand().equals("jakarta/servlet/http/HttpServletResponse");
     }
 }

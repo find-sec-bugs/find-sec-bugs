@@ -51,8 +51,7 @@ public class ServletEndpointDetector extends OpcodeStackDetector {
     public void sawOpcode(int seen) {
 
         //All call to ServletRequest
-        if (seen == Const.INVOKEINTERFACE && (getClassConstantOperand().equals("javax/servlet/ServletRequest") ||
-                getClassConstantOperand().equals("javax/servlet/http/HttpServletRequest"))) {
+        if (seen == Const.INVOKEINTERFACE && isServletRequestOrHttpServletRequestClass()) {
 
             //ServletRequest
 
@@ -106,5 +105,12 @@ public class ServletEndpointDetector extends OpcodeStackDetector {
                 }
             }
         }
+    }
+
+    private boolean isServletRequestOrHttpServletRequestClass() {
+        return getClassConstantOperand().equals("javax/servlet/ServletRequest") ||
+                getClassConstantOperand().equals("jakarta/servlet/ServletRequest") ||
+                getClassConstantOperand().equals("javax/servlet/http/HttpServletRequest") ||
+                getClassConstantOperand().equals("jakarta/servlet/http/HttpServletRequest");
     }
 }

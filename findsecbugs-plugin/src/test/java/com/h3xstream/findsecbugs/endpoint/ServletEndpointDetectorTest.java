@@ -134,4 +134,24 @@ public class ServletEndpointDetectorTest extends BaseDetectorTest {
         }
     }
 
+    @Test
+    public void detectJakartaServletParameter() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/endpoint/JakartaBasicJHttpServlet")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        //Assertions
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("SERVLET_QUERY_STRING")
+                        .inClass("JakartaBasicJHttpServlet").inMethod("doGet").atLine(13)
+                        .build()
+        );
+    }
+
 }

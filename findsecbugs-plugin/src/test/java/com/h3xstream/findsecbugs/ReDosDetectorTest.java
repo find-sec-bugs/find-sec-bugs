@@ -112,4 +112,25 @@ public class ReDosDetectorTest extends BaseDetectorTest {
         );
     }
 
+    @Test
+    public void detectJakartaRedosInAnnotation() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/JakartaRedosInPatternAnnotation.java")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        //Field with a Pattern initialize on instantiation
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("REDOS")
+                        .inClass("JakartaRedosInPatternAnnotation")
+                        .atField("email")
+                        .build()
+        );
+    }
+
 }

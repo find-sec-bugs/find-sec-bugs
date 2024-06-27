@@ -46,13 +46,17 @@ public class JaxWsEndpointDetector implements Detector {
 
             for (AnnotationEntry ae : m.getAnnotationEntries()) {
 
-                //Every method mark with @javax.jws.WebMethod is mark as an Endpoint
-                if (ae.getAnnotationType().equals("Ljavax/jws/WebMethod;")) {
+                //Every method mark with @javax(or jakarta).jws.WebMethod is mark as an Endpoint
+                if (isJaxWsEndpointAnnotation(ae)) {
                     bugReporter.reportBug(new BugInstance(this, JAXWS_ENDPOINT_TYPE, Priorities.LOW_PRIORITY) //
                             .addClassAndMethod(javaClass, m));
                 }
             }
         }
+    }
+
+    private boolean isJaxWsEndpointAnnotation(AnnotationEntry ae) {
+        return ae.getAnnotationType().equals("Ljavax/jws/WebMethod;") || ae.getAnnotationType().equals("Ljakarta/jws/WebMethod;");
     }
 
     @Override

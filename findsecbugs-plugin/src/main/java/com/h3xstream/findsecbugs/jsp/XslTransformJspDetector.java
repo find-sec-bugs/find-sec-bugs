@@ -54,7 +54,7 @@ public class XslTransformJspDetector implements Detector {
     public void visitClassContext(ClassContext classContext) {
         JavaClass javaClass = classContext.getJavaClass();
         try {
-            if (!Hierarchy.isSubtype(javaClass.getClassName(), "javax.servlet.http.HttpServlet")) {
+            if (!isHttpServletSubtype(javaClass)) {
                 return;
             }
         } catch (ClassNotFoundException e) {
@@ -67,6 +67,11 @@ public class XslTransformJspDetector implements Detector {
                 AnalysisContext.logError("Cannot analyze method", e);
             }
         }
+    }
+
+    private boolean isHttpServletSubtype(JavaClass javaClass) throws ClassNotFoundException {
+        return Hierarchy.isSubtype(javaClass.getClassName(), "javax.servlet.http.HttpServlet") ||
+                Hierarchy.isSubtype(javaClass.getClassName(), "jakarta.servlet.http.HttpServlet");
     }
 
     private void analyzeMethod(Method m, ClassContext classContext) throws CFGBuilderException, DataflowAnalysisException {

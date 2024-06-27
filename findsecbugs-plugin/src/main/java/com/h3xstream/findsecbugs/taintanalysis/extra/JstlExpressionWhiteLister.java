@@ -69,10 +69,14 @@ public class JstlExpressionWhiteLister extends BasicInjectionDetector implements
     private static final Pattern TAG_SAFE_QUOTE_PATTERN = Pattern.compile("^\\$\\{\\s*[a-zA-Z]+:safeQuote\\([a-zA-Z0-9\\-#,\\\'\\\"\\&\\[\\]@\\\\ \\._\\(\\):]+\\)\\s*\\}$");
     private static final String CONTEXT_PATH_PATTERN = "${pageContext.request.contextPath}";
 
-    private static final InvokeMatcherBuilder PROPRIETARY_EVALUATE = invokeInstruction()
+    private static final InvokeMatcherBuilder JAVAX_PROPRIETARY_EVALUATE = invokeInstruction()
             .atClass("org/apache/jasper/runtime/PageContextImpl")
             .atMethod("proprietaryEvaluate")
             .withArgs("(Ljava/lang/String;Ljava/lang/Class;Ljavax/servlet/jsp/PageContext;Lorg/apache/jasper/runtime/ProtectedFunctionMapper;)Ljava/lang/Object;");
+    private static final InvokeMatcherBuilder JAKARTA_PROPRIETARY_EVALUATE = invokeInstruction()
+            .atClass("org/apache/jasper/runtime/PageContextImpl")
+            .atMethod("proprietaryEvaluate")
+            .withArgs("(Ljava/lang/String;Ljava/lang/Class;Ljakarta/servlet/jsp/PageContext;Lorg/apache/jasper/runtime/ProtectedFunctionMapper;)Ljava/lang/Object;");
 
     private final List<Pattern> safePatterns;
 
@@ -88,7 +92,7 @@ public class JstlExpressionWhiteLister extends BasicInjectionDetector implements
     @Override
     public void visitInvoke(InvokeInstruction invoke, MethodGen methodGen, TaintFrame frameType, List<Taint> parameters, ConstantPoolGen cpg) throws DataflowAnalysisException {
 
-        if(PROPRIETARY_EVALUATE.matches(invoke,cpg)) {
+        if(isProprietaryEvaluateMethod(invoke, cpg)) {
             Taint defaultVal = parameters.get(3); //The expression is the fourth parameter starting from the right. (Top of the stack last arguments)
             if(defaultVal.getConstantValue() != null) {
 
@@ -111,6 +115,10 @@ public class JstlExpressionWhiteLister extends BasicInjectionDetector implements
                 }
             }
         }
+    }
+
+    private boolean isProprietaryEvaluateMethod(InvokeInstruction invoke, ConstantPoolGen cpg) {
+        return JAVAX_PROPRIETARY_EVALUATE.matches(invoke, cpg) || JAKARTA_PROPRIETARY_EVALUATE.matches(invoke, cpg);
     }
 
     @Override

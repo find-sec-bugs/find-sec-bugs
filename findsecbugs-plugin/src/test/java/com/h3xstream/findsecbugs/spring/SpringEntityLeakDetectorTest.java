@@ -155,4 +155,26 @@ public class SpringEntityLeakDetectorTest extends BaseDetectorTest {
 						.build()
 		);
 	}
+
+    @Test
+    public void detectJakartaEntityLeak() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/spring/JakartaSpringEntityLeakController"),
+                getClassFilePath("testcode/spring/JakartaSampleEntity")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        //Assertions
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("ENTITY_LEAK")
+                        .inClass("JakartaSpringEntityLeakController")
+                        .inMethod("jakartaApi")
+                        .build()
+        );
+    }
 }

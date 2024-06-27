@@ -51,7 +51,8 @@ public class XSSRequestWrapperDetector implements Detector {
         JavaClass javaClass = classContext.getJavaClass();
 
         //The class extends HttpServletRequestWrapper
-        boolean isRequestWrapper = InterfaceUtils.isSubtype(javaClass, "javax.servlet.http.HttpServletRequestWrapper");
+        boolean isRequestWrapper = InterfaceUtils.isSubtype(javaClass, "javax.servlet.http.HttpServletRequestWrapper") ||
+                InterfaceUtils.isSubtype(javaClass, "jakarta.servlet.http.HttpServletRequestWrapper");
 
         //Not the target of this detector
         if (!isRequestWrapper) return;

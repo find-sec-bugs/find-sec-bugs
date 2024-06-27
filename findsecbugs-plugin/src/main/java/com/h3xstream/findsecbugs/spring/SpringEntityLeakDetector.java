@@ -50,6 +50,7 @@ public class SpringEntityLeakDetector implements Detector {
 
 	private static final List<String> ENTITY_ANNOTATION_TYPES = Arrays.asList(
 			"Ljavax/persistence/Entity;",
+			"Ljakarta/persistence/Entity;",
 			"Ljavax/jdo/spi/PersistenceCapable;",
 			"Lorg/springframework/data/mongodb/core/mapping/Document;");
 

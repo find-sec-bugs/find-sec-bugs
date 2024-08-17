@@ -48,11 +48,11 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <copy todir="${project.build.outputDirectory}">
                                     <fileset dir="${project.build.outputDirectory}/metadata" />
                                 </copy>
-                            </tasks>
+                            </target>
                         </configuration>
                     </execution>
                 </executions>

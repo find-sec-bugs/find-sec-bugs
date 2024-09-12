@@ -677,7 +677,7 @@ Detailed information for a proper implementation is available at:
 </p>
 <br/>
 <p>
-    <b>Solution (TrustMangager based on a keystore):</b><br/>
+    <b>Solution (TrustManager based on a keystore):</b><br/>
 <pre>KeyStore ks = //Load keystore containing the certificates trusted
 
 SSLContext sc = SSLContext.getInstance("TLS");
@@ -3467,7 +3467,7 @@ to do this correctly.
 
     <!-- DES usage -->
     <Detector class="com.h3xstream.findsecbugs.crypto.cipher.DesUsageDetector">
-        <Details>DES should be replace by AES</Details>
+        <Details>DES should be replaced by AES</Details>
     </Detector>
     <BugPattern type="DES_USAGE">
         <ShortDescription>DES is insecure</ShortDescription>
@@ -3797,7 +3797,7 @@ the XSS protection rules defined in the OWASP XSS Prevention Cheat Sheet.
             <![CDATA[
 <p>
 The Blowfish cipher supports key sizes from 32 bits to 448 bits. A small key size makes the ciphertext vulnerable to brute force attacks.
-At least 128 bits of entropy should be used when generating the key if use of Blowfish is required.
+At least 128 bits of entropy should be used when generating the key if the use of Blowfish is required.
 </p>
 <p>
 If the algorithm can be changed, the AES block cipher should be used instead.
@@ -4078,7 +4078,7 @@ class UserController {
     <ul>
         <li>Data transfer objects should be used instead including only the parameters needed as input/response to/from the API.</li>
         <li>Sensitive parameters should be removed properly before transferring to UI.</li>
-        <li>Data should be persisted in database only after proper sanitisation checks.</li>
+        <li>Data should be persisted in database only after proper sanitization checks.</li>
     </ul>
 </p>
 <p>
@@ -4164,7 +4164,7 @@ class UserController {
     <ul>
         <li>Data transfer objects should be used instead including only the parameters needed as input/response to/from the API.</li>
         <li>Sensitive parameters should be removed properly before transferring to UI.</li>
-        <li>Data should be persisted in database only after proper sanitisation checks.</li>
+        <li>Data should be persisted in database only after proper sanitization checks.</li>
     </ul>
 </p>
 <p>
@@ -4285,7 +4285,7 @@ attacker gets the ability to execute any code.
 
     <!-- JSTL OUT -->
     <Detector class="com.h3xstream.findsecbugs.jsp.JstlOutDetector">
-        <Details>Detect output where the escaping of special XML characters is disable.</Details>
+        <Details>Detect output where the escaping of special XML characters is disabled.</Details>
     </Detector>
     <BugPattern type="JSP_JSTL_OUT">
         <ShortDescription>Escaping of special XML characters is disabled</ShortDescription>
@@ -5083,7 +5083,7 @@ class FileWriteUtil {
 
     <BugPattern type="INSECURE_COOKIE">
         <ShortDescription>Cookie without the secure flag</ShortDescription>
-        <LongDescription>Cookie without the secure flag could be sent in clear text if a HTTP URL is visited</LongDescription>
+        <LongDescription>Cookie without the secure flag could be sent in clear text if an HTTP URL is visited</LongDescription>
         <Details>
             <![CDATA[
 <p>
@@ -5265,7 +5265,7 @@ Avoid deserializing object provided by remote users.
 <b>Solutions:</b><br/>
 <p>
 Explicitly define what types and subtypes you want to be available when using polymorphism through JsonTypeInfo.Id.NAME.
-Also, never call <code>ObjectMapper.enableDefaultTyping</code> (and then <code>readValue</code> a type that holds a Object or Serializable or Comparable or a known deserialization type).
+Also, never call <code>ObjectMapper.enableDefaultTyping</code> (and then <code>readValue</code> a type that holds an Object or Serializable or Comparable or a known deserialization type).
 </p>
 
 <p>
@@ -6408,7 +6408,7 @@ The sensitive information may be valuable information on its own (such as a pass
         <Details>
             <![CDATA[
 <p>
-Simple Mail Transfer Protocol (SMTP) is a the text based protocol used for email delivery.
+Simple Mail Transfer Protocol (SMTP) is a text based protocol used for email delivery.
 Like with HTTP, headers are separate by new line separator.
 If user input is place in a header line, the application should remove
 or replace new line characters (<code>CR</code> / <code>LF</code>).
@@ -6597,8 +6597,8 @@ If the file affected is a configuration, a binary, a script or sensitive data, i
 </p>
 <p>
 It is possible that another service, running on the same host as your application, gets compromised.
-Services typically run under a different user. A compromised service account could be use to read your configuration, add execution instruction to scripts or alter the data file.
-To limite the damage from other services or local users, you should limited to permission of your application files.
+Services typically run under a different user. A compromised service account could be used to read your configuration, add execution instruction to scripts or alter the data file.
+To limite the damage from other services or local users, you should limit the permission of your application files.
 </p>
 
 <p>
@@ -6686,7 +6686,7 @@ if(username.toUpperCase().equals("ADMIN")) {
 </p>
 
 <p>
-Similar characters transformations can occurs with normalization functions.
+Similar characters transformations can occur with normalization functions.
 In the code bellow, the string <code>"BAC\u212AUP"</code> would cause the condition to be true.
 When the normalization transformation is applied, the character `\u212A` will become '\u004B' (K).<br/>
 <pre>
@@ -6764,15 +6764,15 @@ if (matcher.find()) {
         <Details>Identify string normalization after validation and not before it.</Details>
     </Detector>
     <BugPattern type="NORMALIZATION_AFTER_VALIDATION">
-        <ShortDescription>String is normalzied after validation and not before it</ShortDescription>
-        <LongDescription>String is normalzied after validation and not before it. Tricky attackers may pass malicious strings which bypass validation.</LongDescription>
+        <ShortDescription>String is normalized after validation and not before it</ShortDescription>
+        <LongDescription>String is normalized after validation and not before it. Tricky attackers may pass malicious strings which bypass validation.</LongDescription>
         <Details>
             <![CDATA[
 <p>
 A string must not be normalized after validation because it may allow an attacker to bypass validation using a tricky
 string which becomes malicious after the normalization. For example, a program may filter out the &langle;script&rangle; tags from
 HTML input to avoid cross-site scripting (XSS) and other vulnerabilities. However, in unicode, the same string can have
-many different representations. For example, \uFE64 is normalized to &langle; and \uFE65 is normalized to &rangle;. Thus the
+many different representations. For example, \uFE64 is normalized to &langle; and \uFE65 is normalized to &rangle;. Thus,
 if an attacker passes the string "\uFE64" + "script" + "\uFE65" the validation check fails to detect the &langle;script&rangle; tag,
 but thereafter the string is normalized to the &langle;script&rangle; tag in the input:
 <pre>
@@ -6862,7 +6862,7 @@ pc.add(new RuntimePermission("createClassLoader"));
         <![CDATA[
 <p>
 Unsafe strings (e.g. from a user input) may contain XML tags. If such a string is inserted into an XML document then it
-may change its structure to a valid but semanticallly different document. To prevent this unsafe strings must b
+may change its structure to a valid but semantically different document. To prevent this unsafe strings must b
 sanitized first.
 </p>
 

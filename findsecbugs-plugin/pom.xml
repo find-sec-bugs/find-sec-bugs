@@ -39,7 +39,9 @@
             </plugin>
             <!-- Moving findbugs config to root -->
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.1.0</version>
                 <executions>
                     <execution>
                         <id>ant-magic</id>
@@ -194,7 +196,7 @@
             <artifactId>commons-io</artifactId>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>com.h3xstream.findsecbugs</groupId>
             <artifactId>findsecbugs-samples-deps</artifactId>

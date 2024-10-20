@@ -22,17 +22,19 @@ import edu.umd.cs.findbugs.util.ClassName;
 import org.apache.bcel.Const;
 import org.apache.bcel.classfile.ConstantCP;
 import org.apache.bcel.classfile.ConstantPool;
-import org.apache.bcel.generic.FieldOrMethod;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.FieldOrMethod;
 import org.apache.bcel.generic.InvokeInstruction;
 
+import java.lang.ref.SoftReference;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
-import java.util.WeakHashMap;
 
 /**
  * @author Tomas Polesovsky
@@ -43,7 +45,7 @@ public class BCELUtil {
     /**
      * Caching class inheritance.
      */
-    private static Map<String, Set<String>> superMap = new WeakHashMap<>();
+    private static Map<String, SoftReference<Set<String>>> superMap = Collections.synchronizedMap(new HashMap<>());
 
     public static String getSlashedClassName(ConstantPoolGen cpg, FieldOrMethod obj) {
         if (Const.INVOKEDYNAMIC == obj.getOpcode()) {
@@ -62,7 +64,9 @@ public class BCELUtil {
     }
 
     public static Set<String> getParentClassNames(JavaClass javaClass) {
-        Set<String> classNames = superMap.get(javaClass.getClassName());
+        String key = javaClass.getClassName();
+        SoftReference<Set<String>> reference = superMap.get(key);
+        Set<String> classNames = reference == null ? null : reference.get();
 
         if (classNames == null) {
             classNames = new HashSet<>();
@@ -98,7 +102,7 @@ public class BCELUtil {
                 }
             }
 
-            superMap.put(javaClass.getClassName(), classNames);
+            superMap.put(key, new SoftReference<>(classNames));
         }
 
         return classNames;

@@ -52,6 +52,11 @@ public class InterfaceUtils {
      * @return
      */
     public static boolean isSubtype(String className, String... superClasses) {
+        className = ByteCode.stripObjectArrayFromClassName(className);
+        if (className.startsWith("[")) {
+            // an array of a non-object type
+            return false;
+        }
         for(String potentialSuperClass : superClasses) {
             try {
                 if(Hierarchy.isSubtype(className, potentialSuperClass)) {

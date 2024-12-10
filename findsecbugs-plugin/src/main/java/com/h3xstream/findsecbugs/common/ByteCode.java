@@ -169,4 +169,22 @@ public class ByteCode {
         return null;
     }
 
+    /**
+     * Strips the array marker from a class signature, e.g., {@code [Ljava.lang.String;} becomes
+     * {@code java.lang.String}.
+     *
+     * @param className The "classname" string as returned from
+     *          {@link InvokeInstruction#getClassName(ConstantPoolGen)}.
+     * @return The sanitized class name.
+     */
+    public static String stripObjectArrayFromClassName(String className) {
+      if (className.endsWith(";") && className.startsWith("[L")) {
+        className = className.substring(0, className.length() - 1);
+        while (className.indexOf('[') == 0) {
+          className = className.substring(1);
+        }
+        className = className.substring(1);
+      }
+      return className;
+    }
 }

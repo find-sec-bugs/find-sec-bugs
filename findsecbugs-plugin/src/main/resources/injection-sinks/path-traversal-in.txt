@@ -14,6 +14,7 @@ java/io/File.createTempFile(Ljava/lang/String;Ljava/lang/String;)Ljava/io/File;:
 java/io/File.createTempFile(Ljava/lang/String;Ljava/lang/String;Ljava/io/File;)Ljava/io/File;:0,1,2
 
 javax/activation/FileDataSource.<init>(Ljava/lang/String;)V:0
+jakarta/activation/FileDataSource.<init>(Ljava/lang/String;)V:0
 
 java/nio/file/Files.createTempFile(Ljava/nio/file/Path;Ljava/lang/String;Ljava/lang/String;[Ljava/nio/file/attribute/FileAttribute;)Ljava/nio/file/Path;:1,2
 java/nio/file/Files.createTempFile(Ljava/lang/String;Ljava/lang/String;[Ljava/nio/file/attribute/FileAttribute;)Ljava/nio/file/Path;:1,2

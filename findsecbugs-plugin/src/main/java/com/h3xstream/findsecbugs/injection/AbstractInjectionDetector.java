@@ -18,6 +18,7 @@
 package com.h3xstream.findsecbugs.injection;
 
 import com.h3xstream.findsecbugs.BCELUtil;
+import com.h3xstream.findsecbugs.common.ByteCode;
 import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import com.h3xstream.findsecbugs.taintanalysis.TaintFrame;
 import edu.umd.cs.findbugs.BugReporter;
@@ -202,11 +203,17 @@ public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
             return getMethodAndSinks(classMethodSignature, sinks);
         }
         try {
-            if (classMethodSignature.getClassName().endsWith("]")) {
+            String className = classMethodSignature.getClassName();
+            if (className.endsWith("]")) {
                 // not a real class
                 return Collections.emptySet();
             }
-            JavaClass javaClass = Repository.lookupClass(classMethodSignature.getClassName());
+            className = ByteCode.stripObjectArrayFromClassName(className);
+            if (className.startsWith("[")) {
+              // an array of a non-object type
+              return Collections.emptySet();
+            }
+            JavaClass javaClass = Repository.lookupClass(className);
             assert javaClass != null;
             return getSuperSinks(javaClass, classMethodSignature);
         } catch (ClassNotFoundException ex) {

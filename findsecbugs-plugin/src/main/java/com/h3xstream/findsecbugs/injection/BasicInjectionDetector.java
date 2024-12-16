@@ -19,6 +19,7 @@ package com.h3xstream.findsecbugs.injection;
 
 import com.h3xstream.findsecbugs.BCELUtil;
 import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
+import com.h3xstream.findsecbugs.common.ByteCode;
 import com.h3xstream.findsecbugs.taintanalysis.TaintDataflowEngine;
 import com.h3xstream.findsecbugs.taintanalysis.TaintFrameAdditionalVisitor;
 import edu.umd.cs.findbugs.BugReporter;
@@ -35,6 +36,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import org.apache.bcel.Repository;
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.Signature;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InvokeInstruction;
@@ -76,7 +78,12 @@ public abstract class BasicInjectionDetector extends AbstractInjectionDetector {
 
         try {
             //2. Verify if the super classes match a known sink
-            JavaClass classDef = Repository.lookupClass(invoke.getClassName(cpg));
+            String className = ByteCode.stripObjectArrayFromClassName(invoke.getClassName(cpg));
+            if (className.startsWith("[")) {
+                // an array of a non-object type
+                return InjectionPoint.NONE;
+            }
+            JavaClass classDef = Repository.lookupClass(className);
             Set<String> parentClassNames = BCELUtil.getParentClassNames(classDef);
             for (String parentClassName : parentClassNames) {
                 classMethodSignature.setClassName(parentClassName);

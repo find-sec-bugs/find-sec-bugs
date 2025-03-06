@@ -5877,7 +5877,7 @@ Avoid using * as the value of the Access-Control-Allow-Origin header, which indi
 <b>References</b><br/>
 <a href="https://www.w3.org/TR/cors/">W3C Cross-Origin Resource Sharing</a><br/>
 <a href="https://enable-cors.org/">Enable Cross-Origin Resource Sharing</a><br/>
-a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Permissive Cross-domain Policy with Untrusted Domains</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Permissive Cross-domain Policy with Untrusted Domains</a><br/>
 </p>]]>
         </Details>
     </BugPattern>

@@ -6779,6 +6779,7 @@ if (matcher.find()) {
 <b>References</b><br/>
 <a href="https://wiki.sei.cmu.edu/confluence/display/java/IDS11-J.+Perform+any+string+modifications+before+validation">CERT: IDS11-J. Perform any string modifications before validation</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/179.html">CWE-179: Incorrect Behavior Order: Early Validation</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/182.html">CWE-182: Collapse of Data into Unsafe Value</a><br/>
 </p>
 
             ]]>
@@ -6829,6 +6830,8 @@ if (matcher.find()) {
 <b>References</b><br/>
 <a href="https://wiki.sei.cmu.edu/confluence/display/java/IDS01-J.+Normalize+strings+before+validating+them">CERT: IDS01-J. Normalize strings before validating them</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/179.html">CWE-179: Incorrect Behavior Order: Early Validation</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/180.html">CWE-180: Incorrect Behavior Order: Validate Before Canonicalize</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/289.html">CWE-289: Authentication Bypass by Alternate Name</a><br/>
 </p>
 
             ]]>

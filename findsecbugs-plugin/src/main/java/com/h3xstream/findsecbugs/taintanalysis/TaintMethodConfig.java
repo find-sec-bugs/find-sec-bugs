@@ -234,7 +234,7 @@ public class TaintMethodConfig implements TaintTypeConfig {
         if (outputTaint.hasTags()) {
             sb.append('|');
             boolean isFirst = true;
-            for (Taint.Tag tag : outputTaint.getTags()) {
+            for (TaintTag tag : outputTaint.getTags()) {
                 if (isFirst) {
                     isFirst = false;
                 } else {
@@ -250,7 +250,7 @@ public class TaintMethodConfig implements TaintTypeConfig {
         if (outputTaint.isRemovingTags()) {
             sb.append('|');
             boolean isFirst = true;
-            for (Taint.Tag tag : outputTaint.getTagsToRemove()) {
+            for (TaintTag tag : outputTaint.getTagsToRemove()) {
                 if (isFirst) {
                     isFirst = false;
                 } else {

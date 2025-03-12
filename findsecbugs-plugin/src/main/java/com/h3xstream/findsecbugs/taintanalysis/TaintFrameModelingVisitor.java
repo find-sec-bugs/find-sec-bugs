@@ -788,12 +788,12 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
             // don't add tags to safe values
             if (!result.isSafe() && taint.hasTags()) {
-                for (Taint.Tag tag : taint.getTags()) {
+                for (TaintTag tag : taint.getTags()) {
                     result.addTag(tag);
                 }
             }
             if (taint.isRemovingTags()) {
-                for (Taint.Tag tag : taint.getTagsToRemove()) {
+                for (TaintTag tag : taint.getTagsToRemove()) {
                     result.removeTag(tag);
                 }
             }

@@ -89,7 +89,7 @@ public class Taint {
         }
     }
 
-    public enum Tag {
+    public enum Tag implements TaintTag {
         XSS_SAFE,
         SQL_INJECTION_SAFE,
         COMMAND_INJECTION_SAFE,
@@ -121,8 +121,8 @@ public class Taint {
     private State nonParametricState;
     private ObjectType realInstanceClass;
     private String realInstanceClassName;
-    private Set<Tag> tags;
-    private Set<Tag> tagsToRemove;
+    private Set<TaintTag> tags;
+    private Set<TaintTag> tagsToRemove;
     private String constantValue;
     private String potentialValue;
     private String debugInfo = null;
@@ -173,10 +173,10 @@ public class Taint {
         this.nonParametricState = taint.nonParametricState;
         this.realInstanceClass = taint.realInstanceClass;
         if (taint.hasTags()) {
-            this.tags = EnumSet.copyOf(taint.tags);
+            this.tags = new HashSet<>(taint.tags);
         }
         if (taint.isRemovingTags()) {
-            this.tagsToRemove = EnumSet.copyOf(taint.tagsToRemove);
+            this.tagsToRemove = new HashSet<>(taint.tagsToRemove);
         }
         this.constantValue = taint.constantValue;
         this.potentialValue = taint.potentialValue;
@@ -450,9 +450,9 @@ public class Taint {
      * @param tag tag to add
      * @return true if this tag was not present before, false otherwise
      */
-    public boolean addTag(Tag tag) {
+    public boolean addTag(TaintTag tag) {
         if (tags == null) {
-            tags = EnumSet.noneOf(Tag.class);
+            tags = new HashSet<>();
         }
 
         return tags.add(tag);
@@ -464,7 +464,7 @@ public class Taint {
      * @param tag tag to check
      * @return true if it is present, false otherwise
      */
-    public boolean hasTag(Tag tag) {
+    public boolean hasTag(TaintTag tag) {
         return tags != null && tags.contains(tag);
     }
 
@@ -474,12 +474,12 @@ public class Taint {
      * @param tags Tags to test
      * @return true if at least one is present, false otherwise
      */
-    public boolean hasOneTag(Tag... tags) {
+    public boolean hasOneTag(TaintTag... tags) {
         if (this.tags == null) {
             return false;
         }
 
-        for(Tag t : tags) {
+        for(TaintTag t : tags) {
             if (this.tags.contains(t)) return true;
         }
         return false;
@@ -499,7 +499,7 @@ public class Taint {
      * 
      * @return unmodifiable set of all present taint tags
      */
-    public Set<Tag> getTags() {
+    public Set<TaintTag> getTags() {
         if (tags == null) {
             return Collections.emptySet();
         }
@@ -514,9 +514,9 @@ public class Taint {
      * @param tag tag to remove
      * @return true if the tag was present, false otherwise
      */
-    public boolean removeTag(Tag tag) {
+    public boolean removeTag(TaintTag tag) {
         if (tagsToRemove == null) {
-            tagsToRemove = EnumSet.noneOf(Tag.class);
+            tagsToRemove = new HashSet<>();
         }
         tagsToRemove.add(tag);
 
@@ -538,7 +538,7 @@ public class Taint {
      * 
      * @return unmodifiable set of tags
      */
-    public Set<Tag> getTagsToRemove() {
+    public Set<TaintTag> getTagsToRemove() {
         if (tagsToRemove == null) {
             return Collections.emptySet();
         }
@@ -732,18 +732,18 @@ public class Taint {
     private static void mergeTags(Taint a, Taint b, Taint result) {
         if (a.isSafe() && b.hasTags()) {
             if (result.tags == null) {
-                result.tags = EnumSet.noneOf(Tag.class);
+                result.tags = new HashSet<>();
             }
             result.tags.addAll(b.tags);
         } else if (b.isSafe() && a.hasTags()) {
             if (result.tags == null) {
-                result.tags = EnumSet.noneOf(Tag.class);
+                result.tags = new HashSet<>();
             }
             result.tags.addAll(a.tags);
         } else {
             if (a.hasTags() && b.hasTags()) {
                 if (result.tags == null) {
-                    result.tags = EnumSet.noneOf(Tag.class);
+                    result.tags = new HashSet<>();
                 }
 
                 result.tags.addAll(a.tags);
@@ -753,13 +753,13 @@ public class Taint {
 
         if (a.isRemovingTags()) {
             if (result.tagsToRemove == null) {
-                result.tagsToRemove = EnumSet.noneOf(Tag.class);
+                result.tagsToRemove = new HashSet<>();
             }
             result.tagsToRemove.addAll(a.tagsToRemove);
         }
         if (b.isRemovingTags()) {
             if (result.tagsToRemove == null) {
-                result.tagsToRemove = EnumSet.noneOf(Tag.class);
+                result.tagsToRemove = new HashSet<>();
             }
             result.tagsToRemove.addAll(b.tagsToRemove);
         }

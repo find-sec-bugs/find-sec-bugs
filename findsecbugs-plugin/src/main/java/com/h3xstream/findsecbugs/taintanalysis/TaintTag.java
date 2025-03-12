@@ -17,6 +17,8 @@
  */
 package com.h3xstream.findsecbugs.taintanalysis;
 
+import java.util.ArrayList;
+
 /**
  * @author Tomas Polesovsky
  */
@@ -24,4 +26,40 @@ public interface TaintTag {
 
     String name();
 
+    // There are only several items, created during static class loading and reading config files.
+    ArrayList<TaintTag> registry = new ArrayList<>();
+    
+    static TaintTag get(String name) {
+        for (Taint.Tag enumTag : Taint.Tag.values()) {
+            if (enumTag.name().equals(name)) {
+                return enumTag;
+            }
+        }
+
+        for (TaintTag taintTag : registry) {
+            if (taintTag.name().equals(name)) {
+                return taintTag;
+            }
+        }
+        
+        return null;
+    }
+    
+    static TaintTag create(String name) {
+        TaintTag taintTag = get(name);
+        if (taintTag != null) {
+            return taintTag;
+        }
+
+        synchronized (registry) {
+            taintTag = get(name);
+            if (taintTag != null) {
+                return taintTag;
+            }
+            
+            taintTag = () -> name;
+            registry.add(taintTag);
+            return taintTag;
+        }
+    }
 }

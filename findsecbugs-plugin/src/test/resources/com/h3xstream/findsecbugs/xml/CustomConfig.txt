@@ -1,0 +1,1 @@
+testcode/xxe/schema/SchemaFactoryConfigurationDataFlow.getUnknownSchemaFactoryWithSafeTagsFromConfigFile()Ljavax/xml/validation/SchemaFactory;:UNKNOWN|+XXE_SCHEMA_FACTORY_EXTERNAL_DTD_DISABLED,+XXE_SCHEMA_FACTORY_EXTERNAL_SCHEMA_DISABLED

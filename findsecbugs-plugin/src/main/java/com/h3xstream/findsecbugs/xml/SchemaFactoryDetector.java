@@ -56,11 +56,11 @@ public class SchemaFactoryDetector extends BasicInjectionDetector implements Tai
 
     private static final String EXTERNAL_REFERENCES_DISABLED = "";
 
-    private static final TaintTag XXE_SCHEMA_FACTORY_SECURE_PROCESSING_SAFE = () -> "XXE_SCHEMA_FACTORY_SECURE_PROCESSING_SAFE";
+    private static final TaintTag XXE_SCHEMA_FACTORY_SECURE_PROCESSING_SAFE = TaintTag.create("XXE_SCHEMA_FACTORY_SECURE_PROCESSING_SAFE");
 
-    private static final TaintTag XXE_SCHEMA_FACTORY_EXTERNAL_DTD_DISABLED = () -> "XXE_SCHEMA_FACTORY_EXTERNAL_DTD_DISABLED";
+    private static final TaintTag XXE_SCHEMA_FACTORY_EXTERNAL_DTD_DISABLED = TaintTag.create("XXE_SCHEMA_FACTORY_EXTERNAL_DTD_DISABLED");
 
-    private static final TaintTag XXE_SCHEMA_FACTORY_EXTERNAL_SCHEMA_DISABLED = () -> "XXE_SCHEMA_FACTORY_EXTERNAL_SCHEMA_DISABLED";
+    private static final TaintTag XXE_SCHEMA_FACTORY_EXTERNAL_SCHEMA_DISABLED = TaintTag.create("XXE_SCHEMA_FACTORY_EXTERNAL_SCHEMA_DISABLED");
 
     private static final InvokeMatcherBuilder SET_PROPERTY = invokeInstruction()
             .atClass("javax/xml/validation/SchemaFactory")

@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.taintanalysis;
 
+import edu.umd.cs.findbugs.ba.Location;
 import org.apache.bcel.generic.*;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public interface TaintFrameAdditionalVisitor {
      * @param parameters Stack representation just before the invoke
      * @param cpg
      */
-    void visitInvoke(InvokeInstruction invoke, MethodGen methodGen, TaintFrame frameType, List<Taint> parameters, ConstantPoolGen cpg) throws Exception;
+    void visitInvoke(InvokeInstruction invoke, MethodGen methodGen, TaintFrame frameType, Taint instanceTaint, List<Taint> parameters, ConstantPoolGen cpg, Location location) throws Exception;
 
     /**
      *

@@ -30,6 +30,7 @@ import edu.umd.cs.findbugs.ba.bcp.Invoke;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.INVOKEDYNAMIC;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InvokeInstruction;
@@ -98,7 +99,7 @@ public class ObjectDeserializationDetector implements Detector {
             Instruction inst = location.getHandle().getInstruction();
 
             //
-            if (inst instanceof InvokeInstruction) {
+            if (inst instanceof InvokeInstruction && !(inst instanceof INVOKEDYNAMIC)) {
                 InvokeInstruction invoke = (InvokeInstruction) inst;
 
                 String className = invoke.getClassName(cpg);

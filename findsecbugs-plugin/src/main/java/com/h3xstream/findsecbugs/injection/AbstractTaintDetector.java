@@ -32,6 +32,7 @@ import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 import java.util.Iterator;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.INVOKEDYNAMIC;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InvokeInstruction;
@@ -114,7 +115,7 @@ public abstract class AbstractTaintDetector implements Detector {
             Location location = i.next();
             InstructionHandle handle = location.getHandle();
             Instruction instruction = handle.getInstruction();
-            if (!(instruction instanceof InvokeInstruction)) {
+            if (!(instruction instanceof InvokeInstruction) || instruction instanceof INVOKEDYNAMIC) {
                 continue;
             }
             InvokeInstruction invoke = (InvokeInstruction) instruction;

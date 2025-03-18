@@ -21,6 +21,7 @@ import com.h3xstream.findsecbugs.BCELUtil;
 import com.h3xstream.findsecbugs.common.ByteCode;
 import com.h3xstream.findsecbugs.taintanalysis.Taint;
 import com.h3xstream.findsecbugs.taintanalysis.TaintFrame;
+import com.h3xstream.findsecbugs.taintanalysis.TaintTag;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.SourceLineAnnotation;
@@ -164,12 +165,12 @@ public abstract class AbstractInjectionDetector extends AbstractTaintDetector {
                 continue;
             }
             if (!sinkTaint.isSafe() && sinkTaint.hasTags()) {
-                for (Taint.Tag tag : sinkTaint.getTags()) {
+                for (TaintTag tag : sinkTaint.getTags()) {
                     finalTaint.addTag(tag);
                 }
             }
             if (sinkTaint.isRemovingTags()) {
-                for (Taint.Tag tag : sinkTaint.getTagsToRemove()) {
+                for (TaintTag tag : sinkTaint.getTagsToRemove()) {
                     finalTaint.removeTag(tag);
                 }
             }

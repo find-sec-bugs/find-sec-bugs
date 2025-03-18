@@ -25,6 +25,7 @@ import com.h3xstream.findsecbugs.taintanalysis.TaintFrame;
 import com.h3xstream.findsecbugs.taintanalysis.TaintFrameAdditionalVisitor;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
+import edu.umd.cs.findbugs.ba.Location;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.FieldInstruction;
 import org.apache.bcel.generic.InvokeInstruction;
@@ -90,8 +91,7 @@ public class JstlExpressionWhiteLister extends BasicInjectionDetector implements
 
 
     @Override
-    public void visitInvoke(InvokeInstruction invoke, MethodGen methodGen, TaintFrame frameType, List<Taint> parameters, ConstantPoolGen cpg) throws DataflowAnalysisException {
-
+    public void visitInvoke(InvokeInstruction invoke, MethodGen methodGen, TaintFrame frameType, Taint instanceTaint, List<Taint> parameters, ConstantPoolGen cpg, Location location) throws DataflowAnalysisException {
         if(isProprietaryEvaluateMethod(invoke, cpg)) {
             Taint defaultVal = parameters.get(3); //The expression is the fourth parameter starting from the right. (Top of the stack last arguments)
             if(defaultVal.getConstantValue() != null) {
@@ -119,18 +119,6 @@ public class JstlExpressionWhiteLister extends BasicInjectionDetector implements
 
     private boolean isProprietaryEvaluateMethod(InvokeInstruction invoke, ConstantPoolGen cpg) {
         return JAVAX_PROPRIETARY_EVALUATE.matches(invoke, cpg) || JAKARTA_PROPRIETARY_EVALUATE.matches(invoke, cpg);
-    }
-
-    @Override
-    public void visitLoad(LoadInstruction load, MethodGen methodGen, TaintFrame frameType, int numProduced, ConstantPoolGen cpg) {
-    }
-
-    @Override
-    public void visitField(FieldInstruction put, MethodGen methodGen, TaintFrame frameType, Taint taintFrame, int numProduced, ConstantPoolGen cpg) throws Exception {
-    }
-
-    @Override
-    public void visitReturn(MethodGen methodGen, Taint returnValue, ConstantPoolGen cpg) throws Exception {
     }
 
     private static List<Pattern> getCustomPatterns() {

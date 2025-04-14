@@ -143,29 +143,29 @@
     <Detector class="com.h3xstream.findsecbugs.injection.xml.XmlInjectionDetector" reports="POTENTIAL_XML_INJECTION"/>
 
 
-    <BugPattern type="HTTP_PARAMETER_POLLUTION" abbrev="SECHPP" category="SECURITY"/>
-    <BugPattern type="SMTP_HEADER_INJECTION" abbrev="SECSMTP" category="SECURITY"/>
-    <BugPattern type="FORMAT_STRING_MANIPULATION" abbrev="SECFSM" category="SECURITY"/>
-    <BugPattern type="SPRING_FILE_DISCLOSURE" abbrev="SECSF" category="SECURITY"/>
-    <BugPattern type="STRUTS_FILE_DISCLOSURE" abbrev="SECSFD" category="SECURITY"/>
-    <BugPattern type="REQUESTDISPATCHER_FILE_DISCLOSURE" abbrev="SECSFDR" category="SECURITY"/>
-    <BugPattern type="BEAN_PROPERTY_INJECTION" abbrev="SECBPI" category="SECURITY"/>
-    <BugPattern type="AWS_QUERY_INJECTION" abbrev="SECAQI" category="SECURITY"/>
-    <BugPattern type="INSECURE_SMTP_SSL" abbrev="SECISC" category="SECURITY"/>
-    <BugPattern type="URL_REWRITING" abbrev="SECURLR" category="SECURITY"/>
+    <BugPattern type="HTTP_PARAMETER_POLLUTION" abbrev="SECHPP" category="SECURITY" cweid="235"/>
+    <BugPattern type="SMTP_HEADER_INJECTION" abbrev="SECSMTP" category="SECURITY" cweid="93"/>
+    <BugPattern type="FORMAT_STRING_MANIPULATION" abbrev="SECFSM" category="SECURITY" cweid="134"/>
+    <BugPattern type="SPRING_FILE_DISCLOSURE" abbrev="SECSF" category="SECURITY" cweid="552"/>
+    <BugPattern type="STRUTS_FILE_DISCLOSURE" abbrev="SECSFD" category="SECURITY" cweid="552"/>
+    <BugPattern type="REQUESTDISPATCHER_FILE_DISCLOSURE" abbrev="SECSFDR" category="SECURITY" cweid="552"/>
+    <BugPattern type="BEAN_PROPERTY_INJECTION" abbrev="SECBPI" category="SECURITY" cweid="15"/>
+    <BugPattern type="AWS_QUERY_INJECTION" abbrev="SECAQI" category="SECURITY" cweid="943"/>
+    <BugPattern type="INSECURE_SMTP_SSL" abbrev="SECISC" category="SECURITY" cweid="297"/>
+    <BugPattern type="URL_REWRITING" abbrev="SECURLR" category="SECURITY" cweid="601"/>
     <BugPattern type="COOKIE_PERSISTENT" abbrev="SECCP" category="SECURITY" cweid="539"/>
-    <BugPattern type="PERMISSIVE_CORS" abbrev="SECCORS" category="SECURITY"/>
+    <BugPattern type="PERMISSIVE_CORS" abbrev="SECCORS" category="SECURITY" cweid="942"/>
     <BugPattern type="PREDICTABLE_RANDOM" abbrev="SECPR" category="SECURITY" cweid="330"/>
     <BugPattern type="PREDICTABLE_RANDOM_SCALA" abbrev="SECPRS" category="SECURITY" cweid="330"/>
-    <BugPattern type="SERVLET_PARAMETER" abbrev="SECSP" category="SECURITY"/>
-    <BugPattern type="SERVLET_CONTENT_TYPE" abbrev="SECSCT" category="SECURITY"/>
-    <BugPattern type="SERVLET_SERVER_NAME" abbrev="SECSSN" category="SECURITY"/>
-    <BugPattern type="SERVLET_SESSION_ID" abbrev="SECSSID" category="SECURITY"/>
-    <BugPattern type="SERVLET_QUERY_STRING" abbrev="SECSSQ" category="SECURITY"/>
-    <BugPattern type="SERVLET_HEADER" abbrev="SECSH" category="SECURITY"/>
-    <BugPattern type="SERVLET_HEADER_REFERER" abbrev="SECSHR" category="SECURITY"/>
-    <BugPattern type="SERVLET_HEADER_USER_AGENT" abbrev="SECSHUA" category="SECURITY"/>
-    <BugPattern type="COOKIE_USAGE" abbrev="SECCU" category="SECURITY"/>
+    <BugPattern type="SERVLET_PARAMETER" abbrev="SECSP" category="SECURITY" cweid="20"/>
+    <BugPattern type="SERVLET_CONTENT_TYPE" abbrev="SECSCT" category="SECURITY" cweid="807"/>
+    <BugPattern type="SERVLET_SERVER_NAME" abbrev="SECSSN" category="SECURITY" cweid="807"/>
+    <BugPattern type="SERVLET_SESSION_ID" abbrev="SECSSID" category="SECURITY" cweid="20"/>
+    <BugPattern type="SERVLET_QUERY_STRING" abbrev="SECSSQ" category="SECURITY" cweid="20"/>
+    <BugPattern type="SERVLET_HEADER" abbrev="SECSH" category="SECURITY" cweid="807"/>
+    <BugPattern type="SERVLET_HEADER_REFERER" abbrev="SECSHR" category="SECURITY" cweid="807"/>
+    <BugPattern type="SERVLET_HEADER_USER_AGENT" abbrev="SECSHUA" category="SECURITY" cweid="807"/>
+    <BugPattern type="COOKIE_USAGE" abbrev="SECCU" category="SECURITY" cweid="315"/>
     <BugPattern type="INSECURE_COOKIE" abbrev="SECIC" category="SECURITY" cweid="614"/>
     <BugPattern type="HTTPONLY_COOKIE" abbrev="SECHOC" category="SECURITY" cweid="1004"/>
     <BugPattern type="PATH_TRAVERSAL_IN" abbrev="SECPTI" category="SECURITY" cweid="22"/>
@@ -173,19 +173,19 @@
     <BugPattern type="SCALA_PATH_TRAVERSAL_IN" abbrev="SSECPTI" category="SECURITY" cweid="22"/>
     <BugPattern type="COMMAND_INJECTION" abbrev="SECCI" category="SECURITY" cweid="78"/>
     <BugPattern type="SCALA_COMMAND_INJECTION" abbrev="SECSCI" category="SECURITY" cweid="78"/>
-    <BugPattern type="WEAK_FILENAMEUTILS" abbrev="SECWF" category="SECURITY"/>
+    <BugPattern type="WEAK_FILENAMEUTILS" abbrev="SECWF" category="SECURITY" cweid="158"/>
     <BugPattern type="WEAK_TRUST_MANAGER" abbrev="SECWTM" category="SECURITY" cweid="295"/>
     <BugPattern type="WEAK_HOSTNAME_VERIFIER" abbrev="SECWHV" category="SECURITY" cweid="295"/>
-    <BugPattern type="JAXWS_ENDPOINT" abbrev="SECJWS" category="SECURITY"/>
-    <BugPattern type="JAXRS_ENDPOINT" abbrev="SECJRS" category="SECURITY"/>
-    <BugPattern type="TAPESTRY_ENDPOINT" abbrev="SECTE" category="SECURITY"/>
-    <BugPattern type="WICKET_ENDPOINT" abbrev="SECWE" category="SECURITY"/>
+    <BugPattern type="JAXWS_ENDPOINT" abbrev="SECJWS" category="SECURITY" cweid="20"/>
+    <BugPattern type="JAXRS_ENDPOINT" abbrev="SECJRS" category="SECURITY" cweid="20"/>
+    <BugPattern type="TAPESTRY_ENDPOINT" abbrev="SECTE" category="SECURITY" cweid="20"/>
+    <BugPattern type="WICKET_ENDPOINT" abbrev="SECWE" category="SECURITY" cweid="20"/>
     <BugPattern type="WEAK_MESSAGE_DIGEST_MD5" abbrev="SECMD5" category="SECURITY" cweid="328"/>
     <BugPattern type="WEAK_MESSAGE_DIGEST_SHA1" abbrev="SECSHA1" category="SECURITY" cweid="328"/>
     <BugPattern type="DEFAULT_HTTP_CLIENT" abbrev="SECHTTPCLIENT" category="SECURITY"/>
     <BugPattern type="SSL_CONTEXT" abbrev="SECSSL" category="SECURITY"/>
     <BugPattern type="CUSTOM_MESSAGE_DIGEST" abbrev="SECCMD" category="SECURITY" cweid="327"/>
-    <BugPattern type="FILE_UPLOAD_FILENAME" abbrev="SECFUN" category="SECURITY"/>
+    <BugPattern type="FILE_UPLOAD_FILENAME" abbrev="SECFUN" category="SECURITY" cweid="22"/>
     <BugPattern type="REDOS" abbrev="SECRD" category="SECURITY" cweid="400"/>
     <BugPattern type="XXE_SAXPARSER" abbrev="SECXXESAX" category="SECURITY" cweid="611"/>
     <BugPattern type="XXE_XMLREADER" abbrev="SECXXEREAD" category="SECURITY" cweid="611"/>
@@ -203,10 +203,10 @@
     <BugPattern type="SPRING_CSRF_PROTECTION_DISABLED" abbrev="SECSPRCSRFPD" category="SECURITY" cweid="352"/>
     <BugPattern type="SPRING_CSRF_UNRESTRICTED_REQUEST_MAPPING" abbrev="SECSPRCSRFURM" category="SECURITY" cweid="352"/>
     <BugPattern type="SAML_IGNORE_COMMENTS" abbrev="SECSAMLC" category="SECURITY"/>
-    <BugPattern type="CUSTOM_INJECTION" abbrev="SECCUSTOMI" category="SECURITY" cweid="74"/>
-    <BugPattern type="SQL_INJECTION" abbrev="SECSQLIHIB" category="SECURITY" cweid="564"/>
-    <BugPattern type="SQL_INJECTION_VERTX" abbrev="SECSQLIVX" category="SECURITY" cweid="564"/>
-    <BugPattern type="SQL_INJECTION_TURBINE" abbrev="SECSQLITU" category="SECURITY" cweid="564"/>
+    <BugPattern type="CUSTOM_INJECTION" abbrev="SECCUSTOMI" category="SECURITY" cweid="89"/>
+    <BugPattern type="SQL_INJECTION" abbrev="SECSQLIHIB" category="SECURITY" cweid="89"/>
+    <BugPattern type="SQL_INJECTION_VERTX" abbrev="SECSQLIVX" category="SECURITY" cweid="89"/>
+    <BugPattern type="SQL_INJECTION_TURBINE" abbrev="SECSQLITU" category="SECURITY" cweid="89"/>
     <BugPattern type="SQL_INJECTION_HIBERNATE" abbrev="SECSQLIHIB" category="SECURITY" cweid="564"/>
     <BugPattern type="SQL_INJECTION_JDO" abbrev="SECSQLIJDO" category="SECURITY" cweid="89"/>
     <BugPattern type="SQL_INJECTION_JPA" abbrev="SECSQLIJPA" category="SECURITY" cweid="89"/>
@@ -239,7 +239,7 @@
     <BugPattern type="ENTITY_LEAK" abbrev="SECELEAK" category="SECURITY" cweid="212"/>
     <BugPattern type="ENTITY_MASS_ASSIGNMENT" abbrev="SECEMA" category="SECURITY" cweid="915"/>
     <BugPattern type="XSS_JSP_PRINT" abbrev="SECXSS1" category="SECURITY" cweid="79"/>
-    <BugPattern type="JSP_INCLUDE" abbrev="SECJSPINC" category="SECURITY" cweid="98"/>
+    <BugPattern type="JSP_INCLUDE" abbrev="SECJSPINC" category="SECURITY" cweid="917"/>
     <BugPattern type="JSP_SPRING_EVAL" abbrev="SECJSPSPRING" category="SECURITY" cweid="917"/>
     <BugPattern type="JSP_JSTL_OUT" abbrev="SECJSPJSTL" category="SECURITY" cweid="79"/>
     <BugPattern type="JSP_XSLT" abbrev="SECJSPXSLT" category="SECURITY" cweid="94"/>
@@ -250,7 +250,7 @@
     <BugPattern type="ECB_MODE" abbrev="SECECB" category="SECURITY" cweid="327"/>
     <BugPattern type="PADDING_ORACLE" abbrev="PADORA" category="SECURITY" cweid="326"/>
     <BugPattern type="CIPHER_INTEGRITY" abbrev="CIPINT" category="SECURITY" cweid="353"/>
-    <BugPattern type="ESAPI_ENCRYPTOR" abbrev="ESAPIENC" category="SECURITY"/>
+    <BugPattern type="ESAPI_ENCRYPTOR" abbrev="ESAPIENC" category="SECURITY" cweid="310"/>
     <BugPattern type="SCRIPT_ENGINE_INJECTION" abbrev="SCRIPTE" category="SECURITY" cweid="94"/>
     <BugPattern type="SPEL_INJECTION" abbrev="SPELI" category="SECURITY" cweid="94"/>
     <BugPattern type="EL_INJECTION" abbrev="SECEL" category="SECURITY" cweid="94"/>
@@ -265,7 +265,7 @@
     <BugPattern type="ANDROID_WORLD_WRITABLE" abbrev="SECWW" category="SECURITY" cweid="276"/>
     <BugPattern type="ANDROID_GEOLOCATION" abbrev="SECGEO" category="SECURITY" cweid="359"/>
     <BugPattern type="ANDROID_WEB_VIEW_JAVASCRIPT" abbrev="SECWVJ" category="SECURITY" cweid="79"/>
-    <BugPattern type="ANDROID_WEB_VIEW_JAVASCRIPT_INTERFACE" abbrev="SECWVJI" category="SECURITY" cweid="285"/>
+    <BugPattern type="ANDROID_WEB_VIEW_JAVASCRIPT_INTERFACE" abbrev="SECWVJI" category="SECURITY" cweid="749"/>
     <BugPattern type="OBJECT_DESERIALIZATION" abbrev="SECOBDES" category="SECURITY" cweid="502"/>
     <BugPattern type="JACKSON_UNSAFE_DESERIALIZATION" abbrev="SECUJDES" category="SECURITY" cweid="502"/>
     <BugPattern type="DESERIALIZATION_GADGET" abbrev="SECDESGAD" category="SECURITY" cweid="502" experimental="true"/>
@@ -281,10 +281,10 @@
     <BugPattern type="INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE" abbrev="ERRMSG" category="SECURITY" cweid="209"/>
     <BugPattern type="RPC_ENABLED_EXTENSIONS" abbrev="RPCEXT" category="SECURITY"/>
     <BugPattern type="WICKET_XSS1" abbrev="WICXSS1" category="SECURITY" cweid="79"/>
-    <BugPattern type="OVERLY_PERMISSIVE_FILE_PERMISSION" abbrev="SECOPFP" category="SECURITY"/>
+    <BugPattern type="OVERLY_PERMISSIVE_FILE_PERMISSION" abbrev="SECOPFP" category="SECURITY" cweid="732"/>
     <BugPattern type="IMPROPER_UNICODE" abbrev="SECUNI" category="SECURITY" cweid="176"/>
-    <BugPattern type="MODIFICATION_AFTER_VALIDATION" abbrev="SECMOD" category="SECURITY" cweid="176"/>
-    <BugPattern type="NORMALIZATION_AFTER_VALIDATION" abbrev="SECNORM" category="SECURITY" cweid="176"/>
+    <BugPattern type="MODIFICATION_AFTER_VALIDATION" abbrev="SECMOD" category="SECURITY" cweid="179"/>
+    <BugPattern type="NORMALIZATION_AFTER_VALIDATION" abbrev="SECNORM" category="SECURITY" cweid="180"/>
     <BugPattern type="DANGEROUS_PERMISSION_COMBINATION" abbrev="SECPERM" category="SECURITY" cweid="732"/>
     <BugPattern type="POTENTIAL_XML_INJECTION" abbrev="SECXML" category="SECURITY"/>
 </FindbugsPlugin>

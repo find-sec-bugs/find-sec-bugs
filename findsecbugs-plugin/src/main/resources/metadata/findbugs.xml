@@ -286,5 +286,5 @@
     <BugPattern type="MODIFICATION_AFTER_VALIDATION" abbrev="SECMOD" category="SECURITY" cweid="179"/>
     <BugPattern type="NORMALIZATION_AFTER_VALIDATION" abbrev="SECNORM" category="SECURITY" cweid="180"/>
     <BugPattern type="DANGEROUS_PERMISSION_COMBINATION" abbrev="SECPERM" category="SECURITY" cweid="732"/>
-    <BugPattern type="POTENTIAL_XML_INJECTION" abbrev="SECXML" category="SECURITY"/>
+    <BugPattern type="POTENTIAL_XML_INJECTION" abbrev="SECXML" category="SECURITY" cweid="91"/>
 </FindbugsPlugin>

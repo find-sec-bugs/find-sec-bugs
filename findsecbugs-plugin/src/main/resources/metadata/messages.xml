@@ -7047,6 +7047,7 @@ phone for 1 singe dollar.
 <p>References</b><br>
 <a href="https://wiki.sei.cmu.edu/confluence/display/java/IDS16-J.+Prevent+XML+Injection">IDS16-J. Prevent XML Injection</a><br/>
 <a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/91.html">CWE-91: XML Injection (aka Blind XPath Injection)</a><br/>
 </p>
         ]]>
         </Details>

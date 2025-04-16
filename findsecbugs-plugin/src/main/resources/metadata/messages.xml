@@ -54,7 +54,8 @@ String generateSecretToken() {
 <a href="https://jazzy.id.au/2010/09/20/cracking_random_number_generators_part_1.html">Cracking Random Number Generators - Part 1 (https://jazzy.id.au)</a><br/>
 <a href="https://www.securecoding.cert.org/confluence/display/java/MSC02-J.+Generate+strong+random+numbers">CERT: MSC02-J. Generate strong random numbers</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/330.html">CWE-330: Use of Insufficiently Random Values</a><br/>
-<a href="https://blog.h3xstream.com/2014/12/predicting-struts-csrf-token-cve-2014.html">Predicting Struts CSRF Token (Example of real-life vulnerability and exploitation)</a>
+<a href="https://blog.h3xstream.com/2014/12/predicting-struts-csrf-token-cve-2014.html">Predicting Struts CSRF Token (Example of real-life vulnerability and exploitation)</a><br/>
+<a href="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">OWASP TOP 10 2021 A02 – Cryptographic Failures</a>
 </p>
 ]]>
         </Details>
@@ -112,7 +113,8 @@ def generateSecretToken() {
 <a href="https://jazzy.id.au/2010/09/20/cracking_random_number_generators_part_1.html">Cracking Random Number Generators - Part 1 (http://jazzy.id.au)</a><br/>
 <a href="https://www.securecoding.cert.org/confluence/display/java/MSC02-J.+Generate+strong+random+numbers">CERT: MSC02-J. Generate strong random numbers</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/330.html">CWE-330: Use of Insufficiently Random Values</a><br/>
-<a href="https://blog.h3xstream.com/2014/12/predicting-struts-csrf-token-cve-2014.html">Predicting Struts CSRF Token (Example of real-life vulnerability and exploitation)</a>
+<a href="https://blog.h3xstream.com/2014/12/predicting-struts-csrf-token-cve-2014.html">Predicting Struts CSRF Token (Example of real-life vulnerability and exploitation)</a><br/>
+<a href="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">OWASP TOP 10 2021 A02 – Cryptographic Failures</a>
 </p>
 ]]>
         </Details>
@@ -143,7 +145,8 @@ You may need to validate or sanitize those values before passing them to sensiti
 <br/>
 <p>
 <b>Reference</b><br/>
-<a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a>
+<a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a>
 </p>
 ]]>
         </Details>
@@ -162,7 +165,8 @@ The HTTP header Content-Type can be controlled by the client. As such, its value
 <br/>
 <p>
 <b>Reference</b><br/>
-<a href="https://cwe.mitre.org/data/definitions/807.html">CWE-807: Untrusted Inputs in a Security Decision</a>
+<a href="https://cwe.mitre.org/data/definitions/807.html">CWE-807: Untrusted Inputs in a Security Decision</a><br/>
+<a href="https://owasp.org/Top10/A04_2021-Insecure_Design/">OWASP TOP 10 2021 A04 – Insecure Design</a>
 </p>
 ]]>
         </Details>
@@ -190,7 +194,8 @@ decisions you make with respect to a request.
 <br/>
 <p>
 <b>Reference</b><br/>
-<a href="https://cwe.mitre.org/data/definitions/807.html">CWE-807: Untrusted Inputs in a Security Decision</a>
+<a href="https://cwe.mitre.org/data/definitions/807.html">CWE-807: Untrusted Inputs in a Security Decision</a><br/>
+<a href="https://owasp.org/Top10/A04_2021-Insecure_Design/">OWASP TOP 10 2021 A04 – Insecure Design</a>
 </p>
 ]]>
         </Details>
@@ -225,8 +230,8 @@ valid active session IDs, allowing an insider to hijack any sessions whose IDs h
 <p>
 <b>References</b><br/>
 <a href="https://www.owasp.org/index.php/Session_Management_Cheat_Sheet">OWASP: Session Management Cheat Sheet</a><br/>
-<a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a>
-
+<a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a>
 </p>
 ]]>
         </Details>
@@ -249,7 +254,8 @@ You may need to validate or sanitize anything pulled from the query string befor
 <br/>
 <p>
 <b>Reference</b><br/>
-<a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a>
+<a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a>
 </p>
 ]]>
         </Details>
@@ -268,7 +274,8 @@ not trust this value in any security decisions you make with respect to a reques
 <br/>
 <p>
 <b>Reference</b><br/>
-<a href="https://cwe.mitre.org/data/definitions/807.html">CWE-807: Untrusted Inputs in a Security Decision</a>
+<a href="https://cwe.mitre.org/data/definitions/807.html">CWE-807: Untrusted Inputs in a Security Decision</a><br/>
+<a href="https://owasp.org/Top10/A04_2021-Insecure_Design/">OWASP TOP 10 2021 A04 – Insecure Design</a>
 </p>
 ]]>
         </Details>
@@ -298,7 +305,8 @@ Recommendations:
 <br/>
 <p>
 <b>Reference</b><br/>
-<a href="https://cwe.mitre.org/data/definitions/807.html">CWE-807: Untrusted Inputs in a Security Decision</a>
+<a href="https://cwe.mitre.org/data/definitions/807.html">CWE-807: Untrusted Inputs in a Security Decision</a><br/>
+<a href="https://owasp.org/Top10/A04_2021-Insecure_Design/">OWASP TOP 10 2021 A04 – Insecure Design</a>
 </p>
 ]]>
         </Details>
@@ -316,7 +324,8 @@ crawler UA) is not recommended.</p>
 <br/>
 <p>
 <b>Reference</b><br/>
-<a href="https://cwe.mitre.org/data/definitions/807.html">CWE-807: Untrusted Inputs in a Security Decision</a>
+<a href="https://cwe.mitre.org/data/definitions/807.html">CWE-807: Untrusted Inputs in a Security Decision</a><br/>
+<a href="https://owasp.org/Top10/A04_2021-Insecure_Design/">OWASP TOP 10 2021 A04 – Insecure Design</a>
 </p>
 ]]>
         </Details>
@@ -340,7 +349,8 @@ and referenced by the user's session cookie. See HttpSession (<code>HttpServletR
 <br/>
 <p>
 <b>Reference</b><br/>
-<a href="https://cwe.mitre.org/data/definitions/315.html">CWE-315: Cleartext Storage of Sensitive Information in a Cookie</a>
+<a href="https://cwe.mitre.org/data/definitions/315.html">CWE-315: Cleartext Storage of Sensitive Information in a Cookie</a><br/>
+<a href="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">OWASP TOP 10 2021 A05 – Security Misconfiguration</a>
 </p>
 ]]>
         </Details>
@@ -404,7 +414,8 @@ public Response getImage(@javax.ws.rs.PathParam("image") String image) {
 <a href="http://projects.webappsec.org/w/page/13246952/Path%20Traversal">WASC: Path Traversal</a><br/>
 <a href="https://www.owasp.org/index.php/Path_Traversal">OWASP: Path Traversal</a><br/>
 <a href="https://capec.mitre.org/data/definitions/126.html">CAPEC-126: Path Traversal</a><br/>
-<a href="https://cwe.mitre.org/data/definitions/22.html">CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')</a>
+<a href="https://cwe.mitre.org/data/definitions/22.html">CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')</a><br/>
+<a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">OWASP TOP 10 2021 A01 – Broken Access Control</a>
 </p>
 ]]>
         </Details>
@@ -427,7 +438,8 @@ by the user. If that is the case, the reported instance is a false positive.</p>
 <a href="http://projects.webappsec.org/w/page/13246952/Path%20Traversal">WASC-33: Path Traversal</a><br/>
 <a href="https://www.owasp.org/index.php/Path_Traversal">OWASP: Path Traversal</a><br/>
 <a href="https://capec.mitre.org/data/definitions/126.html">CAPEC-126: Path Traversal</a><br/>
-<a href="https://cwe.mitre.org/data/definitions/22.html">CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')</a>
+<a href="https://cwe.mitre.org/data/definitions/22.html">CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')</a><br/>
+<a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">OWASP TOP 10 2021 A01 – Broken Access Control</a>
 </p>
 ]]>
         </Details>
@@ -480,7 +492,8 @@ def getWordList(value:String) = Action {
 <a href="http://projects.webappsec.org/w/page/13246952/Path%20Traversal">WASC: Path Traversal</a><br/>
 <a href="https://www.owasp.org/index.php/Path_Traversal">OWASP: Path Traversal</a><br/>
 <a href="https://capec.mitre.org/data/definitions/126.html">CAPEC-126: Path Traversal</a><br/>
-<a href="https://cwe.mitre.org/data/definitions/22.html">CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')</a>
+<a href="https://cwe.mitre.org/data/definitions/22.html">CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')</a><br/>
+<a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">OWASP TOP 10 2021 A01 – Broken Access Control</a>
 </p>
 ]]>
         </Details>
@@ -510,6 +523,7 @@ r.exec("/bin/sh -c some_tool" + input);</pre>
 <b>References</b><br/>
 <a href="https://www.owasp.org/index.php/Command_Injection">OWASP: Command Injection</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/78.html">CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')</a>
 </p>
 ]]>
@@ -536,6 +550,7 @@ r.exec("/bin/sh -c some_tool" + input);</pre>
 <b>References</b><br/>
 <a href="https://www.owasp.org/index.php/Command_Injection">OWASP: Command Injection</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/78.html">CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')</a>
 </p>
 ]]>
@@ -642,7 +657,8 @@ sc.init(kmf.getKeyManagers(), tmf.getTrustManagers(),null);
 <p>
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246945/Insufficient%20Transport%20Layer%20Protection">WASC-04: Insufficient Transport Layer Protection</a><br/>
-<a href="https://cwe.mitre.org/data/definitions/295.html">CWE-295: Improper Certificate Validation</a>
+<a href="https://cwe.mitre.org/data/definitions/295.html">CWE-295: Improper Certificate Validation</a><br/>
+<a href="https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/">OWASP TOP 10 2021 A07 – Identification and Authentication Failures</a>
 </p>
 ]]>
         </Details>
@@ -692,7 +708,8 @@ sc.init(kmf.getKeyManagers(), tmf.getTrustManagers(),null);
 <p>
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246945/Insufficient%20Transport%20Layer%20Protection">WASC-04: Insufficient Transport Layer Protection</a><br/>
-<a href="https://cwe.mitre.org/data/definitions/295.html">CWE-295: Improper Certificate Validation</a>
+<a href="https://cwe.mitre.org/data/definitions/295.html">CWE-295: Improper Certificate Validation</a><br/>
+<a href="https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/">OWASP TOP 10 2021 A07 – Identification and Authentication Failures</a>
 </p>
 ]]>
         </Details>
@@ -725,7 +742,8 @@ sc.init(kmf.getKeyManagers(), tmf.getTrustManagers(),null);
 <p>
 <b>References</b><br/>
 <a href="https://www.owasp.org/index.php/Web_Service_Security_Cheat_Sheet">OWASP: Web Service Security Cheat Sheet</a><br/>
-<a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a>
+<a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a>
 </p>
 ]]>
         </Details>
@@ -762,6 +780,7 @@ sc.init(kmf.getKeyManagers(), tmf.getTrustManagers(),null);
 <a href="https://www.owasp.org/index.php/Web_Service_Security_Cheat_Sheet">OWASP: Web Service Security Cheat Sheet</a><br/>
 1. <a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)">OWASP: Cross-Site Request Forgery</a><br/>
 <a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29_Prevention_Cheat_Sheet">OWASP: CSRF Prevention Cheat Sheet</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a>
 </p>
 ]]>
@@ -806,7 +825,8 @@ mapped in this way are properly validated before they are used.</p>
 <p>
 <b>References</b><br/>
 <a href="https://tapestry.apache.org/">Apache Tapestry Home Page</a><br/>
-<a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a>
+<a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a>
 </p>
 ]]>
         </Details>
@@ -831,7 +851,8 @@ mapped in this way are properly validated before they are used.</p>
 <p>
 <b>References</b><br/>
 <a href="https://wicket.apache.org/">Apache Wicket Home Page</a><br/>
-<a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a>
+<a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a>
 </p>
 ]]>
         </Details>
@@ -905,8 +926,9 @@ mapped in this way are properly validated before they are used.</p>
 <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf">NIST: Transitioning the Use of Cryptographic Algorithms and Key Lengths</a><br/>
 <a href="https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-132.pdf">NIST: Recommendation for Password-Based Key Derivation</a><br/>
 <a href="https://stackoverflow.com/q/22580853/89769">Stackoverflow: Reliable implementation of PBKDF2-HMAC-SHA256 for Java</a><br/>
-<a href="https://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky Cryptographic Algorithm</a>
-<a href="https://cwe.mitre.org/data/definitions/328.html">CWE-328: Use of Weak Hash</a>
+<a href="https://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky Cryptographic Algorithm</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/328.html">CWE-328: Use of Weak Hash</a><br/>
+<a href="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">OWASP TOP 10 2021 A02 – Cryptographic Failures</a>
 </p>
 ]]>
         </Details>
@@ -974,8 +996,9 @@ uses. <b>PBKDF2</b> should be used to hash password for example.</p>
 <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf">NIST: Transitioning the Use of Cryptographic Algorithms and Key Lengths</a><br/>
 <a href="https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-132.pdf">NIST: Recommendation for Password-Based Key Derivation</a><br/>
 <a href="https://stackoverflow.com/q/22580853/89769">Stackoverflow: Reliable implementation of PBKDF2-HMAC-SHA256 for Java</a><br/>
-<a href="https://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky Cryptographic Algorithm</a>
-<a href="https://cwe.mitre.org/data/definitions/328.html">CWE-328: Use of Weak Hash</a>
+<a href="https://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky Cryptographic Algorithm</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/328.html">CWE-328: Use of Weak Hash</a><br/>
+<a href="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">OWASP TOP 10 2021 A02 – Cryptographic Failures</a>
 </p>
 ]]>
         </Details>
@@ -1106,7 +1129,8 @@ sha256Digest.update(password.getBytes());</pre>
 <p>
 <b>References</b><br/>
 <a href="https://csrc.nist.gov/projects/hash-functions">NIST Approved Hash Functions</a><br/>
-<a href="https://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky Cryptographic Algorithm</a>
+<a href="https://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky Cryptographic Algorithm</a><br/>
+<a href="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">OWASP TOP 10 2021 A02 – Cryptographic Failures</a>
 </p>
 ]]>
         </Details>
@@ -1140,6 +1164,7 @@ contains no unauthorized path characters (e.g., / \), and refers to an authorize
 <a href="https://cwe.mitre.org/data/definitions/22.html">CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')</a><br/>
 <a href="http://projects.webappsec.org/w/page/13246952/Path%20Traversal">WASC-33: Path Traversal</a><br/>
 <a href="https://www.owasp.org/index.php/Path_Traversal">OWASP: Path Traversal</a><br/>
+<a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">OWASP TOP 10 2021 A01 – Broken Access Control</a><br/>
 <a href="https://capec.mitre.org/data/definitions/126.html">CAPEC-126: Path Traversal</a><br/>
 </p>
 ]]>
@@ -1273,6 +1298,7 @@ The following snippets show two available solutions. You can set one property or
 <a href="https://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference ('XXE')</a><br/>
 <a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=61702260">CERT: IDS10-J. Prevent XML external entity attacks</a><br/>
 <a href="https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing">OWASP.org: XML External Entity (XXE) Processing</a><br/>
+<a href="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">OWASP TOP 10 2021 A05 – Security Misconfiguration</a><br/>
 <a href="https://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a><br/>
 <a href="https://www.ws-attacks.org/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a><br/>
 <a href="https://www.ws-attacks.org/index.php/XML_Entity_Reference_Attack">WS-Attacks.org: XML Entity Reference Attack</a><br/>
@@ -1376,6 +1402,7 @@ xPathExpr.evaluate( builder.parse(inputStream) );</pre>
 <a href="https://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference ('XXE')</a><br/>
 <a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=61702260">CERT: IDS10-J. Prevent XML external entity attacks</a><br/>
 <a href="https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing">OWASP.org: XML External Entity (XXE) Processing</a><br/>
+<a href="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">OWASP TOP 10 2021 A05 – Security Misconfiguration</a><br/>
 <a href="https://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a><br/>
 <a href="https://www.ws-attacks.org/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a><br/>
 <a href="https://www.ws-attacks.org/index.php/XML_Entity_Reference_Attack">WS-Attacks.org: XML Entity Reference Attack</a><br/>
@@ -1467,6 +1494,7 @@ parser.parse(inputStream, customHandler);</pre>
 <a href="https://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference ('XXE')</a><br/>
 <a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=61702260">CERT: IDS10-J. Prevent XML external entity attacks</a><br/>
 <a href="https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing">OWASP.org: XML External Entity (XXE) Processing</a><br/>
+<a href="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">OWASP TOP 10 2021 A05 – Security Misconfiguration</a><br/>
 <a href="https://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a><br/>
 <a href="https://www.ws-attacks.org/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a><br/>
 <a href="https://www.ws-attacks.org/index.php/XML_Entity_Reference_Attack">WS-Attacks.org: XML Entity Reference Attack</a><br/>
@@ -1558,6 +1586,7 @@ reader.parse(new InputSource(inputStream));</pre>
 <a href="https://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference ('XXE')</a><br/>
 <a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=61702260">CERT: IDS10-J. Prevent XML external entity attacks</a><br/>
 <a href="https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing">OWASP.org: XML External Entity (XXE) Processing</a><br/>
+<a href="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">OWASP TOP 10 2021 A05 – Security Misconfiguration</a><br/>
 <a href="https://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a><br/>
 <a href="https://www.ws-attacks.org/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a><br/>
 <a href="https://www.ws-attacks.org/index.php/XML_Entity_Reference_Attack">WS-Attacks.org: XML Entity Reference Attack</a><br/>
@@ -1649,6 +1678,7 @@ Document doc = db.parse(input);</pre>
 <a href="https://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference ('XXE')</a><br/>
 <a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=61702260">CERT: IDS10-J. Prevent XML external entity attacks</a><br/>
 <a href="https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing">OWASP.org: XML External Entity (XXE) Processing</a><br/>
+<a href="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">OWASP TOP 10 2021 A05 – Security Misconfiguration</a><br/>
 <a href="https://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a><br/>
 <a href="https://www.ws-attacks.org/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a><br/>
 <a href="https://www.ws-attacks.org/index.php/XML_Entity_Reference_Attack">WS-Attacks.org: XML Entity Reference Attack</a><br/>
@@ -1751,6 +1781,7 @@ transformer.transform(input, result);</pre>
 <a href="https://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference ('XXE')</a><br/>
 <a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=61702260">CERT: IDS10-J. Prevent XML external entity attacks</a><br/>
 <a href="https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing">OWASP.org: XML External Entity (XXE) Processing</a><br/>
+<a href="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">OWASP TOP 10 2021 A05 – Security Misconfiguration</a><br/>
 <a href="https://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a><br/>
 <a href="https://www.ws-attacks.org/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a><br/>
 <a href="https://www.ws-attacks.org/index.php/XML_Entity_Reference_Attack">WS-Attacks.org: XML Entity Reference Attack</a><br/>
@@ -1832,6 +1863,7 @@ transformer.transform(input, result);</pre>
 <a href="https://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference ('XXE')</a><br/>
 <a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=61702260">CERT: IDS10-J. Prevent XML external entity attacks</a><br/>
 <a href="https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing">OWASP.org: XML External Entity (XXE) Processing</a><br/>
+<a href="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">OWASP TOP 10 2021 A05 – Security Misconfiguration</a><br/>
 <a href="https://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a><br/>
 <a href="https://www.ws-attacks.org/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a><br/>
 <a href="https://www.ws-attacks.org/index.php/XML_Entity_Reference_Attack">WS-Attacks.org: XML Entity Reference Attack</a><br/>
@@ -1940,6 +1972,7 @@ Schema schema = schemaFactory.newSchema(source);
 <ul>
   <li><a href="https://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference</a></li>
   <li><a href="https://owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing">OWASP: XML External Entity (XXE) Processing</a></li>
+  <a href="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">OWASP TOP 10 2021 A05 – Security Misconfiguration</a><br/>
   <li><a href="https://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a></li>
   <li><a href="https://www.ws-attacks.org/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a></li>
   <li><a href="https://www.ws-attacks.org/index.php/XML_Entity_Reference_Attack">WS-Attacks.org: XML Entity Reference Attack</a></li>
@@ -2055,6 +2088,7 @@ validator.validate(source);
 <ul>
   <li><a href="https://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference</a></li>
   <li><a href="https://owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing">OWASP: XML External Entity (XXE) Processing</a></li>
+  <a href="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">OWASP TOP 10 2021 A05 – Security Misconfiguration</a><br/>
   <li><a href="https://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity Expansion</a></li>
   <li><a href="https://www.ws-attacks.org/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External Entity DOS</a></li>
   <li><a href="https://www.ws-attacks.org/index.php/XML_Entity_Reference_Attack">WS-Attacks.org: XML Entity Reference Attack</a></li>
@@ -2085,6 +2119,7 @@ could be exposed. This could allow an attacker to access unauthorized data or ma
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-39: XPath Injection</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/643.html">CWE-643: Improper Neutralization of Data within XPath Expressions ('XPath Injection')</a><br/>
 <a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=61407250">CERT: IDS09-J. Prevent XPath Injection (archive)</a><br/>
 <a href="https://media.blackhat.com/bh-eu-12/Siddharth/bh-eu-12-Siddharth-Xpath-WP.pdf">Black Hat Europe 2012: Hacking XPath 2.0</a><br/>
@@ -2179,6 +2214,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 <a href="https://docs.spring.io/spring-security/site/docs/current/reference/html/csrf.html#when-to-use-csrf-protection">Spring Security Official Documentation: When to use CSRF protection</a><br/>
 <a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29">OWASP: Cross-Site Request Forgery</a><br/>
 <a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29_Prevention_Cheat_Sheet">OWASP: CSRF Prevention Cheat Sheet</a><br/>
+<a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">OWASP TOP 10 2021 A01 – Broken Access Control</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/352.html">CWE-352: Cross-Site Request Forgery (CSRF)</a>
 </p>
 ]]>
@@ -2268,6 +2304,7 @@ public class SafeController {
 <a href="https://docs.spring.io/spring-security/site/docs/current/reference/html/csrf.html#csrf-use-proper-verbs">Spring Security Official Documentation: Use proper HTTP verbs (CSRF protection)</a><br/>
 <a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29">OWASP: Cross-Site Request Forgery</a><br/>
 <a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29_Prevention_Cheat_Sheet">OWASP: CSRF Prevention Cheat Sheet</a><br/>
+<a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">OWASP TOP 10 2021 A01 – Broken Access Control</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/352.html">CWE-352: Cross-Site Request Forgery (CSRF)</a>
 </p>
 ]]>
@@ -2301,6 +2338,7 @@ The method identified is susceptible to injection. The input should be validated
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-19: SQL Injection</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet">OWASP: SQL Injection Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Query_Parameterization_Cheat_Sheet">OWASP: Query Parameterization Cheat Sheet</a><br/>
 <a href="https://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a><br/>
@@ -2351,6 +2389,7 @@ createQuery("select * from User where id = '"+Encoder.encodeForSQL(inputId)+"'")
 <a href="https://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet">OWASP: SQL Injection Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Query_Parameterization_Cheat_Sheet">OWASP: Query Parameterization Cheat Sheet</a><br/>
 </p>
@@ -2409,6 +2448,7 @@ BasePeer.executeQuery("select * from Customer where id = '"+Encoder.encodeForSQL
 <a href="https://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet">OWASP: SQL Injection Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Query_Parameterization_Cheat_Sheet">OWASP: Query Parameterization Cheat Sheet</a><br/>
 </p>
@@ -2465,6 +2505,7 @@ q.execute();</pre>
 <a href="https://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet">OWASP: SQL Injection Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Query_Parameterization_Cheat_Sheet">OWASP: Query Parameterization Cheat Sheet</a><br/>
 </p>
@@ -2509,6 +2550,7 @@ q.execute(input);</pre>
 <a href="https://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet">OWASP: SQL Injection Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Query_Parameterization_Cheat_Sheet">OWASP: Query Parameterization Cheat Sheet</a><br/>
 </p>
@@ -2556,6 +2598,7 @@ UserEntity res = q.getSingleResult();</pre>
 <a href="https://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet">OWASP: SQL Injection Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Query_Parameterization_Cheat_Sheet">OWASP: Query Parameterization Cheat Sheet</a><br/>
 </p>
@@ -2609,6 +2652,7 @@ public function count() {
 <a href="https://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet">OWASP: SQL Injection Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Query_Parameterization_Cheat_Sheet">OWASP: Query Parameterization Cheat Sheet</a><br/>
 </p>
@@ -2650,6 +2694,7 @@ updateSales.setString(2, coffeeName);</pre>
 <a href="https://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet">OWASP: SQL Injection Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Query_Parameterization_Cheat_Sheet">OWASP: Query Parameterization Cheat Sheet</a><br/>
 </p>
@@ -2688,6 +2733,7 @@ Bind variables in prepared statements can be used to easily mitigate the risk of
 <a href="https://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet">OWASP: SQL Injection Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Query_Parameterization_Cheat_Sheet">OWASP: Query Parameterization Cheat Sheet</a><br/>
 </p>
@@ -2730,6 +2776,7 @@ DB.withConnection { implicit c =>
 <a href="https://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet">OWASP: SQL Injection Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Query_Parameterization_Cheat_Sheet">OWASP: Query Parameterization Cheat Sheet</a><br/>
 </p>
@@ -2775,6 +2822,7 @@ client
 <a href="https://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet">OWASP: SQL Injection Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Query_Parameterization_Cheat_Sheet">OWASP: Query Parameterization Cheat Sheet</a><br/>
 </p>
@@ -2822,6 +2870,7 @@ Cursor cursor = this.getReadableDatabase().rawQuery(query,new String[] {userInpu
 <a href="https://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP: Top 10 2013-A1-Injection</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet">OWASP: SQL Injection Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Query_Parameterization_Cheat_Sheet">OWASP: Query Parameterization Cheat Sheet</a><br/>
 </p>
@@ -2863,6 +2912,7 @@ Safe evaluation of Java code using "StringUtils" library.<br/>
 <strong>References</strong><br/>
 <a href="https://cheatsheetseries.owasp.org/cheatsheets/LDAP_Injection_Prevention_Cheat_Sheet.html">LDAP Injection Prevention Cheat Sheet</a><br/>
 <a href="https://owasp.org/www-project-top-ten/OWASP_Top_Ten_2017/Top_10-2017_A1-Injection">OWASP: Top 10 A1:2017-Injection</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="http://projects.webappsec.org/w/page/13246947/LDAP%20Injection">WASC-29: LDAP Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/90.html">CWE-90: Improper Neutralization of Special Elements used in an LDAP Query ('LDAP Injection')</a><br/>
 </p>
@@ -2929,6 +2979,7 @@ public void runCustomTrigger(String script) {
 <a href="https://blog.h3xstream.com/2014/11/remote-code-execution-by-design.html">Remote Code Execution .. by design</a>: Example of malicious payload. The samples given could be used to test sandboxing rules.<br/>
 <a href="https://cwe.mitre.org/data/definitions/94.html">CWE-94: Improper Control of Generation of Code ('Code Injection')</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/95.html">CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 </p>
 ]]>
         </Details>
@@ -2972,7 +3023,8 @@ public void parseExpressionInterface(Person personObj,String property) {
     <a href="https://www.mindedsecurity.com/fileshare/ExpressionLanguageInjection.pdf">Minded Security: Expression Language Injection</a><br/>
     <a href="https://blog.h3xstream.com/2014/11/remote-code-execution-by-design.html">Remote Code Execution .. by design</a>: Example of malicious payload. The samples given could be used to test sandboxing rules.<br/>
     <a href="https://gosecure.net/2018/05/15/beware-of-the-magic-spell-part-1-cve-2018-1273/">Spring Data-Commons: (CVE-2018-1273)</a><br/>
-    <a href="https://gosecure.net/2018/05/17/beware-of-the-magic-spell-part-2-cve-2018-1260/">Spring OAuth2: CVE-2018-1260</a>
+    <a href="https://gosecure.net/2018/05/17/beware-of-the-magic-spell-part-2-cve-2018-1260/">Spring OAuth2: CVE-2018-1260</a><br/>
+    <a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a>
 </p>
 
 ]]>
@@ -3010,6 +3062,7 @@ public void parseExpressionInterface(Person personObj,String property) {
     <a href="https://www.mindedsecurity.com/fileshare/ExpressionLanguageInjection.pdf">Minded Security: Expression Language Injection</a><br/>
     <a href="http://danamodio.com/appsec/research/spring-remote-code-with-expression-language-injection/">Dan Amodio's blog: Remote Code with Expression Language Injection</a><br/>
     <a href="https://blog.h3xstream.com/2014/11/remote-code-execution-by-design.html">Remote Code Execution .. by design</a>: Example of malicious payload. The samples given could be used to test sandboxing rules.<br/>
+    <a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a>
 </p>
 ]]>
         </Details>
@@ -3052,7 +3105,7 @@ public void parseExpressionInterface(Person personObj,String property) {
     <a href="https://docs.oracle.com/javaee/6/tutorial/doc/gjddd.html">The Java EE 6 Tutorial: Expression Language</a><br/>
     <a href="https://cwe.mitre.org/data/definitions/94.html">CWE-94: Improper Control of Generation of Code ('Code Injection')</a><br/>
     <a href="https://cwe.mitre.org/data/definitions/95.html">CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')</a><br/>
-
+    <a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 </p>
 ]]>
         </Details>
@@ -3095,6 +3148,7 @@ In general, method evaluating OGNL expression should not receive user input. It 
     <a href="https://struts.apache.org/docs/s2-016.html">Apache Struts2: Vulnerability S2-016</a><br/>
     <a href="https://struts.apache.org/docs/ognl.html">Apache Struts 2 Documentation: OGNL</a><br/>
     <a href="https://cwe.mitre.org/data/definitions/94.html">CWE-94: Improper Control of Generation of Code ('Code Injection')</a><br/>
+    <a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 </p>
 ]]>
         </Details>
@@ -3136,6 +3190,7 @@ In general, method evaluating Groovy expression should not receive user input fr
     <a href="https://github.com/adamyordan/cve-2019-1003000-jenkins-rce-poc">POC for CVE-2019-1003001</a> by Adam Jordan<br/>
     <a href="https://github.com/welk1n/exploiting-groovy-in-Java/">Various payloads of exploiting Groovy code evaluation</a><br/>
     <a href="https://cwe.mitre.org/data/definitions/94.html">CWE-94: Improper Control of Generation of Code ('Code Injection')</a><br/>
+    <a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 </p>
 ]]>
         </Details>
@@ -3175,6 +3230,7 @@ response.addCookie(cookie);</pre>
     <a href="https://www.owasp.org/index.php/HTTP_Response_Splitting">OWASP: HTTP Response Splitting</a><br/>
     <a href="https://cwe.mitre.org/data/definitions/113.html">CWE-113: Improper Neutralization of CRLF Sequences in HTTP Headers ('HTTP Response Splitting')</a>
     <a href="https://cwe.mitre.org/data/definitions/93.html">CWE-93: Improper Neutralization of CRLF Sequences ('CRLF Injection')</a><br/>
+    <a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 </p>
 
 ]]>
@@ -3247,6 +3303,7 @@ The project <a href="https://github.com/javabeanz/owasp-security-logging">OWASP 
     <a href="https://cwe.mitre.org/data/definitions/93.html">CWE-93: Improper Neutralization of CRLF Sequences ('CRLF Injection')</a><br/>
     <a href="https://logback.qos.ch/manual/layouts.html#replace">CWE-93: Improper Neutralization of CRLF Sequences ('CRLF Injection')</a><br/>
     <a href="https://github.com/javabeanz/owasp-security-logging">OWASP Security Logging</a><br/>
+    <a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 </p>
 
 ]]>
@@ -3280,6 +3337,7 @@ The project <a href="https://github.com/javabeanz/owasp-security-logging">OWASP 
 <p>
     <b>References</b><br/>
     <a href="https://cwe.mitre.org/data/definitions/15.html">CWE-15: External Control of System or Configuration Setting</a><br/>
+    <a href="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">OWASP TOP 10 2021 A05 – Security Misconfiguration</a><br/>
 </p>
 ]]>
         </Details>
@@ -3346,8 +3404,9 @@ In this situation, the method <code>Integer.toHexString()</code> should be repla
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246945/Insufficient%20Transport%20Layer%20Protection">WASC-04: Insufficient Transport Layer Protection</a><br/>
 <a href="https://docs.hazelcast.org/docs/3.5/manual/html/encryption.html">Hazelcast Documentation: Encryption</a><br/>
-<a href="https://cwe.mitre.org/data/definitions/326.html">CWE-326: Inadequate Encryption Strength</a>
-<a href="https://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky Cryptographic Algorithm</a>
+<a href="https://cwe.mitre.org/data/definitions/326.html">CWE-326: Inadequate Encryption Strength</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky Cryptographic Algorithm</a><br/>
+<a href="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">OWASP TOP 10 2021 A02 – Cryptographic Failures</a><br/>
 </p>
 ]]>
         </Details>
@@ -3382,7 +3441,8 @@ byte[] cipherText = c.doFinal(plainText);</pre>
 <br/>
 <p>
 <b>Reference</b><br/>
-<a href="https://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky Cryptographic Algorithm</a>
+<a href="https://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky Cryptographic Algorithm</a><br/>
+<a href="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">OWASP TOP 10 2021 A02 – Cryptographic Failures</a><br/>
 </p>
 ]]>
         </Details>
@@ -3421,6 +3481,7 @@ to do this correctly.
 <b>References</b><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2010-A9">OWASP: Top 10 2010-A9-Insufficient Transport Layer Protection</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A6-Sensitive_Data_Exposure">OWASP: Top 10 2013-A6-Sensitive Data Exposure</a><br/>
+<a href="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">OWASP TOP 10 2021 A02 – Cryptographic Failures</a><br/>
 <a href="https://www.owasp.org/index.php/Transport_Layer_Protection_Cheat_Sheet">OWASP: Transport Layer Protection Cheat Sheet</a><br/>
 <a href="http://projects.webappsec.org/w/page/13246945/Insufficient%20Transport%20Layer%20Protection">WASC-04: Insufficient Transport Layer Protection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/319.html">CWE-319: Cleartext Transmission of Sensitive Information</a>
@@ -3460,6 +3521,7 @@ to do this correctly.
 <b>References</b><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2010-A9">OWASP: Top 10 2010-A9-Insufficient Transport Layer Protection</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A6-Sensitive_Data_Exposure">OWASP: Top 10 2013-A6-Sensitive Data Exposure</a><br/>
+<a href="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">OWASP TOP 10 2021 A02 – Cryptographic Failures</a><br/>
 <a href="https://www.owasp.org/index.php/Transport_Layer_Protection_Cheat_Sheet">OWASP: Transport Layer Protection Cheat Sheet</a><br/>
 <a href="http://projects.webappsec.org/w/page/13246945/Insufficient%20Transport%20Layer%20Protection">WASC-04: Insufficient Transport Layer Protection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/319.html">CWE-319: Cleartext Transmission of Sensitive Information</a>
@@ -3498,8 +3560,9 @@ byte[] cipherText = c.doFinal(plainText);</pre>
 <p>
 <b>References</b><br/>
 <a href="https://www.nist.gov/news-events/news/2005/06/nist-withdraws-outdated-data-encryption-standard">NIST Withdraws Outdated Data Encryption Standard</a><br/>
-<a href="https://cwe.mitre.org/data/definitions/326.html">CWE-326: Inadequate Encryption Strength</a>
-<a href="https://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky Cryptographic Algorithm</a>
+<a href="https://cwe.mitre.org/data/definitions/326.html">CWE-326: Inadequate Encryption Strength</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky Cryptographic Algorithm</a><br/>
+<a href="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">OWASP TOP 10 2021 A02 – Cryptographic Failures</a><br/>
 </p>
 ]]>
         </Details>
@@ -3535,7 +3598,8 @@ byte[] cipherText = c.doFinal(plainText);</pre>
 <p>
 <b>References</b><br/>
 <a href="https://www.nist.gov/news-events/news/2005/06/nist-withdraws-outdated-data-encryption-standard">NIST Withdraws Outdated Data Encryption Standard</a><br/>
-<a href="https://cwe.mitre.org/data/definitions/326.html">CWE-326: Inadequate Encryption Strength</a>
+<a href="https://cwe.mitre.org/data/definitions/326.html">CWE-326: Inadequate Encryption Strength</a><br/>
+<a href="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">OWASP TOP 10 2021 A02 – Cryptographic Failures</a><br/>
 </p>
 ]]>
         </Details>
@@ -3567,7 +3631,8 @@ The code should be replaced with:<br/>
 <p>
 <b>References</b><br/>
 <a href="https://cwe.mitre.org/data/definitions/780.html">CWE-780: Use of RSA Algorithm without OAEP</a><br/>
-<a href="https://rdist.root.org/2009/10/06/why-rsa-encryption-padding-is-critical/">Root Labs: Why RSA encryption padding is critical</a>
+<a href="https://rdist.root.org/2009/10/06/why-rsa-encryption-padding-is-critical/">Root Labs: Why RSA encryption padding is critical</a><br/>
+<a href="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">OWASP TOP 10 2021 A02 – Cryptographic Failures</a><br/>
 </p>
 ]]>
         </Details>
@@ -3622,7 +3687,8 @@ props.put(Context.SECURITY_CREDENTIALS, "p@ssw0rd");</pre>
 <br/>
 <p>
 <b>References</b><br/>
-<a href="https://cwe.mitre.org/data/definitions/259.html">CWE-259: Use of Hard-coded Password</a>
+<a href="https://cwe.mitre.org/data/definitions/259.html">CWE-259: Use of Hard-coded Password</a><br/>
+<a href="https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/">OWASP TOP 10 2021 A07 – Identification and Authentication Failures</a><br/>
 </p>
 ]]>
         </Details>
@@ -3652,6 +3718,7 @@ return aesCipher.doFinal(secretData);</pre>
 <p>
 <b>References</b><br/>
 <a href="https://cwe.mitre.org/data/definitions/321.html">CWE-321: Use of Hard-coded Cryptographic Key</a><br/>
+<a href="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">OWASP TOP 10 2021 A02 – Cryptographic Failures</a><br/>
 </p>
 ]]>
         </Details>
@@ -3735,7 +3802,8 @@ public class RegistrationForm extends ValidatorForm {
 <p>
 <b>References</b><br/>
 <a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a><br/>
-<a href="https://cwe.mitre.org/data/definitions/106.html">CWE-106: Struts: Plug-in Framework not in Use</a>
+<a href="https://cwe.mitre.org/data/definitions/106.html">CWE-106: Struts: Plug-in Framework not in Use</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 </p>
 ]]>
         </Details>
@@ -3783,6 +3851,7 @@ the XSS protection rules defined in the OWASP XSS Prevention Cheat Sheet.
 <a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site Scripting</a><br/>
 <a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet">OWASP: XSS Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_%28XSS%29">OWASP: Top 10 2013-A3: Cross-Site Scripting (XSS)</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a>
 </p>
 ]]>
@@ -3821,7 +3890,8 @@ keyGen.init(128);</pre>
 <p>
 <b>References</b><br/>
 <a href="https://en.wikipedia.org/wiki/Blowfish_(cipher)">Blowfish (cipher)</a><br/>
-<a href="https://cwe.mitre.org/data/definitions/326.html">CWE-326: Inadequate Encryption Strength</a>
+<a href="https://cwe.mitre.org/data/definitions/326.html">CWE-326: Inadequate Encryption Strength</a><br/>
+<a href="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">OWASP TOP 10 2021 A02 – Cryptographic Failures</a><br/>
 </p>
 ]]>
         </Details>
@@ -3868,7 +3938,8 @@ keyGen.initialize(2048);
 <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf">NIST: Recommendation for Transitioning the Use of Cryptographic Algorithms and Key Lengths p.7</a><br/>
 <a href="https://en.wikipedia.org/wiki/Key_size#Asymmetric%5Falgorithm%5Fkey%5Flengths">Wikipedia: Asymmetric algorithm key lengths</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/326.html">CWE-326: Inadequate Encryption Strength</a><br/>
-<a href="https://www.keylength.com/en/compare/">Keylength.com (BlueKrypt): Aggregate key length recommendations.</a>
+<a href="https://www.keylength.com/en/compare/">Keylength.com (BlueKrypt): Aggregate key length recommendations.</a><br/>
+<a href="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">OWASP TOP 10 2021 A02 – Cryptographic Failures</a><br/>
 </p>
 ]]>
         </Details>
@@ -3929,6 +4000,7 @@ keyGen.initialize(2048);
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246981/URL%20Redirector%20Abuse">WASC-38: URL Redirector Abuse</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A10-Unvalidated_Redirects_and_Forwards">OWASP: Top 10 2013-A10: Unvalidated Redirects and Forwards</a><br/>
+<a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">OWASP TOP 10 2021 A01 – Broken Access Control</a><br/>
 <a href="https://www.owasp.org/index.php/Unvalidated_Redirects_and_Forwards_Cheat_Sheet">OWASP: Unvalidated Redirects and Forwards Cheat Sheet</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/601.html">CWE-601: URL Redirection to Untrusted Site ('Open Redirect')</a>
 </p>
@@ -3978,6 +4050,7 @@ keyGen.initialize(2048);
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246981/URL%20Redirector%20Abuse">WASC-38: URL Redirector Abuse</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A10-Unvalidated_Redirects_and_Forwards">OWASP: Top 10 2013-A10: Unvalidated Redirects and Forwards</a><br/>
+<a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">OWASP TOP 10 2021 A01 – Broken Access Control</a><br/>
 <a href="https://www.owasp.org/index.php/Unvalidated_Redirects_and_Forwards_Cheat_Sheet">OWASP: Unvalidated Redirects and Forwards Cheat Sheet</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/601.html">CWE-601: URL Redirection to Untrusted Site ('Open Redirect')</a>
 </p>
@@ -4028,6 +4101,7 @@ public String redirect(@RequestParam("url") String url) {
 <b>References</b><br/>
 <a href="http://projects.webappsec.org/w/page/13246981/URL%20Redirector%20Abuse">WASC-38: URL Redirector Abuse</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A10-Unvalidated_Redirects_and_Forwards">OWASP: Top 10 2013-A10: Unvalidated Redirects and Forwards</a><br/>
+<a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">OWASP TOP 10 2021 A01 – Broken Access Control</a><br/>
 <a href="https://www.owasp.org/index.php/Unvalidated_Redirects_and_Forwards_Cheat_Sheet">OWASP: Unvalidated Redirects and Forwards Cheat Sheet</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/601.html">CWE-601: URL Redirection to Untrusted Site ('Open Redirect')</a>
 </p>
@@ -4107,6 +4181,7 @@ class UserController {
 <p>
 <b>References</b><br/>
 <a href="https://www.owasp.org/index.php/Top_10-2017_A3-Sensitive_Data_Exposure">OWASP Top 10-2017 A3: Sensitive Data Exposure</a><br/>
+<a href="https://owasp.org/Top10/A04_2021-Insecure_Design/">OWASP TOP 10 2021 A04 – Insecure Design</a><br/>
 <a href="https://cheatsheetseries.owasp.org/cheatsheets/Mass_Assignment_Cheat_Sheet.html#spring-mvc">OWASP Cheat Sheet: Mass Assignment</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/212.html">CWE-212: Improper Cross-boundary Removal of Sensitive Data</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/213.html">CWE-213: Intentional Information Exposure</a><br/>
@@ -4208,6 +4283,7 @@ class UserController {
 <p>
 <b>References</b><br/>
 <a href="https://cheatsheetseries.owasp.org/cheatsheets/Mass_Assignment_Cheat_Sheet.html#spring-mvc">OWASP Cheat Sheet: Mass Assignment</a><br/>
+<a href="https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/">OWASP TOP 10 2021 A08 – Software and Data Integrity Failures</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/915.html">CWE-915: Improperly Controlled Modification of Dynamically-Determined Object Attributes</a><br/>
 </p>
             ]]>
@@ -4244,6 +4320,7 @@ attacker gets the ability to execute any code.
 <a href="https://resources.infosecinstitute.com/file-inclusion-attacks/">InfosecInstitute: File Inclusion Attacks</a><br/>
 <a href="http://projects.webappsec.org/w/page/13246955/Remote%20File%20Inclusion">WASC-05: Remote File Inclusion</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/917.html">CWE-917: Improper Neutralization of Special Elements used in an Expression Language Statement ('Expression Language Injection')</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 </p>
             ]]>
         </Details>
@@ -4283,6 +4360,7 @@ attacker gets the ability to execute any code.
     <a href="https://cwe.mitre.org/data/definitions/94.html">CWE-94: Improper Control of Generation of Code ('Code Injection')</a><br/>
     <a href="https://cwe.mitre.org/data/definitions/95.html">CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')</a><br/>
     <a href="https://cwe.mitre.org/data/definitions/917.html">CWE-917: Improper Neutralization of Special Elements used in an Expression Language Statement ('Expression Language Injection')</a><br/>
+    <a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 </p>
             ]]>
         </Details>
@@ -4319,6 +4397,7 @@ attacker gets the ability to execute any code.
 <a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site Scripting</a><br/>
 <a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet">OWASP: XSS Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_%28XSS%29">OWASP: Top 10 2013-A3: Cross-Site Scripting (XSS)</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a><br/>
 <a href="https://docs.oracle.com/javaee/5/jstl/1.1/docs/tlddocs/c/out.html">JSTL Javadoc: Out tag</a><br/>
 </p>
@@ -4367,6 +4446,7 @@ which explains these defenses in significant detail.
 <a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site Scripting</a><br/>
 <a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet">OWASP: XSS Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_%28XSS%29">OWASP: Top 10 2013-A3: Cross-Site Scripting (XSS)</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a><br/>
 <a href="https://code.google.com/p/owasp-java-encoder/">OWASP Java Encoder</a><br/>
 </p>
@@ -4417,6 +4497,7 @@ which explains these defenses in significant detail.
 <a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site Scripting</a><br/>
 <a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet">OWASP: XSS Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_%28XSS%29">OWASP: Top 10 2013-A3: Cross-Site Scripting (XSS)</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a><br/>
 <a href="https://code.google.com/p/owasp-java-encoder/">OWASP Java Encoder</a><br/>
 </p>
@@ -4475,8 +4556,9 @@ The solution is to avoid using XMLDecoder to parse content from an untrusted sou
 <b>References</b><br/>
 <a href="http://blog.diniscruz.com/2013/08/using-xmldecoder-to-execute-server-side.html">Dinis Cruz Blog: Using XMLDecoder to execute server-side Java Code on a Restlet application</a><br/>
 <a href="https://securityblog.redhat.com/2014/01/23/java-deserialization-flaws-part-2-xml-deserialization/">RedHat blog : Java deserialization flaws: Part 2, XML deserialization</a><br/>
-<a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a>
-<a href="https://cwe.mitre.org/data/definitions/502.html">CWE-502: Deserialization of Untrusted Data</a>
+<a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/502.html">CWE-502: Deserialization of Untrusted Data</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 </p>
             ]]>
         </Details>
@@ -4523,7 +4605,8 @@ public void encrypt(String message) throws Exception {
 <b>References</b><br/>
 <a href="https://en.wikipedia.org/wiki/Initialization_vector">Wikipedia: Initialization vector</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/329.html">CWE-329: Not Using a Random IV with CBC Mode</a><br/>
-<a href="https://defuse.ca/cbcmodeiv.htm">Encryption - CBC Mode IV: Secret or Not?</a>
+<a href="https://defuse.ca/cbcmodeiv.htm">Encryption - CBC Mode IV: Secret or Not?</a><br/>
+<a href="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">OWASP TOP 10 2021 A02 – Cryptographic Failures</a><br/>
 </p>
             ]]>
         </Details>
@@ -4569,6 +4652,7 @@ byte[] cipherText = c.doFinal(plainText);</pre>
 <a href="https://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Electronic_codebook_.28ECB.29">Wikipedia: Block cipher modes of operation</a><br/>
 <a href="https://csrc.nist.gov/publications/detail/sp/800-38a/final">NIST: Recommendation for Block Cipher Modes of Operation</a>
 <a href="https://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky Cryptographic Algorithm</a><br/>
+<a href="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">OWASP TOP 10 2021 A02 – Cryptographic Failures</a><br/>
 </p>
 ]]>
         </Details>
@@ -4606,8 +4690,9 @@ byte[] cipherText = c.doFinal(plainText);</pre>
     <a href="https://en.wikipedia.org/wiki/Authenticated_encryption">Wikipedia: Authenticated encryption</a><br/>
     <a href="https://csrc.nist.gov/projects/block-cipher-techniques/bcm/modes-develoment#01">NIST: Authenticated Encryption Modes</a><br/>
     <a href="https://capec.mitre.org/data/definitions/463.html">CAPEC: Padding Oracle Crypto Attack</a><br/>
-    <a href="https://cwe.mitre.org/data/definitions/696.html">CWE-696: Incorrect Behavior Order</a>
-    <a href="https://cwe.mitre.org/data/definitions/326.html">CWE-326: Inadequate Encryption Strength</a>
+    <a href="https://cwe.mitre.org/data/definitions/696.html">CWE-696: Incorrect Behavior Order</a><br/>
+    <a href="https://cwe.mitre.org/data/definitions/326.html">CWE-326: Inadequate Encryption Strength</a><br/>
+    <a href="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">OWASP TOP 10 2021 A02 – Cryptographic Failures</a><br/>
 </p>
 ]]>
         </Details>
@@ -4665,7 +4750,8 @@ In the example solution above, the GCM mode introduces an HMAC into the resultin
     <a href="https://en.wikipedia.org/wiki/Authenticated_encryption">Wikipedia: Authenticated encryption</a><br/>
     <a href="https://csrc.nist.gov/projects/block-cipher-techniques/bcm/modes-develoment#01">NIST: Authenticated Encryption Modes</a><br/>
     <a href="https://moxie.org/blog/the-cryptographic-doom-principle/">Moxie Marlinspike's blog: The Cryptographic Doom Principle</a><br/>
-    <a href="https://cwe.mitre.org/data/definitions/353.html">CWE-353: Missing Support for Integrity Check</a>
+    <a href="https://cwe.mitre.org/data/definitions/353.html">CWE-353: Missing Support for Integrity Check</a><br/>
+    <a href="https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/">OWASP TOP 10 2021 A08 – Software and Data Integrity Failures</a><br/>
 </p>
 ]]>
         </Details>
@@ -4753,6 +4839,7 @@ Encryptor.cipher_modes.additional_allowed=</pre>
     <a href="https://www.synacktiv.com/ressources/synacktiv_owasp_esapi_hmac_bypass.pdf">Synactiv: Bypassing HMAC validation in OWASP ESAPI symmetric encryption</a><br/>
     <a href="https://cwe.mitre.org/data/definitions/310.html">CWE-310: Cryptographic Issues</a><br/>
     <a href="https://lists.owasp.org/pipermail/esapi-dev/2015-March/002533">ESAPI-dev mailing list: Status of CVE-2013-5960</a><br/>
+    <a href="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">OWASP TOP 10 2021 A02 – Cryptographic Failures</a><br/>
 </p>
 ]]>
         </Details>
@@ -4798,6 +4885,7 @@ fos.write(string.getBytes());
     <a href="https://www.securecoding.cert.org/confluence/display/java/DRD00-J.+Do+not+store+sensitive+information+on+external+storage+%28SD+card%29+unless+encrypted+first">CERT: DRD00-J: Do not store sensitive information on external storage [...]</a><br/>
     <a href="https://developer.android.com/guide/topics/data/data-storage.html#filesExternal">Android Official Doc: Using the External Storage</a><br/>
     <a href="https://www.owasp.org/index.php/Mobile_Top_10_2014-M2">OWASP Mobile Top 10 2014-M2: Insecure Data Storage</a><br/>
+    <a href="https://owasp.org/Top10/A04_2021-Insecure_Design/">OWASP TOP 10 2021 A04 – Insecure Design</a><br/>
     <a href="https://cwe.mitre.org/data/definitions/276.html">CWE-276: Incorrect Default Permissions</a>
     <a href="https://cwe.mitre.org/data/definitions/312.html">CWE-312: Cleartext Storage of Sensitive Information</a>
 </p>
@@ -4885,7 +4973,8 @@ sendBroadcast(v1);
     <sup>[1]</sup> <a href="https://stackoverflow.com/a/21513368/89769">StackOverflow: How to set permissions in broadcast sender and receiver in android</a><br/>
     <a href="https://cwe.mitre.org/data/definitions/276.html">CWE-276: Incorrect Default Permissions</a><br/>
     <a href="https://cwe.mitre.org/data/definitions/925.html">CWE-925: Improper Verification of Intent by Broadcast Receiver</a><br/>
-    <a href="https://cwe.mitre.org/data/definitions/927.html">CWE-927: Use of Implicit Intent for Sensitive Communication</a>
+    <a href="https://cwe.mitre.org/data/definitions/927.html">CWE-927: Use of Implicit Intent for Sensitive Communication</a><br/>
+    <a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">OWASP TOP 10 2021 A01 – Broken Access Control</a><br/>
 </p>
 ]]>
         </Details>
@@ -4935,8 +5024,9 @@ create on external storage. See references below for implementation guidelines.
     <a href="https://www.vogella.com/tutorials/AndroidSQLite/article.html#databasetutorial_database">vogella.com: Android SQLite database and content provider - Tutorial</a><br/>
     <a href="https://www.vogella.com/tutorials/AndroidSQLite/article.html#databasetutorial_database">vogella.com: Android SQLite database and content provider - Tutorial</a><br/>
     <a href="https://www.owasp.org/index.php/Mobile_Top_10_2014-M2">OWASP Mobile Top 10 2014-M2: Insecure Data Storage</a><br/>
-    <a href="https://cwe.mitre.org/data/definitions/276.html">CWE-276: Incorrect Default Permissions</a>
-    <a href="https://cwe.mitre.org/data/definitions/312.html">CWE-312: Cleartext Storage of Sensitive Information</a>
+    <a href="https://cwe.mitre.org/data/definitions/276.html">CWE-276: Incorrect Default Permissions</a><br/>
+    <a href="https://cwe.mitre.org/data/definitions/312.html">CWE-312: Cleartext Storage of Sensitive Information</a><br/>
+    <a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">OWASP TOP 10 2021 A01 – Broken Access Control</a><br/>
 </p>
 ]]>
         </Details>
@@ -4989,6 +5079,7 @@ webView.setWebChromeClient(new WebChromeClient() {
     <a href="https://en.wikipedia.org/wiki/W3C_Geolocation_API">Wikipedia: W3C Geolocation API</a><br/>
     <a href="https://w3c.github.io/geolocation-api/">W3C: Geolocation Specification</a><br/>
     <a href="https://cwe.mitre.org/data/definitions/359.html">CWE-359: Exposure of Private Personal Information to an Unauthorized Actor</a>
+    <a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">OWASP TOP 10 2021 A01 – Broken Access Control</a><br/>
 </p>
 ]]>
         </Details>
@@ -5033,6 +5124,7 @@ function updateDescription(newDescription) {
     <a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site Scripting</a><br/>
     <a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet">OWASP: XSS Prevention Cheat Sheet</a><br/>
     <a href="https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_%28XSS%29">OWASP: Top 10 2013-A3: Cross-Site Scripting (XSS)</a><br/>
+    <a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
     <a href="https://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a>
 </p>
 ]]>
@@ -5083,8 +5175,9 @@ class FileWriteUtil {
 <p>
     <b>References</b><br/>
     <a href="https://developer.android.com/reference/android/webkit/WebView.html#addJavascriptInterface%28java.lang.Object,%20java.lang.String%29">Android Official Doc: <code>WebView.addJavascriptInterface()</code></a><br/>
-    <a href="https://cwe.mitre.org/data/definitions/285.html">CWE-285: Improper Authorization</a>
-    <a href="https://cwe.mitre.org/data/definitions/749.html">CWE-749: Exposed Dangerous Method or Function</a>
+    <a href="https://cwe.mitre.org/data/definitions/285.html">CWE-285: Improper Authorization</a><br/>
+    <a href="https://cwe.mitre.org/data/definitions/749.html">CWE-749: Exposed Dangerous Method or Function</a><br/>
+    <a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">OWASP TOP 10 2021 A01 – Broken Access Control</a><br/>
 </p>
 ]]>
         </Details>
@@ -5145,6 +5238,7 @@ cookie.setHttpOnly(true);
 <a href="https://cwe.mitre.org/data/definitions/315.html">CWE-315: Cleartext Storage of Sensitive Information in a Cookie</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/311.html">CWE-311: Missing Encryption of Sensitive Data</a><br/>
 <a href="https://www.owasp.org/index.php/SecureFlag">OWASP: Secure Flag</a><br/>
+<a href="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">OWASP TOP 10 2021 A05 – Security Misconfiguration</a><br/>
 <a href="https://www.rapid7.com/db/vulnerabilities/http-cookie-secure-flag">Rapid7: Missing Secure Flag From SSL Cookie</a>
 </p>
 ]]>
@@ -5201,6 +5295,7 @@ cookie.setHttpOnly(true); //HttpOnly flag
 <b>Reference</b><br/>
 <a href="https://blog.codinghorror.com/protecting-your-cookies-httponly/">Coding Horror blog: Protecting Your Cookies: HttpOnly</a><br/>
 <a href="https://www.owasp.org/index.php/HttpOnly">OWASP: HttpOnly</a><br/>
+<a href="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">OWASP TOP 10 2021 A05 – Security Misconfiguration</a><br/>
 <a href="https://www.rapid7.com/db/vulnerabilities/http-cookie-http-only-flag">Rapid7: Missing HttpOnly Flag From Cookie</a>
 <a href="https://cwe.mitre.org/data/definitions/1004.html">CWE-1004: Sensitive Cookie Without 'HttpOnly' Flag</a><br/>
 </p>
@@ -5254,6 +5349,7 @@ Avoid deserializing object provided by remote users.
 <b>References</b><br/>
 <a href="https://cwe.mitre.org/data/definitions/502.html">CWE-502: Deserialization of Untrusted Data</a><br/>
 <a href="https://www.owasp.org/index.php/Deserialization_of_untrusted_data">Deserialization of untrusted data</a><br/>
+<a href="https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/">OWASP TOP 10 2021 A08 – Software and Data Integrity Failures</a><br/>
 <a href="https://www.oracle.com/technetwork/java/seccodeguide-139067.html#8">Serialization and Deserialization </a><br/>
 <a href="https://github.com/frohoff/ysoserial">A tool for generating payloads that exploit unsafe Java object deserialization</a><br/>
 [1] <a href="https://gist.github.com/coekie/a27cc406fc9f3dc7a70d">Example of Denial of Service using the class <code>java.util.HashSet</code></a><br/>
@@ -5318,6 +5414,7 @@ public class Example {
 <a href="https://github.com/FasterXML/jackson-databind/issues/1599">Jackson Deserializer security vulnerability</a><br>
 <a href="https://github.com/mbechler/marshalsec">Java Unmarshaller Security - Turning your data into code execution</a><br>
 <a href="https://cwe.mitre.org/data/definitions/502.html">CWE-502: Deserialization of Untrusted Data</a><br/>
+<a href="https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/">OWASP TOP 10 2021 A08 – Software and Data Integrity Failures</a><br/>
 </p>
 ]]>
         </Details>
@@ -5347,6 +5444,7 @@ Removing gadget is a hardening practice to reduce the risk of being exploited.
 <b>References</b><br/>
 <a href="https://cwe.mitre.org/data/definitions/502.html">CWE-502: Deserialization of Untrusted Data</a><br/>
 <a href="https://www.owasp.org/index.php/Deserialization_of_untrusted_data">Deserialization of untrusted data</a><br/>
+<a href="https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/">OWASP TOP 10 2021 A08 – Software and Data Integrity Failures</a><br/>
 <a href="https://www.oracle.com/technetwork/java/seccodeguide-139067.html#8">Serialization and Deserialization </a><br/>
 <a href="https://github.com/frohoff/ysoserial">A tool for generating payloads that exploit unsafe Java object deserialization</a><br/>
 [1] <a href="https://gist.github.com/coekie/a27cc406fc9f3dc7a70d">Example of Denial of Service using the class <code>java.util.HashSet</code></a><br/>
@@ -5410,7 +5508,8 @@ safe location rather than using direct user input.
 <p>
 <b>References</b><br/>
 [1] <a href="https://cwe.mitre.org/data/definitions/501.html">CWE-501: Trust Boundary Violation</a><br/>
-<a href="https://www.owasp.org/index.php/Trust_Boundary_Violation">OWASP : Trust Boundary Violation</a>
+<a href="https://www.owasp.org/index.php/Trust_Boundary_Violation">OWASP : Trust Boundary Violation</a><br/>
+<a href="https://owasp.org/Top10/A04_2021-Insecure_Design/">OWASP TOP 10 2021 A04 – Insecure Design</a><br/>
 </p>
 ]]>
         </Details>
@@ -5454,6 +5553,7 @@ Path traversal <sup>[3][4]</sup> are not possible.
 [3] <a href="http://projects.webappsec.org/w/page/13246952/Path%20Traversal">WASC: Path Traversal</a><br/>
 [4] <a href="https://www.owasp.org/index.php/Path_Traversal">OWASP: Path Traversal</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/94.html">CWE-94: Improper Control of Generation of Code ('Code Injection')</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 </p>
             ]]>
         </Details>
@@ -5512,6 +5612,7 @@ Path traversal <sup>[3][4]</sup> are not possible.
 <a href="https://www.w3.org/TR/xslt">w3.org XSL Transformations (XSLT) Version 1.0</a> : w3c specification<br/>
 [3] <a href="http://projects.webappsec.org/w/page/13246952/Path%20Traversal">WASC: Path Traversal</a><br/>
 [4] <a href="https://www.owasp.org/index.php/Path_Traversal">OWASP: Path Traversal</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/94.html">CWE-94: Improper Control of Generation of Code ('Code Injection')</a><br/>
 </p>
             ]]>
@@ -5551,6 +5652,7 @@ Path traversal <sup>[3][4]</sup> are not possible.
 </p>
 <b>References</b><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A6-Sensitive_Data_Exposure">OWASP: Top 10 2013-A6-Sensitive Data Exposure</a><br/>
+<a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">OWASP TOP 10 2021 A01 – Broken Access Control</a><br/>
 [1] <a href="https://www.owasp.org/index.php/Top_10_2007-Information_Leakage_and_Improper_Error_Handling">OWASP: Top 10 2007-Information Leakage and Improper Error Handling</a><br/>
 [2] <a href="http://projects.webappsec.org/w/page/13246936/Information%20Leakage">WASC-13: Information Leakage</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/200.html">CWE-200: Information Exposure</a><br/>
@@ -5596,6 +5698,7 @@ Path traversal <sup>[3][4]</sup> are not possible.
 <b>References</b><br/>
 <a href="https://cwe.mitre.org/data/definitions/918.html">CWE-918: Server-Side Request Forgery (SSRF)</a><br/>
 <a href="https://www.bishopfox.com/blog/2015/04/vulnerable-by-design-understanding-server-side-request-forgery/">Understanding Server-Side Request Forgery</a><br/>
+<a href="https://owasp.org/Top10/A10_2021-Server-Side_Request_Forgery_%28SSRF%29/">OWASP TOP 10 2021 A10 – Server-Side Request Forgery (SSRF)</a><br/>
 </p>
             ]]></Details>
     </BugPattern>
@@ -5642,6 +5745,7 @@ new URL(String url).getContent()
 <a href="https://www.bishopfox.com/blog/2015/04/vulnerable-by-design-understanding-server-side-request-forgery/">Understanding Server-Side Request Forgery</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/73.html">CWE-73: External Control of File Name or Path</a><br/>
 <a href="https://www.pwntester.com/blog/2013/11/28/abusing-jar-downloads/">Abusing jar:// downloads</a><br />
+<a href="https://owasp.org/Top10/A10_2021-Server-Side_Request_Forgery_%28SSRF%29/">OWASP TOP 10 2021 A10 – Server-Side Request Forgery (SSRF)</a><br/>
 </p>
             ]]></Details>
     </BugPattern>
@@ -5682,6 +5786,7 @@ which explains these defenses in significant detail.
 <a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site Scripting</a><br/>
 <a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet">OWASP: XSS Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_%28XSS%29">OWASP: Top 10 2013-A3: Cross-Site Scripting (XSS)</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a><br/>
 <a href="https://code.google.com/p/owasp-java-encoder/">OWASP Java Encoder</a><br/>
 </p>
@@ -5725,6 +5830,7 @@ which explains these defenses in significant detail.
 <a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site Scripting</a><br/>
 <a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet">OWASP: XSS Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_%28XSS%29">OWASP: Top 10 2013-A3: Cross-Site Scripting (XSS)</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a><br/>
 <a href="https://code.google.com/p/owasp-java-encoder/">OWASP Java Encoder</a><br/>
 </p>
@@ -5765,6 +5871,7 @@ prefer logic-less template engines such as Handlebars or Moustache (See referenc
 <a href="https://blog.portswigger.net/2015/08/server-side-template-injection.html">PortSwigger: Server-Side Template Injection </a><br/>
 <a href="https://jknack.github.io/handlebars.java/">Handlebars.java</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/94.html">CWE-94: Improper Control of Generation of Code ('Code Injection')</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 </p>
             ]]>
         </Details>
@@ -5842,6 +5949,7 @@ prefer logic-less template engines such as Handlebars or Moustache (See referenc
 <a href="https://portswigger.net/research/server-side-template-injection">PortSwigger: Server-Side Template Injection</a><br/>
 <a href="https://jknack.github.io/handlebars.java/">Handlebars.java</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/94.html">CWE-94: Improper Control of Generation of Code ('Code Injection')</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 </p>
             ]]>
         </Details>
@@ -5878,6 +5986,7 @@ Avoid using * as the value of the Access-Control-Allow-Origin header, which indi
 <a href="https://www.w3.org/TR/cors/">W3C Cross-Origin Resource Sharing</a><br/>
 <a href="https://enable-cors.org/">Enable Cross-Origin Resource Sharing</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Permissive Cross-domain Policy with Untrusted Domains</a><br/>
+<a href="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">OWASP TOP 10 2021 A05 – Security Misconfiguration</a><br/>
 </p>]]>
         </Details>
     </BugPattern>
@@ -5975,6 +6084,7 @@ ctx.search(query, filter,
 <a href="https://community.hpe.com/t5/Security-Research/Introducing-JNDI-Injection-and-LDAP-Entry-Poisoning/ba-p/6885118">HP Enterprise: Introducing JNDI Injection and LDAP Entry Poisoning</a> by Alvaro Mu&#xF1;oz<br/>
 <a href="http://blog.trendmicro.com/trendlabs-security-intelligence/new-headaches-how-the-pawn-storm-zero-day-evaded-javas-click-to-play-protection/">TrendMicro: How The Pawn Storm Zero-Day Evaded Java's Click-to-Play Protection</a> by Jack Tang
 <a href="https://cwe.mitre.org/data/definitions/90.html">CWE-90: Improper Neutralization of Special Elements used in an LDAP Query ('LDAP Injection')</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 </p>
             ]]>
         </Details>
@@ -6017,6 +6127,7 @@ cookie.setMaxAge(60*60*24*365);
 <b>References</b><br/>
 <a href="https://tomcat.apache.org/tomcat-5.5-doc/servletapi/javax/servlet/http/Cookie.html#setMaxAge%28int%29">Class Cookie <code>setMaxAge</code> documentation</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/539.html">CWE-539: Information Exposure Through Persistent Cookies</a><br/>
+<a href="https://owasp.org/Top10/A04_2021-Insecure_Design/">OWASP TOP 10 2021 A04 – Insecure Design</a><br/>
 </p>
             ]]>
         </Details>
@@ -6060,6 +6171,7 @@ Avoid using those methods. If you are looking to encode a URL String or form par
 <b>References</b><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2010-A3-Broken_Authentication_and_Session_Management">OWASP Top 10 2010-A3-Broken Authentication and Session Management</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/601.html">CWE-601: URL Redirection to Untrusted Site ('Open Redirect')</a><br/>
+<a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">OWASP TOP 10 2021 A01 – Broken Access Control</a><br/>
 </p>
             ]]>
         </Details>
@@ -6107,6 +6219,7 @@ Please add the following check to verify the server certificate:
 <p>
 <b>References</b><br/>
 <a href="https://cwe.mitre.org/data/definitions/297.html">CWE-297: Improper Validation of Certificate with Host Mismatch</a><br/>
+<a href="https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/">OWASP TOP 10 2021 A07 – Identification and Authentication Failures</a><br/>
 </p>
             ]]>
         </Details>
@@ -6193,6 +6306,7 @@ Avoid using user controlled values to populate Bean property names.
 <p>
 <b>References</b><br/>
 <a href="https://cwe.mitre.org/data/definitions/15.html">CWE-15: External Control of System or Configuration Setting</a><br/>
+<a href="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">OWASP TOP 10 2021 A05 – Security Misconfiguration</a><br/>
 </p>
             ]]>
         </Details>
@@ -6231,6 +6345,7 @@ Avoid constructing server-side redirects using user controlled input.
 <p>
 <b>References</b><br/>
 <a href="https://cwe.mitre.org/data/definitions/552.html">CWE-552: Files or Directories Accessible to External Parties</a><br/>
+<a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">OWASP TOP 10 2021 A01 – Broken Access Control</a><br/>
 </p>
             ]]>
         </Details>
@@ -6263,6 +6378,7 @@ Avoid constructing server-side redirects using user controlled input.
 <p>
 <b>References</b><br/>
 <a href="https://cwe.mitre.org/data/definitions/552.html">CWE-552: Files or Directories Accessible to External Parties</a><br/>
+<a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">OWASP TOP 10 2021 A01 – Broken Access Control</a><br/>
 </p>
             ]]>
         </Details>
@@ -6294,6 +6410,7 @@ Avoid constructing server-side redirects using user controlled input.
 <p>
 <b>References</b><br/>
 <a href="https://cwe.mitre.org/data/definitions/552.html">CWE-552: Files or Directories Accessible to External Parties</a><br/>
+<a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">OWASP TOP 10 2021 A01 – Broken Access Control</a><br/>
 </p>
             ]]>
         </Details>
@@ -6376,6 +6493,7 @@ HttpGet httpget = new HttpGet(uriBuilder.build().toString()); //OK
 <b>References</b><br/>
 <a href="https://capec.mitre.org/data/definitions/460.html">CAPEC-460: HTTP Parameter Pollution (HPP)</a>
 <a href="https://cwe.mitre.org/data/definitions/235.html">CWE-235: Improper Handling of Extra Parameters</a><br/>
+<a href="https://owasp.org/Top10/A04_2021-Insecure_Design/">OWASP TOP 10 2021 A04 – Insecure Design</a><br/>
 </p>
             ]]>
         </Details>
@@ -6417,6 +6535,7 @@ The sensitive information may be valuable information on its own (such as a pass
 <b>References</b><br/>
 <a href="https://cwe.mitre.org/data/definitions/209.html">CWE-209: Information Exposure Through an Error Message</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/211.html">CWE-211: Information Exposure Through Externally-Generated Error Message</a><br/>
+<a href="https://owasp.org/Top10/A04_2021-Insecure_Design/">OWASP TOP 10 2021 A04 – Insecure Design</a><br/>
 </p>
             ]]>
         </Details>
@@ -6459,6 +6578,7 @@ Transport.send(message);
 <p>
 <b>References</b><br/>
 <a href="https://www.owasp.org/index.php/Testing_for_IMAP/SMTP_Injection_(OTG-INPVAL-011)">OWASP SMTP Injection</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/93.html">CWE-93: Improper Neutralization of CRLF Sequences ('CRLF Injection')</a><br/>
 <a href="https://commons.apache.org/proper/commons-email/userguide.html">Commons Email: User Guide</a><br/>
 <a href="http://www.simplejavamail.org">Simple Java Mail Website</a><br/>
@@ -6532,6 +6652,7 @@ add(new Label("someLabel").setEscapeModelStrings(false));
 <a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site Scripting</a><br/>
 <a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet">OWASP: XSS Prevention Cheat Sheet</a><br/>
 <a href="https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_%28XSS%29">OWASP: Top 10 2013-A3: Cross-Site Scripting (XSS)</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a>
 </p>
 
@@ -6925,6 +7046,7 @@ phone for 1 singe dollar.
 
 <p>References</b><br>
 <a href="https://wiki.sei.cmu.edu/confluence/display/java/IDS16-J.+Prevent+XML+Injection">IDS16-J. Prevent XML Injection</a><br/>
+<a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP TOP 10 2021 A03 – Injection</a><br/>
 </p>
         ]]>
         </Details>

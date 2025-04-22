@@ -1,0 +1,5 @@
+javax/xml/validation/SchemaFactory.newSchema(Ljavax/xml/transform/Source;)Ljavax/xml/validation/Schema;:1
+javax/xml/validation/SchemaFactory.newSchema(Ljava/io/File;)Ljavax/xml/validation/Schema;:1
+javax/xml/validation/SchemaFactory.newSchema(Ljava/net/URL;)Ljavax/xml/validation/Schema;:1
+javax/xml/validation/SchemaFactory.newSchema([Ljavax/xml/transform/Source;)Ljavax/xml/validation/Schema;:1
+javax/xml/validation/SchemaFactory.newSchema()Ljavax/xml/validation/Schema;:0

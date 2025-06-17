@@ -5,7 +5,7 @@
     <artifactId>findsecbugs-root-pom</artifactId>
 
     <packaging>pom</packaging>
-    <version>1.14.0-SNAPSHOT</version>
+    <version>1.14.0</version>
 
     <name>OWASP Find Security Bugs root</name>
 
@@ -113,7 +113,7 @@
                     <source>8</source>
                 </configuration>
             </plugin>
-
+			
         </plugins>
 
     </build>
@@ -201,7 +201,7 @@
                     <plugin>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs-maven-plugin</artifactId>
-                        <version>4.9.3.0</version>
+                        <version>4.8.6</version>
                         <configuration>
                             <xmlOutput>true</xmlOutput>
                             <failOnError>false</failOnError>
@@ -232,7 +232,7 @@
             <dependency>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs</artifactId>
-                <version>4.9.3</version>
+                <version>4.8.6</version>
             </dependency>
 
             <!-- Artefact definition of the module -->

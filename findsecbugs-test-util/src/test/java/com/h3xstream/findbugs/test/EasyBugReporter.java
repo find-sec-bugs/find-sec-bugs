@@ -60,7 +60,6 @@ public class EasyBugReporter extends AbstractBugReporter {
     public void observeClass(ClassDescriptor classDescriptor) {
 
     }
-
     @Override
     public void doReportBug(BugInstance bugInstance) {
         if(includeCategories.size() > 0 && !includeCategories.contains(bugInstance.getCategoryAbbrev())) {

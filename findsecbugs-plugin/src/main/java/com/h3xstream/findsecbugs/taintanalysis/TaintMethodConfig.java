@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
@@ -43,6 +44,8 @@ public class TaintMethodConfig implements TaintTypeConfig {
     public static final TaintMethodConfig SAFE_CONFIG;
     protected static final Pattern fullMethodPattern;
     protected static final Pattern configPattern;
+
+    private static final Logger LOG = Logger.getLogger(TaintMethodConfig.class.getName());
 
     static {
         SAFE_CONFIG = new TaintMethodConfig(false);
@@ -234,7 +237,7 @@ public class TaintMethodConfig implements TaintTypeConfig {
         if (outputTaint.hasTags()) {
             sb.append('|');
             boolean isFirst = true;
-            for (Taint.Tag tag : outputTaint.getTags()) {
+            for (TaintTag tag : outputTaint.getTags()) {
                 if (isFirst) {
                     isFirst = false;
                 } else {
@@ -250,7 +253,7 @@ public class TaintMethodConfig implements TaintTypeConfig {
         if (outputTaint.isRemovingTags()) {
             sb.append('|');
             boolean isFirst = true;
-            for (Taint.Tag tag : outputTaint.getTagsToRemove()) {
+            for (TaintTag tag : outputTaint.getTagsToRemove()) {
                 if (isFirst) {
                     isFirst = false;
                 } else {
@@ -411,10 +414,11 @@ public class TaintMethodConfig implements TaintTypeConfig {
         for (String tagName : tagInfo.split(",")) {
             char sign = tagName.charAt(0);
             tagName = tagName.substring(1);
-            if (!isTaintTagValue(tagName)) {
-                throw new IOException("Bad format: unknown taint tag " + tagName);
+            TaintTag tag = TaintTag.get(tagName);
+            if (tag == null) {
+                LOG.warning("Bad format: unknown taint tag, creating. Please double check the value " + tagName);
+                tag = TaintTag.create(tagName);
             }
-            Taint.Tag tag = Taint.Tag.valueOf(tagName);
             if (outputTaint.hasTag(tag) || outputTaint.getTagsToRemove().contains(tag)) {
                 throw new IOException("Bad format: tag " + tag + " already present");
             }
@@ -429,16 +433,6 @@ public class TaintMethodConfig implements TaintTypeConfig {
                     throw new IOException("Bad format: taint tag sign must be + or - but is " + sign);
             }
         }
-    }
-
-    private boolean isTaintTagValue(String value) {
-        assert value != null && !value.isEmpty();
-        for (Taint.Tag tag : Taint.Tag.values()) {
-            if (tag.name().equals(value)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private boolean isTaintStateValue(String value) {

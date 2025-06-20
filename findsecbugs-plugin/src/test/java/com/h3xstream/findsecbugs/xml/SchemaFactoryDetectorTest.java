@@ -19,6 +19,7 @@ package com.h3xstream.findsecbugs.xml;
 
 import com.h3xstream.findbugs.test.BaseDetectorTest;
 import com.h3xstream.findbugs.test.EasyBugReporter;
+import com.h3xstream.findsecbugs.FindSecBugsGlobalConfig;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.never;
@@ -94,4 +95,31 @@ public class SchemaFactoryDetectorTest extends BaseDetectorTest {
                         .build()
         );
     }
+
+    @Test
+    public void schemaFactoryConfigurationDataFlow() throws Exception {
+        final String[] files = {
+                getClassFilePath("testcode/xxe/schema/SchemaFactoryConfigurationDataFlow")
+        };
+
+        final EasyBugReporter reporter = spy(new SecurityReporter());
+
+        String customConfigFile = FindSecBugsGlobalConfig.getInstance().getCustomConfigFile();
+        String path = this.getClass().getResource("/com/h3xstream/findsecbugs/xml/CustomConfig.txt").getPath();
+        FindSecBugsGlobalConfig.getInstance().setCustomConfigFile(path);
+        try {
+            analyze(files, reporter);
+        }
+        finally {
+            FindSecBugsGlobalConfig.getInstance().setCustomConfigFile(customConfigFile == null ? "" : customConfigFile);
+        }
+        
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("XXE_SCHEMA_FACTORY")
+                        .inClass("SchemaFactoryConfigurationDataFlow")
+                        .build()
+        );
+    }
+    
 }

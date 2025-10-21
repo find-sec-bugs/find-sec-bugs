@@ -47,6 +47,7 @@ public class BaseConfigValidation {
         if(className.startsWith("play.")) return; //Temporary skip Play
         if(className.startsWith("anorm")) return; //Skipping Scala anorm library classes
         if(className.startsWith("slick")) return; //Skipping Scala slick library classes
+        if(className.startsWith("jakarta")) return; //Skipping Jakarta library classes
         if(className.contains(".log")) return;
         if(className.contains(".Log")) return;
         try {

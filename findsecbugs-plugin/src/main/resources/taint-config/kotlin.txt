@@ -1,0 +1,2 @@
+-- Kotlin checks objects for null. A String is immutable, but the signature is java.lang.Object, so we have to tell the engine.
+kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue(Ljava/lang/Object;Ljava/lang/String;)V:UNKNOWN

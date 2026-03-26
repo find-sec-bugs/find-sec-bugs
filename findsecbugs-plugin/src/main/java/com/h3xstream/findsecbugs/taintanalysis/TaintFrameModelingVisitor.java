@@ -596,11 +596,16 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                 parameters.add(new Taint(tf.getStackValue(i)));
             }
 
+            Taint instanceTaint = null;
+            if (!(obj instanceof INVOKESTATIC)) {
+                instanceTaint = tf.getInstance(obj, cpg);
+            }
+
             modelInstruction(obj, getNumWordsConsumed(obj), getNumWordsProduced(obj), taintCopy);
 
             for(TaintFrameAdditionalVisitor visitor : visitors) {
                 try {
-                    visitor.visitInvoke(obj, methodGen, getFrame() , parameters, cpg);
+                    visitor.visitInvoke(obj, methodGen, getFrame(), instanceTaint, parameters, cpg, getLocation());
                 }
                 catch (Throwable e) {
                     LOG.log(Level.SEVERE,"Error while executing "+visitor.getClass().getName(),e);
@@ -783,12 +788,12 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
 
             // don't add tags to safe values
             if (!result.isSafe() && taint.hasTags()) {
-                for (Taint.Tag tag : taint.getTags()) {
+                for (TaintTag tag : taint.getTags()) {
                     result.addTag(tag);
                 }
             }
             if (taint.isRemovingTags()) {
-                for (Taint.Tag tag : taint.getTagsToRemove()) {
+                for (TaintTag tag : taint.getTagsToRemove()) {
                     result.removeTag(tag);
                 }
             }

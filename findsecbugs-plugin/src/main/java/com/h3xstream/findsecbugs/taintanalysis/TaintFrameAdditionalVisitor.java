@@ -17,6 +17,7 @@
  */
 package com.h3xstream.findsecbugs.taintanalysis;
 
+import edu.umd.cs.findbugs.ba.Location;
 import org.apache.bcel.generic.*;
 
 import java.util.List;
@@ -31,10 +32,14 @@ public interface TaintFrameAdditionalVisitor {
      * @param invoke
      * @param methodGen Method
      * @param frameType Frame representation after the invoke (results)
+     * @param instanceTaint Taint of the instance
      * @param parameters Stack representation just before the invoke
      * @param cpg
+     * @param location
      */
-    void visitInvoke(InvokeInstruction invoke, MethodGen methodGen, TaintFrame frameType, List<Taint> parameters, ConstantPoolGen cpg) throws Exception;
+    default void visitInvoke(InvokeInstruction invoke, MethodGen methodGen, TaintFrame frameType, Taint instanceTaint, List<Taint> parameters, ConstantPoolGen cpg, Location location) throws Exception {
+
+    }
 
     /**
      *
@@ -42,7 +47,8 @@ public interface TaintFrameAdditionalVisitor {
      * @param returnValue State of the returned value.
      * @param cpg
      */
-    void visitReturn(MethodGen methodGen, Taint returnValue, ConstantPoolGen cpg) throws Exception;
+    default void visitReturn(MethodGen methodGen, Taint returnValue, ConstantPoolGen cpg) throws Exception {
+    }
 
 
     /**
@@ -52,7 +58,8 @@ public interface TaintFrameAdditionalVisitor {
      * @param numProduced
      * @param cpg
      */
-    void visitLoad(LoadInstruction load, MethodGen methodGen, TaintFrame frameType, int numProduced, ConstantPoolGen cpg) throws Exception;
+    default void visitLoad(LoadInstruction load, MethodGen methodGen, TaintFrame frameType, int numProduced, ConstantPoolGen cpg) throws Exception {
+    }
 
 
     /**
@@ -63,7 +70,8 @@ public interface TaintFrameAdditionalVisitor {
      * @param numProduced
      * @param cpg
      */
-    void visitField(FieldInstruction put, MethodGen methodGen, TaintFrame frameType,Taint taintFrame, int numProduced, ConstantPoolGen cpg) throws Exception;
+    default void visitField(FieldInstruction put, MethodGen methodGen, TaintFrame frameType,Taint taintFrame, int numProduced, ConstantPoolGen cpg) throws Exception {
+    }
 
 
 }

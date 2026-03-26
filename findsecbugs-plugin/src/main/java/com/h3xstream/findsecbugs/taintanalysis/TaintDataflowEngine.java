@@ -67,6 +67,7 @@ public class TaintDataflowEngine implements IMethodAnalysisEngine<TaintDataflow>
         "java-lang.txt",
         "java-net.txt",
         "jetty.txt",
+        "kotlin.txt",
         "logging.txt",
         "other.txt",
         "portlet.txt",

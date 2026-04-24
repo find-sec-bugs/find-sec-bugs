@@ -41,14 +41,23 @@ public class XssServletDetector extends BasicInjectionDetector {
         "Lorg/apache/jetspeed/portlet/PortletResponse;",
         "Lorg/apache/jetspeed/portlet/PortletResponseWrapper;",
         "Ljavax/portlet/RenderResponse;",
+        "Ljakarta/portlet/RenderResponse;",
         "Ljavax/portlet/MimeResponse;",
+        "Ljakarta/portlet/MimeResponse;",
         "Ljavax/portlet/filter/RenderResponseWrapper;",
+        "Ljakarta/portlet/filter/RenderResponseWrapper;",
         "Ljavax/portlet/PortletResponse;",
+        "Ljakarta/portlet/PortletResponse;",
         "Ljavax/portlet/ActionResponseWrapper;",
+        "Ljakarta/portlet/ActionResponseWrapper;",
         "Ljavax/portlet/EventResponseWrapper;",
+        "Ljakarta/portlet/EventResponseWrapper;",
         "Ljavax/portlet/PortletResponseWrapper;",
+        "Ljakarta/portlet/PortletResponseWrapper;",
         "Ljavax/portlet/RenderResponseWrapper;",
+        "Ljakarta/portlet/RenderResponseWrapper;",
         "Ljavax/portlet/ResourceResponseWrapper;",
+        "Ljakarta/portlet/ResourceResponseWrapper;",
     };
 
     public XssServletDetector(BugReporter bugReporter) {

@@ -19,8 +19,14 @@ java/io/PrintWriter.append(Ljava/lang/CharSequence;II)Ljava/io/PrintWriter;:2
 java/io/PrintWriter.append(C)Ljava/io/PrintWriter;:0
 
 javax/servlet/http/HttpServletResponse.sendError(ILjava/lang/String;)V:0
+jakarta/servlet/http/HttpServletResponse.sendError(ILjava/lang/String;)V:0
 javax/servlet/http/HttpServletResponse.setStatus(ILjava/lang/String;)V:0
+jakarta/servlet/http/HttpServletResponse.setStatus(ILjava/lang/String;)V:0
 javax/servlet/http/HttpServletResponseWrapper.sendError(ILjava/lang/String;)V:0
+jakarta/servlet/http/HttpServletResponseWrapper.sendError(ILjava/lang/String;)V:0
 javax/servlet/http/HttpServletResponseWrapper.setStatus(ILjava/lang/String;)V:0
+jakarta/servlet/http/HttpServletResponseWrapper.setStatus(ILjava/lang/String;)V:0
 javax/servlet/ServletOutputStream.print(Ljava/lang/String;)V:0
+jakarta/servlet/ServletOutputStream.print(Ljava/lang/String;)V:0
 javax/servlet/ServletOutputStream.println(Ljava/lang/String;)V:0
+jakarta/servlet/ServletOutputStream.println(Ljava/lang/String;)V:0

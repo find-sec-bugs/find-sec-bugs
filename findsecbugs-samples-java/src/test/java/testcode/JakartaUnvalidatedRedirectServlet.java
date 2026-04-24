@@ -21,4 +21,21 @@ public class JakartaUnvalidatedRedirectServlet extends HttpServlet {
         }
     }
 
+    public void unvalidatedRedirect2(HttpServletResponse resp, String url) {
+        if (url != null) {
+            resp.addHeader("Location", url);
+        }
+    }
+
+    public void falsePositiveRedirect1(HttpServletResponse resp) throws IOException {
+        String url = "/Home";
+        if (url != null) {
+            resp.sendRedirect(url);
+        }
+    }
+
+    public void falsePositiveRedirect2(HttpServletResponse resp) {
+        resp.addHeader("Location", "/login.jsp");
+    }
+
 }

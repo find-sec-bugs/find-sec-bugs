@@ -98,4 +98,76 @@ public class JpaInjectionSourceTest extends BaseDetectorTest {
                         .build()
         );
     }
+
+    @Test
+    public void detectJakartaJpaInjection() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/sqli/JpaSql$JakartaJpaSql")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("SQL_INJECTION_JPA")
+                        .inClass("JpaSql$JakartaJpaSql").inMethod("getUserByUsername").atLine(71)
+                        .build()
+        );
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("SQL_INJECTION_JPA")
+                        .inClass("JpaSql$JakartaJpaSql").inMethod("getUserByUsernameAlt2").atLine(79)
+                        .build()
+        );
+
+        //Only the previous 5 cases should be marked as vulnerable
+        //2 createQuery + 3 createNativeQuery detect
+        verify(reporter, times(2+3)).doReportBug(
+                bugDefinition()
+                        .bugType("SQL_INJECTION_JPA")
+                        .build()
+        );
+    }
+
+    @Test
+    public void detectJakartaJpaInjectionInNativeQuery() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/sqli/JpaSql$JakartaJpaSql")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        //All 3 method signatures are detected
+
+        for(Integer l : Arrays.asList(106, 107, 108)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("SQL_INJECTION_JPA")
+                            .inClass("JpaSql$JakartaJpaSql").inMethod("getUserWithNativeQueryUnsafe").atLine(l)
+                            .build()
+            );
+        }
+
+        //Check for false positive
+
+        verify(reporter, times(3)).doReportBug(
+                bugDefinition()
+                        .bugType("SQL_INJECTION_JPA")
+                        .inClass("JpaSql$JakartaJpaSql").inMethod("getUserWithNativeQueryUnsafe")
+                        .build()
+        );
+
+        verify(reporter, never()).doReportBug(
+                bugDefinition()
+                        .bugType("SQL_INJECTION_JPA")
+                        .inClass("JpaSql$JakartaJpaSql").inMethod("getUserWithNativeQuerySafe")
+                        .build()
+        );
+    }
 }

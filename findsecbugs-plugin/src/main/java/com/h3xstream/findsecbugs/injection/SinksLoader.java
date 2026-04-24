@@ -58,7 +58,7 @@ public class SinksLoader {
             if (line.isEmpty() || line.startsWith("-")) {
                 continue;
             }
-            loadSink(line, bugType,receiver);
+            loadSink(line, bugType, receiver);
         }
     }
 

@@ -225,6 +225,7 @@
         <module>findsecbugs-samples-java</module>
         <module>findsecbugs-samples-java11</module>
         <module>findsecbugs-samples-jsp</module>
+        <module>findsecbugs-samples-jsp-jakarta</module>
     </modules>
 
 
@@ -267,6 +268,12 @@
             <dependency>
                 <groupId>com.h3xstream.findsecbugs</groupId>
                 <artifactId>findsecbugs-samples-jsp</artifactId>
+                <type>test-jar</type>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.h3xstream.findsecbugs</groupId>
+                <artifactId>findsecbugs-samples-jsp-jakarta</artifactId>
                 <type>test-jar</type>
                 <version>${project.version}</version>
             </dependency>

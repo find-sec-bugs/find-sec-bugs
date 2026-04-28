@@ -115,5 +115,10 @@ public class JpaSql {
             em.createNativeQuery(sql,"testcode.sqli.UserEntity");
             em.createNativeQuery(sql, UserEntity.class);
         }
+
+        public void getUserByUsernameUntyped(String username) {
+            jakarta.persistence.Query q = em.createQuery(
+                    "select * from Users where name = '" + username + "'");
+        }
     }
 }

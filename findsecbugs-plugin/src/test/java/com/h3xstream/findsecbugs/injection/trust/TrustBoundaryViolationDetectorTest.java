@@ -69,4 +69,38 @@ public class TrustBoundaryViolationDetectorTest extends BaseDetectorTest {
         );
     }
 
+    @Test
+    public void detectJakartaTBV() throws Exception {
+        String[] files = {
+                getClassFilePath("testcode/trust/TrustBoundaryViolation$JakartaTrustBoundaryViolation")
+        };
+
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("TRUST_BOUNDARY_VIOLATION").inClass("TrustBoundaryViolation$JakartaTrustBoundaryViolation")
+                        .inMethod("setSessionAttributeNameTainted").withPriority("Medium").build()
+        );
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("TRUST_BOUNDARY_VIOLATION").inClass("TrustBoundaryViolation$JakartaTrustBoundaryViolation")
+                        .inMethod("setSessionAttributeValueTainted").withPriority("Low").build()
+        );
+
+        String[] methodsAtLow = {"setSessionAttributeNameUnknownSource", "setSessionAttributeValueUnknownSource"};
+        for (String method : methodsAtLow) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("TRUST_BOUNDARY_VIOLATION").inClass("TrustBoundaryViolation$JakartaTrustBoundaryViolation")
+                            .inMethod(method).withPriority("Low").build()
+            );
+        }
+
+        verify(reporter, times(4)).doReportBug(
+                bugDefinition().bugType("TRUST_BOUNDARY_VIOLATION").build()
+        );
+    }
+
 }

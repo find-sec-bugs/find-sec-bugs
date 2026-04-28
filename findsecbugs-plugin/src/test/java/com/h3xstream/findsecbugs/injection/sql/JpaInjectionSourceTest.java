@@ -123,9 +123,15 @@ public class JpaInjectionSourceTest extends BaseDetectorTest {
                         .build()
         );
 
-        //Only the previous 5 cases should be marked as vulnerable
-        //2 createQuery + 3 createNativeQuery detect
-        verify(reporter, times(2+3)).doReportBug(
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("SQL_INJECTION_JPA")
+                        .inClass("JpaSql$JakartaJpaSql").inMethod("getUserByUsernameUntyped")
+                        .build()
+        );
+
+        //2 createQuery(String,Class) + 1 createQuery(String) + 3 createNativeQuery
+        verify(reporter, times(2+1+3)).doReportBug(
                 bugDefinition()
                         .bugType("SQL_INJECTION_JPA")
                         .build()

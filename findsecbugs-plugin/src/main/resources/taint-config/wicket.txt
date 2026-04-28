@@ -22,6 +22,7 @@ org/apache/wicket/request/IRequestParameters.getParameterValues(Ljava/lang/Strin
 
 org/apache/wicket/protocol/http/servlet/ServletPartFileItem.getName()Ljava/lang/String;:TAINTED
 org/apache/wicket/protocol/http/servlet/ServletPartFileItem.getFileName(Ljavax/servlet/http/Part;)Ljava/lang/String;:TAINTED
+org/apache/wicket/protocol/http/servlet/ServletPartFileItem.getFileName(Ljakarta/servlet/http/Part;)Ljava/lang/String;:TAINTED
 
 org/apache/wicket/protocol/http/servlet/ServletPartFileItem.get()[B:TAINTED
 org/apache/wicket/protocol/http/servlet/ServletPartFileItem.getString(Ljava/lang/String;)Ljava/lang/String;:TAINTED

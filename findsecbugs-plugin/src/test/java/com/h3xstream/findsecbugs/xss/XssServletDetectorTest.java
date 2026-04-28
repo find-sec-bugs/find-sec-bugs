@@ -229,5 +229,33 @@ public class XssServletDetectorTest extends BaseDetectorTest {
                         .build()
         );
 
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("XSS_SERVLET")
+                        .inClass("JakartaXssServlet")
+                        .inMethod("doGet")
+                        .atLine(18)
+                        .build()
+        );
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("XSS_SERVLET")
+                        .inClass("JakartaXssServlet")
+                        .inMethod("doGet")
+                        .atLine(19)
+                        .build()
+        );
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("XSS_SERVLET")
+                        .inClass("JakartaXssServlet")
+                        .inMethod("doGet")
+                        .atLine(21)
+                        .build()
+        );
+
+        verify(reporter, times(4)).doReportBug(bugDefinition().bugType("XSS_SERVLET").build());
     }
 }

@@ -14,5 +14,10 @@ public class JakartaXssServlet extends HttpServlet {
         String input1 = req.getParameter("input1");
 
         resp.getWriter().write(input1);
+
+        resp.getOutputStream().print(input1);
+        resp.getOutputStream().println(input1);
+
+        resp.sendError(400, input1);
     }
 }

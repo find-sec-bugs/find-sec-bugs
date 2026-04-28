@@ -1,2 +1,4 @@
 javax/servlet/http/HttpSession.setAttribute(Ljava/lang/String;Ljava/lang/Object;)V:0
+jakarta/servlet/http/HttpSession.setAttribute(Ljava/lang/String;Ljava/lang/Object;)V:0
 javax/servlet/http/HttpSession.putValue(Ljava/lang/String;Ljava/lang/Object;)V:0
+jakarta/servlet/http/HttpSession.putValue(Ljava/lang/String;Ljava/lang/Object;)V:0

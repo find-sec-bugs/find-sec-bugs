@@ -1,2 +1,4 @@
 javax/servlet/RequestDispatcher.forward(Ljavax/servlet/ServletRequest;Ljavax/servlet/ServletResponse;)V:2
+jakarta/servlet/RequestDispatcher.forward(Ljakarta/servlet/ServletRequest;Ljakarta/servlet/ServletResponse;)V:2
 javax/servlet/RequestDispatcher.include(Ljavax/servlet/ServletRequest;Ljavax/servlet/ServletResponse;)V:2
+jakarta/servlet/RequestDispatcher.include(Ljakarta/servlet/ServletRequest;Ljakarta/servlet/ServletResponse;)V:2

@@ -81,12 +81,12 @@ java/lang/StringBuilder.append(Ljava/lang/String;)Ljava/lang/StringBuilder;:0,1#
 java/lang/StringBuilder.append(Ljava/lang/StringBuffer;)Ljava/lang/StringBuilder;:0,1#1
 java/lang/StringBuilder.append(Ljava/lang/CharSequence;)Ljava/lang/StringBuilder;:0,1#1
 java/lang/StringBuilder.append(Ljava/lang/CharSequence;II)Ljava/lang/StringBuilder;:2,3#3
-java/lang/StringBuilder.append(Z)Ljava/lang/StringBuilder;:1
-java/lang/StringBuilder.append(C)Ljava/lang/StringBuilder;:0,1
-java/lang/StringBuilder.append(D)Ljava/lang/StringBuilder;:2
-java/lang/StringBuilder.append(F)Ljava/lang/StringBuilder;:1
-java/lang/StringBuilder.append(I)Ljava/lang/StringBuilder;:1
-java/lang/StringBuilder.append(J)Ljava/lang/StringBuilder;:2
+java/lang/StringBuilder.append(Z)Ljava/lang/StringBuilder;:1#1
+java/lang/StringBuilder.append(C)Ljava/lang/StringBuilder;:0,1#1
+java/lang/StringBuilder.append(D)Ljava/lang/StringBuilder;:2#2
+java/lang/StringBuilder.append(F)Ljava/lang/StringBuilder;:1#1
+java/lang/StringBuilder.append(I)Ljava/lang/StringBuilder;:1#1
+java/lang/StringBuilder.append(J)Ljava/lang/StringBuilder;:2#2
 java/lang/StringBuilder.append(Ljava/lang/Object;)Ljava/lang/StringBuilder;:0,1#1
 
 java/lang/StringBuilder.insert(ILjava/lang/String;)Ljava/lang/StringBuilder;:0,2#2
@@ -120,12 +120,12 @@ java/lang/StringBuffer.append(Ljava/lang/String;)Ljava/lang/StringBuffer;:0,1#1
 java/lang/StringBuffer.append(Ljava/lang/StringBuffer;)Ljava/lang/StringBuffer;:0,1#1
 java/lang/StringBuffer.append(Ljava/lang/CharSequence;)Ljava/lang/StringBuffer;:0,1#1
 java/lang/StringBuffer.append(Ljava/lang/CharSequence;II)Ljava/lang/StringBuffer;:2,3#3
-java/lang/StringBuffer.append(Z)Ljava/lang/StringBuffer;:1
-java/lang/StringBuffer.append(C)Ljava/lang/StringBuffer;:0,1
-java/lang/StringBuffer.append(D)Ljava/lang/StringBuffer;:2
-java/lang/StringBuffer.append(F)Ljava/lang/StringBuffer;:1
-java/lang/StringBuffer.append(I)Ljava/lang/StringBuffer;:1
-java/lang/StringBuffer.append(J)Ljava/lang/StringBuffer;:2
+java/lang/StringBuffer.append(Z)Ljava/lang/StringBuffer;:1#1
+java/lang/StringBuffer.append(C)Ljava/lang/StringBuffer;:0,1#1
+java/lang/StringBuffer.append(D)Ljava/lang/StringBuffer;:2#2
+java/lang/StringBuffer.append(F)Ljava/lang/StringBuffer;:1#1
+java/lang/StringBuffer.append(I)Ljava/lang/StringBuffer;:1#1
+java/lang/StringBuffer.append(J)Ljava/lang/StringBuffer;:2#2
 java/lang/StringBuffer.append(Ljava/lang/Object;)Ljava/lang/StringBuffer;:0,1#1
 
 java/lang/StringBuffer.insert(ILjava/lang/String;)Ljava/lang/StringBuffer;:0,2#2

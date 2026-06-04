@@ -43,9 +43,48 @@ public class CrlfLogInjectionDetectorTest extends BaseDetectorTest {
                     .build()
             );
         }
-        verify(reporter, times(49 - 20)).doReportBug(bugDefinition().bugType("CRLF_INJECTION_LOGS").build());
+        // A regex replace that does not strip line breaks is still reported.
+        verify(reporter).doReportBug(
+                bugDefinition()
+                .bugType("CRLF_INJECTION_LOGS")
+                .inClass("Logging").inMethod("crlfRegexReplaceStillInsecure").atLine(71)
+                .build()
+        );
+        verify(reporter, times(49 - 20 + 1)).doReportBug(bugDefinition().bugType("CRLF_INJECTION_LOGS").build());
     }
 
+
+    @Test
+    public void regexLinebreakReplaceIsSanitized() throws Exception {
+        String[] files = {
+            getClassFilePath("testcode/Logging")
+        };
+        SecurityReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        // replaceAll("\\R", "") and replaceAll("\\v", "") strip every line break,
+        // so no CRLF log injection must be reported in this method.
+        verify(reporter, times(0)).doReportBug(
+                bugDefinition()
+                        .bugType("CRLF_INJECTION_LOGS")
+                        .inClass("Logging").inMethod("javaUtilLogging").atLine(61)
+                        .build()
+        );
+        verify(reporter, times(0)).doReportBug(
+                bugDefinition()
+                        .bugType("CRLF_INJECTION_LOGS")
+                        .inClass("Logging").inMethod("javaUtilLogging").atLine(62)
+                        .build()
+        );
+
+        // A regex that does not remove line breaks must still be reported.
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("CRLF_INJECTION_LOGS")
+                        .inClass("Logging").inMethod("crlfRegexReplaceStillInsecure")
+                        .build()
+        );
+    }
 
     @Test
     public void detectResponseSplittingKotlin() throws Exception {

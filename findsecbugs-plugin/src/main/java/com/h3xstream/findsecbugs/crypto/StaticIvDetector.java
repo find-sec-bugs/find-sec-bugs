@@ -32,11 +32,19 @@ import java.util.Iterator;
 import javax.crypto.Cipher;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
+import org.apache.bcel.generic.ALOAD;
+import org.apache.bcel.generic.ANEWARRAY;
 import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.GETFIELD;
+import org.apache.bcel.generic.GETSTATIC;
 import org.apache.bcel.generic.ICONST;
 import org.apache.bcel.generic.INVOKESPECIAL;
 import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InstructionHandle;
+import org.apache.bcel.generic.NEW;
+import org.apache.bcel.generic.NEWARRAY;
+import org.apache.bcel.generic.Type;
 
 /**
  * <p>
@@ -83,6 +91,10 @@ public class StaticIvDetector implements Detector {
         boolean atLeastOneDecryptCipher = false;
         boolean atLeastOneEncryptCipher = false;
         boolean ivFetchFromCipher = false;
+        //Track whether this method performs any Cipher.init at all. A method that only builds the
+        //parameter spec (a helper that receives the IV as an argument and returns the spec) has no
+        //encryption context, so an IV taken from a method parameter cannot be assumed to be static.
+        boolean atLeastOneCipherInit = false;
 
         //First pass : it look for encryption and decryption mode to detect if the method does decryption only
         for (Iterator<Location> i = cfg.locationIterator(); i.hasNext(); ) {
@@ -96,6 +108,7 @@ public class StaticIvDetector implements Detector {
                 //INVOKEVIRTUAL javax/crypto/Cipher.init ((ILjava/security/Key;)V)
                 if (("javax.crypto.Cipher").equals(invoke.getClassName(cpg)) &&
                         "init".equals(invoke.getMethodName(cpg))) {
+                    atLeastOneCipherInit = true;
                     ICONST iconst = ByteCode.getPrevInstruction(location.getHandle(), ICONST.class);
                     if (iconst != null) {
                         int mode = iconst.getValue().intValue();
@@ -141,6 +154,15 @@ public class StaticIvDetector implements Detector {
                 if (("javax.crypto.spec.IvParameterSpec").equals(invoke.getClassName(cpg)) &&
                         "<init>".equals(invoke.getMethodName(cpg))) {
 
+                    //When the method performs no encryption/decryption of its own and the IV is
+                    //received as a method parameter, there is no evidence the IV is static (see #765).
+                    //A genuinely static IV is built locally from constants (NEWARRAY) or read from a
+                    //field (GETSTATIC/GETFIELD), so those still get flagged.
+                    if (!atLeastOneCipherInit
+                            && ivLoadedFromMethodParameter(location.getHandle(), m, cpg)) {
+                        continue;
+                    }
+
                     JavaClass clz = classContext.getJavaClass();
                     bugReporter.reportBug(new BugInstance(this, STATIC_IV, Priorities.NORMAL_PRIORITY) //
                             .addClass(clz)
@@ -149,6 +171,59 @@ public class StaticIvDetector implements Detector {
                 }
             }
         }
+    }
+
+    /**
+     * Determine whether the IV array passed to the spec constructor at {@code initHandle} is loaded
+     * from a method parameter (an {@code ALOAD} of a parameter slot), as opposed to being built
+     * locally from constants or read from a field.
+     *
+     * <p>The scan walks backward from the constructor call to the matching {@code NEW} of the spec
+     * class. If a fresh array construction ({@code NEWARRAY}/{@code ANEWARRAY}) or a field read
+     * ({@code GETSTATIC}/{@code GETFIELD}) appears in that window, the IV is treated as potentially
+     * static and this method returns {@code false}. If the only array reference comes from an
+     * {@code ALOAD} of a parameter slot, the IV is parameter-derived and the method returns
+     * {@code true}.</p>
+     */
+    private boolean ivLoadedFromMethodParameter(InstructionHandle initHandle, Method m, ConstantPoolGen cpg) {
+        int parameterSlots = parameterSlotCount(m);
+        boolean parameterArrayLoaded = false;
+        for (InstructionHandle h = initHandle.getPrev(); h != null; h = h.getPrev()) {
+            Instruction ins = h.getInstruction();
+            if (ins instanceof NEW) {
+                NEW newIns = (NEW) ins;
+                String createdClass = newIns.getLoadClassType(cpg).getClassName();
+                if ("javax.crypto.spec.IvParameterSpec".equals(createdClass)
+                        || "javax.crypto.spec.GCMParameterSpec".equals(createdClass)) {
+                    //Reached the start of the spec construction.
+                    break;
+                }
+            } else if (ins instanceof NEWARRAY || ins instanceof ANEWARRAY) {
+                //The array is built locally; it may be a hardcoded constant IV.
+                return false;
+            } else if (ins instanceof GETSTATIC || ins instanceof GETFIELD) {
+                //The array comes from a field; treat it as potentially static.
+                return false;
+            } else if (ins instanceof ALOAD) {
+                int slot = ((ALOAD) ins).getIndex();
+                if (slot < parameterSlots) {
+                    parameterArrayLoaded = true;
+                }
+            }
+        }
+        return parameterArrayLoaded;
+    }
+
+    /**
+     * Number of local-variable slots occupied by the method parameters (including {@code this} for
+     * instance methods). {@code long} and {@code double} parameters each take two slots.
+     */
+    private int parameterSlotCount(Method m) {
+        int slots = m.isStatic() ? 0 : 1;
+        for (Type t : m.getArgumentTypes()) {
+            slots += t.getSize();
+        }
+        return slots;
     }
 
     private Location nextLocation(Iterator<Location> i,ConstantPoolGen cpg) {

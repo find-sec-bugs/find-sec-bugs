@@ -81,6 +81,8 @@ java/lang/StringBuilder.append(Ljava/lang/String;)Ljava/lang/StringBuilder;:0,1#
 java/lang/StringBuilder.append(Ljava/lang/StringBuffer;)Ljava/lang/StringBuilder;:0,1#1
 java/lang/StringBuilder.append(Ljava/lang/CharSequence;)Ljava/lang/StringBuilder;:0,1#1
 java/lang/StringBuilder.append(Ljava/lang/CharSequence;II)Ljava/lang/StringBuilder;:2,3#3
+java/lang/StringBuilder.append([C)Ljava/lang/StringBuilder;:0,1#1
+java/lang/StringBuilder.append([CII)Ljava/lang/StringBuilder;:2,3#3
 java/lang/StringBuilder.append(Z)Ljava/lang/StringBuilder;:1#1
 java/lang/StringBuilder.append(C)Ljava/lang/StringBuilder;:0,1#1
 java/lang/StringBuilder.append(D)Ljava/lang/StringBuilder;:2#2
@@ -88,17 +90,20 @@ java/lang/StringBuilder.append(F)Ljava/lang/StringBuilder;:1#1
 java/lang/StringBuilder.append(I)Ljava/lang/StringBuilder;:1#1
 java/lang/StringBuilder.append(J)Ljava/lang/StringBuilder;:2#2
 java/lang/StringBuilder.append(Ljava/lang/Object;)Ljava/lang/StringBuilder;:0,1#1
+java/lang/StringBuilder.appendCodePoint(I)Ljava/lang/StringBuilder;:1#1
 
 java/lang/StringBuilder.insert(ILjava/lang/String;)Ljava/lang/StringBuilder;:0,2#2
 java/lang/StringBuilder.insert(ILjava/lang/Object;)Ljava/lang/StringBuilder;:0,2#2
+java/lang/StringBuilder.insert(I[C)Ljava/lang/StringBuilder;:0,2#2
 java/lang/StringBuilder.insert(ILjava/lang/CharSequence;)Ljava/lang/StringBuilder;:0,2#2
 java/lang/StringBuilder.insert(ILjava/lang/CharSequence;II)Ljava/lang/StringBuilder;:2,4#4
-java/lang/StringBuilder.insert(IZ)Ljava/lang/StringBuilder;:2
-java/lang/StringBuilder.insert(IC)Ljava/lang/StringBuilder;:2
-java/lang/StringBuilder.insert(ID)Ljava/lang/StringBuilder;:3
-java/lang/StringBuilder.insert(IF)Ljava/lang/StringBuilder;:2
-java/lang/StringBuilder.insert(II)Ljava/lang/StringBuilder;:2
-java/lang/StringBuilder.insert(IJ)Ljava/lang/StringBuilder;:3
+java/lang/StringBuilder.insert(I[CII)Ljava/lang/StringBuilder;:2,4#4
+java/lang/StringBuilder.insert(IZ)Ljava/lang/StringBuilder;:2#2
+java/lang/StringBuilder.insert(IC)Ljava/lang/StringBuilder;:2#2
+java/lang/StringBuilder.insert(ID)Ljava/lang/StringBuilder;:3#3
+java/lang/StringBuilder.insert(IF)Ljava/lang/StringBuilder;:2#2
+java/lang/StringBuilder.insert(II)Ljava/lang/StringBuilder;:2#2
+java/lang/StringBuilder.insert(IJ)Ljava/lang/StringBuilder;:3#3
 
 java/lang/StringBuilder.delete(II)Ljava/lang/StringBuilder;:2#2
 java/lang/StringBuilder.deleteCharAt(I)Ljava/lang/StringBuilder;:1#1
@@ -120,6 +125,8 @@ java/lang/StringBuffer.append(Ljava/lang/String;)Ljava/lang/StringBuffer;:0,1#1
 java/lang/StringBuffer.append(Ljava/lang/StringBuffer;)Ljava/lang/StringBuffer;:0,1#1
 java/lang/StringBuffer.append(Ljava/lang/CharSequence;)Ljava/lang/StringBuffer;:0,1#1
 java/lang/StringBuffer.append(Ljava/lang/CharSequence;II)Ljava/lang/StringBuffer;:2,3#3
+java/lang/StringBuffer.append([C)Ljava/lang/StringBuffer;:0,1#1
+java/lang/StringBuffer.append([CII)Ljava/lang/StringBuffer;:2,3#3
 java/lang/StringBuffer.append(Z)Ljava/lang/StringBuffer;:1#1
 java/lang/StringBuffer.append(C)Ljava/lang/StringBuffer;:0,1#1
 java/lang/StringBuffer.append(D)Ljava/lang/StringBuffer;:2#2
@@ -127,17 +134,20 @@ java/lang/StringBuffer.append(F)Ljava/lang/StringBuffer;:1#1
 java/lang/StringBuffer.append(I)Ljava/lang/StringBuffer;:1#1
 java/lang/StringBuffer.append(J)Ljava/lang/StringBuffer;:2#2
 java/lang/StringBuffer.append(Ljava/lang/Object;)Ljava/lang/StringBuffer;:0,1#1
+java/lang/StringBuffer.appendCodePoint(I)Ljava/lang/StringBuffer;:1#1
 
 java/lang/StringBuffer.insert(ILjava/lang/String;)Ljava/lang/StringBuffer;:0,2#2
 java/lang/StringBuffer.insert(ILjava/lang/Object;)Ljava/lang/StringBuffer;:0,2#2
+java/lang/StringBuffer.insert(I[C)Ljava/lang/StringBuffer;:0,2#2
 java/lang/StringBuffer.insert(ILjava/lang/CharSequence;)Ljava/lang/StringBuffer;:0,2#2
 java/lang/StringBuffer.insert(ILjava/lang/CharSequence;II)Ljava/lang/StringBuffer;:2,4#4
-java/lang/StringBuffer.insert(IZ)Ljava/lang/StringBuffer;:2
-java/lang/StringBuffer.insert(IC)Ljava/lang/StringBuffer;:2
-java/lang/StringBuffer.insert(ID)Ljava/lang/StringBuffer;:3
-java/lang/StringBuffer.insert(IF)Ljava/lang/StringBuffer;:2
-java/lang/StringBuffer.insert(II)Ljava/lang/StringBuffer;:2
-java/lang/StringBuffer.insert(IJ)Ljava/lang/StringBuffer;:3
+java/lang/StringBuffer.insert(I[CII)Ljava/lang/StringBuffer;:2,4#4
+java/lang/StringBuffer.insert(IZ)Ljava/lang/StringBuffer;:2#2
+java/lang/StringBuffer.insert(IC)Ljava/lang/StringBuffer;:2#2
+java/lang/StringBuffer.insert(ID)Ljava/lang/StringBuffer;:3#3
+java/lang/StringBuffer.insert(IF)Ljava/lang/StringBuffer;:2#2
+java/lang/StringBuffer.insert(II)Ljava/lang/StringBuffer;:2#2
+java/lang/StringBuffer.insert(IJ)Ljava/lang/StringBuffer;:3#3
 
 java/lang/StringBuffer.delete(II)Ljava/lang/StringBuffer;:2#2
 java/lang/StringBuffer.deleteCharAt(I)Ljava/lang/StringBuffer;:1#1

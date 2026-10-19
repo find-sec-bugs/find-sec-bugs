@@ -11,6 +11,8 @@ public interface HttpServletResponse extends ServletResponse {
     
     void setHeader(String header, String value);
 
+    void sendError(int sc, String msg) throws IOException;
+
     void sendRedirect(String url) throws IOException;
 
     String encodeURL(String url);

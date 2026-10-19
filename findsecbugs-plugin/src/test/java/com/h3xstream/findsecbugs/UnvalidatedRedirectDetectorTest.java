@@ -77,8 +77,21 @@ public class UnvalidatedRedirectDetectorTest extends BaseDetectorTest {
                         .bugType("UNVALIDATED_REDIRECT")
                         .inClass("JakartaUnvalidatedRedirectServlet")
                         .inMethod("unvalidatedRedirect1")
+                        .withPriority("High")
+                        .build()
+        );
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("UNVALIDATED_REDIRECT")
+                        .inClass("JakartaUnvalidatedRedirectServlet")
+                        .inMethod("unvalidatedRedirect2")
                         .withPriority("Medium")
                         .build()
+        );
+
+        verify(reporter, times(2)).doReportBug(
+                bugDefinition().bugType("UNVALIDATED_REDIRECT").inClass("JakartaUnvalidatedRedirectServlet").build()
         );
     }
 }

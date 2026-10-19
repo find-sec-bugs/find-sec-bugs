@@ -65,4 +65,24 @@ public class FileDisclosure extends HttpServlet{
             System.out.println(e);
         }
     }
+
+    static class JakartaFileDisclosure extends jakarta.servlet.http.HttpServlet {
+
+        public void doGet2(jakarta.servlet.http.HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response) {
+            try {
+                String jspFile = request.getParameter("jspFile");
+
+                jakarta.servlet.RequestDispatcher requestDispatcher = request.getRequestDispatcher(jspFile);
+
+                requestDispatcher.include(request, response);
+
+                requestDispatcher = request.getServletContext().getRequestDispatcher(jspFile);
+
+                requestDispatcher.forward(request, response);
+
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+    }
 }

@@ -46,4 +46,25 @@ public class TrustBoundaryViolation {
             req.getSession().setAttribute("user","false");
         }
     }
+
+    static class JakartaTrustBoundaryViolation {
+
+        public void setSessionAttributeNameTainted(jakarta.servlet.http.HttpServletRequest req) {
+            String input = req.getParameter("input");
+            req.getSession().setAttribute(input, "true");
+        }
+
+        public void setSessionAttributeValueTainted(jakarta.servlet.http.HttpServletRequest req) {
+            String input = req.getParameter("input");
+            req.getSession().setAttribute("user", input);
+        }
+
+        public void setSessionAttributeNameUnknownSource(jakarta.servlet.http.HttpServletRequest req, String input) {
+            req.getSession().setAttribute(input, "true");
+        }
+
+        public void setSessionAttributeValueUnknownSource(jakarta.servlet.http.HttpServletRequest req, String input) {
+            req.getSession().setAttribute("user", input);
+        }
+    }
 }

@@ -26,6 +26,7 @@ java/security/MessageDigest.digest([B)[B:SAFE
 
 --Hexadecimal representation
 javax/xml/bind/DatatypeConverter.printHexBinary([B)Ljava/lang/String;:SAFE
+jakarta/xml/bind/DatatypeConverter.printHexBinary([B)Ljava/lang/String;:SAFE
 org/apache/commons/codec/binary/Hex.encodeHex([B)[C:SAFE
 org/apache/commons/codec/binary/Hex.encodeHex([BZ)[C:SAFE
 org/apache/commons/codec/binary/Hex.encodeHexString([B)Ljava/lang/String;:SAFE

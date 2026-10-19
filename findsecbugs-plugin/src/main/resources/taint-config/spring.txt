@@ -1,0 +1,19 @@
+- Spring Environment and PropertyResolver return server-side configuration values,
+- not user-supplied input. Marking as SAFE to avoid false positives in path traversal
+- and other injection detectors.
+
+org/springframework/core/env/PropertyResolver.getProperty(Ljava/lang/String;)Ljava/lang/String;:SAFE
+org/springframework/core/env/PropertyResolver.getProperty(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:SAFE
+org/springframework/core/env/PropertyResolver.getProperty(Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/Object;:SAFE
+org/springframework/core/env/PropertyResolver.getProperty(Ljava/lang/String;Ljava/lang/Class;Ljava/lang/Object;)Ljava/lang/Object;:SAFE
+org/springframework/core/env/PropertyResolver.getRequiredProperty(Ljava/lang/String;)Ljava/lang/String;:SAFE
+org/springframework/core/env/PropertyResolver.getRequiredProperty(Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/Object;:SAFE
+org/springframework/core/env/PropertyResolver.resolvePlaceholders(Ljava/lang/String;)Ljava/lang/String;:SAFE
+org/springframework/core/env/PropertyResolver.resolveRequiredPlaceholders(Ljava/lang/String;)Ljava/lang/String;:SAFE
+
+org/springframework/core/env/Environment.getProperty(Ljava/lang/String;)Ljava/lang/String;:SAFE
+org/springframework/core/env/Environment.getProperty(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;:SAFE
+org/springframework/core/env/Environment.getProperty(Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/Object;:SAFE
+org/springframework/core/env/Environment.getProperty(Ljava/lang/String;Ljava/lang/Class;Ljava/lang/Object;)Ljava/lang/Object;:SAFE
+org/springframework/core/env/Environment.getRequiredProperty(Ljava/lang/String;)Ljava/lang/String;:SAFE
+org/springframework/core/env/Environment.getRequiredProperty(Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/Object;:SAFE

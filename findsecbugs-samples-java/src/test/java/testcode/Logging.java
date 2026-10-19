@@ -58,6 +58,17 @@ public class Logging {
         encoded = "safe" + encoded.toLowerCase();
         logger.warning(encoded.replace("\n", " (new line)"));
         logger.fine(tainted.replaceAll("[\r\n]+", ""));
+        logger.fine(tainted.replaceAll("\\R", "")); // \R matches any Unicode linebreak (CR, LF, CRLF)
+        logger.fine(tainted.replaceAll("\\v", "")); // \v matches a vertical whitespace character
+    }
+
+    @SuppressWarnings( "deprecation" )
+    public void crlfRegexReplaceStillInsecure() {
+        String tainted = req.getParameter("test");
+        Logger logger = Logger.getLogger(Logging.class.getName());
+
+        // The regex "\\d" (any digit) does not strip line breaks, so this is still reported.
+        logger.warning(tainted.replaceAll("\\d", ""));
     }
 
 }

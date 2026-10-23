@@ -27,6 +27,7 @@ import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.ba.ClassContext;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
+import edu.umd.cs.findbugs.ba.Location;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.generic.*;
@@ -78,7 +79,7 @@ public class XmlInjectionDetector extends BasicInjectionDetector implements Tain
     }
 
     @Override
-    public void visitInvoke(InvokeInstruction invoke, MethodGen methodGen, TaintFrame frameType, List<Taint> parameters, ConstantPoolGen cpg) throws DataflowAnalysisException {
+    public void visitInvoke(InvokeInstruction invoke, MethodGen methodGen, TaintFrame frameType, Taint instanceTaint, List<Taint> parameters, ConstantPoolGen cpg, Location location) throws DataflowAnalysisException {
 
         if(STRINGBUILDER_APPEND.matches(invoke,cpg)) {
 
@@ -97,21 +98,6 @@ public class XmlInjectionDetector extends BasicInjectionDetector implements Tain
 
 
         }
-    }
-
-    @Override
-    public void visitReturn(MethodGen methodGen, Taint returnValue, ConstantPoolGen cpg) throws Exception {
-
-    }
-
-    @Override
-    public void visitLoad(LoadInstruction instruction, MethodGen methodGen, TaintFrame frameType, int numProduced, ConstantPoolGen cpg) {
-
-    }
-
-    @Override
-    public void visitField(FieldInstruction put, MethodGen methodGen, TaintFrame frameType, Taint taint, int numProduced, ConstantPoolGen cpg) throws Exception {
-
     }
 
     /**

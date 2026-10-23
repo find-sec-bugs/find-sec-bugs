@@ -116,16 +116,6 @@ public class HashUnsafeEqualsDetector extends BasicInjectionDetector implements 
     }
 
     @Override
-    public void visitInvoke(InvokeInstruction invoke, MethodGen methodGen, TaintFrame frameType, List<Taint> parameters, ConstantPoolGen cpg) {
-
-    }
-
-    @Override
-    public void visitReturn(MethodGen methodGen, Taint returnValue, ConstantPoolGen cpg) throws Exception {
-
-    }
-
-    @Override
     public void visitLoad(LoadInstruction instruction, MethodGen methodGen, TaintFrame frameType, int numProduced, ConstantPoolGen cpg) {
         //Extract the name of the variable
         int index = instruction.getIndex();
@@ -167,8 +157,4 @@ public class HashUnsafeEqualsDetector extends BasicInjectionDetector implements 
         }
     }
 
-    @Override
-    public void visitField(FieldInstruction put, MethodGen methodGen, TaintFrame frameType, Taint taint, int numProduced, ConstantPoolGen cpg) throws Exception {
-
-    }
 }

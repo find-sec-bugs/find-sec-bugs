@@ -12,7 +12,7 @@
     <name>Find Security Bugs Samples Kotlin</name>
 
     <properties>
-        <kotlin.version>1.8.20</kotlin.version>
+        <kotlin.version>2.3.0</kotlin.version>
         <spotbugs.skip>true</spotbugs.skip>
     </properties>
 

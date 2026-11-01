@@ -39,7 +39,7 @@ public class KotlinPathTraversalDetectorTest extends BaseDetectorTest {
         EasyBugReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        for (Integer line : Arrays.asList(31, 32, 34, 35)) {
+        for (Integer line : Arrays.asList(32, 33, 35, 36)) {
             verify(reporter).doReportBug(
                     bugDefinition()
                             .bugType("PATH_TRAVERSAL_IN")

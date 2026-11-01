@@ -1,5 +1,6 @@
 package com.h3xstream.findsecbugs.injection
 
+import java.util.Locale
 import javax.servlet.http.HttpServletRequest
 import java.util.ResourceBundle
 import java.util.function.Supplier
@@ -33,7 +34,7 @@ class KotlinLogging {
         logger.log(Level.INFO, tainted, Exception())
         logger.logp(Level.INFO, tainted, safe, "safe")
         logger.logp(Level.INFO, safe, "safe", tainted, safe)
-        logger.logp(Level.INFO, "safe", safe.toLowerCase(), safe, arrayOf(tainted))
+        logger.logp(Level.INFO, "safe", safe.lowercase(Locale.getDefault()), safe, arrayOf(tainted))
         logger.logp(Level.INFO, tainted, safe, safe, Exception())
         logger.logp(Level.INFO, tainted, "safe", null as Supplier<String>?)
         logger.logp(Level.INFO, "safe", tainted, Exception(), null as Supplier<String>?)
@@ -49,13 +50,13 @@ class KotlinLogging {
 
         // these should not be reported
         logger.fine(safe)
-        logger.log(Level.INFO, "safe".toUpperCase(), safe + safe)
+        logger.log(Level.INFO, "safe".uppercase(Locale.getDefault()), safe + safe)
         logger.logp(Level.INFO, safe, safe, safe, arrayOf(safe))
         logger.logrb(Level.INFO, safe, safe, tainted + "bundle", safe) // bundle name can be tainted
         logger.throwing(safe, safe, Exception())
         logger.info(tainted.replace('\n', ' ').replace('\r', ' '))
-        var encoded = tainted.replace("\r", "").toUpperCase()
-        encoded = "safe" + encoded.toLowerCase()
+        var encoded = tainted.replace("\r", "").uppercase(Locale.getDefault())
+        encoded = "safe" + encoded.lowercase(Locale.getDefault())
         logger.warning(encoded.replace("\n", " (new line)"))
         logger.fine(tainted.replace("[\r\n]+".toRegex(), ""))
     }

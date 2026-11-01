@@ -55,7 +55,7 @@ public class CrlfLogInjectionDetectorTest extends BaseDetectorTest {
         SecurityReporter reporter = spy(new SecurityReporter());
         analyze(files, reporter);
 
-        for (int line = 20; line < 49; line++) {
+        for (int line = 21; line < 50; line++) {
             verify(reporter).doReportBug(
                     bugDefinition()
                     .bugType("CRLF_INJECTION_LOGS")
@@ -63,7 +63,7 @@ public class CrlfLogInjectionDetectorTest extends BaseDetectorTest {
                     .build()
             );
         }
-        verify(reporter, times(49 - 20)).doReportBug(bugDefinition().bugType("CRLF_INJECTION_LOGS").build());
+        verify(reporter, times(50 - 21)).doReportBug(bugDefinition().bugType("CRLF_INJECTION_LOGS").build());
     }
 
 

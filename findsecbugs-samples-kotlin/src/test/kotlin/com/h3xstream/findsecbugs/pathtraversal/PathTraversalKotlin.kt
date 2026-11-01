@@ -20,6 +20,7 @@ package com.h3xstream.findsecbugs.pathtraversal
 import java.io.File
 import java.io.IOException
 import java.net.URISyntaxException
+import java.nio.file.Files
 
 class PathTraversalKotlin {
 
@@ -28,16 +29,16 @@ class PathTraversalKotlin {
         val filepath = args[1]
 
         // Unsafe
-        createTempDir(filepath, filepath)
-        createTempDir(filepath, filepath, File("static"))
+        Files.createTempDirectory(filepath)
+        Files.createTempDirectory(File("static").toPath(), filepath)
 
-        createTempFile(filepath, filepath)
-        createTempFile(filepath, filepath, File("static"))
+        Files.createTempFile(filepath, filepath)
+        Files.createTempFile(File("static").toPath(), filepath, filepath)
 
         // Safe
-        createTempDir()
-        createTempFile()
-        createTempDir("static", "static")
-        createTempFile("static", "static")
+        Files.createTempDirectory("tmp")
+        Files.createTempFile("tmp", null)
+        Files.createTempDirectory("static")
+        Files.createTempFile("static", "static")
     }
 }

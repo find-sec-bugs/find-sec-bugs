@@ -204,7 +204,7 @@
                     <plugin>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs-maven-plugin</artifactId>
-                        <version>4.8.6.7</version>
+                        <version>4.10.5.0</version>
                         <configuration>
                             <xmlOutput>true</xmlOutput>
                             <failOnError>false</failOnError>
@@ -235,7 +235,7 @@
             <dependency>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs</artifactId>
-                <version>4.8.6</version>
+                <version>4.10.5</version>
             </dependency>
 
             <!-- Artefact definition of the module -->

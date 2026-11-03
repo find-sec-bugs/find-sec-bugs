@@ -47,6 +47,16 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
     private static final Logger LOG = Logger.getLogger(TaintFrameModelingVisitor.class.getName());
 
     private static final Map<String, Taint.Tag> REPLACE_TAGS;
+
+    /**
+     * Regex constructs that, when used as the pattern of a regex-based replace
+     * (e.g. {@code String.replaceAll}), match line break characters and therefore
+     * strip both carriage return and line feed at once. {@code \R} matches any
+     * Unicode linebreak sequence (including CR, LF and CRLF) and {@code \v} matches
+     * a vertical whitespace character. Removing either neutralizes CRLF log
+     * injection, so both CR_ENCODED and LF_ENCODED must be set when they appear.
+     */
+    private static final String[] LINEBREAK_REGEX_TOKENS = {"\\R", "\\v"};
     private final MethodDescriptor methodDescriptor;
     private final TaintConfig taintConfig;
     private final TaintMethodConfig analyzedMethodConfig;
@@ -692,6 +702,18 @@ public class TaintFrameModelingVisitor extends AbstractFrameModelingVisitor<Tain
                 if ((objectConfiguration.isAReplaceMethodWithRegexParameter() && toReplace.contains(tagString))
                         || toReplace.equals(tagString)) {
                     taint.addTag(replaceTag.getValue());
+                }
+            }
+
+            // A regex pattern can also strip line breaks without naming \r or \n
+            // explicitly, e.g. replaceAll("\\R", "") removes any Unicode linebreak.
+            // Treat such patterns as encoding both CR and LF.
+            if (objectConfiguration.isAReplaceMethodWithRegexParameter()) {
+                for (String linebreakToken : LINEBREAK_REGEX_TOKENS) {
+                    if (toReplace.contains(linebreakToken)) {
+                        taint.addTag(Taint.Tag.CR_ENCODED);
+                        taint.addTag(Taint.Tag.LF_ENCODED);
+                    }
                 }
             }
 

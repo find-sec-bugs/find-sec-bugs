@@ -1294,7 +1294,7 @@ The following snippets show two available solutions. You can set one property or
 <b>References</b><br/>
 <!--XXE_GENERIC_START-->
 <a href="https://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference ('XXE')</a><br/>
-<a href="https://wiki.sei.cmu.edu/confluence/display/java/IDS17-J.+Prevent+XML+External+Entity+Attacks">CERT: IDS17-J. Prevent XML External Entity Attacks</a><br/>
+<a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/input-validation-and-data-sanitization-ids/ids17-j">CERT: IDS17-J. Prevent XML External Entity Attacks</a><br/>
 <a href="https://owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing">OWASP.org: XML External Entity (XXE) Processing</a><br/>
 <a href="https://owasp.org/Top10/2025/A02_2025-Security_Misconfiguration/">OWASP TOP 10 2025 A02 – Security Misconfiguration</a><br/>
 <a href="https://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying XML External Entity vulnerability (XXE)</a><br/>
@@ -1395,7 +1395,7 @@ xPathExpr.evaluate( builder.parse(inputStream) );</pre>
 <b>References</b><br/>
 <!--XXE_GENERIC_START-->
 <a href="https://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference ('XXE')</a><br/>
-<a href="https://wiki.sei.cmu.edu/confluence/display/java/IDS17-J.+Prevent+XML+External+Entity+Attacks">CERT: IDS17-J. Prevent XML External Entity Attacks</a><br/>
+<a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/input-validation-and-data-sanitization-ids/ids17-j">CERT: IDS17-J. Prevent XML External Entity Attacks</a><br/>
 <a href="https://owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing">OWASP.org: XML External Entity (XXE) Processing</a><br/>
 <a href="https://owasp.org/Top10/2025/A02_2025-Security_Misconfiguration/">OWASP TOP 10 2025 A02 – Security Misconfiguration</a><br/>
 <a href="https://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying XML External Entity vulnerability (XXE)</a><br/>
@@ -1484,7 +1484,7 @@ parser.parse(inputStream, customHandler);</pre>
 <b>References</b><br/>
 <!--XXE_GENERIC_START-->
 <a href="https://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference ('XXE')</a><br/>
-<a href="https://wiki.sei.cmu.edu/confluence/display/java/IDS17-J.+Prevent+XML+External+Entity+Attacks">CERT: IDS17-J. Prevent XML External Entity Attacks</a><br/>
+<a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/input-validation-and-data-sanitization-ids/ids17-j">CERT: IDS17-J. Prevent XML External Entity Attacks</a><br/>
 <a href="https://owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing">OWASP.org: XML External Entity (XXE) Processing</a><br/>
 <a href="https://owasp.org/Top10/2025/A02_2025-Security_Misconfiguration/">OWASP TOP 10 2025 A02 – Security Misconfiguration</a><br/>
 <a href="https://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying XML External Entity vulnerability (XXE)</a><br/>
@@ -1573,7 +1573,7 @@ reader.parse(new InputSource(inputStream));</pre>
 <b>References</b><br/>
 <!--XXE_GENERIC_START-->
 <a href="https://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference ('XXE')</a><br/>
-<a href="https://wiki.sei.cmu.edu/confluence/display/java/IDS17-J.+Prevent+XML+External+Entity+Attacks">CERT: IDS17-J. Prevent XML External Entity Attacks</a><br/>
+<a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/input-validation-and-data-sanitization-ids/ids17-j">CERT: IDS17-J. Prevent XML External Entity Attacks</a><br/>
 <a href="https://owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing">OWASP.org: XML External Entity (XXE) Processing</a><br/>
 <a href="https://owasp.org/Top10/2025/A02_2025-Security_Misconfiguration/">OWASP TOP 10 2025 A02 – Security Misconfiguration</a><br/>
 <a href="https://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying XML External Entity vulnerability (XXE)</a><br/>
@@ -1662,7 +1662,7 @@ Document doc = db.parse(input);</pre>
 <b>References</b><br/>
 <!--XXE_GENERIC_START-->
 <a href="https://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference ('XXE')</a><br/>
-<a href="https://wiki.sei.cmu.edu/confluence/display/java/IDS17-J.+Prevent+XML+External+Entity+Attacks">CERT: IDS17-J. Prevent XML External Entity Attacks</a><br/>
+<a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/input-validation-and-data-sanitization-ids/ids17-j">CERT: IDS17-J. Prevent XML External Entity Attacks</a><br/>
 <a href="https://owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing">OWASP.org: XML External Entity (XXE) Processing</a><br/>
 <a href="https://owasp.org/Top10/2025/A02_2025-Security_Misconfiguration/">OWASP TOP 10 2025 A02 – Security Misconfiguration</a><br/>
 <a href="https://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying XML External Entity vulnerability (XXE)</a><br/>
@@ -1762,7 +1762,7 @@ transformer.transform(input, result);</pre>
 <b>References</b><br/>
 <!--XXE_GENERIC_START-->
 <a href="https://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference ('XXE')</a><br/>
-<a href="https://wiki.sei.cmu.edu/confluence/display/java/IDS17-J.+Prevent+XML+External+Entity+Attacks">CERT: IDS17-J. Prevent XML External Entity Attacks</a><br/>
+<a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/input-validation-and-data-sanitization-ids/ids17-j">CERT: IDS17-J. Prevent XML External Entity Attacks</a><br/>
 <a href="https://owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing">OWASP.org: XML External Entity (XXE) Processing</a><br/>
 <a href="https://owasp.org/Top10/2025/A02_2025-Security_Misconfiguration/">OWASP TOP 10 2025 A02 – Security Misconfiguration</a><br/>
 <a href="https://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying XML External Entity vulnerability (XXE)</a><br/>
@@ -1841,7 +1841,7 @@ transformer.transform(input, result);</pre>
 <b>References</b><br/>
 <!--XXE_GENERIC_START-->
 <a href="https://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML External Entity Reference ('XXE')</a><br/>
-<a href="https://wiki.sei.cmu.edu/confluence/display/java/IDS17-J.+Prevent+XML+External+Entity+Attacks">CERT: IDS17-J. Prevent XML External Entity Attacks</a><br/>
+<a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/input-validation-and-data-sanitization-ids/ids17-j">CERT: IDS17-J. Prevent XML External Entity Attacks</a><br/>
 <a href="https://owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing">OWASP.org: XML External Entity (XXE) Processing</a><br/>
 <a href="https://owasp.org/Top10/2025/A02_2025-Security_Misconfiguration/">OWASP TOP 10 2025 A02 – Security Misconfiguration</a><br/>
 <a href="https://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying XML External Entity vulnerability (XXE)</a><br/>
@@ -2091,7 +2091,7 @@ could be exposed. This could allow an attacker to access unauthorized data or ma
 <a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-39: XPath Injection</a><br/>
 <a href="https://owasp.org/Top10/2025/A05_2025-Injection/">OWASP TOP 10 2025 A05 – Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/643.html">CWE-643: Improper Neutralization of Data within XPath Expressions ('XPath Injection')</a><br/>
-<a href="https://wiki.sei.cmu.edu/confluence/display/java/IDS53-J.+Prevent+XPath+Injection">CERT: IDS53-J. Prevent XPath Injection</a><br/>
+<a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/recommendations/input-validation-and-data-sanitization-ids/ids53-j">CERT: IDS53-J. Prevent XPath Injection</a><br/>
 <a href="https://media.blackhat.com/bh-eu-12/Siddharth/bh-eu-12-Siddharth-Xpath-WP.pdf">Black Hat Europe 2012: Hacking XPath 2.0</a><br/>
 <a href="https://www.balisage.net/Proceedings/vol7/html/Vlist02/BalisageVol7-Vlist02.html">Balisage.net: XQuery Injection</a>
 </p>
@@ -4829,7 +4829,7 @@ fos.write(string.getBytes());
 <p>
     <b>References</b><br/>
     <a href="https://developer.android.com/privacy-and-security/security-tips#external-storage">Android Official Doc: Security Tips</a><br/>
-    <a href="https://wiki.sei.cmu.edu/confluence/display/android/DRD00.+Do+not+store+sensitive+information+on+external+storage+%28SD+card%29+unless+encrypted+first">CERT: DRD00-J: Do not store sensitive information on external storage [...]</a><br/>
+    <a href="https://cmu-sei.github.io/secure-coding-standards/android-secure-coding-standard/rules/file-io-and-logging-fio/drd00-do-not-store-sensitive-information-on-external-storage-sd-card-unless-encrypted-first">CERT: DRD00-J: Do not store sensitive information on external storage [...]</a><br/>
     <a href="https://developer.android.com/guide/topics/data/data-storage.html#filesExternal">Android Official Doc: Using the External Storage</a><br/>
     <a href="https://owasp.org/www-project-mobile-top-10/2023-risks/m9-insecure-data-storage.html">OWASP Mobile Top 10 2023-M9: Insecure Data Storage</a><br/>
     <a href="https://owasp.org/Top10/2025/A06_2025-Insecure_Design/">OWASP TOP 10 2025 A06 – Insecure Design</a><br/>
@@ -4914,7 +4914,7 @@ sendBroadcast(v1);
 <br/>
 <p>
     <b>References</b><br/>
-    <a href="https://wiki.sei.cmu.edu/confluence/display/android/DRD03-J.+Do+not+broadcast+sensitive+information+using+an+implicit+intent">CERT: DRD03-J. Do not broadcast sensitive information using an implicit intent</a><br/>
+    <a href="https://cmu-sei.github.io/secure-coding-standards/android-secure-coding-standard/rules/intent-itt/drd03-j">CERT: DRD03-J. Do not broadcast sensitive information using an implicit intent</a><br/>
     <a href="https://developer.android.com/reference/android/content/BroadcastReceiver.html#Security">Android Official Doc: BroadcastReceiver (Security)</a><br/>
     <a href="https://developer.android.com/guide/topics/manifest/receiver-element.html">Android Official Doc: Receiver configuration (see <code>android:permission</code>)</a><br/>
     <sup>[1]</sup> <a href="https://stackoverflow.com/a/21513368/89769">StackOverflow: How to set permissions in broadcast sender and receiver in android</a><br/>
@@ -4965,7 +4965,7 @@ create on external storage. See references below for implementation guidelines.
 <br/>
 <p>
     <b>References</b><br/>
-    <a href="https://wiki.sei.cmu.edu/confluence/display/android/DRD11.+Ensure+that+sensitive+data+is+kept+secure">CERT: DRD11-J. Ensure that sensitive data is kept secure</a><br/>
+    <a href="https://cmu-sei.github.io/secure-coding-standards/android-secure-coding-standard/rules/file-io-and-logging-fio/drd11-ensure-that-sensitive-data-is-kept-secure">CERT: DRD11-J. Ensure that sensitive data is kept secure</a><br/>
     <a href="https://developer.android.com/privacy-and-security/security-tips#internal-storage">Android Official Doc: Security Tips</a><br/>
     <a href="https://developer.android.com/reference/android/content/Context.html#MODE_PRIVATE">Android Official Doc: Context.MODE_PRIVATE</a><br/>
     <a href="https://www.vogella.com/tutorials/AndroidSQLite/article.html#databasetutorial_database">vogella.com: Android SQLite database and content provider - Tutorial</a><br/>
@@ -5021,7 +5021,7 @@ webView.setWebChromeClient(new WebChromeClient() {
 <br/>
 <p>
     <b>References</b><br/>
-    <a href="https://wiki.sei.cmu.edu/confluence/display/android/DRD15-J.+Consider+privacy+concerns+when+using+Geolocation+API">CERT: DRD15-J. Consider privacy concerns when using Geolocation API</a><br/>
+    <a href="https://cmu-sei.github.io/secure-coding-standards/android-secure-coding-standard/rules/miscellaneous-msc/drd15-j">CERT: DRD15-J. Consider privacy concerns when using Geolocation API</a><br/>
     <a href="https://en.wikipedia.org/wiki/W3C_Geolocation_API">Wikipedia: W3C Geolocation API</a><br/>
     <a href="https://w3c.github.io/geolocation/">W3C: Geolocation Specification</a><br/>
     <a href="https://cwe.mitre.org/data/definitions/359.html">CWE-359: Exposure of Private Personal Information to an Unauthorized Actor</a>
@@ -6838,7 +6838,7 @@ if (matcher.find()) {
 
 <p>
 <b>References</b><br/>
-<a href="https://wiki.sei.cmu.edu/confluence/display/java/IDS11-J.+Perform+any+string+modifications+before+validation">CERT: IDS11-J. Perform any string modifications before validation</a><br/>
+<a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/input-validation-and-data-sanitization-ids/ids11-j/">CERT: IDS11-J. Perform any string modifications before validation</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/179.html">CWE-179: Incorrect Behavior Order: Early Validation</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/182.html">CWE-182: Collapse of Data into Unsafe Value</a><br/>
 </p>
@@ -6889,7 +6889,7 @@ if (matcher.find()) {
 
 <p>
 <b>References</b><br/>
-<a href="https://wiki.sei.cmu.edu/confluence/display/java/IDS01-J.+Normalize+strings+before+validating+them">CERT: IDS01-J. Normalize strings before validating them</a><br/>
+<a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/input-validation-and-data-sanitization-ids/ids01-j/">CERT: IDS01-J. Normalize strings before validating them</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/179.html">CWE-179: Incorrect Behavior Order: Early Validation</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/180.html">CWE-180: Incorrect Behavior Order: Validate Before Canonicalize</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/289.html">CWE-289: Authentication Bypass by Alternate Name</a><br/>
@@ -6937,7 +6937,7 @@ pc.add(new RuntimePermission("createClassLoader"));
 
 
 <p>References</b><br>
-<a href="https://wiki.sei.cmu.edu/confluence/display/java/ENV03-J.+Do+not+grant+dangerous+combinations+of+permissions">CERT: ENV03-J. Do not grant dangerous combinations of permissions</a><br/>
+<a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/runtime-environment-env/env03-j/">CERT: ENV03-J. Do not grant dangerous combinations of permissions</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/732.html">CWE-732: Incorrect Permission Assignment for Critical Resource</a><br/>
 </p>
             ]]>
@@ -6985,7 +6985,7 @@ phone for 1 singe dollar.
 </p>
 
 <p>References</b><br>
-<a href="https://wiki.sei.cmu.edu/confluence/display/java/IDS16-J.+Prevent+XML+Injection">IDS16-J. Prevent XML Injection</a><br/>
+<a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/input-validation-and-data-sanitization-ids/ids16-j/">IDS16-J. Prevent XML Injection</a><br/>
 <a href="https://owasp.org/Top10/2025/A05_2025-Injection/">OWASP TOP 10 2025 A05 – Injection</a><br/>
 <a href="https://cwe.mitre.org/data/definitions/91.html">CWE-91: XML Injection (aka Blind XPath Injection)</a><br/>
 </p>

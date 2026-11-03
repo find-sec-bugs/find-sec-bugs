@@ -37,9 +37,3 @@ com/google/common/escape/Escaper.escape(Ljava/lang/String;)Ljava/lang/String;:0|
 --HTTPClient
 org/apache/http/client/utils/URIBuilder.build()Ljava/net/URI;:SAFE
 org/apache/http/client/utils/URIBuilder.toString()Ljava/lang/String;:SAFE
-
---Java SQL Statement enquote methods (Java 9+)
---These methods properly escape SQL literals and identifiers to prevent SQL injection
-java/sql/Statement.enquoteLiteral(Ljava/lang/String;)Ljava/lang/String;:0|+SQL_INJECTION_SAFE
-java/sql/Statement.enquoteIdentifier(Ljava/lang/String;Z)Ljava/lang/String;:0|+SQL_INJECTION_SAFE
-java/sql/Statement.enquoteNCharLiteral(Ljava/lang/String;)Ljava/lang/String;:0|+SQL_INJECTION_SAFE

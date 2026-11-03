@@ -61,4 +61,39 @@ public class HttpResponseSplittingDetectorTest extends BaseDetectorTest {
         }
         verify(reporter, times(8)).doReportBug(bugDefinition().bugType("HTTP_RESPONSE_SPLITTING").build());
     }
+
+    @Test
+    public void detectJakartaResponseSplitting() throws Exception {
+        String[] files = {
+                getClassFilePath("testcode/ResponseSplittingServlet$JakartaResponseSplittingServlet")
+        };
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        for (Integer line : Arrays.asList(50, 53)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("HTTP_RESPONSE_SPLITTING")
+                            .inClass("ResponseSplittingServlet$JakartaResponseSplittingServlet").inMethod("doGet").withPriority("Low").atLine(line)
+                            .build()
+            );
+        }
+        for (Integer line : Arrays.asList(51, 52, 56, 71)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("HTTP_RESPONSE_SPLITTING")
+                            .inClass("ResponseSplittingServlet$JakartaResponseSplittingServlet").withPriority("Medium").atLine(line)
+                            .build()
+            );
+        }
+        for (Integer line : Arrays.asList(66, 67)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("HTTP_RESPONSE_SPLITTING")
+                            .inClass("ResponseSplittingServlet$JakartaResponseSplittingServlet").inMethod("doGet").withPriority("Medium").atLine(line)
+                            .build()
+            );
+        }
+        verify(reporter, times(8)).doReportBug(bugDefinition().bugType("HTTP_RESPONSE_SPLITTING").build());
+    }
 }

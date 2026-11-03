@@ -82,4 +82,18 @@ public class FileDisclosureDetectorTest extends BaseDetectorTest {
                 bugDefinition().bugType("REQUESTDISPATCHER_FILE_DISCLOSURE").inMethod("doGet2").build()
         );
     }
+
+    @Test
+    public void detectFileDisclosureWithJakartaRequestDispatcher() throws Exception {
+        String[] files = {
+                getClassFilePath("testcode/file/FileDisclosure$JakartaFileDisclosure")
+        };
+
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter, times(2)).doReportBug(
+                bugDefinition().bugType("REQUESTDISPATCHER_FILE_DISCLOSURE").inMethod("doGet2").build()
+        );
+    }
 }

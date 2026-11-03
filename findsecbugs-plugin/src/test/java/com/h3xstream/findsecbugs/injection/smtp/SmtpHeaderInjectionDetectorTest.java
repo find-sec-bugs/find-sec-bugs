@@ -79,4 +79,52 @@ public class SmtpHeaderInjectionDetectorTest extends BaseDetectorTest {
         );
     }
 
+    @Test
+    public void detectJakartaSmtpInjection() throws Exception {
+
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/smtp/JakartaSmtpClient")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        for(Integer line : range(38,42)) {
+            verify(reporter).doReportBug(
+                    bugDefinition()
+                            .bugType("SMTP_HEADER_INJECTION")
+                            .inClass("JakartaSmtpClient")
+                            .atLine(line)
+                            .build()
+            );
+        }
+
+        verify(reporter).doReportBug( //Bonus : Path traversal specific to SMTP API
+                bugDefinition()
+                        .bugType("PATH_TRAVERSAL_IN")
+                        .inClass("JakartaSmtpClient")
+                        .atLine(45)
+                        .build()
+        );
+
+        verify(reporter).doReportBug( //Test for tainted source
+                bugDefinition()
+                        .bugType("SMTP_HEADER_INJECTION")
+                        .inClass("JakartaSmtpClient")
+                        .withPriority("High")
+                        .atLine(52)
+                        .build()
+        );
+
+        //Out of the 5 unknown sources and 1 tainted
+        verify(reporter,times(6)).doReportBug(
+                bugDefinition()
+                        .bugType("SMTP_HEADER_INJECTION")
+                        .inClass("JakartaSmtpClient")
+                        .build()
+        );
+    }
+
 }

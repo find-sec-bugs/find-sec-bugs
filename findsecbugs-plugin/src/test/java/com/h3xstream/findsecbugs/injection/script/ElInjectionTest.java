@@ -78,4 +78,56 @@ public class ElInjectionTest extends BaseDetectorTest {
                         .build()
         );
     }
+
+    @Test
+    public void detectInjectionJakarta() throws Exception {
+        //Locate test code
+        String[] files = {
+                getClassFilePath("testcode/script/JakartaElExpressionSample")
+        };
+
+        //Run the analysis
+        EasyBugReporter reporter = spy(new SecurityReporter());
+        analyze(files, reporter);
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("EL_INJECTION")
+                        .inClass("JakartaElExpressionSample")
+                        .inMethod("unsafeEL")
+                        .build()
+        );
+
+        verify(reporter,never()).doReportBug(
+                bugDefinition()
+                        .bugType("EL_INJECTION")
+                        .inClass("JakartaElExpressionSample")
+                        .inMethod("safeEL")
+                        .build()
+        );
+
+        verify(reporter).doReportBug(
+                bugDefinition()
+                        .bugType("EL_INJECTION")
+                        .inClass("JakartaElExpressionSample")
+                        .inMethod("unsafeELMethod")
+                        .build()
+        );
+
+        verify(reporter,never()).doReportBug(
+                bugDefinition()
+                        .bugType("EL_INJECTION")
+                        .inClass("JakartaElExpressionSample")
+                        .inMethod("safeELMethod")
+                        .build()
+        );
+
+        //Only 2 instances in the sample class
+        verify(reporter,times(2)).doReportBug(
+                bugDefinition()
+                        .bugType("EL_INJECTION")
+                        .inClass("JakartaElExpressionSample")
+                        .build()
+        );
+    }
 }

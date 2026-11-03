@@ -24,6 +24,7 @@ import com.h3xstream.findsecbugs.taintanalysis.TaintFrame;
 import com.h3xstream.findsecbugs.taintanalysis.TaintFrameAdditionalVisitor;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.ba.DataflowAnalysisException;
+import edu.umd.cs.findbugs.ba.Location;
 import org.apache.bcel.generic.*;
 
 import java.util.List;
@@ -63,7 +64,7 @@ public class PotentialValueTracker extends BasicInjectionDetector implements Tai
 
 
     @Override
-    public void visitInvoke(InvokeInstruction invoke, MethodGen methodGen, TaintFrame frameType, List<Taint> parameters, ConstantPoolGen cpg) throws DataflowAnalysisException{
+    public void visitInvoke(InvokeInstruction invoke, MethodGen methodGen, TaintFrame frameType, Taint instanceTaint, List<Taint> parameters, ConstantPoolGen cpg, Location location) throws DataflowAnalysisException{
 
         if(PROPERTIES_GET_WITH_DEFAULT.matches(invoke,cpg) || OPTIONAL_OR.matches(invoke,cpg) || HASHMAP_GET_WITH_DEFAULT.matches(invoke,cpg)) {
             Taint defaultVal = parameters.get(0); //Top of the stack last arguments
@@ -74,21 +75,6 @@ public class PotentialValueTracker extends BasicInjectionDetector implements Tai
         }
 
         //ByteCode.printOpCode(invoke,cpg);
-    }
-
-    @Override
-    public void visitLoad(LoadInstruction load, MethodGen methodGen, TaintFrame frameType, int numProduced, ConstantPoolGen cpg) {
-
-    }
-
-    @Override
-    public void visitField(FieldInstruction put, MethodGen methodGen, TaintFrame frameType, Taint taintFrame, int numProduced, ConstantPoolGen cpg) throws Exception {
-
-    }
-
-    @Override
-    public void visitReturn(MethodGen methodGen, Taint returnValue, ConstantPoolGen cpg) throws Exception {
-
     }
 
 
